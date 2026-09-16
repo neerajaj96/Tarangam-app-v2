@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 2.1 Uninformed Search DFS BFS UCS</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 2.1 Uninformed Search DFS BFS UCS | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 2.1 Uninformed Search DFS BFS UCS">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 2.1 Uninformed Search DFS BFS UCS">
+<title>Tarangam — 1.6 Problem Solving Agents And Search Trees</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 1.6 Problem Solving Agents And Search Trees | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.6 Problem Solving Agents And Search Trees">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.6 Problem Solving Agents And Search Trees">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block " data-mod="1">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Agents &amp; Problem Solving</span>
           <span class="chev">&#9656;</span>
@@ -93,7 +93,7 @@
             <span class="topic-dot"></span>
             <span>1.5 Agent Architectures Reflex To Learning</span>
           </a>
-          <a href="./m1_06_problem_solving_agents_and_search_trees.html" class="topic-link " id="topic-m1_06_problem_solving_agents_and_search_trees">
+          <a href="./m1_06_problem_solving_agents_and_search_trees.html" class="topic-link active" id="topic-m1_06_problem_solving_agents_and_search_trees">
             <span class="topic-dot"></span>
             <span>1.6 Problem Solving Agents And Search Trees</span>
           </a>
@@ -107,14 +107,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="2">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Search &amp; Game Playing</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link active" id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+          <a href="./m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
             <span class="topic-dot"></span>
             <span>2.1 Uninformed Search DFS BFS UCS</span>
           </a>
@@ -153,9 +153,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 2</span>
+        <span>Module 1</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">2.1 Uninformed Search DFS BFS UCS</span>
+        <span style="color:var(--ink); font-weight:600;">1.6 Problem Solving Agents And Search Trees</span>
       </div>
 
       <div class="topbar-actions">
@@ -171,143 +171,92 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge badge-accent">MODULE 1</span>
     <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Uninformed (Blind) Search Strategies: BFS, DFS &amp; UCS</h1>
-<p><strong>Search algorithms without domain heuristics: Breadth-First Search, Depth-First Search, and Uniform-Cost Search.</strong></p>
+<h1>Problem-Solving Agents &amp; Search Trees</h1>
+<p><strong>Goal formulation, the 5 components of a well-defined problem, state space vs. search tree, node expansion, and how search performance is measured.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. What is Uninformed (Blind) Search?</h2>
-<p>When an AI agent needs to find a sequence of actions from an <strong>Initial State</strong> to a <strong>Goal State</strong>, it must explore the search space.</p>
-<ul>
-<li><strong>Uninformed Search (Blind Search):</strong> Search strategies that operate with <strong>no domain-specific knowledge</strong> beyond the problem definition. They only know how to generate successor states, test legal actions, and recognize a goal state.</li>
-<li>They evaluate paths systematically without an estimate of how close a state is to the goal.</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Navigating in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine you are navigating an unlit maze without a map, compass, or signs. You can only feel the walls around your current position, test paths step-by-step, and check if you have reached an exit. Uninformed search behaves the same way—it cannot &quot;see&quot; the goal ahead; it explores the graph systematically.</p>
+<h2>1. What Does It Mean to &quot;Solve a Problem&quot;?</h2>
+<p>Imagine driving to an unfamiliar airport. You do not start the engine and improvise turn by turn — you first decide the <strong>goal</strong> (&quot;reach Terminal 2 by 6 PM&quot;), then, map in hand, you work out a <strong>sequence of actions</strong> (take the highway, exit at 14B, follow signs) <em>before</em> moving a single metre. Only after the route is fully planned do you execute it.</p>
+<p>A <strong>problem-solving agent</strong> works exactly this way. It is a goal-based agent specialized for settings where the right action sequence is not obvious and must be <em>computed in advance</em>:</p>
+<pre><code class="language-text">FORMULATE-GOAL  ──&gt;  FORMULATE-PROBLEM  ──&gt;  SEARCH  ──&gt;  EXECUTE
+ (where to end)      (states/actions)     (find path)   (follow it)
+</code></pre>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Offline Thinking, Online Acting</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Search is <strong>offline deliberation</strong>: the agent simulates futures inside its head (or its memory) without touching the real world. Execution only begins once a complete action sequence exists. This separation is why a chess engine can &quot;think&quot; for minutes and then play a whole combination flawlessly — all the trial and error happened in simulation, where mistakes are free.</p>
 </div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2>2. Evaluating Search Strategies</h2>
-<p>Every search algorithm is evaluated against <strong>four standard criteria</strong>:</p>
+<p><a id="the-math"></a></p>
+<h2>2. The 5 Components of a Well-Defined Problem</h2>
+<p>Before any search algorithm can run, the task must be nailed down as a <strong>well-defined problem</strong> — five precise pieces (R&amp;N §3.1). Vague formulations are the #1 source of failed AI projects: the algorithm cannot find what was never specified.</p>
 <ol>
-<li><strong>Completeness:</strong> Is the algorithm guaranteed to find a solution if one exists?</li>
-<li><strong>Time Complexity:</strong> How long (or how many node expansions) does it take to find a solution?</li>
-<li><strong>Space Complexity:</strong> How much computer memory (RAM) is required to hold the frontier and explored nodes?</li>
-<li><strong>Optimality:</strong> Does the algorithm find the highest-quality (lowest total path cost) solution among all valid paths?</li>
+<li><strong>Initial state</strong> — where the agent starts (e.g. the city <code>Arad</code>, a scrambled board).</li>
+<li><strong>Actions</strong> — what the agent <em>can</em> do in a given state (<code>ACTIONS(s)</code> returns the legal moves from $s$).</li>
+<li><strong>Transition model</strong> — what each action <em>does</em>: <code>RESULT(s, a)</code> gives the state reached by doing $a$ in $s$.</li>
+<li><strong>Goal test</strong> — how the agent recognizes success (an explicit state, e.g. <code>Bucharest</code>, or a property, e.g. &quot;no queen attacks another&quot;).</li>
+<li><strong>Path cost</strong> — a number measuring how <em>expensive</em> an action sequence is (distance, time, money). The <strong>optimal solution</strong> is the one with the lowest total path cost — not merely <em>any</em> sequence that reaches the goal.</li>
 </ol>
-<h3>Complexity Parameters</h3>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition: A Problem Is a 5-Tuple</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$$\text{Problem} = (s_0,\ \text{ACTIONS},\ \text{RESULT},\ \text{GOAL-TEST},\ \text{STEP-COST})$$
+The <strong>state space</strong> is the set of <em>all</em> states reachable from $s_0$ by any action sequence — drawn as a <strong>graph</strong> whose nodes are states and whose edges are actions. Memorize all five components in order: they are the standard 3-mark &quot;define a well-defined problem&quot; answer.</p>
+</div></details><h3>State Space vs. Search Tree (the most-tested distinction in this topic)</h3>
 <ul>
-<li><strong>$b$:</strong> <strong>Branching Factor</strong> (the maximum number of successors for any node).</li>
-<li><strong>$d$:</strong> <strong>Depth</strong> of the shallowest goal node.</li>
-<li><strong>$m$:</strong> <strong>Maximum Depth</strong> of the search space (can be $\infty$).</li>
+<li>The <strong>state space</strong> is the <em>territory</em>: the graph of all reachable states. It exists whether or not anyone searches it.</li>
+<li>The <strong>search tree</strong> is the <em>exploration trace</em>: the tree of paths the algorithm actually generates while searching. The same state can appear on the tree <strong>many times</strong> via different routes (Arad → Sibiu → Arad is a loop in the tree, not a new place on the map).</li>
 </ul>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Tree Nodes Are Paths, Not Places</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A <strong>search-tree node</strong> is a data structure holding: the <code>STATE</code>, the <code>PARENT</code> node it came from, the <code>ACTION</code> used, the <code>PATH-COST</code> $g$ from the start, and the <code>DEPTH</code>. Beginners constantly confuse &quot;expanding a node&quot; (generating all its children) with &quot;visiting a state&quot;. The tree can be exponentially larger than the state space — which is exactly why search needs strategies (Module 2) instead of blind wandering.</p>
+</div></details><h3>How a Search Strategy Is Judged (preview of Module 2)</h3>
+<p>Every algorithm in the next module is scored on four criteria — learn the vocabulary now:</p>
+<ul>
+<li><strong>Complete?</strong> Does it always find a solution when one exists?</li>
+<li><strong>Optimal?</strong> Does it find the <em>lowest-cost</em> solution?</li>
+<li><strong>Time complexity?</strong> How many nodes does it generate/expand?</li>
+<li><strong>Space complexity?</strong> How many nodes must it keep in memory?</li>
+</ul>
+<p>Measured with branching factor $b$, solution depth $d$, and maximum depth $m$.</p>
 <hr>
-<p><a id="terminology"></a></p>
-<h2>3. Breadth-First Search (BFS)</h2>
-<p>Breadth-First Search expands the search tree level by level. It explores all sibling nodes at depth $k$ before expanding any nodes at depth $k+1$.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>FIFO (First-In, First-Out) Queue</strong> for the frontier.</li>
-</ul>
-<h3>ASCII Diagram: BFS Level-by-Level Expansion</h3>
-<pre><code class="language-text">           [ A ]  (Level 0 - Root)
-          /     \
-         [ B ]   [ C ]  (Level 1 - Evaluated next)
-        /     \
-       [ D ]   [ E ]  (Level 2 - Evaluated last)
+<p><a id="worked-example"></a></p>
+<h2>3. Hand-Tracing a Search Tree (Arad → Fagaras)</h2>
+<p>Consider a tiny road map: Arad connects to Sibiu (140 km) and Zerind (75 km); Sibiu connects to Fagaras (99 km) and back to Arad. Goal: reach Fagaras from Arad.</p>
+<pre><code class="language-text">STATE SPACE (the map — a graph):
 
-   Queue Order: [A] -&gt; [B, C] -&gt; [C, D, E] -&gt; [D, E] -&gt; [E]
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: BFS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^d)$ (explores all levels down to depth $d$).</li>
-<li><strong>Space Complexity:</strong> $O(b^d)$ (stores all generated nodes in the frontier queue).</li>
-<li><strong>Completeness:</strong> Yes (if branching factor $b$ is finite).</li>
-<li><strong>Optimality:</strong> Yes, <strong>if and only if</strong> all step costs are equal (finds shallowest goal).</li>
-</ul>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Memory Bottleneck of BFS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>While BFS guarantees finding the shallowest solution, its <strong>space complexity</strong> is its greatest limitation. Because all generated nodes are retained in memory, for $b = 10$ and $d = 8$, the frontier requires storing over $10^8$ nodes, exhausting RAM long before CPU time is exhausted.</p>
-</div></details><hr>
-<p><a id="foundations"></a></p>
-<h2>4. Depth-First Search (DFS)</h2>
-<p>Depth-First Search explores as deep as possible along each branch before backtracking.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>LIFO (Last-In, First-Out) Stack</strong> (or recursive function calls).</li>
-</ul>
-<h3>ASCII Diagram: DFS Deep-Dive Expansion</h3>
-<pre><code class="language-text">           [ A ]  (1. Start at root)
-          /     \
-         [ B ]   [ C ]  (3. Visited after backtracking from left branch)
-        /     
-       [ D ]   (2. Dive straight down to leaf node)
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: DFS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^m)$ (may traverse to maximum depth $m$).</li>
-<li><strong>Space Complexity:</strong> $O(b \cdot m)$ (stores only the current branch and unexpanded siblings; linear space).</li>
-<li><strong>Completeness:</strong> No (fails in infinite-depth spaces or graph cycles without cycle detection).</li>
-<li><strong>Optimality:</strong> No (may return a deep, high-cost goal before examining a shallow one).</li>
-</ul>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2>5. Uniform-Cost Search (UCS)</h2>
-<p>When step costs vary (e.g., roads with different lengths or costs), BFS cannot guarantee the cheapest path because it optimizes step count rather than total cost. <strong>Uniform-Cost Search (UCS)</strong> addresses this by expanding the node with the lowest cumulative path cost $g(n)$.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>Priority Queue</strong> ordered by path cost $g(n)$.</li>
-</ul>
-<h3>ASCII Diagram: UCS Cost-Ordered Expansion</h3>
-<pre><code class="language-text">               (Cost: 1)
-           [ A ] -------&gt; [ B ] (Total Cost: 1)
-          |              
-  (Cost: 5)|              
-          v              
-         [ C ] (Total Cost: 5)
+  Zerind --75-- Arad --140-- Sibiu --99-- Fagaras
+                      \_______________/
+                       (direct roads)
 
-   *UCS expands B first because g(B) = 1 is lower than g(C) = 5.*
+SEARCH TREE (the trace — repeats allowed):
+
+              [Arad] g=0
+              /        \
+   (Zerind,75)          (Sibiu,140)
+   [Zerind] g=75        [Sibiu] g=140
+                             /      \
+                  (Arad,140)          (Fagaras,99)
+                  [Arad] g=280        [Fagaras] g=239  &lt;-- GOAL
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: UCS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Let $C^*$ be the optimal path cost and $\epsilon &gt; 0$ be the minimum step cost:</p>
-<ul>
-<li><strong>Time Complexity:</strong> $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</li>
-<li><strong>Space Complexity:</strong> $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</li>
-<li><strong>Completeness:</strong> Yes (if all step costs satisfy $c(s, a, s&#39;) \ge \epsilon &gt; 0$).</li>
-<li><strong>Optimality:</strong> Yes (guaranteed to find the lowest-cost path for arbitrary non-negative costs).</li>
-</ul>
-</div></details><hr>
-<h2>6. Comparative Summary Matrix</h2>
-<pre><code class="language-text">+---------------------+----------------+-----------------+-------------------------------+
-| Criterion           | BFS            | DFS             | UCS                           |
-+=====================+================+=================+===============================+
-| **Frontier Data**   | FIFO Queue     | LIFO Stack      | Priority Queue by $g(n)$      |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Complete?**       | Yes (finite b) | No (loops/inf)  | Yes ($c \ge \epsilon &gt; 0$)    |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Optimal?**        | Yes (cost = 1) | No              | YES (arbitrary non-neg costs) |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Time Complexity** | $O(b^d)$       | $O(b^m)$        | $O(b^{1 + \lfloor C^*/\epsilon \rfloor})$ |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Space Complexity**| $O(b^d)$       | $O(b \cdot m)$  | $O(b^{1 + \lfloor C^*/\epsilon \rfloor})$ |
-+---------------------+----------------+-----------------+-------------------------------+
-</code></pre>
+<p>Reading the trace: the root node holds state Arad with $g=0$. <strong>Expanding</strong> it generates two children (Zerind, $g=75$; Sibiu, $g=140$). Expanding Sibiu generates Arad-again ($g=280$ — a repeated state, correctly appearing as a <em>new tree node</em>) and Fagaras ($g=239$), which passes the goal test. The solution is the action sequence Arad → Sibiu → Fagaras with path cost 239 — cheaper than any route detouring through Zerind. Note the tree already has 5 nodes for a 4-state map: on real maps this redundancy explodes, which is why Module 2 exists.</p>
 <hr>
 <p><a id="self-check"></a></p>
-<h2>7. Active Recall Quizzes</h2>
+<h2>4. Active Recall Quizzes</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why is Breadth-First Search (BFS) suboptimal when step costs along edges are unequal?</span>
+    <span class="quiz-category">A problem-solving agent is given a goal but no precomputed action sequence. What is the correct order of its operation?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because BFS has infinite space complexity.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because BFS optimizes for the fewest depth steps rather than cumulative numerical path cost, choosing shorter step paths over cheaper total cost paths.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because BFS uses a priority queue.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because BFS cannot branch more than twice per node.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Execute actions, then search for what it just did</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Search first, then formulate the goal from the results</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Formulate the goal, formulate the problem, search for a solution, then execute it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Formulate the problem, execute immediately, and search only if execution fails</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -319,20 +268,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>BFS identifies the shallowest goal in terms of depth steps. If a 1-step path costs $100 and a 3-step path costs $5, BFS selects the $100 path because it has fewer steps. Uniform-Cost Search (UCS) must be used when edge weights vary.</p><pre><code>&lt;/div&gt;
+      <p>The R&amp;N problem-solving agent pipeline is strictly ordered: <strong>goal formulation</strong> (decide where to end) → <strong>problem formulation</strong> (fix states, actions, costs) → <strong>search</strong> (simulate action sequences offline) → <strong>execution</strong> (follow the found sequence). Searching before the problem is formulated is impossible — there is nothing to search over yet.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the main memory advantage of Depth-First Search (DFS) over Breadth-First Search (BFS)?</span>
+    <span class="quiz-category">In a search tree, the same city (e.g. Arad) appears as three different nodes. What does this mean?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>DFS has constant $O(1)$ space complexity.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>DFS only stores the single active path from root to leaf plus unexpanded siblings, giving a linear space complexity of $O(bm)$ compared to BFS&#39;s exponential $O(b^d)$ frontier.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>DFS stores nodes in an indexed hash map.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>DFS never expands duplicate nodes.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The map contains three different cities that happen to share a name</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Nodes represent paths from the start, so one state reached by different routes correctly appears as multiple tree nodes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The search algorithm has a bug and must be restarted</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The goal test was applied to the wrong state</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -344,20 +293,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>DFS maintains only the current branch down to depth $m$ in its LIFO stack. This linear space requirement $O(bm)$ uses vastly less RAM than BFS, which stores entire exponential tiers of nodes.</p><pre><code>&lt;/div&gt;
+      <p>A search-tree node records a <em>path</em> (state + parent + action + path cost + depth), not a place. Different routes to the same state — Arad directly, Arad-via-Sibiu — are legitimately different nodes with different path costs. Confusing the tree (trace) with the state space (territory) is the classic error this topic warns against.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Which uninformed search algorithm guarantees finding the lowest-cost solution when step costs vary, assuming all step costs are strictly positive ($\epsilon &gt; 0$)?</span>
+    <span class="quiz-category">Which of the following is part of a well-defined problem but is NOT needed to merely reach *any* goal state — only to find the *best* one?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Depth-First Search</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Breadth-First Search</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Uniform-Cost Search (UCS)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Random Walk Search</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Initial state</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Goal test</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Path cost (step cost)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Actions function</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -369,48 +318,38 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Uniform-Cost Search always expands the frontier node with the lowest cumulative path cost $g(n)$ using a priority queue, guaranteeing cost-optimality when all edge costs are non-negative.</p><pre><code>&lt;/div&gt;
+      <p>Reaching <em>a</em> goal needs the start, the moves, and a way to recognize success. <strong>Path cost</strong> is what lets the agent compare candidate solutions and pick the optimal (cheapest) one. Without costs, &quot;optimal&quot; is undefined — which is exactly why uninformed search (Module 2) splits into step-count methods (BFS/DFS) and cost-aware ones (UCS).</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2>8. Worked University Exam Q&amp;A</h2>
+<h2>5. Worked University Exam Q&amp;A</h2>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> State the 4 evaluation criteria for search algorithms or compare time/space complexities of BFS and DFS.</li>
-<li><strong>7 Marks:</strong> Explain Uniform-Cost Search with an illustrative graph trace, showing queue updates at each step.</li>
+<li><strong>3 Marks:</strong> List the 5 components of a well-defined problem, or the 4 criteria for evaluating search strategies.</li>
+<li><strong>7 Marks:</strong> Formulate a given scenario (route map, puzzle) as a 5-tuple and hand-trace the first two levels of its search tree, distinguishing state space from search tree.</li>
 </ul>
 </div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Compare the time and space complexities of BFS and DFS. Which algorithm is more prone to running out of memory?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>BFS:</strong> Time $O(b^d)$, Space $O(b^d)$ (exponential in depth).</li>
-<li><strong>DFS:</strong> Time $O(b^m)$, Space $O(bm)$ (linear in depth).</li>
-<li><strong>Memory Comparison:</strong> <strong>BFS</strong> is far more prone to running out of memory because its space complexity grows exponentially with depth, requiring every frontier node to be kept in RAM simultaneously.</li>
-</ul>
+<p><strong>Q: Define a well-defined problem in AI. What are its five components?</strong></p>
+<p><strong>Model Answer:</strong> A well-defined problem is a task specified precisely enough for a search algorithm to operate on, as a 5-tuple: (1) <strong>Initial state</strong> $s_0$ where the agent starts; (2) <strong>Actions</strong> — <code>ACTIONS(s)</code> legal in each state; (3) <strong>Transition model</strong> — <code>RESULT(s,a)</code>; (4) <strong>Goal test</strong> — success recognition; (5) <strong>Path cost</strong> — numeric cost enabling optimality comparisons.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Explain the Uniform-Cost Search (UCS) algorithm. How does it guarantee optimality on graphs with variable step costs?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Definition (2 Marks):</strong> UCS is an uninformed graph search strategy that expands the node $n$ with the lowest cumulative path cost $g(n)$ from the root node. It manages its frontier with a Priority Queue.</li>
-<li><strong>Difference from BFS (2 Marks):</strong> BFS expands nodes strictly by depth level (FIFO queue), which assumes uniform unit costs. UCS expands nodes in order of cumulative cost $g(n)$, regardless of their depth.</li>
-<li><strong>Optimality Proof Concept (3 Marks):</strong> Because all step costs are strictly positive ($c \ge \epsilon &gt; 0$), cumulative path costs increase monotonically along any search path. Therefore, whenever UCS selects a goal node for expansion from the priority queue, no unexpanded node on the frontier can lead to a cheaper path to the goal, guaranteeing optimality.</li>
-</ol>
+<p><strong>Q: For route-finding from Arad to Fagaras on the given map, (a) formulate the well-defined problem, (b) draw two levels of the search tree, (c) explain why Arad reappears and what this implies.</strong></p>
+<p><strong>Model Answer:</strong> (a) $s_0=$ Arad; actions $=$ drive to a neighboring city; result $=$ arrival city; goal test $=$ state is Fagaras; step cost $=$ road distance in km. (b) As traced in §3: root Arad expands to Zerind ($g=75$) and Sibiu ($g=140$); Sibiu expands to Arad ($g=280$) and Fagaras ($g=239$, goal). (c) Arad reappears because tree nodes are <em>paths</em>, not places — the same state via a longer route is a distinct node. Implication: trees outgrow state spaces (loops, redundancy), motivating systematic strategies with repeated-state handling in Module 2.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_99_practice_lab_agents_and_problem_formulation.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_05_agent_architectures_reflex_to_learning.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">🧪 Practice Lab: M1 Agents And Problem Formulation</div>
+        <div class="ttl">1.5 Agent Architectures Reflex To Learning</div>
       </a>
       
       
       
-      <a href="./m2_02_iterative_deepening_and_depth_limited.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m1_07_classic_ai_toy_problems.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.2 Iterative Deepening And Depth Limited</div>
+        <div class="ttl">1.7 Classic AI Toy Problems</div>
       </a>
       
     </footer>
@@ -497,7 +436,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(11) || 0;
-    const currentId = "m2_01_uninformed_search_dfs_bfs_ucs";
+    const currentId = "m1_06_problem_solving_agents_and_search_trees";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 
