@@ -257,7 +257,7 @@ function renderNavTree(modules, currentMod, currentId) {
       const safeId = escapeHtml(topic.id);
       const safeTitle = escapeHtml(topic.title);
       html += `
-          <a href="${safeFile}" class="topic-link ${isActive ? 'active' : ''}" id="topic-${safeId}">
+          <a href="./${safeFile}" class="topic-link ${isActive ? 'active' : ''}" id="topic-${safeId}">
             <span class="topic-dot"></span>
             <span>${safeTitle}</span>
           </a>`;
@@ -483,11 +483,16 @@ export function buildSite() {
   // Create .nojekyll in dist
   fs.writeFileSync(path.join(OUTPUT_DIR, '.nojekyll'), '', 'utf-8');
 
-  // Copy root index.html to dist/index.html with adjusted paths for standalone hosting
+  // Copy root index.html to dist/index.html with adjusted paths for standalone hosting.
+  // Root uses dist/<COURSE>/... links (branch-root mode); inside dist/ the
+  // same cards must be explicitly relative (./<COURSE>/...) for artifact mode.
+  // NOTE: a hardcoded /Tarangam-app-v2/ base is deliberately NOT used — it
+  // would break one of the two modes (branch root needs dist/ prefix,
+  // artifact root must not have it). Explicit relative paths serve both.
   if (fs.existsSync('index.html')) {
     let rootIndex = fs.readFileSync('index.html', 'utf-8');
     // Replace "dist/" prefix for links inside dist/
-    const standaloneIndex = rootIndex.replace(/href="dist\//g, 'href="');
+    const standaloneIndex = rootIndex.replace(/href="dist\//g, 'href="./');
     fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), standaloneIndex, 'utf-8');
   }
 

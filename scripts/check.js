@@ -78,6 +78,31 @@ for (const course of courses) {
   }
 }
 
+// 4. Post-build dist validation (skipped when dist/ absent, e.g. fresh clone).
+// Every relative *.html link inside dist/ must resolve to a built file —
+// this catches nav/prev-next/dashboard rewrite breakage in both Pages modes.
+if (fs.existsSync('dist')) {
+  const walk = (dir) =>
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+      const p = path.join(dir, e.name);
+      return e.isDirectory() ? walk(p) : [p];
+    });
+  const pages = walk('dist').filter((f) => f.endsWith('.html'));
+  if (!pages.length) fail('dist/ exists but contains no .html pages');
+  for (const page of pages) {
+    const html = fs.readFileSync(page, 'utf-8');
+    for (const m of html.matchAll(/href="([^"#]+?\.html)"/g)) {
+      const href = m[1];
+      if (/^(https?:)?\/\//.test(href) || href.startsWith('mailto:')) continue;
+      const target = path.normalize(path.join(path.dirname(page), href));
+      if (!fs.existsSync(target)) fail(`dist broken link: ${page} -> ${href}`);
+    }
+  }
+  // dist/index.html must be standalone (no dist/ prefixes — artifact root).
+  const di = fs.existsSync('dist/index.html') ? fs.readFileSync('dist/index.html', 'utf-8') : '';
+  if (di.includes('href="dist/')) fail('dist/index.html still contains dist/ prefixes (artifact mode broken)');
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
