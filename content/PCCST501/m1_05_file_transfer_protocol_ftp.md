@@ -33,6 +33,10 @@ flowchart LR
 * **Control Connection (Port 21):** carries login credentials, directory-navigation commands (`CWD`), and transfer commands (`STOR` to upload, `RETR` to download). Remains open for the **entire session**.
 * **Data Connection (Port 20):** carries only raw file bytes. A **new** data connection is opened and closed for **every individual file**.
 
+::: callout-pitfall Two Numbers, Two Rules
+**Port 20 is the *active-mode* data port** — in passive mode the server instead opens a random high port (see §2.3), so never write "data = always 20" without the active-mode qualifier. And the counting rule is fixed: **1 control connection per session, 1 fresh data connection per file** — a 3-file download means 1 + 3, never 3 + 3.
+:::
+
 ### 2.2 The FTP Session Lifecycle
 
 ```mermaid
@@ -96,7 +100,7 @@ The session uses exactly **1 Control Connection** (open for the whole session) a
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
 ::: quiz Q1: Foundational Concept
 What does it mean when we say FTP uses "out-of-band" control?

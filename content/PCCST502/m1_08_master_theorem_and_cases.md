@@ -33,6 +33,10 @@ $$T(n) = \Theta(f(n))$$
 
 **Important caveat — the "gap" between cases.** The three cases don't cover *every possible* $f(n)$ — there's a gap between "polynomially slower" and "polynomially faster" (e.g. $f(n)$ that differs from $n^{\log_b a}$ only by a logarithmic factor, like $f(n) = n^{\log_b a}\log^2 n$, technically doesn't satisfy Case 2's exact-match requirement nor either polynomial-difference requirement in the classic three-case statement above). When a recurrence falls in this gap, the Master Theorem (in this basic form) simply doesn't apply, and you must fall back to the iteration or recursion-tree method (or a more advanced version of the theorem) to solve it directly.
 
+::: callout-formula KTU Formula Vault: Master Theorem in 30 Seconds
+Compute $n^{\log_b a}$ first. $f$ polynomially *slower* → **Case 1**: $\Theta(n^{\log_b a})$. $f$ *equal* → **Case 2**: $\Theta(n^{\log_b a}\log n)$. $f$ polynomially *faster* (+ regularity) → **Case 3**: $\Theta(f(n))$. Differs only by a $\log$ factor → **gap**: theorem silent, unroll by hand.
+:::
+
 ---
 
 <a id="worked-example"></a>
@@ -67,12 +71,12 @@ Case 2 is defined precisely by $f(n) = \Theta(n^{\log_b a})$ — the extra work 
 :::
 
 ::: quiz For the recurrence $T(n) = 4T(n/2) + n$, what is $n^{\log_b a}$, and which Master Theorem case applies?
-() $n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$
-(*) $n^{\log_2 4} = n^2$; since $f(n)=n$ grows slower, this is Case 1, giving $T(n)=\Theta(n^2)$ [note: same as A — see explanation]
+() $n^{\log_2 4} = n$; since $f(n)=n$ matches the reference exactly, this is Case 2, giving $T(n)=\Theta(n\log n)$
+(*) $n^{\log_2 4} = n^2$; since $f(n)=n$ grows polynomially slower, this is Case 1, giving $T(n)=\Theta(n^2)$
 () $n^{\log_2 4} = n^2$; this is Case 3, giving $T(n)=\Theta(n)$
 () $n^{\log_2 4} = n^2$; this is Case 2, giving $T(n)=\Theta(n^2\log n)$
 ::: explanation
-Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, giving reference function $n^2$. Since $f(n)=n=n^1$ grows polynomially slower than $n^2$ (i.e. $f(n) = O(n^{2-\epsilon})$ for $\epsilon=1$), this satisfies Case 1, and the leaves dominate: $T(n) = \Theta(n^{\log_b a}) = \Theta(n^2)$.
+Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$ (not 1 — a common slip is reading $\log_2 4$ as 1), giving reference function $n^2$. Since $f(n)=n=n^1$ grows polynomially slower than $n^2$ (i.e. $f(n) = O(n^{2-\epsilon})$ for $\epsilon=1$), this satisfies Case 1, and the leaves dominate: $T(n) = \Theta(n^{\log_b a}) = \Theta(n^2)$.
 :::
 
 ::: quiz Which of the following recurrences falls *outside* the basic three-case Master Theorem (i.e., is in the "gap" where none of the three cases cleanly apply)?

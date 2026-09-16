@@ -53,6 +53,15 @@ $$\text{Action}^* = \arg\max_{a \in A} \sum_{s'} P(s' \mid \text{percept sequenc
 Where $U(s')$ represents the utility score of reaching state $s'$.
 :::
 
+::: quiz A designer upgrades a delivery robot with a stronger gripper arm, letting it lift heavier parcels it previously could not move. Which of the four factors of rationality has directly changed?
+() Performance measure — the definition of delivery success
+() Prior knowledge — the map of the warehouse built into the robot
+(*) Actions available — the set of physical operations its actuators can perform
+() Percept sequence — the history of sensor readings received so far
+::: explanation
+The four factors are (1) performance measure, (2) prior knowledge, (3) actions available, (4) percept sequence. A new gripper changes what the agent *can do* — factor 3. It does not redefine success, rewrite the built-in map, or alter the percepts already received.
+:::
+
 ---
 
 <a id="worked-example"></a>

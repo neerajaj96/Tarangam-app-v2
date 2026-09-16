@@ -1,60 +1,61 @@
-# Tarangam — KTU Notes
+# Tarangam — KTU Notes (S5 CSE, 2024 scheme)
 
-Interactive study notes for the KTU 2024 scheme. Currently covers **S5 CSE — Machine Learning (PCCST503)**, all four modules, broken down topic by topic. Built to grow into every subject and every year later — the file layout below is designed for that.
+Static-site notes: `content/<COURSE>/*.md` → `node scripts/build.js` → `dist/<COURSE>/*.html` via `templates/base.html` + `style.css`. Dashboard is `index.html`. Dev server is `server.ts`. Deploy is GitHub Pages from `dist/` (see `.github/workflows/deploy-pages.yml`).
 
 ## Run it
 
-No build step, no install. From this folder:
-
 ```bash
-python3 -m http.server 8000
+npm install
+npm run build:notes
+npm run dev   # tsx server.ts on :3000, serves repo root
+# or: npx serve dist/  # production preview of Pages artifact
 ```
 
-Then open `http://localhost:8000` in a browser. (Any static server works — `npx serve`, VS Code's Live Server, etc.)
-
-## What's here
+## Content layout (locked convention — Session 2)
 
 ```
-ml-app/
-├─ index.html          shell: sidebar, topbar, settings modal
-├─ style.css            design system — dark / light / reading themes
-├─ app.js                all interactivity: nav, accordions, quizzes, theming, progress
-├─ content/
-│  └─ ml.js              ALL Machine Learning content lives here, as data
-├─ manim_scripts/
-│  └─ m1_mle_hill_climb.py   one worked example script — template for the rest
-└─ assets/videos/        rendered .mp4s go here (see below)
+content/<COURSE>/m{mod}_{seq}_{slug}.md
+  seq 00 = module overview (optional, one per module, sorts first)
+  seq 01-98 = topics in reading order
+  seq 99 = practice lab (optional, one per module, sorts last)
 ```
+
+Current truth (2026-09-16):
+- `PCCST501` Computer Networks: M1 only (5 topics)
+- `PCCST502` DAA: M1 only (`m1_00` overview + 10 topics + `m1_99` lab)
+- `PECST522` AI: M1 (5 topics, gap: `m1_06` missing) + M2 partial (3 topics) + `m1_99` lab
+- `PCCST503` Machine Learning: PARKED — `content/PCCST503/` does not exist; dashboard cards are locked; `assets/videos/*.mp4` (ML-named) are orphaned until PCCST503 lands
+- Dashboard `index.html` shows only existing pages as links; everything else is `.is-locked` + `<!-- TODO content/... -->`
+- `src/` (React/Vite/Tailwind) is DEAD — unreferenced by any HTML; do not extend until build decision in Session 3
+- AI/ML features PARKED: `@google/genai` in `package.json` is unused and `metadata.json` claims `MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API`, but `server.ts` exposes only `/api/health` — no tutor/RAG/quiz-gen exists. Spaced-repetition scheduling is the planned first use of the `tarangam_visited_ts_<COURSE>` timestamp map (stored since Session 10); quiz options are client-shuffled per load to neutralize a measured 71%-at-B position bias.
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic, 30 topics across the 4 modules, each its own self-contained unit (theory, formula, worked example, quiz).
-- **Worked problems** wherever the syllabus has a computational method (MLE, least-squares, entropy/information gain, k-NN distance, k-means iterations, confusion-matrix metrics, PCA variance, perceptron update, etc.) — not just theory.
-- **Dropdown / accordion sections** for extra depth (edge cases, derivation notes, "why does this work") so the main page stays uncluttered.
-- **Self-check quizzes** on every topic — instant right/wrong feedback, an explanation on every answer, running score, saved locally.
-- **Manim video slots** on topics where an animation adds real value — currently placeholders with captions describing what the clip would show, wired to auto-play once a matching `.mp4` exists (see below).
-- **Three appearance modes** — dark, light, and a warm high-contrast "reading" mode — plus adjustable text size, in a proper Settings screen.
-- **Progress tracking** — sidebar shows topics visited and quiz scores, stored in the browser (`localStorage`), with a one-click reset.
+- **Topic-by-topic breakdown** — Module → smallest topic (27 `.md` files today: CN M1, DAA M1, AI M1–M2 partial), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
+- **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
+- **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).
+- **Manim video studio** (`::: manim`) with per-clip speed controls — 8 mp4s exist but are currently orphaned (no `.md` references them).
+- **Four appearance modes** — dark, light, sepia reading, Nordic — plus 3 font scales, in Settings. Pre-paint script avoids theme flash.
+- **Progress tracking** — visited topics per course in `localStorage` (`tarangam_visited_<COURSE>`), checkmarks in nav, one-click reset. Practice labs count.
 - **MathJax** for all formulas — no screenshots of equations.
-- Responsive down to a phone screen; collapsible sidebar.
+- Responsive down to a phone screen; collapsible sidebar; skip link; `[`/`]` topic navigation (arrows deliberately left for scrolling).
 
 ## Adding real Manim videos
 
-Each topic with a `video` entry in `content/ml.js` points at a script path, e.g. `manim_scripts/m1_mle_hill_climb.py`. To make a clip play in-app instead of showing the caption placeholder:
+Each topic embeds video via `::: manim assets/videos/<file>.mp4 <title>` in its `.md` (see `scripts/build.js:136 transformCustomWidgets`). To add a clip:
 
-1. Render it: `manim -pqh manim_scripts/m1_mle_hill_climb.py MLEHillClimb`
-2. Save the output as `assets/videos/m1_mle_hill_climb.mp4`
-3. In `app.js` → `renderVideo()`, point the `<video>` `src` at that path (one line — currently left as a click-to-reveal placeholder since no clips are rendered yet).
-
-Only one script is written so far, as a template. The other 9 video slots in `content/ml.js` have a `script` path and caption ready — writing the matching `.py` for each is the remaining work, following the same pattern (Axes / plot / animate).
+1. Render it with Manim, save output as `assets/videos/<file>.mp4`
+2. Reference it from the topic `.md`; `scripts/build.js` copies `assets/` → `dist/assets/`
+3. Currently all 8 mp4s are ORPHANED (no `.md` references them) — rewire or delete in content pass.
 
 ## Adding a new subject
 
-Content is fully decoupled from the app shell. To add, say, DBMS:
+Content is decoupled from the shell. To add, say, DBMS as `PCCXX999`:
 
-1. Create `content/dbms.js` following the exact shape of `content/ml.js` (`window.SUBJECTS.dbms = { name, code, modules: [...] }`).
-2. Add a `<script src="content/dbms.js">` tag in `index.html`.
-3. In `app.js`, the `SUBJECT` constant currently hardcodes `window.SUBJECTS.ml` — swap this for a subject switcher once more than one subject exists (the sidebar already has a `subject-switch` div reserved for this).
+1. Create `content/PCCXX999/m1_01_*.md` following `m{mod}_{seq}_{slug}.md` + widget syntax (`::: callout-*`, `::: quiz`, `::: step`, `::: toggle`, `::: manim`).
+2. Add `PCCXX999: 'Name'` to `COURSE_METADATA` + module titles to `MODULE_NAMES` in `scripts/build.js:9`.
+3. Rebuild; add unlocked cards in `index.html` (copy `.card` pattern, never point at missing files).
 
 ## Adding a new year
 

@@ -16,7 +16,7 @@ A **rotation** in an AVL tree does exactly this for a "tipped" subtree — one w
 <a id="the-math"></a>
 ## 2. Theoretical Framework & Formalism
 
-**When rotations are triggered.** After inserting (or deleting) a node, walk back up from the changed node toward the root, updating each ancestor's height and balance factor. The *first* node found (closest to the newly inserted/deleted node) where $|BF| $ becomes $2$ is the node where a rotation is performed. Fixing the imbalance at this one node is provably always sufficient to restore the AVL invariant for the *entire* tree above it too (for insertion — deletion can occasionally require rotations to propagate further up, as noted below).
+**When rotations are triggered.** After inserting (or deleting) a node, walk back up from the changed node toward the root, updating each ancestor's height and balance factor. The *first* node found (closest to the newly inserted/deleted node) where $|BF|$ becomes $2$ is the node where a rotation is performed. Fixing the imbalance at this one node is provably always sufficient to restore the AVL invariant for the *entire* tree above it too (for insertion — deletion can occasionally require rotations to propagate further up, as noted below).
 
 **Case 1 — LL (Left-Left), single right rotation.** Occurs when the imbalance is caused by inserting into the **left** subtree of the **left** child of the unbalanced node (a "straight line leaning left"). Fix: rotate the unbalanced node **right** — the left child becomes the new local root, the old root becomes the new root's right child, and the new root's *former* right subtree (if any) is reattached as the old root's new left subtree.
 
@@ -29,6 +29,10 @@ A **rotation** in an AVL tree does exactly this for a "tipped" subtree — one w
 **Rotations preserve the BST property.** Each rotation only rearranges pointers among a small, fixed set of 2–3 nodes and their subtrees, in a way carefully designed so that, after the rotation, every value still lies in the correct left/right position relative to every other value — the ordering is never violated, only the *shape* changes.
 
 **A key difference for deletion.** After an insertion, fixing the balance factor at the single lowest unbalanced ancestor is always enough to re-balance the whole tree. After a *deletion*, however, a rotation performed at one level can sometimes reduce that subtree's height, which can in turn cause an imbalance to appear *further up* the tree — so deletion rebalancing must continue checking (and potentially rotating at) every ancestor all the way up to the root, not just stop at the first fix.
+
+::: callout-formula KTU Formula Vault: Rotation Chooser
+Straight line → **single** rotation: **LL** (left-left) → rotate **right**; **RR** → rotate **left**. Zig-zag → **double**: **LR** → **left** on child, then **right** on parent; **RL** → **right** on child, then **left** on parent. Mnemonic: the *first* rotation always pushes the "elbow" of the zig-zag outward into a straight line.
+:::
 
 ---
 

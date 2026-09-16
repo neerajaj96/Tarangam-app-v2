@@ -39,6 +39,10 @@ The network edge is the outermost boundary of the Internet — where end systems
 * **Clients** — desktops, mobile devices, laptops that *request* information.
 * **Servers** — always-on, powerful machines that *supply* information (web pages, video streams, email), typically housed in large data centers today.
 
+::: callout-pitfall Client and Server Are Roles, Not Device Types
+Exams love this trap: a "server" is not a special kind of computer — it is a *role* an end system plays. Your laptop is a client when it streams Netflix, but the moment it serves a file to a peer (or runs a local dev server), it is acting as a **server**. Classify by *behavior* (requesting vs. supplying), never by hardware size.
+:::
+
 ### 2.4 Access Networks — Getting From the Edge to the First Router
 
 ```mermaid
@@ -97,7 +101,7 @@ A single video frame crosses *multiple* communication links (fiber, backbone lin
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
 ::: quiz Q1: Foundational Concept
 Why is a smartphone considered an "end system" or "host," even though it isn't a powerful server?

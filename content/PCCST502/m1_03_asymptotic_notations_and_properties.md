@@ -39,6 +39,10 @@ Equivalently, $\exists\ c_1, c_2 > 0,\ n_0$ such that $c_1 g(n) \le f(n) \le c_2
 - **Symmetry:** $f(n) = \Theta(g(n)) \iff g(n) = \Theta(f(n))$ — Theta is a two-way relationship; if $f$ and $g$ bound each other, the reverse statement is automatically true too. (Big-O and Big-Omega are *not* symmetric: $f=O(g)$ does not imply $g=O(f)$ in general.)
 - **Transitivity:** if $f(n) = O(g(n))$ and $g(n) = O(h(n))$, then $f(n) = O(h(n))$ — the same holds for $\Omega$ and $\Theta$. This lets you chain comparisons: if you know $A$ is $O(B)$ and $B$ is $O(C)$, you immediately know $A$ is $O(C)$ without re-deriving it from scratch.
 
+::: callout-formula KTU Formula Vault: The Five Notations
+$O$ = upper ($\le$, "at most") · $\Omega$ = lower ($\ge$, "at least") · $\Theta$ = both at once ("exactly", needs the *same* $g$) · $o$ = *strictly* slower (limit ratio $0$) · $\omega$ = *strictly* faster (limit ratio $\infty$). Reflexive: $O, \Omega, \Theta$ only. Symmetric: $\Theta$ only. Transitive: $O, \Omega, \Theta$. If an exam asks "which notation is symmetric?" — the answer is always $\Theta$.
+:::
+
 ---
 
 <a id="worked-example"></a>
@@ -53,7 +57,7 @@ We need $3n^2 + 5n + 2 \le c \cdot n^2$ for all $n \ge n_0$. For $n \ge 1$: $5n 
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-Choosing $c = 10$ and $n_0 = 1$ satisfies the definition: $3n^2+5n+2 \le 10n^2$ for all $n \ge 1$. Therefore $f(n) = O(n^2)$ is formally proven — not just "intuitively obvious," but backed by an explicit witness pair $(c, n_0)$, exactly as the definition demands. (Tighter constants exist too — e.g. $c=4$ works for $n_0 \ge 3$ — but the definition only requires *some* valid pair, not the best possible one.)
+Choosing $c = 10$ and $n_0 = 1$ satisfies the definition: $3n^2+5n+2 \le 10n^2$ for all $n \ge 1$. Therefore $f(n) = O(n^2)$ is formally proven — not just "intuitively obvious," but backed by an explicit witness pair $(c, n_0)$, exactly as the definition demands. (Tighter constants exist too — e.g. $c=4$ works for $n_0 \ge 6$, since $5n+2 \le n^2$ once $n \ge 6$ — but the definition only requires *some* valid pair, not the best possible one.)
 :::
 
 ---

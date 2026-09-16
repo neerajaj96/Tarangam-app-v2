@@ -71,6 +71,10 @@ sequenceDiagram
 | Overhead | High — repeated TCP handshakes | Low — handshake paid once |
 | Latency | Higher | Lower |
 
+::: callout-formula KTU Formula Vault: Connection-Count Rule
+For a page with $N$ objects (HTML + embedded): **non-persistent needs $N$ TCP connections** (one per object, each paying a handshake), **persistent needs 1** (reused). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.
+:::
+
 ### 2.4 HTTP Message Structure
 
 **Request Message:**
@@ -119,7 +123,7 @@ Non-Persistent HTTP needs 6× as many TCP connections as Persistent HTTP for thi
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
 ::: quiz Q1: Foundational Concept
 Why is HTTP referred to as a "stateless" protocol?

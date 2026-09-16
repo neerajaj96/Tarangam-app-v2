@@ -72,6 +72,15 @@ This dimension is about **Temporal Horizon and Memory**. Does a decision made ri
 * **Sequential:** The current decision can affect all subsequent decisions.
   * *Example:* **Chess**. A poor opening move on turn 3 can guarantee a loss on turn 40.
 
+::: quiz A defect-scanning agent inspects apples on a paused conveyor belt. Its verdict on apple #5 has no effect on apple #6 — each decision stands alone, and the belt waits while it deliberates. The environment is:
+() Sequential and Dynamic
+(*) Episodic and Static
+() Sequential and Stochastic
+() Episodic and Multi-Agent
+::: explanation
+**Episodic** because every apple is an independent atomic episode — the current decision cannot affect any future decision. **Static** because the scene waits while the agent thinks (no time pressure, no score decay). A single agent acts, and nothing here makes outcomes probabilistic, ruling out the other options.
+:::
+
 ### 5. Static vs. Dynamic
 This dimension is about **Time Pressure**. Does the environment change while the AI is deliberating?
 * **Static:** The world pauses and waits for the AI to compute its move. (e.g., Crossword puzzles).
@@ -97,9 +106,18 @@ This dimension describes the **Agent's Knowledge of Environment Laws & Rules**.
 * *Example:* **Poker** is a **Known** environment (the rules are fully understood), but **Partially Observable** (opponents' hands are concealed).
 :::
 
+::: quiz An agent plays chess against a human with no clock, but it was never given the rules of chess and must discover legal moves by trial and error. How is this environment classified on the time and knowledge dimensions?
+() Dynamic and Known
+(*) Static and Unknown
+() Semi-dynamic and Known
+() Static and Known
+::: explanation
+**Static**: with no clock the board waits while the agent deliberates. **Unknown**: the agent lacks the rulebook and must learn the laws by exploring. Do not confuse this with observability — chess is fully observable (all pieces visible), but observability is about *seeing the state*, while Known/Unknown is about *knowing the rules*. That is exactly the trap above.
+:::
+
 ---
 
-<a id="the-dimensions"></a>
+<a id="the-matrix"></a>
 ## 3. The Master Environment Matrix Table
 
 Examiners frequently ask students to classify standard benchmark environments. Memorize this reference matrix:

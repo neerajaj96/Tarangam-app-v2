@@ -46,6 +46,10 @@ The Internet actually runs on the simpler, practical TCP/IP suite, which merges 
 | Link | Layer 2 | **Frame** |
 | Physical | Layer 1 | **Bits** |
 
+::: callout-formula KTU Formula Vault: PDU Names per Layer
+Memorize top-down: **M**essage (Application) → **S**egment (Transport) → **D**atagram (Network) → **F**rame (Link) → **B**its (Physical). The classic 3-mark question gives the five names scrambled and asks you to match each to its layer — rehearse it in both directions.
+:::
+
 ### 2.3 Encapsulation and Decapsulation
 
 As data descends the sender's stack, each layer wraps the payload from the layer above inside its own header — like nesting a letter inside progressively larger envelopes.
@@ -94,7 +98,7 @@ The same logical HTTP request is renamed at every layer (Message → Segment →
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
 ::: quiz Q1: Foundational Concept
 Why is modularity/layering highly beneficial in network design?

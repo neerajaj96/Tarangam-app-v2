@@ -11,15 +11,21 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve the built site when present (no source-tree disclosure in
+// production); fall back to repo root for pre-build dev convenience.
+const STATIC_ROOT = fs.existsSync(path.join(process.cwd(), 'dist'))
+  ? path.join(process.cwd(), 'dist')
+  : process.cwd();
+
 // Serve static assets from project root
-app.use(express.static(process.cwd(), {
+app.use(express.static(STATIC_ROOT, {
   extensions: ['html', 'htm'],
   index: 'index.html'
 }));
 
 // Route for root
 app.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'index.html'));
+  res.sendFile(path.join(STATIC_ROOT, 'index.html'));
 });
 
 // API health endpoint
@@ -30,11 +36,11 @@ app.get('/api/health', (req, res) => {
 // Fallback / 404 handler
 app.use((req, res) => {
   // If requesting an html page that might not have .html extension
-  const potentialHtml = path.join(process.cwd(), req.path + '.html');
+  const potentialHtml = path.join(STATIC_ROOT, req.path + '.html');
   if (fs.existsSync(potentialHtml)) {
     return res.sendFile(potentialHtml);
   }
-  res.status(404).sendFile(path.join(process.cwd(), 'index.html'));
+  res.status(404).sendFile(path.join(STATIC_ROOT, 'index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {

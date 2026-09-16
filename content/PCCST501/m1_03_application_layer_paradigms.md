@@ -69,6 +69,10 @@ To route a message correctly, the network needs *two* pieces of addressing infor
 
 A Web Server process, for example, conventionally listens on **Port 80** — so even though many processes may be running on the same machine, the port number ensures an incoming HTTP request reaches the right one.
 
+::: callout-exam KTU Exam Focus: The Two-Part Address
+The 2-mark "why isn't IP enough?" answer is always: **IP address finds the host, port number finds the process** — together they name a **socket** (`IP:port`). Any option claiming one identifier suffices, or that ports replace IPs, is the planted distractor.
+:::
+
 ---
 
 <a id="worked-example"></a>
@@ -90,7 +94,7 @@ The customer database chooses Client-Server for **consistency, security, and cen
 ---
 
 <a id="self-check"></a>
-## 4. Active Recall Checkpoint
+## 4. Active Recall Quizzes
 
 ::: quiz Q1: Foundational Concept
 Why is P2P considered "self-scaling"?
