@@ -28,7 +28,7 @@ Current truth (2026-09-16):
 - `PECST522` AI: M1 (5 topics, gap: `m1_06` missing) + M2 partial (3 topics) + `m1_99` lab
 - `PCCST503` Machine Learning: PARKED — `content/PCCST503/` does not exist; dashboard cards are locked; `assets/videos/*.mp4` (ML-named) are orphaned until PCCST503 lands
 - Dashboard `index.html` shows only existing pages as links; everything else is `.is-locked` + `<!-- TODO content/... -->`
-- `src/` (React/Vite/Tailwind) is DEAD — unreferenced by any HTML; do not extend until build decision in Session 3
+- `src/` (React/Vite/Tailwind) was DEAD — **removed in Session 12** along with `vite.config.ts`, one-off `scripts/reformat_daa.*`, and all unused deps. Toolchain is now exactly: `express` + `marked` (+ `@google/genai`/`dotenv`, reserved for the parked AI tutor).
 - AI/ML features PARKED: `@google/genai` in `package.json` is unused and `metadata.json` claims `MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API`, but `server.ts` exposes only `/api/health` — no tutor/RAG/quiz-gen exists. Spaced-repetition scheduling is the planned first use of the `tarangam_visited_ts_<COURSE>` timestamp map (stored since Session 10); quiz options are client-shuffled per load to neutralize a measured 71%-at-B position bias.
 
 ## Features already built
