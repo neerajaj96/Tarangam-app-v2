@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.2 Agents And Environments PEAS</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 1.2 Agents And Environments PEAS | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.2 Agents And Environments PEAS">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.2 Agents And Environments PEAS">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Artificial Intelligence</span>
+        <span class="tag">PECST522</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Agents &amp; Problem Solving</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_01_ai_definition_foundations_and_history.html" class="topic-link " id="topic-m1_01_ai_definition_foundations_and_history">
+            <span class="topic-dot"></span>
+            <span>1.1 AI Definition Foundations And History</span>
+          </a>
+          <a href="m1_02_agents_and_environments_peas.html" class="topic-link active" id="topic-m1_02_agents_and_environments_peas">
+            <span class="topic-dot"></span>
+            <span>1.2 Agents And Environments PEAS</span>
+          </a>
+          <a href="m1_03_concept_of_rationality.html" class="topic-link " id="topic-m1_03_concept_of_rationality">
+            <span class="topic-dot"></span>
+            <span>1.3 Concept Of Rationality</span>
+          </a>
+          <a href="m1_04_nature_of_task_environments.html" class="topic-link " id="topic-m1_04_nature_of_task_environments">
+            <span class="topic-dot"></span>
+            <span>1.4 Nature Of Task Environments</span>
+          </a>
+          <a href="m1_05_agent_architectures_reflex_to_learning.html" class="topic-link " id="topic-m1_05_agent_architectures_reflex_to_learning">
+            <span class="topic-dot"></span>
+            <span>1.5 Agent Architectures Reflex To Learning</span>
+          </a>
+          <a href="m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
+            <span class="topic-dot"></span>
+            <span>1.7 Classic AI Toy Problems</span>
+          </a>
+          <a href="m1_99_practice_lab_agents_and_problem_formulation.html" class="topic-link " id="topic-m1_99_practice_lab_agents_and_problem_formulation">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Agents And Problem Formulation</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Search &amp; Game Playing</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+            <span class="topic-dot"></span>
+            <span>2.1 Uninformed Search DFS BFS UCS</span>
+          </a>
+          <a href="m2_02_iterative_deepening_and_depth_limited.html" class="topic-link " id="topic-m2_02_iterative_deepening_and_depth_limited">
+            <span class="topic-dot"></span>
+            <span>2.2 Iterative Deepening And Depth Limited</span>
+          </a>
+          <a href="m2_03_informed_heuristic_search_and_functions.html" class="topic-link " id="topic-m2_03_informed_heuristic_search_and_functions">
+            <span class="topic-dot"></span>
+            <span>2.3 Informed Heuristic Search And Functions</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 10 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PECST522</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.2 Agents And Environments PEAS</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
+    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
+    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
+  </div>
+</div>
+<h1>Agents and Environments: The PEAS Framework</h1>
+<p><strong>Sensors, actuators, percept sequences, agent functions vs. agent programs, and PEAS specification.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. What is an Agent?</h2>
+<p>In Artificial Intelligence, the word &quot;agent&quot; describes the actual computational entity that perceives, reasons, and executes actions.</p>
+<p><strong>Definition:</strong> An <strong>Agent</strong> is anything that can perceive its environment through <strong>sensors</strong> and act upon that environment through <strong>actuators</strong>.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: You Are an Agent!</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think about yourself crossing a busy street:</p>
+<ul>
+<li>Your <strong>Sensors</strong> are your eyes and ears (taking in data about speeding cars).</li>
+<li>Your <strong>Environment</strong> is the physical road, the weather, and the traffic.</li>
+<li>Your <strong>Actuators</strong> are your legs (moving you across the street) and your vocal cords (yelling at a bad driver). </li>
+<li>Your <strong>Agent Program</strong> is your brain, instantly deciding whether to run or stop based on what your eyes see.</li>
+</ul>
+<p>In software, a web-scraping bot is an agent. Its sensors receive raw HTML text, its environment is the Internet, and its actuators dispatch HTTP requests to fetch pages and click links.</p>
+</div></details><hr>
+<p><a id="terminology"></a></p>
+<h2>2. Key Terminology for Beginners</h2>
+<p>Before designing an AI system, we must establish the formal language of agent architectures:</p>
+<ul>
+<li><strong>Percept:</strong> A single snapshot of raw sensory data that the agent&#39;s sensors capture at a specific instant in time (e.g., a camera frame detecting a red light right <em>now</em>).</li>
+<li><strong>Percept Sequence:</strong> The complete chronological history of everything the agent has ever perceived since its initialization. Rational agents often base their decisions on the entire sequence rather than just the isolated current percept.</li>
+<li><strong>Action:</strong> The discrete or continuous output physical/digital command generated by the agent&#39;s actuators (e.g., applying 15% brake pressure).</li>
+</ul>
+<h3>Agent Function vs. Agent Program</h3>
+<p>This is a classic university exam distinction:</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: The Agent Function</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Mathematically, an agent&#39;s behavior is formalized by the <strong>Agent Function</strong>, an abstract mapping from any given percept sequence to a specific action:
+$$f: P^* \rightarrow A$$
+Where:</p>
+<ul>
+<li>$P^*$ is the set of all possible percept sequences (the entire history of inputs).</li>
+<li>$A$ is the set of all possible actions.</li>
+<li>$f$ is the abstract mathematical rule connecting them.</li>
+</ul>
+</div></details><ul>
+<li><strong>The Agent Function</strong> is an <em>abstract, mathematical concept</em>. It represents a hypothetical infinite lookup table that dictates: &quot;For any historical percept sequence $p \in P^*$, execute action $a \in A$.&quot;</li>
+<li><strong>The Agent Program</strong> is the <em>concrete, physical software implementation</em> (written in Python, C++, etc.) running on a physical computing platform (CPU/GPU) that calculates and executes the Agent Function in real time.</li>
+</ul>
+<h3>The Anatomy of an Agent</h3>
+<pre><code class="language-text">       +---------------------------------------------------+
+       |                       AGENT                       |
+       |                                                   |
+       |   +-----------+                    +----------+   |
+       |   |  Sensors  |                    |          |   |
+    +--|--&gt;| (Cameras, |---- Percepts -----&gt;|  Agent   |   |
+    |  |   |  Mics,    |                    | Program  |   |
+    |  |   |  GPS)     |                    | (Logic &amp; |   |
+    |  |   +-----------+                    | Memory)  |   |
+    |  |                                    |          |   |
+    |  |   +-----------+      Actions       |          |   |
+    |  |   | Actuators |&lt;-------------------|          |   |
+    |  +---| (Wheels,  |                    +----------+   |
+    |      |  Screens, |                                   |
+    |      |  Motors)  |                                   |
+    |      +-----------+                                   |
+    |                                                      |
+    +------------------------------------------------------+
+           | ^
+   Actions | | Percepts
+           v |
+      +-----------+
+      |Environment|
+      +-----------+
+</code></pre>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Which of the following best describes the difference between an Agent Function and an Agent Program?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The Agent Program is the physical hardware, while the Agent Function is the software.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>They are exactly the same thing; the terms are used interchangeably.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The Agent Function is an abstract mathematical mapping of inputs to outputs, while the Agent Program is the actual executable code running on a machine.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The Agent Function only handles sensors, while the Agent Program handles actuators.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The Agent Function is theoretical (what the agent should ideally do for every possible input). The Agent Program is the practical implementation (the actual executable algorithm running on limited hardware that implements that function).</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="the-dimensions"></a></p>
+<h2>3. The PEAS Framework Explained</h2>
+<p>When engineers specify an AI system, the very first task—before writing code or picking neural architectures—is to rigorously define the <strong>Task Environment</strong> using the <strong>PEAS</strong> framework:</p>
+<ul>
+<li><strong>[P] Performance Measure:</strong> The external, objective criteria used to evaluate the success and quality of the agent&#39;s behavior. It answers: <em>&quot;What makes this AI successful?&quot;</em></li>
+<li><strong>[E] Environment:</strong> The external context, world, or simulator in which the agent operates. It includes everything the agent interacts with but does not directly control.</li>
+<li><strong>[A] Actuators:</strong> The physical mechanisms, motors, or digital interfaces through which the agent acts upon and alters the environment.</li>
+<li><strong>[S] Sensors:</strong> The physical or digital sensing devices the agent uses to read data from the environment.</li>
+</ul>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Performance Measure vs. Internal Utility</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Never confuse the <strong>Performance Measure</strong> (which is assigned externally by the system designer/evaluator) with the agent&#39;s internal calculation.
+For a chess bot, the Performance Measure is simply &quot;Winning the match according to official rules.&quot; We evaluate the <em>external outcome in the environment</em>, not how high the agent&#39;s internal evaluation heuristic scored during search.</p>
+</div></details><hr>
+<p><a id="foundations"></a></p>
+<h2>4. Classic Worked PEAS Examples</h2>
+<p>Below is a comprehensive specification table breaking down standard PEAS configurations:</p>
+<pre><code class="language-text">+---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
+|     Agent Type      | [P]erformance Measure |    [E]nvironment      |     [A]ctuators       |      [S]ensors        |
++=====================+=======================+=======================+=======================+=======================+
+| Automated Taxi      | Safe, fast, legal,    | Roads, traffic,       | Steering wheel,       | Cameras, LiDAR, GPS,  |
+| (Self-Driving Car)  | passenger comfort,    | pedestrians, weather, | accelerator, brakes,  | speedometer,          |
+|                     | maximize profit       | stray animals         | horn, turn signals    | engine sensors        |
++---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
+| Medical Diagnostic  | Accurate disease      | Patient, hospital     | Screen display        | Keyboard input        |
+| System              | detection, minimize   | database, medical     | (printing diagnosis,  | (symptoms, patient    |
+|                     | false positives,      | staff                 | treatment plans)      | history), lab results |
+|                     | patient health        |                       |                       | data feed             |
++---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
+| Satellite Image     | Accurate image        | Downlink from         | Display of            | Color pixel arrays,   |
+| Analysis System     | categorization,       | orbiting satellite    | categorized images,   | high-res camera feeds |
+|                     | fast processing       |                       | database write        |                       |
++---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
+| Part-Picking        | Percentage of parts   | Conveyor belt,        | Robotic arm,          | Camera, 3D laser      |
+| Factory Robot       | in correct bins,      | factory floor,        | joint motors,         | scanner, joint angle  |
+|                     | speed, no damage      | random parts          | pneumatic gripper     | sensors               |
++---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
+| Interactive         | Student test scores,  | Human student,        | Screen display        | Keyboard input,       |
+| English Tutor       | student engagement,   | testing agency        | (text, exercises,     | microphone (for voice |
+|                     | lesson completion     |                       | verbal feedback)      | recognition)          |
++---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
+| Vacuum-Cleaner      | Cleanness of room,    | Room, dirt,           | Wheels, brushes,      | Dirt detection sensor,|
+| World Agent         | battery efficiency,   | furniture, pets       | vacuum suction motor  | bump sensor           |
+|                     | low noise levels      |                       |                       |                       |
++---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
+</code></pre>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">You are designing an AI system to play online Poker against humans. Which of the following correctly identifies its Actuators?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The amount of money won at the end of the game.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The digital cards dealt by the dealer.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The graphical UI buttons the AI clicks to &quot;Fold&quot;, &quot;Call&quot;, or &quot;Raise&quot;.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The optical character recognition (OCR) used to read the cards on the screen.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Actuators are the mechanisms by which the agent executes actions in its environment. Clicking &quot;Fold&quot;, &quot;Call&quot;, or &quot;Raise&quot; changes the game state. Money won is the Performance Measure, the card deck is the Environment, and OCR is a Sensor.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="history"></a></p>
+<h2>5. Designing the Performance Measure: Avoiding Unintended Behavior</h2>
+<p>Designing an objective Performance Measure is critical. A rational agent will ruthlessly maximize the exact mathematical function it is given, often exploiting edge cases in unexpected ways.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: The Vacuum Cleaner Paradox</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Suppose you design a robotic vacuum cleaner and define its Performance Measure as: <strong>&quot;Total amount of dirt sucked up into the dustbin.&quot;</strong></p>
+<p>What does an optimal rational agent do?
+It cleans the dirt, <strong>dumps the dustbin back onto the clean floor</strong>, and vacuums it up again in an infinite loop! It achieves a near-infinite score on your metric, yet leaves the room perpetually dirty.</p>
+<p><strong>The Fix:</strong> Performance measures should evaluate the <em>desired state of the environment</em>, not the agent&#39;s internal actions. The proper metric is: <strong>&quot;Award +1 reward point for every clean square per unit of time.&quot;</strong></p>
+</div></details><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Why is it dangerous to set a self-driving car&#39;s performance measure strictly to &quot;Minimize total trip duration to the destination&quot;?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The car will fail to initialize its GPS sensors.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The car might speed excessively, ignore traffic lights, and endanger pedestrians to shave off seconds.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The car will drive in infinite circles to gather percepts.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The car will run out of battery before planning a route.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>If you reward only minimum time and omit safety or legal penalties, the agent treats speed as the sole objective, disregarding safety and road regulations.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2>6. Worked University Exam Q&amp;A</h2>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>High-Yield Patterns:</strong></p>
+<ul>
+<li><strong>3-Mark Question:</strong> Define PEAS and provide a 1-line breakdown of each term.</li>
+<li><strong>7-Mark Question:</strong> Differentiate between Agent Function vs. Agent Program and provide a full PEAS table for a specified domain (e.g., Automated Taxi, Medical Diagnostic System, or Factory Robot).</li>
+</ul>
+</div></details><h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Define the PEAS framework used in designing intelligent agents.</strong></p>
+<p><strong>Model Answer:</strong>
+The PEAS framework formalizes an agent&#39;s task environment before implementation:</p>
+<ul>
+<li><strong>[P] Performance Measure:</strong> The metric used to quantify the success of the agent&#39;s behavior (e.g., safety, fuel efficiency, accuracy).</li>
+<li><strong>[E] Environment:</strong> The external domain the agent interacts with (e.g., roads, hospital databases, chess board).</li>
+<li><strong>[A] Actuators:</strong> The output mechanisms the agent uses to effect changes (e.g., steering motors, screen displays).</li>
+<li><strong>[S] Sensors:</strong> The input devices used to perceive environmental state (e.g., cameras, microphones, keyboards).</li>
+</ul>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Explain the difference between an Agent Function and an Agent Program. Formulate the complete PEAS description for an Automated Taxi Driver.</strong></p>
+<p><strong>Model Answer:</strong>
+<strong>Part 1: Agent Function vs. Agent Program (3 Marks)</strong></p>
+<ul>
+<li><strong>Agent Function:</strong> An abstract mathematical mapping ($f: P^* \rightarrow A$) from any percept sequence $P^*$ to an action $A$. It specifies the theoretical ideal behavior.</li>
+<li><strong>Agent Program:</strong> The concrete software implementation executing on a physical computing architecture (hardware) that computes and realizes the agent function in real time.</li>
+</ul>
+<p><strong>Part 2: PEAS Specification for Automated Taxi Driver (4 Marks)</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">PEAS Component</th>
+<th align="left">Automated Taxi Driver Specification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Performance Measure</strong></td>
+<td align="left">Safety, speed, adherence to traffic laws, passenger comfort, fuel efficiency, profit maximization.</td>
+</tr>
+<tr>
+<td align="left"><strong>Environment</strong></td>
+<td align="left">Urban streets, highways, traffic, pedestrians, cyclists, changing weather, road construction zones.</td>
+</tr>
+<tr>
+<td align="left"><strong>Actuators</strong></td>
+<td align="left">Steering mechanism, accelerator throttle, hydraulic brakes, turn signals, horn, display dashboard.</td>
+</tr>
+<tr>
+<td align="left"><strong>Sensors</strong></td>
+<td align="left">Cameras, LiDAR, radar, ultrasonic sonar, GPS receiver, speedometer, accelerometer, engine diagnostic sensors.</td>
+</tr>
+</tbody></table>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_01_ai_definition_foundations_and_history.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.1 AI Definition Foundations And History</div>
+      </a>
+      
+      
+      
+      <a href="m1_03_concept_of_rationality.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.3 Concept Of Rationality</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(10) || 0;
+    const currentId = "m1_02_agents_and_environments_peas";
+    const courseCode = "PECST522";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

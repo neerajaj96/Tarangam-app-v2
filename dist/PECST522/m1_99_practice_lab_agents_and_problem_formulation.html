@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 🧪 Practice Lab: M1 Agents And Problem Formulation</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 🧪 Practice Lab: M1 Agents And Problem Formulation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M1 Agents And Problem Formulation">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 🧪 Practice Lab: M1 Agents And Problem Formulation">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Artificial Intelligence</span>
+        <span class="tag">PECST522</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Agents &amp; Problem Solving</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_01_ai_definition_foundations_and_history.html" class="topic-link " id="topic-m1_01_ai_definition_foundations_and_history">
+            <span class="topic-dot"></span>
+            <span>1.1 AI Definition Foundations And History</span>
+          </a>
+          <a href="m1_02_agents_and_environments_peas.html" class="topic-link " id="topic-m1_02_agents_and_environments_peas">
+            <span class="topic-dot"></span>
+            <span>1.2 Agents And Environments PEAS</span>
+          </a>
+          <a href="m1_03_concept_of_rationality.html" class="topic-link " id="topic-m1_03_concept_of_rationality">
+            <span class="topic-dot"></span>
+            <span>1.3 Concept Of Rationality</span>
+          </a>
+          <a href="m1_04_nature_of_task_environments.html" class="topic-link " id="topic-m1_04_nature_of_task_environments">
+            <span class="topic-dot"></span>
+            <span>1.4 Nature Of Task Environments</span>
+          </a>
+          <a href="m1_05_agent_architectures_reflex_to_learning.html" class="topic-link " id="topic-m1_05_agent_architectures_reflex_to_learning">
+            <span class="topic-dot"></span>
+            <span>1.5 Agent Architectures Reflex To Learning</span>
+          </a>
+          <a href="m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
+            <span class="topic-dot"></span>
+            <span>1.7 Classic AI Toy Problems</span>
+          </a>
+          <a href="m1_99_practice_lab_agents_and_problem_formulation.html" class="topic-link active" id="topic-m1_99_practice_lab_agents_and_problem_formulation">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Agents And Problem Formulation</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Search &amp; Game Playing</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+            <span class="topic-dot"></span>
+            <span>2.1 Uninformed Search DFS BFS UCS</span>
+          </a>
+          <a href="m2_02_iterative_deepening_and_depth_limited.html" class="topic-link " id="topic-m2_02_iterative_deepening_and_depth_limited">
+            <span class="topic-dot"></span>
+            <span>2.2 Iterative Deepening And Depth Limited</span>
+          </a>
+          <a href="m2_03_informed_heuristic_search_and_functions.html" class="topic-link " id="topic-m2_03_informed_heuristic_search_and_functions">
+            <span class="topic-dot"></span>
+            <span>2.3 Informed Heuristic Search And Functions</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 10 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PECST522</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M1 Agents And Problem Formulation</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
+  </div>
+</div>
+<h1>Module 1 Practice Lab: AI Foundations, PEAS &amp; Environment Matrix</h1>
+<p><strong>Hands-on scenario classification, active recall drills, cheat-sheet comparisons, and university exam outlines.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. Step-by-Step Scenario Analysis</h2>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: How to Analyze AI &amp; Agent Scenarios</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>When dissecting an AI system:</p>
+<ol>
+<li><strong>Dimension Matrix:</strong> Is it judged by <strong>internal thought</strong> or <strong>external action</strong>? Is it mimicking <strong>humans</strong> or striving for <strong>rational optimality</strong>?</li>
+<li><strong>PEAS Framework:</strong> Identify **[P]**erformance Measure (what defines a win?), **[E]**nvironment (the operational sandbox), **[A]**ctuators (mechanisms to change the world), and **[S]**ensors (inputs).</li>
+<li><strong>Rationality Check:</strong> Did the agent make the best statistical choice based <em>only</em> on the percept sequence available at that moment?</li>
+<li><strong>The 7 Environment Dimensions:</strong> Check Observability, Agent count, Determinism, Horizon (Episodic/Sequential), Time (Static/Dynamic), State Space (Discrete/Continuous), and Rulebook (Known/Unknown).</li>
+</ol>
+</div></details><h3>Scenario 1: The Email Spam Filter</h3>
+<ul>
+<li><strong>The Setup:</strong> An algorithm sorts incoming emails into &quot;Inbox&quot; or &quot;Spam&quot;. It doesn&#39;t care how human cognition works, nor does it converse with you. It simply calculates the mathematical probability of an email being spam based on word frequencies.</li>
+<li><strong>Classification:</strong> <strong>Acting Rationally</strong></li>
+<li><strong>Sensors &amp; Actuators:</strong> Sensors = incoming <code>.eml</code> text streams; Actuators = moving files to folder / database tags.</li>
+</ul>
+<h3>Scenario 2: The Customer Service Chatbot Contest</h3>
+<ul>
+<li><strong>The Setup:</strong> Programmers enter a competition where the winning software tricks 30% of human interrogators into believing they are chatting with a real human agent, complete with typos and emotional delays.</li>
+<li><strong>Classification:</strong> <strong>Acting Humanly (The Turing Test Approach)</strong></li>
+</ul>
+<h3>Scenario 3: The Smart Farming Irrigation Bot</h3>
+<ul>
+<li><strong>The Setup:</strong> A robotic system drives through an orchard. It checks soil moisture and inspects leaves via multi-spectral cameras. When soil moisture drops below 20%, it activates precision drip nozzles.</li>
+<li><strong>PEAS Breakdown:</strong><ul>
+<li><strong>[P] Performance Measure:</strong> Maximizing crop yield, minimizing water consumption, preventing tree disease.</li>
+<li><strong>[E] Environment:</strong> Orchard field, soil, trees, changing weather, pests.</li>
+<li><strong>[A] Actuators:</strong> Wheel motors, steering servo, precision water spray nozzles, pesticide dispensers.</li>
+<li><strong>[S] Sensors:</strong> Soil moisture probes, multispectral leaf cameras, temperature sensors, GPS.</li>
+</ul>
+</li>
+</ul>
+<h3>Scenario 4: Automated Medical Image Analyzer (Environment Classification)</h3>
+<ul>
+<li><strong>The Setup:</strong> An AI examines an MRI scan, outputs &quot;Tumor&quot; or &quot;Benign&quot;, generates a report, and then begins analyzing a completely independent new patient&#39;s scan.</li>
+<li><strong>Environment Classification:</strong><ul>
+<li><strong>Episodic:</strong> Diagnosing Patient A has zero causal impact on the correct diagnosis for Patient B.</li>
+<li><strong>Static:</strong> The digital image file does not mutate or change while the neural network is calculating its inference.</li>
+<li><strong>Single-Agent &amp; Partially Observable:</strong> Only the scan is provided (indirect observation of internal body state).</li>
+</ul>
+</li>
+</ul>
+<h3>Scenario 5: Pac-Man (Environment Classification)</h3>
+<ul>
+<li><strong>The Setup:</strong> An agent plays standard Pac-Man on an arcade machine against ghost algorithms.</li>
+<li><strong>Environment Classification:</strong> Fully Observable, Multi-Agent (Ghosts), Deterministic (ghost rules follow fixed paths), Sequential (eating a power pellet changes future turns), Dynamic (ghosts move while agent thinks), Discrete (grid maze), Known (rules are fixed).</li>
+</ul>
+<hr>
+<p><a id="the-dimensions"></a></p>
+<h2>2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Exam Traps Ahead</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Examiners frequently test whether you know the subtle boundaries between closely related AI concepts. Memorize this table!</p>
+</div></details><pre><code class="language-text">+-------------------------+-------------------------------------------------------------+
+| Concept A               | Concept B (And Why They Are Different)                      |
++=========================+=============================================================+
+| AGENT FUNCTION          | AGENT PROGRAM                                               |
+| Abstract mathematical   | Concrete physical executable software running on hardware   |
+| mapping: f: P* -&gt; A     | (Python script, C++ binary) subject to memory &amp; CPU limits. |
++-------------------------+-------------------------------------------------------------+
+| RATIONAL AGENT          | OMNISCIENT AGENT                                            |
+| Makes the *best choice* | Knows the *actual future outcome*. (Impossible in reality). |
+| based on limited info.  | Rationality maximizes expected utility; omniscience knows   |
+|                         | exact reality in advance.                                   |
++-------------------------+-------------------------------------------------------------+
+| FULLY OBSERVABLE        | KNOWN                                                       |
+| Sensors can see the     | Agent knows the rules &amp; physics of the environment.         |
+| entire current state.   | *Poker is KNOWN (rules are clear) but PARTIALLY OBSERVABLE* |
++-------------------------+-------------------------------------------------------------+
+| STATIC                  | EPISODIC                                                    |
+| Relates to TIME: World  | Relates to MEMORY: Current action has no impact on future   |
+| pauses while thinking.  | decisions or performance scores.                            |
++-------------------------+-------------------------------------------------------------+
+| STOCHASTIC              | NON-DETERMINISTIC                                           |
+| Probability distribution| Multiple outcomes possible, but probabilities are unknown.  |
+| of outcomes is known.   |                                                             |
++-------------------------+-------------------------------------------------------------+
+</code></pre>
+<hr>
+<p><a id="self-check"></a></p>
+<h2>3. Active Recall Quizzes</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">If a company builds an AI system designed specifically to pass the Turing Test, which quadrant of the Russell &amp; Norvig AI matrix are they targeting?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Thinking Rationally</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Acting Rationally</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Acting Humanly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Thinking Humanly</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The Turing Test is the classic operational definition for &quot;Acting Humanly&quot; because it evaluates whether an external observer can distinguish the machine&#39;s behavior from a human.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">You are designing a PEAS framework for a Smart Thermostat in an IoT home. Which of the following represents its Actuator?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The digital thermometer measuring ambient temperature.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The resident walking into the living room.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The electronic relay switch that turns the HVAC heating furnace on and off.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Minimizing monthly electric utility costs.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The relay switch is the actuator because it is the mechanism through which the agent acts upon and changes the physical temperature of the environment.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">You are building an AI to play a digital version of Scrabble against a human opponent without any game timer. How is the time dimension classified?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Dynamic</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Semi-dynamic</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Static</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Sequential</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Without a timer, the board does not change and the agent&#39;s performance score does not degrade while it is deliberating its move.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Why is autonomous taxi driving considered a &quot;Continuous&quot; rather than a &quot;Discrete&quot; environment?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Because the car never stops driving.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because the car must continuously learn new routes.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because the inputs and actions (speed, steering wheel angle, acceleration) can take on infinite real-valued numbers.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because the environment is fully observable.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Continuous environments feature continuous real-valued state and action spaces (e.g. steering angle $14.5^\circ$, velocity $45.2 \text{ km/h}$), unlike discrete games with countable squares and discrete turns.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2>4. High-Yield University Exam Questions</h2>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: Exam Strategy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Always use structured tabular format for PEAS questions and clearly separated bullet points for 7-mark comparison essays.</p>
+</div></details><h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Categorize the task environment of a &quot;Medical Diagnosis System&quot; (an AI interacting with patients over time to diagnose and treat diseases) using the 7 environmental dimensions. Justify each classification.</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ol>
+<li><strong>Partially Observable:</strong> The agent cannot directly inspect all internal biological processes; it relies on indirect sensor data (blood tests, vital signs, reported symptoms).</li>
+<li><strong>Single-Agent:</strong> The system treats the patient&#39;s body and pathogens as part of the natural environment, not as strategic opponents.</li>
+<li><strong>Stochastic:</strong> Patient responses to pharmaceutical treatments exhibit biological variability and probabilistic outcomes rather than deterministic certainty.</li>
+<li><strong>Sequential:</strong> Prescriptions and medical interventions administered today directly alter the patient&#39;s health trajectory and future treatment options.</li>
+<li><strong>Dynamic:</strong> The patient&#39;s underlying physiological condition can deteriorate in real time while the AI is computing diagnostic assessments.</li>
+<li><strong>Continuous:</strong> Physiological metrics (blood pressure, oxygen saturation, glucose levels, time) vary over continuous numerical scales.</li>
+<li><strong>Known:</strong> The medical knowledge base, drug interaction tables, and physiological mechanisms are documented in medical literature.</li>
+</ol>
+<h3>Essay Question 2 (7 Marks)</h3>
+<p><strong>Distinguish between Rationality and Omniscience in AI. Is a rational agent guaranteed to be successful? What role does autonomy play?</strong></p>
+<p><strong>Model Answer Outline:</strong></p>
+<ul>
+<li><strong>Rationality vs. Omniscience (3 Marks):</strong> Omniscience requires knowing the actual outcome of all actions in advance (impossible). Rationality requires choosing the action that maximizes <em>expected</em> performance measure based on the percept sequence history to date.</li>
+<li><strong>Success Guarantee (2 Marks):</strong> Rationality does not guarantee success. Unpredictable environmental events or partial observability can cause a fully rational decision to result in an undesirable outcome.</li>
+<li><strong>Role of Autonomy (2 Marks):</strong> Autonomy ensures the agent updates its internal model from its own experience and percepts rather than failing when designer assumptions no longer match the real world.</li>
+</ul>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_07_classic_ai_toy_problems.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.7 Classic AI Toy Problems</div>
+      </a>
+      
+      
+      
+      <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">2.1 Uninformed Search DFS BFS UCS</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(10) || 0;
+    const currentId = "m1_99_practice_lab_agents_and_problem_formulation";
+    const courseCode = "PECST522";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

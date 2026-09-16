@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.3 Concept Of Rationality</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 1.3 Concept Of Rationality | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.3 Concept Of Rationality">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.3 Concept Of Rationality">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Artificial Intelligence</span>
+        <span class="tag">PECST522</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Agents &amp; Problem Solving</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_01_ai_definition_foundations_and_history.html" class="topic-link " id="topic-m1_01_ai_definition_foundations_and_history">
+            <span class="topic-dot"></span>
+            <span>1.1 AI Definition Foundations And History</span>
+          </a>
+          <a href="m1_02_agents_and_environments_peas.html" class="topic-link " id="topic-m1_02_agents_and_environments_peas">
+            <span class="topic-dot"></span>
+            <span>1.2 Agents And Environments PEAS</span>
+          </a>
+          <a href="m1_03_concept_of_rationality.html" class="topic-link active" id="topic-m1_03_concept_of_rationality">
+            <span class="topic-dot"></span>
+            <span>1.3 Concept Of Rationality</span>
+          </a>
+          <a href="m1_04_nature_of_task_environments.html" class="topic-link " id="topic-m1_04_nature_of_task_environments">
+            <span class="topic-dot"></span>
+            <span>1.4 Nature Of Task Environments</span>
+          </a>
+          <a href="m1_05_agent_architectures_reflex_to_learning.html" class="topic-link " id="topic-m1_05_agent_architectures_reflex_to_learning">
+            <span class="topic-dot"></span>
+            <span>1.5 Agent Architectures Reflex To Learning</span>
+          </a>
+          <a href="m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
+            <span class="topic-dot"></span>
+            <span>1.7 Classic AI Toy Problems</span>
+          </a>
+          <a href="m1_99_practice_lab_agents_and_problem_formulation.html" class="topic-link " id="topic-m1_99_practice_lab_agents_and_problem_formulation">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Agents And Problem Formulation</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Search &amp; Game Playing</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+            <span class="topic-dot"></span>
+            <span>2.1 Uninformed Search DFS BFS UCS</span>
+          </a>
+          <a href="m2_02_iterative_deepening_and_depth_limited.html" class="topic-link " id="topic-m2_02_iterative_deepening_and_depth_limited">
+            <span class="topic-dot"></span>
+            <span>2.2 Iterative Deepening And Depth Limited</span>
+          </a>
+          <a href="m2_03_informed_heuristic_search_and_functions.html" class="topic-link " id="topic-m2_03_informed_heuristic_search_and_functions">
+            <span class="topic-dot"></span>
+            <span>2.3 Informed Heuristic Search And Functions</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 10 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PECST522</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.3 Concept Of Rationality</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>The Concept of Rationality &amp; Omniscience</h1>
+<p><strong>Definition of rational action, the 4 factors of rationality, rationality vs. omniscience/success, exploration, learning, and autonomy.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. What is Rationality?</h2>
+<p>In Artificial Intelligence, a <strong>Rational Agent</strong> is one that does the &quot;right thing.&quot; Conceptually, every entry in the table for the agent function is filled out correctly to achieve the best possible performance.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Rationality is Not Magic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine crossing a pedestrian crossing on a green light after looking both ways. As you step out, a small meteorite falls from the sky and injures you. </p>
+<ul>
+<li>Was your action <strong>irrational</strong>? <strong>No!</strong> You made the optimal decision based on all available information and human safety rules.</li>
+<li>Did you <strong>fail</strong>? Yes.</li>
+<li>Were you <strong>omniscient</strong>? No, because nobody can predict falling meteorites.</li>
+</ul>
+<p>Rationality is about <strong>sound decision-making under uncertainty</strong>, not clairvoyance or guaranteed perfection.</p>
+</div></details><hr>
+<p><a id="the-math"></a></p>
+<h2>2. The 4 Factors That Determine Rationality</h2>
+<p>What is rational at any given moment depends on four specific components:</p>
+<pre><code class="language-text">               +-------------------------------------------+
+               |         THE 4 FACTORS OF RATIONALITY      |
+               +-------------------------------------------+
+                                     |
+         +---------------------------+---------------------------+
+         |                           |                           |
+         v                           v                           v
++-----------------+         +-----------------+         +-----------------+
+| 1. Performance  |         | 2. Prior        |         | 3. Actions      |
+|    Measure      |         |    Knowledge    |         |    Available    |
+| (Criteria of    |         | (What designer  |         | (What actuators |
+|  success)       |         |  built in)      |         |  can perform)   |
++-----------------+         +-----------------+         +-----------------+
+                                     |
+                                     v
+                            +-----------------+
+                            | 4. Percept      |
+                            |    Sequence     |
+                            | (Everything it  |
+                            |  has perceived) |
+                            +-----------------+
+</code></pre>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition of a Rational Agent</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For each possible percept sequence, a <strong>rational agent</strong> should select an action that is expected to maximize its <strong>performance measure</strong>, given the evidence provided by the <strong>percept sequence</strong> and whatever <strong>built-in prior knowledge</strong> the agent has:
+$$\text{Action}^* = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid \text{percept sequence}, a) \cdot U(s&#39;)$$
+Where $U(s&#39;)$ represents the utility score of reaching state $s&#39;$.</p>
+</div></details><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A designer upgrades a delivery robot with a stronger gripper arm, letting it lift heavier parcels it previously could not move. Which of the four factors of rationality has directly changed?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Performance measure — the definition of delivery success</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Prior knowledge — the map of the warehouse built into the robot</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Actions available — the set of physical operations its actuators can perform</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Percept sequence — the history of sensor readings received so far</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The four factors are (1) performance measure, (2) prior knowledge, (3) actions available, (4) percept sequence. A new gripper changes what the agent <em>can do</em> — factor 3. It does not redefine success, rewrite the built-in map, or alter the percepts already received.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="worked-example"></a></p>
+<h2>3. Rationality $\neq$ Omniscience, Perfection, or Success</h2>
+<p>A frequent mistake in AI design and exams is confusing rationality with omniscience or perfection.</p>
+<pre><code class="language-text">+-----------------------+-------------------------------------------------------------+
+| Concept               | Definition &amp; Key Differences                                |
++=======================+=============================================================+
+| RATIONALITY           | Maximizes *EXPECTED* performance based on the percept       |
+|                       | sequence to date. Deals with incomplete knowledge.          |
++-----------------------+-------------------------------------------------------------+
+| OMNISCIENCE           | Knows the *ACTUAL* outcome of its actions in advance and    |
+|                       | can act accordingly. (Impossible in real-world physics).    |
++-----------------------+-------------------------------------------------------------+
+| SUCCESS / PERFECTION  | Evaluates the final *HISTORICAL OUTCOME*. A rational action |
+|                       | can still result in failure due to unexpected events.       |
++-----------------------+-------------------------------------------------------------+
+</code></pre>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Rationality vs. Success</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Rationality is NOT the same as perfection. Rationality maximizes <strong>expected</strong> utility, while perfection maximizes <strong>actual</strong> outcome. Since environments are often non-deterministic or partially observable, an agent cannot be blamed for rational moves that lead to bad luck.</p>
+</div></details><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">An AI automated stock trader calculates a 95% probability that stock X will rise, so it buys 1,000 shares. An unpredicted war breaks out overnight, and the market crashes. Was the agent&#39;s action rational?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>No, because the agent lost money and true rationality requires financial profit.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No, because an intelligent agent must be omniscient and predict wars.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Yes, because the decision maximized expected performance based on the percept sequence available at the moment of decision.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Yes, but only if the agent is a Strong AI.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Rationality evaluates the decision process at the moment it was executed, using the percepts available at that time. It does not demand impossible foresight into unpredictable future events.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="self-check"></a></p>
+<h2>4. Information Gathering, Exploration, and Learning</h2>
+<p>Doing the &quot;right thing&quot; does not mean always taking immediate greedy actions.</p>
+<ul>
+<li><strong>Information Gathering:</strong> Doing actions to modify future percepts. For example, looking both ways before crossing the road is an action done purely to gather information.</li>
+<li><strong>Exploration:</strong> In an unfamiliar environment, a rational agent must explore rather than exploit immediately. A vacuum cleaner in a new home must first map out the room boundaries before attempting an optimal cleaning pattern.</li>
+<li><strong>Learning from Experience:</strong> A rational agent must not only gather percepts to act, but also update its internal world model to improve future actions.</li>
+</ul>
+<pre><code class="language-text">[ INITIAL PERCEPTS ] ──&gt; [ EXPLORATION &amp; SENSING ] ──&gt; [ LEARN ENVIRONMENT DYNAMICS ] ──&gt; [ OPTIMAL RATIONAL ACTIONS ]
+</code></pre>
+<hr>
+<h2>5. Autonomy in Intelligent Agents</h2>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: The Sphex Wasp vs. The Autonomous Agent</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The female <em>Sphex</em> wasp exhibits seemingly intelligent behavior: she drags a paralyzed cricket near her burrow, leaves it outside, goes in to inspect the burrow, comes out, and drags the cricket inside.</p>
+<p>However, if an experimenter moves the cricket just a few inches away while the wasp is inside inspecting, the wasp comes out, finds the cricket, brings it back to the entrance, and <strong>inspects the burrow all over again</strong>. You can repeat this 40 times, and she will never learn! </p>
+<p>The wasp has <strong>zero autonomy</strong>—her behavior is entirely rigid and pre-programmed.</p>
+</div></details><ul>
+<li><strong>Definition of Autonomy:</strong> An agent is <strong>autonomous</strong> to the extent that its behavior is determined by its <strong>own experience</strong> (with the ability to learn and adapt), rather than solely by the prior knowledge of its designer.</li>
+<li><strong>The Evolution of Autonomy:</strong> A truly rational agent should be autonomous. Initially, it may be endowed with some prior knowledge (to ensure survival), but as it experiences the world, it must learn and adjust its strategies independently.</li>
+</ul>
+<pre><code class="language-text">SPECTRUM OF AGENT AUTONOMY:
+
+0% Autonomy                                                             100% Autonomy
+[ Pure Hardcoded Rules ] ─────────&gt; [ Adaptive Reinforcement Agent ] ─────────&gt; [ Self-Evolving General Agent ]
+(e.g., Sphex Wasp / Reflex)          (Learns from environment rewards)            (Full lifelong learning)
+</code></pre>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">What gives an agent &quot;Autonomy&quot; in AI?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Running on solar power without a power cord.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The ability to ignore all human commands.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Relying on its own experience and learning to guide behavior rather than just built-in designer assumptions.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Possessing a 100% accurate mathematical model of the universe.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Autonomy means the agent&#39;s behavior is driven by what it learns from its own interaction with the environment, allowing it to adapt to changing or unfamiliar scenarios.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<h2>6. Worked University Exam Q&amp;A</h2>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong> </p>
+<ol>
+<li><strong>3 Marks:</strong> State the 4 factors determining rationality, or define Autonomy.</li>
+<li><strong>7 Marks:</strong> Differentiate between Rationality, Omniscience, and Perfection with an illustrative scenario.</li>
+</ol>
+</div></details><h3>Sample 3-Mark Question</h3>
+<p><strong>Q: List the four factors that determine rationality in an intelligent agent.</strong></p>
+<p><strong>Model Answer:</strong>
+At any given instant, an agent&#39;s rationality depends on:</p>
+<ol>
+<li>The <strong>Performance Measure</strong> defining success criteria.</li>
+<li>The agent&#39;s <strong>Prior Knowledge</strong> of the environment.</li>
+<li>The <strong>Actions</strong> the agent can perform.</li>
+<li>The agent&#39;s <strong>Percept Sequence</strong> to date.</li>
+</ol>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: &quot;A rational agent is not an omniscient agent, nor is it always successful.&quot; Justify this statement with a suitable example. What role does autonomy play in rational agents?</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ol>
+<li><strong>Rationality vs. Omniscience &amp; Success (4 Marks):</strong><ul>
+<li><strong>Omniscience</strong> implies knowing the actual outcome of all actions in advance (impossible due to environmental uncertainty and partial observability).</li>
+<li><strong>Rationality</strong> means selecting the action that maximizes <em>expected</em> performance based on the percept sequence history and built-in knowledge.</li>
+<li><strong>Success</strong> is the actual retrospective outcome. An agent can act with 100% rationality (e.g., stopping at a red signal) but still suffer failure (e.g., getting rear-ended by a distracted driver). Rationality evaluates the decision process, not clairvoyance.</li>
+</ul>
+</li>
+<li><strong>Role of Autonomy (3 Marks):</strong><ul>
+<li>An agent lacks autonomy if it relies solely on the designer&#39;s initial built-in rules (inflexible like the <em>Sphex</em> wasp).</li>
+<li>Autonomy enables an agent to learn from its percept history, adapt to environmental changes, and maintain rational decision-making even when designer assumptions prove incomplete.</li>
+</ul>
+</li>
+</ol>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_02_agents_and_environments_peas.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.2 Agents And Environments PEAS</div>
+      </a>
+      
+      
+      
+      <a href="m1_04_nature_of_task_environments.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.4 Nature Of Task Environments</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(10) || 0;
+    const currentId = "m1_03_concept_of_rationality";
+    const courseCode = "PECST522";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.8 Master Theorem And Cases</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 1.8 Master Theorem And Cases | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.8 Master Theorem And Cases">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 1.8 Master Theorem And Cases">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Design and Analysis of Algorithms</span>
+        <span class="tag">PCCST502</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Analysis &amp; Recurrences</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_00_module_overview.html" class="topic-link " id="topic-m1_00_module_overview">
+            <span class="topic-dot"></span>
+            <span>Module 1 Overview: Module Overview</span>
+          </a>
+          <a href="m1_01_algorithm_definition_and_criteria.html" class="topic-link " id="topic-m1_01_algorithm_definition_and_criteria">
+            <span class="topic-dot"></span>
+            <span>1.1 Algorithm Definition And Criteria</span>
+          </a>
+          <a href="m1_02_time_space_complexity_best_worst_average.html" class="topic-link " id="topic-m1_02_time_space_complexity_best_worst_average">
+            <span class="topic-dot"></span>
+            <span>1.2 Time Space Complexity Best Worst Average</span>
+          </a>
+          <a href="m1_03_asymptotic_notations_and_properties.html" class="topic-link " id="topic-m1_03_asymptotic_notations_and_properties">
+            <span class="topic-dot"></span>
+            <span>1.3 Asymptotic Notations And Properties</span>
+          </a>
+          <a href="m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link " id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
+            <span class="topic-dot"></span>
+            <span>1.4 Complexity Calculation Of Iterative Algorithms</span>
+          </a>
+          <a href="m1_05_recurrence_equations_and_substitution_method.html" class="topic-link " id="topic-m1_05_recurrence_equations_and_substitution_method">
+            <span class="topic-dot"></span>
+            <span>1.5 Recurrence Equations And Substitution Method</span>
+          </a>
+          <a href="m1_06_recurrence_iteration_method.html" class="topic-link " id="topic-m1_06_recurrence_iteration_method">
+            <span class="topic-dot"></span>
+            <span>1.6 Recurrence Iteration Method</span>
+          </a>
+          <a href="m1_07_recursion_tree_method.html" class="topic-link " id="topic-m1_07_recursion_tree_method">
+            <span class="topic-dot"></span>
+            <span>1.7 Recursion Tree Method</span>
+          </a>
+          <a href="m1_08_master_theorem_and_cases.html" class="topic-link active" id="topic-m1_08_master_theorem_and_cases">
+            <span class="topic-dot"></span>
+            <span>1.8 Master Theorem And Cases</span>
+          </a>
+          <a href="m1_09_balanced_search_trees_avl_foundations.html" class="topic-link " id="topic-m1_09_balanced_search_trees_avl_foundations">
+            <span class="topic-dot"></span>
+            <span>1.9 Balanced Search Trees AVL Foundations</span>
+          </a>
+          <a href="m1_10_avl_tree_rotations_insertion_and_deletion.html" class="topic-link " id="topic-m1_10_avl_tree_rotations_insertion_and_deletion">
+            <span class="topic-dot"></span>
+            <span>1.10 AVL Tree Rotations Insertion And Deletion</span>
+          </a>
+          <a href="m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link " id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 12 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST502</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.8 Master Theorem And Cases</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>The Master Theorem for Divide-and-Conquer Recurrences</h1>
+<p><strong>Master Theorem formula T(n) = aT(n/b) + f(n), Case 1, Case 2, and Case 3.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. The Intuition</h2>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>You&#39;ve now solved recurrences the hard way twice — once by unrolling them level by level (iteration method) and once by drawing them out as a tree and summing level totals (recursion tree method). Both times, you probably noticed the same underlying question kept deciding the answer: &quot;does the work happening <em>at the root</em> (splitting the problem, combining sub-results) dominate, or does the work happening <em>at the leaves</em> (the sheer number of base-case calls) dominate, or are they perfectly balanced?&quot;</p>
+<p>The Master Theorem is exactly this observation, turned into a plug-and-chug formula, so that for the huge and extremely common family of recurrences shaped like $T(n) = aT(n/b) + f(n)$, you no longer need to draw a tree or unroll anything by hand — you compare $f(n)$ against a specific reference quantity ($n^{\log_b a}$), see which of three cases you land in, and read off the answer directly. It&#39;s the &quot;cheat sheet&quot; version of everything the recursion tree method taught you — powerful precisely <em>because</em> you now understand why it works, rather than just memorising it blindly.</p>
+</div></details><hr>
+<p><a id="the-math"></a></p>
+<h2>2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Setup.</strong> The Master Theorem applies to recurrences of the exact form:
+$$T(n) = a,T(n/b) + f(n), \qquad a \ge 1,\ b &gt; 1$$
+where $a$ = number of sub-problems per call, $b$ = factor by which the problem size shrinks, and $f(n)$ = the cost of the work done <em>outside</em> the recursive calls (splitting the problem and combining results).</p>
+<p>The theorem compares $f(n)$ against the reference function $n^{\log_b a}$ (this is exactly the leaf-level cost derived in the recursion tree method):</p>
+<p><strong>Case 1 — leaves dominate.</strong> If $f(n) = O(n^{\log_b a - \epsilon})$ for some constant $\epsilon &gt; 0$ (i.e. $f(n)$ grows <em>polynomially slower</em> than $n^{\log_b a}$), then:
+$$T(n) = \Theta(n^{\log_b a})$$</p>
+<p><strong>Case 2 — balanced (every level contributes equally).</strong> If $f(n) = \Theta(n^{\log_b a})$ (i.e. $f(n)$ grows at <em>the same rate</em> as $n^{\log_b a}$), then:
+$$T(n) = \Theta(n^{\log_b a} \log n)$$</p>
+<p><strong>Case 3 — root dominates.</strong> If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some constant $\epsilon &gt; 0$ (i.e. $f(n)$ grows <em>polynomially faster</em> than $n^{\log_b a}$), <strong>and</strong> the regularity condition $a,f(n/b) \le c,f(n)$ holds for some constant $c&lt;1$ and large enough $n$ (a technical condition almost always satisfied for typical polynomial/logarithmic $f(n)$), then:
+$$T(n) = \Theta(f(n))$$</p>
+<p><strong>Important caveat — the &quot;gap&quot; between cases.</strong> The three cases don&#39;t cover <em>every possible</em> $f(n)$ — there&#39;s a gap between &quot;polynomially slower&quot; and &quot;polynomially faster&quot; (e.g. $f(n)$ that differs from $n^{\log_b a}$ only by a logarithmic factor, like $f(n) = n^{\log_b a}\log^2 n$, technically doesn&#39;t satisfy Case 2&#39;s exact-match requirement nor either polynomial-difference requirement in the classic three-case statement above). When a recurrence falls in this gap, the Master Theorem (in this basic form) simply doesn&#39;t apply, and you must fall back to the iteration or recursion-tree method (or a more advanced version of the theorem) to solve it directly.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Master Theorem in 30 Seconds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Compute $n^{\log_b a}$ first. $f$ polynomially <em>slower</em> → <strong>Case 1</strong>: $\Theta(n^{\log_b a})$. $f$ <em>equal</em> → <strong>Case 2</strong>: $\Theta(n^{\log_b a}\log n)$. $f$ polynomially <em>faster</em> (+ regularity) → <strong>Case 3</strong>: $\Theta(f(n))$. Differs only by a $\log$ factor → <strong>gap</strong>: theorem silent, unroll by hand.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Apply the Master Theorem to Binary Search&#39;s recurrence, $T(n) = T(n/2) + O(1)$ (here $a=1$, $b=2$, $f(n)=O(1)=\Theta(n^0)$), and separately to Merge Sort&#39;s recurrence, $T(n) = 2T(n/2) + \Theta(n)$ (here $a=2$, $b=2$, $f(n)=\Theta(n)$).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Binary Search:</strong> compute the reference exponent $\log_b a = \log_2 1 = 0$, so $n^{\log_b a} = n^0 = 1$. Compare to $f(n) = \Theta(1) = \Theta(n^0)$ — this exactly matches the reference function, so we&#39;re in <strong>Case 2</strong>.
+<strong>Merge Sort:</strong> compute $\log_b a = \log_2 2 = 1$, so $n^{\log_b a} = n^1 = n$. Compare to $f(n) = \Theta(n) = \Theta(n^1)$ — again an exact match with the reference function, so this is also <strong>Case 2</strong>.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>Binary Search:</strong> Case 2 gives $T(n) = \Theta(n^{\log_b a}\log n) = \Theta(n^0 \log n) = \Theta(\log n)$ — matching the earlier intuitive derivation in the Module 1 overview.
+<strong>Merge Sort:</strong> Case 2 gives $T(n) = \Theta(n^1 \log n) = \Theta(n\log n)$ — matching exactly the result derived earlier, the hard way, by the iteration method. This confirms the Master Theorem is simply a formalised shortcut for the same reasoning we already worked through by hand.</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2>4. Active Recall Quizzes</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">In the Master Theorem for $T(n) = aT(n/b)+f(n)$, which case applies when $f(n)$ grows at *exactly* the same rate as $n^{\log_b a}$?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Case 1</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Case 2</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Case 3</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>None of the cases apply</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Case 2 is defined precisely by $f(n) = \Theta(n^{\log_b a})$ — the extra work per call matches the reference function&#39;s growth rate exactly, meaning every level of the recursion tree contributes roughly equal total work, giving the extra $\log n$ factor: $T(n) = \Theta(n^{\log_b a}\log n)$.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">For the recurrence $T(n) = 4T(n/2) + n$, what is $n^{\log_b a}$, and which Master Theorem case applies?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$n^{\log_2 4} = n$; since $f(n)=n$ matches the reference exactly, this is Case 2, giving $T(n)=\Theta(n\log n)$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$n^{\log_2 4} = n^2$; since $f(n)=n$ grows polynomially slower, this is Case 1, giving $T(n)=\Theta(n^2)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$n^{\log_2 4} = n^2$; this is Case 3, giving $T(n)=\Theta(n)$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$n^{\log_2 4} = n^2$; this is Case 2, giving $T(n)=\Theta(n^2\log n)$</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$ (not 1 — a common slip is reading $\log_2 4$ as 1), giving reference function $n^2$. Since $f(n)=n=n^1$ grows polynomially slower than $n^2$ (i.e. $f(n) = O(n^{2-\epsilon})$ for $\epsilon=1$), this satisfies Case 1, and the leaves dominate: $T(n) = \Theta(n^{\log_b a}) = \Theta(n^2)$.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Which of the following recurrences falls *outside* the basic three-case Master Theorem (i.e., is in the &quot;gap&quot; where none of the three cases cleanly apply)?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$T(n) = 2T(n/2) + n$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$T(n) = T(n/2) + 1$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$T(n) = 2T(n/2) + n\log n$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$T(n) = 3T(n/2) + n^3$</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Here $\log_b a = \log_2 2 = 1$, so the reference function is $n$. $f(n) = n\log n$ is asymptotically larger than $n$ but not by a full polynomial factor $n^\epsilon$ for any constant $\epsilon&gt;0$ — it only differs by a logarithmic factor. This sits in the gap between Case 2 (exact match) and Case 3 (polynomially larger), so the basic Master Theorem doesn&#39;t directly apply; the actual answer, $\Theta(n\log^2 n)$, requires the iteration or recursion-tree method (or an extended version of the theorem) to derive.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_07_recursion_tree_method.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.7 Recursion Tree Method</div>
+      </a>
+      
+      
+      
+      <a href="m1_09_balanced_search_trees_avl_foundations.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.9 Balanced Search Trees AVL Foundations</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(12) || 0;
+    const currentId = "m1_08_master_theorem_and_cases";
+    const courseCode = "PCCST502";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

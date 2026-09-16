@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.9 Balanced Search Trees AVL Foundations</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 1.9 Balanced Search Trees AVL Foundations | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.9 Balanced Search Trees AVL Foundations">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 1.9 Balanced Search Trees AVL Foundations">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Design and Analysis of Algorithms</span>
+        <span class="tag">PCCST502</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Analysis &amp; Recurrences</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_00_module_overview.html" class="topic-link " id="topic-m1_00_module_overview">
+            <span class="topic-dot"></span>
+            <span>Module 1 Overview: Module Overview</span>
+          </a>
+          <a href="m1_01_algorithm_definition_and_criteria.html" class="topic-link " id="topic-m1_01_algorithm_definition_and_criteria">
+            <span class="topic-dot"></span>
+            <span>1.1 Algorithm Definition And Criteria</span>
+          </a>
+          <a href="m1_02_time_space_complexity_best_worst_average.html" class="topic-link " id="topic-m1_02_time_space_complexity_best_worst_average">
+            <span class="topic-dot"></span>
+            <span>1.2 Time Space Complexity Best Worst Average</span>
+          </a>
+          <a href="m1_03_asymptotic_notations_and_properties.html" class="topic-link " id="topic-m1_03_asymptotic_notations_and_properties">
+            <span class="topic-dot"></span>
+            <span>1.3 Asymptotic Notations And Properties</span>
+          </a>
+          <a href="m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link " id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
+            <span class="topic-dot"></span>
+            <span>1.4 Complexity Calculation Of Iterative Algorithms</span>
+          </a>
+          <a href="m1_05_recurrence_equations_and_substitution_method.html" class="topic-link " id="topic-m1_05_recurrence_equations_and_substitution_method">
+            <span class="topic-dot"></span>
+            <span>1.5 Recurrence Equations And Substitution Method</span>
+          </a>
+          <a href="m1_06_recurrence_iteration_method.html" class="topic-link " id="topic-m1_06_recurrence_iteration_method">
+            <span class="topic-dot"></span>
+            <span>1.6 Recurrence Iteration Method</span>
+          </a>
+          <a href="m1_07_recursion_tree_method.html" class="topic-link " id="topic-m1_07_recursion_tree_method">
+            <span class="topic-dot"></span>
+            <span>1.7 Recursion Tree Method</span>
+          </a>
+          <a href="m1_08_master_theorem_and_cases.html" class="topic-link " id="topic-m1_08_master_theorem_and_cases">
+            <span class="topic-dot"></span>
+            <span>1.8 Master Theorem And Cases</span>
+          </a>
+          <a href="m1_09_balanced_search_trees_avl_foundations.html" class="topic-link active" id="topic-m1_09_balanced_search_trees_avl_foundations">
+            <span class="topic-dot"></span>
+            <span>1.9 Balanced Search Trees AVL Foundations</span>
+          </a>
+          <a href="m1_10_avl_tree_rotations_insertion_and_deletion.html" class="topic-link " id="topic-m1_10_avl_tree_rotations_insertion_and_deletion">
+            <span class="topic-dot"></span>
+            <span>1.10 AVL Tree Rotations Insertion And Deletion</span>
+          </a>
+          <a href="m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link " id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 12 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST502</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.9 Balanced Search Trees AVL Foundations</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Balanced Search Trees: AVL Trees &amp; Balance Factor</h1>
+<p><strong>Binary Search Tree properties, AVL invariant (|BF| &lt;= 1), and height bound proof (h &lt; 1.44 log2 n).</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. The Intuition</h2>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Recall from earlier in this module: binary search on a sorted array is fast ($O(\log n)$) because each comparison eliminates half the remaining possibilities. A <strong>Binary Search Tree (BST)</strong> tries to give you that same &quot;eliminate half each time&quot; speed, but for a data structure that also supports fast insertion and deletion (which a plain sorted array does <em>not</em> — inserting into the middle of an array means shifting everything after it).</p>
+<p>Here&#39;s the catch: a BST&#39;s search speed depends entirely on its <strong>height</strong> (how many levels it has) — and if you insert elements in an unlucky order (say, already-sorted order: 1, 2, 3, 4, 5, ...), a plain BST degenerates into what&#39;s essentially a straight line — every node has only one child, no branching at all. Searching in that &quot;tree&quot; is no better than linear search through an array: $O(n)$, not $O(\log n)$. All the speed advantage of &quot;eliminate half each time&quot; evaporates, because there&#39;s no branching left to eliminate half of anything.</p>
+<p>An <strong>AVL tree</strong> (named after its inventors, Adelson-Velsky and Landis) is a BST with an extra rule bolted on: after every insertion or deletion, the tree checks itself and — if needed — rebalances, so that it can <em>never</em> degenerate into that bad, line-like shape. This guarantees the height always stays close to $\log n$, no matter what order you insert elements in — turning &quot;fast <em>if you&#39;re lucky</em>&quot; into &quot;fast, guaranteed, always.&quot;</p>
+</div></details><hr>
+<p><a id="the-math"></a></p>
+<h2>2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>Binary Search Tree (BST) property (prerequisite recap):</strong> for every node, all values in its left subtree are smaller than the node&#39;s own value, and all values in its right subtree are larger. This property is what makes &quot;go left or go right&quot; a meaningful way to eliminate half the remaining search space at each step — <em>provided</em> the tree is reasonably balanced.</p>
+<p><strong>Height of a tree.</strong> The height of a node is the number of edges on the longest path from that node down to a leaf; the height of the whole tree is the height of its root. For a BST holding $n$ nodes: the <em>best possible</em> height is $\Theta(\log n)$ (a perfectly balanced tree), but the <em>worst possible</em> height is $\Theta(n)$ (a completely skewed, line-like tree) — this gap is exactly the problem AVL trees solve.</p>
+<p><strong>Balance factor.</strong> For any node $x$ in an AVL tree, define:
+$$BF(x) = \text{height}(\text{left subtree of } x) - \text{height}(\text{right subtree of } x)$$
+<strong>The AVL invariant:</strong> every single node in a valid AVL tree must satisfy $|BF(x)| \le 1$ — i.e. $BF(x) \in {-1, 0, +1}$. If an insertion or deletion ever causes some node&#39;s balance factor to become $-2$ or $+2$, the tree is no longer a valid AVL tree, and a rebalancing operation (rotation — covered in the next topic) must be performed to restore the invariant.</p>
+<p><strong>Why this invariant guarantees $O(\log n)$ height — the proof sketch.</strong> Let $N_h$ be the <em>minimum</em> number of nodes possible in an AVL tree of height $h$ (i.e., the &quot;worst allowed&quot; AVL shape — the sparsest tree still satisfying $|BF|\le1$ everywhere). Such a tree&#39;s root has one subtree of height $h-1$ and — because the balance factor can differ by at most 1 — the other subtree can be as short as height $h-2$ (not shorter, or the invariant would be violated). This gives the recurrence:
+$$N_h = N_{h-1} + N_{h-2} + 1, \qquad N_0 = 1,\ N_{-1} = 0$$
+This is (up to the $+1$ and slightly shifted indices) essentially the <strong>Fibonacci recurrence</strong>. Solving it (via its characteristic equation, related to the golden ratio $\phi \approx 1.618$) shows that $N_h$ grows <em>exponentially</em> in $h$, specifically $N_h = \Theta(\phi^h)$. Inverting this relationship — solving for $h$ in terms of $n$ (since a real tree has $n \ge N_h$ nodes for its height $h$) — gives the height bound:
+$$h &lt; 1.44 \log_2 n$$
+In plain words: even in the <em>sparsest, most reluctantly-balanced</em> AVL tree allowed by the invariant, the height can never exceed roughly $1.44 \times \log_2 n$ — a constant multiple of $\log n$, which is exactly the guarantee we wanted. This is what makes every AVL search, insertion, and deletion provably $O(\log n)$ in the worst case, unlike a plain BST&#39;s $O(n)$ worst case.</p>
+<hr>
+<p><a id="worked-example"></a></p>
+<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Given a BST node $x$ whose left subtree has height $3$ and right subtree has height $1$, determine its balance factor and whether the AVL invariant is satisfied at this node.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>By definition, $BF(x) = \text{height(left)} - \text{height(right)} = 3 - 1 = 2$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$BF(x) = 2$ violates the AVL invariant $|BF(x)| \le 1$ — this node is &quot;left-heavy&quot; beyond the allowed tolerance. In a real AVL tree, this situation would trigger a rebalancing rotation (specifically, some form of left-side rotation, detailed in the next topic) immediately after whichever insertion caused this imbalance, restoring $|BF(x)|$ to at most 1 before any further operations proceed.</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2>4. Active Recall Quizzes</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Why does a plain (unbalanced) Binary Search Tree degrade to $O(n)$ search time in the worst case?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>BSTs are inherently slower than arrays for all operations</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>If elements are inserted in a already-sorted (or reverse-sorted) order, the tree can degenerate into a line with no branching, making search behave like linear search</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>BSTs cannot store more than a fixed number of elements</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>BST search always requires visiting every node regardless of structure</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The BST property lets you eliminate roughly half the remaining candidates at each step <em>only if</em> the tree actually branches at each level. If every node has just one child (a &quot;skewed&quot; tree, which happens with already-sorted insertion order), there&#39;s no branching to exploit, and search must potentially visit every node — exactly linear search&#39;s behaviour.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">What is the AVL invariant that must hold at every node of a valid AVL tree?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Every node must have exactly two children</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The balance factor (height of left subtree minus height of right subtree) must satisfy $|BF(x)| \le 1$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The tree must be a perfectly complete binary tree</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The left subtree must always be taller than the right subtree</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The defining rule of an AVL tree is that no node&#39;s left and right subtree heights may differ by more than 1 — formally $BF(x) \in {-1,0,+1}$ for every node $x$. Any insertion or deletion that breaks this rule must trigger a rebalancing rotation.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">The proven height bound for an AVL tree with $n$ nodes is approximately:</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$h &lt; n$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$h &lt; \sqrt{n}$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$h &lt; 1.44 \log_2 n$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$h &lt; n \log n$</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>By analysing the minimum-node AVL tree of a given height (which follows a Fibonacci-like recurrence, $N_h = N_{h-1}+N_{h-2}+1$) and inverting the relationship between height and node count, the height is provably bounded by roughly $1.44 \log_2 n$ — a constant factor times $\log n$, guaranteeing logarithmic-height performance regardless of insertion order.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_08_master_theorem_and_cases.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.8 Master Theorem And Cases</div>
+      </a>
+      
+      
+      
+      <a href="m1_10_avl_tree_rotations_insertion_and_deletion.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.10 AVL Tree Rotations Insertion And Deletion</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(12) || 0;
+    const currentId = "m1_09_balanced_search_trees_avl_foundations";
+    const courseCode = "PCCST502";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

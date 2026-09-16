@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.4 Nature Of Task Environments</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 1.4 Nature Of Task Environments | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.4 Nature Of Task Environments">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.4 Nature Of Task Environments">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Artificial Intelligence</span>
+        <span class="tag">PECST522</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Agents &amp; Problem Solving</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_01_ai_definition_foundations_and_history.html" class="topic-link " id="topic-m1_01_ai_definition_foundations_and_history">
+            <span class="topic-dot"></span>
+            <span>1.1 AI Definition Foundations And History</span>
+          </a>
+          <a href="m1_02_agents_and_environments_peas.html" class="topic-link " id="topic-m1_02_agents_and_environments_peas">
+            <span class="topic-dot"></span>
+            <span>1.2 Agents And Environments PEAS</span>
+          </a>
+          <a href="m1_03_concept_of_rationality.html" class="topic-link " id="topic-m1_03_concept_of_rationality">
+            <span class="topic-dot"></span>
+            <span>1.3 Concept Of Rationality</span>
+          </a>
+          <a href="m1_04_nature_of_task_environments.html" class="topic-link active" id="topic-m1_04_nature_of_task_environments">
+            <span class="topic-dot"></span>
+            <span>1.4 Nature Of Task Environments</span>
+          </a>
+          <a href="m1_05_agent_architectures_reflex_to_learning.html" class="topic-link " id="topic-m1_05_agent_architectures_reflex_to_learning">
+            <span class="topic-dot"></span>
+            <span>1.5 Agent Architectures Reflex To Learning</span>
+          </a>
+          <a href="m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
+            <span class="topic-dot"></span>
+            <span>1.7 Classic AI Toy Problems</span>
+          </a>
+          <a href="m1_99_practice_lab_agents_and_problem_formulation.html" class="topic-link " id="topic-m1_99_practice_lab_agents_and_problem_formulation">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Agents And Problem Formulation</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Search &amp; Game Playing</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+            <span class="topic-dot"></span>
+            <span>2.1 Uninformed Search DFS BFS UCS</span>
+          </a>
+          <a href="m2_02_iterative_deepening_and_depth_limited.html" class="topic-link " id="topic-m2_02_iterative_deepening_and_depth_limited">
+            <span class="topic-dot"></span>
+            <span>2.2 Iterative Deepening And Depth Limited</span>
+          </a>
+          <a href="m2_03_informed_heuristic_search_and_functions.html" class="topic-link " id="topic-m2_03_informed_heuristic_search_and_functions">
+            <span class="topic-dot"></span>
+            <span>2.3 Informed Heuristic Search And Functions</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 10 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PECST522</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.4 Nature Of Task Environments</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
+    <a href="#the-matrix" class="jump-pill">🧮 Matrix</a>
+    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
+  </div>
+</div>
+<h1>The Nature of Task Environments</h1>
+<p><strong>The 7 dimensions of task environments: observability, single vs. multi-agent, determinism, episodic vs. sequential, static vs. dynamic, discrete vs. continuous, and known vs. unknown.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. Why Classify Environments?</h2>
+<p>Imagine you are hired to build a highly intelligent autonomous vehicle. If you build it assuming the environment is a perfectly flat, empty parking lot (your assumption), but deploy it in the middle of a chaotic city highway during monsoon season (the reality), your AI will instantly fail. </p>
+<p>Before an AI engineer writes a single line of code, they must classify the <strong>Task Environment</strong>. The design of the agent, the complexity of its brain (algorithms), and the amount of memory it needs are <strong>completely determined by the nature of its environment.</strong></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: The &quot;Holy Grail&quot; of AI Environments</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>AI engineers dream of the easiest possible environment. The simplest environment to program an AI for is:
+<strong>Fully Observable, Single-Agent, Deterministic, Episodic, Static, Discrete, and Known.</strong> (Think of an AI solving a digital Sudoku puzzle on an empty screen with no time limit). </p>
+<p>As we drift away from these properties and move toward the real world, the AI becomes exponentially harder to build!</p>
+</div></details><hr>
+<p><a id="the-dimensions"></a></p>
+<h2>2. The 7 Environmental Dimensions</h2>
+<p>Russell and Norvig classify task environments along 7 specific dimensions:</p>
+<h3>1. Fully Observable vs. Partially Observable (vs. Unobservable)</h3>
+<p>This dimension is about <strong>Sensor Quality</strong>. Does the agent&#39;s sensors give it access to the <em>complete</em> state of the environment at all times?</p>
+<ul>
+<li><strong>Fully Observable:</strong> The agent can perceive everything that matters to the decision right now.<ul>
+<li><em>Example:</em> <strong>Chess</strong>. You can see every single piece on the board at all times. There are no hidden pieces.</li>
+</ul>
+</li>
+<li><strong>Partially Observable:</strong> Parts of the environment are hidden from the sensors due to noisy/inaccurate data or physical blind spots.<ul>
+<li><em>Example:</em> <strong>Poker</strong>. You can only see your own cards and community cards; opponents&#39; cards are hidden.</li>
+<li><em>Example:</em> <strong>Taxi Driving</strong>. A self-driving car cannot see around a blind corner or know what a pedestrian is planning to do.</li>
+</ul>
+</li>
+<li><strong>Unobservable:</strong> The agent has no sensors at all (blind).</li>
+</ul>
+<h3>2. Single-Agent vs. Multi-Agent</h3>
+<p>This dimension asks <strong>Who else is in the environment?</strong> Is there another entity actively maximizing its own performance measure?</p>
+<ul>
+<li><strong>Single-Agent:</strong> An agent solving a crossword puzzle or playing Solitaire alone.</li>
+<li><strong>Multi-Agent:</strong> <ul>
+<li><strong>Competitive:</strong> Playing Chess against an opponent trying to defeat you.</li>
+<li><strong>Cooperative:</strong> Autonomous taxis communicating at an intersection to avoid collisions.</li>
+</ul>
+</li>
+</ul>
+<h3>3. Deterministic vs. Stochastic</h3>
+<p>This dimension is about <strong>Certainty of Transitions</strong>. If the agent takes a specific action, is the resulting next state 100% guaranteed?</p>
+<ul>
+<li><strong>Deterministic:</strong> The next state is completely determined by the current state and the agent&#39;s action. (e.g., Moving a Knight to E4 in Chess).</li>
+<li><strong>Stochastic:</strong> The next state involves probabilistic uncertainty or dice rolls. (e.g., Backgammon, or a taxi braking on wet asphalt where braking distance varies).</li>
+</ul>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Deterministic vs. Stochastic vs. Non-deterministic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
+<li><strong>Deterministic:</strong> Exactly 1 outcome state ($s&#39; = T(s, a)$).</li>
+<li><strong>Stochastic:</strong> Multiple possible outcomes, but with known probabilities ($P(s&#39; \mid s, a)$).</li>
+<li><strong>Non-deterministic:</strong> Multiple possible outcomes, but probabilities are unknown (common when modeling adversarial human opponents).</li>
+</ul>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Environment Transition Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Mathematically, an environment&#39;s transition from current state $s$ to next state $s&#39;$, given action $a$, is modeled as:</p>
+<ul>
+<li><strong>Deterministic Transition:</strong> $s&#39; = T(s, a)$</li>
+<li><strong>Stochastic Transition:</strong> $P(s&#39; \mid s, a) = \text{Probability of reaching state } s&#39; \text{ given state } s \text{ and action } a$</li>
+</ul>
+</div></details><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">You program an AI to play standard Solitaire on a computer. Once the cards are shuffled and dealt, all the face-down cards are locked in position. Which of the following best describes this environment?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Fully Observable and Stochastic</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Partially Observable and Multi-Agent</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Partially Observable and Deterministic</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Fully Observable and Deterministic</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>It is <strong>Partially Observable</strong> because you cannot see the face-down cards. It is <strong>Deterministic</strong> because flipping a card is guaranteed to reveal that specific card with zero probability of an accidental state change once the deck is dealt.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><h3>4. Episodic vs. Sequential</h3>
+<p>This dimension is about <strong>Temporal Horizon and Memory</strong>. Does a decision made right now impact decisions you have to make an hour from now?</p>
+<ul>
+<li><strong>Episodic:</strong> The agent&#39;s experience is divided into atomic, independent &quot;episodes&quot;. The current action does not affect future episodes.<ul>
+<li><em>Example:</em> A <strong>Part-Picking Defect Scanner</strong> checking apples on a conveyor belt. Classifying Apple #1 has zero impact on classifying Apple #2.</li>
+</ul>
+</li>
+<li><strong>Sequential:</strong> The current decision can affect all subsequent decisions.<ul>
+<li><em>Example:</em> <strong>Chess</strong>. A poor opening move on turn 3 can guarantee a loss on turn 40.</li>
+</ul>
+</li>
+</ul>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A defect-scanning agent inspects apples on a paused conveyor belt. Its verdict on apple #5 has no effect on apple #6 — each decision stands alone, and the belt waits while it deliberates. The environment is:</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Sequential and Dynamic</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Episodic and Static</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Sequential and Stochastic</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Episodic and Multi-Agent</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p><strong>Episodic</strong> because every apple is an independent atomic episode — the current decision cannot affect any future decision. <strong>Static</strong> because the scene waits while the agent thinks (no time pressure, no score decay). A single agent acts, and nothing here makes outcomes probabilistic, ruling out the other options.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><h3>5. Static vs. Dynamic</h3>
+<p>This dimension is about <strong>Time Pressure</strong>. Does the environment change while the AI is deliberating?</p>
+<ul>
+<li><strong>Static:</strong> The world pauses and waits for the AI to compute its move. (e.g., Crossword puzzles).</li>
+<li><strong>Dynamic:</strong> The world continues to evolve while the AI thinks. (e.g., Taxi driving, where pausing 5 seconds causes a crash).</li>
+</ul>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Semi-Dynamic Environments</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>If the environment itself does not change, but the agent&#39;s <strong>performance score drops over time while thinking</strong>, the environment is <strong>Semi-Dynamic</strong> (e.g., Chess played with a ticking chess clock).</p>
+</div></details><h3>6. Discrete vs. Continuous</h3>
+<p>This dimension is about <strong>State, Percept, and Action Granularity</strong>.</p>
+<ul>
+<li><strong>Discrete:</strong> Distinct, countable states and actions. (e.g., Chess has 64 squares, distinct turns, and a finite set of legal moves).</li>
+<li><strong>Continuous:</strong> Real-valued, analog variables. (e.g., Taxi steering wheel angles like $14.5^\circ$, continuous speeds, and flowing time).</li>
+</ul>
+<h3>7. Known vs. Unknown</h3>
+<p>This dimension describes the <strong>Agent&#39;s Knowledge of Environment Laws &amp; Rules</strong>.</p>
+<ul>
+<li><strong>Known:</strong> The agent has the complete rulebook / physics engine of the environment. (e.g., Solitaire rules are known).</li>
+<li><strong>Unknown:</strong> The agent must experiment and discover the rules through trial and error. (e.g., A video game played without a manual).</li>
+</ul>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Known vs. Observable (CRITICAL EXAM TRAP)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
+<li><strong>Known:</strong> I know the rules of the world.</li>
+<li><strong>Observable:</strong> I can see the current state of the world through my sensors.</li>
+<li><em>Example:</em> <strong>Poker</strong> is a <strong>Known</strong> environment (the rules are fully understood), but <strong>Partially Observable</strong> (opponents&#39; hands are concealed).</li>
+</ul>
+</div></details><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">An agent plays chess against a human with no clock, but it was never given the rules of chess and must discover legal moves by trial and error. How is this environment classified on the time and knowledge dimensions?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Dynamic and Known</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Static and Unknown</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Semi-dynamic and Known</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Static and Known</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p><strong>Static</strong>: with no clock the board waits while the agent deliberates. <strong>Unknown</strong>: the agent lacks the rulebook and must learn the laws by exploring. Do not confuse this with observability — chess is fully observable (all pieces visible), but observability is about <em>seeing the state</em>, while Known/Unknown is about <em>knowing the rules</em>. That is exactly the trap above.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="the-matrix"></a></p>
+<h2>3. The Master Environment Matrix Table</h2>
+<p>Examiners frequently ask students to classify standard benchmark environments. Memorize this reference matrix:</p>
+<pre><code class="language-text">+-----------------------+------------+---------+---------------+------------+-----------+------------+
+|   Task Environment    | Observable | Agents  | Transition    | Horizon    | Time      | State Space|
++=======================+============+=========+===============+============+===========+============+
+| Crossword Puzzle      | Fully      | Single  | Deterministic | Episodic   | Static    | Discrete   |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+| Chess (without clock) | Fully      | Multi   | Deterministic | Sequential | Static    | Discrete   |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+| Chess (with clock)    | Fully      | Multi   | Deterministic | Sequential | Semi-Dyn  | Discrete   |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+| Poker                 | Partially  | Multi   | Stochastic    | Sequential | Static    | Discrete   |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+| Backgammon            | Fully      | Multi   | Stochastic    | Sequential | Static    | Discrete   |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+| Part-Picking Robot    | Fully      | Single  | Deterministic | Episodic   | Semi-Dyn  | Continuous |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+| Automated Taxi        | Partially  | Multi   | Stochastic    | Sequential | Dynamic   | Continuous |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+| Medical Diagnosis     | Partially  | Single  | Stochastic    | Sequential | Dynamic   | Continuous |
++-----------------------+------------+---------+---------------+------------+-----------+------------+
+</code></pre>
+<hr>
+<p><a id="history"></a></p>
+<h2>4. The &quot;Hardest Possible Task Environment&quot;</h2>
+<p>The <strong>Automated Taxi Driver</strong> exemplifies the hardest possible challenge in artificial intelligence:</p>
+<ul>
+<li><strong>Partially Observable</strong> (blind spots, hidden pedestrian intentions)</li>
+<li><strong>Multi-Agent</strong> (other drivers, cyclists, pedestrians)</li>
+<li><strong>Stochastic</strong> (weather, mechanical traction, sudden maneuvers)</li>
+<li><strong>Sequential</strong> (speed adjustments compound over long trajectories)</li>
+<li><strong>Dynamic</strong> (traffic conditions change in milliseconds)</li>
+<li><strong>Continuous</strong> (infinite steering angles, braking pressures, and continuous velocities)</li>
+</ul>
+<p>This is why algorithms that achieve superhuman performance in Chess (discrete, static, fully observable) cannot easily be transferred to Level 5 autonomous driving.</p>
+<hr>
+<p><a id="exam-focus"></a></p>
+<h2>5. Worked University Exam Q&amp;A</h2>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> Define Static vs. Dynamic vs. Semidynamic, or Episodic vs. Sequential.</li>
+<li><strong>7 Marks:</strong> Classify a real-world scenario (e.g., Ludo, Medical Diagnosis, Taxi Driver) across all 7 dimensions with 1-line justifications for each.</li>
+</ul>
+</div></details><h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Explain the difference between a Static, Dynamic, and Semidynamic environment.</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>Static Environment:</strong> The environment does not change while the agent is deliberating (thinking). E.g., Crossword puzzle.</li>
+<li><strong>Dynamic Environment:</strong> The environment continuously changes while the agent calculates its move, requiring rapid real-time response. E.g., Taxi driving.</li>
+<li><strong>Semidynamic Environment:</strong> The environment itself does not physically change, but the agent&#39;s performance measure (score) decays over time while thinking. E.g., Chess played with a chess clock.</li>
+</ul>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Categorize the task environment of playing the board game &quot;Ludo&quot; against human opponents using the 7 environmental dimensions. Justify each classification.</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ol>
+<li><strong>Fully Observable:</strong> All tokens, the board layout, and player positions are completely visible to the agent&#39;s sensors at all times.</li>
+<li><strong>Multi-Agent (Competitive):</strong> Multiple players compete to guide their tokens to home, where one player&#39;s victory directly diminishes another&#39;s utility.</li>
+<li><strong>Stochastic:</strong> Token movement depends on the roll of a 6-sided die, making next-state transitions probabilistic rather than deterministic.</li>
+<li><strong>Sequential:</strong> The choice of which token to advance on turn $t$ directly impacts whether that token is captured or reaches safe zones on turn $t+k$.</li>
+<li><strong>Static:</strong> While the agent is deciding its move, the board pieces and opponents remain stationary.</li>
+<li><strong>Discrete:</strong> The board consists of a finite set of discrete squares, with discrete turn counts and integer dice outcomes (1 to 6).</li>
+<li><strong>Known:</strong> The agent is provided with the complete, explicit rulebook governing legal moves, capture mechanics, and winning conditions.</li>
+</ol>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_03_concept_of_rationality.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.3 Concept Of Rationality</div>
+      </a>
+      
+      
+      
+      <a href="m1_05_agent_architectures_reflex_to_learning.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.5 Agent Architectures Reflex To Learning</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(10) || 0;
+    const currentId = "m1_04_nature_of_task_environments";
+    const courseCode = "PECST522";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

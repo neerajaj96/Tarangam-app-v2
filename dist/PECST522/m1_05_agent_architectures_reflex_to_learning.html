@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.5 Agent Architectures Reflex To Learning</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 1.5 Agent Architectures Reflex To Learning | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.5 Agent Architectures Reflex To Learning">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.5 Agent Architectures Reflex To Learning">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Artificial Intelligence</span>
+        <span class="tag">PECST522</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Agents &amp; Problem Solving</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_01_ai_definition_foundations_and_history.html" class="topic-link " id="topic-m1_01_ai_definition_foundations_and_history">
+            <span class="topic-dot"></span>
+            <span>1.1 AI Definition Foundations And History</span>
+          </a>
+          <a href="m1_02_agents_and_environments_peas.html" class="topic-link " id="topic-m1_02_agents_and_environments_peas">
+            <span class="topic-dot"></span>
+            <span>1.2 Agents And Environments PEAS</span>
+          </a>
+          <a href="m1_03_concept_of_rationality.html" class="topic-link " id="topic-m1_03_concept_of_rationality">
+            <span class="topic-dot"></span>
+            <span>1.3 Concept Of Rationality</span>
+          </a>
+          <a href="m1_04_nature_of_task_environments.html" class="topic-link " id="topic-m1_04_nature_of_task_environments">
+            <span class="topic-dot"></span>
+            <span>1.4 Nature Of Task Environments</span>
+          </a>
+          <a href="m1_05_agent_architectures_reflex_to_learning.html" class="topic-link active" id="topic-m1_05_agent_architectures_reflex_to_learning">
+            <span class="topic-dot"></span>
+            <span>1.5 Agent Architectures Reflex To Learning</span>
+          </a>
+          <a href="m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
+            <span class="topic-dot"></span>
+            <span>1.7 Classic AI Toy Problems</span>
+          </a>
+          <a href="m1_99_practice_lab_agents_and_problem_formulation.html" class="topic-link " id="topic-m1_99_practice_lab_agents_and_problem_formulation">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Agents And Problem Formulation</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Search &amp; Game Playing</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+            <span class="topic-dot"></span>
+            <span>2.1 Uninformed Search DFS BFS UCS</span>
+          </a>
+          <a href="m2_02_iterative_deepening_and_depth_limited.html" class="topic-link " id="topic-m2_02_iterative_deepening_and_depth_limited">
+            <span class="topic-dot"></span>
+            <span>2.2 Iterative Deepening And Depth Limited</span>
+          </a>
+          <a href="m2_03_informed_heuristic_search_and_functions.html" class="topic-link " id="topic-m2_03_informed_heuristic_search_and_functions">
+            <span class="topic-dot"></span>
+            <span>2.3 Informed Heuristic Search And Functions</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 10 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PECST522</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.5 Agent Architectures Reflex To Learning</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 12 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
+    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
+    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Structure of Agents: From Reflex to Learning Agents</h1>
+<p><strong>The anatomy of an intelligent agent: Simple Reflex, Model-Based Reflex, Goal-Based, Utility-Based, and Learning Agent architectures.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. How is an Agent Structured?</h2>
+<p>In Artificial Intelligence, every software or robotic agent is defined by a fundamental relationship:
+$$\text{Agent} = \text{Architecture} + \text{Program}$$</p>
+<ul>
+<li><strong>Architecture:</strong> The computing device and physical machinery (sensors, cameras, processors, memory, wheels, and actuators).</li>
+<li><strong>Program:</strong> The software algorithm executing on that hardware that maps percept sequences to concrete actions.</li>
+</ul>
+<h3>The Naive Approach: Table-Driven Agents</h3>
+<p>The simplest conceivable way to build an agent is a giant lookup table storing an explicit action for every possible percept sequence:</p>
+<p>$$\text{Table Size} = |P|^t$$
+Where $|P|$ is the number of possible distinct percepts and $t$ is the operational time horizon. For an autonomous taxi, the number of entries would exceed the number of atoms in the observable universe! </p>
+<p>To overcome this combinatorial explosion, AI systems employ structured <strong>Agent Architectures</strong> that compute actions dynamically.</p>
+<hr>
+<p><a id="terminology"></a></p>
+<h2>2. Architecture 1: Simple Reflex Agents</h2>
+<p>A <strong>Simple Reflex Agent</strong> selects actions based <em>only</em> on the current percept, completely ignoring historical percept sequences. It operates on <strong>Condition-Action Rules</strong> (<code>IF condition THEN action</code>).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Basic Thermostat</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Consider a standard room thermostat. It maintains no historical memory of yesterday&#39;s weather or room temperature. It operates on a single direct rule:
+<code>IF current_temperature &lt; 20°C THEN turn_on_heater()</code>
+It triggers an immediate, reactive response to the state right <em>now</em>.</p>
+</div></details><h3>ASCII Architecture Diagram: Simple Reflex Agent</h3>
+<pre><code class="language-text">                  +-----------------------------------+
+                  |              AGENT                |
+                  |                                   |
+                  |   What the world is like NOW      | &lt;--- Sensors
+                  |                 |                 |
+                  |                 v                 |
+                  |   +---------------------------+   |
+                  |   | Select Next Action (Rules)|   |
+                  |   +---------------------------+   |
+                  |                 |                 |
+                  +-----------------|-----------------+
+                                    v
+                                Actuators ---&gt; Environment
+</code></pre>
+<h3>Condition-Action Rule Flow</h3>
+<pre><code class="language-python">def Simple_Reflex_Agent(percept):
+    state = interpret_input(percept)     # What is the world like now?
+    rule = match_rule(state, rule_base)  # Match IF condition THEN action
+    return rule.action
+</code></pre>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Fatal Flaw: Infinite Loops in Partially Observable Worlds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Simple reflex agents fail catastrophically in <strong>Partially Observable</strong> environments.
+<em>Example:</em> A robotic vacuum cleaner hits a table leg. Its condition-action rule fires: <code>IF bump == true THEN turn_left()</code>. 
+After turning left, its sensor is <em>still</em> blocked by the wide table leg. On the next cycle, it fires the same rule again, turning left forever in an infinite loop.
+<em>The Fix:</em> The agent requires an <strong>internal state</strong> to remember previous actions.</p>
+</div></details><hr>
+<p><a id="the-dimensions"></a></p>
+<h2>3. Architecture 2: Model-Based Reflex Agents</h2>
+<p>To operate reliably in partially observable environments, an agent must maintain an <strong>Internal State</strong> that tracks aspects of the world currently unobservable by its sensors.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Driving Through a Mountain Tunnel</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>When an autonomous vehicle enters a dark mountain tunnel, GPS signals drop and cameras are temporarily blinded. 
+A simple reflex agent would freeze or steer blindly. A <strong>Model-Based Agent</strong> uses its internal world model: <em>&quot;I entered at 60 km/h heading straight, so after 3 seconds I am still in the center lane.&quot;</em> It bridges the sensory gap using state memory and physics models.</p>
+</div></details><h3>ASCII Architecture Diagram: Model-Based Reflex Agent</h3>
+<pre><code class="language-text">                  +-------------------------------------------------+
+                  |                     AGENT                       |
+                  |                                                 |
+                  |   Sensors ---&gt; [ What the world is like now ]   |
+                  |                       ^            |            |
+                  |                       |            v            |
+                  |               [ State History ] &lt;----+          |
+                  |                       ^                         |
+                  |                       | (How world evolves)     |
+                  |               [ Transition Model ]              |
+                  |                       ^                         |
+                  |                       | (What my actions do)    |
+                  |               [ What action I do ]              |
+                  |                       |                         |
+                  |                       v                         |
+                  |            [ Condition-Action Rules ]           |
+                  |                       |                         |
+                  +-----------------------|-------------------------+
+                                          v
+                                      Actuators ---&gt; Environment
+</code></pre>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Internal State Update Equation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The internal state $S_t$ is dynamically updated at each time step using the previous state $S_{t-1}$, the previous action $A_{t-1}$, and the latest percept $P_t$:
+$$S_t = \text{Update}(S_{t-1}, A_{t-1}, P_t)$$</p>
+</div></details><hr>
+<p><a id="foundations"></a></p>
+<h2>4. Architecture 3: Goal-Based Agents</h2>
+<p>Knowing the current state of the world is often insufficient to choose an action. The agent needs explicit <strong>Goals</strong>—descriptions of desirable target situations—to guide its search and planning.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The GPS Route Planner</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine standing at a road intersection. A model-based agent knows exactly where it is located. But deciding whether to turn left or right requires a <strong>Goal</strong> (<em>&quot;Navigate to Cochin International Airport&quot;</em>). 
+Instead of triggering hardcoded reflex rules, the agent evaluates future states: <em>&quot;Turning left leads to congested city streets; turning right merges onto the highway toward the airport.&quot;</em></p>
+</div></details><h3>ASCII Architecture Diagram: Goal-Based Agent</h3>
+<pre><code class="language-text">                  +-------------------------------------------------+
+                  |                     AGENT                       |
+                  |                                                 |
+                  |   Sensors ---&gt; [ What the world is like now ]   |
+                  |                       |                         |
+                  |                       v                         |
+                  |               [ Internal State ]                |
+                  |                       |                         |
+                  |                       v                         |
+                  |         [ &quot;What will it be like if I do X?&quot; ]   |
+                  |                       |                         |
+                  |                       v                         |
+                  |                 [ GOALS ] &lt;------------------+  |
+                  |                       |                      |  |
+                  |                       v                      |  |
+                  |              [ Select Action ] --------------+  |
+                  |                       |                         |
+                  +-----------------------|-------------------------+
+                                          v
+                                      Actuators ---&gt; Environment
+</code></pre>
+<hr>
+<p><a id="history"></a></p>
+<h2>5. Architecture 4: Utility-Based Agents</h2>
+<p>Goals provide only a binary measure of success (Goal achieved vs. Goal not achieved). In complex environments, multiple valid paths reach the goal, but differ in safety, financial cost, time, and comfort. A <strong>Utility Function</strong> maps states to real numbers to optimize trade-offs.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Route Cost vs. Safety Trade-off</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Consider two navigation options to an airport:</p>
+<ul>
+<li><strong>Route A:</strong> 25 minutes, $30 toll fee, high accident rate.</li>
+<li><strong>Route B:</strong> 30 minutes, $0 toll fee, smooth and scenic.</li>
+</ul>
+<p>A goal-based agent treats both routes as identical because both satisfy the goal. A <strong>Utility-Based Agent</strong> uses a mathematical utility function $U(s)$ weighing time, money, and safety to choose Route B as the optimal trade-off.</p>
+</div></details><h3>ASCII Architecture Diagram: Utility-Based Agent</h3>
+<pre><code class="language-text">                  +-------------------------------------------------+
+                  |                     AGENT                       |
+                  |                                                 |
+                  |   Sensors ---&gt; [ What the world is like now ]   |
+                  |                       |                         |
+                  |                       v                         |
+                  |               [ Internal State ]                |
+                  |                       |                         |
+                  |                       v                         |
+                  |      [ &quot;How happy will I be in state S?&quot; ]      |
+                  |                       |                         |
+                  |                       v                         |
+                  |              [ UTILITY FUNCTION ]               |
+                  |                       |                         |
+                  |                       v                         |
+                  |           [ Maximize Expected Utility ]         |
+                  |                       |                         |
+                  +-----------------------|-------------------------+
+                                          v
+                                      Actuators ---&gt; Environment
+</code></pre>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Expected Utility Maximization</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A utility function maps a state $s$ to a real-valued score:
+$$U: S \rightarrow \mathbb{R}$$
+The rational utility agent selects the action $a^<em>$ maximizing expected utility:
+$$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)$$</p>
+</div></details><hr>
+<h2>6. Architecture 5: The Learning Agent</h2>
+<p>While reflex, goal, and utility agents rely on human programmers to hardcode rules and transition models, a <strong>Learning Agent</strong> starts with minimal prior knowledge and autonomously improves its performance through interaction.</p>
+<h3>The 4 Core Components of a Learning Agent:</h3>
+<ol>
+<li><strong>Performance Element:</strong> The active operational agent program responsible for selecting external actions based on percepts (e.g., a reflex, goal, or utility core).</li>
+<li><strong>Critic:</strong> Evaluates the agent&#39;s behavior against an external performance standard and provides evaluative feedback (<em>&quot;That action resulted in a penalty&quot;</em>).</li>
+<li><strong>Learning Element:</strong> Responsible for making improvements. It takes feedback from the critic and updates the internal rules, state models, or utility functions.</li>
+<li><strong>Problem Generator (Learning Goals):</strong> Proactively suggests new exploratory actions that lead to novel experiences, balancing exploration of unknown states against exploitation of known rewards.</li>
+</ol>
+<h3>ASCII Architecture Diagram: Learning Agent</h3>
+<pre><code class="language-text">                  +-------------------------------------------------------------+
+                  |                           AGENT                             |
+                  |                                                             |
+                  |   Sensors                                                   |
+                  |      |                                                      |
+                  |      +------------+                                         |
+                  |      |            v                                         |
+                  |      |    [ PERFORMANCE ELEMENT ] &lt;------- [ LEARNING GOALS ]  |
+                  |      |      (Selects Actions)                 (Problem Gen) |
+                  |      |            |                                   ^     |
+                  |      |            v                                   |     |
+                  |      |      Actuators ---&gt; Environment                |     |
+                  |      |            |                                   |     |
+                  |      v            v                                   |     |
+                  |   [ CRITIC ] -------------&gt; [ LEARNING ELEMENT ] -----+     |
+                  |  (Evaluates)                  (Modifies Program)            |
+                  |                                                             |
+                  +-------------------------------------------------------------+
+</code></pre>
+<hr>
+<h2>7. Comparative Summary Matrix</h2>
+<pre><code class="language-text">+----------------------+------------------+---------------------+---------------------+---------------------+
+| Architecture         | Memory / State   | Decision Criterion  | Handles Partial Obs?| Learning Capable?   |
++======================+==================+================-----+---------------------+---------------------+
+| 1. Simple Reflex     | None             | Condition-Action    | No (Fails)          | No                  |
++----------------------+------------------+---------------------+---------------------+---------------------+
+| 2. Model-Based Reflex| Internal State   | Condition-Action    | Yes                 | No (Unless upgraded)|
++----------------------+------------------+---------------------+---------------------+---------------------+
+| 3. Goal-Based        | Internal State   | Search &amp; Planning   | Yes                 | No (Fixed goals)    |
++----------------------+------------------+---------------------+---------------------+---------------------+
+| 4. Utility-Based     | Internal State   | Maximize Utility    | Yes                 | No (Fixed utility)  |
++----------------------+------------------+---------------------+---------------------+---------------------+
+| 5. Learning Agent    | Evolves over time| Adapts via Critic   | Yes                 | YES (Core feature)  |
++----------------------+------------------+---------------------+---------------------+---------------------+
+</code></pre>
+<hr>
+<p><a id="self-check"></a></p>
+<h2>8. Active Recall Quizzes</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Which agent architecture is required when an environment is Partially Observable and a simple reflex agent gets trapped in an infinite loop?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Goal-Based Agent without internal state</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Simple Reflex Agent with a larger rule base</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Model-Based Reflex Agent</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Table-Driven Agent</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>A Model-Based Reflex Agent maintains an <strong>internal state</strong> to track aspects of the world currently outside sensor range, resolving partial observability traps.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">What is the fundamental distinction between Goal-Based and Utility-Based Agents?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Goal-based agents use sensors, while utility-based agents do not.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Goal-based agents can learn, while utility-based agents cannot.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Goal-based agents evaluate binary success/failure conditions, whereas utility-based agents optimize continuous quality trade-offs using a mathematical scoring function $U(s)$.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Utility-based agents cannot handle state transitions.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Goals are binary (did we arrive at the destination?). Utility functions assign real-valued scores to states, allowing the agent to evaluate competing trade-offs such as travel time, monetary cost, and safety.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">In a Learning Agent, what is the specific responsibility of the &quot;Problem Generator&quot;?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>To generate errors for testing the hardware sensors.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>To propose exploratory actions that lead to novel experiences, balancing exploration against immediate reward exploitation.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>To execute the low-level motor commands to actuators.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>To evaluate actions against external performance benchmarks.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The Problem Generator suggests non-greedy, exploratory actions that allow the agent to discover superior long-term strategies rather than remaining stuck in suboptimal routines.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Why are Table-Driven Agents physically impossible to deploy for complex real-world tasks?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Because lookup tables cannot execute in CPU cache.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because the size of the lookup table grows exponentially ($|P|^t$) with the percept sequence history, exceeding physical storage limits of the universe.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because lookup tables cannot store discrete actions.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because table-driven agents require a utility function.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The table size $|P|^t$ grows exponentially with the length of the percept history $t$, requiring astronomical memory for even modest time horizons.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2>9. Worked University Exam Q&amp;A</h2>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> State the 4 components of a Learning Agent or explain Condition-Action rules in Simple Reflex Agents.</li>
+<li><strong>7 Marks:</strong> Differentiate between Goal-Based and Utility-Based Agents, or draw and explain the full Learning Agent architecture.</li>
+</ul>
+</div></details><h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Draw the structural block diagram of a Simple Reflex Agent and explain its core limitation.</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>Diagram:</strong> Sensors $\rightarrow$ &quot;What the world is like now&quot; $\rightarrow$ Condition-Action Rules $\rightarrow$ Actuators.</li>
+<li><strong>Core Limitation:</strong> Simple reflex agents make decisions based <em>only</em> on the immediate percept. In partially observable environments, unobserved variables can cause identical percepts to require different actions, trapping the agent in infinite loops.</li>
+</ul>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Explain the architecture of a Learning Agent. Describe the function of each of its four primary components with a neat diagram.</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ol>
+<li><strong>Overview (1 Mark):</strong> Unlike static agents with fixed programming, a learning agent separates decision execution from learning, allowing it to adapt to unknown environments.</li>
+<li><strong>Diagram (2 Marks):</strong> Draw the 4-component block diagram showing Sensors $\rightarrow$ Critic $\rightarrow$ Learning Element $\rightarrow$ Problem Generator $\rightarrow$ Performance Element $\rightarrow$ Actuators.</li>
+<li><strong>Component Breakdown (4 Marks):</strong><ul>
+<li><strong>Performance Element:</strong> The active agent program responsible for selecting external actions based on percepts (e.g., reflex, goal, or utility mechanism).</li>
+<li><strong>Critic:</strong> Evaluates the agent&#39;s behavior against an external performance standard and provides scalar reward/penalty feedback.</li>
+<li><strong>Learning Element:</strong> Updates the agent program&#39;s rules, transition models, or utility functions based on feedback from the critic.</li>
+<li><strong>Problem Generator:</strong> Proactively suggests novel, exploratory actions (exploration vs. exploitation) so the agent discovers new strategies.</li>
+</ul>
+</li>
+</ol>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_04_nature_of_task_environments.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.4 Nature Of Task Environments</div>
+      </a>
+      
+      
+      
+      <a href="m1_07_classic_ai_toy_problems.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.7 Classic AI Toy Problems</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(10) || 0;
+    const currentId = "m1_05_agent_architectures_reflex_to_learning";
+    const courseCode = "PECST522";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

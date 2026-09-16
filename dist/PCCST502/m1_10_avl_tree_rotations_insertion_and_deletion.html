@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.10 AVL Tree Rotations Insertion And Deletion</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 1.10 AVL Tree Rotations Insertion And Deletion | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.10 AVL Tree Rotations Insertion And Deletion">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 1.10 AVL Tree Rotations Insertion And Deletion">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Design and Analysis of Algorithms</span>
+        <span class="tag">PCCST502</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Analysis &amp; Recurrences</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_00_module_overview.html" class="topic-link " id="topic-m1_00_module_overview">
+            <span class="topic-dot"></span>
+            <span>Module 1 Overview: Module Overview</span>
+          </a>
+          <a href="m1_01_algorithm_definition_and_criteria.html" class="topic-link " id="topic-m1_01_algorithm_definition_and_criteria">
+            <span class="topic-dot"></span>
+            <span>1.1 Algorithm Definition And Criteria</span>
+          </a>
+          <a href="m1_02_time_space_complexity_best_worst_average.html" class="topic-link " id="topic-m1_02_time_space_complexity_best_worst_average">
+            <span class="topic-dot"></span>
+            <span>1.2 Time Space Complexity Best Worst Average</span>
+          </a>
+          <a href="m1_03_asymptotic_notations_and_properties.html" class="topic-link " id="topic-m1_03_asymptotic_notations_and_properties">
+            <span class="topic-dot"></span>
+            <span>1.3 Asymptotic Notations And Properties</span>
+          </a>
+          <a href="m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link " id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
+            <span class="topic-dot"></span>
+            <span>1.4 Complexity Calculation Of Iterative Algorithms</span>
+          </a>
+          <a href="m1_05_recurrence_equations_and_substitution_method.html" class="topic-link " id="topic-m1_05_recurrence_equations_and_substitution_method">
+            <span class="topic-dot"></span>
+            <span>1.5 Recurrence Equations And Substitution Method</span>
+          </a>
+          <a href="m1_06_recurrence_iteration_method.html" class="topic-link " id="topic-m1_06_recurrence_iteration_method">
+            <span class="topic-dot"></span>
+            <span>1.6 Recurrence Iteration Method</span>
+          </a>
+          <a href="m1_07_recursion_tree_method.html" class="topic-link " id="topic-m1_07_recursion_tree_method">
+            <span class="topic-dot"></span>
+            <span>1.7 Recursion Tree Method</span>
+          </a>
+          <a href="m1_08_master_theorem_and_cases.html" class="topic-link " id="topic-m1_08_master_theorem_and_cases">
+            <span class="topic-dot"></span>
+            <span>1.8 Master Theorem And Cases</span>
+          </a>
+          <a href="m1_09_balanced_search_trees_avl_foundations.html" class="topic-link " id="topic-m1_09_balanced_search_trees_avl_foundations">
+            <span class="topic-dot"></span>
+            <span>1.9 Balanced Search Trees AVL Foundations</span>
+          </a>
+          <a href="m1_10_avl_tree_rotations_insertion_and_deletion.html" class="topic-link active" id="topic-m1_10_avl_tree_rotations_insertion_and_deletion">
+            <span class="topic-dot"></span>
+            <span>1.10 AVL Tree Rotations Insertion And Deletion</span>
+          </a>
+          <a href="m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link " id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 12 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST502</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.10 AVL Tree Rotations Insertion And Deletion</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>AVL Tree Rotations: LL, RR, LR, RL Operations</h1>
+<p><strong>Single rotations (LL, RR), double rotations (LR, RL), step-by-step insertion rebalancing, and deletion rebalancing.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. The Intuition</h2>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a old-fashioned two-pan balance scale that&#39;s tipped too far to one side. To fix it, you don&#39;t throw anything away — you just physically rearrange the weights, moving some from the heavy side to the light side, until the scale sits level again. Crucially, the <em>same</em> weights are still on the scale, just redistributed — nothing was added or removed.</p>
+<p>A <strong>rotation</strong> in an AVL tree does exactly this for a &quot;tipped&quot; subtree — one whose balance factor has drifted outside the allowed ${-1,0,+1}$ range after an insertion or deletion. A rotation restructures a small, local piece of the tree — reassigning which node is the &quot;parent&quot; and which is the &quot;child&quot; among 2–3 nodes — <em>without</em> changing which elements are in the tree, and <em>without</em> breaking the crucial Binary Search Tree ordering property (left-smaller, right-larger must still hold everywhere afterward). There are exactly four named &quot;shapes&quot; of imbalance that can occur, and each has a specific, well-defined fix: <strong>LL</strong> and <strong>RR</strong> (single rotations, for a &quot;straight-line&quot; imbalance) and <strong>LR</strong> and <strong>RL</strong> (double rotations, for a &quot;zig-zag&quot; imbalance).</p>
+</div></details><hr>
+<p><a id="the-math"></a></p>
+<h2>2. Theoretical Framework &amp; Formalism</h2>
+<p><strong>When rotations are triggered.</strong> After inserting (or deleting) a node, walk back up from the changed node toward the root, updating each ancestor&#39;s height and balance factor. The <em>first</em> node found (closest to the newly inserted/deleted node) where $|BF|$ becomes $2$ is the node where a rotation is performed. Fixing the imbalance at this one node is provably always sufficient to restore the AVL invariant for the <em>entire</em> tree above it too (for insertion — deletion can occasionally require rotations to propagate further up, as noted below).</p>
+<p><strong>Case 1 — LL (Left-Left), single right rotation.</strong> Occurs when the imbalance is caused by inserting into the <strong>left</strong> subtree of the <strong>left</strong> child of the unbalanced node (a &quot;straight line leaning left&quot;). Fix: rotate the unbalanced node <strong>right</strong> — the left child becomes the new local root, the old root becomes the new root&#39;s right child, and the new root&#39;s <em>former</em> right subtree (if any) is reattached as the old root&#39;s new left subtree.</p>
+<p><strong>Case 2 — RR (Right-Right), single left rotation.</strong> The mirror image of LL: imbalance caused by inserting into the <strong>right</strong> subtree of the <strong>right</strong> child (a &quot;straight line leaning right&quot;). Fix: rotate the unbalanced node <strong>left</strong> — symmetric to the LL fix.</p>
+<p><strong>Case 3 — LR (Left-Right), double rotation.</strong> Occurs when the imbalance is caused by inserting into the <strong>right</strong> subtree of the <strong>left</strong> child (a &quot;zig-zag&quot; shape — left, then right). A single rotation cannot fix a zig-zag shape directly. Fix: first perform a <strong>left</strong> rotation on the left child (turning the zig-zag into a straight LL shape), <em>then</em> perform a <strong>right</strong> rotation on the original unbalanced node (now fixing that straight-line shape, exactly as in Case 1).</p>
+<p><strong>Case 4 — RL (Right-Left), double rotation.</strong> The mirror image of LR: imbalance caused by inserting into the <strong>left</strong> subtree of the <strong>right</strong> child (a zig-zag: right, then left). Fix: first a <strong>right</strong> rotation on the right child, then a <strong>left</strong> rotation on the original unbalanced node.</p>
+<p><strong>Rotations preserve the BST property.</strong> Each rotation only rearranges pointers among a small, fixed set of 2–3 nodes and their subtrees, in a way carefully designed so that, after the rotation, every value still lies in the correct left/right position relative to every other value — the ordering is never violated, only the <em>shape</em> changes.</p>
+<p><strong>A key difference for deletion.</strong> After an insertion, fixing the balance factor at the single lowest unbalanced ancestor is always enough to re-balance the whole tree. After a <em>deletion</em>, however, a rotation performed at one level can sometimes reduce that subtree&#39;s height, which can in turn cause an imbalance to appear <em>further up</em> the tree — so deletion rebalancing must continue checking (and potentially rotating at) every ancestor all the way up to the root, not just stop at the first fix.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Rotation Chooser</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Straight line → <strong>single</strong> rotation: <strong>LL</strong> (left-left) → rotate <strong>right</strong>; <strong>RR</strong> → rotate <strong>left</strong>. Zig-zag → <strong>double</strong>: <strong>LR</strong> → <strong>left</strong> on child, then <strong>right</strong> on parent; <strong>RL</strong> → <strong>right</strong> on child, then <strong>left</strong> on parent. Mnemonic: the <em>first</em> rotation always pushes the &quot;elbow&quot; of the zig-zag outward into a straight line.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Insert the keys $30, 20, 10$ in that order into an initially empty AVL tree, and determine what rebalancing (if any) is needed after each insertion.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Insert $30$: tree is just node $30$, balanced trivially ($BF=0$).
+Insert $20$: as a BST, $20 &lt; 30$, so $20$ becomes $30$&#39;s left child. Check balance factors: $30$&#39;s left subtree height is $0$, right subtree height is $-1$ (empty, conventionally height $-1$ or sometimes treated as $0$ nodes/height $-1$ depending on convention) — $BF(30) = 0-(-1)=1$, still within ${-1,0,1}$, no rotation needed.
+Insert $10$: as a BST, $10 &lt; 30$ so go left to $20$; $10 &lt; 20$ so $10$ becomes $20$&#39;s left child. Now check balance factors bottom-up: node $20$ is balanced ($BF=1$, fine). Node $30$: left subtree (rooted at $20$) now has height $1$, right subtree height $-1$; $BF(30) = 1-(-1) = 2$ — this violates the AVL invariant.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The imbalance at node $30$ was caused by inserting into the <strong>left</strong> subtree of $30$&#39;s <strong>left</strong> child ($20$) — the new node $10$ went left, then left again — this is exactly the <strong>LL</strong> shape. Fix: a single <strong>right rotation</strong> at node $30$. After rotation, $20$ becomes the new local root, with $10$ as its left child and $30$ as its right child — a perfectly balanced 3-node tree (every node&#39;s $BF=0$). This mirrors exactly how a real AVL insertion sequence self-corrects the moment it starts leaning too far in a straight line.</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2>4. Active Recall Quizzes</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">An imbalance caused by inserting into the right subtree of the left child of an unbalanced node requires which type of rotation?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>LL (single right rotation)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>RR (single left rotation)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>LR (double rotation: left rotation on the child, then right rotation on the parent)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>RL (double rotation: right rotation on the child, then left rotation on the parent)</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>&quot;Right subtree of the left child&quot; is exactly the definition of the LR (Left-Right) zig-zag case. A single rotation can&#39;t straighten a zig-zag shape, so the fix requires two rotations: first a left rotation on the left child (converting the zig-zag into a straight LL shape), then a right rotation on the original unbalanced node.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Do rotations in an AVL tree change which set of values is stored in the tree?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Yes, some values must be discarded during rotation</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>No — rotations only rearrange parent/child pointers among a small local group of nodes; the same set of values remains, just restructured, and the BST ordering property is preserved</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Yes, rotation always adds a new dummy node</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Rotations only affect leaf nodes, never internal structure</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>A rotation is purely a structural rearrangement — like redistributing weights on a balance scale without adding or removing any. Every value that was in the tree before the rotation is still in the tree afterward, and the rotation is specifically designed so the left-smaller/right-larger BST property still holds for every node once the dust settles.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Why can a single rotation performed during a deletion sometimes require checking and rebalancing further up the tree, unlike after an insertion?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Deletion never actually requires rebalancing</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A rotation during deletion can reduce that subtree&#39;s height, which may cause a new imbalance to appear at an ancestor further up, so all ancestors up to the root must be checked</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Deletion always requires exactly two rotations regardless of shape</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Insertion and deletion always trigger identical rebalancing behaviour</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>After insertion, fixing the lowest unbalanced ancestor is provably sufficient because the subtree&#39;s height after rotation is restored to what it was before the insertion. After deletion, a rotation can actually shrink the subtree&#39;s height further, and that shrinkage can propagate upward and trigger a fresh imbalance at an ancestor — so deletion rebalancing must walk all the way up to the root, potentially rotating at multiple levels, not just the first one found.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_09_balanced_search_trees_avl_foundations.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.9 Balanced Search Trees AVL Foundations</div>
+      </a>
+      
+      
+      
+      <a href="m1_99_practice_lab_asymptotics_and_recurrences.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">🧪 Practice Lab: M1 Asymptotics And Recurrences</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(12) || 0;
+    const currentId = "m1_10_avl_tree_rotations_insertion_and_deletion";
+    const courseCode = "PCCST502";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

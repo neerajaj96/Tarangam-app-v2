@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.3 Application Layer Paradigms</title>
+<meta name="description" content="Computer Networks (PCCST501) — 1.3 Application Layer Paradigms | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.3 Application Layer Paradigms">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.3 Application Layer Paradigms">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Computer Networks</span>
+        <span class="tag">PCCST501</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Application Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_01_internet_overview_and_network_edge.html" class="topic-link " id="topic-m1_01_internet_overview_and_network_edge">
+            <span class="topic-dot"></span>
+            <span>1.1 Internet Overview And Network Edge</span>
+          </a>
+          <a href="m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link " id="topic-m1_02_protocol_layering_and_osi_tcpip">
+            <span class="topic-dot"></span>
+            <span>1.2 Protocol Layering And OSI Tcpip</span>
+          </a>
+          <a href="m1_03_application_layer_paradigms.html" class="topic-link active" id="topic-m1_03_application_layer_paradigms">
+            <span class="topic-dot"></span>
+            <span>1.3 Application Layer Paradigms</span>
+          </a>
+          <a href="m1_04_world_wide_web_and_http.html" class="topic-link " id="topic-m1_04_world_wide_web_and_http">
+            <span class="topic-dot"></span>
+            <span>1.4 World Wide Web And HTTP</span>
+          </a>
+          <a href="m1_05_file_transfer_protocol_ftp.html" class="topic-link " id="topic-m1_05_file_transfer_protocol_ftp">
+            <span class="topic-dot"></span>
+            <span>1.5 File Transfer Protocol FTP</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 5 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST501</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 1</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.3 Application Layer Paradigms</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Application Layer Paradigms</h1>
+<p><strong>Client-Server vs. Peer-to-Peer architectures, and how processes communicate across the network via sockets.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. The Intuition</h2>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Restaurant vs. The Potluck</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A <strong>Client-Server</strong> application is like a restaurant: there&#39;s one always-open kitchen (the server) that every customer (client) relies on. Customers never cook for each other — every request goes to the kitchen and every dish comes back from the kitchen. If the restaurant gets too popular, the kitchen becomes a bottleneck; the only fix is a bigger kitchen (or many kitchens acting as one, like a data center).</p>
+<p>A <strong>Peer-to-Peer (P2P)</strong> application is like a potluck dinner: there&#39;s no dedicated kitchen at all. Every guest brings a dish (uploads something) and takes food from others (downloads something) — everyone is simultaneously a &quot;customer&quot; and a &quot;cook.&quot; The more guests that show up, the more food is on the table too, so a potluck doesn&#39;t get bottlenecked the way a single restaurant would; it <em>self-scales</em>.</p>
+<p>Whichever paradigm is chosen, the developer never writes code for the routers in between — only for the <strong>end systems</strong>. And underneath both paradigms, actual communication between two specific programs always happens through the same low-level interface: a <strong>socket</strong>.</p>
+</div></details><hr>
+<p><a id="the-math"></a></p>
+<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h3>2.1 Client-Server Architecture</h3>
+<pre><code class="language-mermaid">flowchart TB
+    C1[&quot;Client A&quot;] --&gt;|request| S[&quot;Always-on Server&lt;br/&gt;(fixed IP address)&quot;]
+    C2[&quot;Client B&quot;] --&gt;|request| S
+    C3[&quot;Client C&quot;] --&gt;|request| S
+    S --&gt;|response| C1
+    S --&gt;|response| C2
+    S --&gt;|response| C3
+</code></pre>
+<ul>
+<li><strong>Asymmetry:</strong> the server <em>provides</em> a service; clients only <em>consume</em> it.</li>
+<li><strong>Always-on, fixed address:</strong> clients must be able to find the server reliably, so it needs a permanent IP address.</li>
+<li><strong>Clients don&#39;t talk directly:</strong> if Client A wants to reach Client B, the message is relayed <em>through</em> the server.</li>
+<li><strong>Scalability bottleneck:</strong> a flood of simultaneous client requests can overwhelm a single server (this is the mechanism behind a DDoS attack). The industry fix is data centers with vast server farms acting as one virtual server.</li>
+<li><strong>Examples:</strong> the Web (HTTP), Email (SMTP), File Transfer (FTP), Netflix.</li>
+</ul>
+<h3>2.2 Peer-to-Peer (P2P) Architecture</h3>
+<pre><code class="language-mermaid">flowchart LR
+    P1[&quot;Peer 1&quot;] &lt;--&gt; P2[&quot;Peer 2&quot;]
+    P2 &lt;--&gt; P3[&quot;Peer 3&quot;]
+    P3 &lt;--&gt; P4[&quot;Peer 4&quot;]
+    P1 &lt;--&gt; P4
+    P1 &lt;--&gt; P3
+    P2 &lt;--&gt; P4
+</code></pre>
+<ul>
+<li><strong>Symmetry:</strong> every peer is simultaneously a client (requesting) and a server (providing).</li>
+<li><strong>Self-scalability:</strong> each new peer adds <em>both</em> new demand (requests) and new capacity (uploads) — unlike client-server, where new demand only ever strains a fixed-size server.</li>
+<li><strong>Decentralized:</strong> no single point of failure; one peer leaving doesn&#39;t take down the whole network.</li>
+<li><strong>Challenges:</strong> harder to secure, highly variable performance (bounded by users&#39; own upload speeds), and peers frequently have dynamic, changing IP addresses.</li>
+<li><strong>Examples:</strong> BitTorrent, blockchain/Bitcoin nodes, early Skype.</li>
+</ul>
+<h3>2.3 Processes Communicating via Sockets</h3>
+<p>Regardless of architecture, the actual exchange of bytes happens between two <strong>processes</strong>, via a software interface called a <strong>socket</strong>.</p>
+<blockquote>
+<p><strong>The Door Analogy:</strong> A process is a house; its socket is the front door. To send a message, the process shoves it out the door, trusting that a transport infrastructure (the layers below) will carry it to the receiver&#39;s own door.</p>
+</blockquote>
+<p>To route a message correctly, the network needs <em>two</em> pieces of addressing information:</p>
+<table>
+<thead>
+<tr>
+<th>Identifier</th>
+<th>Role</th>
+<th>Analogy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IP Address</strong></td>
+<td>Identifies the correct destination <em>host</em> (computer)</td>
+<td>Street address</td>
+</tr>
+<tr>
+<td><strong>Port Number</strong></td>
+<td>Identifies the correct <em>process</em> running on that host</td>
+<td>Apartment number</td>
+</tr>
+</tbody></table>
+<p>A Web Server process, for example, conventionally listens on <strong>Port 80</strong> — so even though many processes may be running on the same machine, the port number ensures an incoming HTTP request reaches the right one.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The Two-Part Address</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The 2-mark &quot;why isn&#39;t IP enough?&quot; answer is always: <strong>IP address finds the host, port number finds the process</strong> — together they name a <strong>socket</strong> (<code>IP:port</code>). Any option claiming one identifier suffices, or that ports replace IPs, is the planted distractor.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Two applications are being designed: (1) a company&#39;s centralized customer database accessed by thousands of employee laptops, and (2) a file-sharing app where users exchange large video files directly with each other. Decide which architecture fits each, and justify why.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Paradigm Criteria</div><div class="step-content"><p><strong>Application 1 (Customer Database):</strong> Requires strict control, security, and a single consistent source of truth that employees query and update. A <strong>Client-Server</strong> model fits: the database server is always-on, has a fixed address, and every client relies on it rather than on each other.
+<strong>Application 2 (File-Sharing):</strong> Requires handling potentially huge numbers of large file transfers without one company having to fund and operate a single massive, always-on server. A <strong>P2P</strong> model fits: each user who downloads a video also becomes a source for other users, spreading the bandwidth cost across the whole user base and allowing the system to self-scale as more users join.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The customer database chooses Client-Server for <strong>consistency, security, and centralized control</strong>; the file-sharing app chooses P2P for <strong>self-scalability and lower infrastructure cost</strong>. This illustrates the core trade-off: Client-Server favors control and reliability at the cost of a scalability bottleneck, while P2P favors scalability and cost-efficiency at the cost of control, security, and predictable performance.</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2>4. Active Recall Quizzes</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Why is P2P considered &quot;self-scaling&quot;?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Because peers never need to upload any data</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because each new peer joining the network adds both new demand (requests) and new service capacity (its own upload bandwidth), unlike a fixed-capacity server</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because P2P networks always use fewer resources than client-server ones</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because P2P eliminates the need for IP addresses entirely</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>In client-server, more clients only ever add <em>load</em> to a fixed-capacity server. In P2P, every new peer simultaneously contributes upload capacity back to the network — so the system&#39;s total capacity naturally grows alongside its total demand.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>If two processes are communicating over the Internet, why isn&#39;t an IP address alone sufficient to get the data to the correct application?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>IP addresses are not globally unique</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A single host can run many different processes simultaneously, and the port number is what identifies which specific process on that host should receive the data</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>IP addresses only work for the Physical layer, not the Application layer</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Port numbers replace IP addresses entirely in modern networks</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>An IP address gets data to the right <em>machine</em>, but a computer may be simultaneously running a web browser, an email client, and a game — the port number is the second piece of addressing that ensures the data reaches the correct <em>process</em> (socket) on that machine, not just the correct machine.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Which of the following is a genuine challenge specific to the P2P architecture (compared to Client-Server)?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>A permanent, fixed IP address is required for every peer</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Peers frequently have dynamic, changing IP addresses and highly variable performance depending on individual users&#39; upload speeds</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>There is always exactly one point of failure</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Clients cannot communicate with each other at all</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Because peers are ordinary users&#39; machines rather than dedicated infrastructure, they often sit behind dynamic IPs (assigned by an ISP or home router) and offer wildly different upload speeds — making P2P performance and addressing far less predictable than a professionally managed, always-on client-server setup.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m1_02_protocol_layering_and_osi_tcpip.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.2 Protocol Layering And OSI Tcpip</div>
+      </a>
+      
+      
+      
+      <a href="m1_04_world_wide_web_and_http.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.4 World Wide Web And HTTP</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(5) || 0;
+    const currentId = "m1_03_application_layer_paradigms";
+    const courseCode = "PCCST501";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

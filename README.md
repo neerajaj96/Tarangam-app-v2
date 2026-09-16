@@ -2,6 +2,8 @@
 
 Static-site notes: `content/<COURSE>/*.md` → `node scripts/build.js` → `dist/<COURSE>/*.html` via `templates/base.html` + `style.css`. Dashboard is `index.html`. Dev server is `server.ts`. Deploy is GitHub Pages from `dist/` (see `.github/workflows/deploy-pages.yml`).
 
+> **Deployment model (important):** Pages serves the **branch root**, so the built `dist/` directory is **committed** to `main` (it is intentionally *not* git-ignored). Every content/build change must be followed by `npm run build:notes` + committing the regenerated `dist/`, or the live site goes stale and note links 404. `npm run check` (also a CI gate) validates links/quizzes/slugs before the build runs.
+
 ## Run it
 
 ```bash

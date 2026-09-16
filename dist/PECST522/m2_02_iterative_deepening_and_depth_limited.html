@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 2.2 Iterative Deepening And Depth Limited</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 2.2 Iterative Deepening And Depth Limited | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.2 Iterative Deepening And Depth Limited">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 2.2 Iterative Deepening And Depth Limited">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Artificial Intelligence</span>
+        <span class="tag">PECST522</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Agents &amp; Problem Solving</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m1_01_ai_definition_foundations_and_history.html" class="topic-link " id="topic-m1_01_ai_definition_foundations_and_history">
+            <span class="topic-dot"></span>
+            <span>1.1 AI Definition Foundations And History</span>
+          </a>
+          <a href="m1_02_agents_and_environments_peas.html" class="topic-link " id="topic-m1_02_agents_and_environments_peas">
+            <span class="topic-dot"></span>
+            <span>1.2 Agents And Environments PEAS</span>
+          </a>
+          <a href="m1_03_concept_of_rationality.html" class="topic-link " id="topic-m1_03_concept_of_rationality">
+            <span class="topic-dot"></span>
+            <span>1.3 Concept Of Rationality</span>
+          </a>
+          <a href="m1_04_nature_of_task_environments.html" class="topic-link " id="topic-m1_04_nature_of_task_environments">
+            <span class="topic-dot"></span>
+            <span>1.4 Nature Of Task Environments</span>
+          </a>
+          <a href="m1_05_agent_architectures_reflex_to_learning.html" class="topic-link " id="topic-m1_05_agent_architectures_reflex_to_learning">
+            <span class="topic-dot"></span>
+            <span>1.5 Agent Architectures Reflex To Learning</span>
+          </a>
+          <a href="m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
+            <span class="topic-dot"></span>
+            <span>1.7 Classic AI Toy Problems</span>
+          </a>
+          <a href="m1_99_practice_lab_agents_and_problem_formulation.html" class="topic-link " id="topic-m1_99_practice_lab_agents_and_problem_formulation">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Agents And Problem Formulation</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Search &amp; Game Playing</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+            <span class="topic-dot"></span>
+            <span>2.1 Uninformed Search DFS BFS UCS</span>
+          </a>
+          <a href="m2_02_iterative_deepening_and_depth_limited.html" class="topic-link active" id="topic-m2_02_iterative_deepening_and_depth_limited">
+            <span class="topic-dot"></span>
+            <span>2.2 Iterative Deepening And Depth Limited</span>
+          </a>
+          <a href="m2_03_informed_heuristic_search_and_functions.html" class="topic-link " id="topic-m2_03_informed_heuristic_search_and_functions">
+            <span class="topic-dot"></span>
+            <span>2.3 Informed Heuristic Search And Functions</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 10 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PECST522</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 2</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">2.2 Iterative Deepening And Depth Limited</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
+    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
+    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Depth-Limited Search (DLS), Iterative Deepening (IDS) &amp; Bidirectional Search</h1>
+<p><strong>Hybrid and advanced blind search strategies: Overcoming the BFS memory bottleneck and DFS incompleteness.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2>1. The Dilemma: BFS Memory vs. DFS Incompleteness</h2>
+<p>In Topic 2.1, we examined two classic search extremes:</p>
+<ul>
+<li><strong>Breadth-First Search (BFS):</strong> Explores level-by-level. It is <strong>complete and optimal</strong> (if step costs are equal), but its <strong>space complexity is exponential ($O(b^d)$)</strong>, exhausting RAM on deep trees.</li>
+<li><strong>Depth-First Search (DFS):</strong> Dives deep down a single path. Its <strong>space complexity is linear ($O(bm)$)</strong>, making it memory-safe, but it is <strong>incomplete</strong> in infinite spaces and <strong>suboptimal</strong>.</li>
+</ul>
+<p>Can we achieve the <strong>memory safety of DFS</strong> while preserving the <strong>completeness and optimality of BFS</strong>? Yes! That is the exact purpose of <strong>Iterative Deepening Search</strong>.</p>
+<hr>
+<p><a id="the-dimensions"></a></p>
+<h2>2. Depth-Limited Search (DLS)</h2>
+<p>Before examining Iterative Deepening, we must look at its core component: <strong>Depth-Limited Search</strong>.</p>
+<ul>
+<li><strong>Definition:</strong> DLS is standard Depth-First Search with a predefined maximum depth limit, $l$.</li>
+<li>Nodes at depth $l$ are treated as if they have <strong>no successors</strong> (leaf boundaries).</li>
+</ul>
+<h3>ASCII Diagram: Depth-Limited Search (Limit $l = 2$)</h3>
+<pre><code class="language-text">           [ Root ]  (Depth 0)
+          /        \
+       [ A ]      [ B ]  (Depth 1)
+      /     \    /     \
+    [ C ]  [ D ][ E ]  [ F ]  (Depth 2 - Cutoff boundary!)
+    /                         \
+  [ X ]                       [ Y ]  (Depth 3 - Cut off / Ignored)
+</code></pre>
+<h3>The Three Possible Outcomes of DLS:</h3>
+<ol>
+<li><strong>Solution Found:</strong> The goal node is discovered within depth $l$.</li>
+<li><strong>Failure:</strong> The search tree is fully explored up to depth $l$ without finding the goal, proving that <strong>no solution exists anywhere within depth $l$</strong>.</li>
+<li><strong>Cutoff (Depth Limit Exceeded):</strong> The algorithm reaches depth $l$ without finding the goal, indicating a solution may exist deeper ($l &lt; d$).</li>
+</ol>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Choosing the Wrong Depth Limit $l$</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
+<li>If <strong>$l &lt; d$</strong>, DLS returns a &quot;Cutoff&quot; or &quot;Failure&quot; even if a valid solution exists deeper down.</li>
+<li>If <strong>$l &gt; d$</strong>, DLS risks exploring deep, suboptimal paths like standard DFS before discovering a shallow solution.</li>
+<li><em>Solution:</em> We allow an algorithm to automatically identify the optimal depth limit: <strong>Iterative Deepening Search!</strong></li>
+</ul>
+</div></details><hr>
+<p><a id="terminology"></a></p>
+<h2>3. Iterative Deepening Depth-First Search (IDS / IDDFS)</h2>
+<p><strong>Iterative Deepening Search</strong> repeatedly executes Depth-Limited Search, incrementing the depth limit by one each iteration ($l = 0, 1, 2, 3, \dots$) until the goal is found.</p>
+<h3>ASCII Diagram: Iterative Deepening Successive Iterations</h3>
+<pre><code class="language-text">  Iteration 0 (Limit = 0):  [ Root ]  (Goal not found, try limit 1)
+
+  Iteration 1 (Limit = 1):  [ Root ]
+                           /        \
+                        [ A ]      [ B ]  (Goal not found, try limit 2)
+
+  Iteration 2 (Limit = 2):  [ Root ]
+                           /        \
+                        [ A ]      [ B ]
+                       /     \    /     \
+                     [ C ]  [ D ][ E ]  [ F ] (Goal FOUND at depth 2!)
+</code></pre>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Searching in Expanding Radii</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine looking for a lost item in the dark. Instead of wandering off into deep woods (DFS) or illuminating the entire forest at once (BFS memory exhaustion), you search in expanding concentric circles:</p>
+<ol>
+<li>Search a 1-meter radius. If not found, reset.</li>
+<li>Search a 2-meter radius. If not found, reset.</li>
+<li>Systematically expand until the item is found.
+This is how IDS balances depth exploration with systematic shallow verification.</li>
+</ol>
+</div></details><hr>
+<p><a id="foundations"></a></p>
+<h2>4. Mathematical Analysis of Node Regeneration Overhead</h2>
+<p>A common question regarding IDS is whether repeatedly regenerating upper-level nodes degrades time efficiency. The mathematics demonstrates that this overhead is minimal in exponential trees.</p>
+<h3>Why the Bottom Layer Dominates</h3>
+<p>In a search tree with branching factor $b$, the vast majority of nodes reside at the <strong>deepest level</strong>:</p>
+<ul>
+<li>At depth $d$, the bottom layer contains $b^d$ nodes.</li>
+<li>The layer immediately above contains $b^{d-1}$ nodes.</li>
+<li>The sum of all upper layers represents a small fraction of the bottom layer in a geometric series.</li>
+</ul>
+<h3>Time Complexity Derivation</h3>
+<p>For search depth $d$:</p>
+<ul>
+<li>Limit 0 generated: $1$ time</li>
+<li>Limit 1 generated: $2$ times</li>
+<li>Limit 2 generated: $3$ times</li>
+<li>$\dots$</li>
+<li>Limit $d$ (bottom layer) generated: $1$ time</li>
+</ul>
+<p>Total generated nodes:
+$$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
+<p>Because $b^d$ dominates the asymptotic growth, <strong>IDS has the same Time Complexity as BFS: $O(b^d)$</strong>.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: IDS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
+<li><strong>Time Complexity:</strong> $O(b^d)$ (Asymptotically equivalent to BFS).</li>
+<li><strong>Space Complexity:</strong> $O(bd)$ (Linear space like DFS, since each DLS iteration operates as depth-first).</li>
+<li><strong>Completeness:</strong> Yes (if $b$ is finite).</li>
+<li><strong>Optimality:</strong> Yes (if step costs are identical; finds shallowest goal).</li>
+</ul>
+</div></details><hr>
+<p><a id="history"></a></p>
+<h2>5. Bidirectional Search</h2>
+<p>When search spaces are extremely large, <strong>Bidirectional Search</strong> provides a method to cut search depth:</p>
+<ul>
+<li><strong>Concept:</strong> Execute <strong>two simultaneous searches</strong>:<ol>
+<li>Forward search from the <strong>Initial State</strong> toward the goal.</li>
+<li>Backward search from the <strong>Goal State</strong> back toward the start.</li>
+</ol>
+</li>
+<li>Search terminates when the two search frontiers intersect.</li>
+</ul>
+<h3>ASCII Diagram: Bidirectional Search</h3>
+<pre><code class="language-text">  Initial State (Start) ---&gt; [Frontier 1] ........ [Frontier 2] &lt;--- Goal State
+</code></pre>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Bidirectional Search Complexities</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
+<li><strong>Time Complexity:</strong> $O(b^{d/2})$ (Cutting the exponent in half yields substantial speedup).</li>
+<li><strong>Space Complexity:</strong> $O(b^{d/2})$ (At least one frontier must remain in memory to detect intersections).</li>
+<li><strong>Completeness:</strong> Yes.</li>
+<li><strong>Optimality:</strong> Yes (if implemented with BFS on both sides with uniform step costs).</li>
+</ul>
+</div></details><h3>Challenges of Bidirectional Search:</h3>
+<ol>
+<li><strong>Predecessor Generation:</strong> Backward search requires computing valid preceding states from any given state.</li>
+<li><strong>Multiple Goals:</strong> Problems with many possible goal states or implicit goal descriptions make reverse search complex.</li>
+</ol>
+<hr>
+<h2>6. Master Comparison Matrix</h2>
+<pre><code class="language-text">+-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
+| Criterion         | BFS            | DFS             | DLS             | IDS             | Bidirectional   |
++===================+================+=================+=================+=================+=================+
+| **Complete?**     | Yes            | No              | If $l \ge d$    | Yes             | Yes             |
++-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
+| **Optimal?**      | Yes (cost = 1) | No              | No              | Yes (cost = 1)  | Yes (cost = 1)  |
++-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
+| **Time Comp.**    | $O(b^d)$       | $O(b^m)$        | $O(b^l)$        | $O(b^d)$        | $O(b^{d/2})$    |
++-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
+| **Space Comp.**   | $O(b^d)$       | $O(bm)$         | $O(bl)$         | $O(bd)$         | $O(b^{d/2})$    |
++-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
+</code></pre>
+<hr>
+<p><a id="self-check"></a></p>
+<h2>7. Active Recall Quizzes</h2>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">What are the two primary algorithmic properties that Iterative Deepening Search (IDS) combines into a single strategy?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The time complexity of DFS and the memory complexity of BFS.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The completeness/optimality of BFS and the linear space efficiency ($O(bd)$) of DFS.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The bidirectional search model and heuristic distance estimation.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The priority queue sorting of UCS and the greedy selection of DFS.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>IDS executes repeated depth-limited DFS iterations, providing the linear memory footprint of DFS ($O(bd)$) while systematically increasing depth limits to guarantee BFS-like completeness and shallowest-first optimality.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Why does repeated generation of upper-level nodes in Iterative Deepening Search not worsen its asymptotic time complexity?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Because upper-level nodes are cached in memory after depth 1.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Because in an exponential tree, the bottom layer ($b^d$) dominates the total node count; regenerating shallow upper layers adds only a minor constant factor, keeping total time complexity at $O(b^d)$.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because IDS uses a FIFO queue for upper-level nodes.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Because the branching factor decreases as depth increases.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>In exponential search trees, the deepest tier dominates all previous tiers combined. Regenerating upper tiers adds only a constant multiplier to the total work, preserving the $O(b^d)$ asymptotic bound.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">What is a key practical challenge when applying Bidirectional Search to complex problem domains like chess or puzzle solving?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Bidirectional search requires unbounded CPU cores.</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Generating valid predecessor states backward from the goal state and managing complex or implicit goal conditions.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Bidirectional search cannot be used on directed graphs.</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Bidirectional search always produces suboptimal paths.</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Backward search requires computing inverse actions (predecessors). When goal states are implicit or predecessor calculations are complex, backward search becomes difficult to implement.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2>8. Worked University Exam Q&amp;A</h2>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> State why IDS is preferred over BFS for large state spaces, or list the three outcomes of DLS.</li>
+<li><strong>7 Marks:</strong> Explain the IDS algorithm with mathematical derivation of its time and space complexities.</li>
+</ul>
+</div></details><h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Why is Iterative Deepening Search (IDS) preferred over Breadth-First Search (BFS) in unweighted search problems with large state spaces?</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ul>
+<li><strong>BFS Limitation:</strong> BFS is complete and optimal, but its <strong>space complexity is exponential ($O(b^d)$)</strong>, rapidly exhausting system memory on deep trees.</li>
+<li><strong>IDS Advantage:</strong> IDS provides the same completeness and optimality guarantees as BFS while maintaining a <strong>linear space complexity of $O(bd)$</strong> by using DFS traversals at each depth limit.</li>
+</ul>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Explain the mechanism of Iterative Deepening Depth-First Search (IDS). Derive its time and space complexities, and explain why node regeneration overhead does not increase its asymptotic time complexity.</strong></p>
+<p><strong>Model Answer:</strong></p>
+<ol>
+<li><strong>Mechanism (2 Marks):</strong> IDS repeatedly invokes Depth-Limited Search (DLS) with increasing depth limits ($l = 0, 1, 2, \dots, d$) until the goal state is found.</li>
+<li><strong>Space Complexity (2 Marks):</strong> Because each iteration is executed as depth-first search, only the current branch and immediate siblings are retained in memory, yielding a linear space complexity of <strong>$O(bd)$</strong>.</li>
+<li><strong>Time Complexity &amp; Overhead Derivation (3 Marks):</strong><ul>
+<li>Nodes at depth $d$ are generated 1 time.</li>
+<li>Nodes at depth $d-1$ are generated 2 times.</li>
+<li>Nodes at depth 1 are generated $d$ times.</li>
+<li>Total nodes generated: $\sum_{i=1}^{d} (d - i + 1) b^i = O(b^d)$.</li>
+<li><em>Conclusion:</em> Because the bottom layer $b^d$ contains the vast majority of nodes in an exponential tree, the regeneration of shallow tiers adds only a constant factor overhead, keeping overall time complexity at <strong>$O(b^d)$</strong>.</li>
+</ul>
+</li>
+</ol>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="m2_01_uninformed_search_dfs_bfs_ucs.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">2.1 Uninformed Search DFS BFS UCS</div>
+      </a>
+      
+      
+      
+      <a href="m2_03_informed_heuristic_search_and_functions.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">2.3 Informed Heuristic Search And Functions</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(10) || 0;
+    const currentId = "m2_02_iterative_deepening_and_depth_limited";
+    const courseCode = "PECST522";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>
