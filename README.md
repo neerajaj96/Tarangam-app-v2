@@ -2,7 +2,7 @@
 
 Static-site notes: `content/<COURSE>/*.md` → `node scripts/build.js` → `dist/<COURSE>/*.html` via `templates/base.html` + `style.css`. Dashboard is `index.html`. Dev server is `server.ts`. Deploy is GitHub Pages from `dist/` (see `.github/workflows/deploy-pages.yml`).
 
-> **Deployment model (important):** Pages serves the **branch root**, so the built `dist/` directory is **committed** to `main` (it is intentionally *not* git-ignored). Every content/build change must be followed by `npm run build:notes` + committing the regenerated `dist/`, or the live site goes stale and note links 404. `npm run check` (also a CI gate) validates links/quizzes/slugs before the build runs.
+> **Deployment model (important, learned 2026-09-16):** this repo is served by GitHub Pages in **Actions-artifact mode** (`dist/` uploaded by `deploy-pages.yml`), while forks/copies may serve the **branch root**. The built `dist/` directory is therefore **committed** to `main` (intentionally *not* git-ignored) so *both* modes resolve: artifact mode uses the uploaded `dist/`, branch mode uses the committed `dist/` behind the root dashboard's `dist/…` links. Every content/build change must be followed by `npm run build:notes` + committing the regenerated `dist/`, or the live site goes stale and note links 404. `npm run check` (also a CI gate) validates links/quizzes/slugs before the build runs.
 
 ## Run it
 
