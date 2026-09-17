@@ -188,7 +188,8 @@
 <h1>Depth-Limited Search (DLS), Iterative Deepening (IDS) &amp; Bidirectional Search</h1>
 <p><strong>Hybrid and advanced blind search strategies: Overcoming the BFS memory bottleneck and DFS incompleteness.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Dilemma: BFS Memory vs. DFS Incompleteness</h2>
+<h2 id="1-the-dilemma-bfs-memory-vs-dfs-incompleteness">1. The Dilemma: BFS Memory vs. DFS Incompleteness</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-depth-limited-search-dls">2. Depth-Limited Search (DLS) →</a></p>
 <p>In Topic 2.1, we examined two classic search extremes:</p>
 <ul>
 <li><strong>Breadth-First Search (BFS):</strong> Explores level-by-level. It is <strong>complete and optimal</strong> (if step costs are equal), but its <strong>space complexity is exponential ($O(b^d)$)</strong>, exhausting RAM on deep trees.</li>
@@ -197,7 +198,8 @@
 <p>Can we achieve the <strong>memory safety of DFS</strong> while preserving the <strong>completeness and optimality of BFS</strong>? Yes! That is the exact purpose of <strong>Iterative Deepening Search</strong>.</p>
 <hr>
 <p><a id="the-dimensions"></a></p>
-<h2>2. Depth-Limited Search (DLS)</h2>
+<h2 id="2-depth-limited-search-dls">2. Depth-Limited Search (DLS)</h2>
+<p class="secnav"><a href="#1-the-dilemma-bfs-memory-vs-dfs-incompleteness">← 1. The Dilemma: BFS Memory vs. DFS…</a><span class="secnav-sep">·</span><a href="#3-iterative-deepening-depth-first-search-ids-iddfs">3. Iterative Deepening Depth-First… →</a></p>
 <p>Before examining Iterative Deepening, we must look at its core component: <strong>Depth-Limited Search</strong>.</p>
 <ul>
 <li><strong>Definition:</strong> DLS is standard Depth-First Search with a predefined maximum depth limit, $l$.</li>
@@ -225,7 +227,8 @@
 </ul>
 </div></details><hr>
 <p><a id="terminology"></a></p>
-<h2>3. Iterative Deepening Depth-First Search (IDS / IDDFS)</h2>
+<h2 id="3-iterative-deepening-depth-first-search-ids-iddfs">3. Iterative Deepening Depth-First Search (IDS / IDDFS)</h2>
+<p class="secnav"><a href="#2-depth-limited-search-dls">← 2. Depth-Limited Search (DLS)</a><span class="secnav-sep">·</span><a href="#4-mathematical-analysis-of-node-regeneration-overhead">4. Mathematical Analysis of Node R… →</a></p>
 <p><strong>Iterative Deepening Search</strong> repeatedly executes Depth-Limited Search, incrementing the depth limit by one each iteration ($l = 0, 1, 2, 3, \dots$) until the goal is found.</p>
 <h3>ASCII Diagram: Iterative Deepening Successive Iterations</h3>
 <pre><code class="language-text">  Iteration 0 (Limit = 0):  [ Root ]  (Goal not found, try limit 1)
@@ -249,7 +252,8 @@ This is how IDS balances depth exploration with systematic shallow verification.
 </ol>
 </div></details><hr>
 <p><a id="foundations"></a></p>
-<h2>4. Mathematical Analysis of Node Regeneration Overhead</h2>
+<h2 id="4-mathematical-analysis-of-node-regeneration-overhead">4. Mathematical Analysis of Node Regeneration Overhead</h2>
+<p class="secnav"><a href="#3-iterative-deepening-depth-first-search-ids-iddfs">← 3. Iterative Deepening Depth-First…</a><span class="secnav-sep">·</span><a href="#5-bidirectional-search">5. Bidirectional Search →</a></p>
 <p>A common question regarding IDS is whether repeatedly regenerating upper-level nodes degrades time efficiency. The mathematics demonstrates that this overhead is minimal in exponential trees.</p>
 <h3>Why the Bottom Layer Dominates</h3>
 <p>In a search tree with branching factor $b$, the vast majority of nodes reside at the <strong>deepest level</strong>:</p>
@@ -278,7 +282,8 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
 </ul>
 </div></details><hr>
 <p><a id="history"></a></p>
-<h2>5. Bidirectional Search</h2>
+<h2 id="5-bidirectional-search">5. Bidirectional Search</h2>
+<p class="secnav"><a href="#4-mathematical-analysis-of-node-regeneration-overhead">← 4. Mathematical Analysis of Node R…</a><span class="secnav-sep">·</span><a href="#6-master-comparison-matrix">6. Master Comparison Matrix →</a></p>
 <p>When search spaces are extremely large, <strong>Bidirectional Search</strong> provides a method to cut search depth:</p>
 <ul>
 <li><strong>Concept:</strong> Execute <strong>two simultaneous searches</strong>:<ol>
@@ -303,7 +308,8 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
 <li><strong>Multiple Goals:</strong> Problems with many possible goal states or implicit goal descriptions make reverse search complex.</li>
 </ol>
 <hr>
-<h2>6. Master Comparison Matrix</h2>
+<h2 id="6-master-comparison-matrix">6. Master Comparison Matrix</h2>
+<p class="secnav"><a href="#5-bidirectional-search">← 5. Bidirectional Search</a><span class="secnav-sep">·</span><a href="#7-active-recall-quizzes">7. Active Recall Quizzes →</a></p>
 <pre><code class="language-text">+-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
 | Criterion         | BFS            | DFS             | DLS             | IDS             | Bidirectional   |
 +===================+================+=================+=================+=================+=================+
@@ -318,7 +324,8 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
 </code></pre>
 <hr>
 <p><a id="self-check"></a></p>
-<h2>7. Active Recall Quizzes</h2>
+<h2 id="7-active-recall-quizzes">7. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#6-master-comparison-matrix">← 6. Master Comparison Matrix</a><span class="secnav-sep">·</span><a href="#8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What are the two primary algorithmic properties that Iterative Deepening Search (IDS) combines into a single strategy?</span>
@@ -396,7 +403,8 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2>8. Worked University Exam Q&amp;A</h2>
+<h2 id="8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#7-active-recall-quizzes">← 7. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
 <li><strong>3 Marks:</strong> State why IDS is preferred over BFS for large state spaces, or list the three outcomes of DLS.</li>
@@ -669,6 +677,64 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

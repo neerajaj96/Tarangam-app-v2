@@ -186,7 +186,8 @@
 <h1>Module 1 Practice Lab: AI Foundations, PEAS &amp; Environment Matrix</h1>
 <p><strong>Hands-on scenario classification, active recall drills, cheat-sheet comparisons, and university exam outlines.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. Step-by-Step Scenario Analysis</h2>
+<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: How to Analyze AI &amp; Agent Scenarios</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>When dissecting an AI system:</p>
 <ol>
 <li><strong>Dimension Matrix:</strong> Is it judged by <strong>internal thought</strong> or <strong>external action</strong>? Is it mimicking <strong>humans</strong> or striving for <strong>rational optimality</strong>?</li>
@@ -233,7 +234,8 @@
 </ul>
 <hr>
 <p><a id="the-dimensions"></a></p>
-<h2>2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Exam Traps Ahead</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Examiners frequently test whether you know the subtle boundaries between closely related AI concepts. Memorize this table!</p>
 </div></details><pre><code class="language-text">+-------------------------+-------------------------------------------------------------+
 | Concept A               | Concept B (And Why They Are Different)                      |
@@ -262,7 +264,8 @@
 </code></pre>
 <hr>
 <p><a id="self-check"></a></p>
-<h2>3. Active Recall Quizzes</h2>
+<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">If a company builds an AI system designed specifically to pass the Turing Test, which quadrant of the Russell &amp; Norvig AI matrix are they targeting?</span>
@@ -365,7 +368,8 @@
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2>4. High-Yield University Exam Questions</h2>
+<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: Exam Strategy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Always use structured tabular format for PEAS questions and clearly separated bullet points for 7-mark comparison essays.</p>
 </div></details><h3>Essay Question 1 (7 Marks)</h3>
 <p><strong>Categorize the task environment of a &quot;Medical Diagnosis System&quot; (an AI interacting with patients over time to diagnose and treat diseases) using the 7 environmental dimensions. Justify each classification.</strong></p>
@@ -632,6 +636,64 @@
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

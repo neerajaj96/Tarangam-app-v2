@@ -181,13 +181,15 @@
 <h1>Balanced Search Trees: AVL Trees &amp; Balance Factor</h1>
 <p><strong>Binary Search Tree properties, AVL invariant (|BF| &lt;= 1), and height bound proof (h &lt; 1.44 log2 n).</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Recall from earlier in this module: binary search on a sorted array is fast ($O(\log n)$) because each comparison eliminates half the remaining possibilities. A <strong>Binary Search Tree (BST)</strong> tries to give you that same &quot;eliminate half each time&quot; speed, but for a data structure that also supports fast insertion and deletion (which a plain sorted array does <em>not</em> — inserting into the middle of an array means shifting everything after it).</p>
 <p>Here&#39;s the catch: a BST&#39;s search speed depends entirely on its <strong>height</strong> (how many levels it has) — and if you insert elements in an unlucky order (say, already-sorted order: 1, 2, 3, 4, 5, ...), a plain BST degenerates into what&#39;s essentially a straight line — every node has only one child, no branching at all. Searching in that &quot;tree&quot; is no better than linear search through an array: $O(n)$, not $O(\log n)$. All the speed advantage of &quot;eliminate half each time&quot; evaporates, because there&#39;s no branching left to eliminate half of anything.</p>
 <p>An <strong>AVL tree</strong> (named after its inventors, Adelson-Velsky and Landis) is a BST with an extra rule bolted on: after every insertion or deletion, the tree checks itself and — if needed — rebalances, so that it can <em>never</em> degenerate into that bad, line-like shape. This guarantees the height always stays close to $\log n$, no matter what order you insert elements in — turning &quot;fast <em>if you&#39;re lucky</em>&quot; into &quot;fast, guaranteed, always.&quot;</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <p><strong>Binary Search Tree (BST) property (prerequisite recap):</strong> for every node, all values in its left subtree are smaller than the node&#39;s own value, and all values in its right subtree are larger. This property is what makes &quot;go left or go right&quot; a meaningful way to eliminate half the remaining search space at each step — <em>provided</em> the tree is reasonably balanced.</p>
 <p><strong>Height of a tree.</strong> The height of a node is the number of edges on the longest path from that node down to a leaf; the height of the whole tree is the height of its root. For a BST holding $n$ nodes: the <em>best possible</em> height is $\Theta(\log n)$ (a perfectly balanced tree), but the <em>worst possible</em> height is $\Theta(n)$ (a completely skewed, line-like tree) — this gap is exactly the problem AVL trees solve.</p>
 <pre><code class="language-text">SKEWED BST (insert 1,2,3,4,5)      AVL TREE (same keys, rebalanced)
@@ -214,13 +216,15 @@ $$h &lt; 1.44 \log_2 n$$
 In plain words: even in the <em>sparsest, most reluctantly-balanced</em> AVL tree allowed by the invariant, the height can never exceed roughly $1.44 \times \log_2 n$ — a constant multiple of $\log n$, which is exactly the guarantee we wanted. This is what makes every AVL search, insertion, and deletion provably $O(\log n)$ in the worst case, unlike a plain BST&#39;s $O(n)$ worst case.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Given a BST node $x$ whose left subtree has height $3$ and right subtree has height $1$, determine its balance factor and whether the AVL invariant is satisfied at this node.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>By definition, $BF(x) = \text{height(left)} - \text{height(right)} = 3 - 1 = 2$.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$BF(x) = 2$ violates the AVL invariant $|BF(x)| \le 1$ — this node is &quot;left-heavy&quot; beyond the allowed tolerance. In a real AVL tree, this situation would trigger a rebalancing rotation (specifically, some form of left-side rotation, detailed in the next topic) immediately after whichever insertion caused this imbalance, restoring $|BF(x)|$ to at most 1 before any further operations proceed.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why does a plain (unbalanced) Binary Search Tree degrade to $O(n)$ search time in the worst case?</span>
@@ -542,6 +546,64 @@ In plain words: even in the <em>sparsest, most reluctantly-balanced</em> AVL tre
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

@@ -181,12 +181,14 @@
 <h1>Asymptotic Notations: Big-O, Omega, Theta, Little-o, Little-omega</h1>
 <p><strong>Formal mathematical definitions via limits and constants (c, n0), transitivity, reflexivity, and symmetry.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine describing how fast two runners are, but instead of saying &quot;Runner A finishes in exactly 42.7 seconds,&quot; you say &quot;Runner A is <em>roughly twice as fast</em> as Runner B, for long enough races.&quot; You&#39;re deliberately throwing away the exact number and keeping only the <em>growth relationship</em> — because the exact number depends on today&#39;s wind, the runner&#39;s shoes, and a dozen irrelevant details, while the growth relationship (twice as fast) is the durable, meaningful fact.</p>
 <p>Asymptotic notation does exactly this for algorithms. Instead of saying &quot;this algorithm takes exactly $3n^2 + 5n + 2$ operations&quot; (a number that depends on irrelevant implementation details like which programming language or which specific hardware), we say &quot;this algorithm&#39;s work grows like $n^2$&quot; — throwing away the constants ($3$, $5$, $2$) and keeping only the <em>shape</em> of growth as $n$ gets large. Big-O, Big-Omega, and Big-Theta are three different &quot;flavours&quot; of this idea: Big-O gives an <em>upper bound</em> (&quot;it never grows faster than this&quot;), Big-Omega gives a <em>lower bound</em> (&quot;it never grows slower than this&quot;), and Big-Theta gives a <em>tight bound</em> (&quot;it grows at exactly this rate, both above and below&quot;). Little-o and little-omega are their stricter cousins, meaning <em>strictly</em> faster or slower, never equal.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <p>Let $f(n)$ and $g(n)$ be functions from positive integers to positive real numbers (typically, $f$ is an algorithm&#39;s actual operation count, and $g$ is a simple reference function like $n$, $n^2$, or $\log n$).</p>
 <p><strong>Big-O (upper bound, &quot;at most this fast-growing&quot;):</strong>
 $$f(n) = O(g(n)) \iff \exists\ c &gt; 0,\ n_0 &gt; 0 \text{ such that } 0 \le f(n) \le c\cdot g(n)\ \ \forall n \ge n_0$$
@@ -208,13 +210,15 @@ Equivalently, $\exists\ c_1, c_2 &gt; 0,\ n_0$ such that $c_1 g(n) \le f(n) \le 
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Five Notations</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$O$ = upper ($\le$, &quot;at most&quot;) · $\Omega$ = lower ($\ge$, &quot;at least&quot;) · $\Theta$ = both at once (&quot;exactly&quot;, needs the <em>same</em> $g$) · $o$ = <em>strictly</em> slower (limit ratio $0$) · $\omega$ = <em>strictly</em> faster (limit ratio $\infty$). Reflexive: $O, \Omega, \Theta$ only. Symmetric: $\Theta$ only. Transitive: $O, \Omega, \Theta$. If an exam asks &quot;which notation is symmetric?&quot; — the answer is always $\Theta$.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Prove formally that $f(n) = 3n^2 + 5n + 2$ is $O(n^2)$ — i.e., find explicit constants $c$ and $n_0$ satisfying the Big-O definition.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>We need $3n^2 + 5n + 2 \le c \cdot n^2$ for all $n \ge n_0$. For $n \ge 1$: $5n \le 5n^2$ and $2 \le 2n^2$, so $3n^2 + 5n + 2 \le 3n^2 + 5n^2 + 2n^2 = 10n^2$. This shows the inequality holds with $c = 10$ for every $n \ge 1$.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Choosing $c = 10$ and $n_0 = 1$ satisfies the definition: $3n^2+5n+2 \le 10n^2$ for all $n \ge 1$. Therefore $f(n) = O(n^2)$ is formally proven — not just &quot;intuitively obvious,&quot; but backed by an explicit witness pair $(c, n_0)$, exactly as the definition demands. (Tighter constants exist too — e.g. $c=4$ works for $n_0 \ge 6$, since $5n+2 \le n^2$ once $n \ge 6$ — but the definition only requires <em>some</em> valid pair, not the best possible one.)</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Which asymptotic notation gives the *tightest* possible statement about a function&#39;s growth — both an upper and a lower bound simultaneously?</span>
@@ -536,6 +540,64 @@ Equivalently, $\exists\ c_1, c_2 &gt; 0,\ n_0$ such that $c_1 g(n) \le f(n) \le 
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

@@ -181,12 +181,14 @@
 <h1>Complexity Analysis of Iterative Loops</h1>
 <p><strong>Single loops, nested loops, logarithmic increment loops, dependent inner loops, and amortized loop bounds.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Counting how many times a loop runs is a bit like counting steps on a staircase. A single flight of $n$ steps takes $n$ steps to climb — simple. But now imagine a building where, for <em>each</em> of the $n$ floors, you also have to climb a separate flight of $n$ steps just to check something on that floor before moving up — now you&#39;re doing $n \times n = n^2$ steps total, because the work is <em>nested</em>. And if, instead of climbing linearly, each step you take lets you skip to double your current floor (floor 1 → 2 → 4 → 8 → 16...), you&#39;ll reach the top in only about $\log_2 n$ steps — dramatically fewer, because the loop variable <em>grows multiplicatively</em> rather than by fixed increments.</p>
 <p>This section teaches you a systematic recipe: look at how the loop variable changes each iteration (does it go up by 1? by doubling? does the inner loop&#39;s range depend on the outer loop&#39;s current value?), and translate that pattern directly into a Big-O bound — without needing to run the code or guess.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <p><strong>Single loop, incrementing by a constant:</strong></p>
 <pre><code>for i = 1 to n:
     do O(1) work
@@ -216,7 +218,8 @@ while i &lt;= n:
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Two Series You Must Memorize</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arithmetic: $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \Theta(n^2)$ (dependent nested loops). Geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$, so $1+2+4+\dots+n = 2n-1 = \Theta(n)$ (doubling loops, dynamic-array resizes). Nine out of ten loop-counting questions reduce to recognizing which of these two sums you are looking at.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Determine the time complexity of the following nested loop, where the inner loop&#39;s bound depends on the outer loop variable:</p>
 <pre><code>for i = 1 to n:
     for j = 1 to i:
@@ -226,7 +229,8 @@ while i &lt;= n:
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Expanding $\frac{n^2+n}{2} = \frac{1}{2}n^2 + \frac{1}{2}n$. As $n$ grows large, the $n^2$ term dominates the $n$ term, and asymptotic notation drops both the constant factor $\frac{1}{2}$ and the lower-order term $\frac{1}{2}n$. Final answer: $\Theta(n^2)$ — the <em>same</em> asymptotic complexity as two fully independent nested loops running $n$ times each, even though this version does roughly half the total work in absolute terms. This illustrates why Big-Theta cares about growth rate, not exact operation counts.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:</span>
@@ -548,6 +552,64 @@ while i &lt;= n:
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

@@ -5,6 +5,8 @@
  */
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
+import { execFileSync } from 'child_process';
 
 const errors = [];
 const warnings = [];
@@ -107,6 +109,24 @@ if (fs.existsSync('dist')) {
     if (/href="\.\.\/\.\.|src="\.\.\/\.\./.test(fs.readFileSync(page, 'utf-8'))) {
       fail(`dist depth escape (../../) in ${page} — must be ../ for artifact root`);
     }
+  }
+}
+
+// 5. Inline <script> syntax gate: every template script block must parse
+// (Jinja placeholders stubbed out). Catches keyboard/touch/quiz JS regressions.
+{
+  const tpl = fs.readFileSync('templates/base.html', 'utf-8');
+  const blocks = [...tpl.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  if (!blocks.length) fail('templates/base.html: no inline scripts found');
+  const stubbed = blocks
+    .map((s) => s.replace(/\{%[\s\S]*?%\}/g, '').replace(/\{\{[\s\S]*?\}\}/g, '0'))
+    .join('\n;\n');
+  const tmp = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'tarangam-check-')), 'inline.js');
+  fs.writeFileSync(tmp, stubbed, 'utf-8');
+  try {
+    execFileSync(process.execPath, ['--check', tmp], { stdio: 'pipe' });
+  } catch (e) {
+    fail('templates/base.html inline JS syntax error: ' + (e.stderr || e.message || e).toString().slice(0, 500));
   }
 }
 

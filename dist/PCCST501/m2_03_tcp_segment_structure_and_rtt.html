@@ -186,11 +186,13 @@
 <h1>TCP Segment Structure, Sequence Numbers &amp; RTT Estimation</h1>
 <p><strong>Byte-stream numbering, the 20-byte header that matters, cumulative ACKs, and how TCP learns the network&#39;s round-trip time to set its timer.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Numbered Manuscript</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine mailing a novel one page per envelope through an unreliable postal service that sometimes loses, duplicates, or reorders mail. Your fix: number <strong>every character</strong> (not every envelope), and ask the reader to reply &quot;I&#39;ve received everything up to character 4,000&quot; after each batch. A gap tells you exactly what to re-send; duplicates are spotted instantly (already-seen numbers); order is restored by sorting numbers, not by arrival order. TCP does precisely this — except the &quot;characters&quot; are <strong>bytes</strong>, and the &quot;reply&quot; is the <strong>acknowledgment number</strong>.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <h3>2.1 TCP Views Data as a Numbered Byte Stream</h3>
 <ul>
 <li><strong>Sequence number:</strong> the byte-stream number of the <em>first</em> data byte in this segment (initial ISN chosen at handshake, then counting bytes, not segments).</li>
@@ -226,13 +228,15 @@
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Sequence Numbers Count Bytes, ACKs Confirm Bytes</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The two eternal confusions: (1) sequence numbers increment by <em>payload bytes</em>, so a 1000-byte segment starting at 5000 makes the next sequence 6000 — <em>not</em> 5001; (2) &quot;ACK 6000&quot; means &quot;send from 6000 onward,&quot; i.e. bytes <em>below</em> 6000 are confirmed. Read every ACK as &quot;everything before me is safe.&quot;</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Current estimates: $\text{SRTT} = 100$ ms, $\text{DevRTT} = 12$ ms. A fresh (never-retransmitted) segment&#39;s ACK arrives after a measured SampleRTT of $140$ ms. Compute the new SRTT, DevRTT, and TimeoutInterval using standard $\alpha=0.125$, $\beta=0.25$.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Triple</div><div class="step-content"><p>New SRTT $= 0.875 \times 100 + 0.125 \times 140 = 87.5 + 17.5 = 105$ ms. Deviation term $= |105 - 140| = 35$ ms; new DevRTT $= 0.75 \times 12 + 0.25 \times 35 = 9 + 8.75 = 17.75$ ms. TimeoutInterval $= 105 + 4 \times 17.75 = 105 + 71 = 176$ ms.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One slow sample nudged the average 100 → 105 ms but nearly doubled the safety margin&#39;s deviation component (12 → 17.75 ms), lifting the timeout to <strong>176 ms</strong> — the estimator reacts to <em>jitter</em> faster than to delay, which is exactly what prevents both premature timeouts and sluggish loss detection.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A TCP segment carries 1000 bytes starting at sequence number 5000, and all arrive intact. What acknowledgment does the receiver send?</span>
@@ -554,6 +558,64 @@
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

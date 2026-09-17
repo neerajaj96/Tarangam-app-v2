@@ -83,6 +83,51 @@ const JUMP_LABELS = {
   'the-matrix': '🧮 Matrix'
 };
 
+function plainText(html) {
+  return html.replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+}
+
+function slugifyHeading(inner) {
+  const slug = plainText(inner).toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+  return slug || 'section';
+}
+
+function shortTitle(inner) {
+  const clean = plainText(inner).trim();
+  return clean.length > 34 ? clean.slice(0, 34) + '…' : clean;
+}
+
+// Bidirectional theory<->practice section chaining: every H2 gets a stable
+// id and a prev/next section nav row, so framework, worked examples, and
+// quizzes link to each other on every page with zero author effort.
+function linkSections(renderedHtml) {
+  const existing = new Set([...renderedHtml.matchAll(/<a id="([^"]+)">/g)].map(m => m[1]));
+  const heads = [...renderedHtml.matchAll(/<h2>(.*?)<\/h2>/gs)];
+  if (heads.length < 2) return renderedHtml;
+  const used = new Set(existing);
+  const secs = heads.map(m => {
+    let slug = slugifyHeading(m[1]);
+    let n = 2;
+    while (used.has(slug)) slug = `${slugifyHeading(m[1])}-${n++}`;
+    used.add(slug);
+    return { slug, title: shortTitle(m[1]) };
+  });
+  let i = 0;
+  return renderedHtml.replace(/<h2>(.*?)<\/h2>/gs, (match, inner) => {
+    const s = secs[i];
+    const prev = i > 0
+      ? `<a href="#${secs[i - 1].slug}">← ${escapeHtml(secs[i - 1].title)}</a>`
+      : `<a href="#content">↑ Top</a>`;
+    const next = i < secs.length - 1
+      ? `<a href="#${secs[i + 1].slug}">${escapeHtml(secs[i + 1].title)} →</a>`
+      : `<a href="#pagefoot">↓ Next topic</a>`;
+    i++;
+    return `<h2 id="${s.slug}">${inner}</h2>\n<p class="secnav">${prev}<span class="secnav-sep">·</span>${next}</p>`;
+  });
+}
 function buildJumpPills(rawMarkdown) {
   const ids = [];
   const seen = new Set();
@@ -419,7 +464,7 @@ export function buildSite() {
         if (!fs.existsSync(rel)) warnings.push(`${courseCode}/${page.filename}: video missing ${rel}`);
       }
 
-      const renderedHtmlBody = marked.parse(preprocessedMarkdown);
+      const renderedHtmlBody = linkSections(marked.parse(preprocessedMarkdown));
 
       const prevPage = idx > 0 ? pages[idx - 1].pageData : null;
       const nextPage = idx < pages.length - 1 ? pages[idx + 1].pageData : null;

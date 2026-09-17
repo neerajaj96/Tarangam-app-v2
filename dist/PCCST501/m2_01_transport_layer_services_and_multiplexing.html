@@ -186,7 +186,8 @@
 <h1>Transport-Layer Services &amp; Multiplexing</h1>
 <p><strong>Process-to-process delivery, connectionless vs. connection-oriented service, ports, sockets, and how one host sorts arriving segments to the right app.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Apartment Building</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The network layer delivers mail to the right <strong>building</strong> (host, by IP address) — but a building holds many <strong>apartments</strong> (processes: browser, mail client, game). Somebody must read the apartment number on each envelope and slide it under the correct door. That somebody is the <strong>transport layer</strong>: it extends host-to-host delivery into <strong>process-to-process</strong> delivery. The &quot;apartment numbers&quot; are <strong>port numbers</strong>, and each door (socket) is watched by exactly one process.</p>
 </div></details><p>The transport layer offers application processes exactly two personalities to choose from — and every application you have met picks one:</p>
 <ul>
@@ -196,7 +197,8 @@
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Service Lives in the End Systems, Not the Network</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exam trap: multiplexing, reliability, and congestion control are implemented <strong>only in hosts</strong> (sender + receiver), never inside routers. The network core stays dumb and fast; all the cleverness sits at the edge. If an option places TCP logic &quot;in the router,&quot; eliminate it instantly.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <h3>2.1 Multiplexing and Demultiplexing</h3>
 <ul>
 <li><strong>Multiplexing (sender):</strong> gathering data chunks from several sockets, wrapping each with transport headers, and handing the segments down to the network layer.</li>
@@ -232,13 +234,15 @@
 <p>A <strong>socket</strong> is the programming interface between an application process and the transport layer, named by <code>(IP address, port number)</code>. Ports 0–1023 are <strong>well-known</strong> (HTTP 80, HTTPS 443, FTP-control 21, DNS 53, SMTP 25); servers listen on them while clients use ephemeral high ports.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Host A runs a DNS client (ephemeral port 52001) and a browser tab fetching a page. Host B runs a DNS server (port 53) and a web server (port 80). A DNS reply and an HTTP segment both arrive at host A addressed to its IP. Which socket gets each segment, and why can&#39;t they be mixed up?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Demultiplexing</div><div class="step-content"><p>The DNS reply carries destination port 52001 → steered to the DNS client&#39;s socket (UDP 2-tuple match). The HTTP segment carries destination port (browser&#39;s ephemeral port, e.g. 49152) → steered to the browser&#39;s TCP socket (4-tuple match). The port numbers in the headers make the decision unambiguous even though both segments arrived at the same IP in the same instant.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Demultiplexing keys — not arrival order, not timing — decide ownership. UDP needs only the destination pair; TCP additionally separates connections by source, which is why one server port can serve thousands of simultaneous clients without confusion.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What is the transport layer&#39;s core job, beyond what the network layer already provides?</span>
@@ -560,6 +564,64 @@
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

@@ -181,12 +181,14 @@
 <h1>The Master Theorem for Divide-and-Conquer Recurrences</h1>
 <p><strong>Master Theorem formula T(n) = aT(n/b) + f(n), Case 1, Case 2, and Case 3.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>You&#39;ve now solved recurrences the hard way twice — once by unrolling them level by level (iteration method) and once by drawing them out as a tree and summing level totals (recursion tree method). Both times, you probably noticed the same underlying question kept deciding the answer: &quot;does the work happening <em>at the root</em> (splitting the problem, combining sub-results) dominate, or does the work happening <em>at the leaves</em> (the sheer number of base-case calls) dominate, or are they perfectly balanced?&quot;</p>
 <p>The Master Theorem is exactly this observation, turned into a plug-and-chug formula, so that for the huge and extremely common family of recurrences shaped like $T(n) = aT(n/b) + f(n)$, you no longer need to draw a tree or unroll anything by hand — you compare $f(n)$ against a specific reference quantity ($n^{\log_b a}$), see which of three cases you land in, and read off the answer directly. It&#39;s the &quot;cheat sheet&quot; version of everything the recursion tree method taught you — powerful precisely <em>because</em> you now understand why it works, rather than just memorising it blindly.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <p><strong>Setup.</strong> The Master Theorem applies to recurrences of the exact form:
 $$T(n) = a,T(n/b) + f(n), \qquad a \ge 1,\ b &gt; 1$$
 where $a$ = number of sub-problems per call, $b$ = factor by which the problem size shrinks, and $f(n)$ = the cost of the work done <em>outside</em> the recursive calls (splitting the problem and combining results).</p>
@@ -210,7 +212,8 @@ $$T(n) = \Theta(f(n))$$</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Master Theorem in 30 Seconds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Compute $n^{\log_b a}$ first. $f$ polynomially <em>slower</em> → <strong>Case 1</strong>: $\Theta(n^{\log_b a})$. $f$ <em>equal</em> → <strong>Case 2</strong>: $\Theta(n^{\log_b a}\log n)$. $f$ polynomially <em>faster</em> (+ regularity) → <strong>Case 3</strong>: $\Theta(f(n))$. Differs only by a $\log$ factor → <strong>gap</strong>: theorem silent, unroll by hand.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Apply the Master Theorem to Binary Search&#39;s recurrence, $T(n) = T(n/2) + O(1)$ (here $a=1$, $b=2$, $f(n)=O(1)=\Theta(n^0)$), and separately to Merge Sort&#39;s recurrence, $T(n) = 2T(n/2) + \Theta(n)$ (here $a=2$, $b=2$, $f(n)=\Theta(n)$).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Binary Search:</strong> compute the reference exponent $\log_b a = \log_2 1 = 0$, so $n^{\log_b a} = n^0 = 1$. Compare to $f(n) = \Theta(1) = \Theta(n^0)$ — this exactly matches the reference function, so we&#39;re in <strong>Case 2</strong>.
 <strong>Merge Sort:</strong> compute $\log_b a = \log_2 2 = 1$, so $n^{\log_b a} = n^1 = n$. Compare to $f(n) = \Theta(n) = \Theta(n^1)$ — again an exact match with the reference function, so this is also <strong>Case 2</strong>.</p>
@@ -218,7 +221,8 @@ $$T(n) = \Theta(f(n))$$</p>
 <strong>Merge Sort:</strong> Case 2 gives $T(n) = \Theta(n^1 \log n) = \Theta(n\log n)$ — matching exactly the result derived earlier, the hard way, by the iteration method. This confirms the Master Theorem is simply a formalised shortcut for the same reasoning we already worked through by hand.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In the Master Theorem for $T(n) = aT(n/b)+f(n)$, which case applies when $f(n)$ grows at *exactly* the same rate as $n^{\log_b a}$?</span>
@@ -540,6 +544,64 @@ $$T(n) = \Theta(f(n))$$</p>
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

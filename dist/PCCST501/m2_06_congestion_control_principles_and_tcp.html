@@ -186,11 +186,13 @@
 <h1>Congestion Control: Principles &amp; TCP Dynamics</h1>
 <p><strong>Why the network chokes, the three costs of congestion, AIMD sawtooth fairness, slow start, and Tahoe vs. Reno on loss.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Highway On-Ramp</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Packet loss is not a pothole (broken road) — it is a <strong>traffic jam</strong> (too many cars). And jams are self-inflicted: every driver entering faster makes everyone slower. TCP drivers therefore follow one shared etiquette: <em>probe for space by speeding up gently, and back off hard at the first brake lights</em>. If every flow obeys it, the highway self-organizes near capacity; if flows ignored it (like early UDP blasters), the road collapses into gridlock where almost no useful traffic moves at all.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <h3>2.1 The Three Costs of Congestion</h3>
 <ol>
 <li><strong>Retransmission waste:</strong> dropped packets must be re-sent, so the network carries the same bytes twice while delivering once.</li>
@@ -224,14 +226,16 @@
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Loss Means Congestion (in This Model)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP&#39;s founding bet: on wired networks, packet loss ≈ buffer overflow ≈ congestion — <em>not</em> link damage. So it always slows down on loss. The famous exception proving the rule: <strong>wireless</strong> links corrupt packets without congestion, where blind halving needlessly throttles — which is exactly why wireless-optimized TCP variants exist.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A Reno flow has <code>cwnd = 24</code> MSS and <code>ssthresh = 32</code> MSS in congestion avoidance. Event A: triple duplicate ACKs arrive. Event B (later, after recovery to <code>cwnd = 14</code>): the retransmission timer expires. Trace <code>cwnd</code> and <code>ssthresh</code> through both events.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Reno Rules</div><div class="step-content"><p><strong>Event A (3 dup-ACKs, mild loss):</strong> <code>ssthresh = 24/2 = 12</code>; <code>cwnd = 24/2 = 12</code> (halve, fast recovery — <em>no</em> slow start). Growth resumes additively from 12.
 <strong>Event B (timeout at cwnd 14, severe loss):</strong> <code>ssthresh = 14/2 = 7</code>; <code>cwnd = 1</code> (full Tahoe-style reset). Slow start doubles 1 → 2 → 4 → 8 (crossing ssthresh=7 mid-way, switching to additive) and continues gently.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same flow, two philosophies: mild loss costs half the window and never leaves congestion avoidance; silence costs everything and restarts the climb from 1 MSS. The severity ladder — <strong>dup-ACKs halve, timeouts reset</strong> — is Reno&#39;s entire personality in one sentence.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why does AIMD produce fairness among competing TCP flows sharing a bottleneck?</span>
@@ -550,6 +554,64 @@
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

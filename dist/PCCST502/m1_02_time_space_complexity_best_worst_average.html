@@ -181,12 +181,14 @@
 <h1>Time &amp; Space Complexity: Best, Worst, and Average Cases</h1>
 <p><strong>Primitive operations count, memory allocation overhead, and case sensitivity analysis.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine you&#39;re searching for your friend&#39;s name in a stack of exam papers, sorted alphabetically, by flipping through one page at a time from the top. If your friend&#39;s name starts with &quot;A,&quot; you&#39;ll find it almost immediately — a lucky, best-case scenario. If it starts with &quot;Z,&quot; you&#39;ll have to flip through the <em>entire</em> stack — the worst case. On an average day, your friend&#39;s name could start with any letter, so on average you&#39;ll flip through about half the stack.</p>
 <p>This everyday intuition — &quot;how long does it take <em>depending on which particular input I happen to get</em>&quot; — is exactly what best-case, worst-case, and average-case analysis formalises. The same algorithm, run on different inputs of the <em>same size</em>, can take wildly different amounts of work. This section teaches you to precisely quantify that &quot;amount of work&quot; using <strong>primitive operations</strong> (basic steps the RAM model counts), and then to separately analyse the best, worst, and average scenario, because in real engineering, &quot;worst case&quot; is usually what you actually care about — you want a guarantee that even the unluckiest possible input won&#39;t make your program crawl.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <p><strong>Primitive operations.</strong> These are the fixed-cost building blocks the RAM model counts: assignment, arithmetic operation, comparison, array/pointer access, and a single method call&#39;s overhead. Time complexity is defined as (a function proportional to) the <em>total number of primitive operations</em> executed, as a function of input size $n$.</p>
 <p><strong>Best case</strong> $T_{best}(n)$: the minimum number of operations over <em>all</em> possible inputs of size $n$ — i.e., the most favourable input. Example: searching an unsorted array where the target happens to be the very first element — found in 1 comparison, regardless of $n$.</p>
 <p><strong>Worst case</strong> $T_{worst}(n)$: the maximum number of operations over all possible inputs of size $n$ — the least favourable input. This is by far the most commonly reported and most useful measure in practice, because it gives a <em>guarantee</em>: &quot;this algorithm will never take longer than this, no matter what input you throw at it.&quot; This matters enormously for safety-critical or time-sensitive systems (e.g., an airline booking system can&#39;t tolerate &quot;usually fast, but occasionally very slow&quot;).</p>
@@ -195,7 +197,8 @@
 <p><strong>Why worst case dominates in practice:</strong> average case requires an input-distribution assumption that may not hold for your actual use case, and best case gives no real guarantee at all (it only tells you what happens on lucky inputs). Worst-case analysis is distribution-free and gives an unconditional upper bound — which is why textbooks, job interviews, and system design almost always default to worst-case unless stated otherwise.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Analyse Linear Search — scanning an array left to right, comparing each element to a target value, and stopping as soon as a match is found (or reaching the end if not found) — on an array of $n$ elements.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Best case:</strong> the target is the very first element. The loop runs once, does 1 comparison, and exits. $T_{best}(n) = O(1)$ — constant, independent of $n$.
 <strong>Worst case:</strong> the target is the last element, or is not present in the array at all. The loop must run through all $n$ elements, doing $n$ comparisons before finishing. $T_{worst}(n) = O(n)$.
@@ -203,7 +206,8 @@
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Linear search&#39;s best case is $O(1)$, but both its worst case and average case are $O(n)$ — meaning that as $n$ grows large, linear search&#39;s <em>typical</em> and <em>worst-possible</em> performance both degrade linearly, even though on rare lucky inputs it can be instantaneous. This is exactly why we can&#39;t judge an algorithm&#39;s real-world suitability by its best case alone — a single lucky test run doesn&#39;t tell you what will happen on the input that actually matters.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why do engineers usually prioritise worst-case complexity over average-case complexity when choosing an algorithm for a critical system?</span>
@@ -525,6 +529,64 @@
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

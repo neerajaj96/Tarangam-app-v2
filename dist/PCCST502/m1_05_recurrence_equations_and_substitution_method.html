@@ -181,13 +181,15 @@
 <h1>Analysis of Recursive Algorithms: Substitution Method</h1>
 <p><strong>Formulating recurrence relations and mathematical induction proofs for upper/lower bounds.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a recursive algorithm like a set of Russian nesting dolls (matryoshka) — a big doll contains a slightly smaller identical doll, which contains an even smaller one, and so on, until you reach the tiniest doll that doesn&#39;t open any further. A recursive <em>algorithm</em> works the same way: to solve a problem of size $n$, it does a little bit of its own work, and then hands off a smaller version of the <em>same</em> problem to itself (a smaller doll) — until the problem is small enough to solve directly, with no further recursion (the innermost doll).</p>
 <p>A <strong>recurrence relation</strong> is just a mathematical equation that captures this nesting pattern: &quot;the cost to solve a problem of size $n$ equals some cost for the current step, plus the cost of solving the smaller sub-problem(s).&quot; For example, $T(n) = T(n-1) + 1$ says &quot;solving a size-$n$ problem costs 1 unit of work plus whatever it costs to solve a size-$(n-1)$ problem&quot; — this is exactly the pattern for something like finding the maximum of a list recursively (compare the last element to the max of the rest).</p>
 <p>The <strong>substitution method</strong> is one way to solve such a recurrence — turn the abstract equation into a concrete formula like $T(n) = O(n)$. The idea: <em>guess</em> the answer&#39;s general shape first, then <em>prove</em> your guess is correct using mathematical induction, exactly the way you&#39;d verify a claimed pattern by checking it holds for a small case and then holds &quot;one step later&quot; too.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <p><strong>What a recurrence relation is.</strong> A recurrence expresses $T(n)$ (the cost of solving a problem of size $n$) in terms of $T$ evaluated at smaller inputs, plus some extra work done at the current level. General form:
 $$T(n) = a \cdot T(n/b) + f(n) \qquad \text{or} \qquad T(n) = T(n-k) + f(n)$$
 depending on whether the problem shrinks by a <em>fraction</em> (divide-and-conquer, e.g. binary search: $T(n) = T(n/2) + O(1)$) or by a <em>fixed amount</em> (linear recursion, e.g. factorial: $T(n) = T(n-1) + O(1)$). A <strong>base case</strong> is also required — e.g. $T(1) = O(1)$ — since without one, the recursion would never terminate, mirroring the Finiteness requirement from earlier in this module.</p>
@@ -202,7 +204,8 @@ depending on whether the problem shrinks by a <em>fraction</em> (divide-and-conq
 <p><strong>Why &quot;guess, then prove&quot; and not &quot;just prove directly&quot;?</strong> Recurrences don&#39;t have an obvious closed-form answer sitting in plain sight — you generally need <em>some</em> candidate answer to test before you can verify it algebraically. The guess often comes from intuition, from an unrolled few levels of recursion (a sneak peek at the iteration method, covered next), or from experience with similar recurrences. The substitution method&#39;s power is that once you have a plausible guess, it gives you an airtight, rigorous way to confirm — or refute — it.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve the recurrence $T(n) = T(n-1) + n$, with base case $T(1) = 1$, using the substitution method. This recurrence describes, for example, an algorithm that does $n$ units of work at the current call, then recurses on a problem one smaller.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Guess:</strong> based on the pattern (each level adds roughly $n$, $n-1$, $n-2, \dots$ down to 1 — an arithmetic-series shape), guess $T(n) = O(n^2)$, specifically claim $T(n) \le cn^2$ for some constant $c$ and all $n \ge 1$.
 <strong>Inductive hypothesis:</strong> assume $T(n-1) \le c(n-1)^2$ holds for the smaller case.
@@ -211,7 +214,8 @@ depending on whether the problem shrinks by a <em>fraction</em> (divide-and-conq
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The inductive step succeeds with $c=1$, and the base case $T(1)=1 \le c(1)^2=1$ also holds — so by mathematical induction, $T(n) = O(n^2)$ is proven rigorously for all $n \ge 1$. (In fact this recurrence&#39;s exact closed form is $T(n) = \frac{n(n+1)}{2}$, the same arithmetic series seen in the previous topic&#39;s dependent-nested-loop example — confirming that a recursive version and an iterative nested-loop version of &quot;add up 1 through $n$&quot; share the same $\Theta(n^2)$ complexity, as they should, since they&#39;re doing the same underlying work.)</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In the substitution method, what is the correct order of steps?</span>
@@ -533,6 +537,64 @@ depending on whether the problem shrinks by a <em>fraction</em> (divide-and-conq
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

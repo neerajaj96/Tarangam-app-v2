@@ -188,7 +188,8 @@
 <h1>Agents and Environments: The PEAS Framework</h1>
 <p><strong>Sensors, actuators, percept sequences, agent functions vs. agent programs, and PEAS specification.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. What is an Agent?</h2>
+<h2 id="1-what-is-an-agent">1. What is an Agent?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-key-terminology-for-beginners">2. Key Terminology for Beginners →</a></p>
 <p>In Artificial Intelligence, the word &quot;agent&quot; describes the actual computational entity that perceives, reasons, and executes actions.</p>
 <p><strong>Definition:</strong> An <strong>Agent</strong> is anything that can perceive its environment through <strong>sensors</strong> and act upon that environment through <strong>actuators</strong>.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: You Are an Agent!</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think about yourself crossing a busy street:</p>
@@ -201,7 +202,8 @@
 <p>In software, a web-scraping bot is an agent. Its sensors receive raw HTML text, its environment is the Internet, and its actuators dispatch HTTP requests to fetch pages and click links.</p>
 </div></details><hr>
 <p><a id="terminology"></a></p>
-<h2>2. Key Terminology for Beginners</h2>
+<h2 id="2-key-terminology-for-beginners">2. Key Terminology for Beginners</h2>
+<p class="secnav"><a href="#1-what-is-an-agent">← 1. What is an Agent?</a><span class="secnav-sep">·</span><a href="#3-the-peas-framework-explained">3. The PEAS Framework Explained →</a></p>
 <p>Before designing an AI system, we must establish the formal language of agent architectures:</p>
 <ul>
 <li><strong>Percept:</strong> A single snapshot of raw sensory data that the agent&#39;s sensors capture at a specific instant in time (e.g., a camera frame detecting a red light right <em>now</em>).</li>
@@ -275,7 +277,8 @@ Where:</p>
   </details>
 </div><hr>
 <p><a id="the-dimensions"></a></p>
-<h2>3. The PEAS Framework Explained</h2>
+<h2 id="3-the-peas-framework-explained">3. The PEAS Framework Explained</h2>
+<p class="secnav"><a href="#2-key-terminology-for-beginners">← 2. Key Terminology for Beginners</a><span class="secnav-sep">·</span><a href="#4-classic-worked-peas-examples">4. Classic Worked PEAS Examples →</a></p>
 <p>When engineers specify an AI system, the very first task—before writing code or picking neural architectures—is to rigorously define the <strong>Task Environment</strong> using the <strong>PEAS</strong> framework:</p>
 <ul>
 <li><strong>[P] Performance Measure:</strong> The external, objective criteria used to evaluate the success and quality of the agent&#39;s behavior. It answers: <em>&quot;What makes this AI successful?&quot;</em></li>
@@ -287,7 +290,8 @@ Where:</p>
 For a chess bot, the Performance Measure is simply &quot;Winning the match according to official rules.&quot; We evaluate the <em>external outcome in the environment</em>, not how high the agent&#39;s internal evaluation heuristic scored during search.</p>
 </div></details><hr>
 <p><a id="foundations"></a></p>
-<h2>4. Classic Worked PEAS Examples</h2>
+<h2 id="4-classic-worked-peas-examples">4. Classic Worked PEAS Examples</h2>
+<p class="secnav"><a href="#3-the-peas-framework-explained">← 3. The PEAS Framework Explained</a><span class="secnav-sep">·</span><a href="#5-designing-the-performance-measure-avoiding-unintended-beha">5. Designing the Performance Measu… →</a></p>
 <p>Below is a comprehensive specification table breaking down standard PEAS configurations:</p>
 <pre><code class="language-text">+---------------------+-----------------------+-----------------------+-----------------------+-----------------------+
 |     Agent Type      | [P]erformance Measure |    [E]nvironment      |     [A]ctuators       |      [S]ensors        |
@@ -345,7 +349,8 @@ For a chess bot, the Performance Measure is simply &quot;Winning the match accor
   </details>
 </div><hr>
 <p><a id="history"></a></p>
-<h2>5. Designing the Performance Measure: Avoiding Unintended Behavior</h2>
+<h2 id="5-designing-the-performance-measure-avoiding-unintended-beha">5. Designing the Performance Measure: Avoiding Unintended Behavior</h2>
+<p class="secnav"><a href="#4-classic-worked-peas-examples">← 4. Classic Worked PEAS Examples</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
 <p>Designing an objective Performance Measure is critical. A rational agent will ruthlessly maximize the exact mathematical function it is given, often exploiting edge cases in unexpected ways.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: The Vacuum Cleaner Paradox</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Suppose you design a robotic vacuum cleaner and define its Performance Measure as: <strong>&quot;Total amount of dirt sucked up into the dustbin.&quot;</strong></p>
 <p>What does an optimal rational agent do?
@@ -378,7 +383,8 @@ It cleans the dirt, <strong>dumps the dustbin back onto the clean floor</strong>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2>6. Worked University Exam Q&amp;A</h2>
+<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#5-designing-the-performance-measure-avoiding-unintended-beha">← 5. Designing the Performance Measu…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>High-Yield Patterns:</strong></p>
 <ul>
 <li><strong>3-Mark Question:</strong> Define PEAS and provide a 1-line breakdown of each term.</li>
@@ -672,6 +678,64 @@ The PEAS framework formalizes an agent&#39;s task environment before implementat
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

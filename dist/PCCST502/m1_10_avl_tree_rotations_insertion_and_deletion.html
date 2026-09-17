@@ -181,12 +181,14 @@
 <h1>AVL Tree Rotations: LL, RR, LR, RL Operations</h1>
 <p><strong>Single rotations (LL, RR), double rotations (LR, RL), step-by-step insertion rebalancing, and deletion rebalancing.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a old-fashioned two-pan balance scale that&#39;s tipped too far to one side. To fix it, you don&#39;t throw anything away — you just physically rearrange the weights, moving some from the heavy side to the light side, until the scale sits level again. Crucially, the <em>same</em> weights are still on the scale, just redistributed — nothing was added or removed.</p>
 <p>A <strong>rotation</strong> in an AVL tree does exactly this for a &quot;tipped&quot; subtree — one whose balance factor has drifted outside the allowed ${-1,0,+1}$ range after an insertion or deletion. A rotation restructures a small, local piece of the tree — reassigning which node is the &quot;parent&quot; and which is the &quot;child&quot; among 2–3 nodes — <em>without</em> changing which elements are in the tree, and <em>without</em> breaking the crucial Binary Search Tree ordering property (left-smaller, right-larger must still hold everywhere afterward). There are exactly four named &quot;shapes&quot; of imbalance that can occur, and each has a specific, well-defined fix: <strong>LL</strong> and <strong>RR</strong> (single rotations, for a &quot;straight-line&quot; imbalance) and <strong>LR</strong> and <strong>RL</strong> (double rotations, for a &quot;zig-zag&quot; imbalance).</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <p><strong>When rotations are triggered.</strong> After inserting (or deleting) a node, walk back up from the changed node toward the root, updating each ancestor&#39;s height and balance factor. The <em>first</em> node found (closest to the newly inserted/deleted node) where $|BF|$ becomes $2$ is the node where a rotation is performed. Fixing the imbalance at this one node is provably always sufficient to restore the AVL invariant for the <em>entire</em> tree above it too (for insertion — deletion can occasionally require rotations to propagate further up, as noted below).</p>
 <p><strong>Case 1 — LL (Left-Left), single right rotation.</strong> Occurs when the imbalance is caused by inserting into the <strong>left</strong> subtree of the <strong>left</strong> child of the unbalanced node (a &quot;straight line leaning left&quot;). Fix: rotate the unbalanced node <strong>right</strong> — the left child becomes the new local root, the old root becomes the new root&#39;s right child, and the new root&#39;s <em>former</em> right subtree (if any) is reattached as the old root&#39;s new left subtree.</p>
 <p><strong>Case 2 — RR (Right-Right), single left rotation.</strong> The mirror image of LL: imbalance caused by inserting into the <strong>right</strong> subtree of the <strong>right</strong> child (a &quot;straight line leaning right&quot;). Fix: rotate the unbalanced node <strong>left</strong> — symmetric to the LL fix.</p>
@@ -206,7 +208,8 @@
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Rotation Chooser</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Straight line → <strong>single</strong> rotation: <strong>LL</strong> (left-left) → rotate <strong>right</strong>; <strong>RR</strong> → rotate <strong>left</strong>. Zig-zag → <strong>double</strong>: <strong>LR</strong> → <strong>left</strong> on child, then <strong>right</strong> on parent; <strong>RL</strong> → <strong>right</strong> on child, then <strong>left</strong> on parent. Mnemonic: the <em>first</em> rotation always pushes the &quot;elbow&quot; of the zig-zag outward into a straight line.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Insert the keys $30, 20, 10$ in that order into an initially empty AVL tree, and determine what rebalancing (if any) is needed after each insertion.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Insert $30$: tree is just node $30$, balanced trivially ($BF=0$).
 Insert $20$: as a BST, $20 &lt; 30$, so $20$ becomes $30$&#39;s left child. Check balance factors: $30$&#39;s left subtree height is $0$, right subtree height is $-1$ (empty, conventionally height $-1$ or sometimes treated as $0$ nodes/height $-1$ depending on convention) — $BF(30) = 0-(-1)=1$, still within ${-1,0,1}$, no rotation needed.
@@ -214,7 +217,8 @@ Insert $10$: as a BST, $10 &lt; 30$ so go left to $20$; $10 &lt; 20$ so $10$ bec
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The imbalance at node $30$ was caused by inserting into the <strong>left</strong> subtree of $30$&#39;s <strong>left</strong> child ($20$) — the new node $10$ went left, then left again — this is exactly the <strong>LL</strong> shape. Fix: a single <strong>right rotation</strong> at node $30$. After rotation, $20$ becomes the new local root, with $10$ as its left child and $30$ as its right child — a perfectly balanced 3-node tree (every node&#39;s $BF=0$). This mirrors exactly how a real AVL insertion sequence self-corrects the moment it starts leaning too far in a straight line.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">An imbalance caused by inserting into the right subtree of the left child of an unbalanced node requires which type of rotation?</span>
@@ -536,6 +540,64 @@ Insert $10$: as a BST, $10 &lt; 30$ so go left to $20$; $10 &lt; 20$ so $10$ bec
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

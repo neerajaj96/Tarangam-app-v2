@@ -186,11 +186,13 @@
 <h1>TCP Flow Control &amp; Connection Management</h1>
 <p><strong>Receive window (rwnd) overflow protection, the 3-way handshake with sequence synchronization, and why teardown needs four steps.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. The Intuition</h2>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Thirsty Guest</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Flow control is pouring drinks for a guest: you match <em>their</em> sipping speed, not your jug&#39;s capacity — overflow the glass and drink spills (packets drop at an overwhelmed receiver). Connection management is the phone call around the conversation: you <strong>dial and confirm</strong> (&quot;hello? — hello! — let&#39;s talk&quot;) before speaking, and both sides <strong>say goodbye and wait for the echo</strong> before hanging up, so no farewell is ever cut off mid-sentence.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. Theoretical Framework &amp; Formalism</h2>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
 <h3>2.1 Flow Control: Never Drown the Receiver</h3>
 <p>The receiver advertises a <strong>receive window</strong> <code>rwnd</code> = free bytes left in its buffer (<code>RcvBuffer − (LastByteRcvd − LastByteRead)</code>). The sender obeys:</p>
 <p>$$\text{LastByteSent} - \text{LastByteAcked} \le \min(\text{cwnd}, \text{rwnd})$$</p>
@@ -214,13 +216,15 @@
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Flow Control ≠ Congestion Control</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same mechanism family (windows), opposite patients: <strong>rwnd</strong> answers &quot;is the <em>receiver&#39;s buffer</em> full?&quot; (end-to-end, receiver-set); <strong>cwnd</strong> answers &quot;is the <em>network</em> overloaded?&quot; (inferred from loss/delay, sender-computed). An exam option attributing router queues to rwnd — or receiver buffers to cwnd — is always wrong.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Worked Example / Step-by-Step Scenario</h2>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Receiver buffer 8000 bytes; app has read 5000, received 7000 total. Sender&#39;s <code>cwnd</code> is 12000 bytes with 3000 unACKed in flight. How many more bytes may the sender transmit right now, and which window binds?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Both Windows</div><div class="step-content"><p>Free buffer: <code>rwnd = 8000 − (7000 − 5000) = 6000</code> bytes. In-flight: 3000, so rwnd allows <code>6000 − 3000 = 3000</code> more bytes. cwnd allows <code>12000 − 3000 = 9000</code> more bytes. Effective limit: <code>min(9000, 3000) = 3000</code> bytes.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Only <strong>3000 bytes</strong> may go — the <strong>receiver window binds</strong>, not congestion. The app must read faster (draining the buffer raises rwnd) before the sender&#39;s generous cwnd matters at all. This is flow control doing its job: the slow reader, not the fast network, sets the pace.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">The sender&#39;s effective transmit limit is min(cwnd, rwnd). What distinct danger does each window guard against?</span>
@@ -542,6 +546,64 @@
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

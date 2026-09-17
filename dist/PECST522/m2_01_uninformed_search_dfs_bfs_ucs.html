@@ -188,7 +188,8 @@
 <h1>Uninformed (Blind) Search Strategies: BFS, DFS &amp; UCS</h1>
 <p><strong>Search algorithms without domain heuristics: Breadth-First Search, Depth-First Search, and Uniform-Cost Search.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. What is Uninformed (Blind) Search?</h2>
+<h2 id="1-what-is-uninformed-blind-search">1. What is Uninformed (Blind) Search?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-evaluating-search-strategies">2. Evaluating Search Strategies →</a></p>
 <p>When an AI agent needs to find a sequence of actions from an <strong>Initial State</strong> to a <strong>Goal State</strong>, it must explore the search space.</p>
 <ul>
 <li><strong>Uninformed Search (Blind Search):</strong> Search strategies that operate with <strong>no domain-specific knowledge</strong> beyond the problem definition. They only know how to generate successor states, test legal actions, and recognize a goal state.</li>
@@ -197,7 +198,8 @@
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Navigating in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine you are navigating an unlit maze without a map, compass, or signs. You can only feel the walls around your current position, test paths step-by-step, and check if you have reached an exit. Uninformed search behaves the same way—it cannot &quot;see&quot; the goal ahead; it explores the graph systematically.</p>
 </div></details><hr>
 <p><a id="the-dimensions"></a></p>
-<h2>2. Evaluating Search Strategies</h2>
+<h2 id="2-evaluating-search-strategies">2. Evaluating Search Strategies</h2>
+<p class="secnav"><a href="#1-what-is-uninformed-blind-search">← 1. What is Uninformed (Blind) Sear…</a><span class="secnav-sep">·</span><a href="#3-breadth-first-search-bfs">3. Breadth-First Search (BFS) →</a></p>
 <p>Every search algorithm is evaluated against <strong>four standard criteria</strong>:</p>
 <ol>
 <li><strong>Completeness:</strong> Is the algorithm guaranteed to find a solution if one exists?</li>
@@ -213,7 +215,8 @@
 </ul>
 <hr>
 <p><a id="terminology"></a></p>
-<h2>3. Breadth-First Search (BFS)</h2>
+<h2 id="3-breadth-first-search-bfs">3. Breadth-First Search (BFS)</h2>
+<p class="secnav"><a href="#2-evaluating-search-strategies">← 2. Evaluating Search Strategies</a><span class="secnav-sep">·</span><a href="#4-depth-first-search-dfs">4. Depth-First Search (DFS) →</a></p>
 <p>Breadth-First Search expands the search tree level by level. It explores all sibling nodes at depth $k$ before expanding any nodes at depth $k+1$.</p>
 <ul>
 <li><strong>Data Structure:</strong> Uses a <strong>FIFO (First-In, First-Out) Queue</strong> for the frontier.</li>
@@ -236,7 +239,8 @@
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Memory Bottleneck of BFS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>While BFS guarantees finding the shallowest solution, its <strong>space complexity</strong> is its greatest limitation. Because all generated nodes are retained in memory, for $b = 10$ and $d = 8$, the frontier requires storing over $10^8$ nodes, exhausting RAM long before CPU time is exhausted.</p>
 </div></details><hr>
 <p><a id="foundations"></a></p>
-<h2>4. Depth-First Search (DFS)</h2>
+<h2 id="4-depth-first-search-dfs">4. Depth-First Search (DFS)</h2>
+<p class="secnav"><a href="#3-breadth-first-search-bfs">← 3. Breadth-First Search (BFS)</a><span class="secnav-sep">·</span><a href="#5-uniform-cost-search-ucs">5. Uniform-Cost Search (UCS) →</a></p>
 <p>Depth-First Search explores as deep as possible along each branch before backtracking.</p>
 <ul>
 <li><strong>Data Structure:</strong> Uses a <strong>LIFO (Last-In, First-Out) Stack</strong> (or recursive function calls).</li>
@@ -256,7 +260,8 @@
 </ul>
 </div></details><hr>
 <p><a id="history"></a></p>
-<h2>5. Uniform-Cost Search (UCS)</h2>
+<h2 id="5-uniform-cost-search-ucs">5. Uniform-Cost Search (UCS)</h2>
+<p class="secnav"><a href="#4-depth-first-search-dfs">← 4. Depth-First Search (DFS)</a><span class="secnav-sep">·</span><a href="#6-comparative-summary-matrix">6. Comparative Summary Matrix →</a></p>
 <p>When step costs vary (e.g., roads with different lengths or costs), BFS cannot guarantee the cheapest path because it optimizes step count rather than total cost. <strong>Uniform-Cost Search (UCS)</strong> addresses this by expanding the node with the lowest cumulative path cost $g(n)$.</p>
 <ul>
 <li><strong>Data Structure:</strong> Uses a <strong>Priority Queue</strong> ordered by path cost $g(n)$.</li>
@@ -279,7 +284,8 @@
 <li><strong>Optimality:</strong> Yes (guaranteed to find the lowest-cost path for arbitrary non-negative costs).</li>
 </ul>
 </div></details><hr>
-<h2>6. Comparative Summary Matrix</h2>
+<h2 id="6-comparative-summary-matrix">6. Comparative Summary Matrix</h2>
+<p class="secnav"><a href="#5-uniform-cost-search-ucs">← 5. Uniform-Cost Search (UCS)</a><span class="secnav-sep">·</span><a href="#7-active-recall-quizzes">7. Active Recall Quizzes →</a></p>
 <pre><code class="language-text">+---------------------+----------------+-----------------+-------------------------------+
 | Criterion           | BFS            | DFS             | UCS                           |
 +=====================+================+=================+===============================+
@@ -296,7 +302,8 @@
 </code></pre>
 <hr>
 <p><a id="self-check"></a></p>
-<h2>7. Active Recall Quizzes</h2>
+<h2 id="7-active-recall-quizzes">7. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#6-comparative-summary-matrix">← 6. Comparative Summary Matrix</a><span class="secnav-sep">·</span><a href="#8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why is Breadth-First Search (BFS) suboptimal when step costs along edges are unequal?</span>
@@ -374,7 +381,8 @@
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2>8. Worked University Exam Q&amp;A</h2>
+<h2 id="8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#7-active-recall-quizzes">← 7. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
 <li><strong>3 Marks:</strong> State the 4 evaluation criteria for search algorithms or compare time/space complexities of BFS and DFS.</li>
@@ -641,6 +649,64 @@
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

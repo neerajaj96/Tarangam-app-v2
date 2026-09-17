@@ -188,7 +188,8 @@
 <h1>Structure of Agents: From Reflex to Learning Agents</h1>
 <p><strong>The anatomy of an intelligent agent: Simple Reflex, Model-Based Reflex, Goal-Based, Utility-Based, and Learning Agent architectures.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. How is an Agent Structured?</h2>
+<h2 id="1-how-is-an-agent-structured">1. How is an Agent Structured?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-architecture-1-simple-reflex-agents">2. Architecture 1: Simple Reflex A… →</a></p>
 <p>In Artificial Intelligence, every software or robotic agent is defined by a fundamental relationship:
 $$\text{Agent} = \text{Architecture} + \text{Program}$$</p>
 <ul>
@@ -202,7 +203,8 @@ Where $|P|$ is the number of possible distinct percepts and $t$ is the operation
 <p>To overcome this combinatorial explosion, AI systems employ structured <strong>Agent Architectures</strong> that compute actions dynamically.</p>
 <hr>
 <p><a id="terminology"></a></p>
-<h2>2. Architecture 1: Simple Reflex Agents</h2>
+<h2 id="2-architecture-1-simple-reflex-agents">2. Architecture 1: Simple Reflex Agents</h2>
+<p class="secnav"><a href="#1-how-is-an-agent-structured">← 1. How is an Agent Structured?</a><span class="secnav-sep">·</span><a href="#3-architecture-2-model-based-reflex-agents">3. Architecture 2: Model-Based Ref… →</a></p>
 <p>A <strong>Simple Reflex Agent</strong> selects actions based <em>only</em> on the current percept, completely ignoring historical percept sequences. It operates on <strong>Condition-Action Rules</strong> (<code>IF condition THEN action</code>).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Basic Thermostat</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Consider a standard room thermostat. It maintains no historical memory of yesterday&#39;s weather or room temperature. It operates on a single direct rule:
 <code>IF current_temperature &lt; 20°C THEN turn_on_heater()</code>
@@ -234,7 +236,8 @@ After turning left, its sensor is <em>still</em> blocked by the wide table leg. 
 <em>The Fix:</em> The agent requires an <strong>internal state</strong> to remember previous actions.</p>
 </div></details><hr>
 <p><a id="the-dimensions"></a></p>
-<h2>3. Architecture 2: Model-Based Reflex Agents</h2>
+<h2 id="3-architecture-2-model-based-reflex-agents">3. Architecture 2: Model-Based Reflex Agents</h2>
+<p class="secnav"><a href="#2-architecture-1-simple-reflex-agents">← 2. Architecture 1: Simple Reflex A…</a><span class="secnav-sep">·</span><a href="#4-architecture-3-goal-based-agents">4. Architecture 3: Goal-Based Agen… →</a></p>
 <p>To operate reliably in partially observable environments, an agent must maintain an <strong>Internal State</strong> that tracks aspects of the world currently unobservable by its sensors.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Driving Through a Mountain Tunnel</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>When an autonomous vehicle enters a dark mountain tunnel, GPS signals drop and cameras are temporarily blinded. 
 A simple reflex agent would freeze or steer blindly. A <strong>Model-Based Agent</strong> uses its internal world model: <em>&quot;I entered at 60 km/h heading straight, so after 3 seconds I am still in the center lane.&quot;</em> It bridges the sensory gap using state memory and physics models.</p>
@@ -264,7 +267,8 @@ A simple reflex agent would freeze or steer blindly. A <strong>Model-Based Agent
 $$S_t = \text{Update}(S_{t-1}, A_{t-1}, P_t)$$</p>
 </div></details><hr>
 <p><a id="foundations"></a></p>
-<h2>4. Architecture 3: Goal-Based Agents</h2>
+<h2 id="4-architecture-3-goal-based-agents">4. Architecture 3: Goal-Based Agents</h2>
+<p class="secnav"><a href="#3-architecture-2-model-based-reflex-agents">← 3. Architecture 2: Model-Based Ref…</a><span class="secnav-sep">·</span><a href="#5-architecture-4-utility-based-agents">5. Architecture 4: Utility-Based A… →</a></p>
 <p>Knowing the current state of the world is often insufficient to choose an action. The agent needs explicit <strong>Goals</strong>—descriptions of desirable target situations—to guide its search and planning.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The GPS Route Planner</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine standing at a road intersection. A model-based agent knows exactly where it is located. But deciding whether to turn left or right requires a <strong>Goal</strong> (<em>&quot;Navigate to Cochin International Airport&quot;</em>). 
 Instead of triggering hardcoded reflex rules, the agent evaluates future states: <em>&quot;Turning left leads to congested city streets; turning right merges onto the highway toward the airport.&quot;</em></p>
@@ -292,7 +296,8 @@ Instead of triggering hardcoded reflex rules, the agent evaluates future states:
 </code></pre>
 <hr>
 <p><a id="history"></a></p>
-<h2>5. Architecture 4: Utility-Based Agents</h2>
+<h2 id="5-architecture-4-utility-based-agents">5. Architecture 4: Utility-Based Agents</h2>
+<p class="secnav"><a href="#4-architecture-3-goal-based-agents">← 4. Architecture 3: Goal-Based Agen…</a><span class="secnav-sep">·</span><a href="#6-architecture-5-the-learning-agent">6. Architecture 5: The Learning Ag… →</a></p>
 <p>Goals provide only a binary measure of success (Goal achieved vs. Goal not achieved). In complex environments, multiple valid paths reach the goal, but differ in safety, financial cost, time, and comfort. A <strong>Utility Function</strong> maps states to real numbers to optimize trade-offs.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Route Cost vs. Safety Trade-off</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Consider two navigation options to an airport:</p>
 <ul>
@@ -327,7 +332,8 @@ $$U: S \rightarrow \mathbb{R}$$
 The rational utility agent selects the action $a^<em>$ maximizing expected utility:
 $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)$$</p>
 </div></details><hr>
-<h2>6. Architecture 5: The Learning Agent</h2>
+<h2 id="6-architecture-5-the-learning-agent">6. Architecture 5: The Learning Agent</h2>
+<p class="secnav"><a href="#5-architecture-4-utility-based-agents">← 5. Architecture 4: Utility-Based A…</a><span class="secnav-sep">·</span><a href="#7-comparative-summary-matrix">7. Comparative Summary Matrix →</a></p>
 <p>While reflex, goal, and utility agents rely on human programmers to hardcode rules and transition models, a <strong>Learning Agent</strong> starts with minimal prior knowledge and autonomously improves its performance through interaction.</p>
 <h3>The 4 Core Components of a Learning Agent:</h3>
 <ol>
@@ -357,7 +363,8 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
                   +-------------------------------------------------------------+
 </code></pre>
 <hr>
-<h2>7. Comparative Summary Matrix</h2>
+<h2 id="7-comparative-summary-matrix">7. Comparative Summary Matrix</h2>
+<p class="secnav"><a href="#6-architecture-5-the-learning-agent">← 6. Architecture 5: The Learning Ag…</a><span class="secnav-sep">·</span><a href="#8-active-recall-quizzes">8. Active Recall Quizzes →</a></p>
 <pre><code class="language-text">+----------------------+------------------+---------------------+---------------------+---------------------+
 | Architecture         | Memory / State   | Decision Criterion  | Handles Partial Obs?| Learning Capable?   |
 +======================+==================+================-----+---------------------+---------------------+
@@ -374,7 +381,8 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
 </code></pre>
 <hr>
 <p><a id="self-check"></a></p>
-<h2>8. Active Recall Quizzes</h2>
+<h2 id="8-active-recall-quizzes">8. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#7-comparative-summary-matrix">← 7. Comparative Summary Matrix</a><span class="secnav-sep">·</span><a href="#9-worked-university-exam-q-a">9. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Which agent architecture is required when an environment is Partially Observable and a simple reflex agent gets trapped in an infinite loop?</span>
@@ -477,7 +485,8 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2>9. Worked University Exam Q&amp;A</h2>
+<h2 id="9-worked-university-exam-q-a">9. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#8-active-recall-quizzes">← 8. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
 <li><strong>3 Marks:</strong> State the 4 components of a Learning Agent or explain Condition-Action rules in Simple Reflex Agents.</li>
@@ -749,6 +758,64 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {

@@ -187,7 +187,8 @@
 <h1>Problem-Solving Agents &amp; Search Trees</h1>
 <p><strong>Goal formulation, the 5 components of a well-defined problem, state space vs. search tree, node expansion, and how search performance is measured.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2>1. What Does It Mean to &quot;Solve a Problem&quot;?</h2>
+<h2 id="1-what-does-it-mean-to-solve-a-problem">1. What Does It Mean to &quot;Solve a Problem&quot;?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-5-components-of-a-well-defined-problem">2. The 5 Components of a Well-Defi… →</a></p>
 <p>Imagine driving to an unfamiliar airport. You do not start the engine and improvise turn by turn — you first decide the <strong>goal</strong> (&quot;reach Terminal 2 by 6 PM&quot;), then, map in hand, you work out a <strong>sequence of actions</strong> (take the highway, exit at 14B, follow signs) <em>before</em> moving a single metre. Only after the route is fully planned do you execute it.</p>
 <p>A <strong>problem-solving agent</strong> works exactly this way. It is a goal-based agent specialized for settings where the right action sequence is not obvious and must be <em>computed in advance</em>:</p>
 <pre><code class="language-text">FORMULATE-GOAL  ──&gt;  FORMULATE-PROBLEM  ──&gt;  SEARCH  ──&gt;  EXECUTE
@@ -196,7 +197,8 @@
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Offline Thinking, Online Acting</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Search is <strong>offline deliberation</strong>: the agent simulates futures inside its head (or its memory) without touching the real world. Execution only begins once a complete action sequence exists. This separation is why a chess engine can &quot;think&quot; for minutes and then play a whole combination flawlessly — all the trial and error happened in simulation, where mistakes are free.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
-<h2>2. The 5 Components of a Well-Defined Problem</h2>
+<h2 id="2-the-5-components-of-a-well-defined-problem">2. The 5 Components of a Well-Defined Problem</h2>
+<p class="secnav"><a href="#1-what-does-it-mean-to-solve-a-problem">← 1. What Does It Mean to &quot;Solve a P…</a><span class="secnav-sep">·</span><a href="#3-hand-tracing-a-search-tree-arad-fagaras">3. Hand-Tracing a Search Tree (Ara… →</a></p>
 <p>Before any search algorithm can run, the task must be nailed down as a <strong>well-defined problem</strong> — five precise pieces (R&amp;N §3.1). Vague formulations are the #1 source of failed AI projects: the algorithm cannot find what was never specified.</p>
 <ol>
 <li><strong>Initial state</strong> — where the agent starts (e.g. the city <code>Arad</code>, a scrambled board).</li>
@@ -224,7 +226,8 @@ The <strong>state space</strong> is the set of <em>all</em> states reachable fro
 <p>Measured with branching factor $b$, solution depth $d$, and maximum depth $m$.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2>3. Hand-Tracing a Search Tree (Arad → Fagaras)</h2>
+<h2 id="3-hand-tracing-a-search-tree-arad-fagaras">3. Hand-Tracing a Search Tree (Arad → Fagaras)</h2>
+<p class="secnav"><a href="#2-the-5-components-of-a-well-defined-problem">← 2. The 5 Components of a Well-Defi…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <p>Consider a tiny road map: Arad connects to Sibiu (140 km) and Zerind (75 km); Sibiu connects to Fagaras (99 km) and back to Arad. Goal: reach Fagaras from Arad.</p>
 <pre><code class="language-text">STATE SPACE (the map — a graph):
 
@@ -245,7 +248,8 @@ SEARCH TREE (the trace — repeats allowed):
 <p>Reading the trace: the root node holds state Arad with $g=0$. <strong>Expanding</strong> it generates two children (Zerind, $g=75$; Sibiu, $g=140$). Expanding Sibiu generates Arad-again ($g=280$ — a repeated state, correctly appearing as a <em>new tree node</em>) and Fagaras ($g=239$), which passes the goal test. The solution is the action sequence Arad → Sibiu → Fagaras with path cost 239 — cheaper than any route detouring through Zerind. Note the tree already has 5 nodes for a 4-state map: on real maps this redundancy explodes, which is why Module 2 exists.</p>
 <hr>
 <p><a id="self-check"></a></p>
-<h2>4. Active Recall Quizzes</h2>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-hand-tracing-a-search-tree-arad-fagaras">← 3. Hand-Tracing a Search Tree (Ara…</a><span class="secnav-sep">·</span><a href="#5-worked-university-exam-q-a">5. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A problem-solving agent is given a goal but no precomputed action sequence. What is the correct order of its operation?</span>
@@ -323,7 +327,8 @@ SEARCH TREE (the trace — repeats allowed):
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2>5. Worked University Exam Q&amp;A</h2>
+<h2 id="5-worked-university-exam-q-a">5. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#4-active-recall-quizzes">← 4. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
 <li><strong>3 Marks:</strong> List the 5 components of a well-defined problem, or the 4 criteria for evaluating search strategies.</li>
@@ -580,6 +585,64 @@ SEARCH TREE (the trace — repeats allowed):
       }
     });
   });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
 
   // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
   document.addEventListener('keydown', (e) => {
