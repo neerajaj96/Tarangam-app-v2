@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.4 World Wide Web And HTTP</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.4 World Wide Web And HTTP | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.4 World Wide Web And HTTP">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.4 World Wide Web And HTTP">
+<title>Tarangam — 🧪 Practice Lab: M1 Application Layer Drills</title>
+<meta name="description" content="Computer Networks (PCCST501) — 🧪 Practice Lab: M1 Application Layer Drills | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M1 Application Layer Drills">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 🧪 Practice Lab: M1 Application Layer Drills">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -85,7 +85,7 @@
             <span class="topic-dot"></span>
             <span>1.3 Application Layer Paradigms</span>
           </a>
-          <a href="./m1_04_world_wide_web_and_http.html" class="topic-link active" id="topic-m1_04_world_wide_web_and_http">
+          <a href="./m1_04_world_wide_web_and_http.html" class="topic-link " id="topic-m1_04_world_wide_web_and_http">
             <span class="topic-dot"></span>
             <span>1.4 World Wide Web And HTTP</span>
           </a>
@@ -93,7 +93,7 @@
             <span class="topic-dot"></span>
             <span>1.5 File Transfer Protocol FTP</span>
           </a>
-          <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
+          <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link active" id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
           </a>
@@ -213,7 +213,7 @@
         <span class="crumb-sep">/</span>
         <span>Module 1</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.4 World Wide Web And HTTP</span>
+        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M1 Application Layer Drills</span>
       </div>
 
       <div class="topbar-actions">
@@ -236,139 +236,96 @@
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
-    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>The World Wide Web and HTTP</h1>
-<p><strong>HTTP request/response structure, non-persistent vs. persistent connections, statelessness, and cookies.</strong></p>
+<h1>Module 1 Practice Lab: Application-Layer Drills</h1>
+<p><strong>Scenario dissections combining every M1 tool, do-not-confuse cheat tables, mixed active recall, and KTU 7-mark model solutions.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Amnesiac Waiter</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a waiter with total amnesia — every time you order, they treat you as a brand-new customer, with zero memory of anything you ordered a minute ago. This is exactly how <strong>HTTP</strong> behaves: it is <strong>stateless</strong>. Every request is handled in complete isolation from every previous one, even from the same browser, even seconds apart.</p>
-<p>Now imagine fetching a webpage that has text plus ten embedded images. Should the waiter make a brand-new trip to the kitchen (open a brand-new connection) for <em>every single item</em>, or should they keep one open channel and bring everything back over it? Early HTTP (1.0) did the former — <strong>non-persistent</strong>, closing and reopening a TCP connection per object, wasting time on repeated handshakes. Modern HTTP (1.1) does the latter — <strong>persistent</strong>, reusing one open connection for many objects in a row.</p>
-<p>But if the waiter forgets everything, how does a shopping cart or login session survive? The restaurant hands you a <strong>cookie</strong> — a small claim-check with a unique ID — the moment you first sit down. Every time you order again, you show that claim-check, and the amnesiac waiter looks up your ID in a notebook to instantly recall your entire history, without ever &quot;remembering&quot; anything on their own.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Web Terminology</h3>
-<ul>
-<li><strong>Web Page:</strong> a document, typically HTML, referencing several other <strong>objects</strong> (images, CSS, JS files).</li>
-<li><strong>Object:</strong> any single file — an HTML file, a JPEG, a video clip.</li>
-<li><strong>URL:</strong> the address of an object — a hostname (<code>www.example.com</code>) plus a path (<code>/images/pic.jpg</code>).</li>
-</ul>
-<h3>2.2 HTTP Fundamentals</h3>
-<ul>
-<li><strong>Transport:</strong> HTTP always runs over <strong>TCP</strong>, never UDP, to guarantee reliable, in-order delivery.</li>
-<li><strong>Statelessness:</strong> the server retains <strong>no memory</strong> of past requests. Identical requests seconds apart are treated as entirely new.</li>
-</ul>
-<h3>2.3 Non-Persistent vs. Persistent Connections</h3>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant B as Browser
-    participant W as Web Server
-    rect rgb(40,40,60)
-    Note over B,W: Non-Persistent HTTP (HTTP/1.0)
-    B-&gt;&gt;W: Open TCP connection
-    B-&gt;&gt;W: GET index.html
-    W-&gt;&gt;B: index.html
-    Note over B,W: Connection closes
-    B-&gt;&gt;W: Open NEW TCP connection
-    B-&gt;&gt;W: GET image1.jpg
-    W-&gt;&gt;B: image1.jpg
-    Note over B,W: Connection closes (repeat per object!)
-    end
-</code></pre>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant B as Browser
-    participant W as Web Server
-    rect rgb(40,60,40)
-    Note over B,W: Persistent HTTP (HTTP/1.1)
-    B-&gt;&gt;W: Open TCP connection (once)
-    B-&gt;&gt;W: GET index.html
-    W-&gt;&gt;B: index.html
-    B-&gt;&gt;W: GET image1.jpg
-    W-&gt;&gt;B: image1.jpg
-    B-&gt;&gt;W: GET image2.jpg
-    W-&gt;&gt;B: image2.jpg
-    Note over B,W: Same connection reused for all objects
-    end
-</code></pre>
+<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<h3>Scenario 1: The Full Web Fetch (Everything at Once)</h3>
+<p>You type <code>http://example.com/page.html</code> (one embedded image) into a browser on dorm Wi-Fi and press Enter. Name every M1 mechanism engaged, in order:</p>
+<ol>
+<li><strong>DNS</strong> (application, UDP port 53): resolve <code>example.com</code> → IP (recursive query outward, cached answer back).</li>
+<li><strong>TCP handshake</strong> to port 80 (transport): SYN → SYNACK → ACK — reliable channel before a single HTTP byte.</li>
+<li><strong>HTTP GET</strong> (application, persistent): request line + headers over the TCP connection; server responds <code>200 OK</code> + HTML; the embedded image reuses the <em>same</em> connection (persistent — 1 connection total, not 2).</li>
+<li><strong>Sockets</strong>: browser&#39;s ephemeral port ↔ server port 80 (the 4-tuple demultiplexes the reply to the right tab).</li>
+<li><strong>Access</strong>: dorm Wi-Fi (wireless access) → FTTH fiber (guided) → core routers (packet switches) — nuts-and-bolts path hidden by the service view.</li>
+</ol>
+<h3>Scenario 2: FTP Backup vs. HTTP Upload</h3>
+<p>Nightly backup of 100 small files to a campus server. FTP: <strong>1 control connection</strong> + <strong>100 data connections</strong> (one per file — connection churn dominates!). HTTP/1.1 persistent POSTs: <strong>1 connection</strong> reused 100 times. Verdict: FTP&#39;s per-file data channel is pure overhead here — HTTP wins on connection economy (though FTP&#39;s out-of-band control + statefulness serve interactive browsing better).</p>
+<h3>Scenario 3: Dorm Movie Night (P2P or Server?)</h3>
+<p>50 students, one 4 GB movie file, one dorm server with 100 Mbps uplink. Client-server: server streams 4 GB × 50 = 200 GB through its 100 Mbps pipe (~4.4 hours wall-clock for the crowd). P2P: each downloader re-uploads — aggregate capacity <em>grows</em> with the crowd (self-scalability); the server seeds once and idles. Decision rule from M1: centralized control/consistency → client-server; bulk distribution to many → P2P.</p>
+<hr>
+<p><a id="the-dimensions"></a></p>
+<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
 <table>
 <thead>
 <tr>
-<th></th>
-<th>Non-Persistent (HTTP/1.0)</th>
-<th>Persistent (HTTP/1.1)</th>
+<th>Pair</th>
+<th>Distinction that earns marks</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Connections needed</td>
-<td>One per object</td>
-<td>One, reused for many objects</td>
+<td>End system vs. packet switch</td>
+<td>Hosts run apps at the edge (originate/consume); switches forward inside (never originate)</td>
 </tr>
 <tr>
-<td>Overhead</td>
-<td>High — repeated TCP handshakes</td>
-<td>Low — handshake paid once</td>
+<td>Client vs. server</td>
+<td><em>Roles</em>, not devices — one laptop plays both across two apps</td>
 </tr>
 <tr>
-<td>Latency</td>
-<td>Higher</td>
-<td>Lower</td>
+<td>Nuts-and-bolts vs. service view</td>
+<td>How it&#39;s built (links/switches) vs. what apps get (byte-moving platform)</td>
+</tr>
+<tr>
+<td>TCP vs. UDP</td>
+<td>4-tuple reliable streams vs. 2-tuple datagrams; handshake/state vs. fire-and-forget</td>
+</tr>
+<tr>
+<td>Non-persistent vs. persistent HTTP</td>
+<td>One TCP connection per object vs. one reused (6 vs. 1 in the worked example)</td>
+</tr>
+<tr>
+<td>Stateless vs. stateful</td>
+<td>HTTP remembers nothing (cookies work around it); FTP tracks directory + login per session</td>
+</tr>
+<tr>
+<td>In-band vs. out-of-band</td>
+<td>HTTP mixes control+data in one connection; FTP splits Port 21 control from Port 20 data</td>
+</tr>
+<tr>
+<td>Active vs. passive FTP</td>
+<td>Server connects back (firewall-blocked) vs. client always dials out (firewall-friendly)</td>
+</tr>
+<tr>
+<td>PDU names</td>
+<td>Message → Segment → Datagram → Frame → Bits, top-down, never scrambled</td>
+</tr>
+<tr>
+<td>OSI 7 vs. TCP/IP 5</td>
+<td>Model vocabulary (Presentation/Session named) vs. running code (top three merged)</td>
 </tr>
 </tbody></table>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Connection-Count Rule</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For a page with $N$ objects (HTML + embedded): <strong>non-persistent needs $N$ TCP connections</strong> (one per object, each paying a handshake), <strong>persistent needs 1</strong> (reused). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.</p>
-</div></details><h3>2.4 HTTP Message Structure</h3>
-<p><strong>Request Message:</strong></p>
-<ul>
-<li><strong>Request Line:</strong> method (<code>GET</code>, <code>POST</code>, <code>HEAD</code>, <code>PUT</code>, <code>DELETE</code>) + URL path + version, e.g. <code>GET /index.html HTTP/1.1</code></li>
-<li><strong>Header Lines:</strong> <code>Host:</code>, <code>User-Agent:</code>, <code>Accept-Language:</code>, etc.</li>
-<li><strong>Entity Body:</strong> used mainly by <code>POST</code> to carry form data/payloads.</li>
-</ul>
-<p><strong>Response Message:</strong></p>
-<ul>
-<li><strong>Status Line:</strong> version + status code + status message, e.g. <code>HTTP/1.1 200 OK</code> or <code>HTTP/1.1 404 Not Found</code></li>
-<li><strong>Header Lines:</strong> <code>Date:</code>, <code>Server:</code>, <code>Content-Length:</code>, <code>Content-Type:</code></li>
-<li><strong>Data (Body):</strong> the actual requested object.</li>
-</ul>
-<h3>2.5 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant Br as Browser
-    participant Sv as Server
-    Br-&gt;&gt;Sv: First-ever request (no cookie)
-    Sv-&gt;&gt;Sv: Create unique ID (e.g. 1678), save in DB
-    Sv-&gt;&gt;Br: Response + Set-cookie: 1678
-    Note over Br: Browser stores cookie locally
-    Br-&gt;&gt;Sv: Next request + Cookie: 1678
-    Sv-&gt;&gt;Sv: Look up 1678 in DB → retrieve state
-    Sv-&gt;&gt;Br: Personalized response
-</code></pre>
 <hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An HTML page references 5 embedded images. Compute the total number of TCP connections required to fully load this page under (a) Non-Persistent HTTP and (b) Persistent HTTP.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting Connections</div><div class="step-content"><p><strong>Non-Persistent:</strong> the HTML file itself requires 1 connection. Each of the 5 images then requires its <em>own</em> new connection (opened and closed individually) = 5 more connections. Total = 1 + 5 = <strong>6 separate TCP connections</strong>.
-<strong>Persistent:</strong> a single TCP connection is opened once, and the HTML file plus all 5 images are transferred sequentially over that same connection before it closes. Total = <strong>1 TCP connection</strong>.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Non-Persistent HTTP needs 6× as many TCP connections as Persistent HTTP for this page — each extra connection costs a full TCP three-way handshake&#39;s worth of round-trip latency. This is precisely why HTTP/1.1&#39;s persistent connections became the default: dramatically less overhead for pages with many embedded objects, which describes nearly every modern web page.</p>
-</div></div><hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">A page has HTML + 4 images over HTTP/1.1 persistent. An identical page loads over FTP-style per-object data connections (1 control + fresh data channel per file). Count user-data connections each way, ignoring control.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is HTTP referred to as a &quot;stateless&quot; protocol?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because it does not use TCP as its transport protocol</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because the server retains no information about any previous client requests, treating every request as entirely new</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because HTTP messages cannot contain any headers</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because HTTP can only transfer static HTML files</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>5 vs. 5 — identical by conservation of data</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>HTTP: 1 reused connection; FTP-style: 5 fresh data connections — same bytes, 5× the handshakes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>HTTP: 5; FTP-style: 1</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both use exactly 2 connections always</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -380,21 +337,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Statelessness means the server has no built-in memory of past interactions — two identical requests from the same client are handled completely independently, with no server-side history unless something external (like a cookie) supplies that context.</p><pre><code>&lt;/div&gt;
+      <p>Persistent HTTP amortizes one handshake across all objects ($N$ objects, 1 connection); per-file channels pay $N$ handshakes + teardowns for identical payloads. Connection economy, not byte economy, is the persistent advantage — Scenario 2&#39;s verdict generalized.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">Two laptops run a video call (UDP) and a file download (TCP) simultaneously on one host. A packet arrives at the host&#39;s IP. What decides whether it reaches the call or the download, and which header field does the job?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>An HTML page contains text and 5 image references. How many total TCP connections are established to fetch the entire page under Non-Persistent HTTP vs. Persistent HTTP?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>1 connection in both cases</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>6 connections under Non-Persistent HTTP (1 per object); 1 connection under Persistent HTTP (reused for all objects)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>5 connections under Non-Persistent HTTP; 6 under Persistent HTTP</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Persistent HTTP always requires more connections than Non-Persistent HTTP</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Arrival order — first packet goes to whichever app asked first</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Destination port (+ protocol): the UDP datagram&#39;s port steers to the call&#39;s socket, the TCP segment&#39;s port to the download&#39;s socket — demultiplexing keys, with TCP additionally separating by full 4-tuple</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The IP address alone, since each app has its own IP</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Packet size — video packets are always larger</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -406,21 +362,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Non-Persistent HTTP opens and closes a fresh TCP connection for every single object (the HTML file plus each of the 5 images = 6 total), while Persistent HTTP keeps one TCP connection open and reuses it to fetch every object sequentially.</p><pre><code>&lt;/div&gt;
+      <p>One IP, many processes: ports disambiguate (UDP 2-tuple, TCP 4-tuple). Same-port-different-protocol traffic even coexists (DNS:53/UDP vs. hypothetical :53/TCP) because the protocol number joins the key. Scenario 1&#39;s tab-routing, restated.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">&quot;FTP is stateful, HTTP is stateless, therefore FTP servers always outperform HTTP servers.&quot; Identify every error in this claim.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>What role does the <code>Set-cookie</code> header play in maintaining state?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It permanently changes the HTTP protocol from stateless to stateful</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It gives the browser a unique identifier to store and resend on future requests, letting the server look up prior state associated with that ID</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It forces the browser to close its TCP connection</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It encrypts all future requests from that browser</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>There are no errors — the claim is textbook-correct</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Direction inverted (statefulness costs scalability: per-session memory caps simultaneous users — stateless HTTP scales better), plus a category error (performance follows workload/architecture, never the stateful label alone)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>FTP is actually stateless and HTTP stateful</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Performance is identical for all protocols by law</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -432,25 +387,64 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p><code>Set-cookie</code> doesn&#39;t change HTTP&#39;s fundamentally stateless nature — it works <em>around</em> it. The server issues a unique ID, the browser stores and automatically resends it, and the server uses that ID as a lookup key into its own database to reconstruct &quot;memory&quot; of that specific client.</p><pre><code>&lt;/div&gt;
+      <p>State is <em>overhead</em>: FTP&#39;s per-user directory/auth memory grows with connections, bounding scale; HTTP&#39;s amnesia is precisely what lets one server juggle thousands of independent requests. &quot;Stateful ⇒ faster&quot; reverses the engineering tradeoff — state buys <em>continuity</em>, statelessness buys <em>scale</em>.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">An FTP client behind a strict firewall must download files; active mode fails. What exactly fails, and what is the minimal fix preserving all functionality?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The control connection fails; fix by switching to HTTP</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The server&#39;s inbound data connection to the client&#39;s random port is rejected as unsolicited traffic; fix with PASV — the client opens the data connection outbound to a server-provided port, same files, same control channel</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The client&#39;s login credentials expire behind firewalls</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Nothing fails; active mode ignores firewalls by design</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Active&#39;s server→client data leg looks exactly like an attack to a stateful firewall. PASV inverts initiation (client always dials out — permitted) while changing nothing semantically: same control connection, same bytes, same commands, zero firewall exceptions needed.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> Any single row of the §2 cheat table (PDU order and demux keys are the most asked).</li>
+<li><strong>7 Marks:</strong> Scenario traces (fetch/IPC decision like Scenarios 1–3) demanding multi-concept chains with justification.</li>
+</ul>
+</div></details><h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: A browser fetches a page with 3 embedded images over persistent HTTP/1.1 on dorm Wi-Fi. (a) How many TCP connections? Contrast with non-persistent. (b) Name the access networks, the socket 4-tuple roles, and where statelessness matters.</strong></p>
+<p><strong>Model Answer:</strong> (a) Persistent: <strong>1</strong> connection reused for HTML + 3 images; non-persistent: <strong>4</strong> (one per object) — each extra handshake costs an RTT. (b) Wi-Fi (unguided access) → FTTH (guided) → core packet switches; client ephemeral port + server port 80 demultiplex the reply (4-tuple); statelessness means the server keeps no inter-request memory — cookies would be needed for any login/cart state across the four fetches.</p>
+<h3>Essay Question 2 (7 Marks)</h3>
+<p><strong>Q: &quot;FTP separates control and data; HTTP mixes them.&quot; Explain both designs, compare connection counts for downloading 3 files plus browsing, and justify when each design wins.</strong></p>
+<p><strong>Model Answer:</strong> FTP: Port-21 control (login/CWD/RETR, session-long) + one Port-20 data channel per file → 1 control + 3 data for the task; browsing state (directory, auth) persists server-side. HTTP: each request/response (headers + payload) shares one TCP connection, stateless. FTP wins interactive file management (stateful navigation, separate heavy channel); HTTP wins object fetching (no per-file handshake tax, massive stateless scale). Design follows workload — the module&#39;s master lesson.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_03_application_layer_paradigms.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_05_file_transfer_protocol_ftp.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.3 Application Layer Paradigms</div>
+        <div class="ttl">1.5 File Transfer Protocol FTP</div>
       </a>
       
       
       
-      <a href="./m1_05_file_transfer_protocol_ftp.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.5 File Transfer Protocol FTP</div>
+        <div class="ttl">2.1 Transport Layer Services And Multiplexing</div>
       </a>
       
     </footer>
@@ -537,7 +531,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(21) || 0;
-    const currentId = "m1_04_world_wide_web_and_http";
+    const currentId = "m1_99_practice_lab_application_layer_drills";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 
