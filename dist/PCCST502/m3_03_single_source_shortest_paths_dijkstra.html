@@ -265,7 +265,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -307,7 +307,27 @@
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Graph: $1!-!2(4), 1!-!3(2), 2!-!3(1), 2!-!4(5), 3!-!4(8), 3!-!5(10), 4!-!5(2), 4!-!6(6), 5!-!6(3)$ (undirected). Run Dijkstra from vertex 1: give the settle order and final distances. (Machine-verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Settling One by One</div><div class="step-content"><p>$d = {1:0}$, rest ∞. Settle <strong>1</strong> (0): relax → $d[2]=4, d[3]=2$. Settle <strong>3</strong> (2): relax → $d[2] = \min(4, 2+1) = 3$ (improved via 3!), $d[4]=10$, $d[5]=12$. Settle <strong>2</strong> (3): relax → $d[4] = \min(10, 3+5) = 8$. Settle <strong>4</strong> (8): relax → $d[5] = \min(12, 8+2) = 10$, $d[6]=14$. Settle <strong>5</strong> (10): relax → $d[6] = \min(14, 10+3) = 13$. Settle <strong>6</strong> (13). Done.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Settle order <strong>1, 3, 2, 4, 5, 6</strong> with distances <strong>{0, 3, 2, 8, 10, 13}</strong> — note vertex 2 settles <em>second</em> at distance 3 via $1\to3\to2$, beating its direct edge (4): settling order is by <em>distance</em>, not by discovery, which is exactly the beginner surprise this trace exists to deliver.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Settling in Distance Order</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated Dijkstra settling order with final distances">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="eg " x1="90" y1="150" x2="240" y2="80"/><line class="eg " x1="90" y1="150" x2="240" y2="220"/><line class="eg " x1="240" y1="80" x2="240" y2="220"/><line class="eg " x1="240" y1="220" x2="390" y2="150"/><line class="eg " x1="240" y1="80" x2="390" y2="150"/><line class="eg " x1="390" y1="150" x2="500" y2="220"/><line class="eg " x1="390" y1="150" x2="570" y2="150"/><line class="eg " x1="500" y1="220" x2="570" y2="150"/>
+<g class="nd a1"><circle cx="90" cy="150" r="22"/><text x="90" y="156">1</text></g><text class="ordbadge a1" x="90" y="196">[1] d=0</text>
+<g class="nd a2"><circle cx="240" cy="80" r="22"/><text x="240" y="86">3</text></g><text class="ordbadge a2" x="240" y="40">[2] d=2</text>
+<g class="nd a3"><circle cx="240" cy="220" r="22"/><text x="240" y="226">2</text></g><text class="ordbadge a3" x="240" y="266">[3] d=3</text>
+<g class="nd a4"><circle cx="390" cy="150" r="22"/><text x="390" y="156">4</text></g><text class="ordbadge a4" x="390" y="110">[4] d=8</text>
+<g class="nd a5"><circle cx="500" cy="220" r="22"/><text x="500" y="226">5</text></g><text class="ordbadge a5" x="500" y="266">[5] d=10</text>
+<g class="nd a5"><circle cx="570" cy="150" r="22"/><text x="570" y="156">6</text></g><text class="ordbadge a5" x="570" y="110">[6] d=13</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Settling in Distance Order</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch vertices lock in 1 → 3 → 2 → 4 → 5 → 6 with final distances stamped beneath — discovery order ignored, distance order obeyed, exactly as traced above.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

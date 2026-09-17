@@ -148,6 +148,11 @@ Let $C^*$ be the optimal path cost and $\epsilon > 0$ be the minimum step cost:
 () Because BFS cannot branch more than twice per node.
 ::: explanation
 BFS identifies the shallowest goal in terms of depth steps. If a 1-step path costs \$100 and a 3-step path costs \$5, BFS selects the \$100 path because it has fewer steps. Uniform-Cost Search (UCS) must be used when edge weights vary.
+
+:::
+
+::: anim bfs-dfs-race Ripples Against String
+Watch both strategies run one shared tree: left ignites level by level (nearest first), right plunges down one branch before backtracking (deepest first) — same footsteps budget, opposite discovery orders.
 :::
 
 ::: quiz What is the main memory advantage of Depth-First Search (DFS) over Breadth-First Search (BFS)?

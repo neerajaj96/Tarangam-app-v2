@@ -30,6 +30,10 @@ depending on whether the problem shrinks by a *fraction* (divide-and-conquer, e.
 
 This is mathematical induction applied directly to algorithm analysis: the base case anchors the proof, and the inductive step shows the pattern is self-sustaining — if it holds for all smaller sizes, it holds for size $n$ too, so by induction it holds for every $n$.
 
+::: anim substitution-pipeline Guess, Assume, Substitute, Verify
+Watch the four stations light in order — each station's output feeds the next, and a miss at Verify loops all the way back to a weaker Guess.
+:::
+
 **Why "guess, then prove" and not "just prove directly"?** Recurrences don't have an obvious closed-form answer sitting in plain sight — you generally need *some* candidate answer to test before you can verify it algebraically. The guess often comes from intuition, from an unrolled few levels of recursion (a sneak peek at the iteration method, covered next), or from experience with similar recurrences. The substitution method's power is that once you have a plausible guess, it gives you an airtight, rigorous way to confirm — or refute — it.
 
 ---

@@ -299,7 +299,28 @@ depending on whether the problem shrinks by a <em>fraction</em> (divide-and-conq
 <li><strong>Verify</strong> that the result matches (or is bounded by) the guessed form for $n$ itself — if it does, the guess is proven correct by induction; if it doesn&#39;t quite work, adjust the guess (often by subtracting a lower-order term) and retry.</li>
 </ol>
 <p>This is mathematical induction applied directly to algorithm analysis: the base case anchors the proof, and the inductive step shows the pattern is self-sustaining — if it holds for all smaller sizes, it holds for size $n$ too, so by induction it holds for every $n$.</p>
-<p><strong>Why &quot;guess, then prove&quot; and not &quot;just prove directly&quot;?</strong> Recurrences don&#39;t have an obvious closed-form answer sitting in plain sight — you generally need <em>some</em> candidate answer to test before you can verify it algebraically. The guess often comes from intuition, from an unrolled few levels of recursion (a sneak peek at the iteration method, covered next), or from experience with similar recurrences. The substitution method&#39;s power is that once you have a plausible guess, it gives you an airtight, rigorous way to confirm — or refute — it.</p>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Guess, Assume, Substitute, Verify</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 260" role="img" aria-label="Animated substitution method pipeline: guess, assume, substitute, verify">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<g class="stagebox a1"><rect x="20" y="100" width="128" height="64" rx="10"/><text x="84" y="126">1 · Guess</text><text x="84" y="146" class="sub">T(n) ≤ cn²</text></g>
+<g class="stagebox a2"><rect x="172" y="100" width="128" height="64" rx="10"/><text x="236" y="126">2 · Assume</text><text x="236" y="146" class="sub">holds below n</text></g>
+<g class="stagebox a3"><rect x="324" y="100" width="128" height="64" rx="10"/><text x="388" y="126">3 · Substitute</text><text x="388" y="146" class="sub">into RHS</text></g>
+<g class="stagebox a4"><rect x="476" y="100" width="144" height="64" rx="10"/><text x="548" y="126">4 · Verify</text><text x="548" y="146" class="sub">fits for n ✓</text></g>
+<text class="flowarrow a2" x="160" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a3" x="312" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a4" x="464" y="140" text-anchor="middle">→</text>
+<text class="animnote a5" x="320" y="220" text-anchor="middle">miss? loop back with a weaker guess (often minus a lower-order term)</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Guess, Assume, Substitute, Verify</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the four stations light in order — each station&#39;s output feeds the next, and a miss at Verify loops all the way back to a weaker Guess.</div>
+  </div>
+</div><p><strong>Why &quot;guess, then prove&quot; and not &quot;just prove directly&quot;?</strong> Recurrences don&#39;t have an obvious closed-form answer sitting in plain sight — you generally need <em>some</em> candidate answer to test before you can verify it algebraically. The guess often comes from intuition, from an unrolled few levels of recursion (a sneak peek at the iteration method, covered next), or from experience with similar recurrences. The substitution method&#39;s power is that once you have a plausible guess, it gives you an airtight, rigorous way to confirm — or refute — it.</p>
 <hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>

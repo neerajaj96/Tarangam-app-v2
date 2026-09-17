@@ -51,6 +51,11 @@ $d = \{1:0\}$, rest ∞. Settle **1** (0): relax → $d[2]=4, d[3]=2$. Settle **
 
 ::: step [Step 3: Conclusion] Final Result
 Settle order **1, 3, 2, 4, 5, 6** with distances **{0, 3, 2, 8, 10, 13}** — note vertex 2 settles *second* at distance 3 via $1\to3\to2$, beating its direct edge (4): settling order is by *distance*, not by discovery, which is exactly the beginner surprise this trace exists to deliver.
+
+:::
+
+::: anim dijkstra-settle Settling in Distance Order
+Watch vertices lock in 1 → 3 → 2 → 4 → 5 → 6 with final distances stamped beneath — discovery order ignored, distance order obeyed, exactly as traced above.
 :::
 
 ---

@@ -59,6 +59,11 @@ Leftover 5-bit remainder: $R = 01110$. Transmit $\langle D, R \rangle$ = `101000
 
 ::: step [Step 3: Conclusion] Final Result
 Receiver divides `101000110101110` by `110101` → remainder `00000`: **accept**. Flip any single transmitted bit and the remainder goes nonzero. (Machine-verified: polynomial long division in GF(2) gives exactly $R = 01110$ with zero receiver remainder.)
+
+:::
+
+::: anim crc-divide Six Alignments to 01110
+Watch each 6-bit window XOR against the generator in turn — alignments appearing in division order until the 5-bit remainder stands alone, then the receiver's all-zero verdict.
 :::
 
 ---

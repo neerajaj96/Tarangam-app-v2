@@ -151,6 +151,68 @@ ${edge(500, 100, 430, 168, 'a3')}${edge(500, 100, 570, 168, 'a3')}${edge(500, 10
 ${node(500, 78, 'a', 'a3')}${node(430, 190, 'b', 'a3')}${node(570, 190, 'c', 'a3')}${node(500, 250, 'd', 'a3')}
 <text class="animnote a4" x="320" y="282" text-anchor="middle">FIND(d) rewires d straight under a — future queries: one hop</text>
 </svg>`
+  },
+
+  'substitution-pipeline': {
+    title: 'Substitution: Guess to Proof',
+    svg: `<svg viewBox="0 0 640 260" role="img" aria-label="Animated substitution method pipeline: guess, assume, substitute, verify">
+${defs}
+<g class="stagebox a1"><rect x="20" y="100" width="128" height="64" rx="10"/><text x="84" y="126">1 · Guess</text><text x="84" y="146" class="sub">T(n) ≤ cn²</text></g>
+<g class="stagebox a2"><rect x="172" y="100" width="128" height="64" rx="10"/><text x="236" y="126">2 · Assume</text><text x="236" y="146" class="sub">holds below n</text></g>
+<g class="stagebox a3"><rect x="324" y="100" width="128" height="64" rx="10"/><text x="388" y="126">3 · Substitute</text><text x="388" y="146" class="sub">into RHS</text></g>
+<g class="stagebox a4"><rect x="476" y="100" width="144" height="64" rx="10"/><text x="548" y="126">4 · Verify</text><text x="548" y="146" class="sub">fits for n ✓</text></g>
+<text class="flowarrow a2" x="160" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a3" x="312" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a4" x="464" y="140" text-anchor="middle">→</text>
+<text class="animnote a5" x="320" y="220" text-anchor="middle">miss? loop back with a weaker guess (often minus a lower-order term)</text>
+</svg>`
+  },
+
+  'bfs-dfs-race': {
+    title: 'BFS Layers vs. DFS Plunge',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated race: breadth-first layers against depth-first plunge on one tree">
+${defs}
+<text class="animcap a1" x="160" y="30" text-anchor="middle">BFS: level order</text>
+${node(160, 80, 's', 'a1')}
+${edge(160, 102, 100, 160, 'e2')}${edge(160, 102, 220, 160, 'e2')}
+${node(100, 182, 'a', 'a2')}${node(220, 182, 'b', 'a2')}
+${edge(100, 204, 70, 250, 'e3')}${edge(100, 204, 130, 250, 'e3')}
+${node(70, 266, 'c', 'a3')}${node(130, 266, 'd', 'a3')}
+<text class="animcap a1" x="480" y="30" text-anchor="middle">DFS: plunge order</text>
+${node(480, 80, 's', 'a1')}
+${edge(480, 102, 480, 160, 'e2')}
+${node(480, 182, 'a', 'a2')}
+${edge(480, 204, 480, 250, 'e2')}
+${node(480, 266, 'c', 'a3')}
+<text class="animnote a4" x="320" y="292" text-anchor="middle">same tree, same cost — ripples find nearest, string finds deepest</text>
+</svg>`
+  },
+
+  'crc-divide': {
+    title: 'CRC Division, Alignment by Alignment',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated CRC long division: six XOR alignments yielding remainder 01110">
+${defs}
+<text class="crcrow a1" x="60" y="70">101000 XOR 110101 = 011101</text>
+<text class="crcrow a2" x="60" y="115">111011 XOR 110101 = 001110</text>
+<text class="crcrow a3" x="60" y="160">111010 XOR 110101 = 001111</text>
+<text class="crcrow a3" x="60" y="205">111110 XOR 110101 = 001011</text>
+<text class="crcrow a4" x="60" y="250">101100 XOR 110101 = 011001 → 110010 XOR 110101 = 000111</text>
+<text class="crcres a5" x="320" y="285" text-anchor="middle">remainder R = 01110 · receiver re-divides → 00000 ✓</text>
+</svg>`
+  },
+
+  'dijkstra-settle': {
+    title: 'Dijkstra Settling Order 1-3-2-4-5-6',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Dijkstra settling order with final distances">
+${defs}
+${edge(90, 150, 240, 80, '')}${edge(90, 150, 240, 220, '')}${edge(240, 80, 240, 220, '')}${edge(240, 220, 390, 150, '')}${edge(240, 80, 390, 150, '')}${edge(390, 150, 500, 220, '')}${edge(390, 150, 570, 150, '')}${edge(500, 220, 570, 150, '')}
+${node(90, 150, '1', 'a1')}<text class="ordbadge a1" x="90" y="196">[1] d=0</text>
+${node(240, 80, '3', 'a2')}<text class="ordbadge a2" x="240" y="40">[2] d=2</text>
+${node(240, 220, '2', 'a3')}<text class="ordbadge a3" x="240" y="266">[3] d=3</text>
+${node(390, 150, '4', 'a4')}<text class="ordbadge a4" x="390" y="110">[4] d=8</text>
+${node(500, 220, '5', 'a5')}<text class="ordbadge a5" x="500" y="266">[5] d=10</text>
+${node(570, 150, '6', 'a5')}<text class="ordbadge a5" x="570" y="110">[6] d=13</text>
+</svg>`
   }
 };
 
