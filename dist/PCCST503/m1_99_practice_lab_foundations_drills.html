@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 3.4 Kernels Soft Margins</title>
-<meta name="description" content="Machine Learning (PCCST503) — 3.4 Kernels Soft Margins | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 3.4 Kernels Soft Margins">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 3.4 Kernels Soft Margins">
+<title>Tarangam — 🧪 Practice Lab: M1 Foundations Drills</title>
+<meta name="description" content="Machine Learning (PCCST503) — 🧪 Practice Lab: M1 Foundations Drills | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M1 Foundations Drills">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 🧪 Practice Lab: M1 Foundations Drills">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block " data-mod="1">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -89,7 +89,7 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
-          <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
+          <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link active" id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
           </a>
@@ -124,8 +124,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="3">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Neural Nets &amp; SVMs</span>
           <span class="chev">&#9656;</span>
@@ -143,7 +143,7 @@
             <span class="topic-dot"></span>
             <span>3.3 Maximum Margin SVM</span>
           </a>
-          <a href="./m3_04_kernels_soft_margins.html" class="topic-link active" id="topic-m3_04_kernels_soft_margins">
+          <a href="./m3_04_kernels_soft_margins.html" class="topic-link " id="topic-m3_04_kernels_soft_margins">
             <span class="topic-dot"></span>
             <span>3.4 Kernels Soft Margins</span>
           </a>
@@ -203,9 +203,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 3</span>
+        <span>Module 1</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">3.4 Kernels Soft Margins</span>
+        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M1 Foundations Drills</span>
       </div>
 
       <div class="topbar-actions">
@@ -221,61 +221,97 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
-    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Kernels &amp; Soft Margins</h1>
-<p><strong>Lifting inseparable data into separable space, the kernel trick that skips the lifting, slack variables with C, and the RBF universe.</strong></p>
+<h1>Module 1 Practice Lab: Foundations Drills</h1>
+<p><strong>Paradigm triage under time pressure, estimator selection, regression debugging scenarios, and exam essay models.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Crumpled Paper</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Red and blue dots interleaved on a flat sheet (XOR-style) defeat every straight cut — so <em>crumple the paper into 3D</em>: lift each dot by $x_1^2 + x_2^2$ and the classes separate into layers a flat plane slices cleanly. <strong>Kernels</strong> are this crumple made computational: instead of explicitly computing lofty coordinates $\phi(x)$, evaluate only their <em>dot products</em> $K(x,z) = \phi(x)\cdot\phi(z)$ — all SVM math needs — often in closed form cheaper than the coordinates themselves. And <strong>soft margins</strong> admit the world is dirty: pay a fine per violation instead of demanding separable perfection.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Kernel Trick (Why It Isn&#39;t Cheating)</h3>
-<p>SVM training and prediction use data <em>only</em> inside dot products (dual form: $\sum \alpha_i y_i (x_i \cdot x)$). Replace every dot product with $K(x_i, x_j)$ and the machine learns a <em>linear</em> separator in $\phi$-space while computing in input space. Valid kernels (Mercer: the Gram matrix stays positive semidefinite) and their powers:</p>
-<ul>
-<li><strong>Linear</strong> $K = x\cdot z$ (no lifting — the baseline).</li>
-<li><strong>Polynomial</strong> $K = (x\cdot z + c)^d$ (all monomials to degree $d$ — explicit $\phi$ would explode combinatorially; the kernel costs $O(d)$-ish arithmetic).</li>
-<li><strong>RBF/Gaussian</strong> $K = \exp(-\gamma|x-z|^2)$ — <em>infinite</em>-dimensional $\phi$ (Taylor expansion never ends); $\gamma$ sets the influence radius (large $\gamma$ = spiky, local, overfit-prone; small $\gamma$ = smooth, blunt).</li>
-</ul>
-<h3>2.2 Soft Margins: Pricing Violations</h3>
-<p>Real data overlaps and mislabels. Add <strong>slack</strong> $\xi_i \ge 0$ per point and penalize: $\min \tfrac12|w|^2 + C\sum_i \xi_i$ s.t. $y_i(w^Tx_i+b) \ge 1-\xi_i$. <strong>$C$ is the strictness dial</strong>: huge $C$ ≈ hard margin (violations nearly forbidden — overfits noise); tiny $C$ ≈ violations tolerated (wide, forgiving corridor — underfits signals). Almost every real SVM runs soft; hard-margin is the textbook warm-up.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Kernel Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Trick: <strong>learn linear in φ-space, compute only K(x,z) dots</strong> · RBF = <strong>infinite dimensions</strong>, γ = <strong>influence radius</strong> · soft: <strong>min ½‖w‖² + CΣξ</strong> · C huge = <strong>hard/strict</strong>, C tiny = <strong>forgiving</strong> · Mercer (PSD Gram) = <strong>valid kernel certificate</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Kernels Don&#39;t Create Information (and C Is Not Regularization-Strength)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A kernel <em>re-represents</em> separability already latent in features — garbage features kernelized stay garbage (RBF can still <em>memorize</em> anything, which is overfitting, not learning). And $C$&#39;s direction trips everyone: <strong>bigger $C$ = LESS regularization</strong> (violations punished harder, boundary bends to data); smaller $C$ = more. Read $C$ as strictness, never strength.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>1D data: negatives at $x = \pm 2$, positives at $x = \pm 0.5$. Prove linear inseparability in 1D, then separate with $\phi(x) = x^2$ and name the threshold. (Arithmetic by inspection, verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Lifting and Splitting</div><div class="step-content"><p>1D check: any single threshold $t$ puts same-side points together — but signs alternate $(-, +, +, -)$, so every threshold mislabels at least one point: <strong>inseparable</strong>. Lift: $\phi(-2) = 4$, $\phi(-0.5) = 0.25$, $\phi(0.5) = 0.25$, $\phi(2) = 4$ — positives cluster at $0.25$, negatives at $4$: threshold $1$ separates perfectly (positives below, negatives above).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One squaring turned impossible into trivial — and the kernel lesson: nobody needed the <em>coordinates</em> $4$ and $0.25$ as geometry, only their <em>separability</em>. RBF does this to <em>every</em> finite dataset simultaneously (infinite dimensions always suffice), which is precisely why its $\gamma$ dial — not its existence — is the entire modeling decision.</p>
-</div></div><hr>
+<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<h3>Scenario 1: Triage Sprint (60 seconds per case)</h3>
+<p>For each, name paradigm + task type + (T, E, P) skeleton: (a) credit-card fraud flags from labeled histories; (b) segmenting 50k unlabeled support tickets by complaint theme; (c) elevator dispatcher learning from passenger wait-time penalties; (d) predicting delivery ETA in minutes from distance/traffic features.</p>
+<p>Answers: (a) supervised classification (T decide, E labeled transactions, P held-out precision/recall); (b) unsupervised clustering (no labels exist — k-means/LDA territory, Module 4); (c) RL (no correct dispatch shown, only delay penalties; P = expected wait); (d) supervised regression (continuous ETA, squared loss). Anyone answering (b) with &quot;classification&quot; skipped the label check — the lab&#39;s core reflex.</p>
+<h3>Scenario 2: The Shifting Estimate</h3>
+<p>A coin shows 7 heads in 10 flips. MLE says 0.7. A skeptic&#39;s prior (fair-ish, strength ≈ 20 flips) pulls MAP toward ~0.55. Now 1000 flips show 630 heads: MLE 0.63, MAP ≈ 0.63 — prior washed out. Moral in numbers: with $n=10$ the prior owns the answer; with $n=1000$ the data does. Exam phrasing: &quot;state how MAP behaves as $n \to \infty$&quot; → converges to MLE (prior weight $\to 0$ relative to data precision).</p>
+<h3>Scenario 3: The Too-Good Fit</h3>
+<p>A teammate&#39;s degree-12 polynomial on 15 points reports train $R^2 = 1.0$ and demands deployment. Your audit: held-out $R^2 = -0.4$ (worse than the mean!). Diagnosis: variance disease (memorization); prescription: cut degree, add ridge penalty (Gaussian prior!), or gather data — <em>not</em> more features. The two-grade certificate (train + held-out) from M1 is the entire diagnostic.</p>
+<hr>
+<p><a id="the-dimensions"></a></p>
+<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Likelihood vs. posterior</td>
+<td>$P(D|\theta)$ (data fixed, vary θ) vs. $P(\theta|D)$ (belief about θ — needs a prior)</td>
+</tr>
+<tr>
+<td>MLE vs. MAP</td>
+<td>Data-only peak vs. prior-penalized peak; coincide as $n \to \infty$</td>
+</tr>
+<tr>
+<td>Unbiased vs. MLE variance</td>
+<td>$n-1$ corrects bias; MLE uses $n$ (peak, not fairness)</td>
+</tr>
+<tr>
+<td>Regression vs. classification</td>
+<td>Continuous $Y$ (closeness) vs. discrete $Y$ (buckets); different losses, different machinery</td>
+</tr>
+<tr>
+<td>k-NN train vs. test accuracy</td>
+<td>$k=1$ trains at 100% always (memorization); only held-out counts</td>
+</tr>
+<tr>
+<td>Sigmoid output vs. decision</td>
+<td>$\sigma \in (0,1)$ confidence; boundary at $w^Tx = 0$ (still linear!)</td>
+</tr>
+<tr>
+<td>Surrogate vs. 0/1 loss</td>
+<td>Train the smooth stand-in, judge with 0/1 accuracy</td>
+</tr>
+<tr>
+<td>Bias vs. variance</td>
+<td>Rigid-wrong vs. wiggly-unstable; test U-curve finds the middle</td>
+</tr>
+<tr>
+<td>Train $R^2$ vs. test $R^2$</td>
+<td>Rises-by-construction vs. honest grade; report the second</td>
+</tr>
+<tr>
+<td>Batch vs. SGD vs. mini-batch</td>
+<td>$O(nd)$ smooth vs. $O(d)$ noisy-fast vs. GPU default middle</td>
+</tr>
+</tbody></table>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">The polynomial kernel (x·z + 1)³ on 100-dimensional inputs is cheap to evaluate, yet its explicit φ-space has ~180,000 dimensions. Where did the computation go, and why is this legitimate?</span>
+    <span class="quiz-category">A startup has 200 labeled medical images and 2 million unlabeled ones, and needs a tumor detector fast. What is the defensible plan, and which paradigm trap must it avoid?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>The kernel approximates and often errs; exactness is sacrificed for speed</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Algebra: expanding the cube shows it *equals* the 180k-dimensional dot product exactly — the SVM only ever needs dot products (dual form), so evaluating the closed form computes the lofty geometry without visiting it</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Kernels only work on low-dimensional data; this example is invalid</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The 180,000 dimensions are mostly zeros and skipped</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Train supervised logistic regression on all 2,000,200 images by inventing labels</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Supervised model on the 200 labels (possibly with augmentation/transfer), optionally semi-supervised help from the unlabeled pool — and never report accuracy measured on the 200 training images as performance</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Unsupervised clustering alone, calling clusters &quot;diagnoses&quot; without validation</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Skip modeling; 200 images can never support any learning</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -287,20 +323,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$(x\cdot z+1)^3$ expands <em>identically</em> into all degree-≤3 monomial products — no approximation anywhere. Since training/prediction consume $\phi$-vectors solely through inner products, the closed form delivers exact high-dimensional learning at low-dimensional prices. The trick is algebra, not heuristics.</p><pre><code>&lt;/div&gt;
+      <p>Data budget dictates method: 200 labels ⇒ simple supervised models + heavy validation (generative NB converges fast per Ng–Jordan); unlabeled millions help only via semi-supervised/pretraining scaffolding. The traps: inventing labels (garbage supervision) and training-accuracy reporting (memorization theater). Honest uncertainty beats confident fiction in medical ML.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">C = 1000 vs C = 0.001 on noisy overlapping data. Predict both outcomes and name the error each risks.</span>
+    <span class="quiz-category">Two models for the same task: A has train R² 0.99 / test R² 0.97; B has train 0.85 / test 0.84. A teammate ships A &quot;because 0.97 &gt; 0.84.&quot; Give the full analysis.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Identical results — C is decorative</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>C=1000: near-hard margin bending to every noisy point (overfit — memorizes mislabels); C=0.001: violations nearly free, corridor ignores real structure (underfit) — strictness dial with failure modes on both ends</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>C=1000 underfits while C=0.001 overfits</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Both always achieve zero training error regardless</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Agree — higher test always wins unconditionally</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A generalizes slightly better *here* (0.97 &gt; 0.84 honest grades), but its 0.02 gap vs B&#39;s 0.01 hints higher variance — check complexity, stability across folds, and whether A&#39;s edge survives nested validation before crowning it; never decide on one split&#39;s decimals</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Ship B — lower train score always means better generalization</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>R² comparisons are meaningless across models</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -312,20 +348,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$C$ prices violations: huge $C$ makes each one expensive → boundary contorts around noise (variance disease); tiny $C$ makes them free → boundary shrugs at signal (bias disease). Validation picks the middle — same U-curve as Module 1, now with a single explicit dial.</p><pre><code>&lt;/div&gt;
+      <p>Compare <em>honest grades</em> (test vs test): A leads. But mind the gaps (variance tell), fold-stability (one split lies), and complexity cost (simpler B may be the engineering winner). Model selection is nested validation + judgment, not decimal taste-testing.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">RBF kernels can separate any finite dataset (infinite dimensions always suffice). Why isn&#39;t &quot;RBF with tiny γ-width everywhere&quot; the universal answer?</span>
+    <span class="quiz-category">Gradient descent on a convex logistic loss diverges to NaN at epoch 30 after a learning-rate hike. List the diagnosis chain in order.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>RBF kernels are mathematically invalid for finite datasets</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Universal separability = universal *memorization* capacity: spiky RBF shatters training data including its noise (overfit by construction) — generalization needs the *right* width, validated, not infinite flexibility deployed blindly</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Tiny widths make computation impossible rather than merely overfit</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>RBF cannot represent linear boundaries as a special case</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Data corruption → model bug → framework bug → hardware fault</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Recognize divergence signature (healthy-then-NaN) → halve η / add clipping → resume from last checkpoint → only then suspect data/model if instability persists at sane η</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Immediately rewrite the model in a different framework</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>NaN means convergence; deploy the weights</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -337,25 +373,64 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Infinite dimensions guarantee <em>some</em> separator exists — including ones encoding pure noise. Capacity without control is memorization machinery; $\gamma$ (plus $C$) must be validation-tuned so flexibility serves signal. Separability is necessary, never sufficient, for learning.</p><pre><code>&lt;/div&gt;
+      <p>Ordered debugging: signatures first (NaN-after-hike screams learning rate), cheapest fix second (halve η, clip, resume from checkpoint), exotic causes last. Nine of ten training deaths are η — check the usual suspect before summoning the others.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Explain why MAP with a Gaussian prior is &quot;ridge regression in a trench coat,&quot; and when the coat comes off (MAP ≈ MLE).</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>They are unrelated methods sharing no mathematics</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Gaussian log-prior −‖w‖²/2τ² is exactly the L2 penalty (λ = σ²/τ²); as n grows, data precision n/σ² swamps prior precision 1/τ², so the penalty&#39;s relative pull → 0 and MAP → MLE</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Ridge came first historically so MAP copies it cosmetically</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The coat never comes off; MAP always differs substantially</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>$-\log$ posterior = data-fit + $|w|^2$ penalty — same objective, two stories (belief vs. shrinkage). Precision arithmetic decides influence: $n/\sigma^2$ vs $1/\tau^2$; big-$n$ drowns the prior. One equation, Bayesian hat and frequentist-regularized hat, worn together.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> Any single cheat-table row (likelihood-vs-posterior and R²-train-vs-test lead the charts).</li>
+<li><strong>7 Marks:</strong> Scenario triage with T-E-P skeletons, or bias–variance diagnosis with prescription.</li>
+</ul>
+</div></details><h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: For (i) spam filtering with labeled mail, (ii) customer segmentation without labels, (iii) game-playing from scores only: name each paradigm with T-E-P, and explain what feedback each learner receives.</strong></p>
+<p><strong>Model Answer:</strong> (i) Supervised classification: T = label mail, E = labeled corpus, P = held-out accuracy; feedback = per-example correct labels. (ii) Unsupervised clustering: T = find segments, E = bare feature vectors, P = coherence/silhouette; feedback = none (structure only). (iii) RL: T = win games, E = self-play episodes, P = expected return; feedback = episode scores, never correct moves. Granularity of feedback (labels / nothing / rewards) is the discriminator — state it explicitly per case.</p>
+<h3>Essay Question 2 (7 Marks)</h3>
+<p><strong>Q: A degree-15 polynomial fits 20 points with train R² = 1.0 but test R² = 0.3. Diagnose fully and prescribe three distinct remedies with mechanisms.</strong></p>
+<p><strong>Model Answer:</strong> Diagnosis: variance-dominated overfitting — 16 parameters memorize 20 noisy points (bias ≈ 0, variance huge); the train/test split is the evidence. Remedies: (1) cut degree (shrink capacity → trade small bias for large variance drop); (2) ridge penalty (Gaussian prior shrinks wild coefficients continuously); (3) more training data (variance falls as samples pin the fit). Optionally: cross-validated model selection to <em>find</em> the U-curve bottom rather than guessing it.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m3_03_maximum_margin_svm.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_04_multiple_regression_model_assessment.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">3.3 Maximum Margin SVM</div>
+        <div class="ttl">1.4 Multiple Regression Model Assessment</div>
       </a>
       
       
       
-      <a href="./m4_01_clustering_kmeans.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_01_classification_boundaries_knn.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">4.1 Clustering Kmeans</div>
+        <div class="ttl">2.1 Classification Boundaries KNN</div>
       </a>
       
     </footer>
@@ -442,7 +517,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(19) || 0;
-    const currentId = "m3_04_kernels_soft_margins";
+    const currentId = "m1_99_practice_lab_foundations_drills";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 
