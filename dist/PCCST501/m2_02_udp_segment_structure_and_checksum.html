@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Protocol Layering And OSI Tcpip</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.2 Protocol Layering And OSI Tcpip | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Protocol Layering And OSI Tcpip">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.2 Protocol Layering And OSI Tcpip">
+<title>Tarangam — 2.2 Udp Segment Structure And Checksum</title>
+<meta name="description" content="Computer Networks (PCCST501) — 2.2 Udp Segment Structure And Checksum | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.2 Udp Segment Structure And Checksum">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 2.2 Udp Segment Structure And Checksum">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Application Layer</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Internet Overview And Network Edge</span>
           </a>
-          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link active" id="topic-m1_02_protocol_layering_and_osi_tcpip">
+          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link " id="topic-m1_02_protocol_layering_and_osi_tcpip">
             <span class="topic-dot"></span>
             <span>1.2 Protocol Layering And OSI Tcpip</span>
           </a>
@@ -95,8 +95,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Transport &amp; Network Layer</span>
           <span class="chev">&#9656;</span>
@@ -106,7 +106,7 @@
             <span class="topic-dot"></span>
             <span>2.1 Transport Layer Services And Multiplexing</span>
           </a>
-          <a href="./m2_02_udp_segment_structure_and_checksum.html" class="topic-link " id="topic-m2_02_udp_segment_structure_and_checksum">
+          <a href="./m2_02_udp_segment_structure_and_checksum.html" class="topic-link active" id="topic-m2_02_udp_segment_structure_and_checksum">
             <span class="topic-dot"></span>
             <span>2.2 Udp Segment Structure And Checksum</span>
           </a>
@@ -153,9 +153,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST501</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Protocol Layering And OSI Tcpip</span>
+        <span style="color:var(--ink); font-weight:600;">2.2 Udp Segment Structure And Checksum</span>
       </div>
 
       <div class="topbar-actions">
@@ -171,8 +171,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -183,113 +183,80 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Protocol Layering &amp; OSI/TCP-IP Models</h1>
-<p><strong>Protocols, the rationale for layered architecture, the 7-layer OSI model, the 5-layer TCP/IP model, and encapsulation/decapsulation.</strong></p>
+<h1>UDP: Segment Structure &amp; Checksum</h1>
+<p><strong>The 8-byte header, port/length/checksum fields, 1s-complement checksum with pseudoheader, and when unreliable delivery is the right choice.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2>1. The Intuition</h2>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Flying From New York to London</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>In human conversation, a protocol governs <em>what</em> is said and <em>when</em>. If you ask &quot;What time is it?&quot;, the protocol dictates a reply with the time — not an unrelated song. Network protocols are the same idea, formalized: they define the exact <strong>format</strong> and <strong>order</strong> of messages exchanged, plus the <strong>actions</strong> taken when a message is sent or received.</p>
-<p>Now think about flying internationally. You don&#39;t hand your passport to the pilot or discuss baggage weight with air traffic control — the trip is broken into independent <strong>layers</strong>: buying a ticket, checking bags, boarding at the gate, and the physical act of flying. Each layer only needs to know how to talk to the layer directly above and below it. If the airline switches from human baggage handlers to robots, your ticketing and boarding experience doesn&#39;t change at all. This independence between layers — <strong>modularity</strong> — is exactly why network designers split the impossibly complex job of &quot;send data anywhere in the world&quot; into a stack of layers, each solving one narrow problem.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Postcard</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP is a registered letter: tracked, signed for, re-sent if lost. <strong>UDP is a postcard</strong>: you write the address, drop it in the box, and forget it. No tracking number (no sequence numbers), no delivery promise, no return receipt. Why would anyone choose the postcard? Because sometimes the letter&#39;s overhead costs more than an occasional lost postcard — a 50 ms voice stutter beats a 500 ms guaranteed-but-late replay, and a DNS answer fits in one datagram anyway.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2>2. Theoretical Framework &amp; Formalism</h2>
-<h3>2.1 The OSI Reference Model (7 Layers)</h3>
-<p>Created by ISO as a conceptual, vendor-neutral framework. Rarely implemented exactly as-is in software, but universally used by engineers as a shared troubleshooting vocabulary.</p>
-<pre><code class="language-mermaid">flowchart TB
-    L7[&quot;Layer 7 — Application&lt;br/&gt;(HTTP, FTP, SMTP)&quot;]
-    L6[&quot;Layer 6 — Presentation&lt;br/&gt;(encryption, JPEG, SSL/TLS)&quot;]
-    L5[&quot;Layer 5 — Session&lt;br/&gt;(establish/terminate connections)&quot;]
-    L4[&quot;Layer 4 — Transport&lt;br/&gt;(TCP, UDP — end-to-end delivery)&quot;]
-    L3[&quot;Layer 3 — Network&lt;br/&gt;(IP, ICMP — path determination)&quot;]
-    L2[&quot;Layer 2 — Data Link&lt;br/&gt;(Ethernet, Wi-Fi — MAC addressing)&quot;]
-    L1[&quot;Layer 1 — Physical&lt;br/&gt;(cables, hubs — raw bits)&quot;]
-    L7 --&gt; L6 --&gt; L5 --&gt; L4 --&gt; L3 --&gt; L2 --&gt; L1
-</code></pre>
-<blockquote>
-<p><strong>Mnemonic (bottom to top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
-</blockquote>
-<h3>2.2 The TCP/IP Model (5 Layers)</h3>
-<p>The Internet actually runs on the simpler, practical TCP/IP suite, which merges OSI&#39;s top three layers into one:</p>
+<h3>2.1 UDP Segment Structure (exactly 8 bytes of header)</h3>
 <table>
 <thead>
 <tr>
-<th>TCP/IP Layer</th>
-<th>Corresponds to OSI</th>
-<th>Protocol Data Unit (PDU)</th>
+<th>Field</th>
+<th>Size</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Application</td>
-<td>Layers 5, 6, 7 combined</td>
-<td><strong>Message</strong></td>
+<td>Source port</td>
+<td>2 bytes</td>
+<td>Reply address (optional in requests)</td>
 </tr>
 <tr>
-<td>Transport</td>
-<td>Layer 4</td>
-<td><strong>Segment</strong></td>
+<td>Destination port</td>
+<td>2 bytes</td>
+<td>Demultiplexing key at receiver</td>
 </tr>
 <tr>
-<td>Network</td>
-<td>Layer 3</td>
-<td><strong>Datagram</strong> (Packet)</td>
+<td>Length</td>
+<td>2 bytes</td>
+<td>Total segment size in bytes (header + data)</td>
 </tr>
 <tr>
-<td>Link</td>
-<td>Layer 2</td>
-<td><strong>Frame</strong></td>
-</tr>
-<tr>
-<td>Physical</td>
-<td>Layer 1</td>
-<td><strong>Bits</strong></td>
+<td>Checksum</td>
+<td>2 bytes</td>
+<td>Error detection over header + data + pseudoheader</td>
 </tr>
 </tbody></table>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PDU Names per Layer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Memorize top-down: <strong>M</strong>essage (Application) → <strong>S</strong>egment (Transport) → <strong>D</strong>atagram (Network) → <strong>F</strong>rame (Link) → <strong>B</strong>its (Physical). The classic 3-mark question gives the five names scrambled and asks you to match each to its layer — rehearse it in both directions.</p>
-</div></details><h3>2.3 Encapsulation and Decapsulation</h3>
-<p>As data descends the sender&#39;s stack, each layer wraps the payload from the layer above inside its own header — like nesting a letter inside progressively larger envelopes.</p>
-<pre><code class="language-mermaid">flowchart LR
-    subgraph Sender[&quot;Sender: Encapsulation (going down)&quot;]
-        direction TB
-        M[&quot;Application: Message&quot;] --&gt; S[&quot;Transport adds header → Segment&quot;]
-        S --&gt; D[&quot;Network adds IP header → Datagram&quot;]
-        D --&gt; F[&quot;Link adds MAC header/trailer → Frame&quot;]
-    end
-    F --&gt;|&quot;Bits travel across physical medium&quot;| G[&quot; &quot;]
-    subgraph Receiver[&quot;Receiver: Decapsulation (going up)&quot;]
-        direction BT
-        F2[&quot;Link reads/strips header → Datagram&quot;] --&gt; D2[&quot;Network reads/strips header → Segment&quot;]
-        D2 --&gt; S2[&quot;Transport reads/strips header → Message&quot;]
-        S2 --&gt; M2[&quot;Application: Message delivered&quot;]
-    end
-    G --&gt; F2
-</code></pre>
-<p>On the receiving side, the process reverses exactly: each layer reads only <em>its own</em> header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.</p>
-<hr>
+<p>No sequence numbers, no acknowledgment numbers, no window fields — the header&#39;s tiny size <em>is</em> the entire design philosophy: minimum mechanism, maximum speed.</p>
+<h3>2.2 Checksum: 1s-Complement Sum (+ Pseudoheader)</h3>
+<ol>
+<li>Arrange the segment (with checksum field set to 0) as a sequence of 16-bit words, <strong>prefixed by a 12-byte pseudoheader</strong> (source IP, destination IP, protocol number, UDP length).</li>
+<li>Add all words using <strong>1s-complement arithmetic</strong> (end-around carry: overflow bits wrap back into the sum).</li>
+<li>Take the <strong>1s complement</strong> (flip every bit) of the result — that value goes in the checksum field.</li>
+<li>The receiver repeats the sum <em>including</em> the received checksum: a correct segment sums to all-1s (<code>0xFFFF</code>); anything else means corruption → the datagram is <strong>silently discarded</strong> (no notification, no retransmission — the application must cope).</li>
+</ol>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Checksum in 4 Steps</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Zero the field → add pseudoheader + all 16-bit words with <strong>end-around carry</strong> → <strong>complement</strong> into the field → receiver re-sums expecting <strong>all-1s</strong>. Corrupt ⇒ <strong>silent discard</strong>. The favourite numerical: given 3 words <code>0110011001100000</code>, <code>0101010101010101</code>, <code>1000111100001100</code>, sum them (wrap the carry!), complement, and state the receiver&#39;s verdict.</p>
+</div></details><h3>2.3 When UDP Wins (exam framing)</h3>
+<ul>
+<li><strong>No handshake delay:</strong> data flows immediately (DNS: one query, one reply).</li>
+<li><strong>No congestion throttling:</strong> sends at application rate (live media prefers drops over slowdowns).</li>
+<li><strong>Small header + simple state:</strong> fine for request/response protocols (DNS, SNMP, DHCP) and real-time transport (RTP, gaming).</li>
+</ul>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The UDP-vs-TCP Decision Rule</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Why does DNS use UDP?&quot; — because a query + response each fit one datagram, latency of a handshake would dominate, and a lost query is cheaply retried <em>by the application</em>. Any answer citing only &quot;UDP is faster&quot; without the fit-and-retry reasoning earns partial marks at best.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2>3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A browser sends an HTTP GET request for a web page. Trace what the message is called at each layer of the TCP/IP stack as it travels down the sender&#39;s stack and is transmitted onto the wire.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Encapsulation Layer by Layer</div><div class="step-content"><ol>
-<li><strong>Application layer:</strong> The browser constructs the HTTP GET request — this is a <strong>Message</strong>.</li>
-<li><strong>Transport layer:</strong> TCP wraps the message with a header (containing source/destination port, sequence numbers) — it is now a <strong>Segment</strong>.</li>
-<li><strong>Network layer:</strong> IP wraps the segment with a header (containing source/destination IP address) — it is now a <strong>Datagram</strong>.</li>
-<li><strong>Link layer:</strong> Ethernet or Wi-Fi wraps the datagram with a MAC header and trailer — it is now a <strong>Frame</strong>.</li>
-<li><strong>Physical layer:</strong> The frame is converted into a stream of <strong>bits</strong> — electrical signals, light pulses, or radio waves — and transmitted onto the medium.</li>
-</ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The same logical HTTP request is renamed at every layer (Message → Segment → Datagram → Frame → Bits) as successive headers are added. At the receiving web server, this exact sequence runs in reverse: bits are reassembled into a frame, the frame&#39;s header is stripped to reveal a datagram, the datagram&#39;s header is stripped to reveal a segment, and finally the segment&#39;s header is stripped to reveal the original HTTP Message, which is handed to the server&#39;s application process.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A sender builds a UDP segment over data words <code>1010101010101010</code> and <code>1111000011110000</code> (pseudoheader contributions already folded in, checksum field zeroed). Compute the transmitted checksum, then verify it at the receiver.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Summing with End-Around Carry</div><div class="step-content"><p>Add: <code>1010101010101010</code> + <code>1111000011110000</code> = <code>1 1001101101011010</code> — a carry out of bit 15. Wrap it around: <code>1001101101011010</code> + <code>1</code> = <code>1001101101011011</code>. Complement every bit → checksum <code>0110010010100100</code>, placed in the header.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The receiver adds data words + received checksum: the sum returns to <code>1111111111111111</code> (all-1s) → <strong>accept</strong>. Flip any single bit in transit and the re-sum differs from all-1s → <strong>silently discard</strong>, with no error message sent back — UDP&#39;s contract ends at detection.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2>4. Active Recall Quizzes</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">Why does the UDP checksum include a pseudoheader with IP addresses, even though UDP is a transport-layer protocol?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is modularity/layering highly beneficial in network design?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It makes every layer aware of every other layer&#39;s internal implementation</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It lets each layer change its internal implementation independently, as long as it keeps offering the same service to the layer above it</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It reduces the total number of headers required for transmission</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need for standardized protocols</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>To encrypt the segment against eavesdropping</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>So the receiver also verifies the datagram wasn&#39;t misdelivered to the wrong host — a network-layer error caught at the transport layer</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>To compress the header below 8 bytes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The pseudoheader is actually transmitted on the wire to save space</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -301,21 +268,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Layering isolates change: as long as a layer&#39;s <em>interface</em> to its neighbors stays the same, its internal implementation can be swapped out (e.g., replacing Wi-Fi with Ethernet at the link layer) without requiring any changes to the layers above or below it — exactly like the airline being able to automate baggage handling without affecting ticketing.</p><pre><code>&lt;/div&gt;
+      <p>The pseudoheader (never transmitted, reconstructed by the receiver) binds the segment to its intended endpoints. If IP misdelivers the datagram, the receiver&#39;s checksum — computed with <em>its own</em> addresses — fails, catching an error UDP would otherwise never see.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">A UDP receiver&#39;s checksum verification fails. What happens next?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Match the Protocol Data Unit (PDU) to its corresponding TCP/IP layer: Frame, Segment, Datagram, Message.</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Frame=Application, Segment=Network, Datagram=Transport, Message=Link</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Frame=Link, Segment=Transport, Datagram=Network, Message=Application</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Frame=Physical, Segment=Application, Datagram=Link, Message=Transport</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Frame=Network, Segment=Link, Datagram=Application, Message=Transport</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It requests retransmission of that exact segment</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It corrects the erroneous bits using the checksum</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It silently discards the datagram; recovery (if any) is the application&#39;s business</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It forwards the corrupt data with a warning flag</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -327,21 +293,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Each layer&#39;s PDU has a distinct name: the Application layer produces Messages, the Transport layer wraps them into Segments, the Network layer wraps those into Datagrams, and the Link layer wraps those into Frames — which are finally transmitted as raw bits by the Physical layer.</p><pre><code>&lt;/div&gt;
+      <p>Checksums detect but never correct, and UDP adds no feedback channel — no ACKs, no NACKs, no timers. &quot;Silently discard&quot; is the complete error handling; DNS-style request/response apps simply time out and retry above UDP.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">Which design choice explains UDP&#39;s 8-byte header versus TCP&#39;s 20-byte header?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>In the OSI model, which layer is responsible for encryption/decryption and data representation formats like JPEG?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Application (Layer 7)</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Presentation (Layer 6)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Session (Layer 5)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Transport (Layer 4)</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>UDP compresses its fields with a better encoding</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>UDP provides no reliability machinery — no sequence/ack numbers, no windows, no flags — so there is nothing more to put in the header</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>UDP offloads header storage to routers</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The 8 bytes are only the checksum repeated four times</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -353,7 +318,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Presentation layer (Layer 6) handles how data is represented, encoded, and secured — including encryption/decryption (SSL/TLS) and format conversions (JPEG) — distinct from the Application layer, which deals with the actual network process (like HTTP or FTP).</p><pre><code>&lt;/div&gt;
+      <p>Header size mirrors function: every TCP field exists to serve reliability/flow/congestion machinery (covered next). UDP deliberately implements none of it, so 2+2+2+2 bytes (ports, length, checksum) suffice — the header <em>is</em> the philosophy.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -362,16 +327,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_internet_overview_and_network_edge.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Internet Overview And Network Edge</div>
+        <div class="ttl">2.1 Transport Layer Services And Multiplexing</div>
       </a>
       
       
       
-      <a href="./m1_03_application_layer_paradigms.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_03_tcp_segment_structure_and_rtt.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Application Layer Paradigms</div>
+        <div class="ttl">2.3 TCP Segment Structure And Rtt</div>
       </a>
       
     </footer>
@@ -458,7 +423,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(11) || 0;
-    const currentId = "m1_02_protocol_layering_and_osi_tcpip";
+    const currentId = "m2_02_udp_segment_structure_and_checksum";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 

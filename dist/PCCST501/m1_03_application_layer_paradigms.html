@@ -95,6 +95,39 @@
           </a>
         </div>
       </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Transport &amp; Network Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="topic-link " id="topic-m2_01_transport_layer_services_and_multiplexing">
+            <span class="topic-dot"></span>
+            <span>2.1 Transport Layer Services And Multiplexing</span>
+          </a>
+          <a href="./m2_02_udp_segment_structure_and_checksum.html" class="topic-link " id="topic-m2_02_udp_segment_structure_and_checksum">
+            <span class="topic-dot"></span>
+            <span>2.2 Udp Segment Structure And Checksum</span>
+          </a>
+          <a href="./m2_03_tcp_segment_structure_and_rtt.html" class="topic-link " id="topic-m2_03_tcp_segment_structure_and_rtt">
+            <span class="topic-dot"></span>
+            <span>2.3 TCP Segment Structure And Rtt</span>
+          </a>
+          <a href="./m2_04_reliable_transfer_gbn_and_sr.html" class="topic-link " id="topic-m2_04_reliable_transfer_gbn_and_sr">
+            <span class="topic-dot"></span>
+            <span>2.4 Reliable Transfer Gbn And Sr</span>
+          </a>
+          <a href="./m2_05_tcp_flow_control_and_connection_management.html" class="topic-link " id="topic-m2_05_tcp_flow_control_and_connection_management">
+            <span class="topic-dot"></span>
+            <span>2.5 TCP Flow Control And Connection Management</span>
+          </a>
+          <a href="./m2_06_congestion_control_principles_and_tcp.html" class="topic-link " id="topic-m2_06_congestion_control_principles_and_tcp">
+            <span class="topic-dot"></span>
+            <span>2.6 Congestion Control Principles And TCP</span>
+          </a>
+        </div>
+      </div>
     </nav>
 
     <div class="sidebar-foot">
@@ -103,7 +136,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel">0 of 5 completed</span>
+          <span id="progressLabel">0 of 11 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
       </div>
@@ -408,7 +441,7 @@
 
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
-    var totalTopics = Number(5) || 0;
+    var totalTopics = Number(11) || 0;
     const currentId = "m1_03_application_layer_paradigms";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;

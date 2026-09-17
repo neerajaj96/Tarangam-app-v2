@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Protocol Layering And OSI Tcpip</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.2 Protocol Layering And OSI Tcpip | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Protocol Layering And OSI Tcpip">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.2 Protocol Layering And OSI Tcpip">
+<title>Tarangam — 2.1 Transport Layer Services And Multiplexing</title>
+<meta name="description" content="Computer Networks (PCCST501) — 2.1 Transport Layer Services And Multiplexing | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.1 Transport Layer Services And Multiplexing">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 2.1 Transport Layer Services And Multiplexing">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Application Layer</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Internet Overview And Network Edge</span>
           </a>
-          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link active" id="topic-m1_02_protocol_layering_and_osi_tcpip">
+          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link " id="topic-m1_02_protocol_layering_and_osi_tcpip">
             <span class="topic-dot"></span>
             <span>1.2 Protocol Layering And OSI Tcpip</span>
           </a>
@@ -95,14 +95,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Transport &amp; Network Layer</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="topic-link " id="topic-m2_01_transport_layer_services_and_multiplexing">
+          <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="topic-link active" id="topic-m2_01_transport_layer_services_and_multiplexing">
             <span class="topic-dot"></span>
             <span>2.1 Transport Layer Services And Multiplexing</span>
           </a>
@@ -153,9 +153,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST501</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Protocol Layering And OSI Tcpip</span>
+        <span style="color:var(--ink); font-weight:600;">2.1 Transport Layer Services And Multiplexing</span>
       </div>
 
       <div class="topbar-actions">
@@ -171,8 +171,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -183,113 +183,68 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Protocol Layering &amp; OSI/TCP-IP Models</h1>
-<p><strong>Protocols, the rationale for layered architecture, the 7-layer OSI model, the 5-layer TCP/IP model, and encapsulation/decapsulation.</strong></p>
+<h1>Transport-Layer Services &amp; Multiplexing</h1>
+<p><strong>Process-to-process delivery, connectionless vs. connection-oriented service, ports, sockets, and how one host sorts arriving segments to the right app.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2>1. The Intuition</h2>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Flying From New York to London</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>In human conversation, a protocol governs <em>what</em> is said and <em>when</em>. If you ask &quot;What time is it?&quot;, the protocol dictates a reply with the time — not an unrelated song. Network protocols are the same idea, formalized: they define the exact <strong>format</strong> and <strong>order</strong> of messages exchanged, plus the <strong>actions</strong> taken when a message is sent or received.</p>
-<p>Now think about flying internationally. You don&#39;t hand your passport to the pilot or discuss baggage weight with air traffic control — the trip is broken into independent <strong>layers</strong>: buying a ticket, checking bags, boarding at the gate, and the physical act of flying. Each layer only needs to know how to talk to the layer directly above and below it. If the airline switches from human baggage handlers to robots, your ticketing and boarding experience doesn&#39;t change at all. This independence between layers — <strong>modularity</strong> — is exactly why network designers split the impossibly complex job of &quot;send data anywhere in the world&quot; into a stack of layers, each solving one narrow problem.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Apartment Building</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The network layer delivers mail to the right <strong>building</strong> (host, by IP address) — but a building holds many <strong>apartments</strong> (processes: browser, mail client, game). Somebody must read the apartment number on each envelope and slide it under the correct door. That somebody is the <strong>transport layer</strong>: it extends host-to-host delivery into <strong>process-to-process</strong> delivery. The &quot;apartment numbers&quot; are <strong>port numbers</strong>, and each door (socket) is watched by exactly one process.</p>
+</div></details><p>The transport layer offers application processes exactly two personalities to choose from — and every application you have met picks one:</p>
+<ul>
+<li><strong>Connectionless, unreliable (UDP):</strong> &quot;throw the envelope and hope.&quot; No setup, no guarantees — but fast and light. (DNS lookups, live streaming, online games.)</li>
+<li><strong>Connection-oriented, reliable (TCP):</strong> &quot;call first, then speak carefully.&quot; A handshake opens the channel then every byte is tracked, ordered, and re-sent if lost. (Web, email, file transfer.)</li>
+</ul>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Service Lives in the End Systems, Not the Network</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exam trap: multiplexing, reliability, and congestion control are implemented <strong>only in hosts</strong> (sender + receiver), never inside routers. The network core stays dumb and fast; all the cleverness sits at the edge. If an option places TCP logic &quot;in the router,&quot; eliminate it instantly.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2>2. Theoretical Framework &amp; Formalism</h2>
-<h3>2.1 The OSI Reference Model (7 Layers)</h3>
-<p>Created by ISO as a conceptual, vendor-neutral framework. Rarely implemented exactly as-is in software, but universally used by engineers as a shared troubleshooting vocabulary.</p>
-<pre><code class="language-mermaid">flowchart TB
-    L7[&quot;Layer 7 — Application&lt;br/&gt;(HTTP, FTP, SMTP)&quot;]
-    L6[&quot;Layer 6 — Presentation&lt;br/&gt;(encryption, JPEG, SSL/TLS)&quot;]
-    L5[&quot;Layer 5 — Session&lt;br/&gt;(establish/terminate connections)&quot;]
-    L4[&quot;Layer 4 — Transport&lt;br/&gt;(TCP, UDP — end-to-end delivery)&quot;]
-    L3[&quot;Layer 3 — Network&lt;br/&gt;(IP, ICMP — path determination)&quot;]
-    L2[&quot;Layer 2 — Data Link&lt;br/&gt;(Ethernet, Wi-Fi — MAC addressing)&quot;]
-    L1[&quot;Layer 1 — Physical&lt;br/&gt;(cables, hubs — raw bits)&quot;]
-    L7 --&gt; L6 --&gt; L5 --&gt; L4 --&gt; L3 --&gt; L2 --&gt; L1
-</code></pre>
-<blockquote>
-<p><strong>Mnemonic (bottom to top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
-</blockquote>
-<h3>2.2 The TCP/IP Model (5 Layers)</h3>
-<p>The Internet actually runs on the simpler, practical TCP/IP suite, which merges OSI&#39;s top three layers into one:</p>
+<h3>2.1 Multiplexing and Demultiplexing</h3>
+<ul>
+<li><strong>Multiplexing (sender):</strong> gathering data chunks from several sockets, wrapping each with transport headers, and handing the segments down to the network layer.</li>
+<li><strong>Demultiplexing (receiver):</strong> inspecting each arriving segment&#39;s destination identifiers and steering its payload up to the correct socket.</li>
+</ul>
+<p>How the receiver identifies the socket differs — and this difference is heavily examined:</p>
 <table>
 <thead>
 <tr>
-<th>TCP/IP Layer</th>
-<th>Corresponds to OSI</th>
-<th>Protocol Data Unit (PDU)</th>
+<th></th>
+<th>UDP demultiplexing</th>
+<th>TCP demultiplexing</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Application</td>
-<td>Layers 5, 6, 7 combined</td>
-<td><strong>Message</strong></td>
+<td>Key used</td>
+<td>(destination IP, destination <strong>port</strong>)</td>
+<td>full <strong>4-tuple</strong>: (source IP, source port, destination IP, destination port)</td>
 </tr>
 <tr>
-<td>Transport</td>
-<td>Layer 4</td>
-<td><strong>Segment</strong></td>
-</tr>
-<tr>
-<td>Network</td>
-<td>Layer 3</td>
-<td><strong>Datagram</strong> (Packet)</td>
-</tr>
-<tr>
-<td>Link</td>
-<td>Layer 2</td>
-<td><strong>Frame</strong></td>
-</tr>
-<tr>
-<td>Physical</td>
-<td>Layer 1</td>
-<td><strong>Bits</strong></td>
+<td>Consequence</td>
+<td>Two senders to the same port land in the <strong>same</strong> socket</td>
+<td>Each client connection gets its <strong>own</strong> socket, even to the same server port</td>
 </tr>
 </tbody></table>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PDU Names per Layer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Memorize top-down: <strong>M</strong>essage (Application) → <strong>S</strong>egment (Transport) → <strong>D</strong>atagram (Network) → <strong>F</strong>rame (Link) → <strong>B</strong>its (Physical). The classic 3-mark question gives the five names scrambled and asks you to match each to its layer — rehearse it in both directions.</p>
-</div></details><h3>2.3 Encapsulation and Decapsulation</h3>
-<p>As data descends the sender&#39;s stack, each layer wraps the payload from the layer above inside its own header — like nesting a letter inside progressively larger envelopes.</p>
-<pre><code class="language-mermaid">flowchart LR
-    subgraph Sender[&quot;Sender: Encapsulation (going down)&quot;]
-        direction TB
-        M[&quot;Application: Message&quot;] --&gt; S[&quot;Transport adds header → Segment&quot;]
-        S --&gt; D[&quot;Network adds IP header → Datagram&quot;]
-        D --&gt; F[&quot;Link adds MAC header/trailer → Frame&quot;]
-    end
-    F --&gt;|&quot;Bits travel across physical medium&quot;| G[&quot; &quot;]
-    subgraph Receiver[&quot;Receiver: Decapsulation (going up)&quot;]
-        direction BT
-        F2[&quot;Link reads/strips header → Datagram&quot;] --&gt; D2[&quot;Network reads/strips header → Segment&quot;]
-        D2 --&gt; S2[&quot;Transport reads/strips header → Message&quot;]
-        S2 --&gt; M2[&quot;Application: Message delivered&quot;]
-    end
-    G --&gt; F2
-</code></pre>
-<p>On the receiving side, the process reverses exactly: each layer reads only <em>its own</em> header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Demux Keys</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>UDP = <strong>2-tuple</strong> (dst IP, dst port). TCP = <strong>4-tuple</strong> (+ src IP, src port). The standard 3-mark question: &quot;two HTTP clients connect to one web server — how many sockets?&quot; Answer: <strong>three</strong> — one welcoming socket plus one connection socket per client, distinguished by the clients&#39; differing source ports.</p>
+</div></details><h3>2.2 Sockets, Ports, and Well-Known Numbers</h3>
+<p>A <strong>socket</strong> is the programming interface between an application process and the transport layer, named by <code>(IP address, port number)</code>. Ports 0–1023 are <strong>well-known</strong> (HTTP 80, HTTPS 443, FTP-control 21, DNS 53, SMTP 25); servers listen on them while clients use ephemeral high ports.</p>
 <hr>
 <p><a id="worked-example"></a></p>
 <h2>3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A browser sends an HTTP GET request for a web page. Trace what the message is called at each layer of the TCP/IP stack as it travels down the sender&#39;s stack and is transmitted onto the wire.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Encapsulation Layer by Layer</div><div class="step-content"><ol>
-<li><strong>Application layer:</strong> The browser constructs the HTTP GET request — this is a <strong>Message</strong>.</li>
-<li><strong>Transport layer:</strong> TCP wraps the message with a header (containing source/destination port, sequence numbers) — it is now a <strong>Segment</strong>.</li>
-<li><strong>Network layer:</strong> IP wraps the segment with a header (containing source/destination IP address) — it is now a <strong>Datagram</strong>.</li>
-<li><strong>Link layer:</strong> Ethernet or Wi-Fi wraps the datagram with a MAC header and trailer — it is now a <strong>Frame</strong>.</li>
-<li><strong>Physical layer:</strong> The frame is converted into a stream of <strong>bits</strong> — electrical signals, light pulses, or radio waves — and transmitted onto the medium.</li>
-</ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The same logical HTTP request is renamed at every layer (Message → Segment → Datagram → Frame → Bits) as successive headers are added. At the receiving web server, this exact sequence runs in reverse: bits are reassembled into a frame, the frame&#39;s header is stripped to reveal a datagram, the datagram&#39;s header is stripped to reveal a segment, and finally the segment&#39;s header is stripped to reveal the original HTTP Message, which is handed to the server&#39;s application process.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Host A runs a DNS client (ephemeral port 52001) and a browser tab fetching a page. Host B runs a DNS server (port 53) and a web server (port 80). A DNS reply and an HTTP segment both arrive at host A addressed to its IP. Which socket gets each segment, and why can&#39;t they be mixed up?</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Demultiplexing</div><div class="step-content"><p>The DNS reply carries destination port 52001 → steered to the DNS client&#39;s socket (UDP 2-tuple match). The HTTP segment carries destination port (browser&#39;s ephemeral port, e.g. 49152) → steered to the browser&#39;s TCP socket (4-tuple match). The port numbers in the headers make the decision unambiguous even though both segments arrived at the same IP in the same instant.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Demultiplexing keys — not arrival order, not timing — decide ownership. UDP needs only the destination pair; TCP additionally separates connections by source, which is why one server port can serve thousands of simultaneous clients without confusion.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2>4. Active Recall Quizzes</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">What is the transport layer&#39;s core job, beyond what the network layer already provides?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is modularity/layering highly beneficial in network design?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It makes every layer aware of every other layer&#39;s internal implementation</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It lets each layer change its internal implementation independently, as long as it keeps offering the same service to the layer above it</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It reduces the total number of headers required for transmission</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need for standardized protocols</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Routing packets across multiple networks</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Extending host-to-host delivery into process-to-process delivery via ports and sockets</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Converting domain names into IP addresses</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Encrypting all application data</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -301,21 +256,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Layering isolates change: as long as a layer&#39;s <em>interface</em> to its neighbors stays the same, its internal implementation can be swapped out (e.g., replacing Wi-Fi with Ethernet at the link layer) without requiring any changes to the layers above or below it — exactly like the airline being able to automate baggage handling without affecting ticketing.</p><pre><code>&lt;/div&gt;
+      <p>The network layer moves datagrams between <em>hosts</em> (IP addresses). The transport layer adds the second half of the address — the <em>port</em> — so payloads reach the correct <em>process</em> (socket) on that host. Routing, DNS, and encryption belong to other layers/mechanisms.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">Two different clients open HTTP connections to the same web server port 80. How does the server keep their data separate?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Match the Protocol Data Unit (PDU) to its corresponding TCP/IP layer: Frame, Segment, Datagram, Message.</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Frame=Application, Segment=Network, Datagram=Transport, Message=Link</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Frame=Link, Segment=Transport, Datagram=Network, Message=Application</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Frame=Physical, Segment=Application, Datagram=Link, Message=Transport</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Frame=Network, Segment=Link, Datagram=Application, Message=Transport</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It cannot — the second client is rejected until the first disconnects</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each connection is demultiplexed by its full 4-tuple, and the clients&#39; differing source IPs/ports give each its own connection socket</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The server assigns each client a different IP address</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>HTTP is connectionless, so no separation is needed</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -327,21 +281,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Each layer&#39;s PDU has a distinct name: the Application layer produces Messages, the Transport layer wraps them into Segments, the Network layer wraps those into Datagrams, and the Link layer wraps those into Frames — which are finally transmitted as raw bits by the Physical layer.</p><pre><code>&lt;/div&gt;
+      <p>TCP demultiplexing uses (source IP, source port, destination IP, destination port). Same destination port 80, but different source endpoints → different 4-tuples → separate connection sockets. This is exactly why one well-known port serves unlimited concurrent clients.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">Where are transport-layer functions (reliability, multiplexing, congestion control) implemented?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>In the OSI model, which layer is responsible for encryption/decryption and data representation formats like JPEG?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Application (Layer 7)</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Presentation (Layer 6)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Session (Layer 5)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Transport (Layer 4)</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Inside core routers, which inspect every TCP header</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Only in the end systems (sender and receiver hosts)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>In DNS servers distributed across the network</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Equally in every device including switches and hubs</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -353,7 +306,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Presentation layer (Layer 6) handles how data is represented, encoded, and secured — including encryption/decryption (SSL/TLS) and format conversions (JPEG) — distinct from the Application layer, which deals with the actual network process (like HTTP or FTP).</p><pre><code>&lt;/div&gt;
+      <p>The end-to-end principle: transport intelligence lives at the edge. Routers forward IP datagrams without TCP/UDP connection state, which keeps the core fast and simple while hosts implement reliability and congestion control cooperatively.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -362,16 +315,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_internet_overview_and_network_edge.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_05_file_transfer_protocol_ftp.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Internet Overview And Network Edge</div>
+        <div class="ttl">1.5 File Transfer Protocol FTP</div>
       </a>
       
       
       
-      <a href="./m1_03_application_layer_paradigms.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_02_udp_segment_structure_and_checksum.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Application Layer Paradigms</div>
+        <div class="ttl">2.2 Udp Segment Structure And Checksum</div>
       </a>
       
     </footer>
@@ -458,7 +411,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(11) || 0;
-    const currentId = "m1_02_protocol_layering_and_osi_tcpip";
+    const currentId = "m2_01_transport_layer_services_and_multiplexing";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 

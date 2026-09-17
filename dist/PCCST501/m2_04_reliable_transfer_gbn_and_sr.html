@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Protocol Layering And OSI Tcpip</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.2 Protocol Layering And OSI Tcpip | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Protocol Layering And OSI Tcpip">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.2 Protocol Layering And OSI Tcpip">
+<title>Tarangam — 2.4 Reliable Transfer Gbn And Sr</title>
+<meta name="description" content="Computer Networks (PCCST501) — 2.4 Reliable Transfer Gbn And Sr | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.4 Reliable Transfer Gbn And Sr">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 2.4 Reliable Transfer Gbn And Sr">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Application Layer</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Internet Overview And Network Edge</span>
           </a>
-          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link active" id="topic-m1_02_protocol_layering_and_osi_tcpip">
+          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link " id="topic-m1_02_protocol_layering_and_osi_tcpip">
             <span class="topic-dot"></span>
             <span>1.2 Protocol Layering And OSI Tcpip</span>
           </a>
@@ -95,8 +95,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Transport &amp; Network Layer</span>
           <span class="chev">&#9656;</span>
@@ -114,7 +114,7 @@
             <span class="topic-dot"></span>
             <span>2.3 TCP Segment Structure And Rtt</span>
           </a>
-          <a href="./m2_04_reliable_transfer_gbn_and_sr.html" class="topic-link " id="topic-m2_04_reliable_transfer_gbn_and_sr">
+          <a href="./m2_04_reliable_transfer_gbn_and_sr.html" class="topic-link active" id="topic-m2_04_reliable_transfer_gbn_and_sr">
             <span class="topic-dot"></span>
             <span>2.4 Reliable Transfer Gbn And Sr</span>
           </a>
@@ -153,9 +153,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST501</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Protocol Layering And OSI Tcpip</span>
+        <span style="color:var(--ink); font-weight:600;">2.4 Reliable Transfer Gbn And Sr</span>
       </div>
 
       <div class="topbar-actions">
@@ -171,8 +171,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -183,113 +183,52 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Protocol Layering &amp; OSI/TCP-IP Models</h1>
-<p><strong>Protocols, the rationale for layered architecture, the 7-layer OSI model, the 5-layer TCP/IP model, and encapsulation/decapsulation.</strong></p>
+<h1>Reliable Transfer: Go-Back-N vs Selective Repeat</h1>
+<p><strong>How pipelining fixes stop-and-wait, sliding windows, cumulative vs. selective ACKs, single vs. per-packet timers — the GBN/SR comparison examiners love.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2>1. The Intuition</h2>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Flying From New York to London</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>In human conversation, a protocol governs <em>what</em> is said and <em>when</em>. If you ask &quot;What time is it?&quot;, the protocol dictates a reply with the time — not an unrelated song. Network protocols are the same idea, formalized: they define the exact <strong>format</strong> and <strong>order</strong> of messages exchanged, plus the <strong>actions</strong> taken when a message is sent or received.</p>
-<p>Now think about flying internationally. You don&#39;t hand your passport to the pilot or discuss baggage weight with air traffic control — the trip is broken into independent <strong>layers</strong>: buying a ticket, checking bags, boarding at the gate, and the physical act of flying. Each layer only needs to know how to talk to the layer directly above and below it. If the airline switches from human baggage handlers to robots, your ticketing and boarding experience doesn&#39;t change at all. This independence between layers — <strong>modularity</strong> — is exactly why network designers split the impossibly complex job of &quot;send data anywhere in the world&quot; into a stack of layers, each solving one narrow problem.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Assembly Line</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Stop-and-wait reliability is a craftsman finishing one chair before starting the next — correct, but the workshop (network) sits idle most of the time. <strong>Pipelining</strong> is the assembly line: multiple chairs in progress at once, dramatically higher throughput, at the cost of bookkeeping when one chair is defective. The bookkeeping question — <em>when chair #5 is broken, do you rebuild #5 onward (Go-Back-N) or just #5 (Selective Repeat)?</em> — is this entire topic.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2>2. Theoretical Framework &amp; Formalism</h2>
-<h3>2.1 The OSI Reference Model (7 Layers)</h3>
-<p>Created by ISO as a conceptual, vendor-neutral framework. Rarely implemented exactly as-is in software, but universally used by engineers as a shared troubleshooting vocabulary.</p>
-<pre><code class="language-mermaid">flowchart TB
-    L7[&quot;Layer 7 — Application&lt;br/&gt;(HTTP, FTP, SMTP)&quot;]
-    L6[&quot;Layer 6 — Presentation&lt;br/&gt;(encryption, JPEG, SSL/TLS)&quot;]
-    L5[&quot;Layer 5 — Session&lt;br/&gt;(establish/terminate connections)&quot;]
-    L4[&quot;Layer 4 — Transport&lt;br/&gt;(TCP, UDP — end-to-end delivery)&quot;]
-    L3[&quot;Layer 3 — Network&lt;br/&gt;(IP, ICMP — path determination)&quot;]
-    L2[&quot;Layer 2 — Data Link&lt;br/&gt;(Ethernet, Wi-Fi — MAC addressing)&quot;]
-    L1[&quot;Layer 1 — Physical&lt;br/&gt;(cables, hubs — raw bits)&quot;]
-    L7 --&gt; L6 --&gt; L5 --&gt; L4 --&gt; L3 --&gt; L2 --&gt; L1
-</code></pre>
-<blockquote>
-<p><strong>Mnemonic (bottom to top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
-</blockquote>
-<h3>2.2 The TCP/IP Model (5 Layers)</h3>
-<p>The Internet actually runs on the simpler, practical TCP/IP suite, which merges OSI&#39;s top three layers into one:</p>
-<table>
-<thead>
-<tr>
-<th>TCP/IP Layer</th>
-<th>Corresponds to OSI</th>
-<th>Protocol Data Unit (PDU)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Application</td>
-<td>Layers 5, 6, 7 combined</td>
-<td><strong>Message</strong></td>
-</tr>
-<tr>
-<td>Transport</td>
-<td>Layer 4</td>
-<td><strong>Segment</strong></td>
-</tr>
-<tr>
-<td>Network</td>
-<td>Layer 3</td>
-<td><strong>Datagram</strong> (Packet)</td>
-</tr>
-<tr>
-<td>Link</td>
-<td>Layer 2</td>
-<td><strong>Frame</strong></td>
-</tr>
-<tr>
-<td>Physical</td>
-<td>Layer 1</td>
-<td><strong>Bits</strong></td>
-</tr>
-</tbody></table>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PDU Names per Layer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Memorize top-down: <strong>M</strong>essage (Application) → <strong>S</strong>egment (Transport) → <strong>D</strong>atagram (Network) → <strong>F</strong>rame (Link) → <strong>B</strong>its (Physical). The classic 3-mark question gives the five names scrambled and asks you to match each to its layer — rehearse it in both directions.</p>
-</div></details><h3>2.3 Encapsulation and Decapsulation</h3>
-<p>As data descends the sender&#39;s stack, each layer wraps the payload from the layer above inside its own header — like nesting a letter inside progressively larger envelopes.</p>
-<pre><code class="language-mermaid">flowchart LR
-    subgraph Sender[&quot;Sender: Encapsulation (going down)&quot;]
-        direction TB
-        M[&quot;Application: Message&quot;] --&gt; S[&quot;Transport adds header → Segment&quot;]
-        S --&gt; D[&quot;Network adds IP header → Datagram&quot;]
-        D --&gt; F[&quot;Link adds MAC header/trailer → Frame&quot;]
-    end
-    F --&gt;|&quot;Bits travel across physical medium&quot;| G[&quot; &quot;]
-    subgraph Receiver[&quot;Receiver: Decapsulation (going up)&quot;]
-        direction BT
-        F2[&quot;Link reads/strips header → Datagram&quot;] --&gt; D2[&quot;Network reads/strips header → Segment&quot;]
-        D2 --&gt; S2[&quot;Transport reads/strips header → Message&quot;]
-        S2 --&gt; M2[&quot;Application: Message delivered&quot;]
-    end
-    G --&gt; F2
-</code></pre>
-<p>On the receiving side, the process reverses exactly: each layer reads only <em>its own</em> header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.</p>
-<hr>
+<h3>2.1 Why Pipeline: Utilization Math</h3>
+<p>With stop-and-wait, the sender transmits for $L/R$ seconds then idles a full RTT. Utilization $U = \frac{L/R}{\text{RTT} + L/R}$ — on a 1 Gbps, 30 ms link with 1 KB packets, $U \approx 0.00027$: the link is busy <strong>0.027%</strong> of the time. Pipelining $N$ unacknowledged packets multiplies utilization toward $N \times U$ — the entire economic case for windows.</p>
+<h3>2.2 Go-Back-N (GBN)</h3>
+<ul>
+<li><strong>Window size $N$:</strong> up to $N$ unACKed packets in flight; sequence numbers need at least $N+1$ values ($k$ bits ⇒ $2^k \ge N+1$).</li>
+<li><strong>Cumulative ACKs:</strong> ACK $n$ confirms <em>all</em> packets through $n$.</li>
+<li><strong>Single timer</strong> for the oldest unACKed packet; on timeout, <strong>retransmit everything from that packet onward</strong> — even packets that arrived fine.</li>
+<li>Receiver is dumb: discards out-of-order packets, re-ACKs the last in-order one.</li>
+</ul>
+<h3>2.3 Selective Repeat (SR)</h3>
+<ul>
+<li>Each packet ACKed <strong>individually</strong>; receiver <strong>buffers</strong> out-of-order arrivals.</li>
+<li><strong>One logical timer per unACKed packet</strong>; only the actually-lost packet is retransmitted.</li>
+<li>Price: sequence numbers need $2N$ values ($2^k \ge 2N$) — windows for sending and receiving must not overlap, or a restarted receiver confuses new packets with old retransmissions.</li>
+</ul>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: GBN vs SR in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Window $N$: GBN needs $2^k \ge$ <strong>$N+1$</strong>, SR needs $2^k \ge$ <strong>$2N$</strong>. ACKs: <strong>cumulative</strong> vs <strong>individual</strong>. Timers: <strong>one</strong> vs <strong>per-packet</strong>. Loss cost: <strong>whole window</strong> vs <strong>single packet</strong>. Receiver: <strong>discards</strong> out-of-order vs <strong>buffers</strong> them. Memory line to memorize: <em>&quot;GBN repeats, SR selects.&quot;</em></p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Window-Size Trap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With too few sequence numbers, SR breaks catastrophically while GBN merely wastes: if sender and receiver windows overlap numerically, the receiver cannot tell a <em>new</em> packet from a <em>retransmission</em> of an old one. That is exactly why SR demands twice the sequence space — the single most-tested &quot;why&quot; of this topic.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2>3. Worked Example / Step-by-Step Scenario</h2>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A browser sends an HTTP GET request for a web page. Trace what the message is called at each layer of the TCP/IP stack as it travels down the sender&#39;s stack and is transmitted onto the wire.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Encapsulation Layer by Layer</div><div class="step-content"><ol>
-<li><strong>Application layer:</strong> The browser constructs the HTTP GET request — this is a <strong>Message</strong>.</li>
-<li><strong>Transport layer:</strong> TCP wraps the message with a header (containing source/destination port, sequence numbers) — it is now a <strong>Segment</strong>.</li>
-<li><strong>Network layer:</strong> IP wraps the segment with a header (containing source/destination IP address) — it is now a <strong>Datagram</strong>.</li>
-<li><strong>Link layer:</strong> Ethernet or Wi-Fi wraps the datagram with a MAC header and trailer — it is now a <strong>Frame</strong>.</li>
-<li><strong>Physical layer:</strong> The frame is converted into a stream of <strong>bits</strong> — electrical signals, light pulses, or radio waves — and transmitted onto the medium.</li>
-</ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The same logical HTTP request is renamed at every layer (Message → Segment → Datagram → Frame → Bits) as successive headers are added. At the receiving web server, this exact sequence runs in reverse: bits are reassembled into a frame, the frame&#39;s header is stripped to reveal a datagram, the datagram&#39;s header is stripped to reveal a segment, and finally the segment&#39;s header is stripped to reveal the original HTTP Message, which is handed to the server&#39;s application process.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Window $N=4$, packets 0–7 in play, packet 2 is lost once (all retransmissions succeed). Count total transmissions under GBN and under SR, and state what each receiver does with packets 3–5.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Both Protocols</div><div class="step-content"><p><strong>GBN:</strong> sender emits 0,1,2,3 (2 lost). Receiver ACKs 0,1, then discards 3 (out of order, re-ACKs 1). Timer for packet 2 expires → sender re-emits <strong>2,3,4,5</strong>. Total sends: 4 + 4 = <strong>8 transmissions</strong>; packets 3–5&#39;s first copies were pure waste.
+<strong>SR:</strong> sender emits 0,1,2,3. Receiver ACKs 0,1,3 (buffers 3). Only packet 2&#39;s timer expires → re-emit <strong>2 alone</strong>. Total sends: 4 + 1 = <strong>5 transmissions</strong>; the buffered 3 slots straight into place on 2&#39;s arrival.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same loss, 8 vs 5 transmissions — SR&#39;s extra receiver memory and sequence space buy back the entire wasted window. On high-error links the gap widens; on clean links both behave identically, which is why TCP (next topics) blends the two philosophies.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2>4. Active Recall Quizzes</h2>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">In Go-Back-N with window size N, how many distinct sequence numbers are required, and why that exact count?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is modularity/layering highly beneficial in network design?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It makes every layer aware of every other layer&#39;s internal implementation</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It lets each layer change its internal implementation independently, as long as it keeps offering the same service to the layer above it</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It reduces the total number of headers required for transmission</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need for standardized protocols</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>$2N$, to give every in-flight packet a unique timer</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$N+1$, so that all N packets of a full window plus the next expected one are distinguishable and the receiver never confuses a new window with retransmissions of the old</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Exactly $N$, one per window slot</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It doesn&#39;t matter — GBN works with a single sequence number</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -301,21 +240,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Layering isolates change: as long as a layer&#39;s <em>interface</em> to its neighbors stays the same, its internal implementation can be swapped out (e.g., replacing Wi-Fi with Ethernet at the link layer) without requiring any changes to the layers above or below it — exactly like the airline being able to automate baggage handling without affecting ticketing.</p><pre><code>&lt;/div&gt;
+      <p>With only $N$ numbers, a fully-ACKed window sliding forward reuses the same numbers as the packets just acknowledged — the sender cannot tell &quot;all ACKed, send new&quot; from &quot;all lost, resend old.&quot; The +1 breaks the symmetry. (SR needs $2N$ because <em>both</em> sides hold windows simultaneously.)</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">Packet 2 of a window is lost; packets 3, 4, 5 arrive intact. Contrast the two receivers.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Match the Protocol Data Unit (PDU) to its corresponding TCP/IP layer: Frame, Segment, Datagram, Message.</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Frame=Application, Segment=Network, Datagram=Transport, Message=Link</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Frame=Link, Segment=Transport, Datagram=Network, Message=Application</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Frame=Physical, Segment=Application, Datagram=Link, Message=Transport</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Frame=Network, Segment=Link, Datagram=Application, Message=Transport</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Both discard 3–5 and wait for a full retransmission</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>GBN discards 3–5 and re-ACKs packet 1; SR buffers 3–5 and ACKs each individually, needing only packet 2 re-sent</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>GBN buffers while SR discards — SR is the simpler receiver</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both receivers crash and the connection resets</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -327,21 +265,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Each layer&#39;s PDU has a distinct name: the Application layer produces Messages, the Transport layer wraps them into Segments, the Network layer wraps those into Datagrams, and the Link layer wraps those into Frames — which are finally transmitted as raw bits by the Physical layer.</p><pre><code>&lt;/div&gt;
+      <p>GBN&#39;s receiver keeps no out-of-order state (cheap, wasteful); SR&#39;s receiver invests memory to save retransmissions (costly, efficient). &quot;GBN repeats, SR selects&quot; — the receiver&#39;s behavior <em>is</em> the protocols&#39; difference, since both send windows identically.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">Pipelining exists fundamentally to fix which stop-and-wait pathology?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>In the OSI model, which layer is responsible for encryption/decryption and data representation formats like JPEG?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Application (Layer 7)</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Presentation (Layer 6)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Session (Layer 5)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Transport (Layer 4)</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Excessive header overhead per packet</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Abysmal link utilization — the sender idles a full RTT per tiny transmission, so $U = \frac{L/R}{RTT + L/R} \ll 1$ on fast or long links</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The inability to use sequence numbers at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Receiver buffer overflow during bursts</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -353,7 +290,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Presentation layer (Layer 6) handles how data is represented, encoded, and secured — including encryption/decryption (SSL/TLS) and format conversions (JPEG) — distinct from the Application layer, which deals with the actual network process (like HTTP or FTP).</p><pre><code>&lt;/div&gt;
+      <p>Stop-and-wait is <em>correct</em> but economically absurd on broadband/long-delay paths (the worked 0.027% example). Windows keep $N$ packets in flight so transmission overlaps with waiting — throughput scales with $N$ until the window, not the RTT, becomes the limit.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -362,16 +299,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_internet_overview_and_network_edge.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_03_tcp_segment_structure_and_rtt.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Internet Overview And Network Edge</div>
+        <div class="ttl">2.3 TCP Segment Structure And Rtt</div>
       </a>
       
       
       
-      <a href="./m1_03_application_layer_paradigms.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_05_tcp_flow_control_and_connection_management.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Application Layer Paradigms</div>
+        <div class="ttl">2.5 TCP Flow Control And Connection Management</div>
       </a>
       
     </footer>
@@ -458,7 +395,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(11) || 0;
-    const currentId = "m1_02_protocol_layering_and_osi_tcpip";
+    const currentId = "m2_04_reliable_transfer_gbn_and_sr";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 
