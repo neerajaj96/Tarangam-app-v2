@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.4 Complexity Calculation Of Iterative Algorithms</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 1.4 Complexity Calculation Of Iterative Algorithms | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.4 Complexity Calculation Of Iterative Algorithms">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 1.4 Complexity Calculation Of Iterative Algorithms">
+<title>Tarangam — 2.1 Disjoint Sets And Union Find</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 2.1 Disjoint Sets And Union Find | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.1 Disjoint Sets And Union Find">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 2.1 Disjoint Sets And Union Find">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Analysis &amp; Recurrences</span>
           <span class="chev">&#9656;</span>
@@ -89,7 +89,7 @@
             <span class="topic-dot"></span>
             <span>1.3 Asymptotic Notations And Properties</span>
           </a>
-          <a href="./m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link active" id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
+          <a href="./m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link " id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
             <span class="topic-dot"></span>
             <span>1.4 Complexity Calculation Of Iterative Algorithms</span>
           </a>
@@ -123,14 +123,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Graphs &amp; Divide/Conquer</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m2_01_disjoint_sets_and_union_find.html" class="topic-link " id="topic-m2_01_disjoint_sets_and_union_find">
+          <a href="./m2_01_disjoint_sets_and_union_find.html" class="topic-link active" id="topic-m2_01_disjoint_sets_and_union_find">
             <span class="topic-dot"></span>
             <span>2.1 Disjoint Sets And Union Find</span>
           </a>
@@ -173,9 +173,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.4 Complexity Calculation Of Iterative Algorithms</span>
+        <span style="color:var(--ink); font-weight:600;">2.1 Disjoint Sets And Union Find</span>
       </div>
 
       <div class="topbar-actions">
@@ -191,8 +191,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -203,70 +203,57 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Complexity Analysis of Iterative Loops</h1>
-<p><strong>Single loops, nested loops, logarithmic increment loops, dependent inner loops, and amortized loop bounds.</strong></p>
+<h1>Disjoint Sets &amp; Union-Find</h1>
+<p><strong>Dynamic connectivity, MAKE-SET/FIND/UNION, union by rank, path compression, and the near-constant inverse-Ackermann bound.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Counting how many times a loop runs is a bit like counting steps on a staircase. A single flight of $n$ steps takes $n$ steps to climb — simple. But now imagine a building where, for <em>each</em> of the $n$ floors, you also have to climb a separate flight of $n$ steps just to check something on that floor before moving up — now you&#39;re doing $n \times n = n^2$ steps total, because the work is <em>nested</em>. And if, instead of climbing linearly, each step you take lets you skip to double your current floor (floor 1 → 2 → 4 → 8 → 16...), you&#39;ll reach the top in only about $\log_2 n$ steps — dramatically fewer, because the loop variable <em>grows multiplicatively</em> rather than by fixed increments.</p>
-<p>This section teaches you a systematic recipe: look at how the loop variable changes each iteration (does it go up by 1? by doubling? does the inner loop&#39;s range depend on the outer loop&#39;s current value?), and translate that pattern directly into a Big-O bound — without needing to run the code or guess.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Family Trees at a Reunion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine tracking which guests at a huge reunion belong to the same family. Each family picks one elder as its <strong>representative</strong>. Two operations cover everything: &quot;are these two guests related?&quot; (climb both family trees to the elders and compare) and &quot;these two families just married — merge them&quot; (graft one elder under the other). Two speed tricks make it fly: always graft the <strong>shorter tree under the taller</strong> (union by rank), and whenever you climb, <strong>re-hang everyone you pass directly under the elder</strong> (path compression) — future queries from those guests then finish in a single hop.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>Single loop, incrementing by a constant:</strong></p>
-<pre><code>for i = 1 to n:
-    do O(1) work
+<h3>2.1 The Three Operations</h3>
+<ul>
+<li><strong>MAKE-SET(x):</strong> create a one-node tree; $x$ is its own parent and representative. Cost $O(1)$.</li>
+<li><strong>FIND(x):</strong> follow parent pointers to the root (the set&#39;s name). <em>With</em> path compression, every visited node is rewired to point at the root on the way back.</li>
+<li><strong>UNION(x, y):</strong> FIND both roots; attach the root of <strong>smaller rank</strong> under the root of larger rank (union by rank); if tied, pick either and increment its rank. (Rank ≈ upper bound on tree height, <em>not</em> exact size — a common exam trap.)</li>
+</ul>
+<pre><code class="language-text">UNION(e, b) by rank:          FIND(c) with path compression:
+
+  (a)r1        (d)r0                a                   a
+ / \          /                    / \                 /|\
+b   c        e          ==&gt;       b   c    ==&gt;        b c d
+   / \
+  d   e                          d
+  (rank 1 subtree)              (d rewired to root a)
 </code></pre>
-<p>Runs exactly $n$ times, each iteration doing constant work → total $\Theta(n)$.</p>
-<p><strong>Nested loops, independent ranges:</strong></p>
-<pre><code>for i = 1 to n:
-    for j = 1 to m:
-        do O(1) work
-</code></pre>
-<p>The inner loop runs $m$ times for <em>each</em> of the $n$ outer iterations, giving $n \times m$ total iterations → $\Theta(nm)$. When both loops run to $n$ (i.e. $m=n$), this becomes the very common $\Theta(n^2)$.</p>
-<p><strong>Dependent nested loops (inner range depends on outer variable):</strong></p>
-<pre><code>for i = 1 to n:
-    for j = 1 to i:
-        do O(1) work
-</code></pre>
-<p>The inner loop runs $i$ times, and $i$ itself ranges from $1$ to $n$. Total iterations $= 1 + 2 + 3 + \dots + n = \frac{n(n+1)}{2}$ — this is the classic <strong>arithmetic series</strong> sum, which is $\Theta(n^2)$ (the leading term dominates; the constant $\frac{1}{2}$ is dropped by asymptotic notation, but the <em>degree</em>, $n^2$, survives).</p>
-<p><strong>Logarithmic loops (variable changes multiplicatively):</strong></p>
-<pre><code>i = 1
-while i &lt;= n:
-    do O(1) work
-    i = i * 2
-</code></pre>
-<p>$i$ takes values $1, 2, 4, 8, \dots$ — i.e. $2^0, 2^1, 2^2, \dots$ — and the loop stops once $2^k &gt; n$, i.e. once $k &gt; \log_2 n$. So the loop runs $\Theta(\log n)$ times. (The same logic applies symmetrically to a loop that starts at $n$ and <em>divides</em> by 2 each time until reaching 1 — this is exactly what happens inside binary search.)</p>
-<p><strong>Amortized analysis (a brief preview).</strong> Sometimes a single operation looks expensive in isolation, but happens rarely enough that its cost, <em>averaged over a long sequence of operations</em>, is actually small. Classic example: a dynamic array (like Python&#39;s list or Java&#39;s ArrayList) that doubles its capacity whenever it&#39;s full. A single &quot;resize&quot; copies all $n$ existing elements — an $O(n)$ operation — but resizes only happen $O(\log n)$ times total across $n$ insertions, and the total cost of all resizes across $n$ insertions sums to $O(n)$ (a geometric series: $1+2+4+\dots+n \approx 2n$). So the <em>amortized</em> (averaged) cost per insertion is $O(1)$, even though occasional individual insertions cost $O(n)$.</p>
-<p><strong>General technique — the summation method:</strong> express the total work as a sum over the loop&#39;s range, then evaluate that sum using standard series formulas (arithmetic series $\sum_{i=1}^n i = \frac{n(n+1)}{2}$, geometric series $\sum_{i=0}^{k} 2^i = 2^{k+1}-1$), and finally express the result in Big-O by keeping only the dominant (fastest-growing) term.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Two Series You Must Memorize</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arithmetic: $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \Theta(n^2)$ (dependent nested loops). Geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$, so $1+2+4+\dots+n = 2n-1 = \Theta(n)$ (doubling loops, dynamic-array resizes). Nine out of ten loop-counting questions reduce to recognizing which of these two sums you are looking at.</p>
+<h3>2.2 The Amortized Bound</h3>
+<p>With <strong>both</strong> heuristics, any sequence of $m$ operations on $n$ elements costs $O(m \cdot \alpha(n))$, where $\alpha$ is the <strong>inverse Ackermann function</strong> — a function growing so slowly that $\alpha(n) \le 4$ for every $n$ up to the number of atoms in the universe. Effectively constant time per operation.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Union-Find in 5 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MAKE-SET $O(1)$ · FIND climbs to root · UNION attaches <strong>smaller rank under larger</strong> · compression <strong>rewires the whole climb path</strong> to the root · amortized cost $O(\alpha(n))$ ≈ constant <strong>only with both heuristics together</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Rank Is Not Size (and Compression Is Not Free Alone)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Rank bounds height; it is <em>not</em> the node count (that&#39;s union-by-<em>size</em>, a different variant). And path compression alone — without union by rank — still degrades: tall skinny trees keep forming. The $\alpha(n)$ miracle needs <strong>both</strong>. Any &quot;one heuristic suffices&quot; option is wrong.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Determine the time complexity of the following nested loop, where the inner loop&#39;s bound depends on the outer loop variable:</p>
-<pre><code>for i = 1 to n:
-    for j = 1 to i:
-        print(i, j)
-</code></pre>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>For $i=1$, the inner loop runs $1$ time. For $i=2$, it runs $2$ times. ... For $i=n$, it runs $n$ times. The total number of <code>print</code> calls is $1 + 2 + 3 + \dots + n$. Using the arithmetic series formula, $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \frac{n^2+n}{2}$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Expanding $\frac{n^2+n}{2} = \frac{1}{2}n^2 + \frac{1}{2}n$. As $n$ grows large, the $n^2$ term dominates the $n$ term, and asymptotic notation drops both the constant factor $\frac{1}{2}$ and the lower-order term $\frac{1}{2}n$. Final answer: $\Theta(n^2)$ — the <em>same</em> asymptotic complexity as two fully independent nested loops running $n$ times each, even though this version does roughly half the total work in absolute terms. This illustrates why Big-Theta cares about growth rate, not exact operation counts.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Start with singletons ${a},{b},{c},{d}$. Execute: UNION(a,b), UNION(c,d), UNION(a,c) — all by rank — then FIND(d) with path compression. Draw the forest after each step and count FIND(d)&#39;s hops before and after a second FIND(d).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Pointers</div><div class="step-content"><p>UNION(a,b): ranks tie (0,0) → $b$ under $a$, rank($a$)=1. UNION(c,d): $d$ under $c$, rank($c$)=1. UNION(a,c): ranks tie (1,1) → $c$ under $a$, rank($a$)=2. Forest: $a$ with children $b,c$; $c$ with child $d$. FIND(d): climb $d \to c \to a$ (<strong>2 hops</strong>), rewiring $d$ (and confirming $c$) directly under $a$. Second FIND(d): $d \to a$ (<strong>1 hop</strong>).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The first query paid 2 hops and flattened the path; every later query on $d$ costs 1. Across Kruskal&#39;s algorithm (thousands of UNION/FINDs on graph edges), this self-flattening is what drags the total to near-linear — the data structure literally gets faster the more you use it.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:</span>
+    <span class="quiz-category">During UNION(x, y) by rank, root Rx has rank 3 and root Ry has rank 1. What happens?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$\Theta(n)$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$\Theta(\log n)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n \log n)$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Ry becomes parent and its rank rises to 4</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Rx becomes parent; ranks stay 3 and 1 (no increment, since ranks differ)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both ranks reset to 0 and the trees are rebuilt</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The operation is illegal — ranks must always match</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -278,20 +265,20 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>If $i$ doubles each iteration starting from 1, after $k$ iterations $i = 2^k$. The loop stops once $2^k$ exceeds $n$, which happens at $k \approx \log_2 n$. So the number of iterations grows logarithmically with $n$.</p><pre><code>&lt;/div&gt;
+      <p>Attach smaller under larger; rank increments <em>only</em> on ties (when height can genuinely grow). Here Ry&#39;s whole tree hangs under Rx with zero rank changes — the invariant (rank bounds height) is preserved for free.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A nested loop where the inner loop runs from $1$ to the current value of the outer loop variable $i$ (which itself ranges from 1 to $n$) has a total number of iterations equal to which sum, and what is its asymptotic complexity?</span>
+    <span class="quiz-category">What does path compression do during FIND(x), and what does it cost future operations?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} n$, giving $\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, giving $\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} \log i$, giving $\Theta(n \log n)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} 1$, giving $\Theta(n)$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It deletes all nodes on the path to save memory</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It rewires every node on the climb directly under the root, so repeat queries on them finish in one hop — future work subsidized by present work</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It sorts the path nodes by key value</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Nothing observable; it is purely cosmetic</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -303,20 +290,20 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The inner loop runs $i$ times for each outer value of $i$, so total iterations $= 1+2+\dots+n = \frac{n(n+1)}{2}$ (the arithmetic series sum). Once expanded, the dominant term is $n^2$, and asymptotic notation drops the constant $\frac12$ and the lower-order $n$ term, giving $\Theta(n^2)$ — the same growth rate as a fully independent $n \times n$ nested loop.</p><pre><code>&lt;/div&gt;
+      <p>Compression spends a few extra pointer writes during this FIND to flatten the path permanently. The data structure amortizes: early queries pay to pave roads that all later queries drive on for free — half of the $\alpha(n)$ miracle.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">In amortized analysis of a dynamic array that doubles its size whenever full, why is the *amortized* cost per insertion $O(1)$ even though a single resize operation costs $O(n)$?</span>
+    <span class="quiz-category">Kruskal&#39;s algorithm sorts edges then UNIONs endpoints unless already connected. Which Union-Find facts make this fast?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Resizes never actually happen in practice</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Resizes happen rarely (only $O(\log n)$ times across $n$ insertions), and their total cost across all insertions sums to $O(n)$, which averages to $O(1)$ per insertion</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The cost of a resize is always exactly 1 operation</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Amortized analysis ignores expensive operations entirely</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>FIND without compression plus union by coin flip</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Union by rank keeps trees shallow and path compression flattens climbed paths, giving near-constant amortized operations across the whole edge sequence</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MAKE-SET alone; FIND/UNION are never actually called</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Kruskal doesn&#39;t use Union-Find at all</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -328,7 +315,7 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Even though an individual resize copies up to $n$ elements ($O(n)$ for that one operation), resizes become exponentially rarer as the array grows (doubling means only $\log_2 n$ resizes total for $n$ insertions), and the sum of all resize costs across the whole sequence is a geometric series that totals $O(n)$. Spread over $n$ insertions, that&#39;s $O(1)$ per insertion on average — which is what &quot;amortized $O(1)$&quot; means.</p><pre><code>&lt;/div&gt;
+      <p>Kruskal issues $O(E)$ FIND/UNION operations; with both heuristics the total is $O(E,\alpha(V))$ — effectively linear, so sorting dominates. Drop either heuristic and the disjoint-set work can balloon to $O(E \cdot V)$ in the worst case.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -337,16 +324,16 @@ while i &lt;= n:
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_03_asymptotic_notations_and_properties.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.3 Asymptotic Notations And Properties</div>
+        <div class="ttl">🧪 Practice Lab: M1 Asymptotics And Recurrences</div>
       </a>
       
       
       
-      <a href="./m1_05_recurrence_equations_and_substitution_method.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_02_graph_traversals_bfs_and_dfs.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.5 Recurrence Equations And Substitution Method</div>
+        <div class="ttl">2.2 Graph Traversals BFS And DFS</div>
       </a>
       
     </footer>
@@ -433,7 +420,7 @@ while i &lt;= n:
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(16) || 0;
-    const currentId = "m1_04_complexity_calculation_of_iterative_algorithms";
+    const currentId = "m2_01_disjoint_sets_and_union_find";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 

@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.4 Complexity Calculation Of Iterative Algorithms</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 1.4 Complexity Calculation Of Iterative Algorithms | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.4 Complexity Calculation Of Iterative Algorithms">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 1.4 Complexity Calculation Of Iterative Algorithms">
+<title>Tarangam — 2.3 Strongly Connected Components Kosaraju</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 2.3 Strongly Connected Components Kosaraju | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.3 Strongly Connected Components Kosaraju">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 2.3 Strongly Connected Components Kosaraju">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Analysis &amp; Recurrences</span>
           <span class="chev">&#9656;</span>
@@ -89,7 +89,7 @@
             <span class="topic-dot"></span>
             <span>1.3 Asymptotic Notations And Properties</span>
           </a>
-          <a href="./m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link active" id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
+          <a href="./m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link " id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
             <span class="topic-dot"></span>
             <span>1.4 Complexity Calculation Of Iterative Algorithms</span>
           </a>
@@ -123,8 +123,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Graphs &amp; Divide/Conquer</span>
           <span class="chev">&#9656;</span>
@@ -138,7 +138,7 @@
             <span class="topic-dot"></span>
             <span>2.2 Graph Traversals BFS And DFS</span>
           </a>
-          <a href="./m2_03_strongly_connected_components_kosaraju.html" class="topic-link " id="topic-m2_03_strongly_connected_components_kosaraju">
+          <a href="./m2_03_strongly_connected_components_kosaraju.html" class="topic-link active" id="topic-m2_03_strongly_connected_components_kosaraju">
             <span class="topic-dot"></span>
             <span>2.3 Strongly Connected Components Kosaraju</span>
           </a>
@@ -173,9 +173,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.4 Complexity Calculation Of Iterative Algorithms</span>
+        <span style="color:var(--ink); font-weight:600;">2.3 Strongly Connected Components Kosaraju</span>
       </div>
 
       <div class="topbar-actions">
@@ -191,8 +191,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -203,70 +203,59 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Complexity Analysis of Iterative Loops</h1>
-<p><strong>Single loops, nested loops, logarithmic increment loops, dependent inner loops, and amortized loop bounds.</strong></p>
+<h1>Strongly Connected Components: Kosaraju&#39;s Algorithm</h1>
+<p><strong>Mutual reachability, the condensation DAG, finishing-time order, the two-pass method on G and transpose, and why the order is load-bearing.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Counting how many times a loop runs is a bit like counting steps on a staircase. A single flight of $n$ steps takes $n$ steps to climb — simple. But now imagine a building where, for <em>each</em> of the $n$ floors, you also have to climb a separate flight of $n$ steps just to check something on that floor before moving up — now you&#39;re doing $n \times n = n^2$ steps total, because the work is <em>nested</em>. And if, instead of climbing linearly, each step you take lets you skip to double your current floor (floor 1 → 2 → 4 → 8 → 16...), you&#39;ll reach the top in only about $\log_2 n$ steps — dramatically fewer, because the loop variable <em>grows multiplicatively</em> rather than by fixed increments.</p>
-<p>This section teaches you a systematic recipe: look at how the loop variable changes each iteration (does it go up by 1? by doubling? does the inner loop&#39;s range depend on the outer loop&#39;s current value?), and translate that pattern directly into a Big-O bound — without needing to run the code or guess.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Island Chains in a One-Way Current</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture islands linked by one-way ferry routes. A <strong>strongly connected component (SCC)</strong> is a maximal group where you can sail from <em>any</em> island to <em>any</em> other (round trips everywhere inside). Between groups, travel is one-way — collapse each group to a single dot and the dots form a <strong>DAG</strong> (cycles can&#39;t survive: a cycle of groups would just be one bigger group). Kosaraju&#39;s trick: process islands in the order a first expedition <em>finishes</em> them, then re-explore the <em>reversed</em> map — each re-exploration nets exactly one island group, no mixing.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>Single loop, incrementing by a constant:</strong></p>
-<pre><code>for i = 1 to n:
-    do O(1) work
+<h3>2.1 Definitions</h3>
+<ul>
+<li>$u, v$ are <strong>mutually reachable</strong> if paths $u \leadsto v$ AND $v \leadsto u$ both exist. Mutual reachability is an equivalence relation; its classes are the <strong>SCCs</strong>.</li>
+<li>The <strong>condensation</strong> (one node per SCC, edges between SCCs) is always a <strong>DAG</strong> — the proof is one line: a directed cycle among SCCs would merge them into a single SCC.</li>
+</ul>
+<h3>2.2 Kosaraju&#39;s Two Passes</h3>
+<ol>
+<li><strong>Pass 1:</strong> DFS on $G$; record vertices in order of <em>finishing</em> time (push each vertex onto a stack when it finishes).</li>
+<li><strong>Pass 2:</strong> DFS on the <strong>transpose</strong> $G^T$ (every edge reversed), visiting vertices in <em>decreasing</em> finish-time order (pop the stack). Each DFS tree grown is exactly one SCC.</li>
+</ol>
+<pre><code class="language-text">G:  A --&gt; B --&gt; C          G^T (reversed):  A &lt;-- B &lt;-- C
+^     |   ^                      |     |   |
+|     v   |                      v     |   v
+D &lt;-- E   F                      D --&gt; E   F
+(pass 1 finishes F,C,B,E,A,D?) (pass 2 peels SCCs in that order)
 </code></pre>
-<p>Runs exactly $n$ times, each iteration doing constant work → total $\Theta(n)$.</p>
-<p><strong>Nested loops, independent ranges:</strong></p>
-<pre><code>for i = 1 to n:
-    for j = 1 to m:
-        do O(1) work
-</code></pre>
-<p>The inner loop runs $m$ times for <em>each</em> of the $n$ outer iterations, giving $n \times m$ total iterations → $\Theta(nm)$. When both loops run to $n$ (i.e. $m=n$), this becomes the very common $\Theta(n^2)$.</p>
-<p><strong>Dependent nested loops (inner range depends on outer variable):</strong></p>
-<pre><code>for i = 1 to n:
-    for j = 1 to i:
-        do O(1) work
-</code></pre>
-<p>The inner loop runs $i$ times, and $i$ itself ranges from $1$ to $n$. Total iterations $= 1 + 2 + 3 + \dots + n = \frac{n(n+1)}{2}$ — this is the classic <strong>arithmetic series</strong> sum, which is $\Theta(n^2)$ (the leading term dominates; the constant $\frac{1}{2}$ is dropped by asymptotic notation, but the <em>degree</em>, $n^2$, survives).</p>
-<p><strong>Logarithmic loops (variable changes multiplicatively):</strong></p>
-<pre><code>i = 1
-while i &lt;= n:
-    do O(1) work
-    i = i * 2
-</code></pre>
-<p>$i$ takes values $1, 2, 4, 8, \dots$ — i.e. $2^0, 2^1, 2^2, \dots$ — and the loop stops once $2^k &gt; n$, i.e. once $k &gt; \log_2 n$. So the loop runs $\Theta(\log n)$ times. (The same logic applies symmetrically to a loop that starts at $n$ and <em>divides</em> by 2 each time until reaching 1 — this is exactly what happens inside binary search.)</p>
-<p><strong>Amortized analysis (a brief preview).</strong> Sometimes a single operation looks expensive in isolation, but happens rarely enough that its cost, <em>averaged over a long sequence of operations</em>, is actually small. Classic example: a dynamic array (like Python&#39;s list or Java&#39;s ArrayList) that doubles its capacity whenever it&#39;s full. A single &quot;resize&quot; copies all $n$ existing elements — an $O(n)$ operation — but resizes only happen $O(\log n)$ times total across $n$ insertions, and the total cost of all resizes across $n$ insertions sums to $O(n)$ (a geometric series: $1+2+4+\dots+n \approx 2n$). So the <em>amortized</em> (averaged) cost per insertion is $O(1)$, even though occasional individual insertions cost $O(n)$.</p>
-<p><strong>General technique — the summation method:</strong> express the total work as a sum over the loop&#39;s range, then evaluate that sum using standard series formulas (arithmetic series $\sum_{i=1}^n i = \frac{n(n+1)}{2}$, geometric series $\sum_{i=0}^{k} 2^i = 2^{k+1}-1$), and finally express the result in Big-O by keeping only the dominant (fastest-growing) term.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Two Series You Must Memorize</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arithmetic: $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \Theta(n^2)$ (dependent nested loops). Geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$, so $1+2+4+\dots+n = 2n-1 = \Theta(n)$ (doubling loops, dynamic-array resizes). Nine out of ten loop-counting questions reduce to recognizing which of these two sums you are looking at.</p>
+<h3>2.3 Why the Order Works (proof intuition)</h3>
+<p>The vertex finishing <em>last</em> in pass 1 belongs to a <strong>source SCC of the condensation</strong> (nothing outside points... precisely: no path <em>into</em> it from unvisited SCCs remains). Reversing all edges turns that source into a <strong>sink</strong> in $G^T$ — so DFS from it in pass 2 cannot escape its own SCC. Peeling sinks one by one partitions the graph exactly. Run pass 2 in <em>arbitrary</em> order and one DFS bleeds across SCCs — the order is the algorithm.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Kosaraju in 4 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>SCC = <strong>mutual reachability class</strong> · condensation is a <strong>DAG</strong> · pass 1: DFS on <strong>G</strong>, stack by <strong>finish time</strong> · pass 2: DFS on <strong>transpose</strong> in <strong>decreasing finish order</strong>, each tree = one SCC. Time $\Theta(V+E)$ — two linear passes, nothing more.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Transpose, Not Complement — and Order Matters</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$G^T$ flips every edge&#39;s <em>direction</em>; it does not add/remove edges (that&#39;s the complement — instant zero if confused). And pass 2 in <em>increasing</em> finish order re-merges SCCs: the decreasing order is load-bearing, not bookkeeping.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Determine the time complexity of the following nested loop, where the inner loop&#39;s bound depends on the outer loop variable:</p>
-<pre><code>for i = 1 to n:
-    for j = 1 to i:
-        print(i, j)
-</code></pre>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>For $i=1$, the inner loop runs $1$ time. For $i=2$, it runs $2$ times. ... For $i=n$, it runs $n$ times. The total number of <code>print</code> calls is $1 + 2 + 3 + \dots + n$. Using the arithmetic series formula, $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \frac{n^2+n}{2}$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Expanding $\frac{n^2+n}{2} = \frac{1}{2}n^2 + \frac{1}{2}n$. As $n$ grows large, the $n^2$ term dominates the $n$ term, and asymptotic notation drops both the constant factor $\frac{1}{2}$ and the lower-order term $\frac{1}{2}n$. Final answer: $\Theta(n^2)$ — the <em>same</em> asymptotic complexity as two fully independent nested loops running $n$ times each, even though this version does roughly half the total work in absolute terms. This illustrates why Big-Theta cares about growth rate, not exact operation counts.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Directed graph: $1 \to 2,\ 2 \to 3,\ 3 \to 1$ (a triangle) plus $3 \to 4$ (a tail). Find all SCCs with Kosaraju, showing both passes. (Start DFS at vertex 1, numeric neighbor order.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Running Both Passes</div><div class="step-content"><p><strong>Pass 1 (DFS on G from 1):</strong> $1 \to 2 \to 3$: from 3, neighbor 1 is gray (back edge, ignore for ordering), neighbor 4 white → discover 4, finish 4 first. Back up: finish 3, then 2, then 1. Finish stack (bottom→top): $[4, 3, 2, 1]$, so decreasing finish order is $1, 2, 3, 4$.
+<strong>Pass 2 (DFS on $G^T$):</strong> transpose edges: $2\to1,\ 3\to2,\ 1\to3,\ 4\to3$. Pop 1: from 1 reach ${1,3,2}$ (via $1\to3\to2\to1$) — 4 unreachable ($4\to3$ points the wrong way) → <strong>SCC ${1,2,3}$</strong>. Next unvisited: 4 → alone → <strong>SCC ${4}$</strong>.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>SCCs: ${1,2,3}$ (the triangle — mutual reachability holds all around) and ${4}$ (reachable <em>from</em> the triangle, but nothing returns — the one-way tail). Note how pass 2&#39;s reversed edge $4\to3$ quarantined 4 instead of merging it: the transpose doing its job.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:</span>
+    <span class="quiz-category">Why must pass 2 run on the transpose graph rather than the original?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$\Theta(n)$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$\Theta(\log n)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n \log n)$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The transpose has fewer edges, so it runs faster</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Reversing edges turns the last-finished source SCC into a sink, so each pass-2 DFS is trapped inside exactly one SCC instead of bleeding into others</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The transpose removes all cycles, making DFS trivial</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It doesn&#39;t matter; Kosaraju works on any second graph</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -278,20 +267,20 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>If $i$ doubles each iteration starting from 1, after $k$ iterations $i = 2^k$. The loop stops once $2^k$ exceeds $n$, which happens at $k \approx \log_2 n$. So the number of iterations grows logarithmically with $n$.</p><pre><code>&lt;/div&gt;
+      <p>Pass 1&#39;s finish order identifies source SCCs; transposition converts sources to sinks. A DFS starting in a sink cannot leave it (no outgoing reversed edges to other SCCs), so each tree harvested is precisely one component. Same-graph DFS would leak downstream and fuse distinct SCCs.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A nested loop where the inner loop runs from $1$ to the current value of the outer loop variable $i$ (which itself ranges from 1 to $n$) has a total number of iterations equal to which sum, and what is its asymptotic complexity?</span>
+    <span class="quiz-category">The condensation of any directed graph (one node per SCC) is always a DAG. Why?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} n$, giving $\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, giving $\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} \log i$, giving $\Theta(n \log n)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} 1$, giving $\Theta(n)$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Because Kosaraju&#39;s algorithm deletes all back edges</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A directed cycle among SCCs would make all its members mutually reachable, contradicting maximality — so no such cycle can exist</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Condensation graphs are defined to be undirected</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>SCCs can never have edges between them at all</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -303,20 +292,20 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The inner loop runs $i$ times for each outer value of $i$, so total iterations $= 1+2+\dots+n = \frac{n(n+1)}{2}$ (the arithmetic series sum). Once expanded, the dominant term is $n^2$, and asymptotic notation drops the constant $\frac12$ and the lower-order $n$ term, giving $\Theta(n^2)$ — the same growth rate as a fully independent $n \times n$ nested loop.</p><pre><code>&lt;/div&gt;
+      <p>If SCC-nodes $C_1 \to C_2 \to C_1$ existed, every vertex in $C_1$ reaches every vertex in $C_2$ and back — mutual reachability across the supposed boundary, so they were one SCC all along. Maximality forbids inter-component cycles by definition.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">In amortized analysis of a dynamic array that doubles its size whenever full, why is the *amortized* cost per insertion $O(1)$ even though a single resize operation costs $O(n)$?</span>
+    <span class="quiz-category">In pass 1, vertex v finishes after vertex u. In pass 2&#39;s decreasing-finish order, v is processed first. What structural fact does v&#39;s late finish encode?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Resizes never actually happen in practice</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Resizes happen rarely (only $O(\log n)$ times across $n$ insertions), and their total cost across all insertions sums to $O(n)$, which averages to $O(1)$ per insertion</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The cost of a resize is always exactly 1 operation</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Amortized analysis ignores expensive operations entirely</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>v has more outgoing edges than u</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>v sits in a source SCC (nothing unvisited points away from it unresolved) — the last-finished vertex anchors the peeling order that makes pass 2 exact</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>v is guaranteed to be a singleton SCC</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Late finish means v was discovered last</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -328,7 +317,7 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Even though an individual resize copies up to $n$ elements ($O(n)$ for that one operation), resizes become exponentially rarer as the array grows (doubling means only $\log_2 n$ resizes total for $n$ insertions), and the sum of all resize costs across the whole sequence is a geometric series that totals $O(n)$. Spread over $n$ insertions, that&#39;s $O(1)$ per insertion on average — which is what &quot;amortized $O(1)$&quot; means.</p><pre><code>&lt;/div&gt;
+      <p>DFS finishes a vertex only after exhausting its reachable frontier; the globally-last finisher&#39;s SCC has no other SCC pointing <em>into</em> it — a source of the condensation DAG. Processing sources-first on the <em>transposed</em> graph (where they&#39;re sinks) is the whole correctness argument.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -337,16 +326,16 @@ while i &lt;= n:
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_03_asymptotic_notations_and_properties.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_02_graph_traversals_bfs_and_dfs.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.3 Asymptotic Notations And Properties</div>
+        <div class="ttl">2.2 Graph Traversals BFS And DFS</div>
       </a>
       
       
       
-      <a href="./m1_05_recurrence_equations_and_substitution_method.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_04_divide_and_conquer_merge_sort_and_strassen.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.5 Recurrence Equations And Substitution Method</div>
+        <div class="ttl">2.4 Divide And Conquer Merge Sort And Strassen</div>
       </a>
       
     </footer>
@@ -433,7 +422,7 @@ while i &lt;= n:
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(16) || 0;
-    const currentId = "m1_04_complexity_calculation_of_iterative_algorithms";
+    const currentId = "m2_03_strongly_connected_components_kosaraju";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 

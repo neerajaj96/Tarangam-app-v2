@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.4 Complexity Calculation Of Iterative Algorithms</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 1.4 Complexity Calculation Of Iterative Algorithms | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.4 Complexity Calculation Of Iterative Algorithms">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 1.4 Complexity Calculation Of Iterative Algorithms">
+<title>Tarangam — 2.4 Divide And Conquer Merge Sort And Strassen</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 2.4 Divide And Conquer Merge Sort And Strassen | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.4 Divide And Conquer Merge Sort And Strassen">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 2.4 Divide And Conquer Merge Sort And Strassen">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Analysis &amp; Recurrences</span>
           <span class="chev">&#9656;</span>
@@ -89,7 +89,7 @@
             <span class="topic-dot"></span>
             <span>1.3 Asymptotic Notations And Properties</span>
           </a>
-          <a href="./m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link active" id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
+          <a href="./m1_04_complexity_calculation_of_iterative_algorithms.html" class="topic-link " id="topic-m1_04_complexity_calculation_of_iterative_algorithms">
             <span class="topic-dot"></span>
             <span>1.4 Complexity Calculation Of Iterative Algorithms</span>
           </a>
@@ -123,8 +123,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Graphs &amp; Divide/Conquer</span>
           <span class="chev">&#9656;</span>
@@ -142,7 +142,7 @@
             <span class="topic-dot"></span>
             <span>2.3 Strongly Connected Components Kosaraju</span>
           </a>
-          <a href="./m2_04_divide_and_conquer_merge_sort_and_strassen.html" class="topic-link " id="topic-m2_04_divide_and_conquer_merge_sort_and_strassen">
+          <a href="./m2_04_divide_and_conquer_merge_sort_and_strassen.html" class="topic-link active" id="topic-m2_04_divide_and_conquer_merge_sort_and_strassen">
             <span class="topic-dot"></span>
             <span>2.4 Divide And Conquer Merge Sort And Strassen</span>
           </a>
@@ -173,9 +173,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.4 Complexity Calculation Of Iterative Algorithms</span>
+        <span style="color:var(--ink); font-weight:600;">2.4 Divide And Conquer Merge Sort And Strassen</span>
       </div>
 
       <div class="topbar-actions">
@@ -191,8 +191,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -203,70 +203,66 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Complexity Analysis of Iterative Loops</h1>
-<p><strong>Single loops, nested loops, logarithmic increment loops, dependent inner loops, and amortized loop bounds.</strong></p>
+<h1>Divide &amp; Conquer: Merge Sort &amp; Strassen</h1>
+<p><strong>The divide-conquer-combine skeleton, merge sort&#39;s Θ(n log n) via the recursion tree, and how Strassen multiplies matrices with 7 products instead of 8.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Counting how many times a loop runs is a bit like counting steps on a staircase. A single flight of $n$ steps takes $n$ steps to climb — simple. But now imagine a building where, for <em>each</em> of the $n$ floors, you also have to climb a separate flight of $n$ steps just to check something on that floor before moving up — now you&#39;re doing $n \times n = n^2$ steps total, because the work is <em>nested</em>. And if, instead of climbing linearly, each step you take lets you skip to double your current floor (floor 1 → 2 → 4 → 8 → 16...), you&#39;ll reach the top in only about $\log_2 n$ steps — dramatically fewer, because the loop variable <em>grows multiplicatively</em> rather than by fixed increments.</p>
-<p>This section teaches you a systematic recipe: look at how the loop variable changes each iteration (does it go up by 1? by doubling? does the inner loop&#39;s range depend on the outer loop&#39;s current value?), and translate that pattern directly into a Big-O bound — without needing to run the code or guess.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Sorting by Delegation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Sorting 1,000 files alone takes all weekend — so you split the pile in half, hand each half to a friend with the <em>same instructions</em> (&quot;sort your pile the same way&quot;), then merge their two sorted piles by repeatedly taking the smaller front file. Nobody ever sorts more than a handful directly; the magic is all in the <strong>merge</strong>. Strassen&#39;s matrix trick is the same spirit pushed further: reorganize the arithmetic so one of the 8 recursive multiplications <em>cancels out</em> — less delegation, same answer, asymptotically faster.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>Single loop, incrementing by a constant:</strong></p>
-<pre><code>for i = 1 to n:
-    do O(1) work
+<h3>2.1 The D&amp;C Skeleton (all three steps, always)</h3>
+<ol>
+<li><strong>Divide</strong> the size-$n$ problem into $a$ subproblems of size $n/b$.</li>
+<li><strong>Conquer</strong> by solving subproblems recursively (base case: trivially small).</li>
+<li><strong>Combine</strong> the sub-solutions into the full answer — cost $f(n)$.</li>
+</ol>
+<p>General recurrence: $T(n) = aT(n/b) + f(n)$ — the exact shape the Master Theorem (Module 1) was built for.</p>
+<h3>2.2 Merge Sort: $T(n) = 2T(n/2) + \Theta(n)$</h3>
+<p>Split the array in half, recursively sort each half, then <strong>merge</strong> two sorted runs in one linear pass (compare front elements, emit the smaller — each element moves exactly once per level).</p>
+<pre><code class="language-text">Level 0:              [8 3 9 1 7 2]              merge cost n
+                     /            \
+Level 1:        [8 3 9]        [1 7 2]           merge cost n
+                /     \        /     \
+Level 2:     [8 3]  [9]    [1 7]  [2]           merge cost n
+             ... one-element lists: trivially sorted (base case)
 </code></pre>
-<p>Runs exactly $n$ times, each iteration doing constant work → total $\Theta(n)$.</p>
-<p><strong>Nested loops, independent ranges:</strong></p>
-<pre><code>for i = 1 to n:
-    for j = 1 to m:
-        do O(1) work
-</code></pre>
-<p>The inner loop runs $m$ times for <em>each</em> of the $n$ outer iterations, giving $n \times m$ total iterations → $\Theta(nm)$. When both loops run to $n$ (i.e. $m=n$), this becomes the very common $\Theta(n^2)$.</p>
-<p><strong>Dependent nested loops (inner range depends on outer variable):</strong></p>
-<pre><code>for i = 1 to n:
-    for j = 1 to i:
-        do O(1) work
-</code></pre>
-<p>The inner loop runs $i$ times, and $i$ itself ranges from $1$ to $n$. Total iterations $= 1 + 2 + 3 + \dots + n = \frac{n(n+1)}{2}$ — this is the classic <strong>arithmetic series</strong> sum, which is $\Theta(n^2)$ (the leading term dominates; the constant $\frac{1}{2}$ is dropped by asymptotic notation, but the <em>degree</em>, $n^2$, survives).</p>
-<p><strong>Logarithmic loops (variable changes multiplicatively):</strong></p>
-<pre><code>i = 1
-while i &lt;= n:
-    do O(1) work
-    i = i * 2
-</code></pre>
-<p>$i$ takes values $1, 2, 4, 8, \dots$ — i.e. $2^0, 2^1, 2^2, \dots$ — and the loop stops once $2^k &gt; n$, i.e. once $k &gt; \log_2 n$. So the loop runs $\Theta(\log n)$ times. (The same logic applies symmetrically to a loop that starts at $n$ and <em>divides</em> by 2 each time until reaching 1 — this is exactly what happens inside binary search.)</p>
-<p><strong>Amortized analysis (a brief preview).</strong> Sometimes a single operation looks expensive in isolation, but happens rarely enough that its cost, <em>averaged over a long sequence of operations</em>, is actually small. Classic example: a dynamic array (like Python&#39;s list or Java&#39;s ArrayList) that doubles its capacity whenever it&#39;s full. A single &quot;resize&quot; copies all $n$ existing elements — an $O(n)$ operation — but resizes only happen $O(\log n)$ times total across $n$ insertions, and the total cost of all resizes across $n$ insertions sums to $O(n)$ (a geometric series: $1+2+4+\dots+n \approx 2n$). So the <em>amortized</em> (averaged) cost per insertion is $O(1)$, even though occasional individual insertions cost $O(n)$.</p>
-<p><strong>General technique — the summation method:</strong> express the total work as a sum over the loop&#39;s range, then evaluate that sum using standard series formulas (arithmetic series $\sum_{i=1}^n i = \frac{n(n+1)}{2}$, geometric series $\sum_{i=0}^{k} 2^i = 2^{k+1}-1$), and finally express the result in Big-O by keeping only the dominant (fastest-growing) term.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Two Series You Must Memorize</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arithmetic: $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \Theta(n^2)$ (dependent nested loops). Geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$, so $1+2+4+\dots+n = 2n-1 = \Theta(n)$ (doubling loops, dynamic-array resizes). Nine out of ten loop-counting questions reduce to recognizing which of these two sums you are looking at.</p>
+<p>Every level costs $\Theta(n)$ total and there are $\log_2 n$ levels → $\Theta(n \log n)$ (Master Case 2: $n^{\log_2 2} = n$ matches $f(n) = \Theta(n)$). Stable, guaranteed — but not in-place (merge needs $\Theta(n)$ auxiliary space).</p>
+<h3>2.3 Strassen: 7 Multiplications Suffice</h3>
+<p>Naive block multiplication needs <strong>8</strong> half-size products: $T(n) = 8T(n/2) + \Theta(n^2) = \Theta(n^3)$ — no better than brute force. Strassen&#39;s 7 clever products (additions/subtractions are $\Theta(n^2)$ and fade into $f(n)$):</p>
+<p>$$M_1 = (A_{11}+A_{22})(B_{11}+B_{22}) \qquad M_2 = (A_{21}+A_{22})B_{11}$$
+$$M_3 = A_{11}(B_{12}-B_{22}) \qquad\qquad\qquad M_4 = A_{22}(B_{21}-B_{11})$$
+$$M_5 = (A_{11}+A_{12})B_{22} \qquad\qquad M_6 = (A_{21}-A_{11})(B_{11}+B_{12})$$
+$$M_7 = (A_{12}-A_{22})(B_{21}+B_{22})$$</p>
+<p>$$C_{11} = M_1+M_4-M_5+M_7 \quad C_{12} = M_3+M_5 \quad C_{21} = M_2+M_4 \quad C_{22} = M_1-M_2+M_3+M_6$$</p>
+<p>Recurrence $T(n) = 7T(n/2) + \Theta(n^2)$: $n^{\log_2 7} \approx n^{2.81}$ dominates $f(n) = n^2$ → Master Case 1 gives $\Theta(n^{\log_2 7}) \approx \Theta(n^{2.81})$ — the first crack ever in the $n^3$ wall (constants keep naive winning for small $n$; crossover sits around $n \approx$ hundreds).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: D&amp;C Complexities</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Merge: $2T(n/2)+\Theta(n) \to \Theta(n\log n)$ (Case 2). Strassen: $7T(n/2)+\Theta(n^2) \to \Theta(n^{2.81})$ (Case 1, $\log_2 7 \approx 2.81$). Binary search: $T(n/2)+\Theta(1) \to \Theta(\log n)$. Read any D&amp;C recurrence straight into its Master case — that reflex is the exam.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Strassen&#39;s Fine Print</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Strassen needs square matrices with power-of-2 dimensions (pad otherwise), uses <em>more</em> additions, is <strong>not in-place friendly</strong>, and loses numerically on stability for some inputs. &quot;7 &lt; 8 so always faster&quot; ignores constants, padding, and memory traffic — the vault&#39;s crossover warning is the complete answer.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Determine the time complexity of the following nested loop, where the inner loop&#39;s bound depends on the outer loop variable:</p>
-<pre><code>for i = 1 to n:
-    for j = 1 to i:
-        print(i, j)
-</code></pre>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>For $i=1$, the inner loop runs $1$ time. For $i=2$, it runs $2$ times. ... For $i=n$, it runs $n$ times. The total number of <code>print</code> calls is $1 + 2 + 3 + \dots + n$. Using the arithmetic series formula, $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \frac{n^2+n}{2}$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Expanding $\frac{n^2+n}{2} = \frac{1}{2}n^2 + \frac{1}{2}n$. As $n$ grows large, the $n^2$ term dominates the $n$ term, and asymptotic notation drops both the constant factor $\frac{1}{2}$ and the lower-order term $\frac{1}{2}n$. Final answer: $\Theta(n^2)$ — the <em>same</em> asymptotic complexity as two fully independent nested loops running $n$ times each, even though this version does roughly half the total work in absolute terms. This illustrates why Big-Theta cares about growth rate, not exact operation counts.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Multiply $A = \begin{pmatrix}1 &amp; 2 \\ 3 &amp; 4\end{pmatrix}$ and $B = \begin{pmatrix}5 &amp; 6 \\ 7 &amp; 8\end{pmatrix}$ with Strassen&#39;s formulas (here each &quot;block&quot; is a single number, so sub-&quot;multiplications&quot; are plain products). Verify against the naive result.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing the 7 Products</div><div class="step-content"><p>$M_1 = (1+4)(5+8) = 5 \times 13 = 65$. $M_2 = (3+4)\times 5 = 35$. $M_3 = 1\times(6-8) = -2$. $M_4 = 4\times(7-5) = 8$. $M_5 = (1+2)\times 8 = 24$. $M_6 = (3-1)(5+6) = 22$. $M_7 = (2-4)(7+8) = -30$.
+$C_{11} = 65+8-24-30 = 19$. $C_{12} = -2+24 = 22$. $C_{21} = 35+8 = 43$. $C_{22} = 65-35-2+22 = 50$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$C = \begin{pmatrix}19 &amp; 22 \\ 43 &amp; 50\end{pmatrix}$ — matches naive multiplication ($1\cdot5+2\cdot7 = 19$, etc.) exactly, using 7 scalar multiplications instead of 8. On $2\times2$ the saving is trivial; applied recursively to $1024\times1024$, one fewer product per level compounds into the $n^{2.81}$ vs $n^3$ gap.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:</span>
+    <span class="quiz-category">Why does merge sort&#39;s merge step cost Θ(n) at every recursion level, and what total does that imply?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$\Theta(n)$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$\Theta(\log n)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\Theta(n \log n)$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Each level merges fewer elements as subarrays shrink, so levels get cheaper — total Θ(n)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each level collectively processes all n elements once (disjoint subarrays tile the array), and with log₂n levels the total is Θ(n log n)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The merge allocates a fresh array per element, giving Θ(n²)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Merge sort never merges; it only divides</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -278,20 +274,20 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>If $i$ doubles each iteration starting from 1, after $k$ iterations $i = 2^k$. The loop stops once $2^k$ exceeds $n$, which happens at $k \approx \log_2 n$. So the number of iterations grows logarithmically with $n$.</p><pre><code>&lt;/div&gt;
+      <p>Partition the array however you like — one level&#39;s disjoint pieces always sum to $n$ elements, each moved once during merging. $\log_2 n$ identical-cost levels multiply to $\Theta(n\log n)$, the textbook Case-2 balance (compare the iteration-method walkthrough in Module 1).</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A nested loop where the inner loop runs from $1$ to the current value of the outer loop variable $i$ (which itself ranges from 1 to $n$) has a total number of iterations equal to which sum, and what is its asymptotic complexity?</span>
+    <span class="quiz-category">Strassen computes 7 half-size products where naive block multiplication uses 8. Why don&#39;t the extra additions needed to form the Mᵢ combinations ruin the speedup?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} n$, giving $\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, giving $\Theta(n^2)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} \log i$, giving $\Theta(n \log n)$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$\sum_{i=1}^{n} 1$, giving $\Theta(n)$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Additions are free on modern hardware</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Additions cost Θ(n²) per level and are absorbed into f(n); the recurrence&#39;s growth is set by the 7-way branching (n^2.81), which dominates any quadratic overhead</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Strassen actually uses no additions at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The additions cancel out to zero</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -303,20 +299,20 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The inner loop runs $i$ times for each outer value of $i$, so total iterations $= 1+2+\dots+n = \frac{n(n+1)}{2}$ (the arithmetic series sum). Once expanded, the dominant term is $n^2$, and asymptotic notation drops the constant $\frac12$ and the lower-order $n$ term, giving $\Theta(n^2)$ — the same growth rate as a fully independent $n \times n$ nested loop.</p><pre><code>&lt;/div&gt;
+      <p>Recurrence $T(n) = 7T(n/2) + \Theta(n^2)$: leaf-driven growth $n^{\log_2 7} \approx n^{2.81}$ polynomially outruns the quadratic combine cost (Master Case 1). The trick works precisely because additions scale slower than the saved recursion branch.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">In amortized analysis of a dynamic array that doubles its size whenever full, why is the *amortized* cost per insertion $O(1)$ even though a single resize operation costs $O(n)$?</span>
+    <span class="quiz-category">For small matrices (say 32×32), naive multiplication usually beats Strassen in practice. Why?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Resizes never actually happen in practice</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Resizes happen rarely (only $O(\log n)$ times across $n$ insertions), and their total cost across all insertions sums to $O(n)$, which averages to $O(1)$ per insertion</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The cost of a resize is always exactly 1 operation</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Amortized analysis ignores expensive operations entirely</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Strassen gives wrong answers below a size threshold</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Recursion overhead, padding to powers of 2, extra additions, and worse memory locality dominate at small n — constants and lower-order terms the asymptotic bound deliberately ignores</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Small matrices cannot be partitioned into blocks</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Strassen requires infinite precision unavailable for small inputs</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -328,7 +324,7 @@ while i &lt;= n:
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Even though an individual resize copies up to $n$ elements ($O(n)$ for that one operation), resizes become exponentially rarer as the array grows (doubling means only $\log_2 n$ resizes total for $n$ insertions), and the sum of all resize costs across the whole sequence is a geometric series that totals $O(n)$. Spread over $n$ insertions, that&#39;s $O(1)$ per insertion on average — which is what &quot;amortized $O(1)$&quot; means.</p><pre><code>&lt;/div&gt;
+      <p>$\Theta$-notation erases the constants that rule small inputs: Strassen&#39;s bookkeeping, temporary submatrices, and cache-hostile access patterns cost more than one extra product branch saves — until $n$ grows into the hundreds and the exponent gap takes over. Asymptotics describe the marathon, not the sprint.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -337,17 +333,14 @@ while i &lt;= n:
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_03_asymptotic_notations_and_properties.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_03_strongly_connected_components_kosaraju.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.3 Asymptotic Notations And Properties</div>
+        <div class="ttl">2.3 Strongly Connected Components Kosaraju</div>
       </a>
       
       
       
-      <a href="./m1_05_recurrence_equations_and_substitution_method.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.5 Recurrence Equations And Substitution Method</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -433,7 +426,7 @@ while i &lt;= n:
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(16) || 0;
-    const currentId = "m1_04_complexity_calculation_of_iterative_algorithms";
+    const currentId = "m2_04_divide_and_conquer_merge_sort_and_strassen";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 
