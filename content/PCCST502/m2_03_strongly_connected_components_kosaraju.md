@@ -21,6 +21,11 @@ Picture islands linked by one-way ferry routes. A **strongly connected component
 
 ### 2.2 Kosaraju's Two Passes
 
+::: anim kosaraju-passes Two Passes, Two Geometries
+Watch pass 1 stamp finish order on G, then the transpose pass peel the triangle {1,2,3} as one SCC while loner 4 falls out alone — the order doing the correctness work.
+:::
+
+
 1. **Pass 1:** DFS on $G$; record vertices in order of *finishing* time (push each vertex onto a stack when it finishes).
 2. **Pass 2:** DFS on the **transpose** $G^T$ (every edge reversed), visiting vertices in *decreasing* finish-time order (pop the stack). Each DFS tree grown is exactly one SCC.
 

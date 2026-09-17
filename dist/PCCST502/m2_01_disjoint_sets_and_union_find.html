@@ -299,9 +299,30 @@
 b   c        e          ==&gt;       b   c    ==&gt;        b c d
    / \
   d   e                          d
-  (rank 1 subtree)              (d rewired to root a)
+   (rank 1 subtree)              (d rewired to root a)
 </code></pre>
-<h3>2.2 The Amortized Bound</h3>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Union, Then Flatten</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated union of two trees followed by path compression">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="160" y="30" text-anchor="middle">two rank-1 trees</text>
+<line class="eg a1" x1="110" y1="100" x2="70" y2="170"/><line class="eg a1" x1="210" y1="100" x2="250" y2="170"/>
+<g class="nd a1"><circle cx="110" cy="78" r="22"/><text x="110" y="84">a</text></g><g class="nd a1"><circle cx="70" cy="192" r="22"/><text x="70" y="198">b</text></g><g class="nd a1"><circle cx="210" cy="78" r="22"/><text x="210" y="84">c</text></g><g class="nd a1"><circle cx="250" cy="192" r="22"/><text x="250" y="198">d</text></g>
+<text class="bigarrow a2" x="320" y="150" text-anchor="middle">UNION(a,c) ⟶</text>
+<text class="animcap a3" x="500" y="30" text-anchor="middle">merged + compressed · rank(a)=2</text>
+<line class="eg a3" x1="500" y1="100" x2="430" y2="168"/><line class="eg a3" x1="500" y1="100" x2="570" y2="168"/><line class="eg a3" x1="500" y1="100" x2="500" y2="228"/>
+<g class="nd a3"><circle cx="500" cy="78" r="22"/><text x="500" y="84">a</text></g><g class="nd a3"><circle cx="430" cy="190" r="22"/><text x="430" y="196">b</text></g><g class="nd a3"><circle cx="570" cy="190" r="22"/><text x="570" y="196">c</text></g><g class="nd a3"><circle cx="500" cy="250" r="22"/><text x="500" y="256">d</text></g>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">FIND(d) rewires d straight under a — future queries: one hop</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Union, Then Flatten</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch two rank-1 trees merge under one elder, then FIND(d) rewire straight to the root — every future query on that path costs a single hop.</div>
+  </div>
+</div><h3>2.2 The Amortized Bound</h3>
 <p>With <strong>both</strong> heuristics, any sequence of $m$ operations on $n$ elements costs $O(m \cdot \alpha(n))$, where $\alpha$ is the <strong>inverse Ackermann function</strong> — a function growing so slowly that $\alpha(n) \le 4$ for every $n$ up to the number of atoms in the universe. Effectively constant time per operation.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Union-Find in 5 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MAKE-SET $O(1)$ · FIND climbs to root · UNION attaches <strong>smaller rank under larger</strong> · compression <strong>rewires the whole climb path</strong> to the root · amortized cost $O(\alpha(n))$ ≈ constant <strong>only with both heuristics together</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Rank Is Not Size (and Compression Is Not Free Alone)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Rank bounds height; it is <em>not</em> the node count (that&#39;s union-by-<em>size</em>, a different variant). And path compression alone — without union by rank — still degrades: tall skinny trees keep forming. The $\alpha(n)$ miracle needs <strong>both</strong>. Any &quot;one heuristic suffices&quot; option is wrong.</p>

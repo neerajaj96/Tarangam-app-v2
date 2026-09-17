@@ -721,6 +721,14 @@ mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 
 .anim-stage .animcap { fill: var(--ink); font-weight: 600; font-size: 14px; }
 .anim-stage .animnote { fill: var(--ink-faint); font-size: 13px; font-style: italic; }
 .anim-stage .bigarrow { fill: var(--accent-warm); font-size: 17px; font-weight: 700; }
+.anim-stage .nd.big text { font-size: 13px; }
+.anim-stage .scc { fill: rgba(16, 185, 129, 0.06); stroke: var(--correct); stroke-width: 2.5; stroke-dasharray: 10 6; }
+.anim-stage .scc.solo { stroke: var(--ink-faint); }
+.anim-stage .badge1 { fill: var(--accent-warm); font-size: 13px; font-style: italic; }
+.anim-stage .cell rect { fill: var(--surface-2); stroke: var(--border); stroke-width: 2; }
+.anim-stage .cell text { fill: var(--ink); font-weight: 600; }
+.anim-stage .cell.cand rect { stroke: var(--accent-warm); stroke-width: 2.5; animation: candpulse 2.4s ease-in-out infinite; }
+@keyframes candpulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 .anim-stage .sawdraw { stroke: var(--accent); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round;
   stroke-dasharray: 1000; animation: sawdraw 12s linear infinite; }
 .anim-stage .sawdot { fill: var(--accent-warm);
@@ -867,6 +875,7 @@ code {
   .anim-stage .sawdraw { animation: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; }
   .anim-stage .sawdot { animation: none !important; opacity: 1 !important; offset-distance: 100% !important; }
   .anim-stage .winbox { animation: none !important; transform: translateX(70px) !important; }
+  .anim-stage .cell.cand rect { animation: none !important; }
 }
 
 /* ---------- Print: notes-first, chrome-free ---------- */

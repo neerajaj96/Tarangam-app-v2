@@ -292,7 +292,29 @@
 <li>The <strong>condensation</strong> (one node per SCC, edges between SCCs) is always a <strong>DAG</strong> — the proof is one line: a directed cycle among SCCs would merge them into a single SCC.</li>
 </ul>
 <h3>2.2 Kosaraju&#39;s Two Passes</h3>
-<ol>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Two Passes, Two Geometries</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated Kosaraju passes: finish order badges then transpose SCC peel">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="160" y="30" text-anchor="middle">pass 1 · DFS on G</text>
+<line class="eg a1" x1="100" y1="100" x2="200" y2="100"/><line class="eg a1" x1="200" y1="100" x2="200" y2="200"/><line class="eg a1" x1="200" y1="200" x2="100" y2="200"/><line class="eg a1" x1="200" y1="200" x2="280" y2="150"/>
+<g class="nd a1"><circle cx="100" cy="100" r="22"/><text x="100" y="106">1</text></g><g class="nd a1"><circle cx="200" cy="100" r="22"/><text x="200" y="106">2</text></g><g class="nd a1"><circle cx="200" cy="200" r="22"/><text x="200" y="206">3</text></g><g class="nd a1"><circle cx="280" cy="150" r="22"/><text x="280" y="156">4</text></g>
+<text class="badge1 a2" x="100" y="140">finishes last</text>
+<text class="animcap a3" x="480" y="30" text-anchor="middle">pass 2 · DFS on transpose</text>
+<ellipse class="scc a4" cx="440" cy="150" rx="75" ry="80"/>
+<ellipse class="scc solo a4" cx="560" cy="150" rx="32" ry="32"/>
+<g class="nd a3"><circle cx="410" cy="100" r="22"/><text x="410" y="106">1</text></g><g class="nd a3"><circle cx="470" cy="100" r="22"/><text x="470" y="106">2</text></g><g class="nd a3"><circle cx="440" cy="200" r="22"/><text x="440" y="206">3</text></g><g class="nd a3"><circle cx="560" cy="150" r="22"/><text x="560" y="156">4</text></g>
+<text class="animnote a5" x="320" y="282" text-anchor="middle">decreasing finish order peels exactly one SCC per search</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Two Passes, Two Geometries</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch pass 1 stamp finish order on G, then the transpose pass peel the triangle {1,2,3} as one SCC while loner 4 falls out alone — the order doing the correctness work.</div>
+  </div>
+</div><ol>
 <li><strong>Pass 1:</strong> DFS on $G$; record vertices in order of <em>finishing</em> time (push each vertex onto a stack when it finishes).</li>
 <li><strong>Pass 2:</strong> DFS on the <strong>transpose</strong> $G^T$ (every edge reversed), visiting vertices in <em>decreasing</em> finish-time order (pop the stack). Each DFS tree grown is exactly one SCC.</li>
 </ol>

@@ -60,6 +60,10 @@ Level i:         3^i nodes, each (n/4^i)^2                   total = (3/16)^i n^
 ```
 :::
 
+::: anim recursion-tree Tree Growth, Level by Level
+Watch the root sprout 3 children, then 9 grandchildren — level totals printed beside each row, each row (3/16)th the last, the root's dominance made visible.
+:::
+
 ::: step [Step 3: Conclusion] Final Result
 Because the level totals shrink geometrically, the sum across all $\log_4 n$ levels is bounded by a constant multiple of the root's cost alone: $T(n) = \Theta(n^2)$. This matches Master Theorem Case 1 (covered next), where the "extra work" function $f(n)$ grows polynomially faster than $n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$, so the root dominates.
 :::

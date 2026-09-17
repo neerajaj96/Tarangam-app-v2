@@ -323,7 +323,30 @@ Level 2:         9 nodes, each n^2/256                      total = 9n^2/256 = (
    ...
 Level i:         3^i nodes, each (n/4^i)^2                   total = (3/16)^i n^2  --&gt;  shrinking
 </code></pre>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Because the level totals shrink geometrically, the sum across all $\log_4 n$ levels is bounded by a constant multiple of the root&#39;s cost alone: $T(n) = \Theta(n^2)$. This matches Master Theorem Case 1 (covered next), where the &quot;extra work&quot; function $f(n)$ grows polynomially faster than $n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$, so the root dominates.</p>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Tree Growth, Level by Level</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 320" role="img" aria-label="Animated recursion tree: root cost shrinking geometrically per level">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<g class="nd a1"><circle cx="320" cy="50" r="22"/><text x="320" y="56">n²</text></g>
+<line class="eg e2" x1="320" y1="72" x2="180" y2="120"/><line class="eg e2" x1="320" y1="72" x2="320" y2="120"/><line class="eg e2" x1="320" y1="72" x2="460" y2="120"/>
+<g class="nd big a2"><circle cx="180" cy="154" r="34"/><text x="180" y="160">n²/16</text></g>
+<g class="nd big a2"><circle cx="320" cy="154" r="34"/><text x="320" y="160">n²/16</text></g>
+<g class="nd big a2"><circle cx="460" cy="154" r="34"/><text x="460" y="160">n²/16</text></g>
+<line class="eg e3" x1="180" y1="188" x2="140" y2="231"/><line class="eg e3" x1="180" y1="188" x2="180" y2="231"/><line class="eg e3" x1="180" y1="188" x2="220" y2="231"/>
+<line class="eg e3" x1="320" y1="188" x2="280" y2="231"/><line class="eg e3" x1="320" y1="188" x2="320" y2="231"/><line class="eg e3" x1="320" y1="188" x2="360" y2="231"/>
+<line class="eg e3" x1="460" y1="188" x2="420" y2="231"/><line class="eg e3" x1="460" y1="188" x2="460" y2="231"/><line class="eg e3" x1="460" y1="188" x2="500" y2="231"/>
+<g class="nd a3"><circle cx="140" cy="244" r="13"/><circle cx="180" cy="244" r="13"/><circle cx="220" cy="244" r="13"/><circle cx="280" cy="244" r="13"/><circle cx="320" cy="244" r="13"/><circle cx="360" cy="244" r="13"/><circle cx="420" cy="244" r="13"/><circle cx="460" cy="244" r="13"/><circle cx="500" cy="244" r="13"/></g>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">level totals ×(3/16) each row down — root dominates</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Tree Growth, Level by Level</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the root sprout 3 children, then 9 grandchildren — level totals printed beside each row, each row (3/16)th the last, the root&#39;s dominance made visible.</div>
+  </div>
+</div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Because the level totals shrink geometrically, the sum across all $\log_4 n$ levels is bounded by a constant multiple of the root&#39;s cost alone: $T(n) = \Theta(n^2)$. This matches Master Theorem Case 1 (covered next), where the &quot;extra work&quot; function $f(n)$ grows polynomially faster than $n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$, so the root dominates.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>

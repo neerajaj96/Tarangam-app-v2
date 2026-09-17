@@ -273,7 +273,25 @@ y=1  [START,OK] [Breeze]   [PIT]      [Breeze]
 <h2 id="3-deducing-safety-at-1-2">3. Deducing Safety at (1,2)</h2>
 <p class="secnav"><a href="#2-the-world-peas-percepts-rules">← 2. The World: PEAS, Percepts, Rule…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <p>Start: agent at (1,1), percepts <code>[None,None,None,None,None]</code> — TELL gives $\lnot P_{1,1} \land \lnot W_{1,1}$. Move to (1,2), perceive <code>[Stench,None,None,None,None]</code>. The KB holds the general rule $S_{x,y} \Leftrightarrow W_{x+1,y} \lor W_{x-1,y} \lor W_{x,y+1} \lor W_{x,y-1}$ (stink means Wumpus next door) plus visited-square facts. From $S_{1,2}$ plus $\lnot W_{1,1}$ (visited safe) and the wall at $(0,2)$, the live candidates are $(1,3)$ and $(2,2)$ — so the agent derives $W_{1,3} \lor W_{2,2}$ — <em>a disjunction, not a location</em>. It cannot prove either square safe, so the rational move is to retreat and probe (2,1) instead. That is logic doing genuine work: knowing <em>that you don&#39;t know</em>, exactly.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Percepts Are Local, Conclusions Are Global</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Stench reports <em>adjacency</em>, never identity — students constantly write &quot;stench ⇒ Wumpus here.&quot; Breeze, stench, and glitter each constrain a <em>neighborhood</em>; only combined sentences across squares pin down single cells. Every Wumpus exam trap exploits this slippage.</p>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; From Stench to Disjunction</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated Wumpus deduction from stench to candidate squares">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<g class="cell a1"><rect x="30" y="90" width="110" height="110" rx="8"/><text x="85" y="135">1,1</text><text x="85" y="160">visited ✓</text></g>
+<g class="cell a2"><rect x="160" y="90" width="110" height="110" rx="8"/><text x="215" y="135">1,2</text><text x="215" y="160">stench!</text></g>
+<g class="cell cand a3"><rect x="290" y="90" width="110" height="110" rx="8"/><text x="345" y="135">1,3 ?</text><text x="345" y="160">candidate</text></g>
+<g class="cell cand a3"><rect x="420" y="90" width="110" height="110" rx="8"/><text x="475" y="135">2,2 ?</text><text x="475" y="160">candidate</text></g>
+<text class="animnote a5" x="320" y="262" text-anchor="middle">one percept, two candidates — knowledge as disjunction, never a guess</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> From Stench to Disjunction</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the visited square check in, the stench square flag, and the two candidate squares pulse — while the verdict stays what logic actually earned: a disjunction, never a guess.</div>
+  </div>
+</div><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Percepts Are Local, Conclusions Are Global</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Stench reports <em>adjacency</em>, never identity — students constantly write &quot;stench ⇒ Wumpus here.&quot; Breeze, stench, and glitter each constrain a <em>neighborhood</em>; only combined sentences across squares pin down single cells. Every Wumpus exam trap exploits this slippage.</p>
 </div></details><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>

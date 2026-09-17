@@ -37,6 +37,10 @@ The KB **entails** $\alpha$ ($KB \models \alpha$) if $\alpha$ is true in *every*
 
 Start: agent at (1,1), percepts `[None,None,None,None,None]` — TELL gives $\lnot P_{1,1} \land \lnot W_{1,1}$. Move to (1,2), perceive `[Stench,None,None,None,None]`. The KB holds the general rule $S_{x,y} \Leftrightarrow W_{x+1,y} \lor W_{x-1,y} \lor W_{x,y+1} \lor W_{x,y-1}$ (stink means Wumpus next door) plus visited-square facts. From $S_{1,2}$ plus $\lnot W_{1,1}$ (visited safe) and the wall at $(0,2)$, the live candidates are $(1,3)$ and $(2,2)$ — so the agent derives $W_{1,3} \lor W_{2,2}$ — *a disjunction, not a location*. It cannot prove either square safe, so the rational move is to retreat and probe (2,1) instead. That is logic doing genuine work: knowing *that you don't know*, exactly.
 
+::: anim wumpus-deduce From Stench to Disjunction
+Watch the visited square check in, the stench square flag, and the two candidate squares pulse — while the verdict stays what logic actually earned: a disjunction, never a guess.
+:::
+
 ::: callout-pitfall Percepts Are Local, Conclusions Are Global
 Stench reports *adjacency*, never identity — students constantly write "stench ⇒ Wumpus here." Breeze, stench, and glitter each constrain a *neighborhood*; only combined sentences across squares pin down single cells. Every Wumpus exam trap exploits this slippage.
 :::

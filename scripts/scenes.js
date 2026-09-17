@@ -91,6 +91,66 @@ ${defs}
 <rect class="winbox" x="62" y="104" width="258" height="84" rx="12"/>
 <text class="animnote a4" x="320" y="240" text-anchor="middle">ACK 1 arrives → window slides → packets 2–5 in flight</text>
 </svg>`
+  },
+
+  'recursion-tree': {
+    title: 'Recursion Tree Growth (3T(n/4) + n²)',
+    svg: `<svg viewBox="0 0 640 320" role="img" aria-label="Animated recursion tree: root cost shrinking geometrically per level">
+${defs}
+${node(320, 50, 'n²', 'a1')}
+${edge(320, 72, 180, 120, 'e2')}${edge(320, 72, 320, 120, 'e2')}${edge(320, 72, 460, 120, 'e2')}
+<g class="nd big a2"><circle cx="180" cy="154" r="34"/><text x="180" y="160">n²/16</text></g>
+<g class="nd big a2"><circle cx="320" cy="154" r="34"/><text x="320" y="160">n²/16</text></g>
+<g class="nd big a2"><circle cx="460" cy="154" r="34"/><text x="460" y="160">n²/16</text></g>
+${edge(180, 188, 140, 231, 'e3')}${edge(180, 188, 180, 231, 'e3')}${edge(180, 188, 220, 231, 'e3')}
+${edge(320, 188, 280, 231, 'e3')}${edge(320, 188, 320, 231, 'e3')}${edge(320, 188, 360, 231, 'e3')}
+${edge(460, 188, 420, 231, 'e3')}${edge(460, 188, 460, 231, 'e3')}${edge(460, 188, 500, 231, 'e3')}
+<g class="nd a3"><circle cx="140" cy="244" r="13"/><circle cx="180" cy="244" r="13"/><circle cx="220" cy="244" r="13"/><circle cx="280" cy="244" r="13"/><circle cx="320" cy="244" r="13"/><circle cx="360" cy="244" r="13"/><circle cx="420" cy="244" r="13"/><circle cx="460" cy="244" r="13"/><circle cx="500" cy="244" r="13"/></g>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">level totals ×(3/16) each row down — root dominates</text>
+</svg>`
+  },
+
+  'kosaraju-passes': {
+    title: "Kosaraju: Finish Order, Then Transpose",
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Kosaraju passes: finish order badges then transpose SCC peel">
+${defs}
+<text class="animcap a1" x="160" y="30" text-anchor="middle">pass 1 · DFS on G</text>
+${edge(100, 100, 200, 100, 'a1')}${edge(200, 100, 200, 200, 'a1')}${edge(200, 200, 100, 200, 'a1')}${edge(200, 200, 280, 150, 'a1')}
+${node(100, 100, '1', 'a1')}${node(200, 100, '2', 'a1')}${node(200, 200, '3', 'a1')}${node(280, 150, '4', 'a1')}
+<text class="badge1 a2" x="100" y="140">finishes last</text>
+<text class="animcap a3" x="480" y="30" text-anchor="middle">pass 2 · DFS on transpose</text>
+<ellipse class="scc a4" cx="440" cy="150" rx="75" ry="80"/>
+<ellipse class="scc solo a4" cx="560" cy="150" rx="32" ry="32"/>
+${node(410, 100, '1', 'a3')}${node(470, 100, '2', 'a3')}${node(440, 200, '3', 'a3')}${node(560, 150, '4', 'a3')}
+<text class="animnote a5" x="320" y="282" text-anchor="middle">decreasing finish order peels exactly one SCC per search</text>
+</svg>`
+  },
+
+  'wumpus-deduce': {
+    title: 'Wumpus Deduction: Stench to Disjunction',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Wumpus deduction from stench to candidate squares">
+${defs}
+<g class="cell a1"><rect x="30" y="90" width="110" height="110" rx="8"/><text x="85" y="135">1,1</text><text x="85" y="160">visited ✓</text></g>
+<g class="cell a2"><rect x="160" y="90" width="110" height="110" rx="8"/><text x="215" y="135">1,2</text><text x="215" y="160">stench!</text></g>
+<g class="cell cand a3"><rect x="290" y="90" width="110" height="110" rx="8"/><text x="345" y="135">1,3 ?</text><text x="345" y="160">candidate</text></g>
+<g class="cell cand a3"><rect x="420" y="90" width="110" height="110" rx="8"/><text x="475" y="135">2,2 ?</text><text x="475" y="160">candidate</text></g>
+<text class="animnote a5" x="320" y="262" text-anchor="middle">one percept, two candidates — knowledge as disjunction, never a guess</text>
+</svg>`
+  },
+
+  'union-find': {
+    title: 'Union by Rank, Then Compression',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated union of two trees followed by path compression">
+${defs}
+<text class="animcap a1" x="160" y="30" text-anchor="middle">two rank-1 trees</text>
+${edge(110, 100, 70, 170, 'a1')}${edge(210, 100, 250, 170, 'a1')}
+${node(110, 78, 'a', 'a1')}${node(70, 192, 'b', 'a1')}${node(210, 78, 'c', 'a1')}${node(250, 192, 'd', 'a1')}
+<text class="bigarrow a2" x="320" y="150" text-anchor="middle">UNION(a,c) ⟶</text>
+<text class="animcap a3" x="500" y="30" text-anchor="middle">merged + compressed · rank(a)=2</text>
+${edge(500, 100, 430, 168, 'a3')}${edge(500, 100, 570, 168, 'a3')}${edge(500, 100, 500, 228, 'a3')}
+${node(500, 78, 'a', 'a3')}${node(430, 190, 'b', 'a3')}${node(570, 190, 'c', 'a3')}${node(500, 250, 'd', 'a3')}
+<text class="animnote a4" x="320" y="282" text-anchor="middle">FIND(d) rewires d straight under a — future queries: one hop</text>
+</svg>`
   }
 };
 

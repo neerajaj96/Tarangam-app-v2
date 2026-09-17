@@ -28,8 +28,12 @@ UNION(e, b) by rank:          FIND(c) with path compression:
 b   c        e          ==>       b   c    ==>        b c d
    / \
   d   e                          d
-  (rank 1 subtree)              (d rewired to root a)
+   (rank 1 subtree)              (d rewired to root a)
 ```
+
+::: anim union-find Union, Then Flatten
+Watch two rank-1 trees merge under one elder, then FIND(d) rewire straight to the root — every future query on that path costs a single hop.
+:::
 
 ### 2.2 The Amortized Bound
 

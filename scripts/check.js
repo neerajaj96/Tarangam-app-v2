@@ -67,6 +67,11 @@ for (const course of courses) {
 
     // 2d. Fence balance.
     if ((t.match(/```/g) || []).length % 2 !== 0) fail(`${course}/${f}: unbalanced code fences`);
+    // 2d2. No widget may open inside another widget's body (nesting breaks
+    // the line-based widget parsers); back-to-back ::: closers betray it.
+    if (/^:::\n:::/m.test(t)) {
+      fail(`${course}/${f}: consecutive ::: closers — a widget is likely nested inside another`);
+    }
 
     // 2e. Anim scene ids must exist in the registry (scripts/scenes.js).
     for (const m of t.matchAll(/::: anim (\S+)/g)) {
