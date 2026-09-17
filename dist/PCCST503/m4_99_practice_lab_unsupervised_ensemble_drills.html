@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Probability MLE MAP Estimation</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.2 Probability MLE MAP Estimation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Probability MLE MAP Estimation">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.2 Probability MLE MAP Estimation">
+<title>Tarangam — 🧪 Practice Lab: M4 Unsupervised Ensemble Drills</title>
+<meta name="description" content="Machine Learning (PCCST503) — 🧪 Practice Lab: M4 Unsupervised Ensemble Drills | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M4 Unsupervised Ensemble Drills">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 🧪 Practice Lab: M4 Unsupervised Ensemble Drills">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Ml Definition Paradigms And Types</span>
           </a>
-          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link active" id="topic-m1_02_probability_mle_map_estimation">
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
             <span class="topic-dot"></span>
             <span>1.2 Probability MLE MAP Estimation</span>
           </a>
@@ -157,8 +157,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>PCA &amp; Ensembles</span>
           <span class="chev">&#9656;</span>
@@ -184,7 +184,7 @@
             <span class="topic-dot"></span>
             <span>4.5 Boosting Adaboost</span>
           </a>
-          <a href="./m4_99_practice_lab_unsupervised_ensemble_drills.html" class="topic-link " id="topic-m4_99_practice_lab_unsupervised_ensemble_drills">
+          <a href="./m4_99_practice_lab_unsupervised_ensemble_drills.html" class="topic-link active" id="topic-m4_99_practice_lab_unsupervised_ensemble_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M4 Unsupervised Ensemble Drills</span>
           </a>
@@ -215,9 +215,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Probability MLE MAP Estimation</span>
+        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M4 Unsupervised Ensemble Drills</span>
       </div>
 
       <div class="topbar-actions">
@@ -233,65 +233,98 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
-    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Probability for ML: MLE &amp; MAP Estimation</h1>
-<p><strong>Likelihood vs. probability, maximum likelihood (sample mean/variance derivations), priors and MAP, and regularization as a prior in disguise.</strong></p>
+<h1>Module 4 Practice Lab: Unsupervised &amp; Ensemble Drills</h1>
+<p><strong>k-selection showdowns, scaling traps, ensemble prescriptions, second-round AdaBoost arithmetic, and exam essay models.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Biased Coin Trial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Someone hands you a coin; 100 flips show 63 heads. <strong>Likelihood</strong> asks: <em>for each candidate bias θ, how probable was this exact evidence?</em> — then <strong>MLE</strong> picks the θ maximizing it (here, $\hat{\theta} = 0.63$). <strong>MAP</strong> adds a prior belief (&quot;coins are usually fair-ish&quot;) and maximizes <em>posterior</em> ∝ likelihood × prior — dragging the estimate toward fairness when evidence is thin, and yielding to evidence when it&#39;s overwhelming. MLE trusts only data; MAP negotiates between data and belief.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Likelihood (Not Probability!)</h3>
-<p>For i.i.d. data $D = {x_i}$ and parameters $\theta$: <strong>likelihood</strong> $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$ — a function <em>of θ</em>, data fixed. Work with <strong>log-likelihood</strong> $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$ (products → sums; maxima coincide since log is monotone).</p>
-<h3>2.2 MLE: Two Canonical Derivations</h3>
-<ul>
-<li><strong>Gaussian mean</strong> ($\sigma^2$ known): $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$; $\frac{d\ell}{d\mu} = 0 \Rightarrow \hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$ — the sample mean, derived, not assumed.</li>
-<li><strong>Gaussian variance</strong> (μ known): $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (x_i - \mu)^2$ — note the $n$ (biased; Bessel&#39;s $n-1$ corrects it — MLE doesn&#39;t care about unbiasedness, only likelihood).</li>
-<li><strong>Bernoulli/coin:</strong> $\hat{\theta} = k/n$ (heads fraction).</li>
-</ul>
-<h3>2.3 MAP: Prior × Likelihood, Then Maximize</h3>
-<p>Bayes: $P(\theta \mid D) \propto P(D \mid \theta),P(\theta)$. <strong>MAP</strong> $\hat{\theta} = \arg\max_\theta [\ell(\theta) + \log P(\theta)]$ — the log-prior is a <em>penalty pulling toward belief</em>. Gaussian prior $\mu \sim \mathcal{N}(\mu_0, \tau^2)$ on a Gaussian mean gives closed-form shrinkage:</p>
-<p>$$\hat{\mu}_{MAP} = \frac{\frac{n\bar{x}}{\sigma^2} + \frac{\mu_0}{\tau^2}}{\frac{n}{\sigma^2} + \frac{1}{\tau^2}}$$</p>
-<p>— a precision-weighted average of data-mean and prior-mean. As $n \to \infty$, data dominates (MAP → MLE); at $n \approx 0$, prior rules. <strong>Regularization preview:</strong> L2-penalized regression <em>is</em> MAP with a Gaussian prior; L1 <em>is</em> MAP with a Laplace prior — Module 2+ penalties are beliefs in mathematical dress.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Estimation Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MLE $= \arg\max \prod P(x_i|\theta)$ (use <strong>log</strong>, monotone) · Gaussian mean MLE $= \bar{x}$ · variance MLE $= \frac{1}{n}\sum(x_i-\mu)^2$ (<strong>biased</strong>) · MAP $= \arg\max[\ell + \log\text{prior}]$ · Gaussian–Gaussian MAP $=$ <strong>precision-weighted average</strong> · L2 $\equiv$ Gaussian prior, L1 $\equiv$ Laplace prior.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Likelihood Is P(data | θ), Never P(θ | data)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$L(\theta)$ plugs <em>varying θ</em> into a function of <em>fixed data</em> — it is not a distribution over θ (doesn&#39;t integrate to 1, needs no prior). Reading &quot;the probability that θ is true&quot; mistakes likelihood for posterior — the confusion Bayes&#39; theorem exists to resolve, via the prior you&#39;re forgetting.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Sensor readings average $\bar{x} = 5.0$ over $n = 4$ samples, known noise $\sigma^2 = 4$. Prior belief: true value near $\mu_0 = 0$ with $\tau^2 = 1$. Compute the MLE and the MAP estimate. (Arithmetic verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Estimating Both Ways</div><div class="step-content"><p><strong>MLE:</strong> $\hat{\mu} = \bar{x} = 5.0$ — data only, no negotiation.
-<strong>MAP:</strong> precisions $n/\sigma^2 = 1$, $1/\tau^2 = 1$ — dead tie, so the answer splits the difference: $\hat{\mu}_{MAP} = \frac{1 \times 5.0 + 1 \times 0}{1 + 1} = \mathbf{2.5}$. The strong prior ($\tau^2 = 1$ vs data precision $1$) drags the estimate halfway home.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>MLE $5.0$ vs MAP $2.5$ on identical data — the gap <em>is</em> the prior speaking. With $n = 400$ instead, data precision $100$ would swamp the prior ($100/101 \approx 0.99$ weight) and MAP $\approx 4.95 \approx$ MLE: beliefs matter most exactly when data is scarcest — the exam-ready moral.</p>
-</div></div><hr>
+<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<h3>Scenario 1: The k Wars (One Dataset, Three Answers)</h3>
+<p>Well-separated blobs (M4&#39;s six points): k-Means $K=2$ converges instantly (WCSS 4); hierarchical single-linkage dendrogram shows the same split with a huge height gap to the final merge; elbow screams $K=2$. Now poison it: add a bridge point at 6.5. k-Means $K=2$ still splits cleanly (means absorb it); single-linkage <em>chains</em> through the bridge (one progressive cluster); complete-linkage holds the split. Same data + one point, three structures — the method <em>is</em> a shape prior, and the bridge point is the experiment that reveals yours.</p>
+<h3>Scenario 2: The Scaling Trap (Numbers That Bite)</h3>
+<p>Income (₹10k units: values ~3–12) vs. age (20–60): raw PCA crowns income PC1 by unit size alone. Standardize (z-scores): covariance becomes correlation — PC1 now reports <em>joint</em> spread-shape, often an age-income axis the raw run buried. Drill: always ask &quot;in what units is this variance?&quot; before trusting any eigendecomposition — the answer decides whether PC1 is discovery or bookkeeping.</p>
+<h3>Scenario 3: Ensemble Prescription Desk</h3>
+<p>Three patients: (a) deep trees, noisy labels, accuracy wanted → <strong>random forest</strong> (averaging dilutes poison; boosting would frame it). (b) Clean data, weak linear baseline, need max accuracy → <strong>boosted trees / AdaBoost-style</strong> (bias-killing sequential focus; margins keep fattening past zero train error). (c) Regulator demands reasons → <strong>single shallow tree</strong> (forests vote inscrutably; a depth-4 tree testifies). Prescription = noise regime + bias profile + stakeholder, in that order.</p>
+<h3>Scenario 4: AdaBoost Round Two (Continuing M4&#39;s Trace)</h3>
+<p>After round 1: $D_2 = {1/6, 1/6, 1/6, 1/2}$ (one heavy miss). Round-2 stump fixes the heavy point but misses one light point: weighted error $\epsilon_2 = 1/6 \approx 0.167$. Vote $\alpha_2 = \tfrac12\ln((5/6)/(1/6)) = \tfrac12\ln 5 \approx 0.805$ — <em>louder</em> than round 1&#39;s $0.549$ (harder distribution solved → bigger voice). Updates: the newly-missed light point $\times e^{0.805} \approx 2.24$; the thrice-correct points shrink again. Attention compounds on whatever survives — boosting&#39;s ruthless curriculum in round two of four points.</p>
+<hr>
+<p><a id="the-dimensions"></a></p>
+<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k-Means vs. hierarchical output</td>
+<td>Fixed-$K$ partition (rerun per $K$) vs. full dendrogram (cut after seeing)</td>
+</tr>
+<tr>
+<td>Single vs. complete linkage</td>
+<td>Chains through bridges vs. quarantines them (shape priors, opposite)</td>
+</tr>
+<tr>
+<td>Elbow (k-Means) vs. scree (PCA)</td>
+<td>WCSS-vs-$K$ kink vs. eigenvalue drop-off — same kink-reading instinct</td>
+</tr>
+<tr>
+<td>Variance vs. signal (PCA)</td>
+<td>Kept spread (reconstruction) vs. class information (may live in the tail)</td>
+</tr>
+<tr>
+<td>Standardize vs. raw PCA</td>
+<td>Shape-driven components vs. unit-driven artifacts</td>
+</tr>
+<tr>
+<td>Bagging vs. boosting-coated trees</td>
+<td>Parallel variance averaging vs. sequential bias/margin attack</td>
+</tr>
+<tr>
+<td>OOB vs. test error</td>
+<td>Free ~37% juries (monitoring) vs. untouched folds (verdicts)</td>
+</tr>
+<tr>
+<td>$\alpha$ small vs. large</td>
+<td>Weak round (quiet vote) vs. dominant round (loud vote) — earned, never set</td>
+</tr>
+<tr>
+<td>Train-zero + test-falling (boosting)</td>
+<td>Margins fattening past verdict saturation (theory-backed, not luck)</td>
+</tr>
+<tr>
+<td>More trees (forests) vs. more rounds (boosting)</td>
+<td>Never overfits (variance only shrinks) vs. eventually overfits noise (attention compounds on lies)</td>
+</tr>
+</tbody></table>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do we maximize log-likelihood instead of raw likelihood, and what justifies the swap?</span>
+    <span class="quiz-category">Single-linkage chains two blobs through one bridge point while k-Means (K=2) splits them cleanly. Both ran &quot;correctly.&quot; What does this disagreement prove about clustering?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Logs make small numbers look bigger for presentations</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Products underflow and differentiate awkwardly; log is strictly monotone so argmax is unchanged, while sums differentiate term-by-term — same peak, friendlier mountain</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Raw likelihood has no maximum in general</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Log-likelihood is a different objective that happens to agree sometimes</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Single-linkage has a software bug in its distance code</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Clustering outputs encode the method&#39;s shape prior (chain-following vs. spherical Voronoi) — with no ground-truth labels, &quot;correct&quot; means &quot;faithful to stated assumptions,&quot; and the bridge point is a prior-detector, not a tiebreaker</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>k-Means is universally correct and linkage methods are obsolete</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The bridge point must be deleted as an outlier before any clustering</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -303,20 +336,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\arg\max L = \arg\max \log L$ always (monotone transform preserves order); $\sum \log$ splits products into additive terms with clean derivatives. Numerical stability (no $10^{-300}$ underflow) plus calculus convenience — zero statistical content changed.</p><pre><code>&lt;/div&gt;
+      <p>Unsupervised = no answer key: each method <em>defines</em> clusterhood differently (connectivity vs. compactness). Disagreement under bridge-noise is the methods honestly reporting different geometries — choose by which geometry the downstream task needs, and say so explicitly.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">The Gaussian-variance MLE divides by n (biased) rather than n−1. Does this contradict &quot;maximum likelihood,&quot; and should exams use n−1?</span>
+    <span class="quiz-category">PCA on raw income/age crowns income PC1; standardized, the lead axis mixes both. A teammate ships the raw version &quot;because it explains more variance.&quot; Refute precisely.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Yes — MLE is defined to be unbiased, so the formula is wrong</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>No contradiction: MLE maximizes likelihood, period — unbiasedness is a separate virtue it never promised; in ML estimation questions, report the MLE (÷n) unless explicitly asked for the unbiased correction</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Yes — always divide by n−1 in every formula</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The bias vanishes only for non-Gaussian data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Raw variance is always the right quantity; ship it</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Raw &quot;variance&quot; sums squared *units* (rupees² vs years²) — a unit contest, not information; standardization converts to shape (correlation), so PC1 reports joint spread instead of measurement conventions</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Standardization is forbidden before PCA by definition</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Income genuinely contains all information in every dataset</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -328,20 +361,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Maximum likelihood&quot; and &quot;unbiased&quot; are independent properties that merely sometimes coincide (as with the mean). The variance MLE&#39;s $n$-denominator <em>is</em> the likelihood peak; Bessel&#39;s $n-1$ answers a different question (unbiasedness). Know which question the exam asked.</p><pre><code>&lt;/div&gt;
+      <p>Eigendecomposition maximizes <em>whatever variance it&#39;s given</em> — feed it unit artifacts, get unit artifacts crowned. z-scores make covariance dimensionless (correlation), so surviving structure is geometric truth, not bookkeeping. &quot;More variance explained&quot; means nothing until variance means something.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A Laplace prior on regression weights yields L1 regularization; a Gaussian prior yields L2. What does this correspondence buy conceptually?</span>
+    <span class="quiz-category">Round-2 AdaBoost earns α₂ ≈ 0.805 versus round-1&#39;s α₁ ≈ 0.549 on the same four points. What does the louder vote signify, and what danger grows alongside it?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — priors and penalties are unrelated coincidences</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Regularizers are beliefs: L1&#39;s sharp peak at zero expects sparsity (many exact zeros); L2&#39;s smooth dome expects small-but-nonzero weights — choosing a penalty *is* stating a prior over solutions</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It proves L1 always outperforms L2 on every dataset</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Priors only apply to classification, never regression</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Louder votes mean round 1 was worthless and should be deleted</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>α₂ &gt; α₁ means round 2 solved a *harder* weighted distribution (heavy miss fixed) — earned authority; danger: attention compounds on persistent misses, so mislabeled points would now command enormous weight (noise memorization in progress)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>α values must decrease monotonically or the algorithm is broken</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Louder votes indicate overfitting has already occurred</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -353,26 +386,62 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$-\log P(w)$ <em>is</em> the penalty term: Laplace $\propto e^{-|w|}$ gives $|w|$ costs (corners → exact zeros, feature selection); Gaussian $\propto e^{-w^2}$ gives $w^2$ costs (shrinkage, no zeros). Penalty-shopping without prior-thinking is superstition; the correspondence turns it into modeling.</p><pre><code>&lt;/div&gt;
+      <p>$\alpha = \tfrac12\ln((1-\epsilon)/\epsilon)$ prices <em>difficulty conquered</em>: $\epsilon_2 = 1/6$ beats $\epsilon_1 = 1/4$, hence louder voice. But the same compounding that rewards genuine difficulty <em>worships</em> noise — round-3+ weights on lies grow exponentially. Volume tracks conquest, blind to truth.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Forests can grow 5000 trees safely while AdaBoost must stop early on noisy data. One mechanism per method explains both — state them.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Forests use less memory per tree, so more fit</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Forests average independent-ish votes (variance-only effect: more trees strictly smooth, bias untouched — nothing to overfit *toward*); boosting reweights onto residuals each round (on noise, residuals *are* lies, compounded exponentially into memorization)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>AdaBoost trees are deeper than forest trees by rule</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Forests never look at labels, avoiding the issue</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Averaging can&#39;t invent bias (5000 votes for the same wrong answer is still wrong, never worse); sequential reweighting <em>chases</em> whatever errs — truth on clean data (margins fatten, test improves), lies on noisy data (weights explode on poison). Same rounds, opposite dynamics: smoothing vs. pursuit.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> Any cheat-table row (linkage choice and α-meaning lead); single-round AdaBoost arithmetic.</li>
+<li><strong>7 Marks:</strong> Method-selection scenarios with justification, PCA scaling autopsies, or multi-round boosting traces.</li>
+</ul>
+</div></details><h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: Points {1,2,3,10,11,12} plus a bridge point at 6.5. Predict k-Means (K=2), single-linkage, and complete-linkage outcomes, and explain each from the method&#39;s bias.</strong></p>
+<p><strong>Model Answer:</strong> k-Means: means settle near {2-ish, 11-ish}; the bridge at 6.5 sits at an <em>exact</em> tie (|6.5−2| = |6.5−11| = 4.5) — decided by the implementation&#39;s tie-break (≤ joins left), a coin-flip elevated to arithmetic. Single-linkage: chains left→bridge→right progressively (nearest-pair stepping stones) into one advancing front. Complete-linkage: bridge&#39;s farthest-pair distances stay large — quarantined longest, original split preserved. Three methods, three honest geometries (plus one honest coin-flip); pick by downstream need (separation vs. connectivity).</p>
+<h3>Essay Question 2 (7 Marks)</h3>
+<p><strong>Q: Continuing M4&#39;s AdaBoost trace (D₂ = three × 1/6, one × 1/2): round 2 fixes the heavy point but misses a light one. Compute α₂, the new distribution emphasis, and explain what round 3 will prioritize.</strong></p>
+<p><strong>Model Answer:</strong> $\epsilon_2 = 1/6$; $\alpha_2 = \tfrac12\ln 5 \approx 0.805$ (louder than $\alpha_1 = 0.549$ — harder distribution conquered). The newly missed light point multiplies by $e^{0.805} \approx 2.24$; solved points shrink. Round 3 faces a world dominated by <em>two generations</em> of survivors — attention compounding exactly as designed on clean data, exactly as dangerous on mislabeled data (state which regime applies before praising the mechanism).</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_ml_definition_paradigms_and_types.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m4_05_boosting_adaboost.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Ml Definition Paradigms And Types</div>
+        <div class="ttl">4.5 Boosting Adaboost</div>
       </a>
       
       
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -458,7 +527,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(22) || 0;
-    const currentId = "m1_02_probability_mle_map_estimation";
+    const currentId = "m4_99_practice_lab_unsupervised_ensemble_drills";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 
