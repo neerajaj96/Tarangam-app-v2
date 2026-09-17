@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Probability MLE MAP Estimation</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.2 Probability MLE MAP Estimation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Probability MLE MAP Estimation">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.2 Probability MLE MAP Estimation">
+<title>Tarangam — 3.2 Multilayer Networks Backpropagation</title>
+<meta name="description" content="Machine Learning (PCCST503) — 3.2 Multilayer Networks Backpropagation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.2 Multilayer Networks Backpropagation">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 3.2 Multilayer Networks Backpropagation">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Ml Definition Paradigms And Types</span>
           </a>
-          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link active" id="topic-m1_02_probability_mle_map_estimation">
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
             <span class="topic-dot"></span>
             <span>1.2 Probability MLE MAP Estimation</span>
           </a>
@@ -120,8 +120,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Neural Nets &amp; SVMs</span>
           <span class="chev">&#9656;</span>
@@ -131,7 +131,7 @@
             <span class="topic-dot"></span>
             <span>3.1 Perceptron Learning Rule</span>
           </a>
-          <a href="./m3_02_multilayer_networks_backpropagation.html" class="topic-link " id="topic-m3_02_multilayer_networks_backpropagation">
+          <a href="./m3_02_multilayer_networks_backpropagation.html" class="topic-link active" id="topic-m3_02_multilayer_networks_backpropagation">
             <span class="topic-dot"></span>
             <span>3.2 Multilayer Networks Backpropagation</span>
           </a>
@@ -170,9 +170,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Probability MLE MAP Estimation</span>
+        <span style="color:var(--ink); font-weight:600;">3.2 Multilayer Networks Backpropagation</span>
       </div>
 
       <div class="topbar-actions">
@@ -188,7 +188,7 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge badge-accent">MODULE 3</span>
     <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
@@ -200,53 +200,69 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Probability for ML: MLE &amp; MAP Estimation</h1>
-<p><strong>Likelihood vs. probability, maximum likelihood (sample mean/variance derivations), priors and MAP, and regularization as a prior in disguise.</strong></p>
+<h1>Multilayer Networks &amp; Backpropagation</h1>
+<p><strong>Hidden layers that learn bends, the chain rule as credit assignment, one fully hand-computed gradient step, and why depth trains at all.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Biased Coin Trial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Someone hands you a coin; 100 flips show 63 heads. <strong>Likelihood</strong> asks: <em>for each candidate bias θ, how probable was this exact evidence?</em> — then <strong>MLE</strong> picks the θ maximizing it (here, $\hat{\theta} = 0.63$). <strong>MAP</strong> adds a prior belief (&quot;coins are usually fair-ish&quot;) and maximizes <em>posterior</em> ∝ likelihood × prior — dragging the estimate toward fairness when evidence is thin, and yielding to evidence when it&#39;s overwhelming. MLE trusts only data; MAP negotiates between data and belief.</p>
-</div></details><hr>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Blame Delegation Inc.</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A company&#39;s profit falls short. The CEO doesn&#39;t yell at everyone equally — blame flows <em>backward</em> through the org chart, each manager receiving blame proportional to their influence on the shortfall, then subdividing it among <em>their</em> reports by the same rule. <strong>Backpropagation</strong> is this memo in calculus: the loss&#39;s blame (gradient) enters at the output layer and splits backward through every weight by the <strong>chain rule</strong>, so each weight learns exactly how much <em>it</em> contributed to the error. Forward pass = work; backward pass = performance reviews, all the way down.</p>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Backpropagation Flow</span>
+    <div class="video-speed-controls">
+      <button class="speed-btn" data-speed="0.75">0.75x</button>
+      <button class="speed-btn active" data-speed="1.0">1.0x</button>
+      <button class="speed-btn" data-speed="1.25">1.25x</button>
+      <button class="speed-btn" data-speed="1.5">1.5x</button>
+    </div>
+  </div>
+  <div class="video-frame-wrap">
+    <video controls preload="metadata">
+      <source src="../assets/videos/m3_backprop.mp4" type="video/mp4">
+      Your browser does not support embedded video.
+    </video>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Backpropagation Flow</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch error signals split backward layer by layer, each weight&#39;s blame proportional to its forward influence — the chain rule animated as organizational accountability.</div>
+  </div>
+</div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Likelihood (Not Probability!)</h3>
-<p>For i.i.d. data $D = {x_i}$ and parameters $\theta$: <strong>likelihood</strong> $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$ — a function <em>of θ</em>, data fixed. Work with <strong>log-likelihood</strong> $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$ (products → sums; maxima coincide since log is monotone).</p>
-<h3>2.2 MLE: Two Canonical Derivations</h3>
+<h3>2.1 Forward Pass (Notation That Pays Off)</h3>
+<p>Layer $l$: $z^{(l)} = W^{(l)}a^{(l-1)} + b^{(l)}$, $a^{(l)} = \sigma(z^{(l)})$, with $a^{(0)} = x$. Sigmoid/tanh/ReLU nonlinearities are load-bearing: stacked <em>linear</em> layers collapse to one matrix (depth without nonlinearity is a expensive no-op).</p>
+<h3>2.2 Backward Pass (One Rule, Recursed)</h3>
+<p>Output error $\delta^{(L)} = \nabla_{a}L \odot \sigma&#39;(z^{(L)})$; propagate $\delta^{(l)} = (W^{(l+1)T}\delta^{(l+1)}) \odot \sigma&#39;(z^{(l)})$; gradients $\nabla_{W^{(l)}} = \delta^{(l)}a^{(l-1)T}$. Cost: one forward + one backward ≈ 2× one forward — gradients for <em>millions</em> of weights at the price of two passes (vs. $10^6$ finite-difference passes). That ratio <em>is</em> deep learning&#39;s economic engine.</p>
+<h3>2.3 Why Depth Trains (and Sometimes Doesn&#39;t)</h3>
 <ul>
-<li><strong>Gaussian mean</strong> ($\sigma^2$ known): $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$; $\frac{d\ell}{d\mu} = 0 \Rightarrow \hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$ — the sample mean, derived, not assumed.</li>
-<li><strong>Gaussian variance</strong> (μ known): $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (x_i - \mu)^2$ — note the $n$ (biased; Bessel&#39;s $n-1$ corrects it — MLE doesn&#39;t care about unbiasedness, only likelihood).</li>
-<li><strong>Bernoulli/coin:</strong> $\hat{\theta} = k/n$ (heads fraction).</li>
+<li><strong>Universal approximation:</strong> one wide hidden layer fits anything continuous — but depth buys <em>exponential</em> parameter efficiency for compositional functions (each layer reuses the previous one&#39;s features).</li>
+<li><strong>Vanishing gradients:</strong> sigmoid $\sigma&#39; \le 0.25$ multiplies per layer — deep stacks starve early layers of signal. Remedies: ReLU ($\sigma&#39;=1$ when active), careful init, normalization, residuals — the modern training toolkit in one sentence each.</li>
 </ul>
-<h3>2.3 MAP: Prior × Likelihood, Then Maximize</h3>
-<p>Bayes: $P(\theta \mid D) \propto P(D \mid \theta),P(\theta)$. <strong>MAP</strong> $\hat{\theta} = \arg\max_\theta [\ell(\theta) + \log P(\theta)]$ — the log-prior is a <em>penalty pulling toward belief</em>. Gaussian prior $\mu \sim \mathcal{N}(\mu_0, \tau^2)$ on a Gaussian mean gives closed-form shrinkage:</p>
-<p>$$\hat{\mu}_{MAP} = \frac{\frac{n\bar{x}}{\sigma^2} + \frac{\mu_0}{\tau^2}}{\frac{n}{\sigma^2} + \frac{1}{\tau^2}}$$</p>
-<p>— a precision-weighted average of data-mean and prior-mean. As $n \to \infty$, data dominates (MAP → MLE); at $n \approx 0$, prior rules. <strong>Regularization preview:</strong> L2-penalized regression <em>is</em> MAP with a Gaussian prior; L1 <em>is</em> MAP with a Laplace prior — Module 2+ penalties are beliefs in mathematical dress.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Estimation Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MLE $= \arg\max \prod P(x_i|\theta)$ (use <strong>log</strong>, monotone) · Gaussian mean MLE $= \bar{x}$ · variance MLE $= \frac{1}{n}\sum(x_i-\mu)^2$ (<strong>biased</strong>) · MAP $= \arg\max[\ell + \log\text{prior}]$ · Gaussian–Gaussian MAP $=$ <strong>precision-weighted average</strong> · L2 $\equiv$ Gaussian prior, L1 $\equiv$ Laplace prior.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Likelihood Is P(data | θ), Never P(θ | data)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$L(\theta)$ plugs <em>varying θ</em> into a function of <em>fixed data</em> — it is not a distribution over θ (doesn&#39;t integrate to 1, needs no prior). Reading &quot;the probability that θ is true&quot; mistakes likelihood for posterior — the confusion Bayes&#39; theorem exists to resolve, via the prior you&#39;re forgetting.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Backprop Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Forward $z=Wa+b$, $a=\sigma(z)$ · backward $\delta^{(l)} = (W^T\delta^{(l+1)})\odot\sigma&#39;$ · grads $\delta a^T$ · cost <strong>≈ 2 forwards for all weights</strong> · depth = <strong>parameter efficiency</strong>, width = brute capacity · sigmoid stacks <strong>vanish</strong> (fix: ReLU/init/norm/residuals).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Linear Layers Don&#39;t Stack (and Saturated Neurons Don&#39;t Learn)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Two linear layers $W_2(W_1x)$ equal <em>one</em> matrix — depth without nonlinearity adds parameters but zero expressiveness. And saturated sigmoids ($\sigma&#39; \approx 0$) pass ~zero blame backward — the same saturation slowdown as logistic training (Module 2), now multiplied per layer. Nonlinearity everywhere, saturation nowhere: the design commandments.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Sensor readings average $\bar{x} = 5.0$ over $n = 4$ samples, known noise $\sigma^2 = 4$. Prior belief: true value near $\mu_0 = 0$ with $\tau^2 = 1$. Compute the MLE and the MAP estimate. (Arithmetic verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Estimating Both Ways</div><div class="step-content"><p><strong>MLE:</strong> $\hat{\mu} = \bar{x} = 5.0$ — data only, no negotiation.
-<strong>MAP:</strong> precisions $n/\sigma^2 = 1$, $1/\tau^2 = 1$ — dead tie, so the answer splits the difference: $\hat{\mu}_{MAP} = \frac{1 \times 5.0 + 1 \times 0}{1 + 1} = \mathbf{2.5}$. The strong prior ($\tau^2 = 1$ vs data precision $1$) drags the estimate halfway home.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>MLE $5.0$ vs MAP $2.5$ on identical data — the gap <em>is</em> the prior speaking. With $n = 400$ instead, data precision $100$ would swamp the prior ($100/101 \approx 0.99$ weight) and MAP $\approx 4.95 \approx$ MLE: beliefs matter most exactly when data is scarcest — the exam-ready moral.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Micro-network: input $x = [0.5, -0.3]$, one hidden sigmoid unit ($W_1 = [0.4, -0.2]$, $b_1 = 0$), output sigmoid ($w_2 = 0.7$, $b_2 = 0.1$), target $y = 1$, squared loss $\tfrac12(y-o)^2$. Compute forward values and every gradient. (Verified against finite differences.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Forward Then Backward</div><div class="step-content"><p>Forward: $z_1 = 0.4(0.5) + (-0.2)(-0.3) = 0.26$, $h = \sigma(0.26) \approx 0.5646$; $z_2 = 0.7(0.5646) + 0.1 = 0.4952$, $o = \sigma(0.4952) \approx 0.6213$; loss $\approx 0.0717$. Backward: $\delta_o = (0.6213-1)(0.6213)(0.3787) \approx -0.0891$; $\partial L/\partial w_2 = \delta_o h \approx -0.0503$; $\delta_h = \delta_o(0.7)(0.5646)(0.4354) \approx -0.0153$; $\partial L/\partial W_1 = \delta_h x \approx [-0.0077, +0.0046]$. Finite-difference agreement to 5 decimals on all six gradients.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Six gradients, two passes, zero finite-difference budgets — and notice the decay ($-0.089 \to -0.015$): blame <em>attenuates</em> backward through small weights and sigmoid slopes, the vanishing-gradient phenomenon visible in miniature on a <em>two-layer</em> toy. Depth&#39;s power and depth&#39;s pathology, one worked step apart.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do we maximize log-likelihood instead of raw likelihood, and what justifies the swap?</span>
+    <span class="quiz-category">Backprop computes all gradients for roughly the cost of two forward passes, while finite differences need one forward pass per weight. What single mathematical fact creates this gap?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Logs make small numbers look bigger for presentations</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Products underflow and differentiate awkwardly; log is strictly monotone so argmax is unchanged, while sums differentiate term-by-term — same peak, friendlier mountain</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Raw likelihood has no maximum in general</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Log-likelihood is a different objective that happens to agree sometimes</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Backprop uses a faster programming language than finite differences</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The chain rule reuses shared intermediate quantities (δ per layer) across all weights, while finite differences perturb each weight in isolation, recomputing everything every time</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Finite differences are mathematically incorrect for neural networks</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Backprop skips computing most gradients by random sampling</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -258,20 +274,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\arg\max L = \arg\max \log L$ always (monotone transform preserves order); $\sum \log$ splits products into additive terms with clean derivatives. Numerical stability (no $10^{-300}$ underflow) plus calculus convenience — zero statistical content changed.</p><pre><code>&lt;/div&gt;
+      <p>One backward sweep&#39;s $\delta^{(l)}$ vectors serve <em>every</em> weight in layer $l$ simultaneously — shared substructure exploited once. Finite differences share nothing: $10^6$ weights = $10^6$ full forwards. The gap is reuse vs. repetition — dynamic programming&#39;s whiteboard (Module DAA-3) wearing calculus clothes.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">The Gaussian-variance MLE divides by n (biased) rather than n−1. Does this contradict &quot;maximum likelihood,&quot; and should exams use n−1?</span>
+    <span class="quiz-category">A 10-layer sigmoid network barely trains its first layers while the last layers learn fine. Diagnose precisely and name two fixes with mechanisms.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Yes — MLE is defined to be unbiased, so the formula is wrong</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>No contradiction: MLE maximizes likelihood, period — unbiasedness is a separate virtue it never promised; in ML estimation questions, report the MLE (÷n) unless explicitly asked for the unbiased correction</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Yes — always divide by n−1 in every formula</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The bias vanishes only for non-Gaussian data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The dataset is too small; fixes: delete layers, delete data</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Vanishing gradients: σ′ ≤ 0.25 multiplies per layer, attenuating blame ~0.25¹⁰ ≈ 0 to early weights — fixes: ReLU (slope 1 when active, no attenuation) and careful init/normalization/residuals (keep signal paths short and scaled)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The learning rate is too high; fixes: raise it further, remove all nonlinearities</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>First layers are frozen by definition in deep networks</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -283,20 +299,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Maximum likelihood&quot; and &quot;unbiased&quot; are independent properties that merely sometimes coincide (as with the mean). The variance MLE&#39;s $n$-denominator <em>is</em> the likelihood peak; Bessel&#39;s $n-1$ answers a different question (unbiasedness). Know which question the exam asked.</p><pre><code>&lt;/div&gt;
+      <p>Blame decays multiplicatively backward — the worked example&#39;s $-0.089 \to -0.015$ in <em>one</em> hop previews ten hops of starvation. ReLU passes full slope when active; init/norm/residuals preserve signal magnitude across depth. Diagnose by layer-wise gradient norms, fix by preserving the backward signal path.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A Laplace prior on regression weights yields L1 regularization; a Gaussian prior yields L2. What does this correspondence buy conceptually?</span>
+    <span class="quiz-category">Why must every hidden layer carry a nonlinearity — what goes wrong with an all-linear deep network?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — priors and penalties are unrelated coincidences</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Regularizers are beliefs: L1&#39;s sharp peak at zero expects sparsity (many exact zeros); L2&#39;s smooth dome expects small-but-nonzero weights — choosing a penalty *is* stating a prior over solutions</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It proves L1 always outperforms L2 on every dataset</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Priors only apply to classification, never regression</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Linear networks cannot be trained by gradient descent at all</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Composing linear maps yields one linear map (W₂(W₁x) = Wx) — depth adds parameters but zero expressiveness; the network equals single-layer regression regardless of layer count</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Linear layers cause immediate NaN losses</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Nonlinearities are only needed at the output layer</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -308,7 +324,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$-\log P(w)$ <em>is</em> the penalty term: Laplace $\propto e^{-|w|}$ gives $|w|$ costs (corners → exact zeros, feature selection); Gaussian $\propto e^{-w^2}$ gives $w^2$ costs (shrinkage, no zeros). Penalty-shopping without prior-thinking is superstition; the correspondence turns it into modeling.</p><pre><code>&lt;/div&gt;
+      <p>Matrix products collapse: any all-linear stack <em>is</em> one matrix, learnable directly. Depth&#39;s entire representational payoff (bends for XOR, hierarchies for vision) comes from nonlinearities <em>between</em> the matrices — linearity everywhere means paying deep-network costs for shallow-model power.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -317,16 +333,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_ml_definition_paradigms_and_types.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_01_perceptron_learning_rule.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Ml Definition Paradigms And Types</div>
+        <div class="ttl">3.1 Perceptron Learning Rule</div>
       </a>
       
       
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_03_maximum_margin_svm.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
+        <div class="ttl">3.3 Maximum Margin SVM</div>
       </a>
       
     </footer>
@@ -413,7 +429,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(13) || 0;
-    const currentId = "m1_02_probability_mle_map_estimation";
+    const currentId = "m3_02_multilayer_networks_backpropagation";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 

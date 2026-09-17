@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Probability MLE MAP Estimation</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.2 Probability MLE MAP Estimation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Probability MLE MAP Estimation">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.2 Probability MLE MAP Estimation">
+<title>Tarangam — 3.1 Perceptron Learning Rule</title>
+<meta name="description" content="Machine Learning (PCCST503) — 3.1 Perceptron Learning Rule | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.1 Perceptron Learning Rule">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 3.1 Perceptron Learning Rule">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Ml Definition Paradigms And Types</span>
           </a>
-          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link active" id="topic-m1_02_probability_mle_map_estimation">
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
             <span class="topic-dot"></span>
             <span>1.2 Probability MLE MAP Estimation</span>
           </a>
@@ -120,14 +120,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Neural Nets &amp; SVMs</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m3_01_perceptron_learning_rule.html" class="topic-link " id="topic-m3_01_perceptron_learning_rule">
+          <a href="./m3_01_perceptron_learning_rule.html" class="topic-link active" id="topic-m3_01_perceptron_learning_rule">
             <span class="topic-dot"></span>
             <span>3.1 Perceptron Learning Rule</span>
           </a>
@@ -170,9 +170,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Probability MLE MAP Estimation</span>
+        <span style="color:var(--ink); font-weight:600;">3.1 Perceptron Learning Rule</span>
       </div>
 
       <div class="topbar-actions">
@@ -188,8 +188,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -200,53 +200,48 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Probability for ML: MLE &amp; MAP Estimation</h1>
-<p><strong>Likelihood vs. probability, maximum likelihood (sample mean/variance derivations), priors and MAP, and regularization as a prior in disguise.</strong></p>
+<h1>The Perceptron: Learning Rule &amp; Limits</h1>
+<p><strong>The original neuron, mistake-driven updates, convergence on separable data with a traced run, and the XOR wall that froze the field.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Biased Coin Trial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Someone hands you a coin; 100 flips show 63 heads. <strong>Likelihood</strong> asks: <em>for each candidate bias θ, how probable was this exact evidence?</em> — then <strong>MLE</strong> picks the θ maximizing it (here, $\hat{\theta} = 0.63$). <strong>MAP</strong> adds a prior belief (&quot;coins are usually fair-ish&quot;) and maximizes <em>posterior</em> ∝ likelihood × prior — dragging the estimate toward fairness when evidence is thin, and yielding to evidence when it&#39;s overwhelming. MLE trusts only data; MAP negotiates between data and belief.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Stubborn Bouncer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A bouncer judges entrants by a weighted checklist (height × w₁ + shoes × w₂ ≥ threshold?). Each mistake stings into an instant rule tweak: wrongly admitted → lower the weights of their traits; wrongly rejected → raise them. No patience, no averaging — pure mistake-driven learning. The <strong>perceptron</strong> is this bouncer in mathematics: predict $\text{sign}(w^Tx + b)$, and on every error add (or subtract) the offender&#39;s features once. Repeat until the club admits exactly the right crowd — <em>if</em> any single straight rope-line can separate them.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Likelihood (Not Probability!)</h3>
-<p>For i.i.d. data $D = {x_i}$ and parameters $\theta$: <strong>likelihood</strong> $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$ — a function <em>of θ</em>, data fixed. Work with <strong>log-likelihood</strong> $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$ (products → sums; maxima coincide since log is monotone).</p>
-<h3>2.2 MLE: Two Canonical Derivations</h3>
-<ul>
-<li><strong>Gaussian mean</strong> ($\sigma^2$ known): $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$; $\frac{d\ell}{d\mu} = 0 \Rightarrow \hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$ — the sample mean, derived, not assumed.</li>
-<li><strong>Gaussian variance</strong> (μ known): $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (x_i - \mu)^2$ — note the $n$ (biased; Bessel&#39;s $n-1$ corrects it — MLE doesn&#39;t care about unbiasedness, only likelihood).</li>
-<li><strong>Bernoulli/coin:</strong> $\hat{\theta} = k/n$ (heads fraction).</li>
-</ul>
-<h3>2.3 MAP: Prior × Likelihood, Then Maximize</h3>
-<p>Bayes: $P(\theta \mid D) \propto P(D \mid \theta),P(\theta)$. <strong>MAP</strong> $\hat{\theta} = \arg\max_\theta [\ell(\theta) + \log P(\theta)]$ — the log-prior is a <em>penalty pulling toward belief</em>. Gaussian prior $\mu \sim \mathcal{N}(\mu_0, \tau^2)$ on a Gaussian mean gives closed-form shrinkage:</p>
-<p>$$\hat{\mu}_{MAP} = \frac{\frac{n\bar{x}}{\sigma^2} + \frac{\mu_0}{\tau^2}}{\frac{n}{\sigma^2} + \frac{1}{\tau^2}}$$</p>
-<p>— a precision-weighted average of data-mean and prior-mean. As $n \to \infty$, data dominates (MAP → MLE); at $n \approx 0$, prior rules. <strong>Regularization preview:</strong> L2-penalized regression <em>is</em> MAP with a Gaussian prior; L1 <em>is</em> MAP with a Laplace prior — Module 2+ penalties are beliefs in mathematical dress.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Estimation Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MLE $= \arg\max \prod P(x_i|\theta)$ (use <strong>log</strong>, monotone) · Gaussian mean MLE $= \bar{x}$ · variance MLE $= \frac{1}{n}\sum(x_i-\mu)^2$ (<strong>biased</strong>) · MAP $= \arg\max[\ell + \log\text{prior}]$ · Gaussian–Gaussian MAP $=$ <strong>precision-weighted average</strong> · L2 $\equiv$ Gaussian prior, L1 $\equiv$ Laplace prior.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Likelihood Is P(data | θ), Never P(θ | data)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$L(\theta)$ plugs <em>varying θ</em> into a function of <em>fixed data</em> — it is not a distribution over θ (doesn&#39;t integrate to 1, needs no prior). Reading &quot;the probability that θ is true&quot; mistakes likelihood for posterior — the confusion Bayes&#39; theorem exists to resolve, via the prior you&#39;re forgetting.</p>
+<h3>2.1 Model and Update</h3>
+<p>Predict $\hat{y} = \text{sign}(w^Tx + b)$ for $y \in {+1,-1}$. On mistake ($y(w^Tx+b) \le 0$):</p>
+<p>$$w \leftarrow w + \eta, y, x, \qquad b \leftarrow b + \eta, y$$</p>
+<p>($\eta = 1$ standard — scaling just rescales the boundary.) Correct predictions change nothing: the perceptron learns <em>only</em> from errors, in $O(d)$ per step.</p>
+<h3>2.2 Convergence Theorem (Novikoff/Block)</h3>
+<p>If the data are <strong>linearly separable</strong> with margin $\gamma$ (some unit vector separates all points by $\ge \gamma$) inside radius $R$, the perceptron makes at most $(R/\gamma)^2$ mistakes, then stops forever — finite errors <em>regardless</em> of presentation order. Big margin ⇒ fast peace; tiny margin ⇒ long war. No separability ⇒ no promise (it cycles eternally — always cap epochs in practice).</p>
+<h3>2.3 The XOR Wall (Minsky &amp; Papert, 1969)</h3>
+<p>No single line separates ${(0,0){-}, (1,1){-}}$ from ${(0,1){+}, (1,0){+}}$ — XOR needs a <em>bend</em>. One perceptron layer is provably limited to linearly separable concepts (conjunctions, disjunctions, majorities — but not parity/XOR). This single limitation froze neural research for a decade, until hidden layers (next topic) learned the bend themselves.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Perceptron Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Predict <strong>sign(w·x+b)</strong> · mistake update <strong>$w += yx$</strong> · separable ⇒ <strong>≤ (R/γ)² mistakes then silence</strong> · XOR-class concepts <strong>impossible</strong> single-layer · fix = <strong>hidden layers</strong> (next topic) or <strong>kernels</strong> (topic 4).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Convergence Needs Separability (and Says Nothing About Speed Otherwise)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The theorem&#39;s fine print <em>is</em> the theorem: inseparable data ⇒ infinite cycling, and separable-but-tight data ⇒ astronomically many mistakes before peace. &quot;Perceptron always converges&quot; without the separability qualifier is the classic half-truth — always state the condition first.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Sensor readings average $\bar{x} = 5.0$ over $n = 4$ samples, known noise $\sigma^2 = 4$. Prior belief: true value near $\mu_0 = 0$ with $\tau^2 = 1$. Compute the MLE and the MAP estimate. (Arithmetic verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Estimating Both Ways</div><div class="step-content"><p><strong>MLE:</strong> $\hat{\mu} = \bar{x} = 5.0$ — data only, no negotiation.
-<strong>MAP:</strong> precisions $n/\sigma^2 = 1$, $1/\tau^2 = 1$ — dead tie, so the answer splits the difference: $\hat{\mu}_{MAP} = \frac{1 \times 5.0 + 1 \times 0}{1 + 1} = \mathbf{2.5}$. The strong prior ($\tau^2 = 1$ vs data precision $1$) drags the estimate halfway home.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>MLE $5.0$ vs MAP $2.5$ on identical data — the gap <em>is</em> the prior speaking. With $n = 400$ instead, data precision $100$ would swamp the prior ($100/101 \approx 0.99$ weight) and MAP $\approx 4.95 \approx$ MLE: beliefs matter most exactly when data is scarcest — the exam-ready moral.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Points $A(2,2){+}$, $B(3,3){+}$, $C(0,1){-}$, $D(1,0){-}$ (separable: $x_1 = 2$ splits them). Run the perceptron ($\eta=1$, order A,B,C,D cycling) from zeros. (Trace machine-verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Mistakes Only</div><div class="step-content"><p>Start $w=[0,0], b=0$. <strong>Epoch 0:</strong> A: score $0 \to +$ ✓; B: $0 \to +$ ✓; C: $0 \to +$ ✗ (want −) → $w=[0,-1], b=-1$; D: $0-1-0=-1 \to -$ ✓. <strong>Epoch 1:</strong> A: $0-2-1=-3 \to -$ ✗ → $w=[2,1], b=0$; B: $6+3=9 \to +$ ✓; C: $0+1+0=+1 \to +$ ✗ → $w=[2,0], b=-1$; D: $2+0-1=+1 \to +$ ✗ → $w=[1,0], b=-2$. <strong>Epoch 2:</strong> A: $2-2=0 \to +$ ✓; B: $3-2=+1$ ✓; C: $-2 \to -$ ✓; D: $1-2=-1$ ✓ — clean pass, converged.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Final $w=[1,0], b=-2$: boundary $x_1 = 2$ — exactly the human-obvious split, <em>discovered</em> through 4 mistakes and zero calculus. Scoreboard: separable data + mistake-driven updates = finite errors, guaranteed. (Try XOR points through the same procedure and watch it cycle forever — the wall, demonstrated.)</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do we maximize log-likelihood instead of raw likelihood, and what justifies the swap?</span>
+    <span class="quiz-category">The perceptron update fires only on mistakes (w += yx). Why is &quot;learn only from errors&quot; viable instead of wasteful?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Logs make small numbers look bigger for presentations</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Products underflow and differentiate awkwardly; log is strictly monotone so argmax is unchanged, while sums differentiate term-by-term — same peak, friendlier mountain</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Raw likelihood has no maximum in general</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Log-likelihood is a different objective that happens to agree sometimes</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It isn&#39;t viable — all practical algorithms update on every example</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Correct predictions already satisfy the current boundary, so they carry no information about how to move it; mistakes alone indicate the repair direction — updates concentrate exactly where the model is wrong</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Mistakes are rarer and therefore cheaper to store</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The update rule cannot compute anything for correct predictions</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -258,20 +253,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\arg\max L = \arg\max \log L$ always (monotone transform preserves order); $\sum \log$ splits products into additive terms with clean derivatives. Numerical stability (no $10^{-300}$ underflow) plus calculus convenience — zero statistical content changed.</p><pre><code>&lt;/div&gt;
+      <p>An update&#39;s job is boundary repair; satisfied examples need none. Mistake-driven learning spends 100% of computation on informative cases — the same attention principle as cross-entropy&#39;s $(p-y)$ weighting (Module 2), in hard 0/1 form. Silence on success is efficiency, not laziness.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">The Gaussian-variance MLE divides by n (biased) rather than n−1. Does this contradict &quot;maximum likelihood,&quot; and should exams use n−1?</span>
+    <span class="quiz-category">Data separable with margin γ inside radius R converges within (R/γ)² mistakes. What happens as the margin γ shrinks toward zero, and what does this say about &quot;guaranteed convergence&quot;?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Yes — MLE is defined to be unbiased, so the formula is wrong</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>No contradiction: MLE maximizes likelihood, period — unbiasedness is a separate virtue it never promised; in ML estimation questions, report the MLE (÷n) unless explicitly asked for the unbiased correction</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Yes — always divide by n−1 in every formula</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The bias vanishes only for non-Gaussian data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Convergence accelerates because small margins are easier</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Mistake bound explodes (÷γ²) — the guarantee holds but becomes vacuous in practice; at γ = 0 (inseparable) it vanishes entirely into infinite cycling</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The bound is independent of γ</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Small margins cause immediate convergence in one epoch</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -283,20 +278,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Maximum likelihood&quot; and &quot;unbiased&quot; are independent properties that merely sometimes coincide (as with the mean). The variance MLE&#39;s $n$-denominator <em>is</em> the likelihood peak; Bessel&#39;s $n-1$ answers a different question (unbiasedness). Know which question the exam asked.</p><pre><code>&lt;/div&gt;
+      <p>$(R/\gamma)^2$ prices separability: fat margins ⇒ few mistakes, hairline margins ⇒ eons. The theorem never promises <em>fast</em> — only <em>finite, given separability</em>. Practitioners cap epochs precisely because near-inseparable data turns the guarantee into a technicality.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A Laplace prior on regression weights yields L1 regularization; a Gaussian prior yields L2. What does this correspondence buy conceptually?</span>
+    <span class="quiz-category">Which concept can a single perceptron NEVER represent, and what minimal upgrade fixes it?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — priors and penalties are unrelated coincidences</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Regularizers are beliefs: L1&#39;s sharp peak at zero expects sparsity (many exact zeros); L2&#39;s smooth dome expects small-but-nonzero weights — choosing a penalty *is* stating a prior over solutions</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It proves L1 always outperforms L2 on every dataset</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Priors only apply to classification, never regression</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>AND — needs at least three layers</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>XOR (parity-like bends) — no single hyperplane separates it; minimal fixes are a hidden layer (learned bends, next topic) or a kernel lifting it separable (topic 4)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>OR — perceptrons only do negations</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Any concept with more than two training points</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -308,7 +303,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$-\log P(w)$ <em>is</em> the penalty term: Laplace $\propto e^{-|w|}$ gives $|w|$ costs (corners → exact zeros, feature selection); Gaussian $\propto e^{-w^2}$ gives $w^2$ costs (shrinkage, no zeros). Penalty-shopping without prior-thinking is superstition; the correspondence turns it into modeling.</p><pre><code>&lt;/div&gt;
+      <p>Minsky–Papert: one hyperplane, one cut — XOR&#39;s diagonal pattern needs two. The field&#39;s decade-long winter came from this single impossibility; both escapes (learned hidden features vs. fixed kernel liftings) define the next two topics. One limitation, two industries.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -317,16 +312,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_ml_definition_paradigms_and_types.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_05_gradient_descent_training_engine.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Ml Definition Paradigms And Types</div>
+        <div class="ttl">2.5 Gradient Descent Training Engine</div>
       </a>
       
       
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_02_multilayer_networks_backpropagation.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
+        <div class="ttl">3.2 Multilayer Networks Backpropagation</div>
       </a>
       
     </footer>
@@ -413,7 +408,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(13) || 0;
-    const currentId = "m1_02_probability_mle_map_estimation";
+    const currentId = "m3_01_perceptron_learning_rule";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 

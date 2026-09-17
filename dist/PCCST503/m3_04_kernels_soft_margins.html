@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Probability MLE MAP Estimation</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.2 Probability MLE MAP Estimation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Probability MLE MAP Estimation">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.2 Probability MLE MAP Estimation">
+<title>Tarangam — 3.4 Kernels Soft Margins</title>
+<meta name="description" content="Machine Learning (PCCST503) — 3.4 Kernels Soft Margins | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.4 Kernels Soft Margins">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 3.4 Kernels Soft Margins">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Ml Definition Paradigms And Types</span>
           </a>
-          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link active" id="topic-m1_02_probability_mle_map_estimation">
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
             <span class="topic-dot"></span>
             <span>1.2 Probability MLE MAP Estimation</span>
           </a>
@@ -120,8 +120,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Neural Nets &amp; SVMs</span>
           <span class="chev">&#9656;</span>
@@ -139,7 +139,7 @@
             <span class="topic-dot"></span>
             <span>3.3 Maximum Margin SVM</span>
           </a>
-          <a href="./m3_04_kernels_soft_margins.html" class="topic-link " id="topic-m3_04_kernels_soft_margins">
+          <a href="./m3_04_kernels_soft_margins.html" class="topic-link active" id="topic-m3_04_kernels_soft_margins">
             <span class="topic-dot"></span>
             <span>3.4 Kernels Soft Margins</span>
           </a>
@@ -170,9 +170,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Probability MLE MAP Estimation</span>
+        <span style="color:var(--ink); font-weight:600;">3.4 Kernels Soft Margins</span>
       </div>
 
       <div class="topbar-actions">
@@ -188,7 +188,7 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge badge-accent">MODULE 3</span>
     <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
@@ -200,53 +200,49 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Probability for ML: MLE &amp; MAP Estimation</h1>
-<p><strong>Likelihood vs. probability, maximum likelihood (sample mean/variance derivations), priors and MAP, and regularization as a prior in disguise.</strong></p>
+<h1>Kernels &amp; Soft Margins</h1>
+<p><strong>Lifting inseparable data into separable space, the kernel trick that skips the lifting, slack variables with C, and the RBF universe.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Biased Coin Trial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Someone hands you a coin; 100 flips show 63 heads. <strong>Likelihood</strong> asks: <em>for each candidate bias θ, how probable was this exact evidence?</em> — then <strong>MLE</strong> picks the θ maximizing it (here, $\hat{\theta} = 0.63$). <strong>MAP</strong> adds a prior belief (&quot;coins are usually fair-ish&quot;) and maximizes <em>posterior</em> ∝ likelihood × prior — dragging the estimate toward fairness when evidence is thin, and yielding to evidence when it&#39;s overwhelming. MLE trusts only data; MAP negotiates between data and belief.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Crumpled Paper</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Red and blue dots interleaved on a flat sheet (XOR-style) defeat every straight cut — so <em>crumple the paper into 3D</em>: lift each dot by $x_1^2 + x_2^2$ and the classes separate into layers a flat plane slices cleanly. <strong>Kernels</strong> are this crumple made computational: instead of explicitly computing lofty coordinates $\phi(x)$, evaluate only their <em>dot products</em> $K(x,z) = \phi(x)\cdot\phi(z)$ — all SVM math needs — often in closed form cheaper than the coordinates themselves. And <strong>soft margins</strong> admit the world is dirty: pay a fine per violation instead of demanding separable perfection.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Likelihood (Not Probability!)</h3>
-<p>For i.i.d. data $D = {x_i}$ and parameters $\theta$: <strong>likelihood</strong> $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$ — a function <em>of θ</em>, data fixed. Work with <strong>log-likelihood</strong> $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$ (products → sums; maxima coincide since log is monotone).</p>
-<h3>2.2 MLE: Two Canonical Derivations</h3>
+<h3>2.1 The Kernel Trick (Why It Isn&#39;t Cheating)</h3>
+<p>SVM training and prediction use data <em>only</em> inside dot products (dual form: $\sum \alpha_i y_i (x_i \cdot x)$). Replace every dot product with $K(x_i, x_j)$ and the machine learns a <em>linear</em> separator in $\phi$-space while computing in input space. Valid kernels (Mercer: the Gram matrix stays positive semidefinite) and their powers:</p>
 <ul>
-<li><strong>Gaussian mean</strong> ($\sigma^2$ known): $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$; $\frac{d\ell}{d\mu} = 0 \Rightarrow \hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$ — the sample mean, derived, not assumed.</li>
-<li><strong>Gaussian variance</strong> (μ known): $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (x_i - \mu)^2$ — note the $n$ (biased; Bessel&#39;s $n-1$ corrects it — MLE doesn&#39;t care about unbiasedness, only likelihood).</li>
-<li><strong>Bernoulli/coin:</strong> $\hat{\theta} = k/n$ (heads fraction).</li>
+<li><strong>Linear</strong> $K = x\cdot z$ (no lifting — the baseline).</li>
+<li><strong>Polynomial</strong> $K = (x\cdot z + c)^d$ (all monomials to degree $d$ — explicit $\phi$ would explode combinatorially; the kernel costs $O(d)$-ish arithmetic).</li>
+<li><strong>RBF/Gaussian</strong> $K = \exp(-\gamma|x-z|^2)$ — <em>infinite</em>-dimensional $\phi$ (Taylor expansion never ends); $\gamma$ sets the influence radius (large $\gamma$ = spiky, local, overfit-prone; small $\gamma$ = smooth, blunt).</li>
 </ul>
-<h3>2.3 MAP: Prior × Likelihood, Then Maximize</h3>
-<p>Bayes: $P(\theta \mid D) \propto P(D \mid \theta),P(\theta)$. <strong>MAP</strong> $\hat{\theta} = \arg\max_\theta [\ell(\theta) + \log P(\theta)]$ — the log-prior is a <em>penalty pulling toward belief</em>. Gaussian prior $\mu \sim \mathcal{N}(\mu_0, \tau^2)$ on a Gaussian mean gives closed-form shrinkage:</p>
-<p>$$\hat{\mu}_{MAP} = \frac{\frac{n\bar{x}}{\sigma^2} + \frac{\mu_0}{\tau^2}}{\frac{n}{\sigma^2} + \frac{1}{\tau^2}}$$</p>
-<p>— a precision-weighted average of data-mean and prior-mean. As $n \to \infty$, data dominates (MAP → MLE); at $n \approx 0$, prior rules. <strong>Regularization preview:</strong> L2-penalized regression <em>is</em> MAP with a Gaussian prior; L1 <em>is</em> MAP with a Laplace prior — Module 2+ penalties are beliefs in mathematical dress.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Estimation Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MLE $= \arg\max \prod P(x_i|\theta)$ (use <strong>log</strong>, monotone) · Gaussian mean MLE $= \bar{x}$ · variance MLE $= \frac{1}{n}\sum(x_i-\mu)^2$ (<strong>biased</strong>) · MAP $= \arg\max[\ell + \log\text{prior}]$ · Gaussian–Gaussian MAP $=$ <strong>precision-weighted average</strong> · L2 $\equiv$ Gaussian prior, L1 $\equiv$ Laplace prior.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Likelihood Is P(data | θ), Never P(θ | data)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$L(\theta)$ plugs <em>varying θ</em> into a function of <em>fixed data</em> — it is not a distribution over θ (doesn&#39;t integrate to 1, needs no prior). Reading &quot;the probability that θ is true&quot; mistakes likelihood for posterior — the confusion Bayes&#39; theorem exists to resolve, via the prior you&#39;re forgetting.</p>
+<h3>2.2 Soft Margins: Pricing Violations</h3>
+<p>Real data overlaps and mislabels. Add <strong>slack</strong> $\xi_i \ge 0$ per point and penalize: $\min \tfrac12|w|^2 + C\sum_i \xi_i$ s.t. $y_i(w^Tx_i+b) \ge 1-\xi_i$. <strong>$C$ is the strictness dial</strong>: huge $C$ ≈ hard margin (violations nearly forbidden — overfits noise); tiny $C$ ≈ violations tolerated (wide, forgiving corridor — underfits signals). Almost every real SVM runs soft; hard-margin is the textbook warm-up.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Kernel Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Trick: <strong>learn linear in φ-space, compute only K(x,z) dots</strong> · RBF = <strong>infinite dimensions</strong>, γ = <strong>influence radius</strong> · soft: <strong>min ½‖w‖² + CΣξ</strong> · C huge = <strong>hard/strict</strong>, C tiny = <strong>forgiving</strong> · Mercer (PSD Gram) = <strong>valid kernel certificate</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Kernels Don&#39;t Create Information (and C Is Not Regularization-Strength)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A kernel <em>re-represents</em> separability already latent in features — garbage features kernelized stay garbage (RBF can still <em>memorize</em> anything, which is overfitting, not learning). And $C$&#39;s direction trips everyone: <strong>bigger $C$ = LESS regularization</strong> (violations punished harder, boundary bends to data); smaller $C$ = more. Read $C$ as strictness, never strength.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Sensor readings average $\bar{x} = 5.0$ over $n = 4$ samples, known noise $\sigma^2 = 4$. Prior belief: true value near $\mu_0 = 0$ with $\tau^2 = 1$. Compute the MLE and the MAP estimate. (Arithmetic verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Estimating Both Ways</div><div class="step-content"><p><strong>MLE:</strong> $\hat{\mu} = \bar{x} = 5.0$ — data only, no negotiation.
-<strong>MAP:</strong> precisions $n/\sigma^2 = 1$, $1/\tau^2 = 1$ — dead tie, so the answer splits the difference: $\hat{\mu}_{MAP} = \frac{1 \times 5.0 + 1 \times 0}{1 + 1} = \mathbf{2.5}$. The strong prior ($\tau^2 = 1$ vs data precision $1$) drags the estimate halfway home.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>MLE $5.0$ vs MAP $2.5$ on identical data — the gap <em>is</em> the prior speaking. With $n = 400$ instead, data precision $100$ would swamp the prior ($100/101 \approx 0.99$ weight) and MAP $\approx 4.95 \approx$ MLE: beliefs matter most exactly when data is scarcest — the exam-ready moral.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>1D data: negatives at $x = \pm 2$, positives at $x = \pm 0.5$. Prove linear inseparability in 1D, then separate with $\phi(x) = x^2$ and name the threshold. (Arithmetic by inspection, verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Lifting and Splitting</div><div class="step-content"><p>1D check: any single threshold $t$ puts same-side points together — but signs alternate $(-, +, +, -)$, so every threshold mislabels at least one point: <strong>inseparable</strong>. Lift: $\phi(-2) = 4$, $\phi(-0.5) = 0.25$, $\phi(0.5) = 0.25$, $\phi(2) = 4$ — positives cluster at $0.25$, negatives at $4$: threshold $1$ separates perfectly (positives below, negatives above).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One squaring turned impossible into trivial — and the kernel lesson: nobody needed the <em>coordinates</em> $4$ and $0.25$ as geometry, only their <em>separability</em>. RBF does this to <em>every</em> finite dataset simultaneously (infinite dimensions always suffice), which is precisely why its $\gamma$ dial — not its existence — is the entire modeling decision.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do we maximize log-likelihood instead of raw likelihood, and what justifies the swap?</span>
+    <span class="quiz-category">The polynomial kernel (x·z + 1)³ on 100-dimensional inputs is cheap to evaluate, yet its explicit φ-space has ~180,000 dimensions. Where did the computation go, and why is this legitimate?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Logs make small numbers look bigger for presentations</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Products underflow and differentiate awkwardly; log is strictly monotone so argmax is unchanged, while sums differentiate term-by-term — same peak, friendlier mountain</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Raw likelihood has no maximum in general</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Log-likelihood is a different objective that happens to agree sometimes</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The kernel approximates and often errs; exactness is sacrificed for speed</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Algebra: expanding the cube shows it *equals* the 180k-dimensional dot product exactly — the SVM only ever needs dot products (dual form), so evaluating the closed form computes the lofty geometry without visiting it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Kernels only work on low-dimensional data; this example is invalid</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The 180,000 dimensions are mostly zeros and skipped</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -258,20 +254,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\arg\max L = \arg\max \log L$ always (monotone transform preserves order); $\sum \log$ splits products into additive terms with clean derivatives. Numerical stability (no $10^{-300}$ underflow) plus calculus convenience — zero statistical content changed.</p><pre><code>&lt;/div&gt;
+      <p>$(x\cdot z+1)^3$ expands <em>identically</em> into all degree-≤3 monomial products — no approximation anywhere. Since training/prediction consume $\phi$-vectors solely through inner products, the closed form delivers exact high-dimensional learning at low-dimensional prices. The trick is algebra, not heuristics.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">The Gaussian-variance MLE divides by n (biased) rather than n−1. Does this contradict &quot;maximum likelihood,&quot; and should exams use n−1?</span>
+    <span class="quiz-category">C = 1000 vs C = 0.001 on noisy overlapping data. Predict both outcomes and name the error each risks.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Yes — MLE is defined to be unbiased, so the formula is wrong</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>No contradiction: MLE maximizes likelihood, period — unbiasedness is a separate virtue it never promised; in ML estimation questions, report the MLE (÷n) unless explicitly asked for the unbiased correction</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Yes — always divide by n−1 in every formula</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The bias vanishes only for non-Gaussian data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Identical results — C is decorative</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>C=1000: near-hard margin bending to every noisy point (overfit — memorizes mislabels); C=0.001: violations nearly free, corridor ignores real structure (underfit) — strictness dial with failure modes on both ends</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>C=1000 underfits while C=0.001 overfits</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both always achieve zero training error regardless</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -283,20 +279,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Maximum likelihood&quot; and &quot;unbiased&quot; are independent properties that merely sometimes coincide (as with the mean). The variance MLE&#39;s $n$-denominator <em>is</em> the likelihood peak; Bessel&#39;s $n-1$ answers a different question (unbiasedness). Know which question the exam asked.</p><pre><code>&lt;/div&gt;
+      <p>$C$ prices violations: huge $C$ makes each one expensive → boundary contorts around noise (variance disease); tiny $C$ makes them free → boundary shrugs at signal (bias disease). Validation picks the middle — same U-curve as Module 1, now with a single explicit dial.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A Laplace prior on regression weights yields L1 regularization; a Gaussian prior yields L2. What does this correspondence buy conceptually?</span>
+    <span class="quiz-category">RBF kernels can separate any finite dataset (infinite dimensions always suffice). Why isn&#39;t &quot;RBF with tiny γ-width everywhere&quot; the universal answer?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — priors and penalties are unrelated coincidences</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Regularizers are beliefs: L1&#39;s sharp peak at zero expects sparsity (many exact zeros); L2&#39;s smooth dome expects small-but-nonzero weights — choosing a penalty *is* stating a prior over solutions</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It proves L1 always outperforms L2 on every dataset</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Priors only apply to classification, never regression</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>RBF kernels are mathematically invalid for finite datasets</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Universal separability = universal *memorization* capacity: spiky RBF shatters training data including its noise (overfit by construction) — generalization needs the *right* width, validated, not infinite flexibility deployed blindly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Tiny widths make computation impossible rather than merely overfit</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>RBF cannot represent linear boundaries as a special case</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -308,7 +304,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$-\log P(w)$ <em>is</em> the penalty term: Laplace $\propto e^{-|w|}$ gives $|w|$ costs (corners → exact zeros, feature selection); Gaussian $\propto e^{-w^2}$ gives $w^2$ costs (shrinkage, no zeros). Penalty-shopping without prior-thinking is superstition; the correspondence turns it into modeling.</p><pre><code>&lt;/div&gt;
+      <p>Infinite dimensions guarantee <em>some</em> separator exists — including ones encoding pure noise. Capacity without control is memorization machinery; $\gamma$ (plus $C$) must be validation-tuned so flexibility serves signal. Separability is necessary, never sufficient, for learning.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -317,17 +313,14 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_ml_definition_paradigms_and_types.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_03_maximum_margin_svm.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Ml Definition Paradigms And Types</div>
+        <div class="ttl">3.3 Maximum Margin SVM</div>
       </a>
       
       
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -413,7 +406,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(13) || 0;
-    const currentId = "m1_02_probability_mle_map_estimation";
+    const currentId = "m3_04_kernels_soft_margins";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 

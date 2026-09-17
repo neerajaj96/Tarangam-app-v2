@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.2 Probability MLE MAP Estimation</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.2 Probability MLE MAP Estimation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.2 Probability MLE MAP Estimation">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.2 Probability MLE MAP Estimation">
+<title>Tarangam — 3.3 Maximum Margin SVM</title>
+<meta name="description" content="Machine Learning (PCCST503) — 3.3 Maximum Margin SVM | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.3 Maximum Margin SVM">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 3.3 Maximum Margin SVM">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -77,7 +77,7 @@
             <span class="topic-dot"></span>
             <span>1.1 Ml Definition Paradigms And Types</span>
           </a>
-          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link active" id="topic-m1_02_probability_mle_map_estimation">
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
             <span class="topic-dot"></span>
             <span>1.2 Probability MLE MAP Estimation</span>
           </a>
@@ -120,8 +120,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Neural Nets &amp; SVMs</span>
           <span class="chev">&#9656;</span>
@@ -135,7 +135,7 @@
             <span class="topic-dot"></span>
             <span>3.2 Multilayer Networks Backpropagation</span>
           </a>
-          <a href="./m3_03_maximum_margin_svm.html" class="topic-link " id="topic-m3_03_maximum_margin_svm">
+          <a href="./m3_03_maximum_margin_svm.html" class="topic-link active" id="topic-m3_03_maximum_margin_svm">
             <span class="topic-dot"></span>
             <span>3.3 Maximum Margin SVM</span>
           </a>
@@ -170,9 +170,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.2 Probability MLE MAP Estimation</span>
+        <span style="color:var(--ink); font-weight:600;">3.3 Maximum Margin SVM</span>
       </div>
 
       <div class="topbar-actions">
@@ -188,7 +188,7 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge badge-accent">MODULE 3</span>
     <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
@@ -200,53 +200,66 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Probability for ML: MLE &amp; MAP Estimation</h1>
-<p><strong>Likelihood vs. probability, maximum likelihood (sample mean/variance derivations), priors and MAP, and regularization as a prior in disguise.</strong></p>
+<h1>Maximum-Margin Classifiers: SVMs</h1>
+<p><strong>Geometric vs. functional margins, support vectors, the minimum-norm objective, hinge loss, and why only boundary points matter.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Biased Coin Trial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Someone hands you a coin; 100 flips show 63 heads. <strong>Likelihood</strong> asks: <em>for each candidate bias θ, how probable was this exact evidence?</em> — then <strong>MLE</strong> picks the θ maximizing it (here, $\hat{\theta} = 0.63$). <strong>MAP</strong> adds a prior belief (&quot;coins are usually fair-ish&quot;) and maximizes <em>posterior</em> ∝ likelihood × prior — dragging the estimate toward fairness when evidence is thin, and yielding to evidence when it&#39;s overwhelming. MLE trusts only data; MAP negotiates between data and belief.</p>
-</div></details><hr>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Widest Corridor</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Two villages (classes) need a road (boundary) between them. Any line separating them <em>works</em> — but the wise surveyor builds the road maximizing clearance on <em>both</em> sides (widest corridor), so future houses (test points) near the edge stay correctly sided despite survey wobble. <strong>SVMs</strong> build exactly this widest corridor: among all separators, the one farthest from the nearest points of each class. Only the corridor&#39;s <em>walls</em> — the nearest points, the <strong>support vectors</strong> — determine the road; every other village is irrelevant to the survey.</p>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Maximum Margin Geometry</span>
+    <div class="video-speed-controls">
+      <button class="speed-btn" data-speed="0.75">0.75x</button>
+      <button class="speed-btn active" data-speed="1.0">1.0x</button>
+      <button class="speed-btn" data-speed="1.25">1.25x</button>
+      <button class="speed-btn" data-speed="1.5">1.5x</button>
+    </div>
+  </div>
+  <div class="video-frame-wrap">
+    <video controls preload="metadata">
+      <source src="../assets/videos/m2_svm_margin.mp4" type="video/mp4">
+      Your browser does not support embedded video.
+    </video>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Maximum Margin Geometry</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch candidate boundaries rotate while the margin corridor breathes — widest at the optimum, with support vectors glowing on both walls and all interior points fading to irrelevance.</div>
+  </div>
+</div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Likelihood (Not Probability!)</h3>
-<p>For i.i.d. data $D = {x_i}$ and parameters $\theta$: <strong>likelihood</strong> $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$ — a function <em>of θ</em>, data fixed. Work with <strong>log-likelihood</strong> $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$ (products → sums; maxima coincide since log is monotone).</p>
-<h3>2.2 MLE: Two Canonical Derivations</h3>
-<ul>
-<li><strong>Gaussian mean</strong> ($\sigma^2$ known): $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$; $\frac{d\ell}{d\mu} = 0 \Rightarrow \hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$ — the sample mean, derived, not assumed.</li>
-<li><strong>Gaussian variance</strong> (μ known): $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (x_i - \mu)^2$ — note the $n$ (biased; Bessel&#39;s $n-1$ corrects it — MLE doesn&#39;t care about unbiasedness, only likelihood).</li>
-<li><strong>Bernoulli/coin:</strong> $\hat{\theta} = k/n$ (heads fraction).</li>
-</ul>
-<h3>2.3 MAP: Prior × Likelihood, Then Maximize</h3>
-<p>Bayes: $P(\theta \mid D) \propto P(D \mid \theta),P(\theta)$. <strong>MAP</strong> $\hat{\theta} = \arg\max_\theta [\ell(\theta) + \log P(\theta)]$ — the log-prior is a <em>penalty pulling toward belief</em>. Gaussian prior $\mu \sim \mathcal{N}(\mu_0, \tau^2)$ on a Gaussian mean gives closed-form shrinkage:</p>
-<p>$$\hat{\mu}_{MAP} = \frac{\frac{n\bar{x}}{\sigma^2} + \frac{\mu_0}{\tau^2}}{\frac{n}{\sigma^2} + \frac{1}{\tau^2}}$$</p>
-<p>— a precision-weighted average of data-mean and prior-mean. As $n \to \infty$, data dominates (MAP → MLE); at $n \approx 0$, prior rules. <strong>Regularization preview:</strong> L2-penalized regression <em>is</em> MAP with a Gaussian prior; L1 <em>is</em> MAP with a Laplace prior — Module 2+ penalties are beliefs in mathematical dress.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Estimation Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MLE $= \arg\max \prod P(x_i|\theta)$ (use <strong>log</strong>, monotone) · Gaussian mean MLE $= \bar{x}$ · variance MLE $= \frac{1}{n}\sum(x_i-\mu)^2$ (<strong>biased</strong>) · MAP $= \arg\max[\ell + \log\text{prior}]$ · Gaussian–Gaussian MAP $=$ <strong>precision-weighted average</strong> · L2 $\equiv$ Gaussian prior, L1 $\equiv$ Laplace prior.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Likelihood Is P(data | θ), Never P(θ | data)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$L(\theta)$ plugs <em>varying θ</em> into a function of <em>fixed data</em> — it is not a distribution over θ (doesn&#39;t integrate to 1, needs no prior). Reading &quot;the probability that θ is true&quot; mistakes likelihood for posterior — the confusion Bayes&#39; theorem exists to resolve, via the prior you&#39;re forgetting.</p>
+<h3>2.1 Functional vs. Geometric Margin</h3>
+<p>For separator $w^Tx + b = 0$ and example $(x_i, y_i)$, $y_i \in {+1,-1}$: <strong>functional margin</strong> $\hat{\gamma}_i = y_i(w^Tx_i + b)$ — scale-dependent (double $(w,b)$, double all $\hat{\gamma}$ without moving the line!). <strong>Geometric margin</strong> $\gamma_i = \hat{\gamma}_i / |w|$ — true Euclidean distance, scale-free. Maximizing the <em>geometric</em> margin $\iff$ fixing functional margin $= 1$ and <strong>minimizing $|w|$</strong>:</p>
+<p>$$\min_{w,b}\ \tfrac12|w|^2 \quad \text{s.t.}\quad y_i(w^Tx_i + b) \ge 1\ \ \forall i$$</p>
+<p>— a convex quadratic program with a unique global optimum (contrast: perceptron stops at <em>any</em> separator; SVM demands the <em>best-placed</em> one).</p>
+<h3>2.2 Support Vectors and Hinge Loss</h3>
+<p>At the optimum, only points <em>on</em> the corridor walls ($y_i(w^Tx_i+b) = 1$) constrain the solution — the <strong>support vectors</strong> (typically few). Unconstrained twin: minimize $\sum_i \max(0,, 1 - y_i(w^Tx_i+b)) + \lambda|w|^2$ — <strong>hinge loss</strong> (zero when confidently right with margin ≥ 1, linear pain otherwise) plus the same minimum-norm pressure.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: SVM Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Geometric margin $= \hat{\gamma}/|w|$ (functional is <strong>scale-fakeable</strong>) · objective <strong>min ½‖w‖² s.t. margins ≥ 1</strong> (convex, unique) · corridor width $= 2/|w|$ · only <strong>support vectors</strong> matter · hinge $= \max(0, 1-y\cdot\text{score}) + \lambda|w|^2$.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Scaling (w,b) Changes Nothing Geometric (and Fools Functional Readers)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$(2w, 2b)$ doubles every functional margin while the line — and every prediction — stands still. &quot;Bigger functional margin = better separator&quot; is therefore meaningless across scalings; compare separators by $|w|$ (smaller = wider corridor) or geometric margins only. Fix the scale (functional = 1) before comparing anything.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Sensor readings average $\bar{x} = 5.0$ over $n = 4$ samples, known noise $\sigma^2 = 4$. Prior belief: true value near $\mu_0 = 0$ with $\tau^2 = 1$. Compute the MLE and the MAP estimate. (Arithmetic verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Estimating Both Ways</div><div class="step-content"><p><strong>MLE:</strong> $\hat{\mu} = \bar{x} = 5.0$ — data only, no negotiation.
-<strong>MAP:</strong> precisions $n/\sigma^2 = 1$, $1/\tau^2 = 1$ — dead tie, so the answer splits the difference: $\hat{\mu}_{MAP} = \frac{1 \times 5.0 + 1 \times 0}{1 + 1} = \mathbf{2.5}$. The strong prior ($\tau^2 = 1$ vs data precision $1$) drags the estimate halfway home.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>MLE $5.0$ vs MAP $2.5$ on identical data — the gap <em>is</em> the prior speaking. With $n = 400$ instead, data precision $100$ would swamp the prior ($100/101 \approx 0.99$ weight) and MAP $\approx 4.95 \approx$ MLE: beliefs matter most exactly when data is scarcest — the exam-ready moral.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Separator $w = [1,1]$, $b = -3$ (line $x_1 + x_2 = 3$); points $A(2,2){+1}$, $B(0,0){-1}$. Compute functional margins, geometric margins, hinge losses, and corridor width. (Arithmetic verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Margins Both Ways</div><div class="step-content"><p>$|w| = \sqrt{2} \approx 1.414$. $A$: score $4-3 = 1$; functional $\hat{\gamma}_A = +1 \times 1 = 1$; geometric $1/\sqrt{2} \approx 0.707$. $B$: score $-3$; functional $\hat{\gamma}_B = -1 \times (-3) = 3$; geometric $3/\sqrt{2} \approx 2.121$. Hinge: $A$: $\max(0, 1-1) = 0$; $B$: $\max(0, 1-3) = 0$ — both correctly placed with margin to spare. Corridor width $= 2/|w| = 2/\sqrt{2} = \sqrt{2} \approx 1.414$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$A$ sits exactly <em>on</em> the corridor wall (functional $= 1$ — a support vector if this $w$ were optimal); $B$ lounges deep in safe territory (functional $3$). Halve all coordinates&#39; scale... precisely, rescale to $(2w, 2b)$: functionals double ($2$, $6$) while geometry, predictions, and hinge-zero statuses freeze — the scale illusion made numeric.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do we maximize log-likelihood instead of raw likelihood, and what justifies the swap?</span>
+    <span class="quiz-category">Two candidate separators classify training data identically. Separator P has ‖w‖ = 0.5; separator Q has ‖w‖ = 4 (same functional-margin convention). Which generalizes better and why?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Logs make small numbers look bigger for presentations</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Products underflow and differentiate awkwardly; log is strictly monotone so argmax is unchanged, while sums differentiate term-by-term — same peak, friendlier mountain</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Raw likelihood has no maximum in general</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Log-likelihood is a different objective that happens to agree sometimes</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Q — bigger weights mean more confident predictions</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>P — corridor width 2/‖w‖ gives 4.0 vs 0.5; the wider corridor tolerates more test-time wobble, which is exactly the margin theory of generalization (and why SVMs minimize ‖w‖)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — weight norms carry no information about generalization</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Q — smaller corridors fit training data more snugly</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -258,20 +271,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\arg\max L = \arg\max \log L$ always (monotone transform preserves order); $\sum \log$ splits products into additive terms with clean derivatives. Numerical stability (no $10^{-300}$ underflow) plus calculus convenience — zero statistical content changed.</p><pre><code>&lt;/div&gt;
+      <p>Same training accuracy, different robustness: P&#39;s corridor is $8\times$ wider, so unseen points near the boundary stay correctly sided under perturbations that flip Q&#39;s. Minimum-norm <em>is</em> maximum-margin <em>is</em> the generalization bet — SVM&#39;s entire philosophical core in one comparison.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">The Gaussian-variance MLE divides by n (biased) rather than n−1. Does this contradict &quot;maximum likelihood,&quot; and should exams use n−1?</span>
+    <span class="quiz-category">After training an SVM on a million points, only 200 are support vectors. A new point arrives far from the boundary on the correct side. Must the model be retrained, and which points could be deleted without changing it?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Yes — MLE is defined to be unbiased, so the formula is wrong</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>No contradiction: MLE maximizes likelihood, period — unbiasedness is a separate virtue it never promised; in ML estimation questions, report the MLE (÷n) unless explicitly asked for the unbiased correction</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Yes — always divide by n−1 in every formula</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The bias vanishes only for non-Gaussian data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Retrain from scratch; all million points are load-bearing</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>No retraining needed for far-correct points (hinge zero, KKT slack); all 999,800 non-support vectors could be deleted with the identical resulting boundary — the model *is* its support vectors plus (w, b)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Delete the support vectors to simplify the model</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Support vectors are irrelevant once training ends</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -283,20 +296,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Maximum likelihood&quot; and &quot;unbiased&quot; are independent properties that merely sometimes coincide (as with the mean). The variance MLE&#39;s $n$-denominator <em>is</em> the likelihood peak; Bessel&#39;s $n-1$ answers a different question (unbiasedness). Know which question the exam asked.</p><pre><code>&lt;/div&gt;
+      <p>KKT conditions: non-support vectors carry zero Lagrange multipliers — they shaped nothing. The boundary is fully determined by support vectors; compression to 200 points is exact, not approximate. (This sparsity is also what makes kernels affordable next topic.)</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A Laplace prior on regression weights yields L1 regularization; a Gaussian prior yields L2. What does this correspondence buy conceptually?</span>
+    <span class="quiz-category">Hinge loss max(0, 1 − y·score) stays zero for confidently-correct points but grows linearly past the margin. Contrast with 0/1 loss and cross-entropy on this behavior.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — priors and penalties are unrelated coincidences</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Regularizers are beliefs: L1&#39;s sharp peak at zero expects sparsity (many exact zeros); L2&#39;s smooth dome expects small-but-nonzero weights — choosing a penalty *is* stating a prior over solutions</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It proves L1 always outperforms L2 on every dataset</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Priors only apply to classification, never regression</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>All three losses behave identically on every point</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>0/1 loss is flat-everywhere (no gradients, NP-hard to optimize); cross-entropy never fully zeroes (keeps polishing confident points); hinge zeroes exactly at margin satisfaction — sparse, optimization-friendly, and margin-aware, each loss&#39;s personality in one line</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Hinge loss is non-convex unlike the other two</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cross-entropy also zeroes exactly at the margin</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -308,7 +321,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$-\log P(w)$ <em>is</em> the penalty term: Laplace $\propto e^{-|w|}$ gives $|w|$ costs (corners → exact zeros, feature selection); Gaussian $\propto e^{-w^2}$ gives $w^2$ costs (shrinkage, no zeros). Penalty-shopping without prior-thinking is superstition; the correspondence turns it into modeling.</p><pre><code>&lt;/div&gt;
+      <p>0/1: right/wrong step (unoptimizable). Cross-entropy: asymptotic approach, eternal small gradients (keeps tuning). Hinge: exact zero beyond margin $1$ (frees capacity for violators), linear pain inside. Loss <em>shape</em> dictates training dynamics — choose by which points deserve attention.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -317,16 +330,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_01_ml_definition_paradigms_and_types.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_02_multilayer_networks_backpropagation.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.1 Ml Definition Paradigms And Types</div>
+        <div class="ttl">3.2 Multilayer Networks Backpropagation</div>
       </a>
       
       
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_04_kernels_soft_margins.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
+        <div class="ttl">3.4 Kernels Soft Margins</div>
       </a>
       
     </footer>
@@ -413,7 +426,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(13) || 0;
-    const currentId = "m1_02_probability_mle_map_estimation";
+    const currentId = "m3_03_maximum_margin_svm";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 
