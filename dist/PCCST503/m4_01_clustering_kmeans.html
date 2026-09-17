@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 2.4 Decision Trees Entropy Information Gain</title>
-<meta name="description" content="Machine Learning (PCCST503) — 2.4 Decision Trees Entropy Information Gain | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 2.4 Decision Trees Entropy Information Gain">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 2.4 Decision Trees Entropy Information Gain">
+<title>Tarangam — 4.1 Clustering Kmeans</title>
+<meta name="description" content="Machine Learning (PCCST503) — 4.1 Clustering Kmeans | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.1 Clustering Kmeans">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 4.1 Clustering Kmeans">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -91,8 +91,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="2">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Classification &amp; Trees</span>
           <span class="chev">&#9656;</span>
@@ -110,7 +110,7 @@
             <span class="topic-dot"></span>
             <span>2.3 Naive Bayes Generative Models</span>
           </a>
-          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link active" id="topic-m2_04_decision_trees_entropy_information_gain">
+          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link " id="topic-m2_04_decision_trees_entropy_information_gain">
             <span class="topic-dot"></span>
             <span>2.4 Decision Trees Entropy Information Gain</span>
           </a>
@@ -145,14 +145,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>PCA &amp; Ensembles</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m4_01_clustering_kmeans.html" class="topic-link " id="topic-m4_01_clustering_kmeans">
+          <a href="./m4_01_clustering_kmeans.html" class="topic-link active" id="topic-m4_01_clustering_kmeans">
             <span class="topic-dot"></span>
             <span>4.1 Clustering Kmeans</span>
           </a>
@@ -199,9 +199,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 2</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">2.4 Decision Trees Entropy Information Gain</span>
+        <span style="color:var(--ink); font-weight:600;">4.1 Clustering Kmeans</span>
       </div>
 
       <div class="topbar-actions">
@@ -217,8 +217,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -229,50 +229,68 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Decision Trees: Entropy &amp; Information Gain</h1>
-<p><strong>Recursive splitting, Shannon entropy, information gain on the PlayTennis data, overfitting control via pruning, and why trees beg to be ensembled.</strong></p>
+<h1>Clustering I: k-Means</h1>
+<p><strong>The Lloyd loop, assignment–update alternation, k-means++ seeding, the elbow method, and a hand-traced convergence.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Twenty Questions, Optimized</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A decision tree plays Twenty Questions: each node asks the single question slicing remaining possibilities most unevenly (&quot;is it bigger than a breadbox?&quot;). <strong>Entropy</strong> measures the current mess (all-yes/all-no = 0 mess; 50/50 = maximum mess); <strong>information gain</strong> scores each candidate question by <em>mess removed</em>. Ask the biggest-gain question, recurse per answer, stop when leaves are pure (or patience runs out). Overfitting = asking until every training example gets its own private leaf — memorizing the crowd instead of learning the pattern.</p>
-</div></details><hr>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Campfire Gathering</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Strangers in a dark field each walk to the nearest campfire, then every campfire <em>relocates to the center of its crowd</em> — which changes nearest-fire assignments, so people re-walk, fires re-center, until nobody moves. <strong>k-Means</strong> is this evening in mathematics: alternate <strong>assign</strong> (every point joins the nearest centroid) and <strong>update</strong> (each centroid becomes its cluster&#39;s mean) until assignments freeze. No labels, no teachers — just the geometry of togetherness, iterated to a standstill.</p>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Lloyd Iterations Live</span>
+    <div class="video-speed-controls">
+      <button class="speed-btn" data-speed="0.75">0.75x</button>
+      <button class="speed-btn active" data-speed="1.0">1.0x</button>
+      <button class="speed-btn" data-speed="1.25">1.25x</button>
+      <button class="speed-btn" data-speed="1.5">1.5x</button>
+    </div>
+  </div>
+  <div class="video-frame-wrap">
+    <video controls preload="metadata">
+      <source src="../assets/videos/m4_kmeans.mp4" type="video/mp4">
+      Your browser does not support embedded video.
+    </video>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Lloyd Iterations Live</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch assignments flicker as centroids march to cluster centers — boundary points switching sides mid-run, then the freeze of convergence when no point wants to move.</div>
+  </div>
+</div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Entropy and Information Gain</h3>
-<p>For a set with class proportions $p_i$: $H(S) = -\sum_i p_i \log_2 p_i$ (bits). Gain of attribute $A$ with values $v$: $\text{Gain}(S,A) = H(S) - \sum_v \frac{|S_v|}{|S|} H(S_v)$ — parent mess minus weighted child mess. Greedy top-down induction (ID3/C4.5/CART family): at each node, split on max gain (CART uses Gini $1-\sum p_i^2$ instead — same instinct, cheaper arithmetic).</p>
-<h3>2.2 The PlayTennis Computation (Verified Values)</h3>
-<p>14 days, 9 Play-Yes / 5 No: $H(S) = -(9/14\log_2 9/14 + 5/14\log_2 5/14) \approx \mathbf{0.940}$ bits. Gains: <strong>Outlook 0.247</strong>, Humidity 0.151, Wind 0.048, Temperature 0.029 — so Outlook splits the root (Sunny→? Overcast→Yes-leaf immediately, Rain→?); recurse within Sunny/Rain subsets. (All values machine-verified.)</p>
-<h3>2.3 Taming Overfit: Pruning and Honest Cousins</h3>
+<h3>2.1 Objective and Lloyd&#39;s Algorithm</h3>
+<p>Minimize within-cluster sum of squares: $J = \sum_{k=1}^{K}\sum_{x \in C_k} |x - \mu_k|^2$. <strong>Lloyd&#39;s loop:</strong> (1) assign each $x$ to nearest $\mu_k$; (2) reset $\mu_k$ = mean of $C_k$; repeat until assignments stop changing. Each step <em>monotonically decreases</em> $J$ (assignment step: every point picks its cheapest center; update step: the mean <em>is</em> the squared-error minimizer) — convergence guaranteed, to a <em>local</em> optimum only.</p>
+<h3>2.2 Initialization and Choosing k</h3>
 <ul>
-<li><strong>Pre-pruning:</strong> stop early (max depth, min samples/leaf, gain threshold) — fast, risks stopping before useful structure.</li>
-<li><strong>Post-pruning:</strong> grow fully, then snip subtrees that don&#39;t pay on <em>validation</em> data (reduced-error pruning, cost-complexity/CART $\alpha$-pruning).</li>
-<li>Gain&#39;s bias footnote: many-valued attributes (dates, IDs) score inflated gains by shattering data — <strong>gain ratio</strong> (C4.5) normalizes by split entropy. A &quot;Date&quot; root with one example per leaf is memorization wearing mathematics.</li>
+<li>Random init can strand centroids (empty clusters, terrible local minima). <strong>k-means++</strong>: seed first centroid uniformly, each subsequent one with probability $\propto$ squared distance to the nearest seeded centroid — spread-out starts with an $O(\log k)$ approximation guarantee.</li>
+<li><strong>Elbow method:</strong> plot $J$ vs $K$; pick the kink where returns diminish. Silhouette scores formalize the eyeballing. Neither discovers &quot;true&quot; $k$ — clustering has no ground truth, only useful resolutions.</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Tree Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$H = -\sum p\log_2 p$ (0 = pure, 1 = 50/50 binary max) · $\text{Gain} = H(parent) - \sum\frac{|S_v|}{|S|}H(S_v)$ · root = <strong>max gain</strong> (Tennis: Outlook 0.247) · prune <strong>pre</strong> (early stop) or <strong>post</strong> (validation snip) · many-valued attributes need <strong>gain ratio</strong>, not raw gain.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Pure Leaves Memorize Noise (and IDs Memorize Everything)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A tree grown to 100% training purity on noisy data encodes the noise as law — test accuracy collapses while train sits at 1.0 (the k-NN $k=1$ disease, arboreal form). And any near-unique attribute (ID, date) &quot;wins&quot; gain by isolation, not insight. Prune by validation; distrust splits that merely enumerate.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: k-Means Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Objective <strong>WCSS</strong> (within-cluster squares) · loop <strong>assign → update-means</strong> (each step <strong>decreases J</strong>) · converges to <strong>local</strong> optimum · seed with <strong>k-means++</strong> ($d^2$ weighting) · pick $k$ by <strong>elbow/silhouette</strong> · likes <strong>spherical, equal-size</strong> clusters; fails on moons/rings/densities (DBSCAN territory).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: k-Means Sees Spheres Everywhere (Even Where None Exist)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Voronoi boundaries + mean-centers bake in a spherical-cluster worldview: elongated, ring-shaped, or mixed-density clusters get shredded into round pieces regardless of truth. Wrong-shape data needs density methods (DBSCAN) or spectral cuts — running k-Means harder (more restarts) never fixes a shape mismatch.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Using the PlayTennis counts, verify $H(S) = 0.940$ and Gain(Wind) $= 0.048$, and decide the root split among Outlook (0.247), Humidity (0.151), Wind (0.048), Temperature (0.029).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Mess Removed</div><div class="step-content"><p>$H(S) = -(0.6429 \times \log_2 0.6429 + 0.3571 \times \log_2 0.3571) = -(-0.4098 - 0.5305) = 0.940$ bits. Wind splits 8 weak ($6{+},2{-}$) / 6 strong ($3{+},3{-}$): $H_{weak} = 0.811$, $H_{strong} = 1.0$; weighted $(8/14)(0.811) + (6/14)(1.0) = 0.892$; gain $= 0.940 - 0.892 = \mathbf{0.048}$. Root = max gain = <strong>Outlook (0.247)</strong> — Sunny and Rain branches recurse; Overcast ($4{+},0$) is an instant Yes-leaf.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One number per attribute ranks the questions; the ranking <em>is</em> the tree&#39;s skeleton. Outlook first because nothing else removes nearly as much mess (0.247 vs runner-up Humidity 0.151) — greedy gain-chasing builds the whole tree one best-question-at-a-time, with pruning (not shown) as the adult supervision.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>1D points ${1, 2, 3, 10, 11, 12}$, $K = 2$, initial centroids $\mu = {1, 12}$. Run Lloyd&#39;s to convergence. (Trace verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Assign, Update, Freeze</div><div class="step-content"><p><strong>Iteration 1:</strong> distances — $1,2,3$ nearer $\mu_1 = 1$; $10,11,12$ nearer $\mu_2 = 12$. Clusters ${1,2,3}$, ${10,11,12}$. New means: $2.0$, $11.0$.
+<strong>Iteration 2:</strong> reassign against ${2.0, 11.0}$ — $|1-2| &lt; |1-11|$ ✓ stays; $|3-2| &lt; |3-11|$ ✓; $|10-11| &lt; |10-2|$ ✓ … identical clusters. <strong>Frozen — converged</strong> in one effective update.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Centroids ${2.0, 11.0}$, WCSS $= (1+0+1) + (1+0+1) = 4$. Note what <em>didn&#39;t</em> happen: no point ever crossed the $6.5$ midpoint — well-separated data converges instantly. Tight interleaved data would oscillate assignments for rounds (and different inits could freeze on different answers — the local-optimum fine print, live).</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Gain(Wind) = 0.048 while Gain(Outlook) = 0.247. In plain terms, what do these numbers say about the two attributes?</span>
+    <span class="quiz-category">Why does Lloyd&#39;s loop always terminate, and what kind of answer does it guarantee?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Wind is useless and should be deleted from the dataset</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Splitting on Outlook removes ~5× more uncertainty (0.247 bits) than splitting on Wind (0.048) — Outlook is the far more informative root question, though Wind may still help deeper in the tree</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Wind must be the root because smaller gains are always better</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Gains below 0.1 indicate corrupted data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It runs a fixed 100 iterations and returns whatever exists then</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Every assign step and every update step strictly decreases (or holds) the WCSS objective over finitely many possible partitions — so it must freeze, at a local (not necessarily global) optimum</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Centroids move randomly until a timer expires</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It terminates because K is always 2 in practice</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -284,20 +302,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Gain prices <em>questions in bits of mess removed</em>: 0.247 vs 0.048 means Outlook clarifies roughly five times more. Root goes to the top bidder; low-gain attributes aren&#39;t trash — they&#39;re later, conditional questions (Wind matters <em>within</em> rainy days, say). Ranking, not exile.</p><pre><code>&lt;/div&gt;
+      <p>Monotone descent on a finite set (finitely many partitions of $n$ points into $K$ groups) forces termination — no cycles possible while $J$ strictly drops. But descent stops at the <em>nearest valley</em>, not the deepest: initialization decides which optimum you get, hence k-means++ and restarts.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A &quot;CustomerID&quot; attribute (unique per row) achieves the highest gain on a churn dataset. Split on it?</span>
+    <span class="quiz-category">Two overlapping elongated clusters (diagonal cigars) get shredded by k-Means into round pieces. What assumption failed, and what family fixes it?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Yes — max gain is max gain; the tree is optimal</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>No — it shatters data into singletons (zero child entropy, vacuous &quot;perfect&quot; gain) that memorize rows instead of patterns; use gain ratio or drop ID-like attributes — pure training purity, zero generalization</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Yes, but only with pre-pruning disabled</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Split on it twice for extra confidence</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The number of points was too small for any algorithm</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>k-Means&#39; spherical Voronoi bias (means + Euclidean distance) mismatches elongated/density-varying truth — density-based methods (DBSCAN: core/border/noise via reachability) or spectral clustering respect the actual shape</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>k-Means requires exactly spherical data by law; the dataset is illegal</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>More iterations would eventually fix the shapes</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -309,20 +327,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Unique identifiers maximize gain <em>mechanically</em> (each leaf pure by construction) while learning literally nothing transferable. Gain ratio divides by split entropy to punish shattering; better still, exclude IDs from features — the model equivalent of refusing to memorize phone books.</p><pre><code>&lt;/div&gt;
+      <p>The failure is <em>representational</em>: means summarize round blobs, so boundaries bisect cigars regardless of iterations. DBSCAN follows density connectivity instead of distance-to-center — different bias, right tool for non-spherical structure. Diagnose shape mismatch before tuning $K$.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A fully grown tree hits 100% train accuracy but 62% test accuracy. Name the disease and two cures from opposite directions.</span>
+    <span class="quiz-category">k-means++ seeds centroids with probability proportional to squared distance from existing seeds. What failure of uniform random seeding does this cure?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Underfitting; cures: grow deeper, add more features</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Overfitting (variance disease — leaves memorizing noise); cures: constrain (max depth / min-leaf / gain threshold — pre-pruning) or grow-then-snip against validation data (post-pruning); the exam also accepts ensembling (forests average the variance away)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Data leakage; cures: delete the test set</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The tree is optimal; 62% is the Bayes limit here</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Slow Python loops during assignment</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Clumped seeds that leave whole true clusters empty/starved (wasted centroids, terrible local minima) — spread-out starts cover the data extent and carry an O(log k) approximation guarantee</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>k-means++ eliminates the need to choose K</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Uniform seeding is actually superior and ++ is pure marketing</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -334,7 +352,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Train 1.0 + test 0.62 = memorization signature (same disease as 1-NN). Pre-pruning stops the growth early (risks under-shooting); post-pruning grows fully then validates each snip (costs a validation split); forests sidestep both by averaging many overfit trees. Three exits, one diagnosis.</p><pre><code>&lt;/div&gt;
+      <p>Uniform seeds can all land in one dense blob, abandoning far clusters to never-formed centroids. $d^2$-weighting forces geographic coverage — each new seed lands far from covered ground with high probability. Initialization quality dominates k-Means outcomes more than any other hyperparameter.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -343,16 +361,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m2_03_naive_bayes_generative_models.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_04_kernels_soft_margins.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">2.3 Naive Bayes Generative Models</div>
+        <div class="ttl">3.4 Kernels Soft Margins</div>
       </a>
       
       
       
-      <a href="./m2_05_gradient_descent_training_engine.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m4_02_hierarchical_clustering.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.5 Gradient Descent Training Engine</div>
+        <div class="ttl">4.2 Hierarchical Clustering</div>
       </a>
       
     </footer>
@@ -439,7 +457,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(18) || 0;
-    const currentId = "m2_04_decision_trees_entropy_information_gain";
+    const currentId = "m4_01_clustering_kmeans";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 

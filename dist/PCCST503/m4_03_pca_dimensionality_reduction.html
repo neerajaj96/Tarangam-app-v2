@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 2.4 Decision Trees Entropy Information Gain</title>
-<meta name="description" content="Machine Learning (PCCST503) — 2.4 Decision Trees Entropy Information Gain | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 2.4 Decision Trees Entropy Information Gain">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 2.4 Decision Trees Entropy Information Gain">
+<title>Tarangam — 4.3 PCA Dimensionality Reduction</title>
+<meta name="description" content="Machine Learning (PCCST503) — 4.3 PCA Dimensionality Reduction | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.3 PCA Dimensionality Reduction">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 4.3 PCA Dimensionality Reduction">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -91,8 +91,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="2">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Classification &amp; Trees</span>
           <span class="chev">&#9656;</span>
@@ -110,7 +110,7 @@
             <span class="topic-dot"></span>
             <span>2.3 Naive Bayes Generative Models</span>
           </a>
-          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link active" id="topic-m2_04_decision_trees_entropy_information_gain">
+          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link " id="topic-m2_04_decision_trees_entropy_information_gain">
             <span class="topic-dot"></span>
             <span>2.4 Decision Trees Entropy Information Gain</span>
           </a>
@@ -145,8 +145,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>PCA &amp; Ensembles</span>
           <span class="chev">&#9656;</span>
@@ -160,7 +160,7 @@
             <span class="topic-dot"></span>
             <span>4.2 Hierarchical Clustering</span>
           </a>
-          <a href="./m4_03_pca_dimensionality_reduction.html" class="topic-link " id="topic-m4_03_pca_dimensionality_reduction">
+          <a href="./m4_03_pca_dimensionality_reduction.html" class="topic-link active" id="topic-m4_03_pca_dimensionality_reduction">
             <span class="topic-dot"></span>
             <span>4.3 PCA Dimensionality Reduction</span>
           </a>
@@ -199,9 +199,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 2</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">2.4 Decision Trees Entropy Information Gain</span>
+        <span style="color:var(--ink); font-weight:600;">4.3 PCA Dimensionality Reduction</span>
       </div>
 
       <div class="topbar-actions">
@@ -217,8 +217,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -229,50 +229,68 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Decision Trees: Entropy &amp; Information Gain</h1>
-<p><strong>Recursive splitting, Shannon entropy, information gain on the PlayTennis data, overfitting control via pruning, and why trees beg to be ensembled.</strong></p>
+<h1>PCA: Principal Component Analysis</h1>
+<p><strong>Variance as information, covariance eigen-structure, the projection theorem, variance-explained arithmetic, and scaling discipline.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Twenty Questions, Optimized</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A decision tree plays Twenty Questions: each node asks the single question slicing remaining possibilities most unevenly (&quot;is it bigger than a breadbox?&quot;). <strong>Entropy</strong> measures the current mess (all-yes/all-no = 0 mess; 50/50 = maximum mess); <strong>information gain</strong> scores each candidate question by <em>mess removed</em>. Ask the biggest-gain question, recurse per answer, stop when leaves are pure (or patience runs out). Overfitting = asking until every training example gets its own private leaf — memorizing the crowd instead of learning the pattern.</p>
-</div></details><hr>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Shadow Gallery</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A 3D mobile casts shadows on gallery walls — each wall shows a 2D <em>projection</em>, and the most informative wall is the one where the shadow sprawls widest (most spread = most structure preserved). <strong>PCA</strong> finds that wall mathematically: the direction (unit vector) along which the data <em>varies most</em> is principal component 1; the best perpendicular runner-up is PC2; and so on. Keep the top few directions, drop the flat ones — maximum information per kept dimension, guaranteed by linear algebra rather than luck.</p>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Variance-Preserving Projection</span>
+    <div class="video-speed-controls">
+      <button class="speed-btn" data-speed="0.75">0.75x</button>
+      <button class="speed-btn active" data-speed="1.0">1.0x</button>
+      <button class="speed-btn" data-speed="1.25">1.25x</button>
+      <button class="speed-btn" data-speed="1.5">1.5x</button>
+    </div>
+  </div>
+  <div class="video-frame-wrap">
+    <video controls preload="metadata">
+      <source src="../assets/videos/m4_pca.mp4" type="video/mp4">
+      Your browser does not support embedded video.
+    </video>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Variance-Preserving Projection</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the cloud rotate onto its principal axes — spread maximizing along PC1, the flat tail directions collapsing away with barely any information lost.</div>
+  </div>
+</div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Entropy and Information Gain</h3>
-<p>For a set with class proportions $p_i$: $H(S) = -\sum_i p_i \log_2 p_i$ (bits). Gain of attribute $A$ with values $v$: $\text{Gain}(S,A) = H(S) - \sum_v \frac{|S_v|}{|S|} H(S_v)$ — parent mess minus weighted child mess. Greedy top-down induction (ID3/C4.5/CART family): at each node, split on max gain (CART uses Gini $1-\sum p_i^2$ instead — same instinct, cheaper arithmetic).</p>
-<h3>2.2 The PlayTennis Computation (Verified Values)</h3>
-<p>14 days, 9 Play-Yes / 5 No: $H(S) = -(9/14\log_2 9/14 + 5/14\log_2 5/14) \approx \mathbf{0.940}$ bits. Gains: <strong>Outlook 0.247</strong>, Humidity 0.151, Wind 0.048, Temperature 0.029 — so Outlook splits the root (Sunny→? Overcast→Yes-leaf immediately, Rain→?); recurse within Sunny/Rain subsets. (All values machine-verified.)</p>
-<h3>2.3 Taming Overfit: Pruning and Honest Cousins</h3>
+<h3>2.1 Covariance and Eigen-Structure</h3>
+<p>Center the data ($\bar{x} = 0$). Covariance $\Sigma = \frac{1}{n-1}X^TX$ ($d \times d$, symmetric). Its <strong>eigenvectors</strong> $v_i$ (orthonormal) are the principal directions; <strong>eigenvalues</strong> $\lambda_i$ are the variances along them. Projection $z = V_k^Tx$ onto top-$k$ keeps fraction $\sum_{i\le k}\lambda_i / \sum \lambda_i$ of total variance — and among <em>all</em> $k$-dimensional linear projections, <strong>none preserves more</strong> (the projection theorem: PCA is the optimal linear compressor by reconstruction error).</p>
+<h3>2.2 Practical Discipline (Where Exams Probe)</h3>
 <ul>
-<li><strong>Pre-pruning:</strong> stop early (max depth, min samples/leaf, gain threshold) — fast, risks stopping before useful structure.</li>
-<li><strong>Post-pruning:</strong> grow fully, then snip subtrees that don&#39;t pay on <em>validation</em> data (reduced-error pruning, cost-complexity/CART $\alpha$-pruning).</li>
-<li>Gain&#39;s bias footnote: many-valued attributes (dates, IDs) score inflated gains by shattering data — <strong>gain ratio</strong> (C4.5) normalizes by split entropy. A &quot;Date&quot; root with one example per leaf is memorization wearing mathematics.</li>
+<li><strong>Standardize first</strong> (zero mean, unit variance per feature) unless units are commensurate — PCA chases <em>raw variance</em>, so a meters-vs-millimeters feature choice silently elects the winner.</li>
+<li><strong>Choose $k$</strong> by cumulative variance (80–95% rules of thumb) or the scree-plot elbow — same spirit as clustering elbows.</li>
+<li>PCA is <strong>unsupervised</strong> (labels never enter) and <strong>linear</strong> (curved manifolds need kernels/autoencoders, not more components).</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Tree Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$H = -\sum p\log_2 p$ (0 = pure, 1 = 50/50 binary max) · $\text{Gain} = H(parent) - \sum\frac{|S_v|}{|S|}H(S_v)$ · root = <strong>max gain</strong> (Tennis: Outlook 0.247) · prune <strong>pre</strong> (early stop) or <strong>post</strong> (validation snip) · many-valued attributes need <strong>gain ratio</strong>, not raw gain.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Pure Leaves Memorize Noise (and IDs Memorize Everything)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A tree grown to 100% training purity on noisy data encodes the noise as law — test accuracy collapses while train sits at 1.0 (the k-NN $k=1$ disease, arboreal form). And any near-unique attribute (ID, date) &quot;wins&quot; gain by isolation, not insight. Prune by validation; distrust splits that merely enumerate.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PCA Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Center → $\Sigma = X^TX/(n-1)$ · eigenvectors = <strong>directions</strong>, eigenvalues = <strong>variances</strong> · keep top-$k$: fraction $\sum_{i\le k}\lambda_i/\sum\lambda$ · <strong>standardize first</strong> (variance units decide winners) · optimal <strong>linear</strong> compressor · unsupervised (no labels used).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Unscaled PCA Elects Units, Not Structure</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feeding raw features (income in rupees + age in years) lets the biggest-<em>unit</em> feature dominate PC1 regardless of information — a measurement artifact wearing mathematics. Standardization ($z$-scores) is not preprocessing politeness; it <em>defines what variance means</em> across incommensurate axes. Skip it and PC1 reports your unit choices.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Using the PlayTennis counts, verify $H(S) = 0.940$ and Gain(Wind) $= 0.048$, and decide the root split among Outlook (0.247), Humidity (0.151), Wind (0.048), Temperature (0.029).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Mess Removed</div><div class="step-content"><p>$H(S) = -(0.6429 \times \log_2 0.6429 + 0.3571 \times \log_2 0.3571) = -(-0.4098 - 0.5305) = 0.940$ bits. Wind splits 8 weak ($6{+},2{-}$) / 6 strong ($3{+},3{-}$): $H_{weak} = 0.811$, $H_{strong} = 1.0$; weighted $(8/14)(0.811) + (6/14)(1.0) = 0.892$; gain $= 0.940 - 0.892 = \mathbf{0.048}$. Root = max gain = <strong>Outlook (0.247)</strong> — Sunny and Rain branches recurse; Overcast ($4{+},0$) is an instant Yes-leaf.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One number per attribute ranks the questions; the ranking <em>is</em> the tree&#39;s skeleton. Outlook first because nothing else removes nearly as much mess (0.247 vs runner-up Humidity 0.151) — greedy gain-chasing builds the whole tree one best-question-at-a-time, with pruning (not shown) as the adult supervision.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Points $(1,2), (2,1), (3,4), (4,3)$. Compute the covariance, its eigen-structure, variance kept by PC1, and the PC1 direction. (Arithmetic verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Eigendecomposition by Hand</div><div class="step-content"><p>Mean $(2.5, 2.5)$; centered sums: $\sum dx^2 = 5.0$, $\sum dy^2 = 5.0$, $\sum dx,dy = 3.0$. $\Sigma = \frac{1}{3}\begin{pmatrix}5 &amp; 3 \\ 3 &amp; 5\end{pmatrix}$. Characteristic: $(5/3-\lambda)^2 - 1 = 0 \Rightarrow \lambda = 5/3 \pm 1$: $\lambda_1 = 8/3 \approx 2.667$, $\lambda_2 = 2/3 \approx 0.667$. Total $10/3$; PC1 keeps $2.667/3.333 = \mathbf{80%}$. Eigenvector for $\lambda_1$: $(5/3-8/3)x + y = 0 \Rightarrow y = x$ — direction $(1,1)/\sqrt{2}$ (the main diagonal, exactly where the eye sees the cloud stretched).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One direction ($y=x$) carries 80% of the variance; the perpendicular carries the 20% wobble. Dropping to 1D keeps four-fifths of the information at half the coordinates — and the eigenvector <em>agrees with visual inspection</em>, which is how you sanity-check PCA on every new dataset forever: plot, eyeball the stretch, confirm the math found it.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Gain(Wind) = 0.048 while Gain(Outlook) = 0.247. In plain terms, what do these numbers say about the two attributes?</span>
+    <span class="quiz-category">Features: annual income (tens of thousands) and age (years). PCA without standardization puts nearly all PC1 weight on income. What happened, and what is the fix?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Wind is useless and should be deleted from the dataset</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Splitting on Outlook removes ~5× more uncertainty (0.247 bits) than splitting on Wind (0.048) — Outlook is the far more informative root question, though Wind may still help deeper in the tree</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Wind must be the root because smaller gains are always better</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Gains below 0.1 indicate corrupted data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Income genuinely contains all the information; nothing is wrong</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Raw variance scales with units — income&#39;s huge numbers dominate Σ mechanically; standardize (z-scores) so variance reflects spread-shape, not unit choice, before eigendecomposition</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>PCA cannot handle two features simultaneously</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Age must be deleted from all analyses permanently</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -284,20 +302,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Gain prices <em>questions in bits of mess removed</em>: 0.247 vs 0.048 means Outlook clarifies roughly five times more. Root goes to the top bidder; low-gain attributes aren&#39;t trash — they&#39;re later, conditional questions (Wind matters <em>within</em> rainy days, say). Ranking, not exile.</p><pre><code>&lt;/div&gt;
+      <p>Covariance eats <em>squared units</em>: rupees² vs years² is a unit contest, not an information contest. Standardization makes each feature contribute shape, not scale — PC1 then reports correlation structure instead of measurement conventions. Preprocessing <em>is</em> the analysis here.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A &quot;CustomerID&quot; attribute (unique per row) achieves the highest gain on a churn dataset. Split on it?</span>
+    <span class="quiz-category">PC1 keeps 80% variance and you drop the rest for a classifier. Name what you provably kept, what you possibly destroyed, and when this backfires.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Yes — max gain is max gain; the tree is optimal</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>No — it shatters data into singletons (zero child entropy, vacuous &quot;perfect&quot; gain) that memorize rows instead of patterns; use gain ratio or drop ID-like attributes — pure training purity, zero generalization</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Yes, but only with pre-pruning disabled</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Split on it twice for extra confidence</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Kept everything; nothing is ever destroyed by PCA</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Kept: the maximum-variance 1D linear projection (optimal compressor). Possibly destroyed: low-variance directions that carried the *class signal* (variance ≠ discriminative value) — backfires when labels live in the flat tail (then use supervised LDA instead)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>PCA keeps class labels intact by construction</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Variance kept always equals accuracy kept</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -309,20 +327,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Unique identifiers maximize gain <em>mechanically</em> (each leaf pure by construction) while learning literally nothing transferable. Gain ratio divides by split entropy to punish shattering; better still, exclude IDs from features — the model equivalent of refusing to memorize phone books.</p><pre><code>&lt;/div&gt;
+      <p>PCA optimizes <em>reconstruction</em>, knowing nothing of labels — the projection theorem promises information, not <em>relevant</em> information. A 1%-variance direction separating classes perfectly is discarded first. Unsupervised compression before supervised learning is a bet, not a pipeline law.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A fully grown tree hits 100% train accuracy but 62% test accuracy. Name the disease and two cures from opposite directions.</span>
+    <span class="quiz-category">Eigenvalues 8/3 and 2/3 with eigenvectors (1,1) and (1,−1) (up to scale). A student normalizes them to unit length before projecting. Necessary or cosmetic?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Underfitting; cures: grow deeper, add more features</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Overfitting (variance disease — leaves memorizing noise); cures: constrain (max depth / min-leaf / gain threshold — pre-pruning) or grow-then-snip against validation data (post-pruning); the exam also accepts ensembling (forests average the variance away)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Data leakage; cures: delete the test set</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The tree is optimal; 62% is the Bayes limit here</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Cosmetic — scale never matters in projections</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Necessary for honest coordinates: projection $z = v^Tx$ with $\|v\| \neq 1$ rescales the axis (variance bookkeeping breaks: kept-variance fraction assumes orthonormal $V_k$)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Normalizing destroys the orthogonality between components</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Eigenvectors are always born unit-length from any computation</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -334,7 +352,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Train 1.0 + test 0.62 = memorization signature (same disease as 1-NN). Pre-pruning stops the growth early (risks under-shooting); post-pruning grows fully then validates each snip (costs a validation split); forests sidestep both by averaging many overfit trees. Three exits, one diagnosis.</p><pre><code>&lt;/div&gt;
+      <p>Variance accounting ($\sum_{kept}\lambda / \sum\lambda$) and reconstruction $V_kV_k^Tx$ both assume orthonormal directions. Unnormalized vectors silently stretch coordinates — same line, wrong ruler. Numerical routines return unit vectors by convention; hand work must divide by the norm explicitly.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -343,16 +361,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m2_03_naive_bayes_generative_models.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m4_02_hierarchical_clustering.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">2.3 Naive Bayes Generative Models</div>
+        <div class="ttl">4.2 Hierarchical Clustering</div>
       </a>
       
       
       
-      <a href="./m2_05_gradient_descent_training_engine.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m4_04_ensemble_bagging_random_forests.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.5 Gradient Descent Training Engine</div>
+        <div class="ttl">4.4 Ensemble Bagging Random Forests</div>
       </a>
       
     </footer>
@@ -439,7 +457,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(18) || 0;
-    const currentId = "m2_04_decision_trees_entropy_information_gain";
+    const currentId = "m4_03_pca_dimensionality_reduction";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 
