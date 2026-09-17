@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 3.3 Single Source Shortest Paths Dijkstra</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 3.3 Single Source Shortest Paths Dijkstra | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 3.3 Single Source Shortest Paths Dijkstra">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 3.3 Single Source Shortest Paths Dijkstra">
+<title>Tarangam — 🧪 Practice Lab: M4 Branchbound Complexity Drills</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 🧪 Practice Lab: M4 Branchbound Complexity Drills | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M4 Branchbound Complexity Drills">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 🧪 Practice Lab: M4 Branchbound Complexity Drills">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -152,8 +152,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="3">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Greedy, DP &amp; Backtracking</span>
           <span class="chev">&#9656;</span>
@@ -167,7 +167,7 @@
             <span class="topic-dot"></span>
             <span>3.2 Minimum Spanning Trees Kruskal Prim</span>
           </a>
-          <a href="./m3_03_single_source_shortest_paths_dijkstra.html" class="topic-link active" id="topic-m3_03_single_source_shortest_paths_dijkstra">
+          <a href="./m3_03_single_source_shortest_paths_dijkstra.html" class="topic-link " id="topic-m3_03_single_source_shortest_paths_dijkstra">
             <span class="topic-dot"></span>
             <span>3.3 Single Source Shortest Paths Dijkstra</span>
           </a>
@@ -185,8 +185,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Branch/Bound &amp; Complexity</span>
           <span class="chev">&#9656;</span>
@@ -212,7 +212,7 @@
             <span class="topic-dot"></span>
             <span>4.5 Randomized Algorithms Las Vegas Monte Carlo</span>
           </a>
-          <a href="./m4_99_practice_lab_branchbound_complexity_drills.html" class="topic-link " id="topic-m4_99_practice_lab_branchbound_complexity_drills">
+          <a href="./m4_99_practice_lab_branchbound_complexity_drills.html" class="topic-link active" id="topic-m4_99_practice_lab_branchbound_complexity_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M4 Branchbound Complexity Drills</span>
           </a>
@@ -243,9 +243,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 3</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">3.3 Single Source Shortest Paths Dijkstra</span>
+        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M4 Branchbound Complexity Drills</span>
       </div>
 
       <div class="topbar-actions">
@@ -261,64 +261,98 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
-    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Single-Source Shortest Paths: Dijkstra</h1>
-<p><strong>Greedy settling order, relaxation, the non-negative-weight contract, a hand-settled trace, and why one negative edge voids everything.</strong></p>
+<h1>Module 4 Practice Lab: Branch &amp; Bound and Complexity Drills</h1>
+<p><strong>Bound races, reduction-direction autopsies, FFD packing traces, amplification arithmetic, and exam essay models.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Expanding Ink Blot</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Drop ink on your start city on a map of roads: the stain spreads along every road simultaneously at equal speed. The moment the ink <em>first</em> touches a city, the path it took is the shortest possible — no later arrival can beat first contact, because all spread moves at the same rate. <strong>Dijkstra&#39;s algorithm</strong> simulates exactly this blot with a priority queue: repeatedly <em>settle</em> the unsettled vertex with the smallest tentative distance (first contact = final answer), then <em>relax</em> its outgoing roads (offer neighbors a possibly shorter route through it).</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Relaxation and Settling</h3>
-<ul>
-<li>Maintain tentative distances $d[v]$ (∞ except $d[s]=0$). Repeatedly extract-min unsettled $u$ (<strong>settle</strong> it: $d[u]$ is final) and <strong>relax</strong> each edge $(u,v,w)$: if $d[u]+w &lt; d[v]$, set $d[v] = d[u]+w$ (and remember predecessor $u$).</li>
-<li>Correctness hinge: extraction order is nondecreasing in final distance — a settled vertex can never be improved later, <em>provided all weights are non-negative</em> (any alternative path to $u$ must extend an unsettled vertex with distance $\ge d[u]$, plus non-negative edges).</li>
-</ul>
-<h3>2.2 The Non-Negative Contract</h3>
-<p>One negative edge can make a <em>settled</em> vertex improvable (arrive cheaply late via the negative edge) — the extraction invariant shatters, and outputs go silently wrong (not merely slow). Negative weights demand Bellman-Ford (slower, detects negative cycles); Dijkstra simply <em>assumes them away</em>. Complexity with binary heap: $\Theta((V+E) \log V)$.</p>
-<h3>2.3 Dijkstra vs. BFS vs. Prim (the Confusion Trio)</h3>
-<ul>
-<li><strong>BFS:</strong> Dijkstra with all weights $=1$ (queue suffices; settles by hops).</li>
-<li><strong>Prim:</strong> same <em>machinery</em> (priority queue, growing frontier) but minimizes <em>attachment cost</em> (cheapest edge to tree), not <em>path distance from source</em> — identical code shape, different key, different problem.</li>
-</ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Dijkstra Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Loop: <strong>extract-min (settle) → relax outgoing</strong> · needs <strong>non-negative weights</strong> (else Bellman-Ford) · $\Theta((V+E)\log V)$ heap · BFS = <strong>unit-weight Dijkstra</strong> · Prim = <strong>same skeleton, edge-key instead of path-key</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Settled Means Final — Only Without Negatives</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Students trace Dijkstra on negative-weight graphs and &quot;get answers&quot; — all of them suspect. The algorithm <em>runs</em> fine (no crash); its <em>guarantee</em> evaporates. If any weight is negative, switch algorithms (Bellman-Ford), don&#39;t switch hope.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Graph: $1!-!2(4), 1!-!3(2), 2!-!3(1), 2!-!4(5), 3!-!4(8), 3!-!5(10), 4!-!5(2), 4!-!6(6), 5!-!6(3)$ (undirected). Run Dijkstra from vertex 1: give the settle order and final distances. (Machine-verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Settling One by One</div><div class="step-content"><p>$d = {1:0}$, rest ∞. Settle <strong>1</strong> (0): relax → $d[2]=4, d[3]=2$. Settle <strong>3</strong> (2): relax → $d[2] = \min(4, 2+1) = 3$ (improved via 3!), $d[4]=10$, $d[5]=12$. Settle <strong>2</strong> (3): relax → $d[4] = \min(10, 3+5) = 8$. Settle <strong>4</strong> (8): relax → $d[5] = \min(12, 8+2) = 10$, $d[6]=14$. Settle <strong>5</strong> (10): relax → $d[6] = \min(14, 10+3) = 13$. Settle <strong>6</strong> (13). Done.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Settle order <strong>1, 3, 2, 4, 5, 6</strong> with distances <strong>{0, 3, 2, 8, 10, 13}</strong> — note vertex 2 settles <em>second</em> at distance 3 via $1\to3\to2$, beating its direct edge (4): settling order is by <em>distance</em>, not by discovery, which is exactly the beginner surprise this trace exists to deliver.</p>
-</div></div><hr>
+<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<h3>Scenario 1: The Bound Race (TSP, Same Matrix, Three Timings)</h3>
+<p>Instance from M4 (optimum 35, root bound 35, forbid-1→2 bound 39). Three counterfactuals: (a) incumbent starts at 39 (nearest-neighbor): root 35 &lt; 39 → branch; include-side resolves tour 35 (new incumbent); forbid-side bound 39 ≥ 35 → prune; done — 1 branch, 1 prune. (b) Incumbent starts at 35 (lucky heuristic): root bound 35 ≥ ... precisely, bound == incumbent → <strong>optimal proven with zero branching</strong> (nothing can beat what&#39;s already certified). (c) Incumbent starts at 60 (terrible): both branches live longer (forbid-side 39 &lt; 60 survives!), search sprawls until tour 35 surfaces. Moral: incumbent quality <em>is</em> search cost — good heuristics aren&#39;t polish, they&#39;re pruning fuel.</p>
+<h3>Scenario 2: Reduction Autopsy (Three Verdicts, One Autopsy Each)</h3>
+<p>(a) &quot;Reduced X to 3-SAT, therefore X is NP-complete.&quot; Autopsy: backwards — shows $X \in$ NP at best (easiness direction). Verdict: half-proof, zero hardness. (b) &quot;Reduced Hamiltonian-Cycle to X, and X has a poly verifier.&quot; Autopsy: correct shape both halves (hardness in, membership shown) — complete proof modulo details. (c) &quot;X is NP-complete because one instance took my laptop a week.&quot; Autopsy: single-instance hardness proves nothing about <em>asymptotic worst case</em> (maybe a bad algorithm, maybe a pathological input) — complexity quantifies over infinite families, never anecdotes.</p>
+<h3>Scenario 3: FFD Packing Trace (Capacity 10)</h3>
+<p>Items $[7, 6, 5, 4, 4, 3, 2, 2]$ (already descending — sorting free this once). $7\to$B1; $6\to$B2; $5\to$B3 (fits neither B1 $12 &gt; 10$ nor B2 $11 &gt; 10$); $4\to$B2 ($6+4=10$ ✓); $4\to$B3 ($5+4=9$ ✓); $3\to$B1 ($7+3=10$ ✓); $2\to$B4 (B1/B2/B3 all overflow); $2\to$B4 ($4$ ✓). <strong>4 bins</strong> vs. lower bound $\lceil 33/10 \rceil = 4$ — optimal, certified. (Trace verified.)</p>
+<h3>Scenario 4: Amplification Checkout</h3>
+<p>Miller–Rabin with $k$ rounds: error $\le 4^{-k}$ per composite. $k = 1$: 25% doubt (toy only). $k = 5$: $\le 1/1024$ (better than hardware glitch rates). $k = 10$: $\le 1/1{,}048{,}576 \approx 10^{-6}$ (production-grade). $k = 40$ (crypto libraries): $\le 2^{-80}$ — fewer failure odds than cosmic-ray bit flips during the computation itself. Each round <em>multiplies</em> confidence; cost grows only linearly in $k$.</p>
+<hr>
+<p><a id="the-dimensions"></a></p>
+<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Live vs. E-node vs. dead</td>
+<td>Waiting vs. expanding vs. finished/killed (lifecycle, not priority)</td>
+</tr>
+<tr>
+<td>FIFO vs. LIFO vs. LC search</td>
+<td>Oldest vs. newest vs. smallest-bound next (LC pairs with bounding)</td>
+</tr>
+<tr>
+<td>Optimistic vs. pessimistic bounds</td>
+<td>Underestimate (minimization) prunes safely; overestimate kills optima silently</td>
+</tr>
+<tr>
+<td>Include vs. exclude branch</td>
+<td>Fix edge (delete row/col, ban return) vs. ban edge (∞) and re-reduce</td>
+</tr>
+<tr>
+<td>P vs. NP vs. NPC</td>
+<td>Poly-solvable vs. poly-verifiable vs. verifiable + all-NP-reduces-here</td>
+</tr>
+<tr>
+<td>Hardness direction</td>
+<td>Known-hard → target (prove hard); target → known (prove easy/at most)</td>
+</tr>
+<tr>
+<td>NF vs. FF vs. FFD ratios</td>
+<td>≤2·OPT−1 vs. ≤1.7·OPT+2 vs. ≤11/9·OPT+1 (sorting buys the last tier)</td>
+</tr>
+<tr>
+<td>Las Vegas vs. Monte Carlo</td>
+<td>Random time, exact answer vs. fixed time, probable answer</td>
+</tr>
+<tr>
+<td>Amplify by repetition</td>
+<td>Error $\epsilon^k$: exponential confidence, linear cost</td>
+</tr>
+<tr>
+<td>Backtracking vs. B&amp;B</td>
+<td>Feasibility pruning vs. + cost-vs-incumbent pruning</td>
+</tr>
+</tbody></table>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">In the worked trace, vertex 2 is discovered first (distance 4, direct edge) but settles second (distance 3, via vertex 3). What principle does this demonstrate?</span>
+    <span class="quiz-category">The forbid-1→2 branch bounds at 39 with incumbent 39 and gets pruned. A student protests: &quot;but it could still contain a 39-cost tour — you&#39;re throwing away an optimum!&quot; Resolve.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Dijkstra processes vertices in discovery order</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Extraction is by smallest tentative distance, and relaxation can improve a discovered vertex before it settles — settling order need not match discovery order</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Vertex 2 should have settled first; the trace contains an error</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Direct edges always give final distances immediately</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The student is right — pruning here loses optima and the trace cheats</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Pruning keeps *an* optimum (incumbent 39 already in hand), discarding only redundant equals — B&amp;B promises optimal *cost*, never enumeration of all optimal tours</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Equality pruning is valid only for maximization problems</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The branch must be expanded to confirm the bound is tight</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -330,20 +364,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Discovery $\neq$ finality: $d[2]=4$ was provisional until vertex 3 offered $2+1=3$. The priority queue always extracts the current minimum <em>unsettled</em> vertex — that ordering discipline (not arrival order) is what makes settled distances trustworthy.</p><pre><code>&lt;/div&gt;
+      <p>Correctness = return <em>a</em> tour of optimal cost, not <em>all</em> of them. Bound ≥ incumbent certifies &quot;nothing strictly better inside&quot; — ties add no information. Equality-prunes are where B&amp;B banks its biggest savings, legitimately.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A graph has one negative edge but no negative cycles. Dijkstra runs to completion and prints distances. Status of the output?</span>
+    <span class="quiz-category">&quot;I reduced my new problem X to Vertex Cover, therefore X is NP-complete.&quot; Give the precise verdict and the one-line repair.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Correct — Dijkstra handles isolated negative edges fine</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Untrustworthy — the non-negative contract is violated, so the settling invariant may fail silently; Bellman-Ford is the correct tool</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Correct only for the vertices settled before the negative edge is relaxed</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The algorithm crashes, so there is no output to judge</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Verdict: correct and complete as stated</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Verdict: proves X ∈ NP at most (easiness direction); repair: reduce *from* a known NPC problem *to* X (plus exhibit X&#39;s verifier) — hardness flows with the arrow, and this arrow points the wrong way</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Verdict: proves X ∈ P; repair: use a slower reduction</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Reductions are unnecessary for NP-completeness claims</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -355,20 +389,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Dijkstra never checks its precondition — it happily settles vertices whose distances a late-arriving negative edge could still improve. Silence, not failure, is the danger: wrong numbers with full confidence. One negative edge anywhere → switch to Bellman-Ford.</p><pre><code>&lt;/div&gt;
+      <p>$X \le_p$ VertexCover means &quot;X is no harder than VC&quot; — consistent with X ∈ P! Hardness must flow <em>into</em> X from known-hard ground (NPC $\le_p$ X), plus X&#39;s own verifier for membership. Arrow direction is the entire proof; everything else is bookkeeping.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Dijkstra and Prim look nearly identical in code (priority queue, growing set, relaxation-like updates). What single difference separates the problems they solve?</span>
+    <span class="quiz-category">FFD packs an instance into 5 bins with lower bound 4. Your teammate declares victory (&quot;near-optimal, guaranteed within 11/9&quot;). Your manager demands proven optimal. Who is right for which purpose, and what closes the gap?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Dijkstra uses a queue while Prim uses a stack</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Dijkstra keys vertices by *path distance from the source* (minimize route cost); Prim keys by *cheapest single attachment edge to the tree* (minimize connection cost) — same skeleton, different key, MST vs shortest paths</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Prim requires negative weights; Dijkstra forbids them</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>They are the same algorithm with different variable names</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Teammate fully right; ratios certify optimality always</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Teammate right for engineering (5 vs ≥4: at most 1 bin over, ratio-consistent); manager needs the gap closed — either find a 4-packing (constructive proof) or raise the bound (stronger certificate), since 11/9·4+1 ≈ 5.9 permits 5 without proving 4 impossible</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Manager right that 5 bins violates the lower bound</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both wrong: bin packing has no lower bounds</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -380,26 +414,62 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$d[v] = $ best known <em>source→v path</em> (Dijkstra) vs. $key[v] = $ cheapest <em>edge into the tree</em> (Prim). Swap the key definition and each algorithm morphs toward the other — the classic &quot;same code, different objective&quot; pair every exam probes.</p><pre><code>&lt;/div&gt;
+      <p>$4 \le OPT \le 5$: the sandwich certifies near-optimality (ship it, usually) but not optimality (4 might exist). Ratios bound <em>waste</em>; only matching bounds <em>prove</em> optima. Engineering stops at the sandwich; perfection demands closing it — different jobs, different stopping rules.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Miller–Rabin with k=10 rounds reports &quot;prime&quot; with error ≤ 10⁻⁶, yet the team wants cryptographic certainty. What does &quot;cryptographic certainty&quot; mean here, and what buys it?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It means zero error, achievable by running deterministically instead</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It means error below physical noise floors (k=40: ≤2⁻⁸⁰, rarer than hardware faults during the test itself) — bought with linear extra rounds, since error decays exponentially in k</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It means switching to trial division for all inputs</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>More rounds cannot reduce error below 10⁻⁶ by mathematical law</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>&quot;Certainty&quot; in crypto = error dwarfed by physics (cosmic rays, hardware glitches ~2⁻⁵⁰-ish per operation scale). Exponential decay makes k=40 cost 4× k=10 while dividing doubt by $4^{30}$ — certainty is <em>purchased</em>, linearly priced, and the budget math is the whole argument.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> Any cheat-table row (reduction direction and B&amp;B vocabulary lead); single-ratio statements.</li>
+<li><strong>7 Marks:</strong> TSP bound traces, reduction proofs (3-SAT→Clique pattern), FFD traces with bounds, or LV-vs-MC comparisons with amplification math.</li>
+</ul>
+</div></details><h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: On the M4 cost matrix (optimum 35, root bound 35, NN incumbent 39): trace the include/exclude branching on edge 1→2 to certified optimality, explaining each prune.</strong></p>
+<p><strong>Model Answer:</strong> Root 35 &lt; 39 → branch on 1→2. Exclude: ban it, re-reduce → bound 39 ≥ incumbent 39 → prune (ties can&#39;t improve). Include: delete row 1/column 2, ban return 2→1, continue → resolves tour $1\to2\to4\to3\to1 = 10+10+9+6 = 35$ &lt; 39 → new incumbent 35 = root bound → optimal proven, search ends. One live branch, one prune, one certificate: bounds did all exponential work.</p>
+<h3>Essay Question 2 (7 Marks)</h3>
+<p><strong>Q: Define P, NP, NP-complete. Prove Clique NP-complete via 3-SAT reduction, stating both proof directions explicitly.</strong></p>
+<p><strong>Model Answer:</strong> P: poly-time solvable. NP: poly-time verifiable (certificate checkable fast). NPC: in NP + every NP problem poly-reduces to it. Reduction (M4 construction): triangle per clause, cross-edges except contradictions. (⇒) $k$-clique → one literal per clause, pairwise consistent → set true → formula satisfied. (⇐) Satisfying assignment → one true literal per clause → $k$ pairwise-consistent vertices → clique. Polynomial construction ($3k$ vertices) + Clique ∈ NP (verify claimed clique in $O(k^2)$) completes both obligations — hardness in, membership shown.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m3_02_minimum_spanning_trees_kruskal_prim.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m4_05_randomized_algorithms_las_vegas_monte_carlo.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">3.2 Minimum Spanning Trees Kruskal Prim</div>
+        <div class="ttl">4.5 Randomized Algorithms Las Vegas Monte Carlo</div>
       </a>
       
       
       
-      <a href="./m3_04_dynamic_programming_matrix_chain_knapsack.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">3.4 Dynamic Programming Matrix Chain Knapsack</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -485,7 +555,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(29) || 0;
-    const currentId = "m3_03_single_source_shortest_paths_dijkstra";
+    const currentId = "m4_99_practice_lab_branchbound_complexity_drills";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 
