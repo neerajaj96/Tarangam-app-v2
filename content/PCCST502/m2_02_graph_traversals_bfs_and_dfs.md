@@ -45,6 +45,10 @@ DFS stamps each vertex with discovery/finish times ($d[v]$, $f[v]$ — parenthes
 * Undirected graphs have **only tree + back edges** (no forward/cross — the edge is seen from both ends).
 * Same $\Theta(V+E)$ skeleton as BFS; recursion depth can hit $V$ (stack overflow on path graphs — the iterative version exists for exactly this reason).
 
+::: anim bfs-layers Ripple Expansion Order
+Watch nodes ignite layer by layer — s, then a and b, then c, d, e, then f and g. No node lights before every node nearer the source: nondecreasing distance, animated.
+:::
+
 ::: callout-formula KTU Formula Vault: Traversal Facts
 BFS = **queue**, layers, **shortest path (unweighted)**. DFS = **stack/recursion**, timestamps, **edge classification**. Both $\Theta(V+E)$. Directed edges: **tree/back/forward/cross** (gray target = back = cycle). Undirected: **tree + back only**.
 :::

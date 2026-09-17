@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
+import { SCENES } from './scenes.js';
 
 const CONTENT_DIR = 'content';
 const OUTPUT_DIR = 'dist';
@@ -275,6 +276,27 @@ function transformCustomWidgets(markdownText) {
       <source src="../${safeSrc}" type="video/mp4">
       Your browser does not support embedded video.
     </video>
+  </div>
+</div>`;
+  });
+
+  // 6. SVG motion scenes (dependency-free animations, see scripts/scenes.js).
+  // Unknown ids are left raw and reported by check.js (scene registry check).
+  const animPattern = /::: anim (\S+)(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(animPattern, (match, sceneId, title, obs) => {
+    const scene = SCENES[sceneId.trim()];
+    if (!scene) return match;
+    const safeTitle = escapeHtml(title.trim() || scene.title);
+    return `<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; ${safeTitle}</span>
+  </div>
+  <div class="video-frame-wrap">
+    ${scene.svg.replace('<svg ', '<svg class="anim-stage" ')}
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> ${safeTitle}</p>
+    <div class="video-observations"><strong>What to observe:</strong> ${escapeHtml(obs.trim())}</div>
   </div>
 </div>`;
   });

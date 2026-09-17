@@ -37,6 +37,10 @@ sequenceDiagram
 
 Why three and not two? The third ACK proves the *server's* SYN arrived — with only two steps, a stale duplicate SYN could conjure a half-open connection the client never wanted. Each side picks a **random ISN** (security: predictable ISNs enable spoofing) and each side's number is explicitly confirmed by the other.
 
+::: anim tcp-handshake The Three-Message Greeting
+Watch SYN leave, SYNACK return, ACK confirm — in this order, always. The animation loops the exact sequence from the diagram above; notice nothing carries data until all three complete.
+:::
+
 ### 2.3 Teardown: Four Steps (FIN Apiece + Echoes)
 
 Either side sends **FIN**; the other **ACKs** it, finishes its own remaining data, then sends its **own FIN**, which is ACKed in turn — 4 messages because the two directions close **independently** (half-close is legal: "I'm done sending, still listening"). The initiator then waits **2MSL** (twice the maximum segment lifetime) in TIME_WAIT so stray duplicates die before the same ports are reused.

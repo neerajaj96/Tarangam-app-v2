@@ -39,6 +39,10 @@ cwnd ^
               loss: halve          loss: halve
 ```
 
+::: anim aimd-sawtooth The Sawtooth Breathing
+Watch the congestion window climb additively and crash multiplicatively on each loss — the dot rides real AIMD dynamics while the caption calls each phase.
+:::
+
 Repeated across competing flows, AIMD converges to **fairness**: overfull flows get halved more often in absolute terms, so shares equalize — the celebrated "sawtooth" is the sound of fairness being enforced.
 
 ### 2.3 Slow Start, ssthresh, Tahoe vs. Reno

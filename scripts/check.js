@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { execFileSync } from 'child_process';
+import { SCENE_IDS } from './scenes.js';
 
 const errors = [];
 const warnings = [];
@@ -66,6 +67,11 @@ for (const course of courses) {
 
     // 2d. Fence balance.
     if ((t.match(/```/g) || []).length % 2 !== 0) fail(`${course}/${f}: unbalanced code fences`);
+
+    // 2e. Anim scene ids must exist in the registry (scripts/scenes.js).
+    for (const m of t.matchAll(/::: anim (\S+)/g)) {
+      if (!SCENE_IDS.includes(m[1])) fail(`${course}/${f}: unknown anim scene '${m[1]}' (registry: ${SCENE_IDS.join(', ')})`);
+    }
   }
 }
 

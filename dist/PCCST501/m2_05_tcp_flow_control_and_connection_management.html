@@ -283,7 +283,26 @@
     Note over C,S: Both sides now agree on initial sequence numbers
 </code></pre>
 <p>Why three and not two? The third ACK proves the <em>server&#39;s</em> SYN arrived — with only two steps, a stale duplicate SYN could conjure a half-open connection the client never wanted. Each side picks a <strong>random ISN</strong> (security: predictable ISNs enable spoofing) and each side&#39;s number is explicitly confirmed by the other.</p>
-<h3>2.3 Teardown: Four Steps (FIN Apiece + Echoes)</h3>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; The Three-Message Greeting</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated TCP three-way handshake: SYN, SYNACK, ACK">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="host" x="40" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="110" y="55">Client</text>
+<rect class="host" x="460" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="530" y="55">Server</text>
+<g class="msg a1"><line x1="180" y1="110" x2="460" y2="110" marker-end="url(#ah)"/><text x="320" y="100" text-anchor="middle">1 · SYN (Seq=x)</text></g>
+<g class="msg a2"><line x1="460" y1="165" x2="180" y2="165" marker-end="url(#ah)"/><text x="320" y="155" text-anchor="middle">2 · SYNACK (Seq=y, ACK=x+1)</text></g>
+<g class="msg a3"><line x1="180" y1="220" x2="460" y2="220" marker-end="url(#ah)"/><text x="320" y="210" text-anchor="middle">3 · ACK (ACK=y+1) — ESTABLISHED</text></g>
+<text class="animnote a4" x="320" y="262" text-anchor="middle">both sequence numbers confirmed before any data flows</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> The Three-Message Greeting</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch SYN leave, SYNACK return, ACK confirm — in this order, always. The animation loops the exact sequence from the diagram above; notice nothing carries data until all three complete.</div>
+  </div>
+</div><h3>2.3 Teardown: Four Steps (FIN Apiece + Echoes)</h3>
 <p>Either side sends <strong>FIN</strong>; the other <strong>ACKs</strong> it, finishes its own remaining data, then sends its <strong>own FIN</strong>, which is ACKed in turn — 4 messages because the two directions close <strong>independently</strong> (half-close is legal: &quot;I&#39;m done sending, still listening&quot;). The initiator then waits <strong>2MSL</strong> (twice the maximum segment lifetime) in TIME_WAIT so stray duplicates die before the same ports are reused.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Handshake vs Teardown</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Setup = <strong>3</strong> (SYN → SYNACK → ACK; synchronizes <em>both</em> ISNs, defeats stale SYNs). Teardown = <strong>4</strong> (FIN → ACK … FIN → ACK; directions close independently) + <strong>2MSL</strong> wait (lets ghosts expire). Sender&#39;s live limit = <strong>min(cwnd, rwnd)</strong> — cwnd guards the <em>network</em>, rwnd guards the <em>receiver</em>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Flow Control ≠ Congestion Control</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same mechanism family (windows), opposite patients: <strong>rwnd</strong> answers &quot;is the <em>receiver&#39;s buffer</em> full?&quot; (end-to-end, receiver-set); <strong>cwnd</strong> answers &quot;is the <em>network</em> overloaded?&quot; (inferred from loss/delay, sender-computed). An exam option attributing router queues to rwnd — or receiver buffers to cwnd — is always wrong.</p>

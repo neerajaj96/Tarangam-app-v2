@@ -265,7 +265,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -301,7 +301,26 @@
   10                                all balance factors back to 0
 </code></pre>
 <p>Straight lines (LL, RR) need one rotation <em>against</em> the lean; zig-zags (LR, RL) need two — first unbend the elbow into a line, then fix the line.</p>
-<p><strong>Rotations preserve the BST property.</strong> Each rotation only rearranges pointers among a small, fixed set of 2–3 nodes and their subtrees, in a way carefully designed so that, after the rotation, every value still lies in the correct left/right position relative to every other value — the ordering is never violated, only the <em>shape</em> changes.</p>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; LL Rotation in Motion</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated LL rotation: right rotation at 30 rebalances to 20">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="140" y="30" text-anchor="middle">BEFORE · BF(30)=+2</text>
+<line class="eg a1" x1="140" y1="100" x2="80" y2="170"/><g class="nd a1"><circle cx="140" cy="78" r="22"/><text x="140" y="84">30</text></g><g class="nd a1"><circle cx="80" cy="192" r="22"/><text x="80" y="198">20</text></g><g class="nd a1"><circle cx="40" cy="262" r="22"/><text x="40" y="268">10</text></g>
+<text class="bigarrow a2" x="320" y="180" text-anchor="middle">right rotation ⟳</text>
+<text class="animcap a3" x="500" y="30" text-anchor="middle">AFTER · all BF=0</text>
+<line class="eg a3" x1="500" y1="100" x2="440" y2="170"/><line class="eg a3" x1="500" y1="100" x2="560" y2="170"/><g class="nd a3"><circle cx="500" cy="78" r="22"/><text x="500" y="84">20</text></g><g class="nd a3"><circle cx="440" cy="192" r="22"/><text x="440" y="198">10</text></g><g class="nd a3"><circle cx="560" cy="192" r="22"/><text x="560" y="198">30</text></g>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">straight-line lean fixed by one rotation against it</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> LL Rotation in Motion</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the leaning tower (30 over 20 over 10) swing right into balance (20 over 10 and 30) — same three nodes, same order, new shape, all balance factors zero.</div>
+  </div>
+</div><p><strong>Rotations preserve the BST property.</strong> Each rotation only rearranges pointers among a small, fixed set of 2–3 nodes and their subtrees, in a way carefully designed so that, after the rotation, every value still lies in the correct left/right position relative to every other value — the ordering is never violated, only the <em>shape</em> changes.</p>
 <p><strong>A key difference for deletion.</strong> After an insertion, fixing the balance factor at the single lowest unbalanced ancestor is always enough to re-balance the whole tree. After a <em>deletion</em>, however, a rotation performed at one level can sometimes reduce that subtree&#39;s height, which can in turn cause an imbalance to appear <em>further up</em> the tree — so deletion rebalancing must continue checking (and potentially rotating at) every ancestor all the way up to the root, not just stop at the first fix.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Rotation Chooser</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Straight line → <strong>single</strong> rotation: <strong>LL</strong> (left-left) → rotate <strong>right</strong>; <strong>RR</strong> → rotate <strong>left</strong>. Zig-zag → <strong>double</strong>: <strong>LR</strong> → <strong>left</strong> on child, then <strong>right</strong> on parent; <strong>RL</strong> → <strong>right</strong> on child, then <strong>left</strong> on parent. Mnemonic: the <em>first</em> rotation always pushes the &quot;elbow&quot; of the zig-zag outward into a straight line.</p>
 </div></details><hr>

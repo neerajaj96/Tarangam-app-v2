@@ -35,6 +35,10 @@ GBN sender, window N=4, base=2 (packets 2,3,4,5 in flight):
                in flight             sent
 ```
 
+::: anim gbn-window The Window Sliding
+Watch the sender window glide forward as cumulative ACKs arrive — four packets in flight, always, the left edge advancing exactly where acknowledgments land.
+:::
+
 ### 2.3 Selective Repeat (SR)
 
 * Each packet ACKed **individually**; receiver **buffers** out-of-order arrivals.

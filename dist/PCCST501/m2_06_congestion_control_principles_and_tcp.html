@@ -288,7 +288,25 @@
       (x2)   (AIMD +1/RTT)        (AIMD +1/RTT)
               loss: halve          loss: halve
 </code></pre>
-<p>Repeated across competing flows, AIMD converges to <strong>fairness</strong>: overfull flows get halved more often in absolute terms, so shares equalize — the celebrated &quot;sawtooth&quot; is the sound of fairness being enforced.</p>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; The Sawtooth Breathing</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated congestion window sawtooth: additive rise, multiplicative halving">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="axis" x1="60" y1="20" x2="60" y2="260"/><line class="axis" x1="60" y1="260" x2="610" y2="260"/>
+<text class="axislbl" x="30" y="150">cwnd</text><text class="axislbl" x="340" y="285">time →</text>
+<path class="sawdraw" pathLength="1000" d="M60,220 L60,120 L220,220 L220,170 L380,240 L380,190 L540,250" fill="none"/>
+<circle class="sawdot" cx="0" cy="0" r="7"/>
+<text class="animnote a4" x="340" y="40" text-anchor="middle">+1 MSS per RTT up · halve on loss · fairness emerges</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> The Sawtooth Breathing</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the congestion window climb additively and crash multiplicatively on each loss — the dot rides real AIMD dynamics while the caption calls each phase.</div>
+  </div>
+</div><p>Repeated across competing flows, AIMD converges to <strong>fairness</strong>: overfull flows get halved more often in absolute terms, so shares equalize — the celebrated &quot;sawtooth&quot; is the sound of fairness being enforced.</p>
 <h3>2.3 Slow Start, ssthresh, Tahoe vs. Reno</h3>
 <ul>
 <li><strong>Slow start:</strong> despite the name, <em>exponential</em> growth — <code>cwnd</code> doubles per RTT from 1 MSS until first loss or <code>ssthresh</code>. Used at connection birth and after heavy loss (Tahoe).</li>

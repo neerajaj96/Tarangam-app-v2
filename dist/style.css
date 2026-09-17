@@ -705,6 +705,48 @@ mjx-container { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 
   box-shadow: var(--shadow-sm);
 }
 
+/* ---------- SVG motion scenes (dependency-free animations) ---------- */
+.video-frame-wrap svg.anim-stage { width: 100%; height: auto; display: block; background: var(--surface); }
+.anim-stage text { font-family: var(--font-mono); fill: var(--ink-dim); font-size: 14px; }
+.anim-stage .host { fill: none; stroke: var(--border); }
+.anim-stage .hostlbl { fill: var(--ink); font-weight: 600; font-size: 15px; }
+.anim-stage .nd circle { fill: var(--surface-2); stroke: var(--accent); stroke-width: 2; }
+.anim-stage .nd text { fill: var(--ink); font-weight: 600; font-size: 15px; }
+.anim-stage .eg { stroke: var(--ink-faint); stroke-width: 2; }
+.anim-stage .msg line { stroke: var(--accent-warm); stroke-width: 2.5; }
+.anim-stage .msg text { fill: var(--ink); font-weight: 600; }
+.anim-stage #ah path { fill: var(--accent-warm); }
+.anim-stage .axis { stroke: var(--ink-faint); stroke-width: 1.5; }
+.anim-stage .axislbl { fill: var(--ink-faint); font-size: 13px; }
+.anim-stage .animcap { fill: var(--ink); font-weight: 600; font-size: 14px; }
+.anim-stage .animnote { fill: var(--ink-faint); font-size: 13px; font-style: italic; }
+.anim-stage .bigarrow { fill: var(--accent-warm); font-size: 17px; font-weight: 700; }
+.anim-stage .sawdraw { stroke: var(--accent); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round;
+  stroke-dasharray: 1000; animation: sawdraw 12s linear infinite; }
+.anim-stage .sawdot { fill: var(--accent-warm);
+  offset-path: path("M60,220 L60,120 L220,220 L220,170 L380,240 L380,190 L540,250");
+  animation: sawdot 12s linear infinite; }
+.anim-stage .pkt rect { fill: var(--surface-2); stroke: var(--border); }
+.anim-stage .pkt text { fill: var(--ink); font-weight: 600; }
+.anim-stage .winbox { fill: rgba(56, 189, 248, 0.07); stroke: var(--accent); stroke-width: 2; stroke-dasharray: 8 5;
+  animation: winslide 12s ease-in-out infinite; }
+.anim-stage .a1 { animation: k1 12s ease infinite; }
+.anim-stage .a2 { animation: k2 12s ease infinite; }
+.anim-stage .a3 { animation: k3 12s ease infinite; }
+.anim-stage .a4 { animation: k4 12s ease infinite; }
+.anim-stage .a5 { animation: k5 12s ease infinite; }
+.anim-stage .e1 { animation: k2 12s ease infinite; }
+.anim-stage .e2 { animation: k3 12s ease infinite; }
+.anim-stage .e3 { animation: k4 12s ease infinite; }
+@keyframes k1 { 0% { opacity: 0; } 3% { opacity: 1; } 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+@keyframes k2 { 0%, 15% { opacity: 0; } 19% { opacity: 1; } 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+@keyframes k3 { 0%, 31% { opacity: 0; } 35% { opacity: 1; } 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+@keyframes k4 { 0%, 47% { opacity: 0; } 51% { opacity: 1; } 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+@keyframes k5 { 0%, 63% { opacity: 0; } 67% { opacity: 1; } 90% { opacity: 1; } 94%, 100% { opacity: 0; } }
+@keyframes sawdraw { 0% { stroke-dashoffset: 1000; opacity: 0; } 6% { opacity: 1; } 60% { stroke-dashoffset: 0; opacity: 1; } 88% { opacity: 1; } 94%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes sawdot { 0%, 8% { offset-distance: 0%; opacity: 0; } 12% { opacity: 1; } 60% { offset-distance: 100%; opacity: 1; } 88% { opacity: 1; } 94%, 100% { offset-distance: 100%; opacity: 0; } }
+@keyframes winslide { 0%, 8% { transform: translateX(0); } 30% { transform: translateX(70px); } 55% { transform: translateX(140px); } 80% { transform: translateX(70px); } 100% { transform: translateX(0); } }
+
 /* Section chain nav (auto theory<->practice bidirectional links) */
 .secnav {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -819,6 +861,12 @@ code {
     transition-duration: 0.01ms !important;
   }
   .reading-progress-bar { transition: none; }
+  /* SVG scenes collapse to their final static state (actors visible, paths drawn) */
+  .anim-stage .a1, .anim-stage .a2, .anim-stage .a3, .anim-stage .a4, .anim-stage .a5,
+  .anim-stage .e1, .anim-stage .e2, .anim-stage .e3 { animation: none !important; opacity: 1 !important; }
+  .anim-stage .sawdraw { animation: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; }
+  .anim-stage .sawdot { animation: none !important; opacity: 1 !important; offset-distance: 100% !important; }
+  .anim-stage .winbox { animation: none !important; transform: translateX(70px) !important; }
 }
 
 /* ---------- Print: notes-first, chrome-free ---------- */

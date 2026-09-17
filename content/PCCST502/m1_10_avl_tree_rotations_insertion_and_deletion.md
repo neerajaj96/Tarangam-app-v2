@@ -38,6 +38,10 @@ LL BEFORE (BF = +2 at 30)          LL AFTER (single right rotation at 30)
 
 Straight lines (LL, RR) need one rotation *against* the lean; zig-zags (LR, RL) need two — first unbend the elbow into a line, then fix the line.
 
+::: anim avl-ll LL Rotation in Motion
+Watch the leaning tower (30 over 20 over 10) swing right into balance (20 over 10 and 30) — same three nodes, same order, new shape, all balance factors zero.
+:::
+
 **Rotations preserve the BST property.** Each rotation only rearranges pointers among a small, fixed set of 2–3 nodes and their subtrees, in a way carefully designed so that, after the rotation, every value still lies in the correct left/right position relative to every other value — the ordering is never violated, only the *shape* changes.
 
 **A key difference for deletion.** After an insertion, fixing the balance factor at the single lowest unbalanced ancestor is always enough to re-balance the whole tree. After a *deletion*, however, a rotation performed at one level can sometimes reduce that subtree's height, which can in turn cause an imbalance to appear *further up* the tree — so deletion rebalancing must continue checking (and potentially rotating at) every ancestor all the way up to the root, not just stop at the first fix.
