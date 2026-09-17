@@ -31,7 +31,7 @@ Current truth (2026-09-17) — full syllabus complete, 83 topics:
 - All 8 `assets/videos/*.mp4` wired into topics via `::: manim` (0 orphan warnings)
 - `npm run check`: 0 errors, 0 warnings (was: 8 orphan-video warnings at peak)
 - Toolchain is exactly `express` + `marked` (+ `@google/genai`/`dotenv`, reserved for the parked AI tutor — dead React/Vite scaffold removed in Session 12).
-- Parked intelligence: no tutor/RAG/quiz-gen exists yet (`metadata.json` capability vs `/api/health`-only server). Spaced repetition is the planned first use of the `tarangam_visited_ts_<COURSE>` timestamp map (stored since Session 10); quiz options are client-shuffled per load to neutralize a measured 71%-at-B position bias.
+- Parked intelligence: no tutor/RAG/quiz-gen exists yet (`metadata.json` capability vs `/api/health`-only server). Spaced review v1 is live (7-day due flags + counter, stamps refreshed on visit); quiz options are client-shuffled per load to neutralize a measured 71%-at-B position bias.
 
 ## Features already built
 
