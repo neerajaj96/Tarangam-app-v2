@@ -167,7 +167,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -197,6 +197,15 @@ $$T(n) = \Theta(n^{\log_b a})$$</p>
 $$T(n) = \Theta(n^{\log_b a} \log n)$$</p>
 <p><strong>Case 3 — root dominates.</strong> If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some constant $\epsilon &gt; 0$ (i.e. $f(n)$ grows <em>polynomially faster</em> than $n^{\log_b a}$), <strong>and</strong> the regularity condition $a,f(n/b) \le c,f(n)$ holds for some constant $c&lt;1$ and large enough $n$ (a technical condition almost always satisfied for typical polynomial/logarithmic $f(n)$), then:
 $$T(n) = \Theta(f(n))$$</p>
+<pre><code class="language-mermaid">flowchart TD
+    Q[&quot;Compare f(n) against n^(log_b a)&quot;] --&gt; C1{&quot;f polynomially slower?&quot;}
+    C1 -- Yes --&gt; A1[&quot;Case 1: T = Theta(n^(log_b a))&quot;]
+    C1 -- No --&gt; C2{&quot;f asymptotically equal?&quot;}
+    C2 -- Yes --&gt; A2[&quot;Case 2: T = Theta(n^(log_b a) log n)&quot;]
+    C2 -- No --&gt; C3{&quot;f polynomially faster + regularity?&quot;}
+    C3 -- Yes --&gt; A3[&quot;Case 3: T = Theta(f(n))&quot;]
+    C3 -- No --&gt; GAP[&quot;Gap: theorem silent, unroll by hand&quot;]
+</code></pre>
 <p><strong>Important caveat — the &quot;gap&quot; between cases.</strong> The three cases don&#39;t cover <em>every possible</em> $f(n)$ — there&#39;s a gap between &quot;polynomially slower&quot; and &quot;polynomially faster&quot; (e.g. $f(n)$ that differs from $n^{\log_b a}$ only by a logarithmic factor, like $f(n) = n^{\log_b a}\log^2 n$, technically doesn&#39;t satisfy Case 2&#39;s exact-match requirement nor either polynomial-difference requirement in the classic three-case statement above). When a recurrence falls in this gap, the Master Theorem (in this basic form) simply doesn&#39;t apply, and you must fall back to the iteration or recursion-tree method (or a more advanced version of the theorem) to solve it directly.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Master Theorem in 30 Seconds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Compute $n^{\log_b a}$ first. $f$ polynomially <em>slower</em> → <strong>Case 1</strong>: $\Theta(n^{\log_b a})$. $f$ <em>equal</em> → <strong>Case 2</strong>: $\Theta(n^{\log_b a}\log n)$. $f$ polynomially <em>faster</em> (+ regularity) → <strong>Case 3</strong>: $\Theta(f(n))$. Differs only by a $\log$ factor → <strong>gap</strong>: theorem silent, unroll by hand.</p>
 </div></details><hr>

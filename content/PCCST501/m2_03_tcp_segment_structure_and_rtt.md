@@ -23,6 +23,23 @@ Imagine mailing a novel one page per envelope through an unreliable postal servi
 
 Source/destination ports (multiplexing), **sequence + acknowledgment numbers** (ordering/reliability), header length, flags (**SYN, ACK, FIN, RST** — connection control), **receive window** `rwnd` (flow control, next topic), **checksum** (mandatory in TCP, unlike UDP's optional use), urgent pointer.
 
+```text
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |  demux
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |  byte # of
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  1st payload byte
+|                     Acknowledgment Number                     |  next byte
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  expected
+|Offset |  Flags (SYN ACK FIN..)|        Receive Window         |  control +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  flow ctrl
+|            Checksum           |         Urgent Pointer        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                    20 bytes minimum (options may extend)
+```
+
 ### 2.3 Learning the RTT: SRTT, DevRTT, Timeout
 
 TCP cannot be born knowing the network's delay — it measures each segment's **SampleRTT** (send time → ACK arrival, measured only for once-transmitted segments) and smooths it:

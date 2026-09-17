@@ -48,6 +48,16 @@ Solve $T(n) = 3T(n/4) + n^2$ using the recursion tree method (here $a=3$, $b=4$,
 **Level 2:** 9 nodes, each of size $n/16$, each costing $(n/16)^2 = n^2/256$; level total $= 9 \cdot n^2/256 = (3/16)^2 n^2$.
 **Level $i$ (general pattern):** level total $= (3/16)^i \cdot n^2$.
 **Recognising the shape:** since $3/16 < 1$, each successive level's total is *smaller* than the one above it — a geometric series that shrinks — meaning the **root's** contribution ($n^2$) dominates the entire sum, and the sum of the full (infinite, in the limit) geometric series $\sum_{i=0}^{\infty} (3/16)^i$ converges to a constant ($\frac{1}{1-3/16} = \frac{16}{13}$), not growing with $n$.
+
+```text
+Level 0 (root):              [ cost n^2 ]                    total = n^2
+                          /      |      \
+Level 1:          [n^2/16]  [n^2/16]  [n^2/16]               total = 3n^2/16
+                   /|\         ...         ...
+Level 2:         9 nodes, each n^2/256                      total = 9n^2/256 = (3/16)^2 n^2
+   ...
+Level i:         3^i nodes, each (n/4^i)^2                   total = (3/16)^i n^2  -->  shrinking
+```
 :::
 
 ::: step [Step 3: Conclusion] Final Result

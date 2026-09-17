@@ -198,6 +198,21 @@
 </ul>
 <h3>2.2 The Header Fields That Earn Marks (20 bytes minimum)</h3>
 <p>Source/destination ports (multiplexing), <strong>sequence + acknowledgment numbers</strong> (ordering/reliability), header length, flags (<strong>SYN, ACK, FIN, RST</strong> — connection control), <strong>receive window</strong> <code>rwnd</code> (flow control, next topic), <strong>checksum</strong> (mandatory in TCP, unlike UDP&#39;s optional use), urgent pointer.</p>
+<pre><code class="language-text"> 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |  demux
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |  byte # of
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  1st payload byte
+|                     Acknowledgment Number                     |  next byte
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  expected
+|Offset |  Flags (SYN ACK FIN..)|        Receive Window         |  control +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  flow ctrl
+|            Checksum           |         Urgent Pointer        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                    20 bytes minimum (options may extend)
+</code></pre>
 <h3>2.3 Learning the RTT: SRTT, DevRTT, Timeout</h3>
 <p>TCP cannot be born knowing the network&#39;s delay — it measures each segment&#39;s <strong>SampleRTT</strong> (send time → ACK arrival, measured only for once-transmitted segments) and smooths it:</p>
 <ul>

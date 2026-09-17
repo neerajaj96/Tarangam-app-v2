@@ -172,7 +172,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -200,6 +200,14 @@
 <li><strong>Single timer</strong> for the oldest unACKed packet; on timeout, <strong>retransmit everything from that packet onward</strong> — even packets that arrived fine.</li>
 <li>Receiver is dumb: discards out-of-order packets, re-ACKs the last in-order one.</li>
 </ul>
+<pre><code class="language-text">GBN sender, window N=4, base=2 (packets 2,3,4,5 in flight):
+
+ 0   1  |  2   3   4   5  |  6   7   8 ...
+        |&lt;--- window ---&gt;|
+       base                   nextseqnum
+     ACKed     unACKed              not yet
+               in flight             sent
+</code></pre>
 <h3>2.3 Selective Repeat (SR)</h3>
 <ul>
 <li>Each packet ACKed <strong>individually</strong>; receiver <strong>buffers</strong> out-of-order arrivals.</li>

@@ -22,6 +22,22 @@ An **AVL tree** (named after its inventors, Adelson-Velsky and Landis) is a BST 
 
 **Height of a tree.** The height of a node is the number of edges on the longest path from that node down to a leaf; the height of the whole tree is the height of its root. For a BST holding $n$ nodes: the *best possible* height is $\Theta(\log n)$ (a perfectly balanced tree), but the *worst possible* height is $\Theta(n)$ (a completely skewed, line-like tree) — this gap is exactly the problem AVL trees solve.
 
+```text
+SKEWED BST (insert 1,2,3,4,5)      AVL TREE (same keys, rebalanced)
+
+  1                                        2
+   \                                     /   \
+    2                                   1     4
+     \                                       / \
+      3                                     3   5
+       \
+        4
+         \
+          5
+
+height 4: search visits 5 nodes    height 2: search visits at most 3
+```
+
 **Balance factor.** For any node $x$ in an AVL tree, define:
 $$BF(x) = \text{height}(\text{left subtree of } x) - \text{height}(\text{right subtree of } x)$$
 **The AVL invariant:** every single node in a valid AVL tree must satisfy $|BF(x)| \le 1$ — i.e. $BF(x) \in \{-1, 0, +1\}$. If an insertion or deletion ever causes some node's balance factor to become $-2$ or $+2$, the tree is no longer a valid AVL tree, and a rebalancing operation (rotation — covered in the next topic) must be performed to restore the invariant.

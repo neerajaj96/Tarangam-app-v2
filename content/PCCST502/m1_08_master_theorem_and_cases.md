@@ -31,6 +31,17 @@ $$T(n) = \Theta(n^{\log_b a} \log n)$$
 **Case 3 — root dominates.** If $f(n) = \Omega(n^{\log_b a + \epsilon})$ for some constant $\epsilon > 0$ (i.e. $f(n)$ grows *polynomially faster* than $n^{\log_b a}$), **and** the regularity condition $a\,f(n/b) \le c\,f(n)$ holds for some constant $c<1$ and large enough $n$ (a technical condition almost always satisfied for typical polynomial/logarithmic $f(n)$), then:
 $$T(n) = \Theta(f(n))$$
 
+```mermaid
+flowchart TD
+    Q["Compare f(n) against n^(log_b a)"] --> C1{"f polynomially slower?"}
+    C1 -- Yes --> A1["Case 1: T = Theta(n^(log_b a))"]
+    C1 -- No --> C2{"f asymptotically equal?"}
+    C2 -- Yes --> A2["Case 2: T = Theta(n^(log_b a) log n)"]
+    C2 -- No --> C3{"f polynomially faster + regularity?"}
+    C3 -- Yes --> A3["Case 3: T = Theta(f(n))"]
+    C3 -- No --> GAP["Gap: theorem silent, unroll by hand"]
+```
+
 **Important caveat — the "gap" between cases.** The three cases don't cover *every possible* $f(n)$ — there's a gap between "polynomially slower" and "polynomially faster" (e.g. $f(n)$ that differs from $n^{\log_b a}$ only by a logarithmic factor, like $f(n) = n^{\log_b a}\log^2 n$, technically doesn't satisfy Case 2's exact-match requirement nor either polynomial-difference requirement in the classic three-case statement above). When a recurrence falls in this gap, the Master Theorem (in this basic form) simply doesn't apply, and you must fall back to the iteration or recursion-tree method (or a more advanced version of the theorem) to solve it directly.
 
 ::: callout-formula KTU Formula Vault: Master Theorem in 30 Seconds

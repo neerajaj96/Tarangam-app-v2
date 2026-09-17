@@ -25,6 +25,16 @@ With stop-and-wait, the sender transmits for $L/R$ seconds then idles a full RTT
 * **Single timer** for the oldest unACKed packet; on timeout, **retransmit everything from that packet onward** — even packets that arrived fine.
 * Receiver is dumb: discards out-of-order packets, re-ACKs the last in-order one.
 
+```text
+GBN sender, window N=4, base=2 (packets 2,3,4,5 in flight):
+
+ 0   1  |  2   3   4   5  |  6   7   8 ...
+        |<--- window --->|
+       base                   nextseqnum
+     ACKed     unACKed              not yet
+               in flight             sent
+```
+
 ### 2.3 Selective Repeat (SR)
 
 * Each packet ACKed **individually**; receiver **buffers** out-of-order arrivals.

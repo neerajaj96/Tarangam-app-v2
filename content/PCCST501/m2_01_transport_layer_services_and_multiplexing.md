@@ -39,6 +39,13 @@ How the receiver identifies the socket differs — and this difference is heavil
 UDP = **2-tuple** (dst IP, dst port). TCP = **4-tuple** (+ src IP, src port). The standard 3-mark question: "two HTTP clients connect to one web server — how many sockets?" Answer: **three** — one welcoming socket plus one connection socket per client, distinguished by the clients' differing source ports.
 :::
 
+```mermaid
+flowchart LR
+    NET["Arriving segments"] -->|dest port 53| S53["Socket :53 (DNS)"]
+    NET -->|dest port 80| S80["Socket :80 (HTTP)"]
+    NET -->|dest port 443| S443["Socket :443 (HTTPS)"]
+```
+
 ### 2.2 Sockets, Ports, and Well-Known Numbers
 
 A **socket** is the programming interface between an application process and the transport layer, named by `(IP address, port number)`. Ports 0–1023 are **well-known** (HTTP 80, HTTPS 443, FTP-control 21, DNS 53, SMTP 25); servers listen on them while clients use ephemeral high ports.

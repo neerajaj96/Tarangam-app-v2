@@ -223,7 +223,12 @@
 </tr>
 </tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Demux Keys</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>UDP = <strong>2-tuple</strong> (dst IP, dst port). TCP = <strong>4-tuple</strong> (+ src IP, src port). The standard 3-mark question: &quot;two HTTP clients connect to one web server — how many sockets?&quot; Answer: <strong>three</strong> — one welcoming socket plus one connection socket per client, distinguished by the clients&#39; differing source ports.</p>
-</div></details><h3>2.2 Sockets, Ports, and Well-Known Numbers</h3>
+</div></details><pre><code class="language-mermaid">flowchart LR
+    NET[&quot;Arriving segments&quot;] --&gt;|dest port 53| S53[&quot;Socket :53 (DNS)&quot;]
+    NET --&gt;|dest port 80| S80[&quot;Socket :80 (HTTP)&quot;]
+    NET --&gt;|dest port 443| S443[&quot;Socket :443 (HTTPS)&quot;]
+</code></pre>
+<h3>2.2 Sockets, Ports, and Well-Known Numbers</h3>
 <p>A <strong>socket</strong> is the programming interface between an application process and the transport layer, named by <code>(IP address, port number)</code>. Ports 0–1023 are <strong>well-known</strong> (HTTP 80, HTTPS 443, FTP-control 21, DNS 53, SMTP 25); servers listen on them while clients use ephemeral high ports.</p>
 <hr>
 <p><a id="worked-example"></a></p>
