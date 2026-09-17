@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 3.1 Greedy Strategy Control Abstraction</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 3.1 Greedy Strategy Control Abstraction | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 3.1 Greedy Strategy Control Abstraction">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 3.1 Greedy Strategy Control Abstraction">
+<title>Tarangam — 4.2 TSP Branch And Bound</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 4.2 TSP Branch And Bound | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.2 TSP Branch And Bound">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 4.2 TSP Branch And Bound">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -148,14 +148,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="3">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Greedy, DP &amp; Backtracking</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m3_01_greedy_strategy_control_abstraction.html" class="topic-link active" id="topic-m3_01_greedy_strategy_control_abstraction">
+          <a href="./m3_01_greedy_strategy_control_abstraction.html" class="topic-link " id="topic-m3_01_greedy_strategy_control_abstraction">
             <span class="topic-dot"></span>
             <span>3.1 Greedy Strategy Control Abstraction</span>
           </a>
@@ -177,8 +177,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Branch/Bound &amp; Complexity</span>
           <span class="chev">&#9656;</span>
@@ -188,7 +188,7 @@
             <span class="topic-dot"></span>
             <span>4.1 Branch And Bound Control Abstraction</span>
           </a>
-          <a href="./m4_02_tsp_branch_and_bound.html" class="topic-link " id="topic-m4_02_tsp_branch_and_bound">
+          <a href="./m4_02_tsp_branch_and_bound.html" class="topic-link active" id="topic-m4_02_tsp_branch_and_bound">
             <span class="topic-dot"></span>
             <span>4.2 TSP Branch And Bound</span>
           </a>
@@ -231,9 +231,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 3</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">3.1 Greedy Strategy Control Abstraction</span>
+        <span style="color:var(--ink); font-weight:600;">4.2 TSP Branch And Bound</span>
       </div>
 
       <div class="topbar-actions">
@@ -249,7 +249,7 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge badge-accent">MODULE 4</span>
     <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
@@ -261,58 +261,57 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Greedy Strategy &amp; Control Abstraction</h1>
-<p><strong>Greedy-choice property, optimal substructure, the generic greedy loop, activity selection as the canonical proof, and when greed fails.</strong></p>
+<h1>TSP Branch &amp; Bound: Reduced Matrices</h1>
+<p><strong>Tour cost, assignment-style lower bounds by row/column reduction, include/exclude branching, incumbent pruning, and a fully traced 4-city optimum.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Coin-Change Cashier</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A cashier making change for 67¢ grabs the biggest coin that fits (quarter), then repeats (quarter, dime, nickel, pennies) — never reconsidering, never backtracking. Fast, obviously sensible — and <em>sometimes wrong</em>: with coin denominations {30, 25, 1} and 50¢ due, greedy grabs 30+20×1 (21 coins!) while 25+25 (2 coins) is optimal. <strong>Greedy algorithms</strong> commit to the locally best choice at every step with zero regrets. The entire theory of this topic is one question: <em>when is never-looking-back provably safe?</em></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Salesperson&#39;s Price Floor</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A salesperson must visit 4 cities and return. Before planning any route, a clever assistant computes a <strong>price floor</strong>: &quot;every city must be <em>left</em> (≥ cheapest outgoing road) and <em>entered</em> (≥ cheapest incoming road) — sum those minima and no tour on Earth costs less.&quot; That floor (≈ assignment bound via row+column reduction) then judges every partial route: any branch whose floor already exceeds the best complete tour found is abandoned unbuilt. Floors first, tours second, pruning always.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Control Abstraction (the Generic Greedy Loop)</h3>
-<pre><code class="language-text">GreedyFramework(Problem P):
-    Solution S ← ∅
-    while S is not complete and candidates remain:
-        x ← SELECT locally-optimal feasible candidate
-        if S ∪ {x} stays feasible: S ← S ∪ {x}   // commit forever
-        discard x either way                      // never reconsidered
-    return S
-</code></pre>
-<p>Every greedy algorithm in this module is this skeleton wearing different SELECT/feasible costumes (Kruskal: cheapest edge not forming a cycle; Dijkstra: closest unsettled vertex; Huffman: two lightest trees).</p>
-<h3>2.2 The Two Properties That License Greed</h3>
+<h3>2.1 Problem and Bound Machinery</h3>
 <ul>
-<li><strong>Greedy-choice property:</strong> <em>some</em> optimal solution extends the greedy first choice — i.e. there exists an optimal solution containing it (proved by <strong>exchange argument</strong>: take any optimal solution lacking the greedy pick, swap the pick in, show nothing gets worse).</li>
-<li><strong>Optimal substructure:</strong> after the greedy commitment, the <em>remainder</em> is the same problem on a smaller instance, solvable optimally the same way (shared with dynamic programming — §4).</li>
+<li>Tour $1 \to \dots \to 1$ visiting each city once; cost = edge sum. $(n-1)!/2$ tours (symmetric) — brute force dies early.</li>
+<li><strong>Row reduction:</strong> subtract each row&#39;s minimum from that row (every tour uses exactly one entry per row — cost drops by exactly the subtracted total, so the reduction total is a valid lower bound).</li>
+<li><strong>Column reduction</strong> on the result (every tour uses exactly one entry per column). <strong>Bound = row total + column total.</strong> Forbid used edges/self-loops with $\infty$ (never the minimum — reductions skip infinities).</li>
+<li><strong>Branch:</strong> pick an edge $e$: <em>include</em> it (delete its row/column, ban the return edge to forbid subtours) vs. <em>exclude</em> it (set cost $\infty$), recompute bounds, prune branches $\ge$ incumbent (start incumbent = any heuristic tour, e.g. nearest-neighbor).</li>
 </ul>
-<p>Greedy needs <strong>both</strong>; DP needs only the second. Problems with substructure but <em>no</em> safe greedy choice (0/1 knapsack, longest path) punish greed and demand DP or backtracking instead. (Preview: on items $(60,10),(100,20),(120,30)$ with capacity $50$, ratio-greedy scores $60+100 = 160$ while $100+120 = 220$ fits — greed leaves 60 value on the table.)</p>
-<h3>2.3 Canonical Proof: Activity Selection</h3>
-<p>Given activities with start/finish times, maximize the count of compatible (non-overlapping) activities. Greedy rule: <strong>always pick the compatible activity finishing earliest</strong>. Exchange proof: let greedy pick $a_1$ (earliest finish $f_1$); any optimal solution&#39;s first activity $a_k$ has $f_k \ge f_1$, so swapping $a_k \to a_1$ keeps feasibility and count — an optimal solution <em>containing</em> $a_1$ exists; recurse on what remains after $f_1$. Result: $\Theta(n \log n)$ (sort by finish) and provably optimal.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Greed Checklist</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Loop: <strong>select-best → commit-if-feasible → never-revisit</strong> · license: <strong>greedy-choice</strong> (exchange argument) + <strong>optimal substructure</strong> · canonical wins: <strong>activity selection</strong> (earliest finish), <strong>fractional knapsack</strong> (best ratio), <strong>MST/Huffman/Dijkstra</strong> · canonical failure: <strong>0/1 knapsack</strong> (greed by ratio fails), <strong>coin systems without canonical denominations</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Fractional ≠ 0/1 Knapsack (the Standard Trap)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Greedy-by-ratio is <em>optimal</em> for <strong>fractional</strong> knapsack (take fractions of the best-ratio item — exchange argument holds) and can <em>fail</em> for <strong>0/1</strong> knapsack (indivisibility breaks the swap: classic $v/w$ counterexample $(60,10),(100,20),(120,30)$, capacity $50$: greedy banks $60+100 = 160$ but $100+120 = 220$ fits). Same ratio rule, opposite verdicts — the exam always pairs them.</p>
+<h3>2.2 The Worked Instance (Machine-Verified)</h3>
+<p>Cost matrix (row $i$ → column $j$):</p>
+<pre><code class="language-text">       1    2    3    4
+  1  [ -   10   15   20 ]
+  2  [ 5    -    9   10 ]
+  3  [ 6   13    -   12 ]
+  4  [ 8    8    9    - ]
+</code></pre>
+<p>Row minima (off-diagonal): $10, 5, 6, 8$ → reduce total $29$. Column minima of the row-reduced matrix: $0, 0, 1, 5$ → reduce total $6$. <strong>Root bound $= 29 + 6 = 35$.</strong> Nearest-neighbor tour from 1: $1 \to 2\ (10) \to 3\ (9) \to 4\ (12) \to 1\ (8) = 39$ — incumbent $39$.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: TSP B&amp;B Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Bound = <strong>row-reduction + column-reduction totals</strong> (assignment relaxation) · branch <strong>include vs exclude</strong> an edge · prune when <strong>bound ≥ incumbent</strong> · infinities for <strong>used rows/columns, diagonal, return edges</strong> (subtour killer) · optimal proven when <strong>bound == incumbent</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Bound Is Optimistic Because It Allows Subtours</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Row+column reduction solves the <em>assignment</em> problem (each city one in-edge + one out-edge), which permits disjoint subtours (1→2→1 plus 3→4→3) that no TSP tour allows. The bound is valid (a real tour is a feasible assignment, so optimum ≥ bound) but loose exactly when subtours win — include/exclude branching exists to kill them one by one.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Activities (start, finish): A(1,4), B(3,5), C(0,6), D(5,7), E(3,9), F(5,9), G(6,10), H(8,11). Select the maximum compatible subset with earliest-finish greedy, and show the exchange logic at the first step.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Running Greedy</div><div class="step-content"><p>Sort by finish: A(4), B(5), C(6), D(7), E(9), F(9), G(10), H(11). Pick A(1,4) (earliest finish). Discard overlapping: B(3&lt;4), C(0&lt;4), E(3&lt;4). Next earliest compatible: D(5,7) (5≥4 ✓). Discard F(5&lt;7? F starts 5 &lt; 7 ✓ overlaps → discard). Next: H(8,11) (8≥7 ✓); G(6&lt;7... G starts 6, D ends 7 → overlaps → discard). Selected: {A, D, H} — 3 activities.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>{A, D, H} with no overlaps and no room for a fourth (every leftover overlaps one of them — C spans 0–6 killing A+D, B/E/F/G each collide). Exchange argument at step 1: any optimal solution&#39;s first activity finishes ≥ 4 = A&#39;s finish, so A swaps in freely — greed&#39;s first commitment was safe, and inductively so is each following one.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Using the matrix above (root bound 35, incumbent 39): branch on edge $1 \to 2$. Compute the exclude-branch bound (edge banned) and resolve the include side down to a tour. (All bounds machine-verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Branching</div><div class="step-content"><p><strong>Exclude $1 \to 2$:</strong> set $M[1][2] = \infty$, re-reduce — bound rises to <strong>39</strong>, equal to the incumbent: nothing down this branch can <em>beat</em> 39, so prune it unexpanded (it can only tie, never improve).
+<strong>Include $1 \to 2$:</strong> delete row 1 / column 2, ban return $2 \to 1$ (subtour guard), continue branching — the surviving line resolves to tour $1 \to 2 \to 4 \to 3 \to 1$ costing $10 + 10 + 9 + 6 = \mathbf{35}$. New incumbent 35 <strong>equals the root bound</strong> — optimality proven, search over.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Optimum <strong>35</strong> ($1 \to 2 \to 4 \to 3 \to 1$), certified by the root floor: no tour exists below 35 (bound), one exists at 35 (tour) — squeeze complete. One exclusion-prune + one inclusion-descent solved a $3$-tour... precisely, a $(4-1)!/2 = 3$-tour problem with barely any search — bounds doing the exponential heavy lifting.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What do the greedy-choice property and optimal substructure each contribute to a correctness proof?</span>
+    <span class="quiz-category">Row reduction subtracts each row&#39;s minimum and adds it to a running total claimed as part of the lower bound. Why is this total valid (never overestimating)?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They are rival theories; only one is ever used</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Greedy-choice (via exchange argument) proves committing to the local pick never destroys optimality; optimal substructure proves the remaining smaller instance can be solved the same way — induction needs both halves</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Substructure replaces the need for any greedy choice</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Greedy-choice alone proves everything including termination</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Subtraction makes all entries non-negative, which is sufficient</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Every feasible tour uses exactly one entry per row, so each tour&#39;s cost drops by exactly the subtracted amounts — the reduction total is a cost every tour must pay, hence a true lower bound</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Row minima are always zero in valid TSP instances</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Validity requires column reduction first; rows alone prove nothing</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -324,20 +323,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The proof is induction with two legs: <em>this step is safe</em> (some optimal solution extends the greedy pick — exchange) and <em>the rest is the same problem</em> (substructure — recurse). Drop the first and greed may err (0/1 knapsack); drop the second and there&#39;s nothing to recurse on.</p><pre><code>&lt;/div&gt;
+      <p>The bound&#39;s legitimacy is one-to-one usage: one entry per row per tour means subtracting row-minimum $m_i$ removes exactly $m_i$ from <em>every</em> tour&#39;s cost — $\sum m_i$ is donc unavoidable cost, a floor no tour ducks under. Same logic, transposed, for columns.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Greedy-by-value-density is optimal for fractional knapsack but fails 0/1 knapsack on (v,w) = (60,10),(100,20),(120,30), capacity 50. What exactly breaks?</span>
+    <span class="quiz-category">In the worked trace, the exclude-1→2 branch (bound 39, incumbent 39) was pruned. Why is pruning on equality correct rather than merely safe?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>The exchange argument&#39;s arithmetic contains an error</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Indivisibility: greedy banks 60 + 100 = 160 and then nothing else fits, while skipping the ratio-leader for 100 + 120 = 220 fits — the swap that proves safety for fractions is physically impossible for whole items</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Fractional knapsack is NP-hard so greed must fail there too</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The counterexample uses negative weights</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Equality pruning is actually incorrect and the trace cheats</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The branch promises cost ≥ 39 while 39 is already in hand — expanding it can at best tie the incumbent, never improve it, so skipping loses no optimal solution</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Equal bounds always indicate arithmetic errors</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The incumbent 39 was itself unproven at that point</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -349,20 +348,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>With fractions, greedy&#39;s pick can always be <em>partially</em> swapped into any optimal solution (take a slice of the best-ratio item). Whole items forbid slicing: after banking (60,10)+(100,20) = 160 with 20 capacity left, the 30-weight item won&#39;t fit — yet the optimum (220) skips nothing it can&#39;t use. Divisibility is the whole ballgame.</p><pre><code>&lt;/div&gt;
+      <p>Pruning needs &quot;cannot <em>beat</em>&quot; — ties don&#39;t beat. Bound $\ge$ incumbent (not strictly $&gt;$) is the correct kill condition: the subtree holds no <em>strictly better</em> tour by the bound&#39;s own certificate. Equality prunes are where B&amp;B saves its most time.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Running earliest-finish greedy on the worked example selected {A, D, H}. A student claims {B, D, H} is equally good so &quot;greed got lucky.&quot; What is wrong with this reasoning?</span>
+    <span class="quiz-category">Why must the return edge be banned (∞) when an edge is included in the partial tour?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — greedy algorithms depend on luck by definition</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Optimality was never about this instance&#39;s tie: the exchange proof guarantees *some* optimal solution contains each greedy pick on *every* instance — luck plays no role; {B,D,H} being optimal here is consistent with, not evidence against, the guarantee</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>{B, D, H} is actually infeasible</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Greedy never selects H in any correct implementation</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>To make the matrix symmetric for faster reduction</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Without the ban, the assignment relaxation happily closes a premature subtour (e.g. 1→2→1) and reports an invalid &quot;tour&quot; with an artificially low bound — the ban forces genuine single-cycle completion</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Banning speeds up row reduction by removing large entries</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Return edges are illegal in all graphs by definition</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -374,7 +373,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The theorem promises the greedy <em>set</em> is optimal, not that it&#39;s the <em>unique</em> optimum — ties ({A,D,H} vs {B,D,H}) are expected, not suspicious. Correctness is a universal claim over instances (proved by exchange), never a story about one lucky run.</p><pre><code>&lt;/div&gt;
+      <p>The bound&#39;s optimism <em>includes</em> subtour-shaped assignments; include-branching without return-bans lets the relaxation &quot;complete&quot; a 2-cycle and claim victory. The $\infty$ kills exactly the premature closure, forcing the search toward true Hamiltonian cycles.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -383,16 +382,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m2_04_divide_and_conquer_merge_sort_and_strassen.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m4_01_branch_and_bound_control_abstraction.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">2.4 Divide And Conquer Merge Sort And Strassen</div>
+        <div class="ttl">4.1 Branch And Bound Control Abstraction</div>
       </a>
       
       
       
-      <a href="./m3_02_minimum_spanning_trees_kruskal_prim.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m4_03_np_completeness_p_np_reductions.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">3.2 Minimum Spanning Trees Kruskal Prim</div>
+        <div class="ttl">4.3 NP Completeness P NP Reductions</div>
       </a>
       
     </footer>
@@ -479,7 +478,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(26) || 0;
-    const currentId = "m3_01_greedy_strategy_control_abstraction";
+    const currentId = "m4_02_tsp_branch_and_bound";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 

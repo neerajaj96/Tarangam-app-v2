@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 3.1 Greedy Strategy Control Abstraction</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 3.1 Greedy Strategy Control Abstraction | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 3.1 Greedy Strategy Control Abstraction">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 3.1 Greedy Strategy Control Abstraction">
+<title>Tarangam — 4.4 Bin Packing Approximation Algorithms</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 4.4 Bin Packing Approximation Algorithms | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.4 Bin Packing Approximation Algorithms">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 4.4 Bin Packing Approximation Algorithms">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -148,14 +148,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="3">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Greedy, DP &amp; Backtracking</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m3_01_greedy_strategy_control_abstraction.html" class="topic-link active" id="topic-m3_01_greedy_strategy_control_abstraction">
+          <a href="./m3_01_greedy_strategy_control_abstraction.html" class="topic-link " id="topic-m3_01_greedy_strategy_control_abstraction">
             <span class="topic-dot"></span>
             <span>3.1 Greedy Strategy Control Abstraction</span>
           </a>
@@ -177,8 +177,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Branch/Bound &amp; Complexity</span>
           <span class="chev">&#9656;</span>
@@ -196,7 +196,7 @@
             <span class="topic-dot"></span>
             <span>4.3 NP Completeness P NP Reductions</span>
           </a>
-          <a href="./m4_04_bin_packing_approximation_algorithms.html" class="topic-link " id="topic-m4_04_bin_packing_approximation_algorithms">
+          <a href="./m4_04_bin_packing_approximation_algorithms.html" class="topic-link active" id="topic-m4_04_bin_packing_approximation_algorithms">
             <span class="topic-dot"></span>
             <span>4.4 Bin Packing Approximation Algorithms</span>
           </a>
@@ -231,9 +231,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 3</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">3.1 Greedy Strategy Control Abstraction</span>
+        <span style="color:var(--ink); font-weight:600;">4.4 Bin Packing Approximation Algorithms</span>
       </div>
 
       <div class="topbar-actions">
@@ -249,8 +249,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -261,58 +261,50 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Greedy Strategy &amp; Control Abstraction</h1>
-<p><strong>Greedy-choice property, optimal substructure, the generic greedy loop, activity selection as the canonical proof, and when greed fails.</strong></p>
+<h1>Bin Packing: Approximation Algorithms</h1>
+<p><strong>NP-hard packing, Next/First/Best-Fit online rules, First-Fit Decreasing, approximation ratios, and lower-bound certificates.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Coin-Change Cashier</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A cashier making change for 67¢ grabs the biggest coin that fits (quarter), then repeats (quarter, dime, nickel, pennies) — never reconsidering, never backtracking. Fast, obviously sensible — and <em>sometimes wrong</em>: with coin denominations {30, 25, 1} and 50¢ due, greedy grabs 30+20×1 (21 coins!) while 25+25 (2 coins) is optimal. <strong>Greedy algorithms</strong> commit to the locally best choice at every step with zero regrets. The entire theory of this topic is one question: <em>when is never-looking-back provably safe?</em></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Packing a Moving Truck</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Boxes arrive one by one and must go <em>somewhere now</em> (online) — or you&#39;ve seen them all and can pre-sort (offline). <strong>Next Fit</strong> uses one open box, sealing it forever when the next item won&#39;t fit (amnesiac, wasteful). <strong>First Fit</strong> keeps all open boxes and slots each item into the <em>first</em> that fits (remembers everything). <strong>Best Fit</strong> picks the <em>tightest</em> fit (greedy tidiness). <strong>First-Fit Decreasing</strong> sorts big-to-small first — the tiny items at the end plug gaps like sand filling gravel. Sorting first is the whole superpower: FFD&#39;s worst case (~22% over optimum) crushes online rules (~70% over).</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Control Abstraction (the Generic Greedy Loop)</h3>
-<pre><code class="language-text">GreedyFramework(Problem P):
-    Solution S ← ∅
-    while S is not complete and candidates remain:
-        x ← SELECT locally-optimal feasible candidate
-        if S ∪ {x} stays feasible: S ← S ∪ {x}   // commit forever
-        discard x either way                      // never reconsidered
-    return S
-</code></pre>
-<p>Every greedy algorithm in this module is this skeleton wearing different SELECT/feasible costumes (Kruskal: cheapest edge not forming a cycle; Dijkstra: closest unsettled vertex; Huffman: two lightest trees).</p>
-<h3>2.2 The Two Properties That License Greed</h3>
+<h3>2.1 Problem and Lower Bounds</h3>
+<p>Items sizes $s_i \in (0,1]$, bins capacity 1, minimize bin count. Decision form is NP-complete (from Partition); optimization is NP-hard — approximation is the honest goal. Universal lower bounds for any instance: $\lceil \sum s_i \rceil$ bins (total size) and at least (#items $&gt; 1/2$) bins (each needs its own).</p>
+<h3>2.2 The Algorithms and Their Guarantees</h3>
 <ul>
-<li><strong>Greedy-choice property:</strong> <em>some</em> optimal solution extends the greedy first choice — i.e. there exists an optimal solution containing it (proved by <strong>exchange argument</strong>: take any optimal solution lacking the greedy pick, swap the pick in, show nothing gets worse).</li>
-<li><strong>Optimal substructure:</strong> after the greedy commitment, the <em>remainder</em> is the same problem on a smaller instance, solvable optimally the same way (shared with dynamic programming — §4).</li>
+<li><strong>Next Fit (NF):</strong> one open bin; overflow seals it forever. $\le 2\cdot OPT - 1$ (at most ~2× optimal — adjacent bin pairs always sum $&gt; 1$).</li>
+<li><strong>First Fit (FF):</strong> lowest-indexed fitting bin. $\le 1.7 \cdot OPT + 2$ — remembers all open bins, roughly halves the waste.</li>
+<li><strong>Best Fit (BF):</strong> tightest-fitting bin. Same $1.7$ asymptotic family as FF.</li>
+<li><strong>First-Fit Decreasing (FFD):</strong> sort descending, then First Fit. $\le \frac{11}{9} OPT + 1$ ($\approx 22%$ over) — sorting first dominates every online rule; the bound&#39;s proof fills textbook chapters.</li>
 </ul>
-<p>Greedy needs <strong>both</strong>; DP needs only the second. Problems with substructure but <em>no</em> safe greedy choice (0/1 knapsack, longest path) punish greed and demand DP or backtracking instead. (Preview: on items $(60,10),(100,20),(120,30)$ with capacity $50$, ratio-greedy scores $60+100 = 160$ while $100+120 = 220$ fits — greed leaves 60 value on the table.)</p>
-<h3>2.3 Canonical Proof: Activity Selection</h3>
-<p>Given activities with start/finish times, maximize the count of compatible (non-overlapping) activities. Greedy rule: <strong>always pick the compatible activity finishing earliest</strong>. Exchange proof: let greedy pick $a_1$ (earliest finish $f_1$); any optimal solution&#39;s first activity $a_k$ has $f_k \ge f_1$, so swapping $a_k \to a_1$ keeps feasibility and count — an optimal solution <em>containing</em> $a_1$ exists; recurse on what remains after $f_1$. Result: $\Theta(n \log n)$ (sort by finish) and provably optimal.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Greed Checklist</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Loop: <strong>select-best → commit-if-feasible → never-revisit</strong> · license: <strong>greedy-choice</strong> (exchange argument) + <strong>optimal substructure</strong> · canonical wins: <strong>activity selection</strong> (earliest finish), <strong>fractional knapsack</strong> (best ratio), <strong>MST/Huffman/Dijkstra</strong> · canonical failure: <strong>0/1 knapsack</strong> (greed by ratio fails), <strong>coin systems without canonical denominations</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Fractional ≠ 0/1 Knapsack (the Standard Trap)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Greedy-by-ratio is <em>optimal</em> for <strong>fractional</strong> knapsack (take fractions of the best-ratio item — exchange argument holds) and can <em>fail</em> for <strong>0/1</strong> knapsack (indivisibility breaks the swap: classic $v/w$ counterexample $(60,10),(100,20),(120,30)$, capacity $50$: greedy banks $60+100 = 160$ but $100+120 = 220$ fits). Same ratio rule, opposite verdicts — the exam always pairs them.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Packing Ratios</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Lower bounds: <strong>⌈total size⌉</strong>, <strong>count of &gt;1/2 items</strong> · NF <strong>≤ 2·OPT − 1</strong> · FF/BF <strong>≤ 1.7·OPT + 2</strong> · FFD <strong>≤ 11/9·OPT + 1</strong> · mantra: <strong>&quot;sort descending first&quot;</strong> converts online mediocrity into near-optimality.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Ratios Are Worst-Case, Not Report Cards</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$11/9 \cdot OPT + 1$ promises FFD is <em>never worse</em> than that — typical instances land far closer to optimal. Quoting the ratio as <em>expected</em> performance wildly undersells the algorithm; quoting optimal-on-all-inputs oversells it. Bounds bound the worst; practice lives near the best.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Activities (start, finish): A(1,4), B(3,5), C(0,6), D(5,7), E(3,9), F(5,9), G(6,10), H(8,11). Select the maximum compatible subset with earliest-finish greedy, and show the exchange logic at the first step.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Running Greedy</div><div class="step-content"><p>Sort by finish: A(4), B(5), C(6), D(7), E(9), F(9), G(10), H(11). Pick A(1,4) (earliest finish). Discard overlapping: B(3&lt;4), C(0&lt;4), E(3&lt;4). Next earliest compatible: D(5,7) (5≥4 ✓). Discard F(5&lt;7? F starts 5 &lt; 7 ✓ overlaps → discard). Next: H(8,11) (8≥7 ✓); G(6&lt;7... G starts 6, D ends 7 → overlaps → discard). Selected: {A, D, H} — 3 activities.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>{A, D, H} with no overlaps and no room for a fourth (every leftover overlaps one of them — C spans 0–6 killing A+D, B/E/F/G each collide). Exchange argument at step 1: any optimal solution&#39;s first activity finishes ≥ 4 = A&#39;s finish, so A swaps in freely — greed&#39;s first commitment was safe, and inductively so is each following one.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Capacity $10$, items $[6, 5, 5, 4, 4, 3, 2]$ (total $29$ → lower bound $\lceil 2.9 \rceil = 3$ bins). Run First Fit, then First-Fit Decreasing, and certify optimality. (Arithmetic verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Packing Twice</div><div class="step-content"><p><strong>First Fit (given order):</strong> 6→B1{6}; 5→B1? $11 &gt; 10$ ✗ → B2{5}; 5→B2 ($5+5=10$ ✓); 4→B1 ($6+4=10$ ✓); 4→B3{4}; 3→B3 ($7$ ✓); 2→B3 ($9$ ✓). <strong>FF = 3 bins</strong> (B1:{6,4}, B2:{5,5}, B3:{4,3,2}).
+<strong>FFD (sorted: same order here — already descending):</strong> identical 3 bins. Lower bound was 3 → <strong>OPT = 3, both optimal</strong> on this instance.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Three bins against a floor of three: optimal, certified without search — the lower bound did the proving, the algorithm did the packing. Note the luck: FFD <em>guarantees</em> near-optimal always, but <em>certificates</em> of optimality need a matching lower bound, which only sometimes cooperates.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What do the greedy-choice property and optimal substructure each contribute to a correctness proof?</span>
+    <span class="quiz-category">Items arrive online (order fixed, no sorting allowed). Which rule, and what worst-case price versus optimal?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They are rival theories; only one is ever used</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Greedy-choice (via exchange argument) proves committing to the local pick never destroys optimality; optimal substructure proves the remaining smaller instance can be solved the same way — induction needs both halves</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Substructure replaces the need for any greedy choice</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Greedy-choice alone proves everything including termination</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>First-Fit Decreasing at 11/9·OPT + 1 — sorting is always permitted</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>First Fit at ≤ 1.7·OPT + 2 (or Best Fit, same family) — without presorting, ~70% overhead is the price of irrevocable online decisions</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Next Fit at exactly OPT — online never costs anything</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Random placement, which is optimal in expectation</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -324,20 +316,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The proof is induction with two legs: <em>this step is safe</em> (some optimal solution extends the greedy pick — exchange) and <em>the rest is the same problem</em> (substructure — recurse). Drop the first and greed may err (0/1 knapsack); drop the second and there&#39;s nothing to recurse on.</p><pre><code>&lt;/div&gt;
+      <p>FFD&#39;s power <em>is</em> the sort — banned online. Among true online rules, FF/BF remember all open bins ($\le 1.7\times$) while NF&#39;s amnesia costs up to $2\times$. &quot;Online&quot; means decide-now-forever; the ratio prices exactly that handicap.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Greedy-by-value-density is optimal for fractional knapsack but fails 0/1 knapsack on (v,w) = (60,10),(100,20),(120,30), capacity 50. What exactly breaks?</span>
+    <span class="quiz-category">A lower bound says OPT ≥ 7 bins and your algorithm packed 8. What have you proven about your packing, and what remains open?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>The exchange argument&#39;s arithmetic contains an error</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Indivisibility: greedy banks 60 + 100 = 160 and then nothing else fits, while skipping the ratio-leader for 100 + 120 = 220 fits — the swap that proves safety for fractions is physically impossible for whole items</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Fractional knapsack is NP-hard so greed must fail there too</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The counterexample uses negative weights</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Proven optimal — bounds are always tight</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Proven at most 1 bin from optimal (8 vs ≥7) — near-optimal certified; whether 7 is achievable (bound loose?) or 8 is truly optimal stays open without more work</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Proven nothing — lower bounds carry no information</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Proven the bound itself is wrong</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -349,20 +341,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>With fractions, greedy&#39;s pick can always be <em>partially</em> swapped into any optimal solution (take a slice of the best-ratio item). Whole items forbid slicing: after banking (60,10)+(100,20) = 160 with 20 capacity left, the 30-weight item won&#39;t fit — yet the optimum (220) skips nothing it can&#39;t use. Divisibility is the whole ballgame.</p><pre><code>&lt;/div&gt;
+      <p>Bounds sandwich: $7 \le OPT \le 8$. The packing is certified <em>near</em>-optimal (gap ≤ 1) — often enough to stop. Closing the gap needs either a better packing (7 found?) or a stronger bound (raise the floor) — the standard approximation workflow.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Running earliest-finish greedy on the worked example selected {A, D, H}. A student claims {B, D, H} is equally good so &quot;greed got lucky.&quot; What is wrong with this reasoning?</span>
+    <span class="quiz-category">Why does sorting descending first (FFD) beat First Fit so decisively, in one mechanism?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — greedy algorithms depend on luck by definition</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Optimality was never about this instance&#39;s tie: the exchange proof guarantees *some* optimal solution contains each greedy pick on *every* instance — luck plays no role; {B,D,H} being optimal here is consistent with, not evidence against, the guarantee</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>{B, D, H} is actually infeasible</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Greedy never selects H in any correct implementation</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Sorting makes items physically smaller</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Big items placed early face empty bins (no awkward leftovers yet); tiny items placed late plug the remaining gaps like sand — ascending order strands big items against fragmented space instead</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Descending order is required for the bins to close properly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Sorting changes the approximation ratio by definition</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -374,7 +366,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The theorem promises the greedy <em>set</em> is optimal, not that it&#39;s the <em>unique</em> optimum — ties ({A,D,H} vs {B,D,H}) are expected, not suspicious. Correctness is a universal claim over instances (proved by exchange), never a story about one lucky run.</p><pre><code>&lt;/div&gt;
+      <p>Fragmentation is created by <em>early small</em> items chopping bins into unusable slivers that later big items can&#39;t fill. Big-first reserves clean large slots; small-last filters into cracks. Order of arrival is FFD&#39;s only advantage over FF — and it&#39;s worth nearly 50 points of ratio.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -383,16 +375,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m2_04_divide_and_conquer_merge_sort_and_strassen.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m4_03_np_completeness_p_np_reductions.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">2.4 Divide And Conquer Merge Sort And Strassen</div>
+        <div class="ttl">4.3 NP Completeness P NP Reductions</div>
       </a>
       
       
       
-      <a href="./m3_02_minimum_spanning_trees_kruskal_prim.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m4_05_randomized_algorithms_las_vegas_monte_carlo.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">3.2 Minimum Spanning Trees Kruskal Prim</div>
+        <div class="ttl">4.5 Randomized Algorithms Las Vegas Monte Carlo</div>
       </a>
       
     </footer>
@@ -479,7 +471,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(26) || 0;
-    const currentId = "m3_01_greedy_strategy_control_abstraction";
+    const currentId = "m4_04_bin_packing_approximation_algorithms";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 
