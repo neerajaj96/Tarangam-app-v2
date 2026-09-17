@@ -22,22 +22,24 @@ content/<COURSE>/m{mod}_{seq}_{slug}.md
   seq 99 = practice lab (optional, one per module, sorts last)
 ```
 
-Current truth (2026-09-16):
-- `PCCST501` Computer Networks: M1 only (5 topics)
-- `PCCST502` DAA: M1 only (`m1_00` overview + 10 topics + `m1_99` lab)
-- `PECST522` AI: M1 (5 topics, gap: `m1_06` missing) + M2 partial (3 topics) + `m1_99` lab
-- `PCCST503` Machine Learning: PARKED — `content/PCCST503/` does not exist; dashboard cards are locked; `assets/videos/*.mp4` (ML-named) are orphaned until PCCST503 lands
-- Dashboard `index.html` shows only existing pages as links; everything else is `.is-locked` + `<!-- TODO content/... -->`
-- `src/` (React/Vite/Tailwind) was DEAD — **removed in Session 12** along with `vite.config.ts`, one-off `scripts/reformat_daa.*`, and all unused deps. Toolchain is now exactly: `express` + `marked` (+ `@google/genai`/`dotenv`, reserved for the parked AI tutor).
-- AI/ML features PARKED: `@google/genai` in `package.json` is unused and `metadata.json` claims `MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API`, but `server.ts` exposes only `/api/health` — no tutor/RAG/quiz-gen exists. Spaced-repetition scheduling is the planned first use of the `tarangam_visited_ts_<COURSE>` timestamp map (stored since Session 10); quiz options are client-shuffled per load to neutralize a measured 71%-at-B position bias.
+Current truth (2026-09-17) — full syllabus complete, 83 topics:
+- `PCCST501` Computer Networks: M1–M4 complete (20 topics)
+- `PCCST502` DAA: M1–M4 complete (26 topics, incl. `m1_00` overview + `m1_99` lab)
+- `PECST522` AI: M1–M4 complete (21 topics, incl. `m1_99` lab)
+- `PCCST503` Machine Learning: M1–M4 complete (18 topics)
+- Dashboard `index.html`: every card unlocked, zero `TODO content/…` remaining
+- All 8 `assets/videos/*.mp4` wired into topics via `::: manim` (0 orphan warnings)
+- `npm run check`: 0 errors, 0 warnings (was: 8 orphan-video warnings at peak)
+- Toolchain is exactly `express` + `marked` (+ `@google/genai`/`dotenv`, reserved for the parked AI tutor — dead React/Vite scaffold removed in Session 12).
+- Parked intelligence: no tutor/RAG/quiz-gen exists yet (`metadata.json` capability vs `/api/health`-only server). Spaced repetition is the planned first use of the `tarangam_visited_ts_<COURSE>` timestamp map (stored since Session 10); quiz options are client-shuffled per load to neutralize a measured 71%-at-B position bias.
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic (27 `.md` files today: CN M1, DAA M1, AI M1–M2 partial), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Topic-by-topic breakdown** — Module → smallest topic (83 `.md` files: 4 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
 - **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
 - **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
 - **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).
-- **Manim video studio** (`::: manim`) with per-clip speed controls — 8 mp4s exist but are currently orphaned (no `.md` references them).
+- **Manim video studio** (`::: manim`) with per-clip speed controls — all 8 mp4s wired into ML topics (0 orphaned).
 - **Four appearance modes** — dark, light, sepia reading, Nordic — plus 3 font scales, in Settings. Pre-paint script avoids theme flash.
 - **Progress tracking** — visited topics per course in `localStorage` (`tarangam_visited_<COURSE>`), checkmarks in nav, one-click reset. Practice labs count.
 - **MathJax** for all formulas — no screenshots of equations.
