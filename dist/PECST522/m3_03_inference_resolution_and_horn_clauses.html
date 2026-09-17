@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.7 Classic AI Toy Problems</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 1.7 Classic AI Toy Problems | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.7 Classic AI Toy Problems">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.7 Classic AI Toy Problems">
+<title>Tarangam — 3.3 Inference Resolution And Horn Clauses</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 3.3 Inference Resolution And Horn Clauses | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.3 Inference Resolution And Horn Clauses">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 3.3 Inference Resolution And Horn Clauses">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Agents &amp; Problem Solving</span>
           <span class="chev">&#9656;</span>
@@ -97,7 +97,7 @@
             <span class="topic-dot"></span>
             <span>1.6 Problem Solving Agents And Search Trees</span>
           </a>
-          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link active" id="topic-m1_07_classic_ai_toy_problems">
+          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
             <span class="topic-dot"></span>
             <span>1.7 Classic AI Toy Problems</span>
           </a>
@@ -128,8 +128,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Knowledge &amp; Logic</span>
           <span class="chev">&#9656;</span>
@@ -143,7 +143,7 @@
             <span class="topic-dot"></span>
             <span>3.2 Propositional Logic Syntax Semantics</span>
           </a>
-          <a href="./m3_03_inference_resolution_and_horn_clauses.html" class="topic-link " id="topic-m3_03_inference_resolution_and_horn_clauses">
+          <a href="./m3_03_inference_resolution_and_horn_clauses.html" class="topic-link active" id="topic-m3_03_inference_resolution_and_horn_clauses">
             <span class="topic-dot"></span>
             <span>3.3 Inference Resolution And Horn Clauses</span>
           </a>
@@ -178,9 +178,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.7 Classic AI Toy Problems</span>
+        <span style="color:var(--ink); font-weight:600;">3.3 Inference Resolution And Horn Clauses</span>
       </div>
 
       <div class="topbar-actions">
@@ -196,8 +196,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -205,134 +205,56 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Classic AI Toy Problems &amp; Real-World Formulations</h1>
-<p><strong>Formal problem formulations: Vacuum World, Sliding 8-Puzzle, 8-Queens problem, and real-world search problems.</strong></p>
+<h1>Inference: Resolution, Horn Clauses &amp; Chaining</h1>
+<p><strong>CNF conversion, the resolution rule and refutation proofs, Horn form, and forward vs. backward chaining with the Wumpus agent.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-toy-problems-vs-real-world-problems">1. Toy Problems vs. Real-World Problems</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-vacuum-world">2. The Vacuum World →</a></p>
-<p>When AI researchers develop and benchmark new search algorithms, they do not test them immediately on complex, massive real-world systems. Instead, they use <strong>Toy Problems</strong>.</p>
-<ul>
-<li><strong>Toy Problem:</strong> A concise, formal, and clearly defined problem with exact mathematical rules and a manageable state space, used to compare and evaluate search algorithms.</li>
-<li><strong>Real-World Problem:</strong> A production problem whose solutions have direct practical, scientific, or financial value (e.g., airline scheduling, autonomous navigation, chip routing).</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flight Simulator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of a toy problem like a flight simulator used in pilot training. It has simplified physics and an artificial cockpit, allowing pilots to master flight principles safely before handling a commercial airliner. In AI, toy problems allow us to verify search algorithms before deploying them to high-stakes applications.</p>
+<h2 id="1-from-truth-tables-to-proofs">1. From Truth Tables to Proofs</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-cnf-and-the-resolution-rule">2. CNF and the Resolution Rule →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Courtroom vs. Census</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Model checking is a <strong>census</strong>: interrogate every possible world ($2^n$ of them) and count. <strong>Theorem proving</strong> is a <strong>courtroom</strong>: start from admitted evidence (the KB) and apply airtight rules until the verdict falls out — never visiting the worlds at all. Resolution is the courtroom&#39;s single gavel: one rule, applied relentlessly, that can derive <em>any</em> entailed sentence (given the right setup). Chaining is the fast-track court for well-behaved (Horn) evidence.</p>
 </div></details><hr>
 <p><a id="the-dimensions"></a></p>
-<h2 id="2-the-vacuum-world">2. The Vacuum World</h2>
-<p class="secnav"><a href="#1-toy-problems-vs-real-world-problems">← 1. Toy Problems vs. Real-World Pro…</a><span class="secnav-sep">·</span><a href="#3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle →</a></p>
-<p>The <strong>Vacuum World</strong> is a foundational toy problem for single-agent search and reflex planning.</p>
-<h3>Formal Formulation (The 5-Tuple)</h3>
-<ol>
-<li><strong>Initial State:</strong> The agent is in location $A$ or $B$. Dirt can be in $A$, in $B$, in both, or in neither.</li>
-<li><strong>Actions:</strong> <code>[Left, Right, Suck]</code></li>
-<li><strong>Transition Model:</strong> Moving <code>Left</code> places the agent in $A$; moving <code>Right</code> places the agent in $B$; <code>Suck</code> cleans the current location if dirty.</li>
-<li><strong>Goal Test:</strong> Are all locations clean?</li>
-<li><strong>Path Cost:</strong> 1 unit per action taken.</li>
-</ol>
-<h3>ASCII Diagram: Vacuum World State Transitions</h3>
-<pre><code class="language-text">      +--------------------+                 +--------------------+
-      | State 1:           |                 | State 2:           |
-      | [Agent at A, Dirty]| --(Action: Suck)--&gt; | [Agent at A, Clean]|
-      +--------------------+                 +--------------------+
-               |                                       |
-        (Action: Right)                         (Action: Right)
-               v                                       v
-      +--------------------+                 +--------------------+
-      | State 3:           |                 | State 4:           |
-      | [Agent at B, Dirty]|                 | [Agent at B, Clean]|
-      +--------------------+                 +--------------------+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of Vacuum World</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With 2 physical locations, 2 dirt states per location ($\text{Clean}$ or $\text{Dirty}$), and 2 possible agent locations:
-$$\text{Total States} = 2 \times 2 \times 2 = 8 \text{ possible world states}$$</p>
+<h2 id="2-cnf-and-the-resolution-rule">2. CNF and the Resolution Rule</h2>
+<p class="secnav"><a href="#1-from-truth-tables-to-proofs">← 1. From Truth Tables to Proofs</a><span class="secnav-sep">·</span><a href="#3-horn-clauses-chaining-territory">3. Horn Clauses: Chaining Territor… →</a></p>
+<p><strong>Conjunctive Normal Form:</strong> a conjunction of <strong>clauses</strong>, each clause a disjunction of <strong>literals</strong> (an atom or its negation): $(A \lor \lnot B) \land (B \lor C) \land (\lnot C)$. Conversion pipeline — <strong>eliminate</strong> $\Leftrightarrow$ ($P \Leftrightarrow Q \to (P \Rightarrow Q) \land (Q \Rightarrow P)$) and $\Rightarrow$ ($P \Rightarrow Q \to \lnot P \lor Q$), <strong>push</strong> $\lnot$ inward (de Morgan + double negation), <strong>distribute</strong> $\lor$ over $\land$.</p>
+<p><strong>The resolution rule</strong> (one rule to derive them all): from $(l_1 \lor \dots \lor l_k)$ and $(m_1 \lor \dots \lor m_n)$ where $l_i$ and $m_j$ are <strong>complementary</strong> ($l_i = \lnot m_j$), infer the <strong>resolvent</strong> — the disjunction of everything <em>except</em> the cancelled pair. Unit-clause special case: from $(P)$ and $(\lnot P \lor Q)$, infer $(Q)$ — Modus Ponens in disguise.</p>
+<p><strong>Refutation proof of $KB \models \alpha$:</strong> convert $KB \land \lnot\alpha$ to CNF, resolve repeatedly — deriving the <strong>empty clause</strong> $\Box$ (a contradiction) <em>proves</em> entailment (recall: $KB \models \alpha \iff KB \land \lnot\alpha$ unsatisfiable). Resolution is <strong>sound</strong> and <strong>refutation-complete</strong>: if entailment holds, the empty clause <em>will</em> appear.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Resolution in 3 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Resolve</strong> complementary literals, keep the rest: $\frac{(l \lor C),; (\lnot l \lor D)}{(C \lor D)}$. <strong>Prove</strong> $\alpha$ by refuting $\lnot\alpha$: CNF($KB \land \lnot\alpha$) $\leadsto \cdots \leadsto \Box$. <strong>Complete</strong> for full propositional logic — the price is worst-case exponential search for the right pairings.</p>
 </div></details><hr>
 <p><a id="terminology"></a></p>
-<h2 id="3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle</h2>
-<p class="secnav"><a href="#2-the-vacuum-world">← 2. The Vacuum World</a><span class="secnav-sep">·</span><a href="#4-the-8-queens-problem">4. The 8-Queens Problem →</a></p>
-<p>The <strong>8-Puzzle</strong> is a sliding-tile problem consisting of a $3 \times 3$ board with 8 numbered tiles and one empty space (the blank).</p>
-<h3>Formal Formulation &amp; The &quot;Blank Tile&quot; Standard</h3>
+<h2 id="3-horn-clauses-chaining-territory">3. Horn Clauses: Chaining Territory</h2>
+<p class="secnav"><a href="#2-cnf-and-the-resolution-rule">← 2. CNF and the Resolution Rule</a><span class="secnav-sep">·</span><a href="#4-refuting-our-way-to-a-safe-square">4. Refuting Our Way to a Safe Squa… →</a></p>
+<p>A <strong>Horn clause</strong> has <em>at most one positive</em> literal — equivalently, an implication with a conjunction of positive premises: $(P_1 \land \dots \land P_k) \Rightarrow Q$ (a <strong>definite clause</strong> when exactly one positive head exists; a bare fact $Q$ is the $k=0$ case). The Wumpus rule $B_{1,1} \Rightarrow (P_{1,2} \lor P_{2,1})$ is <strong>not</strong> Horn (two positives) — but $P_{1,2} \land P_{2,1} \Rightarrow \text{Danger}$-style rules are, and most practical KBs are written Horn on purpose, because Horn unlocks linear-time chaining:</p>
 <ul>
-<li><strong>States:</strong> The positions of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Instead of defining actions by which <em>tile</em> moves (which varies based on position), we formulate actions by <strong>moving the blank space</strong>: <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Given a state and an action, returns the resulting board layout after swapping the blank with the adjacent tile.</li>
-<li><strong>Goal Test:</strong> Matches a target numerical configuration (e.g., tiles 1 through 8 in sequential order).</li>
-<li><strong>Path Cost:</strong> 1 unit per slide.</li>
+<li><strong>Forward chaining (data-driven):</strong> fire every rule whose premises are all known; repeat until the query appears or nothing new fires. Complete for Horn KBs, linear in KB size — the honest detective rediscovering <em>everything</em> from the evidence.</li>
+<li><strong>Backward chaining (goal-driven):</strong> start from the query; recursively prove each premise (facts succeed instantly, rules recurse). Touches only relevant rules — the lazy genius working backward from the verdict. Basis of Prolog.</li>
 </ul>
-<h3>ASCII Diagram: The 8-Puzzle Board</h3>
-<pre><code class="language-text">      +---+---+---+             +---+---+---+
-      | 1 | 2 | 3 |             | 1 | 2 | 3 |
-      +---+---+---+             +---+---+---+
-      | 8 |   | 4 |  --(Move)--&gt;| 8 | 4 |   |
-      +---+---+---+             +---+---+---+
-      | 7 | 6 | 5 |             | 7 | 6 | 5 |
-      +---+---+---+             +---+---+---+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of the 8-Puzzle</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The total permutations of 9 elements on a grid is $9! = 362,880$. However, parity constraints (inversions) mean that exactly half of these configurations cannot be reached via legal sliding moves from any starting state:
-$$\text{Reachable States} = \frac{9!}{2} = 181,440$$</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Horn Means ≤1 Positive Literal — Count Carefully</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$(A \lor \lnot B \lor \lnot C)$ is Horn (one positive: $A$); $(A \lor B \lor \lnot C)$ is <strong>not</strong> (two positives). Students miscount under time pressure — circle the <em>un-negated</em> atoms and count those. And neither chaining algorithm is complete for <em>non</em>-Horn KBs: that territory belongs to resolution alone.</p>
 </div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-the-8-queens-problem">4. The 8-Queens Problem</h2>
-<p class="secnav"><a href="#3-the-sliding-8-puzzle">← 3. The Sliding 8-Puzzle</a><span class="secnav-sep">·</span><a href="#5-real-world-search-problems">5. Real-World Search Problems →</a></p>
-<p>The <strong>8-Queens Problem</strong> requires placing 8 queens on an $8 \times 8$ chessboard such that no two queens attack each other (no two share the same row, column, or diagonal).</p>
-<h3>Formulation Strategies: Incremental vs. Complete-State</h3>
-<p>The formulation chosen directly determines the size and shape of the search space.</p>
-<ul>
-<li><strong>Strategy 1: Incremental Formulation (Constructive Placement)</strong><ul>
-<li><em>Initial State:</em> An empty chessboard.</li>
-<li><em>Actions:</em> Add a queen to any empty square.</li>
-<li><em>State Space Size:</em>
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Strategy 2: Complete-State Formulation (Heuristic Repair)</strong><ul>
-<li><em>Initial State:</em> All 8 queens placed on the board with <strong>exactly one queen per column</strong>.</li>
-<li><em>Actions:</em> Move a queen vertically within its column to a different row.</li>
-<li><em>State Space Size:</em> Since each queen is restricted to its own column, each has 8 possible rows:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-</ul>
-</li>
-</ul>
-<h3>ASCII Diagram: 8-Queens Formulations</h3>
-<pre><code class="language-text">      INCREMENTAL (Any empty square)       COMPLETE-STATE (1 Queen per column)
-        .  .  Q  .  .  .  .  .                 Q  .  .  .  .  .  .  .
-        .  .  .  .  Q  .  .  .                 .  .  Q  .  .  .  .  .
-        (Searching 300 trillion states)          .  .  .  .  .  Q  .  .
-                                                 (Searching 16.7 million states)
-</code></pre>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: State Space Explosion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A naive problem formulation can inflate your search space by many orders of magnitude. Restricting problem dimensions early (such as 1 queen per column) prunes invalid configurations and makes search computationally feasible.</p>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-real-world-search-problems">5. Real-World Search Problems</h2>
-<p class="secnav"><a href="#4-the-8-queens-problem">← 4. The 8-Queens Problem</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
-<p>Unlike toy problems, real-world problems feature massive search spaces, continuous variables, and noisy data:</p>
-<ul>
-<li><strong>Route Finding &amp; Traveling Salesperson Problem (TSP):</strong><ul>
-<li><em>Route Finding:</em> Computing optimal point-to-point driving directions on road networks (Google Maps, GPS navigation).</li>
-<li><em>TSP:</em> Finding the shortest round-trip tour visiting $N$ cities exactly once and returning to the start. It is an <strong>NP-hard</strong> problem with $(N-1)! / 2$ tours for symmetric graphs.</li>
-</ul>
-</li>
-<li><strong>VLSI Layout Design:</strong> Positioning millions of logic transistors and routing interconnecting wires on silicon chips to minimize signal delay and silicon area without wire overlap.</li>
-<li><strong>Robot Navigation &amp; Motion Planning:</strong> Guiding robotic manipulators through complex 3D workspaces around dynamic obstacles.</li>
-</ul>
+<p><a id="worked-example"></a></p>
+<h2 id="4-refuting-our-way-to-a-safe-square">4. Refuting Our Way to a Safe Square</h2>
+<p class="secnav"><a href="#3-horn-clauses-chaining-territory">← 3. Horn Clauses: Chaining Territor…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p>KB (clausal): $C_1: (\lnot B_{1,1} \lor P_{1,2} \lor P_{2,1})$ [breeze rule, $\Rightarrow$-eliminated] · $C_2: (\lnot P_{1,2})$ [probed safe] · $C_3: (B_{1,1})$ [observed breeze at (1,1)... in <em>this</em> telling the agent felt a draft]. Query: is there a pit nearby — $\alpha = (P_{1,2} \lor P_{2,1})$?</p>
+<p>Negate the query: $\lnot\alpha = (\lnot P_{1,2}) \land (\lnot P_{2,1})$ — add $C_4: (\lnot P_{1,2})$ (already $C_2$, reused) and $C_5: (\lnot P_{2,1})$. Resolve $C_1$ with $C_3$ on $B_{1,1}$ → $(P_{1,2} \lor P_{2,1})$; resolve with $C_4$ on $P_{1,2}$ → $(P_{2,1})$; resolve with $C_5$ on $P_{2,1}$ → $\Box$. <strong>Contradiction derived — the query is entailed</strong>: given breeze at (1,1) and a safe (1,2), a pit <em>must</em> neighbor (1,1) somewhere — here, (2,1).</p>
 <hr>
 <p><a id="self-check"></a></p>
-<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#5-real-world-search-problems">← 5. Real-World Search Problems</a><span class="secnav-sep">·</span><a href="#7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-refuting-our-way-to-a-safe-square">← 4. Refuting Our Way to a Safe Squa…</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do AI engineers formulate the 8-puzzle by moving the blank space rather than moving the numbered tiles?</span>
+    <span class="quiz-category">To prove KB ⊨ α by resolution, what exact set do you convert to CNF and what terminal symbol ends the proof?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the blank space has less weight than the tiles.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because moving the blank space standardizes the action set to at most 4 directional choices (Up, Down, Left, Right), whereas moving tiles yields variable numbers of legal choices depending on adjacent spaces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because tiles cannot move diagonally.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank space represents the goal state.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>CNF(KB) alone, ending when α appears verbatim as a clause</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>CNF(KB ∧ ¬α), ending with the empty clause □ (a derived contradiction)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>CNF(¬KB ∧ α), ending with a tautology clause</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No conversion needed; resolution works directly on implications</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -344,20 +266,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Standardizing actions around the blank space makes the transition model uniform across all states. The blank can always move into adjacent slots, while individual tiles have variable degrees of movement freedom depending on their board position.</p><pre><code>&lt;/div&gt;
+      <p>Refutation: <em>assume the query false alongside the KB</em> and derive impossibility. CNF-ize $KB \land \lnot\alpha$; resolve until $\Box$ — the contradiction certifies no counter-model exists, i.e. entailment holds. Ending at anything else proves nothing.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the primary advantage of using a Complete-State Formulation for the 8-Queens problem over an Incremental Formulation?</span>
+    <span class="quiz-category">Which clause is NOT Horn, and what breaks if you feed it to a chaining engine?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It guarantees finding the solution on the very first step.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It drastically reduces the state space from over 300 trillion configurations down to 16.7 million by pre-restricting each queen to its own column.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It allows queens to move through other pieces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need to check diagonal conflicts.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>(¬A ∨ ¬B ∨ C) — breaks nothing; it is Horn</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>(A ∨ B ∨ ¬C) — two positive literals; chaining is incomplete outside Horn, so entailed conclusions can be silently missed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>(¬A ∨ ¬B ∨ ¬C) — a goal clause; breaks nothing</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>(A) — a unit fact; the engine&#39;s favorite food</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -369,20 +291,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>By restricting each queen to its own column from the outset, we eliminate vast regions of the search tree where multiple queens share columns, cutting the search space by nearly seven orders of magnitude.</p><pre><code>&lt;/div&gt;
+      <p>Horn = at most one un-negated atom; $(A \lor B \lor \lnot C)$ has two. Chaining&#39;s completeness proof assumes Horn form — outside it, the engine may halt without the answer although resolution would find it. Feed non-Horn KBs to resolution instead.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why are 50% of the mathematical permutations ($9!$) of the 8-puzzle unreachable during search?</span>
+    <span class="quiz-category">Forward chaining fires every applicable rule each round; backward chaining starts from the query. When is backward chaining the clear winner?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the center position is fixed.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because sliding moves preserve the parity of tile inversions, making odd-parity configurations unreachable from even-parity goal states.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank tile cannot enter corner positions.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because path costs cannot exceed depth limits.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>When the KB is tiny enough to memorize entirely</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>When the query needs only a small relevant slice of a huge KB — it explores goal-relevant rules instead of re-deriving all consequences</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>When the KB is non-Horn and resolution is unavailable</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Backward chaining never wins; it is strictly slower</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -394,62 +316,39 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Every legal slide corresponds to an even permutation of tiles (preserving the inversion parity). Half of the $9! = 362,880$ permutations have odd parity and are mathematically unreachable from the standard goal state.</p><pre><code>&lt;/div&gt;
+      <p>Forward chaining floods: every derivable fact, relevant or not. Backward chaining is demand-driven — it recursively grounds only the query&#39;s premise tree. On million-rule KBs with focused questions (diagnosis, Prolog queries), that selectivity is the whole game.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2 id="7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#6-active-recall-quizzes">← 6. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> Define the 5-tuple formulation of the 8-puzzle or calculate the reachable state space of an $N$-puzzle.</li>
-<li><strong>7 Marks:</strong> Compare incremental vs. complete-state formulations for the 8-Queens problem with full state space calculations.</li>
+<li><strong>3 Marks:</strong> State the resolution rule, define Horn clause, or contrast forward vs. backward chaining.</li>
+<li><strong>7 Marks:</strong> Full refutation proof on a Wumpus fragment (CNF → resolve → □), or trace chaining to a goal.</li>
 </ul>
 </div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Formulate the Sliding 8-Puzzle as a search problem by specifying its 5-tuple definition.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>States:</strong> Coordinate locations of each of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Moving the blank space <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Returns the new board layout resulting from swapping the blank space with an adjacent tile.</li>
-<li><strong>Goal Test:</strong> Checks whether the current tile configuration matches the target goal state (e.g., tiles 1–8 in order).</li>
-<li><strong>Path Cost:</strong> 1 unit per sliding action.</li>
-</ol>
+<p><strong>Q: State the resolution rule and the condition for applying it.</strong></p>
+<p><strong>Model Answer:</strong> From clauses $(l_1 \lor \dots \lor l_k)$ and $(m_1 \lor \dots \lor m_n)$ containing a complementary pair $l_i = \lnot m_j$, infer the resolvent: the disjunction of all remaining literals. One complementary pair per step; the empty clause $\Box$ signals contradiction.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Compare Incremental Formulation and Complete-State Formulation for solving the 8-Queens problem. Calculate and contrast the size of the state space for both approaches.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Introduction (1 Mark):</strong> The 8-queens problem requires placing 8 non-attacking queens on an $8 \times 8$ chessboard. The choice of formulation radically alters search efficiency.</li>
-<li><strong>Incremental Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with an empty board and adds queens one by one.</li>
-<li><em>State Space:</em> Placing queen 1 has 64 choices, queen 2 has 63 choices, $\dots$, queen 8 has 57 choices:
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3.1 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Complete-State Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with all 8 queens on the board, enforcing <strong>one queen per column</strong>. Actions move queens vertically within their column.</li>
-<li><em>State Space:</em> Each of the 8 queens has 8 possible row positions:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-<li><em>Conclusion:</em> Complete-state formulation reduces the state space by approximately $10^7$ times, enabling efficient local search.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: Using the KB of §4, prove by resolution that a pit neighbors (1,1).</strong></p>
+<p><strong>Model Answer:</strong> As traced: CNF gives $C_1: (\lnot B_{1,1} \lor P_{1,2} \lor P_{2,1})$, $C_2: (\lnot P_{1,2})$, $C_3: (B_{1,1})$, negated query $C_5: (\lnot P_{2,1})$. $C_1 \otimes C_3 \to (P_{1,2} \lor P_{2,1})$; $\otimes, C_2 \to (P_{2,1})$; $\otimes, C_5 \to \Box$. Refutation complete — entailment proven, and the surviving disjunct history even shows <em>where</em> the pit must be.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_06_problem_solving_agents_and_search_trees.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_02_propositional_logic_syntax_semantics.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.6 Problem Solving Agents And Search Trees</div>
+        <div class="ttl">3.2 Propositional Logic Syntax Semantics</div>
       </a>
       
       
       
-      <a href="./m1_99_practice_lab_agents_and_problem_formulation.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_04_first_order_logic_unification_and_lifting.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">🧪 Practice Lab: M1 Agents And Problem Formulation</div>
+        <div class="ttl">3.4 First Order Logic Unification And Lifting</div>
       </a>
       
     </footer>
@@ -536,7 +435,7 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(15) || 0;
-    const currentId = "m1_07_classic_ai_toy_problems";
+    const currentId = "m3_03_inference_resolution_and_horn_clauses";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 

@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.7 Classic AI Toy Problems</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 1.7 Classic AI Toy Problems | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.7 Classic AI Toy Problems">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.7 Classic AI Toy Problems">
+<title>Tarangam — 3.1 Knowledge Based Agents And Wumpus World</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 3.1 Knowledge Based Agents And Wumpus World | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.1 Knowledge Based Agents And Wumpus World">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 3.1 Knowledge Based Agents And Wumpus World">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Agents &amp; Problem Solving</span>
           <span class="chev">&#9656;</span>
@@ -97,7 +97,7 @@
             <span class="topic-dot"></span>
             <span>1.6 Problem Solving Agents And Search Trees</span>
           </a>
-          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link active" id="topic-m1_07_classic_ai_toy_problems">
+          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
             <span class="topic-dot"></span>
             <span>1.7 Classic AI Toy Problems</span>
           </a>
@@ -128,14 +128,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Knowledge &amp; Logic</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m3_01_knowledge_based_agents_and_wumpus_world.html" class="topic-link " id="topic-m3_01_knowledge_based_agents_and_wumpus_world">
+          <a href="./m3_01_knowledge_based_agents_and_wumpus_world.html" class="topic-link active" id="topic-m3_01_knowledge_based_agents_and_wumpus_world">
             <span class="topic-dot"></span>
             <span>3.1 Knowledge Based Agents And Wumpus World</span>
           </a>
@@ -178,9 +178,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.7 Classic AI Toy Problems</span>
+        <span style="color:var(--ink); font-weight:600;">3.1 Knowledge Based Agents And Wumpus World</span>
       </div>
 
       <div class="topbar-actions">
@@ -196,143 +196,59 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Classic AI Toy Problems &amp; Real-World Formulations</h1>
-<p><strong>Formal problem formulations: Vacuum World, Sliding 8-Puzzle, 8-Queens problem, and real-world search problems.</strong></p>
+<h1>Knowledge-Based Agents &amp; the Wumpus World</h1>
+<p><strong>Tell/Ask knowledge bases, entailment vs. inference, the Wumpus PEAS and percept rules, and why this toy dungeon drives all of logic-based AI.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-toy-problems-vs-real-world-problems">1. Toy Problems vs. Real-World Problems</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-vacuum-world">2. The Vacuum World →</a></p>
-<p>When AI researchers develop and benchmark new search algorithms, they do not test them immediately on complex, massive real-world systems. Instead, they use <strong>Toy Problems</strong>.</p>
-<ul>
-<li><strong>Toy Problem:</strong> A concise, formal, and clearly defined problem with exact mathematical rules and a manageable state space, used to compare and evaluate search algorithms.</li>
-<li><strong>Real-World Problem:</strong> A production problem whose solutions have direct practical, scientific, or financial value (e.g., airline scheduling, autonomous navigation, chip routing).</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flight Simulator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of a toy problem like a flight simulator used in pilot training. It has simplified physics and an artificial cockpit, allowing pilots to master flight principles safely before handling a commercial airliner. In AI, toy problems allow us to verify search algorithms before deploying them to high-stakes applications.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-the-vacuum-world">2. The Vacuum World</h2>
-<p class="secnav"><a href="#1-toy-problems-vs-real-world-problems">← 1. Toy Problems vs. Real-World Pro…</a><span class="secnav-sep">·</span><a href="#3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle →</a></p>
-<p>The <strong>Vacuum World</strong> is a foundational toy problem for single-agent search and reflex planning.</p>
-<h3>Formal Formulation (The 5-Tuple)</h3>
-<ol>
-<li><strong>Initial State:</strong> The agent is in location $A$ or $B$. Dirt can be in $A$, in $B$, in both, or in neither.</li>
-<li><strong>Actions:</strong> <code>[Left, Right, Suck]</code></li>
-<li><strong>Transition Model:</strong> Moving <code>Left</code> places the agent in $A$; moving <code>Right</code> places the agent in $B$; <code>Suck</code> cleans the current location if dirty.</li>
-<li><strong>Goal Test:</strong> Are all locations clean?</li>
-<li><strong>Path Cost:</strong> 1 unit per action taken.</li>
-</ol>
-<h3>ASCII Diagram: Vacuum World State Transitions</h3>
-<pre><code class="language-text">      +--------------------+                 +--------------------+
-      | State 1:           |                 | State 2:           |
-      | [Agent at A, Dirty]| --(Action: Suck)--&gt; | [Agent at A, Clean]|
-      +--------------------+                 +--------------------+
-               |                                       |
-        (Action: Right)                         (Action: Right)
-               v                                       v
-      +--------------------+                 +--------------------+
-      | State 3:           |                 | State 4:           |
-      | [Agent at B, Dirty]|                 | [Agent at B, Clean]|
-      +--------------------+                 +--------------------+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of Vacuum World</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With 2 physical locations, 2 dirt states per location ($\text{Clean}$ or $\text{Dirty}$), and 2 possible agent locations:
-$$\text{Total States} = 2 \times 2 \times 2 = 8 \text{ possible world states}$$</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle</h2>
-<p class="secnav"><a href="#2-the-vacuum-world">← 2. The Vacuum World</a><span class="secnav-sep">·</span><a href="#4-the-8-queens-problem">4. The 8-Queens Problem →</a></p>
-<p>The <strong>8-Puzzle</strong> is a sliding-tile problem consisting of a $3 \times 3$ board with 8 numbered tiles and one empty space (the blank).</p>
-<h3>Formal Formulation &amp; The &quot;Blank Tile&quot; Standard</h3>
-<ul>
-<li><strong>States:</strong> The positions of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Instead of defining actions by which <em>tile</em> moves (which varies based on position), we formulate actions by <strong>moving the blank space</strong>: <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Given a state and an action, returns the resulting board layout after swapping the blank with the adjacent tile.</li>
-<li><strong>Goal Test:</strong> Matches a target numerical configuration (e.g., tiles 1 through 8 in sequential order).</li>
-<li><strong>Path Cost:</strong> 1 unit per slide.</li>
-</ul>
-<h3>ASCII Diagram: The 8-Puzzle Board</h3>
-<pre><code class="language-text">      +---+---+---+             +---+---+---+
-      | 1 | 2 | 3 |             | 1 | 2 | 3 |
-      +---+---+---+             +---+---+---+
-      | 8 |   | 4 |  --(Move)--&gt;| 8 | 4 |   |
-      +---+---+---+             +---+---+---+
-      | 7 | 6 | 5 |             | 7 | 6 | 5 |
-      +---+---+---+             +---+---+---+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of the 8-Puzzle</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The total permutations of 9 elements on a grid is $9! = 362,880$. However, parity constraints (inversions) mean that exactly half of these configurations cannot be reached via legal sliding moves from any starting state:
-$$\text{Reachable States} = \frac{9!}{2} = 181,440$$</p>
-</div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-the-8-queens-problem">4. The 8-Queens Problem</h2>
-<p class="secnav"><a href="#3-the-sliding-8-puzzle">← 3. The Sliding 8-Puzzle</a><span class="secnav-sep">·</span><a href="#5-real-world-search-problems">5. Real-World Search Problems →</a></p>
-<p>The <strong>8-Queens Problem</strong> requires placing 8 queens on an $8 \times 8$ chessboard such that no two queens attack each other (no two share the same row, column, or diagonal).</p>
-<h3>Formulation Strategies: Incremental vs. Complete-State</h3>
-<p>The formulation chosen directly determines the size and shape of the search space.</p>
-<ul>
-<li><strong>Strategy 1: Incremental Formulation (Constructive Placement)</strong><ul>
-<li><em>Initial State:</em> An empty chessboard.</li>
-<li><em>Actions:</em> Add a queen to any empty square.</li>
-<li><em>State Space Size:</em>
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Strategy 2: Complete-State Formulation (Heuristic Repair)</strong><ul>
-<li><em>Initial State:</em> All 8 queens placed on the board with <strong>exactly one queen per column</strong>.</li>
-<li><em>Actions:</em> Move a queen vertically within its column to a different row.</li>
-<li><em>State Space Size:</em> Since each queen is restricted to its own column, each has 8 possible rows:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-</ul>
-</li>
-</ul>
-<h3>ASCII Diagram: 8-Queens Formulations</h3>
-<pre><code class="language-text">      INCREMENTAL (Any empty square)       COMPLETE-STATE (1 Queen per column)
-        .  .  Q  .  .  .  .  .                 Q  .  .  .  .  .  .  .
-        .  .  .  .  Q  .  .  .                 .  .  Q  .  .  .  .  .
-        (Searching 300 trillion states)          .  .  .  .  .  Q  .  .
-                                                 (Searching 16.7 million states)
-</code></pre>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: State Space Explosion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A naive problem formulation can inflate your search space by many orders of magnitude. Restricting problem dimensions early (such as 1 queen per column) prunes invalid configurations and makes search computationally feasible.</p>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-real-world-search-problems">5. Real-World Search Problems</h2>
-<p class="secnav"><a href="#4-the-8-queens-problem">← 4. The 8-Queens Problem</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
-<p>Unlike toy problems, real-world problems feature massive search spaces, continuous variables, and noisy data:</p>
-<ul>
-<li><strong>Route Finding &amp; Traveling Salesperson Problem (TSP):</strong><ul>
-<li><em>Route Finding:</em> Computing optimal point-to-point driving directions on road networks (Google Maps, GPS navigation).</li>
-<li><em>TSP:</em> Finding the shortest round-trip tour visiting $N$ cities exactly once and returning to the start. It is an <strong>NP-hard</strong> problem with $(N-1)! / 2$ tours for symmetric graphs.</li>
-</ul>
-</li>
-<li><strong>VLSI Layout Design:</strong> Positioning millions of logic transistors and routing interconnecting wires on silicon chips to minimize signal delay and silicon area without wire overlap.</li>
-<li><strong>Robot Navigation &amp; Motion Planning:</strong> Guiding robotic manipulators through complex 3D workspaces around dynamic obstacles.</li>
-</ul>
+<h2 id="1-why-a-dungeon">1. Why a Dungeon?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-world-peas-percepts-rules">2. The World: PEAS, Percepts, Rule… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Cautious Spelunker</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>You enter a pitch-dark cave rumored to hold gold, bottomless pits, and a sleeping monster. You cannot see — but the cave <em>talks</em>: a cold draft means a pit is next door; a foul smell means the monster is adjacent; a glint means gold is <em>here</em>. A <strong>knowledge-based agent</strong> plays exactly this game: it stores everything it perceives as <strong>sentences</strong> in a <strong>knowledge base (KB)</strong>, combines them with general rules (&quot;draft ⇒ pit nearby&quot;), and deduces safe moves it has never directly observed. The Wumpus World is the smallest universe where <em>reasoning beats seeing</em>.</p>
+</div></details><p>A knowledge-based agent runs one eternal loop: <strong>TELL</strong> the KB what it perceives, <strong>ASK</strong> the KB what to do, <strong>EXECUTE</strong> the answer. Declarative knowledge (facts + rules) stays cleanly separated from the dumb inference procedure that grinds on it — add zoology tomorrow by TELLing sentences, without touching a line of code.</p>
 <hr>
+<p><a id="the-dimensions"></a></p>
+<h2 id="2-the-world-peas-percepts-rules">2. The World: PEAS, Percepts, Rules</h2>
+<p class="secnav"><a href="#1-why-a-dungeon">← 1. Why a Dungeon?</a><span class="secnav-sep">·</span><a href="#3-deducing-safety-at-1-2">3. Deducing Safety at (1,2) →</a></p>
+<p><strong>Performance:</strong> +1000 for grabbing the gold and climbing out, −1000 for death (pit or live Wumpus), −1 per action, −10 per arrow fired. <strong>Environment:</strong> a $4 \times 4$ grid (walls all around), fixed pits, one Wumpus, one gold pile. <strong>Actuators:</strong> move forward, turn left/right, grab, shoot (one arrow, flies straight until wall or Wumpus — killing it produces a <strong>Scream</strong> everywhere), climb out. <strong>Sensors:</strong> five percept lists per square — <strong>Stench</strong> (Wumpus orthogonally adjacent), <strong>Breeze</strong> (pit orthogonally adjacent), <strong>Glitter</strong> (gold <em>here</em>), <strong>Bump</strong> (walked into a wall), <strong>Scream</strong> (Wumpus just died).</p>
+<pre><code class="language-text">y=4  [Stench]   [OK]       [Breeze]   [PIT]
+y=3  [WUMPUS]   [St,Br,Gl] [PIT]      [Breeze]
+y=2  [Stench]   [OK]       [Breeze]   [OK]
+y=1  [START,OK] [Breeze]   [PIT]      [Breeze]
+      x=1        x=2        x=3        x=4
+</code></pre>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Entailment vs. Inference</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The KB <strong>entails</strong> $\alpha$ ($KB \models \alpha$) if $\alpha$ is true in <em>every</em> world where the KB is true — a semantic, god&#39;s-eye fact. An <strong>inference procedure</strong> $i$ <strong>derives</strong> $\alpha$ ($KB \vdash_i \alpha$) by pushing symbols around syntactically. The procedure is <strong>sound</strong> if everything it derives is entailed, <strong>complete</strong> if it derives everything entailed. Sound + complete = reasoning you can bet the agent&#39;s life on.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2 id="3-deducing-safety-at-1-2">3. Deducing Safety at (1,2)</h2>
+<p class="secnav"><a href="#2-the-world-peas-percepts-rules">← 2. The World: PEAS, Percepts, Rule…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<p>Start: agent at (1,1), percepts <code>[None,None,None,None,None]</code> — TELL gives $\lnot P_{1,1} \land \lnot W_{1,1}$. Move to (1,2), perceive <code>[Stench,None,None,None,None]</code>. The KB holds the general rule $S_{x,y} \Leftrightarrow W_{x+1,y} \lor W_{x-1,y} \lor W_{x,y+1} \lor W_{x,y-1}$ (stink means Wumpus next door) plus visited-square facts. From $S_{1,2}$ plus $\lnot W_{1,1}$ (visited safe) and the wall at $(0,2)$, the live candidates are $(1,3)$ and $(2,2)$ — so the agent derives $W_{1,3} \lor W_{2,2}$ — <em>a disjunction, not a location</em>. It cannot prove either square safe, so the rational move is to retreat and probe (2,1) instead. That is logic doing genuine work: knowing <em>that you don&#39;t know</em>, exactly.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Percepts Are Local, Conclusions Are Global</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Stench reports <em>adjacency</em>, never identity — students constantly write &quot;stench ⇒ Wumpus here.&quot; Breeze, stench, and glitter each constrain a <em>neighborhood</em>; only combined sentences across squares pin down single cells. Every Wumpus exam trap exploits this slippage.</p>
+</div></details><hr>
 <p><a id="self-check"></a></p>
-<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#5-real-world-search-problems">← 5. Real-World Search Problems</a><span class="secnav-sep">·</span><a href="#7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A →</a></p>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-deducing-safety-at-1-2">← 3. Deducing Safety at (1,2)</a><span class="secnav-sep">·</span><a href="#5-worked-university-exam-q-a">5. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do AI engineers formulate the 8-puzzle by moving the blank space rather than moving the numbered tiles?</span>
+    <span class="quiz-category">The agent perceives Glitter in its current square. What does it validly know, and what must it do?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the blank space has less weight than the tiles.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because moving the blank space standardizes the action set to at most 4 directional choices (Up, Down, Left, Right), whereas moving tiles yields variable numbers of legal choices depending on adjacent spaces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because tiles cannot move diagonally.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank space represents the goal state.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="true"><span>Gold is in this exact square (glitter is co-located, not adjacent) — Grab it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Gold is in some neighboring square — go explore</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The Wumpus is here — shoot immediately</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Nothing — glitter carries no information</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -344,20 +260,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Standardizing actions around the blank space makes the transition model uniform across all states. The blank can always move into adjacent slots, while individual tiles have variable degrees of movement freedom depending on their board position.</p><pre><code>&lt;/div&gt;
+      <p>Glitter is the one <em>co-located</em> percept: unlike stench/breeze (adjacency), it fires only where the gold sits. The correct response is Grab — the one action whose precondition needs no inference at all.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the primary advantage of using a Complete-State Formulation for the 8-Queens problem over an Incremental Formulation?</span>
+    <span class="quiz-category">Which statement best captures soundness versus completeness of an inference procedure?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It guarantees finding the solution on the very first step.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It drastically reduces the state space from over 300 trillion configurations down to 16.7 million by pre-restricting each queen to its own column.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It allows queens to move through other pieces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need to check diagonal conflicts.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Sound means fast; complete means memory-efficient</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Sound means everything derived is truly entailed (no lies); complete means everything entailed can be derived (nothing missed)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Sound means it handles Horn clauses; complete means it handles full FOL</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>They are synonyms for determinism</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -369,20 +285,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>By restricting each queen to its own column from the outset, we eliminate vast regions of the search tree where multiple queens share columns, cutting the search space by nearly seven orders of magnitude.</p><pre><code>&lt;/div&gt;
+      <p>Soundness ($KB \vdash \alpha \Rightarrow KB \models \alpha$) forbids false conclusions; completeness ($KB \models \alpha \Rightarrow KB \vdash \alpha$) forbids missed ones. A lying-but-thorough agent is complete yet unsound; a silent-but-honest one is sound yet incomplete. You need both before trusting deductions with the agent&#39;s life.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why are 50% of the mathematical permutations ($9!$) of the 8-puzzle unreachable during search?</span>
+    <span class="quiz-category">Why is the Wumpus World (rather than chess) the canonical testbed for knowledge representation?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the center position is fixed.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because sliding moves preserve the parity of tile inversions, making odd-parity configurations unreachable from even-parity goal states.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank tile cannot enter corner positions.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because path costs cannot exceed depth limits.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Chess has no legal moves worth representing</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It is small enough to fully specify yet forces genuinely partial observability, so survival depends on *combining* local percepts with general rules — the exact skill KR exists to provide</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The Wumpus can be bribed, unlike chess pieces</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Chess forbids knowledge bases by tournament rule</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -394,62 +310,39 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Every legal slide corresponds to an even permutation of tiles (preserving the inversion parity). Half of the $9! = 362,880$ permutations have odd parity and are mathematically unreachable from the standard goal state.</p><pre><code>&lt;/div&gt;
+      <p>Chess is fully observable — search suffices, representation adds little. The dungeon&#39;s darkness makes raw search blind; only an agent that <em>stores percepts as sentences</em> and <em>derives unseen facts</em> survives. Partial observability + logical rules = the KR sweet spot in miniature.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2 id="7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#6-active-recall-quizzes">← 6. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-worked-university-exam-q-a">5. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#4-active-recall-quizzes">← 4. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> Define the 5-tuple formulation of the 8-puzzle or calculate the reachable state space of an $N$-puzzle.</li>
-<li><strong>7 Marks:</strong> Compare incremental vs. complete-state formulations for the 8-Queens problem with full state space calculations.</li>
+<li><strong>3 Marks:</strong> PEAS of the Wumpus agent, or the five percepts with meanings.</li>
+<li><strong>7 Marks:</strong> Given a percept history, derive which squares are provably safe (show the Tell/Ask sentences used).</li>
 </ul>
 </div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Formulate the Sliding 8-Puzzle as a search problem by specifying its 5-tuple definition.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>States:</strong> Coordinate locations of each of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Moving the blank space <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Returns the new board layout resulting from swapping the blank space with an adjacent tile.</li>
-<li><strong>Goal Test:</strong> Checks whether the current tile configuration matches the target goal state (e.g., tiles 1–8 in order).</li>
-<li><strong>Path Cost:</strong> 1 unit per sliding action.</li>
-</ol>
+<p><strong>Q: List the five Wumpus percepts and state what each indicates.</strong></p>
+<p><strong>Model Answer:</strong> <strong>Stench</strong> — Wumpus in an orthogonally adjacent square; <strong>Breeze</strong> — pit adjacent; <strong>Glitter</strong> — gold in the <em>current</em> square; <strong>Bump</strong> — attempted move into a wall (position unchanged); <strong>Scream</strong> — the Wumpus died (heard everywhere, once). Stench/breeze constrain neighborhoods; glitter alone is co-located.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Compare Incremental Formulation and Complete-State Formulation for solving the 8-Queens problem. Calculate and contrast the size of the state space for both approaches.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Introduction (1 Mark):</strong> The 8-queens problem requires placing 8 non-attacking queens on an $8 \times 8$ chessboard. The choice of formulation radically alters search efficiency.</li>
-<li><strong>Incremental Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with an empty board and adds queens one by one.</li>
-<li><em>State Space:</em> Placing queen 1 has 64 choices, queen 2 has 63 choices, $\dots$, queen 8 has 57 choices:
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3.1 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Complete-State Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with all 8 queens on the board, enforcing <strong>one queen per column</strong>. Actions move queens vertically within their column.</li>
-<li><em>State Space:</em> Each of the 8 queens has 8 possible row positions:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-<li><em>Conclusion:</em> Complete-state formulation reduces the state space by approximately $10^7$ times, enabling efficient local search.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: The agent visits (1,1) (no percepts) then (2,1) (breeze). Using KB sentences, prove (2,2) may hold a pit while (1,2) is provably safe.</strong></p>
+<p><strong>Model Answer:</strong> TELL: $\lnot P_{1,1}$, $\lnot W_{1,1}$, $B_{2,1}$. Rule: $B_{2,1} \Leftrightarrow P_{1,1} \lor P_{3,1} \lor P_{2,2}$. Since $\lnot P_{1,1}$, deduce $P_{3,1} \lor P_{2,2}$ — pit possibly at (2,2), unproven either way. For (1,2): breeze rule at (1,1) would be $B_{1,1} \Leftrightarrow P_{2,1} \lor P_{1,2}$; observed $\lnot B_{1,1}$ forces $\lnot P_{2,1} \land \lnot P_{1,2}$ — (1,2) provably pit-free. Combined with no stench anywhere visited, (1,2) is the safe probe.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_06_problem_solving_agents_and_search_trees.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_03_informed_heuristic_search_and_functions.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.6 Problem Solving Agents And Search Trees</div>
+        <div class="ttl">2.3 Informed Heuristic Search And Functions</div>
       </a>
       
       
       
-      <a href="./m1_99_practice_lab_agents_and_problem_formulation.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_02_propositional_logic_syntax_semantics.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">🧪 Practice Lab: M1 Agents And Problem Formulation</div>
+        <div class="ttl">3.2 Propositional Logic Syntax Semantics</div>
       </a>
       
     </footer>
@@ -536,7 +429,7 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(15) || 0;
-    const currentId = "m1_07_classic_ai_toy_problems";
+    const currentId = "m3_01_knowledge_based_agents_and_wumpus_world";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 

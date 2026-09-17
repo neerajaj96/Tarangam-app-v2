@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.7 Classic AI Toy Problems</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 1.7 Classic AI Toy Problems | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.7 Classic AI Toy Problems">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.7 Classic AI Toy Problems">
+<title>Tarangam — 3.2 Propositional Logic Syntax Semantics</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 3.2 Propositional Logic Syntax Semantics | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.2 Propositional Logic Syntax Semantics">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 3.2 Propositional Logic Syntax Semantics">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Agents &amp; Problem Solving</span>
           <span class="chev">&#9656;</span>
@@ -97,7 +97,7 @@
             <span class="topic-dot"></span>
             <span>1.6 Problem Solving Agents And Search Trees</span>
           </a>
-          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link active" id="topic-m1_07_classic_ai_toy_problems">
+          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
             <span class="topic-dot"></span>
             <span>1.7 Classic AI Toy Problems</span>
           </a>
@@ -128,8 +128,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Knowledge &amp; Logic</span>
           <span class="chev">&#9656;</span>
@@ -139,7 +139,7 @@
             <span class="topic-dot"></span>
             <span>3.1 Knowledge Based Agents And Wumpus World</span>
           </a>
-          <a href="./m3_02_propositional_logic_syntax_semantics.html" class="topic-link " id="topic-m3_02_propositional_logic_syntax_semantics">
+          <a href="./m3_02_propositional_logic_syntax_semantics.html" class="topic-link active" id="topic-m3_02_propositional_logic_syntax_semantics">
             <span class="topic-dot"></span>
             <span>3.2 Propositional Logic Syntax Semantics</span>
           </a>
@@ -178,9 +178,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.7 Classic AI Toy Problems</span>
+        <span style="color:var(--ink); font-weight:600;">3.2 Propositional Logic Syntax Semantics</span>
       </div>
 
       <div class="topbar-actions">
@@ -196,8 +196,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -205,134 +205,55 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Classic AI Toy Problems &amp; Real-World Formulations</h1>
-<p><strong>Formal problem formulations: Vacuum World, Sliding 8-Puzzle, 8-Queens problem, and real-world search problems.</strong></p>
+<h1>Propositional Logic: Syntax, Semantics &amp; Entailment</h1>
+<p><strong>Atomic sentences, connectives and precedence, models, entailment vs. validity vs. satisfiability, and why truth tables don&#39;t scale.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-toy-problems-vs-real-world-problems">1. Toy Problems vs. Real-World Problems</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-vacuum-world">2. The Vacuum World →</a></p>
-<p>When AI researchers develop and benchmark new search algorithms, they do not test them immediately on complex, massive real-world systems. Instead, they use <strong>Toy Problems</strong>.</p>
-<ul>
-<li><strong>Toy Problem:</strong> A concise, formal, and clearly defined problem with exact mathematical rules and a manageable state space, used to compare and evaluate search algorithms.</li>
-<li><strong>Real-World Problem:</strong> A production problem whose solutions have direct practical, scientific, or financial value (e.g., airline scheduling, autonomous navigation, chip routing).</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flight Simulator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of a toy problem like a flight simulator used in pilot training. It has simplified physics and an artificial cockpit, allowing pilots to master flight principles safely before handling a commercial airliner. In AI, toy problems allow us to verify search algorithms before deploying them to high-stakes applications.</p>
+<h2 id="1-logic-as-legos-and-worlds">1. Logic as Legos and Worlds</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-syntax-atoms-connectives-precedence">2. Syntax: Atoms, Connectives, Pre… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Blueprints vs. Buildings</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Syntax</strong> is the Lego manual: which brick-shapes (sentences) you may snap together and in what orders — pure form, no meaning. <strong>Semantics</strong> is the buildings: each fully-specified way the world <em>could</em> be (a <strong>model</strong>, i.e. a true/false assignment to every atom) either satisfies your construction or collapses it. <strong>Entailment</strong> ($KB \models \alpha$) is the engineer&#39;s guarantee: <em>in every building where your premises stand, the conclusion stands too</em> — no exceptions, no luck.</p>
 </div></details><hr>
 <p><a id="the-dimensions"></a></p>
-<h2 id="2-the-vacuum-world">2. The Vacuum World</h2>
-<p class="secnav"><a href="#1-toy-problems-vs-real-world-problems">← 1. Toy Problems vs. Real-World Pro…</a><span class="secnav-sep">·</span><a href="#3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle →</a></p>
-<p>The <strong>Vacuum World</strong> is a foundational toy problem for single-agent search and reflex planning.</p>
-<h3>Formal Formulation (The 5-Tuple)</h3>
-<ol>
-<li><strong>Initial State:</strong> The agent is in location $A$ or $B$. Dirt can be in $A$, in $B$, in both, or in neither.</li>
-<li><strong>Actions:</strong> <code>[Left, Right, Suck]</code></li>
-<li><strong>Transition Model:</strong> Moving <code>Left</code> places the agent in $A$; moving <code>Right</code> places the agent in $B$; <code>Suck</code> cleans the current location if dirty.</li>
-<li><strong>Goal Test:</strong> Are all locations clean?</li>
-<li><strong>Path Cost:</strong> 1 unit per action taken.</li>
-</ol>
-<h3>ASCII Diagram: Vacuum World State Transitions</h3>
-<pre><code class="language-text">      +--------------------+                 +--------------------+
-      | State 1:           |                 | State 2:           |
-      | [Agent at A, Dirty]| --(Action: Suck)--&gt; | [Agent at A, Clean]|
-      +--------------------+                 +--------------------+
-               |                                       |
-        (Action: Right)                         (Action: Right)
-               v                                       v
-      +--------------------+                 +--------------------+
-      | State 3:           |                 | State 4:           |
-      | [Agent at B, Dirty]|                 | [Agent at B, Clean]|
-      +--------------------+                 +--------------------+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of Vacuum World</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With 2 physical locations, 2 dirt states per location ($\text{Clean}$ or $\text{Dirty}$), and 2 possible agent locations:
-$$\text{Total States} = 2 \times 2 \times 2 = 8 \text{ possible world states}$$</p>
+<h2 id="2-syntax-atoms-connectives-precedence">2. Syntax: Atoms, Connectives, Precedence</h2>
+<p class="secnav"><a href="#1-logic-as-legos-and-worlds">← 1. Logic as Legos and Worlds</a><span class="secnav-sep">·</span><a href="#3-model-checking-and-its-wall">3. Model Checking and Its Wall →</a></p>
+<ul>
+<li><strong>Atomic sentences:</strong> single proposition symbols ($P$, $Q$, $P_{1,2}$) — indivisible true/false facts.</li>
+<li><strong>Complex sentences</strong> via connectives: $\lnot$ (not), $\land$ (and), $\lor$ (or), $\Rightarrow$ (implies), $\Leftrightarrow$ (iff).</li>
+<li><strong>Precedence</strong> (tightest first): $\lnot$, then $\land$, then $\lor$, then $\Rightarrow$, then $\Leftrightarrow$. So $P \lor Q \Rightarrow R$ parses as $(P \lor Q) \Rightarrow R$ — and when in doubt, parenthesize: exams punish precedence slips.</li>
+<li><strong>Implication truth table</strong> (the one everyone must memorize): $P \Rightarrow Q$ is false in exactly one row — $P$ true, $Q$ false. True premise with false conclusion is the <em>only</em> broken promise; a false premise implies <em>anything</em> (vacuous truth).</li>
+</ul>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Entailment, Validity, Satisfiability</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$M(\alpha)$ = the set of models where $\alpha$ is true. <strong>Entailment:</strong> $KB \models \alpha \iff M(KB) \subseteq M(\alpha)$. <strong>Valid</strong> (tautology): true in <em>all</em> models ($M(\alpha) =$ everything). <strong>Satisfiable:</strong> true in <em>at least one</em> model. <strong>Unsatisfiable:</strong> true in <em>none</em>. Deduction theorem bridge: $KB \models \alpha$ <strong>iff</strong> $KB \land \lnot\alpha$ is <strong>unsatisfiable</strong> — the fact resolution (next topic) is built on.</p>
 </div></details><hr>
 <p><a id="terminology"></a></p>
-<h2 id="3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle</h2>
-<p class="secnav"><a href="#2-the-vacuum-world">← 2. The Vacuum World</a><span class="secnav-sep">·</span><a href="#4-the-8-queens-problem">4. The 8-Queens Problem →</a></p>
-<p>The <strong>8-Puzzle</strong> is a sliding-tile problem consisting of a $3 \times 3$ board with 8 numbered tiles and one empty space (the blank).</p>
-<h3>Formal Formulation &amp; The &quot;Blank Tile&quot; Standard</h3>
-<ul>
-<li><strong>States:</strong> The positions of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Instead of defining actions by which <em>tile</em> moves (which varies based on position), we formulate actions by <strong>moving the blank space</strong>: <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Given a state and an action, returns the resulting board layout after swapping the blank with the adjacent tile.</li>
-<li><strong>Goal Test:</strong> Matches a target numerical configuration (e.g., tiles 1 through 8 in sequential order).</li>
-<li><strong>Path Cost:</strong> 1 unit per slide.</li>
-</ul>
-<h3>ASCII Diagram: The 8-Puzzle Board</h3>
-<pre><code class="language-text">      +---+---+---+             +---+---+---+
-      | 1 | 2 | 3 |             | 1 | 2 | 3 |
-      +---+---+---+             +---+---+---+
-      | 8 |   | 4 |  --(Move)--&gt;| 8 | 4 |   |
-      +---+---+---+             +---+---+---+
-      | 7 | 6 | 5 |             | 7 | 6 | 5 |
-      +---+---+---+             +---+---+---+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of the 8-Puzzle</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The total permutations of 9 elements on a grid is $9! = 362,880$. However, parity constraints (inversions) mean that exactly half of these configurations cannot be reached via legal sliding moves from any starting state:
-$$\text{Reachable States} = \frac{9!}{2} = 181,440$$</p>
+<h2 id="3-model-checking-and-its-wall">3. Model Checking and Its Wall</h2>
+<p class="secnav"><a href="#2-syntax-atoms-connectives-precedence">← 2. Syntax: Atoms, Connectives, Pre…</a><span class="secnav-sep">·</span><a href="#4-proving-entailment-by-hand-wumpus-fragment">4. Proving Entailment by Hand (Wum… →</a></p>
+<p><strong>Model checking</strong> (TT-ENTAILS?) enumerates all $2^n$ assignments for $n$ atoms and keeps only rows satisfying the KB: $\alpha$ is entailed iff it holds in every surviving row. Sound and complete — and hopeless past toy sizes: 30 atoms means a billion rows. This exponential wall is <em>why</em> inference procedures (resolution, chaining) exist at all: entailment is co-NP-complete, so no general shortcut is believed possible — only smarter proof search.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Implication Is Not Causation (or Equivalence)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$P \Rightarrow Q$ says nothing about $Q \Rightarrow P$ (affirming the consequent: from $Q$, concluding $P$ — <strong>invalid</strong>). Denying the antecedent (from $\lnot P$, concluding $\lnot Q$) is equally invalid. Only <strong>Modus Ponens</strong> (from $P \Rightarrow Q$ and $P$, conclude $Q$) and <strong>Modus Tollens</strong> (from $P \Rightarrow Q$ and $\lnot Q$, conclude $\lnot P$) are licensed moves. Two valid rules; every other &quot;obvious&quot; step is a trap.</p>
 </div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-the-8-queens-problem">4. The 8-Queens Problem</h2>
-<p class="secnav"><a href="#3-the-sliding-8-puzzle">← 3. The Sliding 8-Puzzle</a><span class="secnav-sep">·</span><a href="#5-real-world-search-problems">5. Real-World Search Problems →</a></p>
-<p>The <strong>8-Queens Problem</strong> requires placing 8 queens on an $8 \times 8$ chessboard such that no two queens attack each other (no two share the same row, column, or diagonal).</p>
-<h3>Formulation Strategies: Incremental vs. Complete-State</h3>
-<p>The formulation chosen directly determines the size and shape of the search space.</p>
-<ul>
-<li><strong>Strategy 1: Incremental Formulation (Constructive Placement)</strong><ul>
-<li><em>Initial State:</em> An empty chessboard.</li>
-<li><em>Actions:</em> Add a queen to any empty square.</li>
-<li><em>State Space Size:</em>
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Strategy 2: Complete-State Formulation (Heuristic Repair)</strong><ul>
-<li><em>Initial State:</em> All 8 queens placed on the board with <strong>exactly one queen per column</strong>.</li>
-<li><em>Actions:</em> Move a queen vertically within its column to a different row.</li>
-<li><em>State Space Size:</em> Since each queen is restricted to its own column, each has 8 possible rows:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-</ul>
-</li>
-</ul>
-<h3>ASCII Diagram: 8-Queens Formulations</h3>
-<pre><code class="language-text">      INCREMENTAL (Any empty square)       COMPLETE-STATE (1 Queen per column)
-        .  .  Q  .  .  .  .  .                 Q  .  .  .  .  .  .  .
-        .  .  .  .  Q  .  .  .                 .  .  Q  .  .  .  .  .
-        (Searching 300 trillion states)          .  .  .  .  .  Q  .  .
-                                                 (Searching 16.7 million states)
-</code></pre>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: State Space Explosion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A naive problem formulation can inflate your search space by many orders of magnitude. Restricting problem dimensions early (such as 1 queen per column) prunes invalid configurations and makes search computationally feasible.</p>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-real-world-search-problems">5. Real-World Search Problems</h2>
-<p class="secnav"><a href="#4-the-8-queens-problem">← 4. The 8-Queens Problem</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
-<p>Unlike toy problems, real-world problems feature massive search spaces, continuous variables, and noisy data:</p>
-<ul>
-<li><strong>Route Finding &amp; Traveling Salesperson Problem (TSP):</strong><ul>
-<li><em>Route Finding:</em> Computing optimal point-to-point driving directions on road networks (Google Maps, GPS navigation).</li>
-<li><em>TSP:</em> Finding the shortest round-trip tour visiting $N$ cities exactly once and returning to the start. It is an <strong>NP-hard</strong> problem with $(N-1)! / 2$ tours for symmetric graphs.</li>
-</ul>
-</li>
-<li><strong>VLSI Layout Design:</strong> Positioning millions of logic transistors and routing interconnecting wires on silicon chips to minimize signal delay and silicon area without wire overlap.</li>
-<li><strong>Robot Navigation &amp; Motion Planning:</strong> Guiding robotic manipulators through complex 3D workspaces around dynamic obstacles.</li>
-</ul>
+<p><a id="worked-example"></a></p>
+<h2 id="4-proving-entailment-by-hand-wumpus-fragment">4. Proving Entailment by Hand (Wumpus Fragment)</h2>
+<p class="secnav"><a href="#3-model-checking-and-its-wall">← 3. Model Checking and Its Wall</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p>KB: $R_1: \lnot P_{1,1}$ · $R_2: B_{1,1} \Leftrightarrow (P_{1,2} \lor P_{2,1})$ · $R_3: \lnot B_{1,1}$ (observed). Query: $\alpha = \lnot P_{1,2}$ (square (1,2) is pit-free).</p>
+<p>Relevant atoms: $P_{1,1}, P_{1,2}, P_{2,1}, B_{1,1}$ — 16 rows. $R_1$ kills 8 (fixes $P_{1,1}=$ false); $R_3$ kills all but $B_{1,1}=$ false rows. In every surviving row, $R_2$&#39;s biconditional with $B_{1,1}$ false forces $(P_{1,2} \lor P_{2,1})$ false, i.e. both false — so $\alpha$ holds in <em>all</em> surviving models: $KB \models \lnot P_{1,2}$ proven. Four atoms needed 16 rows; the full $4\times4$ dungeon&#39;s 64+ atoms would need $2^{64}$ — the wall, demonstrated.</p>
 <hr>
 <p><a id="self-check"></a></p>
-<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#5-real-world-search-problems">← 5. Real-World Search Problems</a><span class="secnav-sep">·</span><a href="#7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-proving-entailment-by-hand-wumpus-fragment">← 4. Proving Entailment by Hand (Wum…</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do AI engineers formulate the 8-puzzle by moving the blank space rather than moving the numbered tiles?</span>
+    <span class="quiz-category">Which row of the truth table makes P ⇒ Q false, and what does that imply about vacuous truth?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the blank space has less weight than the tiles.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because moving the blank space standardizes the action set to at most 4 directional choices (Up, Down, Left, Right), whereas moving tiles yields variable numbers of legal choices depending on adjacent spaces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because tiles cannot move diagonally.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank space represents the goal state.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The row where both are false — implication needs truth on both sides</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The row P=true, Q=false — the only broken promise; with a false premise the implication is automatically (vacuously) true</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No row ever falsifies an implication</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The row P=false, Q=true — a true conclusion can&#39;t follow a false premise</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -344,20 +265,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Standardizing actions around the blank space makes the transition model uniform across all states. The blank can always move into adjacent slots, while individual tiles have variable degrees of movement freedom depending on their board position.</p><pre><code>&lt;/div&gt;
+      <p>Implication is a <em>promise</em>: &quot;if P, then Q.&quot; Only P-true-with-Q-false breaks it. P-false rows (whatever Q) keep the promise vacuously — the single most-tested truth-table fact, and the engine behind half the exam traps on this topic.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the primary advantage of using a Complete-State Formulation for the 8-Queens problem over an Incremental Formulation?</span>
+    <span class="quiz-category">KB ⊨ α holds exactly when which model-set relationship (or satisfiability fact) holds?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It guarantees finding the solution on the very first step.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It drastically reduces the state space from over 300 trillion configurations down to 16.7 million by pre-restricting each queen to its own column.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It allows queens to move through other pieces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need to check diagonal conflicts.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>M(α) ⊆ M(KB) — the query&#39;s models are fewer</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>M(KB) ⊆ M(α) — every KB-model is an α-model; equivalently KB ∧ ¬α is unsatisfiable</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>M(KB) and M(α) are disjoint</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>KB and α share at least one atom symbol</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -369,20 +290,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>By restricting each queen to its own column from the outset, we eliminate vast regions of the search tree where multiple queens share columns, cutting the search space by nearly seven orders of magnitude.</p><pre><code>&lt;/div&gt;
+      <p>Entailment means <em>no counterexample</em>: no model satisfying the KB violates $\alpha$. Set-wise, KB-models sit inside $\alpha$-models; equivalently, assuming the KB <em>plus the query&#39;s negation</em> explodes into contradiction. The second phrasing is what resolution mechanizes next topic.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why are 50% of the mathematical permutations ($9!$) of the 8-puzzle unreachable during search?</span>
+    <span class="quiz-category">An agent reasons: &quot;If there&#39;s a breeze there must be a pit nearby (B ⇒ P-nearby). No breeze here, so no pit nearby.&quot; Valid or fallacy, and why?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the center position is fixed.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because sliding moves preserve the parity of tile inversions, making odd-parity configurations unreachable from even-parity goal states.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank tile cannot enter corner positions.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because path costs cannot exceed depth limits.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Valid — this is Modus Ponens applied correctly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Valid — this is Modus Tollens applied correctly</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Fallacy — denying the antecedent: from ¬B nothing follows about P-nearby under this rule alone (the rule constrains breezy squares, not calm ones)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Fallacy — affirming the consequent, because the agent observed a conclusion</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -394,62 +315,39 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Every legal slide corresponds to an even permutation of tiles (preserving the inversion parity). Half of the $9! = 362,880$ permutations have odd parity and are mathematically unreachable from the standard goal state.</p><pre><code>&lt;/div&gt;
+      <p>Modus Tollens needs $\lnot Q$ to conclude $\lnot P$ — here the rule&#39;s consequent is &quot;pit nearby,&quot; and the observation is about <em>breeze</em>, the antecedent. Denying the antecedent proves nothing (the rule is silent about calm squares). Contrast the <em>valid</em> twin: breeze-rule contrapositive runs through $\lnot P$-facts, not $\lnot B$-observations.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2 id="7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#6-active-recall-quizzes">← 6. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> Define the 5-tuple formulation of the 8-puzzle or calculate the reachable state space of an $N$-puzzle.</li>
-<li><strong>7 Marks:</strong> Compare incremental vs. complete-state formulations for the 8-Queens problem with full state space calculations.</li>
+<li><strong>3 Marks:</strong> Precedence order, implication truth table, or define entailment/validity/satisfiability.</li>
+<li><strong>7 Marks:</strong> Model-checking proof of a Wumpus entailment (enumerate rows, filter by KB, verdict).</li>
 </ul>
 </div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Formulate the Sliding 8-Puzzle as a search problem by specifying its 5-tuple definition.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>States:</strong> Coordinate locations of each of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Moving the blank space <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Returns the new board layout resulting from swapping the blank space with an adjacent tile.</li>
-<li><strong>Goal Test:</strong> Checks whether the current tile configuration matches the target goal state (e.g., tiles 1–8 in order).</li>
-<li><strong>Path Cost:</strong> 1 unit per sliding action.</li>
-</ol>
+<p><strong>Q: State the precedence of propositional connectives and the condition under which P ⇒ Q is false.</strong></p>
+<p><strong>Model Answer:</strong> Tightest first: $\lnot$, $\land$, $\lor$, $\Rightarrow$, $\Leftrightarrow$. $P \Rightarrow Q$ is false in exactly one case: $P$ true and $Q$ false; all three other rows are true (vacuous truth when $P$ is false).</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Compare Incremental Formulation and Complete-State Formulation for solving the 8-Queens problem. Calculate and contrast the size of the state space for both approaches.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Introduction (1 Mark):</strong> The 8-queens problem requires placing 8 non-attacking queens on an $8 \times 8$ chessboard. The choice of formulation radically alters search efficiency.</li>
-<li><strong>Incremental Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with an empty board and adds queens one by one.</li>
-<li><em>State Space:</em> Placing queen 1 has 64 choices, queen 2 has 63 choices, $\dots$, queen 8 has 57 choices:
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3.1 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Complete-State Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with all 8 queens on the board, enforcing <strong>one queen per column</strong>. Actions move queens vertically within their column.</li>
-<li><em>State Space:</em> Each of the 8 queens has 8 possible row positions:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-<li><em>Conclusion:</em> Complete-state formulation reduces the state space by approximately $10^7$ times, enabling efficient local search.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: With the KB of §4, prove by model checking that square (1,2) is pit-free. Why is this method impractical in general?</strong></p>
+<p><strong>Model Answer:</strong> List the 16 assignments over ${P_{1,1}, P_{1,2}, P_{2,1}, B_{1,1}}$; discard rows violating $R_1$ ($P_{1,1}$ true), $R_3$ ($B_{1,1}$ true), or $R_2$ (biconditional mismatch); observe $\lnot P_{1,2}$ in every survivor — hence entailment. Impractical because rows double per atom ($2^n$): a 64-atom dungeon needs $\sim 10^{19}$ rows — sound, complete, and unusable, motivating resolution.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_06_problem_solving_agents_and_search_trees.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_01_knowledge_based_agents_and_wumpus_world.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.6 Problem Solving Agents And Search Trees</div>
+        <div class="ttl">3.1 Knowledge Based Agents And Wumpus World</div>
       </a>
       
       
       
-      <a href="./m1_99_practice_lab_agents_and_problem_formulation.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_03_inference_resolution_and_horn_clauses.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">🧪 Practice Lab: M1 Agents And Problem Formulation</div>
+        <div class="ttl">3.3 Inference Resolution And Horn Clauses</div>
       </a>
       
     </footer>
@@ -536,7 +434,7 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(15) || 0;
-    const currentId = "m1_07_classic_ai_toy_problems";
+    const currentId = "m3_02_propositional_logic_syntax_semantics";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 

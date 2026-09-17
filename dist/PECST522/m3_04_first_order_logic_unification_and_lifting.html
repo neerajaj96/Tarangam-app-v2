@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.7 Classic AI Toy Problems</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 1.7 Classic AI Toy Problems | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.7 Classic AI Toy Problems">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 1.7 Classic AI Toy Problems">
+<title>Tarangam — 3.4 First Order Logic Unification And Lifting</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 3.4 First Order Logic Unification And Lifting | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.4 First Order Logic Unification And Lifting">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 3.4 First Order Logic Unification And Lifting">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Agents &amp; Problem Solving</span>
           <span class="chev">&#9656;</span>
@@ -97,7 +97,7 @@
             <span class="topic-dot"></span>
             <span>1.6 Problem Solving Agents And Search Trees</span>
           </a>
-          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link active" id="topic-m1_07_classic_ai_toy_problems">
+          <a href="./m1_07_classic_ai_toy_problems.html" class="topic-link " id="topic-m1_07_classic_ai_toy_problems">
             <span class="topic-dot"></span>
             <span>1.7 Classic AI Toy Problems</span>
           </a>
@@ -128,8 +128,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Knowledge &amp; Logic</span>
           <span class="chev">&#9656;</span>
@@ -147,7 +147,7 @@
             <span class="topic-dot"></span>
             <span>3.3 Inference Resolution And Horn Clauses</span>
           </a>
-          <a href="./m3_04_first_order_logic_unification_and_lifting.html" class="topic-link " id="topic-m3_04_first_order_logic_unification_and_lifting">
+          <a href="./m3_04_first_order_logic_unification_and_lifting.html" class="topic-link active" id="topic-m3_04_first_order_logic_unification_and_lifting">
             <span class="topic-dot"></span>
             <span>3.4 First Order Logic Unification And Lifting</span>
           </a>
@@ -178,9 +178,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.7 Classic AI Toy Problems</span>
+        <span style="color:var(--ink); font-weight:600;">3.4 First Order Logic Unification And Lifting</span>
       </div>
 
       <div class="topbar-actions">
@@ -196,8 +196,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -205,134 +205,55 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Classic AI Toy Problems &amp; Real-World Formulations</h1>
-<p><strong>Formal problem formulations: Vacuum World, Sliding 8-Puzzle, 8-Queens problem, and real-world search problems.</strong></p>
+<h1>First-Order Logic: Quantifiers, Unification &amp; Lifting</h1>
+<p><strong>Objects, relations, and functions; ∀/∃ semantics; most general unifiers with the occur check; lifting Modus Ponens and chaining to FOL.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-toy-problems-vs-real-world-problems">1. Toy Problems vs. Real-World Problems</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-vacuum-world">2. The Vacuum World →</a></p>
-<p>When AI researchers develop and benchmark new search algorithms, they do not test them immediately on complex, massive real-world systems. Instead, they use <strong>Toy Problems</strong>.</p>
-<ul>
-<li><strong>Toy Problem:</strong> A concise, formal, and clearly defined problem with exact mathematical rules and a manageable state space, used to compare and evaluate search algorithms.</li>
-<li><strong>Real-World Problem:</strong> A production problem whose solutions have direct practical, scientific, or financial value (e.g., airline scheduling, autonomous navigation, chip routing).</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flight Simulator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of a toy problem like a flight simulator used in pilot training. It has simplified physics and an artificial cockpit, allowing pilots to master flight principles safely before handling a commercial airliner. In AI, toy problems allow us to verify search algorithms before deploying them to high-stakes applications.</p>
+<h2 id="1-from-propositions-to-predicates">1. From Propositions to Predicates</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-syntax-and-semantics-in-one-pass">2. Syntax and Semantics in One Pas… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Stamps vs. Stencil Machine</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Propositional logic hand-carves one stamp per fact: $\text{Pit}<em>{1,2}$, $\text{Pit}</em>{1,3}$, $\text{Pit}_{2,1}$ … — a thousand squares need a thousand stamps. <strong>First-order logic owns a stencil machine</strong>: one quantified sentence $\forall x,y; \text{Breeze}(x,y) \Rightarrow \text{AdjacentPit}(x,y)$ stamps the rule onto <em>every</em> square at once. <strong>Objects</strong> (squares, agents, the Wumpus), <strong>relations</strong> ($\text{Adjacent}$, $\text{At}$), and <strong>functions</strong> ($\text{LocationOf}$, $\text{LeftOf}$ — each mapping objects to exactly one object) replace flat atoms; <strong>variables</strong> ($x, y$) plus <strong>quantifiers</strong> ($\forall$ &quot;for all&quot;, $\exists$ &quot;there exists&quot;) supply the generality. One FOL sentence routinely replaces exponentially many propositional ones.</p>
 </div></details><hr>
 <p><a id="the-dimensions"></a></p>
-<h2 id="2-the-vacuum-world">2. The Vacuum World</h2>
-<p class="secnav"><a href="#1-toy-problems-vs-real-world-problems">← 1. Toy Problems vs. Real-World Pro…</a><span class="secnav-sep">·</span><a href="#3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle →</a></p>
-<p>The <strong>Vacuum World</strong> is a foundational toy problem for single-agent search and reflex planning.</p>
-<h3>Formal Formulation (The 5-Tuple)</h3>
-<ol>
-<li><strong>Initial State:</strong> The agent is in location $A$ or $B$. Dirt can be in $A$, in $B$, in both, or in neither.</li>
-<li><strong>Actions:</strong> <code>[Left, Right, Suck]</code></li>
-<li><strong>Transition Model:</strong> Moving <code>Left</code> places the agent in $A$; moving <code>Right</code> places the agent in $B$; <code>Suck</code> cleans the current location if dirty.</li>
-<li><strong>Goal Test:</strong> Are all locations clean?</li>
-<li><strong>Path Cost:</strong> 1 unit per action taken.</li>
-</ol>
-<h3>ASCII Diagram: Vacuum World State Transitions</h3>
-<pre><code class="language-text">      +--------------------+                 +--------------------+
-      | State 1:           |                 | State 2:           |
-      | [Agent at A, Dirty]| --(Action: Suck)--&gt; | [Agent at A, Clean]|
-      +--------------------+                 +--------------------+
-               |                                       |
-        (Action: Right)                         (Action: Right)
-               v                                       v
-      +--------------------+                 +--------------------+
-      | State 3:           |                 | State 4:           |
-      | [Agent at B, Dirty]|                 | [Agent at B, Clean]|
-      +--------------------+                 +--------------------+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of Vacuum World</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With 2 physical locations, 2 dirt states per location ($\text{Clean}$ or $\text{Dirty}$), and 2 possible agent locations:
-$$\text{Total States} = 2 \times 2 \times 2 = 8 \text{ possible world states}$$</p>
+<h2 id="2-syntax-and-semantics-in-one-pass">2. Syntax and Semantics in One Pass</h2>
+<p class="secnav"><a href="#1-from-propositions-to-predicates">← 1. From Propositions to Predicates</a><span class="secnav-sep">·</span><a href="#3-lifting-inference-to-fol">3. Lifting Inference to FOL →</a></p>
+<ul>
+<li><strong>Terms:</strong> constants (<code>Wumpus</code>, <code>A</code>), variables (<code>x</code>), or functions of terms (<code>LeftOf(x)</code>).</li>
+<li><strong>Atomic sentences:</strong> predicate applied to terms: $\text{At}(\text{Agent}, (1,1))$, $\text{Adjacent}((1,2),(2,2))$.</li>
+<li><strong>Quantified sentences:</strong> $\forall x; P(x)$ (true iff $P$ holds for <em>every</em> object), $\exists x; P(x)$ (true iff $P$ holds for <em>at least one</em>). Order matters: $\forall x, \exists y; \text{Loves}(x,y)$ (&quot;everyone loves someone&quot;) $\neq$ $\exists y, \forall x; \text{Loves}(x,y)$ (&quot;someone is loved by all&quot;) — the classic scope swap examiners adore.</li>
+<li><strong>Standard pitfall shapes:</strong> $\forall x; (\text{At}(x,\text{Cave}) \Rightarrow \text{Dark}(x))$ is the correct &quot;all cave squares are dark&quot; ($\forall$ pairs with $\Rightarrow$); $\exists x; (\text{At}(x,\text{Cave}) \land \text{Glitter}(x))$ is &quot;some cave square glitters&quot; ($\exists$ pairs with $\land$). Swapping the connective ($\forall$+$\land$, $\exists$+$\Rightarrow$) states near-nonsense — the single most-tested FOL syntax fact.</li>
+</ul>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Unification (UNIFY)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$\text{UNIFY}(p, q)$ returns the <strong>most general unifier (MGU)</strong> $\theta$ — variable bindings making $p\theta = q\theta$ while committing to <em>nothing extra</em>. Rules: identical constants unify; variable–anything unifies (record $var/term$) and <strong>compose</strong> through all accumulated bindings; two different constants/arity-mismatches <strong>fail</strong>. <strong>Occur check:</strong> $x$ never unifies with a term <em>containing</em> $x$ (else infinite regress: $x = f(x) = f(f(x)) = \dots$). Skipping it (as Prolog does, for speed) risks unsound loops.</p>
 </div></details><hr>
 <p><a id="terminology"></a></p>
-<h2 id="3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle</h2>
-<p class="secnav"><a href="#2-the-vacuum-world">← 2. The Vacuum World</a><span class="secnav-sep">·</span><a href="#4-the-8-queens-problem">4. The 8-Queens Problem →</a></p>
-<p>The <strong>8-Puzzle</strong> is a sliding-tile problem consisting of a $3 \times 3$ board with 8 numbered tiles and one empty space (the blank).</p>
-<h3>Formal Formulation &amp; The &quot;Blank Tile&quot; Standard</h3>
-<ul>
-<li><strong>States:</strong> The positions of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Instead of defining actions by which <em>tile</em> moves (which varies based on position), we formulate actions by <strong>moving the blank space</strong>: <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Given a state and an action, returns the resulting board layout after swapping the blank with the adjacent tile.</li>
-<li><strong>Goal Test:</strong> Matches a target numerical configuration (e.g., tiles 1 through 8 in sequential order).</li>
-<li><strong>Path Cost:</strong> 1 unit per slide.</li>
-</ul>
-<h3>ASCII Diagram: The 8-Puzzle Board</h3>
-<pre><code class="language-text">      +---+---+---+             +---+---+---+
-      | 1 | 2 | 3 |             | 1 | 2 | 3 |
-      +---+---+---+             +---+---+---+
-      | 8 |   | 4 |  --(Move)--&gt;| 8 | 4 |   |
-      +---+---+---+             +---+---+---+
-      | 7 | 6 | 5 |             | 7 | 6 | 5 |
-      +---+---+---+             +---+---+---+
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of the 8-Puzzle</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The total permutations of 9 elements on a grid is $9! = 362,880$. However, parity constraints (inversions) mean that exactly half of these configurations cannot be reached via legal sliding moves from any starting state:
-$$\text{Reachable States} = \frac{9!}{2} = 181,440$$</p>
+<h2 id="3-lifting-inference-to-fol">3. Lifting Inference to FOL</h2>
+<p class="secnav"><a href="#2-syntax-and-semantics-in-one-pass">← 2. Syntax and Semantics in One Pas…</a><span class="secnav-sep">·</span><a href="#4-unifying-to-fire-a-rule">4. Unifying to Fire a Rule →</a></p>
+<p><strong>Lifted Modus Ponens:</strong> from $\forall \vec{v}; (p_1 \land \dots \land p_n \Rightarrow q)$ and premises $p_i&#39;$ with a <em>single</em> $\theta$ unifying every $p_i$ with $p_i&#39;$, infer $q\theta$ — one rule application doing the work of infinitely many propositional groundings. <strong>Forward chaining</strong> (FOL-FC) matches rules against known facts via unification, adding consequents until the query grounds out; <strong>backward chaining</strong> (FOL-BC, Prolog&#39;s engine) recursively unifies the goal with rule heads, proving premises depth-first with backtracking over alternative unifiers.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Standardize Apart Before You Unify</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Two rules sharing a variable name ($x$ in both) will collide during unification — silently merging unrelated bindings. <strong>Standardizing apart</strong> (renaming each rule-use&#39;s variables uniquely, e.g. $x_{17}$) is mandatory hygiene before every UNIFY call. Nearly every &quot;mysterious wrong binding&quot; in tracing questions traces back here.</p>
 </div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-the-8-queens-problem">4. The 8-Queens Problem</h2>
-<p class="secnav"><a href="#3-the-sliding-8-puzzle">← 3. The Sliding 8-Puzzle</a><span class="secnav-sep">·</span><a href="#5-real-world-search-problems">5. Real-World Search Problems →</a></p>
-<p>The <strong>8-Queens Problem</strong> requires placing 8 queens on an $8 \times 8$ chessboard such that no two queens attack each other (no two share the same row, column, or diagonal).</p>
-<h3>Formulation Strategies: Incremental vs. Complete-State</h3>
-<p>The formulation chosen directly determines the size and shape of the search space.</p>
-<ul>
-<li><strong>Strategy 1: Incremental Formulation (Constructive Placement)</strong><ul>
-<li><em>Initial State:</em> An empty chessboard.</li>
-<li><em>Actions:</em> Add a queen to any empty square.</li>
-<li><em>State Space Size:</em>
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Strategy 2: Complete-State Formulation (Heuristic Repair)</strong><ul>
-<li><em>Initial State:</em> All 8 queens placed on the board with <strong>exactly one queen per column</strong>.</li>
-<li><em>Actions:</em> Move a queen vertically within its column to a different row.</li>
-<li><em>State Space Size:</em> Since each queen is restricted to its own column, each has 8 possible rows:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-</ul>
-</li>
-</ul>
-<h3>ASCII Diagram: 8-Queens Formulations</h3>
-<pre><code class="language-text">      INCREMENTAL (Any empty square)       COMPLETE-STATE (1 Queen per column)
-        .  .  Q  .  .  .  .  .                 Q  .  .  .  .  .  .  .
-        .  .  .  .  Q  .  .  .                 .  .  Q  .  .  .  .  .
-        (Searching 300 trillion states)          .  .  .  .  .  Q  .  .
-                                                 (Searching 16.7 million states)
-</code></pre>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: State Space Explosion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A naive problem formulation can inflate your search space by many orders of magnitude. Restricting problem dimensions early (such as 1 queen per column) prunes invalid configurations and makes search computationally feasible.</p>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-real-world-search-problems">5. Real-World Search Problems</h2>
-<p class="secnav"><a href="#4-the-8-queens-problem">← 4. The 8-Queens Problem</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
-<p>Unlike toy problems, real-world problems feature massive search spaces, continuous variables, and noisy data:</p>
-<ul>
-<li><strong>Route Finding &amp; Traveling Salesperson Problem (TSP):</strong><ul>
-<li><em>Route Finding:</em> Computing optimal point-to-point driving directions on road networks (Google Maps, GPS navigation).</li>
-<li><em>TSP:</em> Finding the shortest round-trip tour visiting $N$ cities exactly once and returning to the start. It is an <strong>NP-hard</strong> problem with $(N-1)! / 2$ tours for symmetric graphs.</li>
-</ul>
-</li>
-<li><strong>VLSI Layout Design:</strong> Positioning millions of logic transistors and routing interconnecting wires on silicon chips to minimize signal delay and silicon area without wire overlap.</li>
-<li><strong>Robot Navigation &amp; Motion Planning:</strong> Guiding robotic manipulators through complex 3D workspaces around dynamic obstacles.</li>
-</ul>
+<p><a id="worked-example"></a></p>
+<h2 id="4-unifying-to-fire-a-rule">4. Unifying to Fire a Rule</h2>
+<p class="secnav"><a href="#3-lifting-inference-to-fol">← 3. Lifting Inference to FOL</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p>KB rule: $\forall s; (\text{Stench}(s) \Rightarrow \text{WumpusNear}(s))$. Known fact: $\text{Stench}(S_{12})$ (stench sensed at square (1,2)).</p>
+<p>Standardize apart: the rule&#39;s $s$ becomes $s_7$ (fresh, collision-proof). UNIFY premise $\text{Stench}(s_7)$ with fact $\text{Stench}(S_{12})$: same predicate, same arity; $s_7$ is a variable meeting a constant → $\theta = {s_7/S_{12}}$. Apply $\theta$ to the consequent: $\text{WumpusNear}(S_{12})$ — the Wumpus is constrained to $(1,2)$&#39;s neighborhood, i.e. the $W_{1,3} \lor W_{2,2}$-style disjunction of this module&#39;s first topic, derived by <em>one lifted step</em> instead of a page of propositional clauses. Had the fact instead been $\text{Stench}(S_{12}, \text{extra})$ (arity 2 vs 1), unification would <strong>fail</strong> immediately — arity mismatch is non-negotiable.</p>
 <hr>
 <p><a id="self-check"></a></p>
-<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#5-real-world-search-problems">← 5. Real-World Search Problems</a><span class="secnav-sep">·</span><a href="#7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-unifying-to-fire-a-rule">← 4. Unifying to Fire a Rule</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why do AI engineers formulate the 8-puzzle by moving the blank space rather than moving the numbered tiles?</span>
+    <span class="quiz-category">What is the most general unifier of Knows(John, x) and Knows(y, Mother(y)), and why must y bind before the second argument is compared?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the blank space has less weight than the tiles.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because moving the blank space standardizes the action set to at most 4 directional choices (Up, Down, Left, Right), whereas moving tiles yields variable numbers of legal choices depending on adjacent spaces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because tiles cannot move diagonally.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank space represents the goal state.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>No unifier exists — John and Mother(y) can never match</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>θ = {y/John, x/Mother(John)} — binding y first lets Mother(y) resolve to Mother(John) before x commits, keeping the substitution maximally general</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>θ = {x/John, y/John} — both variables simply take the constant</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>θ = {y/Mother(y)} — self-binding is permitted without checks</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -344,20 +265,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Standardizing actions around the blank space makes the transition model uniform across all states. The blank can always move into adjacent slots, while individual tiles have variable degrees of movement freedom depending on their board position.</p><pre><code>&lt;/div&gt;
+      <p>Unify left-to-right, composing as you go: $y$ meets $\text{John}$ → $\theta = {y/\text{John}}$; apply it through the accumulated substitution, so the second pair is $x$ vs. $\text{Mother}(\text{John})$ → add $x/\text{Mother}(\text{John})$. Committing $x$ early (option C) over-binds; self-binding (option D) is exactly what the occur check forbids.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the primary advantage of using a Complete-State Formulation for the 8-Queens problem over an Incremental Formulation?</span>
+    <span class="quiz-category">Which pairing of quantifier and connective is correct, and what goes wrong otherwise?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It guarantees finding the solution on the very first step.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It drastically reduces the state space from over 300 trillion configurations down to 16.7 million by pre-restricting each queen to its own column.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It allows queens to move through other pieces.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It eliminates the need to check diagonal conflicts.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>∀ with ∧ is the safe universal form; nothing goes wrong</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>∀ pairs with ⇒ (&quot;all cave squares are dark&quot;); ∃ pairs with ∧ (&quot;some square glitters&quot;) — swapped, ∀+∧ claims everything is a dark cave-square and ∃+⇒ is trivially true of any non-cave object</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>∃ with ⇒ is the standard existential form</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Quantifiers don&#39;t interact with connectives at all</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -369,20 +290,20 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>By restricting each queen to its own column from the outset, we eliminate vast regions of the search tree where multiple queens share columns, cutting the search space by nearly seven orders of magnitude.</p><pre><code>&lt;/div&gt;
+      <p>$\forall x; (\text{At}(x) \land \text{Dark}(x))$ asserts <em>every object in the universe</em> is a dark cave square — absurdly strong. $\exists x; (\text{At}(x) \Rightarrow \text{Glitter}(x))$ is satisfied by <em>any</em> non-cave object (false antecedent) — vacuously, uselessly true. Right connective per quantifier, or the sentence means something unintended.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why are 50% of the mathematical permutations ($9!$) of the 8-puzzle unreachable during search?</span>
+    <span class="quiz-category">Two FOL rules both use variable x. Before unifying a goal against both, what must happen and why?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because the center position is fixed.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because sliding moves preserve the parity of tile inversions, making odd-parity configurations unreachable from even-parity goal states.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because the blank tile cannot enter corner positions.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because path costs cannot exceed depth limits.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Nothing — shared names automatically mean shared values across rules</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Standardize apart: rename each rule&#39;s variables uniquely, or bindings from one rule leak into the other and corrupt the proof</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Delete one rule to avoid the collision</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Convert both rules to propositional form first</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -394,63 +315,37 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Every legal slide corresponds to an even permutation of tiles (preserving the inversion parity). Half of the $9! = 362,880$ permutations have odd parity and are mathematically unreachable from the standard goal state.</p><pre><code>&lt;/div&gt;
+      <p>Variable scope is per-rule-use; the $x$ in rule A and the $x$ in rule B are unrelated. Unifying without renaming fuses them into one variable, so a binding forced by rule A silently constrains rule B — the classic source of &quot;correct rules, insane derivation.&quot; Fresh names per use ($x_1, x_2, \dots$) cost nothing and prevent everything.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2 id="7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#6-active-recall-quizzes">← 6. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> Define the 5-tuple formulation of the 8-puzzle or calculate the reachable state space of an $N$-puzzle.</li>
-<li><strong>7 Marks:</strong> Compare incremental vs. complete-state formulations for the 8-Queens problem with full state space calculations.</li>
+<li><strong>3 Marks:</strong> MGU of two given expressions, ∀/∃ connective pairing, or the occur check.</li>
+<li><strong>7 Marks:</strong> Lifted Modus Ponens trace (standardize apart → UNIFY → apply θ), or FOL forward/backward chaining comparison.</li>
 </ul>
 </div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Formulate the Sliding 8-Puzzle as a search problem by specifying its 5-tuple definition.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>States:</strong> Coordinate locations of each of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Moving the blank space <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Returns the new board layout resulting from swapping the blank space with an adjacent tile.</li>
-<li><strong>Goal Test:</strong> Checks whether the current tile configuration matches the target goal state (e.g., tiles 1–8 in order).</li>
-<li><strong>Path Cost:</strong> 1 unit per sliding action.</li>
-</ol>
+<p><strong>Q: Find the MGU of Knows(John, x) and Knows(y, Mother(y)), showing composition order.</strong></p>
+<p><strong>Model Answer:</strong> Compare argument-wise: first pair $y$ vs. $\text{John}$ gives $\theta_1 = {y/\text{John}}$. Compose $\theta_1$ into the remaining problem: second pair becomes $x$ vs. $\text{Mother}(\text{John})$, giving $\theta_2 = {x/\text{Mother}(\text{John})}$. Final MGU $\theta = {y/\text{John},, x/\text{Mother}(\text{John})}$ — binding $y$ first is load-bearing, since $x$&#39;s partner contains $y$.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Compare Incremental Formulation and Complete-State Formulation for solving the 8-Queens problem. Calculate and contrast the size of the state space for both approaches.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Introduction (1 Mark):</strong> The 8-queens problem requires placing 8 non-attacking queens on an $8 \times 8$ chessboard. The choice of formulation radically alters search efficiency.</li>
-<li><strong>Incremental Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with an empty board and adds queens one by one.</li>
-<li><em>State Space:</em> Placing queen 1 has 64 choices, queen 2 has 63 choices, $\dots$, queen 8 has 57 choices:
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3.1 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Complete-State Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with all 8 queens on the board, enforcing <strong>one queen per column</strong>. Actions move queens vertically within their column.</li>
-<li><em>State Space:</em> Each of the 8 queens has 8 possible row positions:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-<li><em>Conclusion:</em> Complete-state formulation reduces the state space by approximately $10^7$ times, enabling efficient local search.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: Explain lifted Modus Ponens with an example. Why is standardizing apart necessary?</strong></p>
+<p><strong>Model Answer:</strong> Lifted MP: from $\forall \vec{v}; (p_1 \land \dots \land p_n \Rightarrow q)$ plus facts $p_i&#39;$ unifiable with every $p_i$ under one $\theta$, infer $q\theta$ — e.g. the §4 Stench derivation in a single step. Standardizing apart renames each rule invocation&#39;s variables ($x \to x_{17}$) so that coincidental name-sharing between rules cannot fuse independent bindings; without it, one rule&#39;s committed substitution corrupts another&#39;s unification and the derivation goes unsound.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_06_problem_solving_agents_and_search_trees.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_03_inference_resolution_and_horn_clauses.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.6 Problem Solving Agents And Search Trees</div>
+        <div class="ttl">3.3 Inference Resolution And Horn Clauses</div>
       </a>
       
       
       
-      <a href="./m1_99_practice_lab_agents_and_problem_formulation.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">🧪 Practice Lab: M1 Agents And Problem Formulation</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -536,7 +431,7 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(15) || 0;
-    const currentId = "m1_07_classic_ai_toy_problems";
+    const currentId = "m3_04_first_order_logic_unification_and_lifting";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 
