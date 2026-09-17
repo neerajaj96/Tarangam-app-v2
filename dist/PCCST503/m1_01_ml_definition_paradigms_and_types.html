@@ -91,6 +91,35 @@
           </a>
         </div>
       </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Classification &amp; Trees</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_classification_boundaries_knn.html" class="topic-link " id="topic-m2_01_classification_boundaries_knn">
+            <span class="topic-dot"></span>
+            <span>2.1 Classification Boundaries KNN</span>
+          </a>
+          <a href="./m2_02_logistic_regression_sigmoid_loss.html" class="topic-link " id="topic-m2_02_logistic_regression_sigmoid_loss">
+            <span class="topic-dot"></span>
+            <span>2.2 Logistic Regression Sigmoid Loss</span>
+          </a>
+          <a href="./m2_03_naive_bayes_generative_models.html" class="topic-link " id="topic-m2_03_naive_bayes_generative_models">
+            <span class="topic-dot"></span>
+            <span>2.3 Naive Bayes Generative Models</span>
+          </a>
+          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link " id="topic-m2_04_decision_trees_entropy_information_gain">
+            <span class="topic-dot"></span>
+            <span>2.4 Decision Trees Entropy Information Gain</span>
+          </a>
+          <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
+            <span class="topic-dot"></span>
+            <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+        </div>
+      </div>
     </nav>
 
     <div class="sidebar-foot">
@@ -99,7 +128,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel">0 of 4 completed</span>
+          <span id="progressLabel">0 of 9 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
       </div>
@@ -375,7 +404,7 @@
 
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
-    var totalTopics = Number(4) || 0;
+    var totalTopics = Number(9) || 0;
     const currentId = "m1_01_ml_definition_paradigms_and_types";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;

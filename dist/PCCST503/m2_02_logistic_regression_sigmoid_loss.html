@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.4 Multiple Regression Model Assessment</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.4 Multiple Regression Model Assessment | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.4 Multiple Regression Model Assessment">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.4 Multiple Regression Model Assessment">
+<title>Tarangam — 2.2 Logistic Regression Sigmoid Loss</title>
+<meta name="description" content="Machine Learning (PCCST503) — 2.2 Logistic Regression Sigmoid Loss | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.2 Logistic Regression Sigmoid Loss">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 2.2 Logistic Regression Sigmoid Loss">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -85,14 +85,14 @@
             <span class="topic-dot"></span>
             <span>1.3 Linear Regression Least Squares</span>
           </a>
-          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link active" id="topic-m1_04_multiple_regression_model_assessment">
+          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link " id="topic-m1_04_multiple_regression_model_assessment">
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Classification &amp; Trees</span>
           <span class="chev">&#9656;</span>
@@ -102,7 +102,7 @@
             <span class="topic-dot"></span>
             <span>2.1 Classification Boundaries KNN</span>
           </a>
-          <a href="./m2_02_logistic_regression_sigmoid_loss.html" class="topic-link " id="topic-m2_02_logistic_regression_sigmoid_loss">
+          <a href="./m2_02_logistic_regression_sigmoid_loss.html" class="topic-link active" id="topic-m2_02_logistic_regression_sigmoid_loss">
             <span class="topic-dot"></span>
             <span>2.2 Logistic Regression Sigmoid Loss</span>
           </a>
@@ -145,9 +145,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.4 Multiple Regression Model Assessment</span>
+        <span style="color:var(--ink); font-weight:600;">2.2 Logistic Regression Sigmoid Loss</span>
       </div>
 
       <div class="topbar-actions">
@@ -163,8 +163,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -175,15 +175,15 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Multiple Regression &amp; Model Assessment</h1>
-<p><strong>Many predictors, polynomial expansion, train/test discipline, R², and the bias–variance lens that previews all of Module 3.</strong></p>
+<h1>Logistic Regression: Sigmoid &amp; Cross-Entropy</h1>
+<p><strong>Squashing linear scores into probabilities, the logit link, cross-entropy loss, its gradient, and why &quot;regression&quot; is a historical misnomer.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Panel of Witnesses</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One predictor is one witness — useful, limited. <strong>Multiple regression</strong> convenes the panel: price explained jointly by size <em>and</em> bedrooms <em>and</em> age, each coefficient testifying <em>holding the others fixed</em>. But panels overfit: with enough witnesses you can &quot;explain&quot; anything, including noise — memorizing the training lineup instead of learning the law. <strong>Assessment</strong> (held-out testing, R², bias–variance) is the cross-examination separating genuine understanding from expensive memorization.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Betting Odds Converter</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A linear score $z = w^Tx$ ranges over $(-\infty, \infty)$ — useless as a probability. The <strong>sigmoid</strong> $\sigma(z) = 1/(1+e^{-z})$ is the odds converter: huge negative → $\approx 0$, zero → exactly $0.5$, huge positive → $\approx 1$, smoothly S-shaped between. <strong>Logistic regression</strong> = linear scoring <em>plus</em> sigmoid squashing <em>plus</em> a loss that punishes confident wrongness brutally (being 99% sure and wrong costs far more than being 60% sure and wrong). Despite the name, it <em>classifies</em> — &quot;regression&quot; survives only because it fits weights by regression-style optimization.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
-    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Multiple Regression Geometry</span>
+    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; The Sigmoid Squash</span>
     <div class="video-speed-controls">
       <button class="speed-btn" data-speed="0.75">0.75x</button>
       <button class="speed-btn active" data-speed="1.0">1.0x</button>
@@ -193,51 +193,48 @@
   </div>
   <div class="video-frame-wrap">
     <video controls preload="metadata">
-      <source src="../assets/videos/m1_08_multiple_regression.mp4" type="video/mp4">
+      <source src="../assets/videos/m2_logistic_sigmoid.mp4" type="video/mp4">
       Your browser does not support embedded video.
     </video>
   </div>
   <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> Multiple Regression Geometry</p>
-    <div class="video-observations"><strong>What to observe:</strong> Watch the fitted plane tilt through a 3D point cloud as predictors join, then see training error keep falling while test error bottoms out and rises — the overfitting signature every later module fights.</div>
+    <p class="video-caption"><strong>Key Insight:</strong> The Sigmoid Squash</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the S-curve map every real score into (0,1), its steepest slope at the boundary z=0, and how weight scaling sharpens or softens the transition — the decision boundary living at σ = 0.5.</div>
   </div>
 </div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Multiple and Polynomial Regression</h3>
-<p>Same normal equations, wider $X$: $w = (X^TX)^{-1}X^Ty$ with $d$ predictors; $w_j$ = effect of $x_j$ <em>ceteris paribus</em>. <strong>Polynomial regression</strong> is linear regression in disguise — expand features $(x, x^2, \dots, x^p)$ and fit linearly in the expanded space (linear in <em>weights</em>, curved in <em>x</em>; degree is a hyperparameter, not a fitted weight).</p>
-<h3>2.2 Assessment: R² and Held-Out Testing</h3>
-<ul>
-<li><strong>Train/test split</strong> (or cross-validation): fit on train, judge on unseen test — test error estimates <em>generalization</em>, train error does not.</li>
-<li><strong>R²</strong> $= 1 - \frac{\sum(y_i-\hat{y}_i)^2}{\sum(y_i-\bar{y})^2}$: fraction of variance explained ($1$ = perfect, $0$ = mean-baseline, negative = worse than guessing the mean). Rises <em>by construction</em> with added predictors on train — judge it on test only.</li>
-</ul>
-<h3>2.3 Bias–Variance Preview</h3>
-<p>Expected test error $=$ <strong>bias²</strong> (rigidity: wrong model family) $+$ <strong>variance</strong> (wiggliness: sensitivity to the sample) $+$ irreducible noise. Simple models starve on bias; flexible ones drown in variance; test error bottoms at the sweet spot — the master tradeoff behind regularization, trees-vs-forests, and neural sizing across Modules 2–4.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Regression Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same equations, wider $X$ · polynomial = <strong>linear in weights</strong> · assess on <strong>held-out data</strong> · $R^2 = 1 - SS_{res}/SS_{tot}$ (test only!) · error $=$ <strong>bias² + variance + noise</strong> · train error <strong>falls</strong> with complexity, test error <strong>U-turns</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: R² Worship (and Train-Error Theater)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Adding <em>any</em> predictor — even random noise — never lowers train $R^2$ (least squares exploits it), so train-$R^2 \approx 1$ advertises overfitting, not quality. Report test $R^2$; distrust any model selected <em>and</em> graded on the same data (selection contaminates the grade — nested validation exists for exactly this).</p>
+<h3>2.1 Model and the Logit Link</h3>
+<p>$P(y=1 \mid x) = \sigma(w^Tx)$, $\sigma(z) = \frac{1}{1+e^{-z}}$. Inverse view: $\log\frac{p}{1-p} = w^Tx$ — the model is <em>linear in log-odds</em> (logit), which is why coefficients read as odds multipliers ($w_j$ = log-odds change per unit $x_j$). Decision rule: predict 1 iff $\sigma \ge 0.5$ ⟺ $w^Tx \ge 0$ — a <strong>linear boundary</strong>, exactly as expressive (and limited) as a perceptron&#39;s.</p>
+<h3>2.2 Cross-Entropy Loss and Gradient</h3>
+<p>For one example: $\ell(w) = -[y\log p + (1-y)\log(1-p)]$, $p = \sigma(w^Tx)$. The loss is <strong>convex</strong> (single global minimum — no bad local optima, unlike neural nets), and its gradient is memorably clean:</p>
+<p>$$\nabla_w \ell = (p - y),x = (\text{predicted} - \text{actual}) \times \text{features}$$</p>
+<p>— <em>error times input</em>, the same shape driving LMS, perceptrons, and (generalized) backprop. Update: $w \leftarrow w - \eta,(p-y)x$.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Logistic Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$p = \sigma(w^Tx)$, $\sigma(0) = 0.5$ · boundary $w^Tx = 0$ (<strong>linear</strong>) · loss $-[y\log p + (1-y)\log(1-p)]$ (<strong>convex</strong>) · gradient <strong>$(p-y)x$</strong> · coefficients = <strong>log-odds</strong> shifts · despite the name: a <strong>classifier</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Confident Errors Cost Everything (by Design)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Cross-entropy $\to \infty$ as $p \to$ the wrong extreme ($y=1, p=0.001$ costs $\approx 6.9$ vs $0.22$ at $p=0.8$) — the loss <em>deliberately</em> terrorizes overconfidence. Mislabeled training points therefore wield enormous leverage: one flipped label near the boundary can drag the whole fit. Clean labels aren&#39;t hygiene here; they&#39;re load-bearing.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Six house sales: sizes (1000 sqft units) $x = [1, 2, 3, 4, 5, 6]$, prices (lakh) $y = [12, 20, 25, 34, 41, 48]$. Fit a line, compute train $R^2$, then leave-one-out test the last point (fit on first five, predict $x=6$).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Fitting and Splitting</div><div class="step-content"><p>Means $\bar{x} = 3.5$, $\bar{y} = 30$. Slope $= \sum(x-\bar{x})(y-\bar{y})/\sum(x-\bar{x})^2 = 126/17.5 = 7.2$; intercept $= 30 - 7.2\times3.5 = 4.8$. Model $\hat{y} = 4.8 + 7.2x$; residuals $(0, +0.8, -1.4, +0.4, +0.2, 0)$ give $SS_{res} = 2.8$ against $SS_{tot} = 910$ → train $R^2 = 1 - 2.8/910 \approx 0.997$. Leave-one-out: fitting the first five points gives the same line $\hat{y} = 4.8 + 7.2x$ (slope $72/10 = 7.2$, intercept $26.4 - 21.6 = 4.8$), predicting $x=6 \to 48.0$ vs truth $48$ — error $\approx 0$ on unseen data.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Train $R^2 \approx 0.997$ <em>and</em> held-out error $\approx 0$ — both grades agree, so the fit is genuine, not memorized. Had the left-out error been $15$ with $R^2$ still $0.997$, that divergence <em>would be</em> the overfitting diagnosis — agreement between the two grades is the certificate.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Single feature, current weights give score $z = 2.0$ for a truly-positive example ($y=1$). Take one gradient step with $\eta = 0.5$, $x = 1$. (Numbers verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Squash, Score, Step</div><div class="step-content"><p>$p = \sigma(2.0) = 1/(1+e^{-2}) \approx 0.881$ — fairly confident and correct. Loss $= -\log(0.881) \approx 0.127$. Error $p - y = -0.119$; gradient $= -0.119 \times 1$; update $w \leftarrow w - 0.5\times(-0.119) = w + 0.060$ — weights nudge <em>up</em>, growing confidence in an already-right answer (diminishing returns built in: near-certain correct predictions barely move weights).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One line of arithmetic exhibits the whole algorithm: squash → measure surprise → step against the error, scaled by input. Repeat over the dataset (batch/stochastic next module&#39;s engine topic) and convexity guarantees arrival at the unique optimum — logistic regression&#39;s entire reputation in three lines.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Train R² = 0.99 but held-out error is terrible. A student proposes adding more polynomial features to fix it. What is wrong?</span>
+    <span class="quiz-category">The gradient of logistic loss is (p − y)x — &quot;error times input.&quot; A training point with y=1 currently scores p=0.99. How hard does it push the weights, and why is that desirable?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — more features always help generalization</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>The symptom is overfitting (memorization), and more flexibility worsens it — the cure is less complexity, regularization, or more data, i.e. move left on the U-curve, not right</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>R² cannot reach 0.99 on real data, so the report is fabricated</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Held-out error is meaningless; only train error matters</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Enormously — near-certain points dominate learning</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Barely (error −0.01) — correct confidence needs no correction; learning effort concentrates automatically on mistakes and uncertain cases</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It pushes backward, unlearning the correct answer</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Gradient magnitude is constant for all points by design</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -249,20 +246,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>High train + bad test = variance disease (fit wiggles through noise). More features feed the disease. Treat by constraining capacity (lower degree, ridge penalty) or more samples — the bias–variance U-curve tells you <em>which direction</em> before you touch anything.</p><pre><code>&lt;/div&gt;
+      <p>$(p-y) = -0.01$: the update is proportional to <em>surprise</em>, so settled points whisper while errors shout. This self-allocating attention (a property of the loss shape, not an add-on) is why cross-entropy trains decisively instead of dithering over mastered examples.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why must model selection (picking degree, features) and final grading use different data — ideally nested splits?</span>
+    <span class="quiz-category">Logistic regression&#39;s decision boundary is linear (wᵀx = 0). What follows about XOR-type data, and what is the fix?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They don&#39;t need to; one split serves all purposes</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Selecting on the test set leaks it into training (the winner is partly chosen for test luck); nested validation keeps an untouched outer fold so the reported grade estimates fresh-data performance honestly</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Nested splits run faster than single splits</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Test sets are too small to select from but fine to grade on</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Logistic regression solves XOR perfectly because the sigmoid is nonlinear</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The model can only split space with one hyperplane — XOR needs curved/multiple boundaries, so it fails structurally; fixes live in feature expansion, trees, or hidden layers (Modules 2–3)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>XOR is linearly separable with the right learning rate</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The sigmoid&#39;s nonlinearity at z=0 handles XOR automatically</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -274,20 +271,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Reusing test data for choices <em>fits</em> the test set by hand — the grade then measures luck + skill inseparably (selection contamination). Nested protocol: inner loop selects, outer loop grades the <em>procedure</em>. One clean grade beats ten contaminated ones.</p><pre><code>&lt;/div&gt;
+      <p>Squashing is monotone — it rescales confidence, never bends the boundary&#39;s <em>shape</em>. Linear-in-$x$ scores cut once, flatly. XOR (and rings, moons) demand either engineered features ($\phi(x)$ tricks), axis-aligned splits (trees), or learned hidden representations (networks) — the syllabus&#39;s next three stops, in order.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Polynomial regression with degree 15 on 16 points achieves zero train error. Bias, variance, and the right response?</span>
+    <span class="quiz-category">Why is cross-entropy preferred over squared error for training logistic models, in one mechanism?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Low bias, low variance — a perfect model, ship it</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Near-zero bias but enormous variance (wild oscillation between points — Runge-style); response: cut degree, regularize, or gather data — trade a little bias for a lot less variance</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>High bias — the model is too rigid to fit</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Variance is irrelevant for deterministic algorithms</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Squared error is undefined for probabilities</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Cross-entropy&#39;s gradient stays proportional to raw error (p−y), while squared-error-through-sigmoid gradients multiply by σ′(z) ≈ 0 in confident regions — learning stalls exactly where it is wrong-but-sure (saturation slowdown)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cross-entropy is non-convex and therefore more expressive</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Squared error cannot handle binary labels at all</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -299,7 +296,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Sixteen parameters nail sixteen points (bias ≈ 0) while encoding every noise wiggle (variance huge) — textbook overfitting. The U-curve&#39;s right wall: each added degree buys bias it no longer needs at variance prices it can&#39;t afford. Regularize or simplify.</p><pre><code>&lt;/div&gt;
+      <p>$\nabla$ MSE-through-$\sigma$ carries a $\sigma&#39;(z) = p(1-p)$ factor that vanishes at confident extremes — confidently-wrong points, needing the biggest corrections, get the smallest steps. Cross-entropy&#39;s log cancels the sigmoid&#39;s flat tails, keeping gradients honest everywhere. Loss choice <em>is</em> optimization fate.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -308,16 +305,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_01_classification_boundaries_knn.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
+        <div class="ttl">2.1 Classification Boundaries KNN</div>
       </a>
       
       
       
-      <a href="./m2_01_classification_boundaries_knn.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_03_naive_bayes_generative_models.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Classification Boundaries KNN</div>
+        <div class="ttl">2.3 Naive Bayes Generative Models</div>
       </a>
       
     </footer>
@@ -404,7 +401,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(9) || 0;
-    const currentId = "m1_04_multiple_regression_model_assessment";
+    const currentId = "m2_02_logistic_regression_sigmoid_loss";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 

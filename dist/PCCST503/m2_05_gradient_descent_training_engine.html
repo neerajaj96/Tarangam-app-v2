@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.4 Multiple Regression Model Assessment</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.4 Multiple Regression Model Assessment | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.4 Multiple Regression Model Assessment">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.4 Multiple Regression Model Assessment">
+<title>Tarangam — 2.5 Gradient Descent Training Engine</title>
+<meta name="description" content="Machine Learning (PCCST503) — 2.5 Gradient Descent Training Engine | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.5 Gradient Descent Training Engine">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 2.5 Gradient Descent Training Engine">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -85,14 +85,14 @@
             <span class="topic-dot"></span>
             <span>1.3 Linear Regression Least Squares</span>
           </a>
-          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link active" id="topic-m1_04_multiple_regression_model_assessment">
+          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link " id="topic-m1_04_multiple_regression_model_assessment">
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Classification &amp; Trees</span>
           <span class="chev">&#9656;</span>
@@ -114,7 +114,7 @@
             <span class="topic-dot"></span>
             <span>2.4 Decision Trees Entropy Information Gain</span>
           </a>
-          <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
+          <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link active" id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
           </a>
@@ -145,9 +145,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.4 Multiple Regression Model Assessment</span>
+        <span style="color:var(--ink); font-weight:600;">2.5 Gradient Descent Training Engine</span>
       </div>
 
       <div class="topbar-actions">
@@ -163,7 +163,7 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge badge-accent">MODULE 2</span>
     <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
@@ -175,15 +175,15 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Multiple Regression &amp; Model Assessment</h1>
-<p><strong>Many predictors, polynomial expansion, train/test discipline, R², and the bias–variance lens that previews all of Module 3.</strong></p>
+<h1>Gradient Descent: The Training Engine</h1>
+<p><strong>Following the slope downhill, learning rates that cooperate vs. explode, batch vs. stochastic vs. mini-batch, and convexity&#39;s guarantee.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Panel of Witnesses</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One predictor is one witness — useful, limited. <strong>Multiple regression</strong> convenes the panel: price explained jointly by size <em>and</em> bedrooms <em>and</em> age, each coefficient testifying <em>holding the others fixed</em>. But panels overfit: with enough witnesses you can &quot;explain&quot; anything, including noise — memorizing the training lineup instead of learning the law. <strong>Assessment</strong> (held-out testing, R², bias–variance) is the cross-examination separating genuine understanding from expensive memorization.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Foggy Mountain</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>You stand on a foggy mountainside (loss landscape) tasked with reaching the valley (minimum) — you can feel only the <em>local slope</em> under your boots. <strong>Gradient descent</strong> steps downhill, stride proportional to steepness (<strong>learning rate</strong> $\eta$): timid strides crawl (slow, safe), bold strides leap over the valley and ricochet uphill (<strong>divergence</strong>). <strong>Stochastic</strong> descent asks a random local (one sample&#39;s slope) instead of surveying the whole mountain per step — noisy directions, far more steps per second, and noise that usefully rattles out of shallow ditches.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
-    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Multiple Regression Geometry</span>
+    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Descending the Loss Bowl</span>
     <div class="video-speed-controls">
       <button class="speed-btn" data-speed="0.75">0.75x</button>
       <button class="speed-btn active" data-speed="1.0">1.0x</button>
@@ -193,51 +193,84 @@
   </div>
   <div class="video-frame-wrap">
     <video controls preload="metadata">
-      <source src="../assets/videos/m1_08_multiple_regression.mp4" type="video/mp4">
+      <source src="../assets/videos/m2_gradient_descent.mp4" type="video/mp4">
       Your browser does not support embedded video.
     </video>
   </div>
   <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> Multiple Regression Geometry</p>
-    <div class="video-observations"><strong>What to observe:</strong> Watch the fitted plane tilt through a 3D point cloud as predictors join, then see training error keep falling while test error bottoms out and rises — the overfitting signature every later module fights.</div>
+    <p class="video-caption"><strong>Key Insight:</strong> Descending the Loss Bowl</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch batch steps march smoothly to the bottom, overshooting strides ping-pong across the valley, and stochastic steps jitter downhill — noisy individually, fastest overall.</div>
   </div>
 </div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Multiple and Polynomial Regression</h3>
-<p>Same normal equations, wider $X$: $w = (X^TX)^{-1}X^Ty$ with $d$ predictors; $w_j$ = effect of $x_j$ <em>ceteris paribus</em>. <strong>Polynomial regression</strong> is linear regression in disguise — expand features $(x, x^2, \dots, x^p)$ and fit linearly in the expanded space (linear in <em>weights</em>, curved in <em>x</em>; degree is a hyperparameter, not a fitted weight).</p>
-<h3>2.2 Assessment: R² and Held-Out Testing</h3>
+<h3>2.1 The Update and the Learning Rate</h3>
+<p>$$w \leftarrow w - \eta,\nabla_w J(w)$$</p>
 <ul>
-<li><strong>Train/test split</strong> (or cross-validation): fit on train, judge on unseen test — test error estimates <em>generalization</em>, train error does not.</li>
-<li><strong>R²</strong> $= 1 - \frac{\sum(y_i-\hat{y}_i)^2}{\sum(y_i-\bar{y})^2}$: fraction of variance explained ($1$ = perfect, $0$ = mean-baseline, negative = worse than guessing the mean). Rises <em>by construction</em> with added predictors on train — judge it on test only.</li>
+<li>$\eta$ too small: monotone but glacial (steps $\propto$ gradient shrink near optima anyway — compounding the crawl).</li>
+<li>$\eta$ too large: overshoot, oscillate, <strong>diverge</strong> (loss explodes to NaN — the most common training-death signature).</li>
+<li>Goldilocks diagnostics: loss falling smoothly (good), plateaued high (raise $\eta$ or wait), spiking/NaN (halve $\eta$ immediately). Schedules decay $\eta$ over time (step, exponential, cosine) — long strides early, careful feet late.</li>
 </ul>
-<h3>2.3 Bias–Variance Preview</h3>
-<p>Expected test error $=$ <strong>bias²</strong> (rigidity: wrong model family) $+$ <strong>variance</strong> (wiggliness: sensitivity to the sample) $+$ irreducible noise. Simple models starve on bias; flexible ones drown in variance; test error bottoms at the sweet spot — the master tradeoff behind regularization, trees-vs-forests, and neural sizing across Modules 2–4.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Regression Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same equations, wider $X$ · polynomial = <strong>linear in weights</strong> · assess on <strong>held-out data</strong> · $R^2 = 1 - SS_{res}/SS_{tot}$ (test only!) · error $=$ <strong>bias² + variance + noise</strong> · train error <strong>falls</strong> with complexity, test error <strong>U-turns</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: R² Worship (and Train-Error Theater)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Adding <em>any</em> predictor — even random noise — never lowers train $R^2$ (least squares exploits it), so train-$R^2 \approx 1$ advertises overfitting, not quality. Report test $R^2$; distrust any model selected <em>and</em> graded on the same data (selection contaminates the grade — nested validation exists for exactly this).</p>
+<h3>2.2 Three Flavors (One Spectrum)</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Gradient source</th>
+<th>Cost/step</th>
+<th>Noise</th>
+<th>Convergence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Batch GD</td>
+<td>full dataset</td>
+<td>$O(nd)$</td>
+<td>none</td>
+<td>smooth, slow per step</td>
+</tr>
+<tr>
+<td>SGD</td>
+<td>single sample</td>
+<td>$O(d)$</td>
+<td>high</td>
+<td>jittery, fast, escapes shallows</td>
+</tr>
+<tr>
+<td>Mini-batch</td>
+<td>$B$ samples (32–256)</td>
+<td>$O(Bd)$</td>
+<td>moderate</td>
+<td>the working default (GPU-friendly)</td>
+</tr>
+</tbody></table>
+<h3>2.3 Convexity: When Downhill Can&#39;t Go Wrong</h3>
+<p>Logistic loss is <strong>convex</strong>: one bowl, one minimum — gradient descent with sensible $\eta$ <em>must</em> arrive (rate depends on conditioning; feature scaling/standardization fixes ravines). Neural losses (Module 3) are non-convex: valleys, saddles, plateaus — same update, no guarantees, plenty of craft (momentum, Adam preview).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Optimization Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Update <strong>$w - \eta\nabla J$</strong> · $\eta$ small = <strong>crawl</strong>, large = <strong>diverge/NaN</strong> · batch <strong>$O(nd)$ smooth</strong>, SGD <strong>$O(d)$ noisy-fast</strong>, mini-batch <strong>default</strong> · convex (logistic) = <strong>one minimum, guaranteed</strong> · non-convex (nets) = <strong>craft needed</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: NaN Loss Means η, Not Data (Usually)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exploding/diverging loss with weights racing to ±∞ is the learning-rate-too-high signature — halve $\eta$ (or add gradient clipping) <em>before</em> blaming the dataset, the model, or the framework. Nine of ten &quot;my training broke&quot; stories end at the learning rate.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Six house sales: sizes (1000 sqft units) $x = [1, 2, 3, 4, 5, 6]$, prices (lakh) $y = [12, 20, 25, 34, 41, 48]$. Fit a line, compute train $R^2$, then leave-one-out test the last point (fit on first five, predict $x=6$).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Fitting and Splitting</div><div class="step-content"><p>Means $\bar{x} = 3.5$, $\bar{y} = 30$. Slope $= \sum(x-\bar{x})(y-\bar{y})/\sum(x-\bar{x})^2 = 126/17.5 = 7.2$; intercept $= 30 - 7.2\times3.5 = 4.8$. Model $\hat{y} = 4.8 + 7.2x$; residuals $(0, +0.8, -1.4, +0.4, +0.2, 0)$ give $SS_{res} = 2.8$ against $SS_{tot} = 910$ → train $R^2 = 1 - 2.8/910 \approx 0.997$. Leave-one-out: fitting the first five points gives the same line $\hat{y} = 4.8 + 7.2x$ (slope $72/10 = 7.2$, intercept $26.4 - 21.6 = 4.8$), predicting $x=6 \to 48.0$ vs truth $48$ — error $\approx 0$ on unseen data.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Train $R^2 \approx 0.997$ <em>and</em> held-out error $\approx 0$ — both grades agree, so the fit is genuine, not memorized. Had the left-out error been $15$ with $R^2$ still $0.997$, that divergence <em>would be</em> the overfitting diagnosis — agreement between the two grades is the certificate.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Minimize $J(w) = (w-3)^2$ from $w_0 = 0$. (a) Two batch steps with $\eta = 0.1$. (b) Same with $\eta = 1.1$. (c) Which $\eta$ regime is each in?</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Stepping Twice</div><div class="step-content"><p>$\nabla J = 2(w-3)$. (a) $\eta=0.1$: $w_1 = 0 - 0.1\times(-6) = 0.6$; $\nabla = 2(0.6-3) = -4.8$; $w_2 = 0.6 + 0.48 = 1.08$ — marching toward 3 ($|w-3|$: $3 \to 2.4 \to 1.92$, shrinking geometrically). (b) $\eta=1.1$: $w_1 = 0 + 6.6 = 6.6$ (overshot past 3!); $\nabla = 2(3.6) = 7.2$; $w_2 = 6.6 - 7.92 = -1.32$ (ping-ponged across) — $|w-3|$: $3 \to 3.6 \to 4.32$, <em>growing</em>: divergence.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$\eta = 0.1$ converges geometrically; $\eta = 1.1$ explodes on a <em>perfectly convex quadratic</em> — the stability ceiling here is $\eta &lt; 1$ (curvature 2 ⇒ need $\eta &lt; 2/L$ with $L=2$). If it diverges on a bowl, it diverges anywhere: learning-rate discipline first, architectures second.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Train R² = 0.99 but held-out error is terrible. A student proposes adding more polynomial features to fix it. What is wrong?</span>
+    <span class="quiz-category">Training loss suddenly becomes NaN after 50 healthy epochs (say, right after unfreezing layers or raising η). What is the most likely mechanism and the first fix?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — more features always help generalization</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>The symptom is overfitting (memorization), and more flexibility worsens it — the cure is less complexity, regularization, or more data, i.e. move left on the U-curve, not right</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>R² cannot reach 0.99 on real data, so the report is fabricated</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Held-out error is meaningless; only train error matters</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The dataset developed corrupted labels exactly at epoch 50</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Updates overshot into exploding gradients/weights (divergence) — first fix: halve the learning rate (and consider gradient clipping), then resume from the last good checkpoint</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>NaN is the expected signal of convergence; stop training triumphantly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The GPU ran out of memory precisely at epoch 50</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -249,20 +282,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>High train + bad test = variance disease (fit wiggles through noise). More features feed the disease. Treat by constraining capacity (lower degree, ridge penalty) or more samples — the bias–variance U-curve tells you <em>which direction</em> before you touch anything.</p><pre><code>&lt;/div&gt;
+      <p>Healthy-then-NaN = stability boundary crossed (higher $\eta$, new unfrozen layers spiking gradients). Weights race to ±∞ through overflow. Halving $\eta$ restores the contraction; clipping bounds the worst step. Checkpoints exist for exactly this resume.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why must model selection (picking degree, features) and final grading use different data — ideally nested splits?</span>
+    <span class="quiz-category">Why is mini-batch (not full-batch, not single-sample) the default flavor in practice?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They don&#39;t need to; one split serves all purposes</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Selecting on the test set leaks it into training (the winner is partly chosen for test luck); nested validation keeps an untouched outer fold so the reported grade estimates fresh-data performance honestly</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Nested splits run faster than single splits</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Test sets are too small to select from but fine to grade on</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Mini-batch has theoretical guarantees the others lack entirely</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It balances gradient noise (smoother than SGD&#39;s single-sample jitter) against step cost (far cheaper than full-batch passes) while vectorizing perfectly onto GPUs — the practical sweet spot both algorithms bracket</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Full-batch cannot run on modern hardware at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Single-sample SGD is mathematically invalid</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -274,20 +307,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Reusing test data for choices <em>fits</em> the test set by hand — the grade then measures luck + skill inseparably (selection contamination). Nested protocol: inner loop selects, outer loop grades the <em>procedure</em>. One clean grade beats ten contaminated ones.</p><pre><code>&lt;/div&gt;
+      <p>Batch: exact direction, $O(nd)$ per step — bankrupt on big data. SGD: $O(d)$ steps with wild directions. Mini-batch $B\approx32$–$256$: $O(Bd)$ steps, moderate noise (which even helps generalization), full GPU utilization. Defaults are defaults for arithmetic reasons.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Polynomial regression with degree 15 on 16 points achieves zero train error. Bias, variance, and the right response?</span>
+    <span class="quiz-category">A convex logistic loss and a deep-net loss are both trained with the same well-tuned gradient descent. What guarantee differs, and why does practice still bother with the net?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Low bias, low variance — a perfect model, ship it</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Near-zero bias but enormous variance (wild oscillation between points — Runge-style); response: cut degree, regularize, or gather data — trade a little bias for a lot less variance</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>High bias — the model is too rigid to fit</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Variance is irrelevant for deterministic algorithms</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>No difference exists; convexity is irrelevant to optimization</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Convex: arrival at the global minimum is guaranteed (conditioning only sets speed). Non-convex: only stationary points are promised — but expressive architectures reach *useful* minima whose modeling power dwarfs the convex model&#39;s ceiling</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Non-convex losses cannot be differentiated at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Convex models always generalize better regardless of data</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -299,7 +332,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Sixteen parameters nail sixteen points (bias ≈ 0) while encoding every noise wiggle (variance huge) — textbook overfitting. The U-curve&#39;s right wall: each added degree buys bias it no longer needs at variance prices it can&#39;t afford. Regularize or simplify.</p><pre><code>&lt;/div&gt;
+      <p>Guarantees vs. capacity: convexity buys certainty about a limited model family; depth buys representational power with only local assurances. Practice trades the guarantee for the ceiling — with craft (init, schedules, momentum/Adam) making the trade pay. (Module 3&#39;s entire story, previewed.)</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -308,17 +341,14 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_04_decision_trees_entropy_information_gain.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
+        <div class="ttl">2.4 Decision Trees Entropy Information Gain</div>
       </a>
       
       
       
-      <a href="./m2_01_classification_boundaries_knn.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Classification Boundaries KNN</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -404,7 +434,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(9) || 0;
-    const currentId = "m1_04_multiple_regression_model_assessment";
+    const currentId = "m2_05_gradient_descent_training_engine";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 

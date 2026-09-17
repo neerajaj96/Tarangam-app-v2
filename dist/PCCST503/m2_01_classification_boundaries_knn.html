@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.4 Multiple Regression Model Assessment</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.4 Multiple Regression Model Assessment | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.4 Multiple Regression Model Assessment">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.4 Multiple Regression Model Assessment">
+<title>Tarangam — 2.1 Classification Boundaries KNN</title>
+<meta name="description" content="Machine Learning (PCCST503) — 2.1 Classification Boundaries KNN | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.1 Classification Boundaries KNN">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 2.1 Classification Boundaries KNN">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
@@ -85,20 +85,20 @@
             <span class="topic-dot"></span>
             <span>1.3 Linear Regression Least Squares</span>
           </a>
-          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link active" id="topic-m1_04_multiple_regression_model_assessment">
+          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link " id="topic-m1_04_multiple_regression_model_assessment">
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Classification &amp; Trees</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m2_01_classification_boundaries_knn.html" class="topic-link " id="topic-m2_01_classification_boundaries_knn">
+          <a href="./m2_01_classification_boundaries_knn.html" class="topic-link active" id="topic-m2_01_classification_boundaries_knn">
             <span class="topic-dot"></span>
             <span>2.1 Classification Boundaries KNN</span>
           </a>
@@ -145,9 +145,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.4 Multiple Regression Model Assessment</span>
+        <span style="color:var(--ink); font-weight:600;">2.1 Classification Boundaries KNN</span>
       </div>
 
       <div class="topbar-actions">
@@ -163,8 +163,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -175,69 +175,46 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Multiple Regression &amp; Model Assessment</h1>
-<p><strong>Many predictors, polynomial expansion, train/test discipline, R², and the bias–variance lens that previews all of Module 3.</strong></p>
+<h1>Classification: Boundaries, Linear Flaws &amp; k-NN</h1>
+<p><strong>Decision boundaries, why regression misfires on labels, 0/1 loss, and nearest-neighbor voting with a hand-computed query.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Panel of Witnesses</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One predictor is one witness — useful, limited. <strong>Multiple regression</strong> convenes the panel: price explained jointly by size <em>and</em> bedrooms <em>and</em> age, each coefficient testifying <em>holding the others fixed</em>. But panels overfit: with enough witnesses you can &quot;explain&quot; anything, including noise — memorizing the training lineup instead of learning the law. <strong>Assessment</strong> (held-out testing, R², bias–variance) is the cross-examination separating genuine understanding from expensive memorization.</p>
-</div></details><div class="video-studio">
-  <div class="video-studio-header">
-    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Multiple Regression Geometry</span>
-    <div class="video-speed-controls">
-      <button class="speed-btn" data-speed="0.75">0.75x</button>
-      <button class="speed-btn active" data-speed="1.0">1.0x</button>
-      <button class="speed-btn" data-speed="1.25">1.25x</button>
-      <button class="speed-btn" data-speed="1.5">1.5x</button>
-    </div>
-  </div>
-  <div class="video-frame-wrap">
-    <video controls preload="metadata">
-      <source src="../assets/videos/m1_08_multiple_regression.mp4" type="video/mp4">
-      Your browser does not support embedded video.
-    </video>
-  </div>
-  <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> Multiple Regression Geometry</p>
-    <div class="video-observations"><strong>What to observe:</strong> Watch the fitted plane tilt through a 3D point cloud as predictors join, then see training error keep falling while test error bottoms out and rises — the overfitting signature every later module fights.</div>
-  </div>
-</div><hr>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Fences vs. Thermometers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Regression is a <strong>thermometer</strong> (how much?). Classification is a <strong>fence</strong> (which side?). Fitting a thermometer where a fence belongs fails absurdly: least squares happily predicts &quot;diabetes = 1.7&quot; or lets one far-away outlier drag the whole line across the fence. And the fence itself can be lazy genius: <strong>k-NN</strong> builds no model at all — to label a newcomer, just ask its $k$ nearest labeled neighbors and take a vote. No training, all memory; the training set <em>is</em> the model.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Multiple and Polynomial Regression</h3>
-<p>Same normal equations, wider $X$: $w = (X^TX)^{-1}X^Ty$ with $d$ predictors; $w_j$ = effect of $x_j$ <em>ceteris paribus</em>. <strong>Polynomial regression</strong> is linear regression in disguise — expand features $(x, x^2, \dots, x^p)$ and fit linearly in the expanded space (linear in <em>weights</em>, curved in <em>x</em>; degree is a hyperparameter, not a fitted weight).</p>
-<h3>2.2 Assessment: R² and Held-Out Testing</h3>
-<ul>
-<li><strong>Train/test split</strong> (or cross-validation): fit on train, judge on unseen test — test error estimates <em>generalization</em>, train error does not.</li>
-<li><strong>R²</strong> $= 1 - \frac{\sum(y_i-\hat{y}_i)^2}{\sum(y_i-\bar{y})^2}$: fraction of variance explained ($1$ = perfect, $0$ = mean-baseline, negative = worse than guessing the mean). Rises <em>by construction</em> with added predictors on train — judge it on test only.</li>
-</ul>
-<h3>2.3 Bias–Variance Preview</h3>
-<p>Expected test error $=$ <strong>bias²</strong> (rigidity: wrong model family) $+$ <strong>variance</strong> (wiggliness: sensitivity to the sample) $+$ irreducible noise. Simple models starve on bias; flexible ones drown in variance; test error bottoms at the sweet spot — the master tradeoff behind regularization, trees-vs-forests, and neural sizing across Modules 2–4.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Regression Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same equations, wider $X$ · polynomial = <strong>linear in weights</strong> · assess on <strong>held-out data</strong> · $R^2 = 1 - SS_{res}/SS_{tot}$ (test only!) · error $=$ <strong>bias² + variance + noise</strong> · train error <strong>falls</strong> with complexity, test error <strong>U-turns</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: R² Worship (and Train-Error Theater)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Adding <em>any</em> predictor — even random noise — never lowers train $R^2$ (least squares exploits it), so train-$R^2 \approx 1$ advertises overfitting, not quality. Report test $R^2$; distrust any model selected <em>and</em> graded on the same data (selection contaminates the grade — nested validation exists for exactly this).</p>
+<h3>2.1 Decision Boundaries and 0/1 Loss</h3>
+<p>A classifier partitions feature space into labeled regions; the <strong>decision boundary</strong> is the surface between them (a point, line, or hypersurface depending on dimension). The honest score is <strong>0/1 loss</strong> (wrong = 1) — but it is non-differentiable and NP-hard to optimize directly, so every trainable classifier optimizes a <em>surrogate</em> (cross-entropy, hinge, Gini) and reports 0/1 accuracy. Surrogate-for-training, 0/1-for-judgment: never confuse the two.</p>
+<h3>2.2 Why Least Squares Fails Labels</h3>
+<p>Encode classes as 0/1 and regress: far-away points exert huge squared leverage (one outlier $x = 100$ drags predictions for $x \in [0,1]$), and outputs like $1.7$ or $-0.3$ are meaningless as probabilities. Thresholding the line at 0.5 <em>sort of</em> works on clean data — until it catastrophically doesn&#39;t. Classification needs machinery that respects discreteness (sigmoid + cross-entropy next topic; margins in Module 3).</p>
+<h3>2.3 k-NN: The Laziest Learner</h3>
+<p>Store all training points. Query $q$: compute distances (usually Euclidean) to everything, take the $k$ nearest, <strong>majority vote</strong> (weight by $1/d$ to break influence ties). Choices that matter: $k$ (small = jagged, noise-fitting boundaries; large = smooth, detail-erasing — tune by validation), distance metric (scale features first, or meters-vs-kilograms voting goes absurd), and the price: $O(nd)$ memory + $O(nd)$ <em>per query</em> — training is free, prediction is expensive (KD-trees/Ball-trees mitigate).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Classification Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Boundary = <strong>region surface</strong> · judge with <strong>0/1 loss</strong>, train with <strong>surrogates</strong> · regression-on-labels breaks via <strong>leverage + meaningless outputs</strong> · k-NN: <strong>store all, vote k nearest</strong> · small $k$ = <strong>variance</strong>, large $k$ = <strong>bias</strong> · cost per query <strong>$O(nd)$</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: k-NN Has No Training Error Worth Quoting</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With $k=1$, training accuracy is <em>always</em> 100% (every point is its own nearest neighbor) — a meaningless perfect score. k-NN can only be assessed on held-out data (last module&#39;s discipline, sharpest here). Any &quot;my 1-NN achieves 100%&quot; claim confesses overfitting, not success.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Six house sales: sizes (1000 sqft units) $x = [1, 2, 3, 4, 5, 6]$, prices (lakh) $y = [12, 20, 25, 34, 41, 48]$. Fit a line, compute train $R^2$, then leave-one-out test the last point (fit on first five, predict $x=6$).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Fitting and Splitting</div><div class="step-content"><p>Means $\bar{x} = 3.5$, $\bar{y} = 30$. Slope $= \sum(x-\bar{x})(y-\bar{y})/\sum(x-\bar{x})^2 = 126/17.5 = 7.2$; intercept $= 30 - 7.2\times3.5 = 4.8$. Model $\hat{y} = 4.8 + 7.2x$; residuals $(0, +0.8, -1.4, +0.4, +0.2, 0)$ give $SS_{res} = 2.8$ against $SS_{tot} = 910$ → train $R^2 = 1 - 2.8/910 \approx 0.997$. Leave-one-out: fitting the first five points gives the same line $\hat{y} = 4.8 + 7.2x$ (slope $72/10 = 7.2$, intercept $26.4 - 21.6 = 4.8$), predicting $x=6 \to 48.0$ vs truth $48$ — error $\approx 0$ on unseen data.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Train $R^2 \approx 0.997$ <em>and</em> held-out error $\approx 0$ — both grades agree, so the fit is genuine, not memorized. Had the left-out error been $15$ with $R^2$ still $0.997$, that divergence <em>would be</em> the overfitting diagnosis — agreement between the two grades is the certificate.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Training points: $A(1,1){+}$, $B(2,3){+}$, $C(3,2){-}$, $D(5,4){-}$. Classify query $Q(2,2)$ with $k=3$ (Euclidean), and show what $k=1$ and $k=2$ would do. (Distances verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Voting</div><div class="step-content"><p>$d(Q,A) = \sqrt{2} \approx 1.414{+}$; $d(Q,B) = 1.0{+}$; $d(Q,C) = 1.0{-}$; $d(Q,D) \approx 3.606{-}$. Three nearest: $B{+}, C{-}, A{+}$ → vote 2–1 ⇒ <strong>class +</strong>. Note the exact tie $d_B = d_C = 1.0$: with $k=2$ the vote splits 1–1 (tie-break rule needed — distance-weighting would favor neither here; conventional fallback: the nearer... they&#39;re equal — reduce $k$ to 1 or grow to 3). With $k=1$: nearest is $B$ (tie with $C$ broken arbitrarily — instability on display).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$k=3$ says <strong>+</strong> by 2–1. The trace also exhibits k-NN&#39;s twin fragilities in miniature: distance ties demanding tie-breaks, and $k=1$&#39;s hair-trigger instability — the bias–variance knob from Module 1, now with a concrete dial.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Train R² = 0.99 but held-out error is terrible. A student proposes adding more polynomial features to fix it. What is wrong?</span>
+    <span class="quiz-category">Why is fitting least-squares regression to 0/1 labels and thresholding at 0.5 considered broken rather than merely inelegant?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — more features always help generalization</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>The symptom is overfitting (memorization), and more flexibility worsens it — the cure is less complexity, regularization, or more data, i.e. move left on the U-curve, not right</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>R² cannot reach 0.99 on real data, so the report is fabricated</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Held-out error is meaningless; only train error matters</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It is actually the recommended state-of-the-art method</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Squared loss gives far-away points massive leverage over the boundary, and outputs outside [0,1] carry no probabilistic meaning — the objective fights the task instead of serving it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Regression lines cannot be drawn through binary points at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Thresholding at 0.5 is mathematically undefined</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -249,20 +226,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>High train + bad test = variance disease (fit wiggles through noise). More features feed the disease. Treat by constraining capacity (lower degree, ridge penalty) or more samples — the bias–variance U-curve tells you <em>which direction</em> before you touch anything.</p><pre><code>&lt;/div&gt;
+      <p>Two independent failures: <em>leverage</em> (one distant $x$ drags the whole fit — squared penalties amplify extremes) and <em>semantics</em> (1.7 is not a 170% probability). Surrogate losses (cross-entropy next topic) fix both by design; thresholded regression fixes neither.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why must model selection (picking degree, features) and final grading use different data — ideally nested splits?</span>
+    <span class="quiz-category">k-NN with k=1 reports 100% training accuracy. What should you conclude and what must you do?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They don&#39;t need to; one split serves all purposes</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Selecting on the test set leaks it into training (the winner is partly chosen for test luck); nested validation keeps an untouched outer fold so the reported grade estimates fresh-data performance honestly</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Nested splits run faster than single splits</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Test sets are too small to select from but fine to grade on</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The model is perfect; deploy immediately</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Conclude nothing — 1-NN memorizes (each point is its own neighbor); assess only on held-out data, where its jagged boundaries will show true quality</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Increase k to n immediately without validation</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Training accuracy is the only metric that matters</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -274,20 +251,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Reusing test data for choices <em>fits</em> the test set by hand — the grade then measures luck + skill inseparably (selection contamination). Nested protocol: inner loop selects, outer loop grades the <em>procedure</em>. One clean grade beats ten contaminated ones.</p><pre><code>&lt;/div&gt;
+      <p>1-NN&#39;s training score is identically 100% on <em>any</em> dataset — a constant, not information. Generalization lives exclusively in held-out measurement (Module 1 discipline), where small-$k$ variance reveals itself honestly.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Polynomial regression with degree 15 on 16 points achieves zero train error. Bias, variance, and the right response?</span>
+    <span class="quiz-category">In the worked example, k=2 produces a 1–1 tie (B+, C− at distance 1.0 each). What is the principled response?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Low bias, low variance — a perfect model, ship it</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Near-zero bias but enormous variance (wild oscillation between points — Runge-style); response: cut degree, regularize, or gather data — trade a little bias for a lot less variance</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>High bias — the model is too rigid to fit</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Variance is irrelevant for deterministic algorithms</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Always pick the positive class on ties by convention</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Recognize ties as k-NN&#39;s known edge case: use odd k, distance-weighted voting, or validation-chosen k — and note that tie frequency itself signals a boundary-hugging query deserving caution</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Discard both tied neighbors and vote with the rest</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Ties prove k-NN is unusable for even k on all datasets</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -299,7 +276,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Sixteen parameters nail sixteen points (bias ≈ 0) while encoding every noise wiggle (variance huge) — textbook overfitting. The U-curve&#39;s right wall: each added degree buys bias it no longer needs at variance prices it can&#39;t afford. Regularize or simplify.</p><pre><code>&lt;/div&gt;
+      <p>Ties are structural (even $k$, symmetric distances), not bugs — handled by odd $k$, $1/d$ weighting, or validation. The deeper lesson: boundary-hugging queries are <em>inherently</em> uncertain, and a classifier admitting the tie is more honest than one hiding it.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -308,16 +285,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_03_linear_regression_least_squares.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_04_multiple_regression_model_assessment.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.3 Linear Regression Least Squares</div>
+        <div class="ttl">1.4 Multiple Regression Model Assessment</div>
       </a>
       
       
       
-      <a href="./m2_01_classification_boundaries_knn.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_02_logistic_regression_sigmoid_loss.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Classification Boundaries KNN</div>
+        <div class="ttl">2.2 Logistic Regression Sigmoid Loss</div>
       </a>
       
     </footer>
@@ -404,7 +381,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(9) || 0;
-    const currentId = "m1_04_multiple_regression_model_assessment";
+    const currentId = "m2_01_classification_boundaries_knn";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 
