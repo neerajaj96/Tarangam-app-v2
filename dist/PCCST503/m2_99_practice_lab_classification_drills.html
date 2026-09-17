@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.1 Ml Definition Paradigms And Types</title>
-<meta name="description" content="Machine Learning (PCCST503) — 1.1 Ml Definition Paradigms And Types | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.1 Ml Definition Paradigms And Types">
-<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.1 Ml Definition Paradigms And Types">
+<title>Tarangam — 🧪 Practice Lab: M2 Classification Drills</title>
+<meta name="description" content="Machine Learning (PCCST503) — 🧪 Practice Lab: M2 Classification Drills | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M2 Classification Drills">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 🧪 Practice Lab: M2 Classification Drills">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,14 +66,14 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Foundations &amp; Regression</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m1_01_ml_definition_paradigms_and_types.html" class="topic-link active" id="topic-m1_01_ml_definition_paradigms_and_types">
+          <a href="./m1_01_ml_definition_paradigms_and_types.html" class="topic-link " id="topic-m1_01_ml_definition_paradigms_and_types">
             <span class="topic-dot"></span>
             <span>1.1 Ml Definition Paradigms And Types</span>
           </a>
@@ -95,8 +95,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Classification &amp; Trees</span>
           <span class="chev">&#9656;</span>
@@ -122,7 +122,7 @@
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
           </a>
-          <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
+          <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link active" id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M2 Classification Drills</span>
           </a>
@@ -207,9 +207,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST503</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.1 Ml Definition Paradigms And Types</span>
+        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M2 Classification Drills</span>
       </div>
 
       <div class="topbar-actions">
@@ -225,85 +225,98 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
-    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Machine Learning: Definition, Paradigms &amp; Problem Types</h1>
-<p><strong>Mitchell&#39;s definition, supervised vs. unsupervised vs. reinforcement learning, regression vs. classification, and how to recognize each in the wild.</strong></p>
+<h1>Module 2 Practice Lab: Classification Drills</h1>
+<p><strong>Classifier selection under constraints, loss arithmetic races, veto autopsies, split decisions, and divergence triage.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Recipes vs. Taste Buds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Traditional programming hands the computer a <strong>recipe</strong> (explicit rules: &quot;if credit score &gt; 700 and income &gt; 50k, approve&quot;). <strong>Machine learning</strong> hands it a <strong>kitchen full of past meals and verdicts</strong> (data + outcomes) and asks it to develop <em>taste</em> — a function mapping new situations to good decisions, without anyone writing the rule down. Mitchell&#39;s formalization: a program <strong>learns</strong> from experience $E$ on task $T$ with performance measure $P$ if its performance on $T$, measured by $P$, <strong>improves with $E$</strong>. Learning = measurable improvement with experience, full stop.</p>
-</div></details><div class="video-studio">
-  <div class="video-studio-header">
-    <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Paradigms of Machine Learning</span>
-    <div class="video-speed-controls">
-      <button class="speed-btn" data-speed="0.75">0.75x</button>
-      <button class="speed-btn active" data-speed="1.0">1.0x</button>
-      <button class="speed-btn" data-speed="1.25">1.25x</button>
-      <button class="speed-btn" data-speed="1.5">1.5x</button>
-    </div>
-  </div>
-  <div class="video-frame-wrap">
-    <video controls preload="metadata">
-      <source src="../assets/videos/m1_paradigms.mp4" type="video/mp4">
-      Your browser does not support embedded video.
-    </video>
-  </div>
-  <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> Paradigms of Machine Learning</p>
-    <div class="video-observations"><strong>What to observe:</strong> Watch how the same dataset splits three ways: labeled pairs flowing into a supervised predictor, raw points clumping into unsupervised clusters, and an agent bouncing against reward signals in reinforcement learning.</div>
-  </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Three Paradigms</h3>
-<ul>
-<li><strong>Supervised learning:</strong> training data = $(x, y)$ pairs with <strong>labels</strong>. Learn $f: X \to Y$ minimizing expected loss. Split by output kind below.</li>
-<li><strong>Unsupervised learning:</strong> training data = bare $x$&#39;s. Find <strong>structure</strong>: clusters (k-means), densities, low-dimensional manifolds (PCA), associations.</li>
-<li><strong>Reinforcement learning:</strong> training signal = <strong>rewards</strong> for action sequences (no correct answers shown). Learn a <strong>policy</strong> maximizing long-term return — the AI module&#39;s MDP machinery, reused here with function approximation.</li>
-</ul>
-<h3>2.2 Regression vs. Classification (Within Supervised)</h3>
-<ul>
-<li><strong>Regression:</strong> $Y$ continuous (prices, temperatures) — loss is usually squared error; success = closeness.</li>
-<li><strong>Classification:</strong> $Y$ discrete labels (spam/ham, digit 0–9) — loss is 0/1 or cross-entropy; success = correct bucket. (Same machinery, different output geometry — Modules 1 and 2 respectively.)</li>
-</ul>
-<h3>2.3 The Universal Workflow (every ML topic follows it)</h3>
-<p><strong>Data → model class (hypotheses) → loss + training (fit parameters) → evaluation on unseen data (generalization).</strong> Memorize this spine: each coming topic fills one slot (this module: linear models + least squares + optimization; next modules: classifiers, margins, trees, networks, ensembles).</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Paradigm Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Mitchell: <strong>performance on T by P improves with E</strong> · supervised = <strong>labeled pairs</strong> (regression: continuous Y; classification: discrete Y) · unsupervised = <strong>bare X, find structure</strong> · RL = <strong>rewards, learn policy</strong> · workflow: <strong>data → model → loss/train → generalize</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Labels vs. Rewards (the Standard Mix-Up)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Supervised labels say <em>&quot;the right answer was 7&quot;</em> per example; RL rewards say <em>&quot;+10 for that whole episode&quot;</em> with no per-step key. An option describing per-example correct outputs as &quot;reinforcement&quot; (or episode scores as &quot;supervision&quot;) is always wrong — feedback <em>granularity</em> is the discriminator.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Classify three applicant decisions asML paradigms/tasks: (a) historical loan records with approve/deny labels → predict new applicants; (b) group 10,000 unlabeled customers for marketing; (c) teach a warehouse robot to fetch bins with +1 per delivery, −1 per collision.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Identifying Each</div><div class="step-content"><p>(a) Labeled pairs + discrete verdicts → <strong>supervised classification</strong>. $T$ = decide applications, $E$ = historical records, $P$ = accuracy on held-out applicants. (b) No labels, seek groups → <strong>unsupervised clustering</strong>; $P$ = cluster coherence/silhouette on unseen customers. (c) No correct moves shown, only episode scores → <strong>reinforcement learning</strong>; $P$ = expected return per shift.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same ritual every time: name $T$, $E$, $P$ explicitly, then read the paradigm off the feedback type (labels / nothing / rewards). Students who skip the $T$-$E$-$P$ sentence invariably misclassify borderline cases (recommender logs, bandit ads) — write it first, decide second.</p>
-</div></div><hr>
+<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<h3>Scenario 1: The Startup Triage (Pick the Classifier, Defend It)</h3>
+<p>Constraints: (a) 300 labeled medical scans, 2M unlabeled, must ship in a week → <strong>Gaussian NB / simple generative</strong>: converges in $O(\log n)$ samples, no tuning marathons, calibrated-enough probabilities for review queues. (b) 10M labeled ad clicks, accuracy is revenue → <strong>logistic regression / trees</strong>: data-rich regime where discriminative ceilings win; NB&#39;s bias would leave money. (c) Credit decisions requiring <em>reasons</em> for regulators → <strong>shallow decision tree</strong>: auditable splits beat black-box points when the examiner is a lawyer. Method follows data budget + stakeholder, never fashion.</p>
+<h3>Scenario 2: Cross-Entropy Race (Feel the Curve)</h3>
+<p>True label $y=1$. Model A predicts $0.9$: loss $-\ln 0.9 \approx 0.105$. Model B predicts $0.5$: $0.693$. Model C predicts $0.1$: $2.303$. Same correct <em>direction</em> (all &gt; 0.5 → all classify right!), wildly different <em>losses</em> (22× spread) — accuracy sees three ties; cross-entropy sees confidence quality. Train on the loss, report the accuracy, and never confuse which game each number scores.</p>
+<h3>Scenario 3: The Veto Autopsy</h3>
+<p>Spam {win:2, money:2}/4 words, ham {win:0, money:1}/3 words, priors 50/50, $|V|=2$, $\alpha=1$. Classify &quot;win money&quot;: spam $0.5 \times 0.5 \times 0.5 = 0.125$; ham $0.5 \times 0.2 \times 0.4 = 0.04$ → <strong>spam</strong>, 3:1. Now delete smoothing: $P(\text{win}|\text{ham}) = 0/3 = 0$ — ham&#39;s score zeroes <em>regardless</em>; worse, any <em>unseen-in-both</em> word zeroes <em>both</em> classes and argmax ties on nothing. Autopsy conclusion: unsmoothed NB doesn&#39;t degrade gracefully — it holds vetoes, and vetoes detonate.</p>
+<h3>Scenario 4: Divergence Triage in 30 Seconds</h3>
+<p>Symptoms → verdicts: loss NaN after healthy epochs → halve $\eta$, clip, resume from checkpoint (divergence, not data). Loss plateaued high from epoch 1 → $\eta$ too small <em>or</em> model too weak — raise $\eta$ first (cheapest test), then capacity. Train/test gap yawning → variance disease (regularize, more data, simpler model). Train <em>and</em> test both bad → bias disease (bigger model, better features, longer training). Four symptoms, four prescriptions — triage before tuning, always.</p>
+<hr>
+<p><a id="the-dimensions"></a></p>
+<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0/1 loss vs. surrogate</td>
+<td>Judge with 0/1, train the smooth stand-in (CE/hinge/Gini)</td>
+</tr>
+<tr>
+<td>Sigmoid vs. boundary</td>
+<td>$\sigma$ rescales confidence; $w^Tx=0$ still cuts linear and flat</td>
+</tr>
+<tr>
+<td>$(p-y)$ gradient meaning</td>
+<td>Surprise-proportional updates: mistakes shout, certainties whisper</td>
+</tr>
+<tr>
+<td>Generative vs. discriminative</td>
+<td>Model $P(x|y)$ (fast, sampleable) vs. $P(y|x)$ boundary (higher ceiling, hungrier)</td>
+</tr>
+<tr>
+<td>Smoothing purpose</td>
+<td>Kills zero-vetoes (unseen ≠ impossible), not a performance topping</td>
+</tr>
+<tr>
+<td>Gain vs. gain ratio</td>
+<td>Raw mess-removed vs. normalized (IDs shatter gain, ratio resists)</td>
+</tr>
+<tr>
+<td>Pre- vs. post-pruning</td>
+<td>Stop early (risks under-shoot) vs. grow + validation-snip (costs a split)</td>
+</tr>
+<tr>
+<td>Batch vs. SGD vs. mini-batch</td>
+<td>$O(nd)$ smooth vs. $O(d)$ noisy-fast vs. GPU default middle</td>
+</tr>
+<tr>
+<td>Convex vs. non-convex training</td>
+<td>Guaranteed arrival vs. crafted local success (init/schedules/momentum)</td>
+</tr>
+<tr>
+<td>k ties</td>
+<td>Even-$k$ symmetric distances need tie rules — odd $k$ or $1/d$ weights</td>
+</tr>
+</tbody></table>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Which situation is reinforcement learning, and what makes it NOT supervised learning?</span>
+    <span class="quiz-category">Three models all classify a validation point correctly with probabilities 0.9, 0.6, and 0.51. Accuracy says tie-tie-tie. What does cross-entropy say, and which number should drive the next training decision?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Predicting house prices from labeled sales records</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Training a game agent from win/loss scores only — no correct move is ever shown per position, so there are no (x, y) pairs to supervise with</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Grouping news articles into topics without labels</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Fitting a line through measured points</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>All three are equally good; stop training immediately</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Losses ≈ 0.105 / 0.511 / 0.673 — the 0.51 model is barely confident (near-boundary, fragile) while 0.9 is robust; training decisions follow the loss (confidence quality), deployment reports follow accuracy</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Accuracy should drive training because it is the final metric</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Probabilities above 0.5 are all identically perfect</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -315,20 +328,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Supervision needs per-example right answers; RL gets only episode-level scores. A game agent sees <em>outcomes</em>, never <em>correct moves</em> — the feedback-granularity gap that defines the paradigm boundary.</p><pre><code>&lt;/div&gt;
+      <p>Accuracy binarizes away confidence; loss preserves it. A 0.51-correct point flips under breath-sized perturbations — the model is <em>right by luck</em> there. Train on losses (they see fragility), evaluate on accuracy (the contract), and let the 22× spread between 0.105 and 2.303-like extremes allocate effort.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">State Mitchell&#39;s definition using T, E, P for spam filtering, and explain why each letter matters.</span>
+    <span class="quiz-category">A teammate &quot;fixes&quot; NB zero-vetoes by deleting every word unseen in either class from the vocabulary. Why is Laplace smoothing strictly better?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>T = delete all email, E = user complaints, P = inbox size</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>T = classify messages, E = labeled spam/ham corpus, P = accuracy on future mail — T fixes the job, E the fuel, P the grading ruler; without P, &quot;learning&quot; is unmeasurable</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>T, E, P are just decorative formalities</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Mitchell&#39;s definition applies only to neural networks</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Deletion is actually superior and smoothing is obsolete</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Deletion destroys test-time information (new words in future mail vanish silently); smoothing prices ignorance ($+α$) while keeping the feature — unseen-today words still score tomorrow, rare but non-zero</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Smoothing is faster to compute than deletion</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Deletion changes the priors while smoothing preserves them</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -340,20 +353,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$T$ scopes the task, $E$ names what experience counts, $P$ makes improvement <em>falsifiable</em> — a filter whose held-out accuracy never rises hasn&#39;t learned, whatever its training loss claims. Measurable improvement <em>is</em> the definition.</p><pre><code>&lt;/div&gt;
+      <p>Deletion amputates the feature space to fit the training sample — future mail containing those words becomes unscorable evidence. Smoothing instead assigns calibrated rarity: the vocabulary stays complete, and today&#39;s unseen word is tomorrow&#39;s weak (not vetoed) signal. Robustness lives in kept-but-discounted features.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A dataset has inputs but no labels, and the goal is to find customer segments. A student proposes logistic regression. What is wrong?</span>
+    <span class="quiz-category">Your tree model must be explained to non-technical regulators who will veto black boxes. You have logistic regression (89%) and a depth-4 tree (87%). Which ships, and what principle decides?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Nothing — logistic regression handles unlabeled data natively</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Logistic regression is supervised (needs labels); unlabeled segmentation is clustering (k-means territory) — wrong paradigm, not just wrong algorithm</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Customer data can never be clustered for privacy reasons</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Regression always beats clustering on marketing data</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Logistic regression — 2% accuracy is sacrosanct regardless of context</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The depth-4 tree — auditability (readable splits, traceable decisions) is a hard constraint here, and 2% is its explicit price; model selection optimizes the *stakeholder* objective, not accuracy in a vacuum</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — only neural networks satisfy regulators</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Flip a coin; interpretability has no monetary value</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -365,22 +378,64 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>No labels ⇒ no supervised loss to optimize — logistic regression has literally nothing to fit. Paradigm first (unsupervised → clustering), algorithm second. The error is categorical, one level above hyperparameter taste.</p><pre><code>&lt;/div&gt;
+      <p>Accuracy is one term in the real objective; auditability, latency, and maintainability are others. A 2% accuracy tax buying full inspectability is cheap where regulators (or doctors, or judges) consume the model. State the tradeoff explicitly — &quot;87% and explainable&quot; beats &quot;89% and inscrutable&quot; <em>for this stakeholder</em>.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Mini-batch training shows healthy falling loss; switching to full-batch (same η) stalls almost immediately at a mediocre plateau. Diagnose.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Full-batch is mathematically incapable of optimizing anything</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Full-batch takes few giant exact steps that settle into the nearest sharp minimum/plateau, losing SGD noise that previously rattled through saddle regions — plus far fewer updates per epoch; remedies: raise η cautiously, restore mini-batch noise, or improve conditioning (scaling/normalization)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The dataset shrank when switching modes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Full-batch requires a different loss function by definition</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Noise is a feature (escape dynamics) and step-count is budget: full-batch spends $O(nd)$ per single exact step. Same-$\eta$ switching removes both advantages at once — stall diagnosed. Mini-batch&#39;s jitter-plus-frequency is the default precisely because it sidesteps both traps simultaneously.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><hr>
+<p><a id="exam-focus"></a></p>
+<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
+<ul>
+<li><strong>3 Marks:</strong> Any cheat-table row (surrogate-vs-0/1 and smoothing lead); sigmoid/CE single-point arithmetic.</li>
+<li><strong>7 Marks:</strong> NB scoring traces with smoothing autopsy, tree split computations (entropy/gain), or GD divergence diagnosis with fixes.</li>
+</ul>
+</div></details><h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: With the Scenario-3 counts, classify &quot;win money&quot; with Laplace α=1, then show exactly what breaks with α=0.</strong></p>
+<p><strong>Model Answer:</strong> Smoothed: $P(\text{win}|S)=P(\text{money}|S)=3/6=0.5$ → score $0.5^3=0.125$; $P(\text{win}|H)=1/5=0.2$, $P(\text{money}|H)=2/5=0.4$ → $0.5(0.2)(0.4)=0.04$. <strong>Spam</strong> (~3:1). Unsmoothed ($\alpha=0$): ham&#39;s $P(\text{win}|H)=0/3=0$ vetoes ham regardless — and any word unseen in <em>both</em> classes zeroes <em>both</em> scores (argmax over zeros). Smoothing converts vetoes into votes: ignorance priced, never absolute.</p>
+<h3>Essay Question 2 (7 Marks)</h3>
+<p><strong>Q: Training diverges to NaN at epoch 40 after an η hike; separately, a colleague&#39;s run plateaus high from epoch 1. Diagnose both with ordered fixes.</strong></p>
+<p><strong>Model Answer:</strong> Case 1 (healthy→NaN after hike): divergence signature — updates overshot into overflow. Fix order: halve $\eta$, add gradient clipping, resume from last good checkpoint; investigate data/model only if sane $\eta$ still explodes. Case 2 (plateau from start): underpowered steps or capacity — raise $\eta$ first (cheapest experiment), then model size/features/schedule. Same symptom family (bad training), opposite ends of the $\eta$ dial — read the <em>onset pattern</em> before touching anything.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <div></div>
+      <a href="./m2_05_gradient_descent_training_engine.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">2.5 Gradient Descent Training Engine</div>
+      </a>
       
       
       
-      <a href="./m1_02_probability_mle_map_estimation.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_01_perceptron_learning_rule.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.2 Probability MLE MAP Estimation</div>
+        <div class="ttl">3.1 Perceptron Learning Rule</div>
       </a>
       
     </footer>
@@ -467,7 +522,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(20) || 0;
-    const currentId = "m1_01_ml_definition_paradigms_and_types";
+    const currentId = "m2_99_practice_lab_classification_drills";
     const courseCode = "PCCST503";
     if (totalTopics === 0 || !currentId) return;
 
