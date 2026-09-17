@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tarangam - KTU Study Notes</title>
-<meta name="description" content="Interactive study notes, visual animations, and active recall quizzes for KTU S5 Computer Science, S3 Maths & DSA, and S1/S2 Physics & Electrical courses.">
+<meta name="description" content="Interactive study notes, visual animations, and active recall quizzes for KTU S5–S6 Computer Science, S3 Maths & DSA, and S1/S2 Physics & Electrical courses.">
 <meta property="og:title" content="Tarangam - KTU Study Notes">
-<meta property="og:description" content="Interactive study notes, visual animations, and active recall quizzes for KTU S5 Computer Science, S3 Maths & DSA, and S1/S2 Physics & Electrical courses.">
+<meta property="og:description" content="Interactive study notes, visual animations, and active recall quizzes for KTU S5–S6 Computer Science, S3 Maths & DSA, and S1/S2 Physics & Electrical courses.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
   }
   .header {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.75rem;
   }
   .header .logo {
     display: inline-flex;
@@ -64,12 +64,116 @@
     color: #94a3b8;
     margin-top: 0.5rem;
   }
-  .course-section {
+  .pill-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+  .pill-bar.sem-bar {
+    margin-bottom: 0.5rem;
+  }
+  .pill {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #94a3b8;
+    background-color: #121824;
+    border: 1px solid #1e293b;
+    border-radius: 9999px;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .pill:hover {
+    color: #f1f5f9;
+    border-color: #38bdf8;
+  }
+  .pill.active {
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.5);
+    background-color: rgba(56, 189, 248, 0.1);
+  }
+  .pill .count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    opacity: 0.8;
+    margin-left: 0.3rem;
+  }
+  .filter-meta {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-bottom: 2rem;
+    min-height: 1.2em;
+  }
+  .year-block {
     margin-bottom: 2.5rem;
+  }
+  .year-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #1e293b;
+  }
+  .year-head h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.01em;
+  }
+  .year-head .year-sub {
+    color: #64748b;
+    font-size: 0.85rem;
+  }
+  .sem-block {
+    margin-bottom: 1.75rem;
+  }
+  .sem-block:last-child {
+    margin-bottom: 0;
+  }
+  .sem-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .sem-label .sem-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    background-color: rgba(59, 130, 246, 0.12);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .sem-label .sem-name {
+    color: #94a3b8;
+    font-size: 0.85rem;
+  }
+  .empty-note {
+    border: 1px dashed #1e293b;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    color: #64748b;
+    font-size: 0.85rem;
+    background: rgba(18, 24, 36, 0.4);
+  }
+  .course-section {
+    margin-bottom: 1.25rem;
     background: rgba(18, 24, 36, 0.6);
     border: 1px solid #1e293b;
     border-radius: 16px;
     padding: 1.5rem;
+  }
+  .course-section:last-child {
+    margin-bottom: 0;
   }
   .course-header {
     display: flex;
@@ -160,253 +264,446 @@
         <span class="brand-badge">त</span>
         <h1>Tarangam</h1>
       </div>
-      <p>Interactive Notes &middot; KTU 2024 Scheme &middot; S5 Computer Science, S3 Maths & DSA, S1/S2 Physics & Electrical</p>
+      <p>Interactive Notes &middot; KTU 2024 Scheme &middot; S5–S6 Computer Science, S3 Maths & DSA, S1/S2 Physics & Electrical</p>
     </div>
-    
-    <!-- PCCST503: Machine Learning -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Machine Learning</div>
-        <span class="course-code">PCCST503</span>
+
+    <div class="pill-bar year-bar" role="group" aria-label="Filter by year">
+      <button class="pill active" data-year="all">All Years</button>
+      <button class="pill" data-year="y1">1st Year</button>
+      <button class="pill" data-year="y2">2nd Year</button>
+      <button class="pill" data-year="y3">3rd Year</button>
+      <button class="pill" data-year="y4">4th Year</button>
+    </div>
+    <div class="pill-bar sem-bar" role="group" aria-label="Filter by semester">
+      <button class="pill active" data-sem="all">All Semesters</button>
+      <button class="pill" data-sem="s1s2">S1 / S2</button>
+      <button class="pill" data-sem="s3">S3</button>
+      <button class="pill" data-sem="s4">S4</button>
+      <button class="pill" data-sem="s5">S5</button>
+      <button class="pill" data-sem="s6">S6</button>
+      <button class="pill" data-sem="s7">S7</button>
+      <button class="pill" data-sem="s8">S8</button>
+    </div>
+    <div class="filter-meta" id="filterMeta"></div>
+
+    <!-- ================= 1ST YEAR ================= -->
+    <div class="year-block" data-year="y1">
+      <div class="year-head">
+        <h2>1st Year</h2>
+        <span class="year-sub">B.Tech S1 / S2 &middot; Common courses</span>
       </div>
-      <div class="card-grid">
-        <a href="dist/PCCST503/m1_01_ml_definition_paradigms_and_types.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Parameter Estimation</h2>
-          <p>MLE, MAP, regression models, and mathematical foundations.</p>
-        </a>
-        <a href="dist/PCCST503/m2_01_classification_boundaries_knn.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Supervised Learning</h2>
-          <p>Logistic Regression, Naive Bayes, KNN, and Decision Trees.</p>
-        </a>
-        <a href="dist/PCCST503/m3_01_perceptron_learning_rule.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>SVMs & Neural Networks</h2>
-          <p>Maximum margin hyperplanes, Perceptrons, and Backpropagation.</p>
-        </a>
-        <a href="dist/PCCST503/m4_01_clustering_kmeans.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Unsupervised & Ensembles</h2>
-          <p>K-Means, Hierarchical Clustering, PCA, Bagging, and Boosting.</p>
-        </a>
+
+      <div class="sem-block" data-sem="s1s2">
+        <div class="sem-label">
+          <span class="sem-tag">S1 / S2</span>
+          <span class="sem-name">First & second semester &middot; 2 subjects</span>
+        </div>
+
+        <!-- GXEST104: Intro to Electrical & Electronics (S1/S2, theory only) -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Introduction to Electrical & Electronics Engineering</div>
+            <span class="course-code">GXEST104</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/GXEST104/m1_01_ohms_kcl_kvl_division_rules.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>DC & Magnetic Circuits</h2>
+              <p>Ohm/KCL/KVL, C & L energy, star-delta, mesh/nodal matrices, magnetics + drills.</p>
+            </a>
+            <a href="dist/GXEST104/m2_02_ac_fundamentals_rms_average.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>AC & Three-Phase</h2>
+              <p>EMI, RMS/phasors, R/L/C, RLC resonance, power & PF, star/delta + drills.</p>
+            </a>
+            <a href="dist/GXEST104/m3_01_passive_active_pn_diode.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Devices & Circuits</h2>
+              <p>Diodes, Zener regulation, rectifiers & ripple, BJT, biasing, amplifiers, MOSFETs + drill.</p>
+            </a>
+            <a href="dist/GXEST104/m4_01_comm_fibre_block_diagrams.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Comms & Instruments</h2>
+              <p>Comm/fibre blocks, AM/FM receivers, GSM & generations, DMM, CRO, IoT + drill.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- GZPHT121: Physics for Physical Science and Life Science (S1/S2, theory only) -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Physics for Physical Science and Life Science</div>
+            <span class="course-code">GZPHT121</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/GZPHT121/m1_01_optical_processes_absorption_spontaneous_stimulated.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Laser & Fibre Optics</h2>
+              <p>Emission processes, inversion & pumping, Ruby/CO2/diode lasers, fibre types, NA derivation, link block diagram + drills.</p>
+            </a>
+            <a href="dist/GZPHT121/m2_01_superposition_path_difference_cosine_law.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Interference & Diffraction</h2>
+              <p>Superposition, thin films, Newton's rings, air wedge, single slit, grating equation, powers + mixed numerical drill.</p>
+            </a>
+            <a href="dist/GZPHT121/m3_01_uncertainty_principle_conjugate_observables.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Quantum Mechanics</h2>
+              <p>Uncertainty + applications, wavefunction & Schrodinger equations, 1D box derivation, energy/probability drills, tunnelling.</p>
+            </a>
+            <a href="dist/GZPHT121/m4_01_wave_types_frequency_wavelength.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Waves & Acoustics</h2>
+              <p>Wave basics, stretched string + laws, Sabine reverberation + drill, piezoelectric & diffractometer, SONAR/NDT, ultrasound.</p>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- PCCST501: Computer Networks -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Computer Networks</div>
-        <span class="course-code">PCCST501</span>
+    <!-- ================= 2ND YEAR ================= -->
+    <div class="year-block" data-year="y2">
+      <div class="year-head">
+        <h2>2nd Year</h2>
+        <span class="year-sub">B.Tech S3 / S4 &middot; Branch core + mathematics</span>
       </div>
-      <div class="card-grid">
-        <a href="dist/PCCST501/m1_01_internet_overview_and_network_edge.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Application Layer</h2>
-          <p>Internet overview, OSI & TCP/IP, HTTP, DNS, FTP, SMTP, and P2P.</p>
-        </a>
-        <a href="dist/PCCST501/m2_01_transport_layer_services_and_multiplexing.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Transport & Network Layer</h2>
-          <p>TCP, UDP, Congestion Control, IPv4/IPv6, and Routing Algorithms.</p>
-        </a>
-        <a href="dist/PCCST501/m3_01_datalink_layer_services_and_framing.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Data Link Layer</h2>
-          <p>Framing, CRC error detection, CSMA/CD, ARP, VLANs, and 802.11.</p>
-        </a>
-        <a href="dist/PCCST501/m4_01_network_management_snmp_architecture.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Physical Layer & Management</h2>
-          <p>SNMP, Nyquist & Shannon limits, PCM, and Modulation techniques.</p>
-        </a>
+
+      <div class="sem-block" data-sem="s3">
+        <div class="sem-label">
+          <span class="sem-tag">S3</span>
+          <span class="sem-name">Third semester &middot; 2 subjects</span>
+        </div>
+
+        <!-- GAMAT301: Mathematics for Information Science-3 (S3) -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Mathematics for Information Science-3</div>
+            <span class="course-code">GAMAT301</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/GAMAT301/m1_01_random_variables_pmf_cdf.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Discrete Random Variables</h2>
+              <p>pmf & cdf, expectation & variance, binomial, Poisson limit, joint pmf, functions of RVs + drill.</p>
+            </a>
+            <a href="dist/GAMAT301/m2_01_continuous_rv_pdf_cdf_expectation.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Continuous Random Variables</h2>
+              <p>pdf & cdf, uniform, normal standardisation, exponential memorylessness, joint pdf + mixed drill.</p>
+            </a>
+            <a href="dist/GAMAT301/m3_01_markov_chebyshev_inequalities.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Limit Theorems & Processes</h2>
+              <p>Markov & Chebyshev bounds, SLLN & CLT approximations, counting processes, Poisson process + drills.</p>
+            </a>
+            <a href="dist/GAMAT301/m4_01_markov_chains_transition_matrix.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Markov Chains</h2>
+              <p>Transition matrix, random walk & ruin, Chapman–Kolmogorov, classification, stationary distribution + drill.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- PCCST303: Data Structures and Algorithms (S3, theory only) -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Data Structures and Algorithms</div>
+            <span class="course-code">PCCST303</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PCCST303/m1_01_data_structures_adt_abstraction.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Stacks & Queues</h2>
+              <p>ADTs, complexity & notations, sparse matrices, stacks, queues, expression traces + drill.</p>
+            </a>
+            <a href="dist/PCCST303/m2_01_singly_linked_list_operations.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Linked Lists & Memory</h2>
+              <p>Singly/doubly/circular lists, linked stacks & queues, fit strategies, GC & compaction + drill.</p>
+            </a>
+            <a href="dist/PCCST303/m3_01_trees_binary_foundations.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Trees & Graphs</h2>
+              <p>Binary trees, traversals, BST, heaps, graph representation, BFS/DFS + drill.</p>
+            </a>
+            <a href="dist/PCCST303/m4_01_selection_insertion_sort.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Sorting & Hashing</h2>
+              <p>Selection/insertion/quick/merge/heap/radix sorts, binary search, hashing + drill.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sem-block" data-sem="s4">
+        <div class="sem-label">
+          <span class="sem-tag">S4</span>
+          <span class="sem-name">Fourth semester</span>
+        </div>
+        <div class="empty-note">No S4 subjects yet &mdash; check back soon.</div>
       </div>
     </div>
 
-    <!-- PCCST502: Algorithm Design -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Design and Analysis of Algorithms</div>
-        <span class="course-code">PCCST502</span>
+    <!-- ================= 3RD YEAR ================= -->
+    <div class="year-block" data-year="y3">
+      <div class="year-head">
+        <h2>3rd Year</h2>
+        <span class="year-sub">B.Tech S5 / S6 &middot; Computer Science core</span>
       </div>
-      <div class="card-grid">
-        <a href="dist/PCCST502/m1_01_algorithm_definition_and_criteria.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Asymptotics & Recurrences</h2>
-          <p>Complexity analysis, Master theorem, Recursion trees, and AVL trees.</p>
-        </a>
-        <a href="dist/PCCST502/m2_01_disjoint_sets_and_union_find.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Graphs & Divide and Conquer</h2>
-          <p>Union-Find, BFS/DFS, Kosaraju SCC, Merge Sort, and Strassen.</p>
-        </a>
-        <a href="dist/PCCST502/m3_01_greedy_strategy_control_abstraction.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Greedy, DP & Backtracking</h2>
-          <p>Kruskal, Prim, Dijkstra, Matrix Chain Multiplication, and N-Queens.</p>
-        </a>
-        <a href="dist/PCCST502/m4_01_branch_and_bound_control_abstraction.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Branch & Bound & Complexity</h2>
-          <p>TSP, NP-Completeness proofs, Bin Packing, and Randomized Algorithms.</p>
-        </a>
+
+      <div class="sem-block" data-sem="s5">
+        <div class="sem-label">
+          <span class="sem-tag">S5</span>
+          <span class="sem-name">Fifth semester &middot; 4 subjects</span>
+        </div>
+
+        <!-- PCCST503: Machine Learning -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Machine Learning</div>
+            <span class="course-code">PCCST503</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PCCST503/m1_01_ml_definition_paradigms_and_types.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Parameter Estimation</h2>
+              <p>MLE, MAP, regression models, and mathematical foundations.</p>
+            </a>
+            <a href="dist/PCCST503/m2_01_classification_boundaries_knn.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Supervised Learning</h2>
+              <p>Logistic Regression, Naive Bayes, KNN, and Decision Trees.</p>
+            </a>
+            <a href="dist/PCCST503/m3_01_perceptron_learning_rule.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>SVMs & Neural Networks</h2>
+              <p>Maximum margin hyperplanes, Perceptrons, and Backpropagation.</p>
+            </a>
+            <a href="dist/PCCST503/m4_01_clustering_kmeans.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Unsupervised & Ensembles</h2>
+              <p>K-Means, Hierarchical Clustering, PCA, Bagging, and Boosting.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- PCCST501: Computer Networks -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Computer Networks</div>
+            <span class="course-code">PCCST501</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PCCST501/m1_01_internet_overview_and_network_edge.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Application Layer</h2>
+              <p>Internet overview, OSI & TCP/IP, HTTP, DNS, FTP, SMTP, and P2P.</p>
+            </a>
+            <a href="dist/PCCST501/m2_01_transport_layer_services_and_multiplexing.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Transport & Network Layer</h2>
+              <p>TCP, UDP, Congestion Control, IPv4/IPv6, and Routing Algorithms.</p>
+            </a>
+            <a href="dist/PCCST501/m3_01_datalink_layer_services_and_framing.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Data Link Layer</h2>
+              <p>Framing, CRC error detection, CSMA/CD, ARP, VLANs, and 802.11.</p>
+            </a>
+            <a href="dist/PCCST501/m4_01_network_management_snmp_architecture.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Physical Layer & Management</h2>
+              <p>SNMP, Nyquist & Shannon limits, PCM, and Modulation techniques.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- PCCST502: Algorithm Design -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Design and Analysis of Algorithms</div>
+            <span class="course-code">PCCST502</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PCCST502/m1_01_algorithm_definition_and_criteria.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Asymptotics & Recurrences</h2>
+              <p>Complexity analysis, Master theorem, Recursion trees, and AVL trees.</p>
+            </a>
+            <a href="dist/PCCST502/m2_01_disjoint_sets_and_union_find.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Graphs & Divide and Conquer</h2>
+              <p>Union-Find, BFS/DFS, Kosaraju SCC, Merge Sort, and Strassen.</p>
+            </a>
+            <a href="dist/PCCST502/m3_01_greedy_strategy_control_abstraction.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Greedy, DP & Backtracking</h2>
+              <p>Kruskal, Prim, Dijkstra, Matrix Chain Multiplication, and N-Queens.</p>
+            </a>
+            <a href="dist/PCCST502/m4_01_branch_and_bound_control_abstraction.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Branch & Bound & Complexity</h2>
+              <p>TSP, NP-Completeness proofs, Bin Packing, and Randomized Algorithms.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- PECST522: Artificial Intelligence -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Artificial Intelligence</div>
+            <span class="course-code">PECST522</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PECST522/m1_01_ai_definition_foundations_and_history.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Agents & Problem Solving</h2>
+              <p>PEAS framework, agent architectures, and classic AI toy problems.</p>
+            </a>
+            <a href="dist/PECST522/m1_99_practice_lab_agents_and_problem_formulation.html" class="card" style="border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(180deg, #121b2d 0%, #0e1524 100%);">
+              <span class="module-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">🧪 Module 1 Lab</span>
+              <h2>Practice Lab: Agents & PEAS</h2>
+              <p>Real-world scenario matrix, cheat tables, active recall quizzes, and KTU 7-mark model solutions.</p>
+            </a>
+            <a href="dist/PECST522/m2_01_uninformed_search_dfs_bfs_ucs.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Search & Game Playing</h2>
+              <p>A* Search, CSPs, AC-3, Minimax, and Alpha-Beta pruning.</p>
+            </a>
+            <a href="dist/PECST522/m3_01_knowledge_based_agents_and_wumpus_world.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Knowledge & Logic</h2>
+              <p>Wumpus World, Propositional & First-Order Logic, Unification, and Chaining.</p>
+            </a>
+            <a href="dist/PECST522/m4_01_reinforcement_learning_learning_from_rewards.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Reinforcement Learning</h2>
+              <p>Passive & Active RL, Q-Learning, Policy Search, and Inverse RL.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sem-block" data-sem="s6">
+        <div class="sem-label">
+          <span class="sem-tag">S6</span>
+          <span class="sem-name">Sixth semester &middot; 1 subject</span>
+        </div>
+
+        <!-- PCCST601: Compiler Design (S6, theory only) -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Compiler Design</div>
+            <span class="course-code">PCCST601</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PCCST601/m1_01_compiler_structure_phases.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Front End & Scanners</h2>
+              <p>Compiler phases, regex & FSA, RE-to-scanner pipeline, Lex hands-on + drill.</p>
+            </a>
+            <a href="dist/PCCST601/m2_01_parsing_grammars_ambiguity.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Top-Down Parsing</h2>
+              <p>Grammars & ambiguity, left recursion/factoring, recursive descent, LL(1) tables + drills.</p>
+            </a>
+            <a href="dist/PCCST601/m3_01_shift_reduce_handles.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Bottom-Up & IR</h2>
+              <p>Shift-reduce, LR(1)/LALR, YACC, IR taxonomy, TAC, SDT + drills.</p>
+            </a>
+            <a href="dist/PCCST601/m4_01_codegen_arithmetic.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Codegen & Optimization</h2>
+              <p>Code shapes, LVN, unrolling, liveness, placement + drill.</p>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- PECST522: Artificial Intelligence -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Artificial Intelligence</div>
-        <span class="course-code">PECST522</span>
+    <!-- ================= 4TH YEAR ================= -->
+    <div class="year-block" data-year="y4">
+      <div class="year-head">
+        <h2>4th Year</h2>
+        <span class="year-sub">B.Tech S7 / S8 &middot; Electives, seminar & project</span>
       </div>
-      <div class="card-grid">
-        <a href="dist/PECST522/m1_01_ai_definition_foundations_and_history.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Agents & Problem Solving</h2>
-          <p>PEAS framework, agent architectures, and classic AI toy problems.</p>
-        </a>
-        <a href="dist/PECST522/m1_99_practice_lab_agents_and_problem_formulation.html" class="card" style="border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(180deg, #121b2d 0%, #0e1524 100%);">
-          <span class="module-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">🧪 Module 1 Lab</span>
-          <h2>Practice Lab: Agents & PEAS</h2>
-          <p>Real-world scenario matrix, cheat tables, active recall quizzes, and KTU 7-mark model solutions.</p>
-        </a>
-        <a href="dist/PECST522/m2_01_uninformed_search_dfs_bfs_ucs.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Search & Game Playing</h2>
-          <p>A* Search, CSPs, AC-3, Minimax, and Alpha-Beta pruning.</p>
-        </a>
-        <a href="dist/PECST522/m3_01_knowledge_based_agents_and_wumpus_world.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Knowledge & Logic</h2>
-          <p>Wumpus World, Propositional & First-Order Logic, Unification, and Chaining.</p>
-        </a>
-        <a href="dist/PECST522/m4_01_reinforcement_learning_learning_from_rewards.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Reinforcement Learning</h2>
-          <p>Passive & Active RL, Q-Learning, Policy Search, and Inverse RL.</p>
-        </a>
-      </div>
-    </div>
 
-    <!-- GAMAT301: Mathematics for Information Science-3 (S3) -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Mathematics for Information Science-3</div>
-        <span class="course-code">GAMAT301</span>
+      <div class="sem-block" data-sem="s7">
+        <div class="sem-label">
+          <span class="sem-tag">S7</span>
+          <span class="sem-name">Seventh semester</span>
+        </div>
+        <div class="empty-note">No S7 subjects yet &mdash; check back soon.</div>
       </div>
-      <div class="card-grid">
-        <a href="dist/GAMAT301/m1_01_random_variables_pmf_cdf.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Discrete Random Variables</h2>
-          <p>pmf & cdf, expectation & variance, binomial, Poisson limit, joint pmf, functions of RVs + drill.</p>
-        </a>
-        <a href="dist/GAMAT301/m2_01_continuous_rv_pdf_cdf_expectation.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Continuous Random Variables</h2>
-          <p>pdf & cdf, uniform, normal standardisation, exponential memorylessness, joint pdf + mixed drill.</p>
-        </a>
-        <a href="dist/GAMAT301/m3_01_markov_chebyshev_inequalities.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Limit Theorems & Processes</h2>
-          <p>Markov & Chebyshev bounds, SLLN & CLT approximations, counting processes, Poisson process + drills.</p>
-        </a>
-        <a href="dist/GAMAT301/m4_01_markov_chains_transition_matrix.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Markov Chains</h2>
-          <p>Transition matrix, random walk & ruin, Chapman–Kolmogorov, classification, stationary distribution + drill.</p>
-        </a>
-      </div>
-    </div>
 
-    <!-- PCCST303: Data Structures and Algorithms (S3, theory only) -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Data Structures and Algorithms</div>
-        <span class="course-code">PCCST303</span>
-      </div>
-      <div class="card-grid">
-        <a href="dist/PCCST303/m1_01_data_structures_adt_abstraction.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Stacks & Queues</h2>
-          <p>ADTs, complexity & notations, sparse matrices, stacks, queues, expression traces + drill.</p>
-        </a>
-        <a href="dist/PCCST303/m2_01_singly_linked_list_operations.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Linked Lists & Memory</h2>
-          <p>Singly/doubly/circular lists, linked stacks & queues, fit strategies, GC & compaction + drill.</p>
-        </a>
-        <a href="dist/PCCST303/m3_01_trees_binary_foundations.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Trees & Graphs</h2>
-          <p>Binary trees, traversals, BST, heaps, graph representation, BFS/DFS + drill.</p>
-        </a>
-        <a href="dist/PCCST303/m4_01_selection_insertion_sort.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Sorting & Hashing</h2>
-          <p>Selection/insertion/quick/merge/heap/radix sorts, binary search, hashing + drill.</p>
-        </a>
-      </div>
-    </div>
-
-    <!-- GXEST104: Intro to Electrical & Electronics (S1/S2, theory only) -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Introduction to Electrical & Electronics Engineering</div>
-        <span class="course-code">GXEST104</span>
-      </div>
-      <div class="card-grid">
-        <a href="dist/GXEST104/m1_01_ohms_kcl_kvl_division_rules.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>DC & Magnetic Circuits</h2>
-          <p>Ohm/KCL/KVL, C & L energy, star-delta, mesh/nodal matrices, magnetics + drills.</p>
-        </a>
-        <a href="dist/GXEST104/m2_02_ac_fundamentals_rms_average.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>AC & Three-Phase</h2>
-          <p>EMI, RMS/phasors, R/L/C, RLC resonance, power & PF, star/delta + drills.</p>
-        </a>
-        <a href="dist/GXEST104/m3_01_passive_active_pn_diode.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Devices & Circuits</h2>
-          <p>Diodes, Zener regulation, rectifiers & ripple, BJT, biasing, amplifiers, MOSFETs + drill.</p>
-        </a>
-        <a href="dist/GXEST104/m4_01_comm_fibre_block_diagrams.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Comms & Instruments</h2>
-          <p>Comm/fibre blocks, AM/FM receivers, GSM & generations, DMM, CRO, IoT + drill.</p>
-        </a>
-      </div>
-    </div>
-
-    <!-- GZPHT121: Physics for Physical Science and Life Science (S1/S2, theory only) -->
-    <div class="course-section">
-      <div class="course-header">
-        <div class="course-title">Physics for Physical Science and Life Science</div>
-        <span class="course-code">GZPHT121</span>
-      </div>
-      <div class="card-grid">
-        <a href="dist/GZPHT121/m1_01_optical_processes_absorption_spontaneous_stimulated.html" class="card">
-          <span class="module-tag">Module 1</span>
-          <h2>Laser & Fibre Optics</h2>
-          <p>Emission processes, inversion & pumping, Ruby/CO2/diode lasers, fibre types, NA derivation, link block diagram + drills.</p>
-        </a>
-        <a href="dist/GZPHT121/m2_01_superposition_path_difference_cosine_law.html" class="card">
-          <span class="module-tag">Module 2</span>
-          <h2>Interference & Diffraction</h2>
-          <p>Superposition, thin films, Newton's rings, air wedge, single slit, grating equation, powers + mixed numerical drill.</p>
-        </a>
-        <a href="dist/GZPHT121/m3_01_uncertainty_principle_conjugate_observables.html" class="card">
-          <span class="module-tag">Module 3</span>
-          <h2>Quantum Mechanics</h2>
-          <p>Uncertainty + applications, wavefunction & Schrodinger equations, 1D box derivation, energy/probability drills, tunnelling.</p>
-        </a>
-        <a href="dist/GZPHT121/m4_01_wave_types_frequency_wavelength.html" class="card">
-          <span class="module-tag">Module 4</span>
-          <h2>Waves & Acoustics</h2>
-          <p>Wave basics, stretched string + laws, Sabine reverberation + drill, piezoelectric & diffractometer, SONAR/NDT, ultrasound.</p>
-        </a>
+      <div class="sem-block" data-sem="s8">
+        <div class="sem-label">
+          <span class="sem-tag">S8</span>
+          <span class="sem-name">Eighth semester</span>
+        </div>
+        <div class="empty-note">No S8 subjects yet &mdash; check back soon.</div>
       </div>
     </div>
   </div>
+<script>
+  // Dashboard year + semester filtering (progressive enhancement; all cards stay in the DOM).
+  (function () {
+    var KEY = 'tarangam_dash_filter';
+    var state = { year: 'all', sem: 'all' };
+    try {
+      var saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+      if (saved.year) state.year = saved.year;
+      if (saved.sem) state.sem = saved.sem;
+    } catch (e) { /* private mode: defaults */ }
+
+    var yearNames = { all: 'all years', y1: '1st Year', y2: '2nd Year', y3: '3rd Year', y4: '4th Year' };
+    var semNames = { all: 'all semesters', s1s2: 'S1/S2', s3: 'S3', s4: 'S4', s5: 'S5', s6: 'S6', s7: 'S7', s8: 'S8' };
+
+    function apply() {
+      var visibleSubjects = 0;
+      var visibleSems = 0;
+      var years = document.querySelectorAll('.year-block');
+      years.forEach(function (yb) {
+        var yearOk = state.year === 'all' || yb.getAttribute('data-year') === state.year;
+        var yearHasVisible = false;
+        yb.querySelectorAll('.sem-block').forEach(function (sb) {
+          var semOk = state.sem === 'all' || sb.getAttribute('data-sem') === state.sem;
+          var show = yearOk && semOk;
+          sb.style.display = show ? '' : 'none';
+          if (show) {
+            yearHasVisible = true;
+            visibleSems++;
+            visibleSubjects += sb.querySelectorAll('.course-section').length;
+          }
+        });
+        yb.style.display = yearHasVisible ? '' : 'none';
+      });
+      document.querySelectorAll('.year-bar .pill').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-year') === state.year);
+      });
+      document.querySelectorAll('.sem-bar .pill').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-sem') === state.sem);
+      });
+      var meta = document.getElementById('filterMeta');
+      if (meta) {
+        meta.textContent = 'Showing ' + visibleSubjects + ' subject' + (visibleSubjects === 1 ? '' : 's') +
+          ' · ' + (yearNames[state.year] || state.year) + ' · ' + (semNames[state.sem] || state.sem);
+      }
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+    }
+
+    document.querySelectorAll('.year-bar .pill').forEach(function (p) {
+      p.addEventListener('click', function () { state.year = p.getAttribute('data-year'); apply(); });
+    });
+    document.querySelectorAll('.sem-bar .pill').forEach(function (p) {
+      p.addEventListener('click', function () { state.sem = p.getAttribute('data-sem'); apply(); });
+    });
+
+    // Guard against stale saved values from older pill sets.
+    if (!yearNames[state.year]) state.year = 'all';
+    if (!semNames[state.sem]) state.sem = 'all';
+    apply();
+  })();
+</script>
 </body>
 </html>

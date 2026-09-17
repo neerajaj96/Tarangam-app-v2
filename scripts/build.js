@@ -15,7 +15,8 @@ const COURSE_METADATA = {
   GZPHT121: 'Physics for Physical Science and Life Science',
   GAMAT301: 'Mathematics for Information Science-3',
   PCCST303: 'Data Structures and Algorithms',
-  GXEST104: 'Introduction to Electrical and Electronics Engineering'
+  GXEST104: 'Introduction to Electrical and Electronics Engineering',
+  PCCST601: 'Compiler Design'
 };
 
 const MODULE_NAMES = {
@@ -66,6 +67,12 @@ const MODULE_NAMES = {
     2: 'EMI, AC & Three-Phase Systems',
     3: 'Electronic Devices & Circuits',
     4: 'Modern Electronics & Applications'
+  },
+  PCCST601: {
+    1: 'Front End & Scanners',
+    2: 'Top-Down Parsing',
+    3: 'Bottom-Up Parsing & IR',
+    4: 'Code Generation & Optimization'
   }
 };
 
@@ -86,7 +93,7 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
-const ACRONYMS = new Set(['AI', 'PEAS', 'OSI', 'TCP', 'IP', 'HTTP', 'FTP', 'DNS', 'SMTP', 'P2P', 'AVL', 'BFS', 'DFS', 'UCS', 'DLS', 'IDDFS', 'CSP', 'AC-3', 'RL', 'RAM', 'SNMP', 'VLAN', 'ARP', 'CRC', 'CSMA', 'CD', 'PCM', 'KTU', 'CSE', 'SCC', 'DP', 'TSP', 'NP', 'MLE', 'MAP', 'KNN', 'PCA', 'SVM', 'NA', 'SONAR', 'NDT', 'LED', 'CW', 'PIN', 'PMF', 'CDF', 'PDF', 'CLT', 'SLLN', 'RV', 'ADT', 'FIFO', 'LIFO', 'BST', 'AC', 'DC', 'RMS', 'EMF', 'MMF', 'BJT', 'FET', 'MOSFET', 'CE', 'CB', 'CC', 'AM', 'FM', 'GSM', 'CRO', 'DMM', 'KCL', 'KVL', 'RL', 'RC', 'RLC']);
+const ACRONYMS = new Set(['AI', 'PEAS', 'OSI', 'TCP', 'IP', 'HTTP', 'FTP', 'DNS', 'SMTP', 'P2P', 'AVL', 'BFS', 'DFS', 'UCS', 'DLS', 'IDDFS', 'CSP', 'AC-3', 'RL', 'RAM', 'SNMP', 'VLAN', 'ARP', 'CRC', 'CSMA', 'CD', 'PCM', 'KTU', 'CSE', 'SCC', 'DP', 'TSP', 'NP', 'MLE', 'MAP', 'KNN', 'PCA', 'SVM', 'NA', 'SONAR', 'NDT', 'LED', 'CW', 'PIN', 'PMF', 'CDF', 'PDF', 'CLT', 'SLLN', 'RV', 'ADT', 'FIFO', 'LIFO', 'BST', 'AC', 'DC', 'RMS', 'EMF', 'MMF', 'BJT', 'FET', 'MOSFET', 'CE', 'CB', 'CC', 'AM', 'FM', 'GSM', 'CRO', 'DMM', 'KCL', 'KVL', 'RL', 'RC', 'RLC', 'TAC', 'IR', 'LR', 'LL', 'LVN', 'YACC', 'AST']);
 
 function titleCaseSlug(slug) {
   return slug.replace(/_/g, ' ').split(' ').map(w => {

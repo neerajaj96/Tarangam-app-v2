@@ -22,7 +22,7 @@ content/<COURSE>/m{mod}_{seq}_{slug}.md
   seq 99 = practice lab (optional, one per module, sorts last)
 ```
 
-Current truth (2026-09-17) — full syllabus complete, 205 topics:
+Current truth (2026-09-17) — full syllabus complete, 234 topics:
 - `PCCST501` Computer Networks: M1–M4 complete (24 topics)
 - `PCCST502` DAA: M1–M4 complete (29 topics, incl. `m1_00` overview + `m1_99` lab)
 - `PECST522` AI: M1–M4 complete (22 topics, incl. `m1_99` lab)
@@ -31,6 +31,7 @@ Current truth (2026-09-17) — full syllabus complete, 205 topics:
 - `GAMAT301` Mathematics for Information Science-3 (S3, Group A): M1–M4 complete (24 topics, no lab)
 - `PCCST303` Data Structures and Algorithms (S3): M1–M4 theory complete (27 topics, no lab)
 - `GXEST104` Intro to Electrical & Electronics Eng. (S1/S2, Groups A & B): M1–M4 complete (31 topics, no lab, 5 animated SVG scenes)
+- `PCCST601` Compiler Design (S6): M1–M4 theory complete (29 topics, no lab, 3 animated SVG scenes)
 - Dashboard `index.html`: every card unlocked, zero `TODO content/…` remaining
 - All 8 `assets/videos/*.mp4` wired into topics via `::: manim` (0 orphan warnings)
 - `npm run check`: 0 errors, 0 warnings (was: 8 orphan-video warnings at peak)
@@ -39,7 +40,7 @@ Current truth (2026-09-17) — full syllabus complete, 205 topics:
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic (205 `.md` files: 8 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Topic-by-topic breakdown** — Module → smallest topic (234 `.md` files: 9 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
 - **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
 - **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
 - **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).
@@ -65,9 +66,9 @@ Content is decoupled from the shell. To add, say, DBMS as `PCCXX999`:
 2. Add `PCCXX999: 'Name'` to `COURSE_METADATA` + module titles to `MODULE_NAMES` in `scripts/build.js:9`.
 3. Rebuild; add unlocked cards in `index.html` (copy `.card` pattern, never point at missing files).
 
-## Adding a new year
+## Adding a new year/semester
 
-The sidebar's "1st & 2nd" / "4th" pills are present but locked (`data-locked`) — intentionally, since only 3rd year has content right now. Wire them up the same way as subjects once that content exists.
+The dashboard (`index.html`) groups subjects under year blocks (`1st`–`4th Year`) containing semester blocks (`S1/S2`–`S8`), with year + semester pills that filter them (choice persists in `localStorage`). To add a subject, drop its `course-section` into the right semester block (or add a new semester block copying the `.sem-block` pattern with an `empty-note` removed); empty semesters render a "check back soon" note with no dead links. All cards stay in the DOM so `npm run check` still validates every link.
 
 ## Design notes
 

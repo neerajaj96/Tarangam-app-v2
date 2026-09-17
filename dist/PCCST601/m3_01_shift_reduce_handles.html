@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 3.1 Shift Reduce Handles</title>
+<meta name="description" content="Compiler Design (PCCST601) — 3.1 Shift Reduce Handles | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.1 Shift Reduce Handles">
+<meta property="og:description" content="Compiler Design (PCCST601) study notes: 3.1 Shift Reduce Handles">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Compiler Design</span>
+        <span class="tag">PCCST601</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Front End &amp; Scanners</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_compiler_structure_phases.html" class="topic-link " id="topic-m1_01_compiler_structure_phases">
+            <span class="topic-dot"></span>
+            <span>1.1 Compiler Structure Phases</span>
+          </a>
+          <a href="./m1_02_regex_fsa_brushup.html" class="topic-link " id="topic-m1_02_regex_fsa_brushup">
+            <span class="topic-dot"></span>
+            <span>1.2 Regex Fsa Brushup</span>
+          </a>
+          <a href="./m1_03_re_to_scanner_construction.html" class="topic-link " id="topic-m1_03_re_to_scanner_construction">
+            <span class="topic-dot"></span>
+            <span>1.3 Re To Scanner Construction</span>
+          </a>
+          <a href="./m1_04_lex_hands_on.html" class="topic-link " id="topic-m1_04_lex_hands_on">
+            <span class="topic-dot"></span>
+            <span>1.4 Lex Hands On</span>
+          </a>
+          <a href="./m1_05_m1_mixed_drill.html" class="topic-link " id="topic-m1_05_m1_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>1.5 M1 Mixed Drill</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Top-Down Parsing</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_parsing_grammars_ambiguity.html" class="topic-link " id="topic-m2_01_parsing_grammars_ambiguity">
+            <span class="topic-dot"></span>
+            <span>2.1 Parsing Grammars Ambiguity</span>
+          </a>
+          <a href="./m2_02_left_recursion_factoring.html" class="topic-link " id="topic-m2_02_left_recursion_factoring">
+            <span class="topic-dot"></span>
+            <span>2.2 Left Recursion Factoring</span>
+          </a>
+          <a href="./m2_03_recursive_descent_predictive.html" class="topic-link " id="topic-m2_03_recursive_descent_predictive">
+            <span class="topic-dot"></span>
+            <span>2.3 Recursive Descent Predictive</span>
+          </a>
+          <a href="./m2_04_ll1_first_follow_tables.html" class="topic-link " id="topic-m2_04_ll1_first_follow_tables">
+            <span class="topic-dot"></span>
+            <span>2.4 Ll1 First Follow Tables</span>
+          </a>
+          <a href="./m2_05_ll1_traces_errors.html" class="topic-link " id="topic-m2_05_ll1_traces_errors">
+            <span class="topic-dot"></span>
+            <span>2.5 Ll1 Traces Errors</span>
+          </a>
+          <a href="./m2_06_grammar_transform_drill.html" class="topic-link " id="topic-m2_06_grammar_transform_drill">
+            <span class="topic-dot"></span>
+            <span>2.6 Grammar Transform Drill</span>
+          </a>
+          <a href="./m2_07_m2_mixed_drill.html" class="topic-link " id="topic-m2_07_m2_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>2.7 M2 Mixed Drill</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Bottom-Up Parsing &amp; IR</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_shift_reduce_handles.html" class="topic-link active" id="topic-m3_01_shift_reduce_handles">
+            <span class="topic-dot"></span>
+            <span>3.1 Shift Reduce Handles</span>
+          </a>
+          <a href="./m3_02_lr1_algorithm_items.html" class="topic-link " id="topic-m3_02_lr1_algorithm_items">
+            <span class="topic-dot"></span>
+            <span>3.2 Lr1 Algorithm Items</span>
+          </a>
+          <a href="./m3_03_lr_tables_lalr_shrinking.html" class="topic-link " id="topic-m3_03_lr_tables_lalr_shrinking">
+            <span class="topic-dot"></span>
+            <span>3.3 LR Tables Lalr Shrinking</span>
+          </a>
+          <a href="./m3_04_yacc_calculator_conflicts.html" class="topic-link " id="topic-m3_04_yacc_calculator_conflicts">
+            <span class="topic-dot"></span>
+            <span>3.4 YACC Calculator Conflicts</span>
+          </a>
+          <a href="./m3_05_lr_drill.html" class="topic-link " id="topic-m3_05_lr_drill">
+            <span class="topic-dot"></span>
+            <span>3.5 LR Drill</span>
+          </a>
+          <a href="./m3_06_ir_taxonomy_graphical.html" class="topic-link " id="topic-m3_06_ir_taxonomy_graphical">
+            <span class="topic-dot"></span>
+            <span>3.6 IR Taxonomy Graphical</span>
+          </a>
+          <a href="./m3_07_linear_ir_tac.html" class="topic-link " id="topic-m3_07_linear_ir_tac">
+            <span class="topic-dot"></span>
+            <span>3.7 Linear IR TAC</span>
+          </a>
+          <a href="./m3_08_sdt_expressions_control.html" class="topic-link " id="topic-m3_08_sdt_expressions_control">
+            <span class="topic-dot"></span>
+            <span>3.8 Sdt Expressions Control</span>
+          </a>
+          <a href="./m3_09_m3_mixed_drill.html" class="topic-link " id="topic-m3_09_m3_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>3.9 M3 Mixed Drill</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>Code Generation &amp; Optimization</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_codegen_arithmetic.html" class="topic-link " id="topic-m4_01_codegen_arithmetic">
+            <span class="topic-dot"></span>
+            <span>4.1 Codegen Arithmetic</span>
+          </a>
+          <a href="./m4_02_codegen_boolean_relational.html" class="topic-link " id="topic-m4_02_codegen_boolean_relational">
+            <span class="topic-dot"></span>
+            <span>4.2 Codegen Boolean Relational</span>
+          </a>
+          <a href="./m4_03_codegen_control_calls.html" class="topic-link " id="topic-m4_03_codegen_control_calls">
+            <span class="topic-dot"></span>
+            <span>4.3 Codegen Control Calls</span>
+          </a>
+          <a href="./m4_04_optimization_opportunities_scope.html" class="topic-link " id="topic-m4_04_optimization_opportunities_scope">
+            <span class="topic-dot"></span>
+            <span>4.4 Optimization Opportunities Scope</span>
+          </a>
+          <a href="./m4_05_local_lvn_balancing.html" class="topic-link " id="topic-m4_05_local_lvn_balancing">
+            <span class="topic-dot"></span>
+            <span>4.5 Local LVN Balancing</span>
+          </a>
+          <a href="./m4_06_regional_superlocal_unrolling.html" class="topic-link " id="topic-m4_06_regional_superlocal_unrolling">
+            <span class="topic-dot"></span>
+            <span>4.6 Regional Superlocal Unrolling</span>
+          </a>
+          <a href="./m4_07_global_live_placement.html" class="topic-link " id="topic-m4_07_global_live_placement">
+            <span class="topic-dot"></span>
+            <span>4.7 Global Live Placement</span>
+          </a>
+          <a href="./m4_08_m4_mixed_drill.html" class="topic-link " id="topic-m4_08_m4_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>4.8 M4 Mixed Drill</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 29 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST601</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 3</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">3.1 Shift Reduce Handles</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Shift-Reduce Parsing: Handles &amp; Conflicts</h1>
+<p><strong>Bottom-up in one mechanism — shift, reduce, accept, error — plus what handles and conflicts really mean.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Assembly Line in Reverse</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Top-down <em>predicts</em> the finished model; bottom-up <em>builds</em> it: completed parts (handles — right-hand sides sitting on the stack top) get boxed into sub-assemblies (reduce to nonterminals), new bricks roll in (shift). A <strong>handle</strong> is exactly &quot;the next boxable chunk&quot;: rightmost-derivation-in-reverse pruning. Two box labels fit one chunk? <strong>Conflict</strong> — shift/shift (LL-style indecision) or shift/reduce and reduce/reduce (which box?).</p>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Shift Until Boxable, Then Box</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated shift-reduce: terminals shift on, then a handle reduces to a nonterminal">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap" x="320" y="30" text-anchor="middle">stack ← shifts · handle → reduce</text>
+<g class="pkt p0 a1"><rect x="90" y="120" width="52" height="52" rx="8"/><text x="116" y="152">id</text></g>
+<g class="pkt p1 a1"><rect x="160" y="120" width="52" height="52" rx="8"/><text x="186" y="152">+</text></g>
+<g class="pkt p2 a2"><rect x="230" y="120" width="52" height="52" rx="8"/><text x="256" y="152">id</text></g>
+<g class="pkt p3 a3"><rect x="300" y="120" width="52" height="52" rx="8"/><text x="326" y="152">E</text></g>
+<rect class="winbox" x="82" y="104" width="200" height="84" rx="12"/>
+<text class="badge1 a2" x="320" y="152">shift id, shift +, shift id…</text>
+<text class="badge1 a3" x="320" y="185">handle 〈id〉 → reduce E!</text>
+<text class="animnote a4" x="320" y="250" text-anchor="middle">shift until the top spells a right-hand side, then collapse it</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Shift Until Boxable, Then Box</p>
+    <div class="video-observations"><strong>What to observe:</strong> Terminals pile on, the handle 〈id〉 lights up, collapse to E — the shift-reduce heartbeat in one loop.</div>
+  </div>
+</div><hr>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
+<h3>2.1 The four actions and the viable-prefix invariant</h3>
+<p>Shift (push input) · reduce $A\to\beta$ (pop $|\beta|$, push $A$, emit production) · accept (stack $S$, input $$ $) · error (no action). Stack always holds a <strong>viable prefix</strong> (a rightmost sentential form&#39;s prefix) — the invariant tables enforce.</p>
+<h3>2.2 Handles and conflict kinds</h3>
+<p>Handle $\langle A\to\beta, k\rangle$: $\beta$ ends at stack top and reducing continues a rightmost derivation backwards. Shift/reduce (dangling-else&#39;s $M[\dots,else]$) · reduce/reduce (two completions coincide) — both demand grammar surgery or precedence declarations.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Bottom-Up</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Shift <strong>in</strong>, reduce <strong>$A\to\beta$ at top</strong>, accept <strong>$S+$$</strong> · stack = <strong>viable prefix</strong> · conflicts: <strong>shift/reduce, reduce/reduce</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Reduce Only Handles, Not Prefixes</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Reducing a mere prefix (right side incomplete) derails the derivation permanently — the &quot;reduce early&quot; temptation. Top-must-spell-a-full-RHS is the legality test per action.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Grammar $E\to E+E\mid id$. Trace stack/input/actions on <code>id+id$</code> and mark each handle reduced.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Pile and Box</div><div class="step-content"><ol>
+<li>Shift <code>id</code> → handle 〈$E\to id$〉 → reduce $E$. Shift <code>+</code>, shift <code>id</code> → handle 〈$E\to id$〉 → reduce $E$. Stack $E+E$ → handle 〈$E\to E+E$〉 → reduce $E$. Input <code>$</code>, stack $E$ → accept.</li>
+<li>Handles in order: first <code>id</code>, second <code>id</code>, then $E+E$ — leaves before parents, rightmost-derivation reversed.</li>
+</ol>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Handles reduce leaves-up; trace columns (stack/input/action/handle) mirror LL traces bottom-up. Handle column is the graded extra — always show it.</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>What qualifies a stack-top string as a handle?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Any prefix of the input</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A complete right-hand side ending at the top whose reduction continues some rightmost derivation of the input — boxable *now*, provably on-track</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Any single terminal</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The whole stack always</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Handle = reducible <em>and</em> rightmost-consistent. Prefixes fail completeness; wrong-RHS tops fail consistency. Viable-prefix tables admit exactly handles — mechanism and theory aligned.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Shift/reduce conflict means:</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Parser crashed</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>One state, one lookahead licenses both shifting (grow the chunk) and reducing (box it now) — e.g. `else` after an if: shift extends the inner if, reduce closes it (dangling-else)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Two stacks needed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Input is empty</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Genuine ambiguity of action (not just grammar): both moves are table-legal. Resolutions: precedence declarations (YACC shifts by default on <code>else</code> — matching typical language semantics) or grammar rewrite.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Bottom-up traces rightmost derivations — why does that matter?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Speed only</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Handles are defined against rightmost derivations, so reductions provably march toward $S$; leftmost-based reduction would box wrong chunks</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Trees differ</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It doesn&#39;t matter</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Rightmost-in-reverse gives the unique parent chain to climb; handles <em>are</em> its pruning steps. Direction consistency (reduce rightmost-first) is what makes every reduction safe — the invariant behind the tables.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m2_07_m2_mixed_drill.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">2.7 M2 Mixed Drill</div>
+      </a>
+      
+      
+      
+      <a href="./m3_02_lr1_algorithm_items.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">3.2 Lr1 Algorithm Items</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(29) || 0;
+    const currentId = "m3_01_shift_reduce_handles";
+    const courseCode = "PCCST601";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    // Spaced review (v1 schedule): visited topics untouched for 7+ days are
+    // flagged in the nav; opening one refreshes its timestamp (written above).
+    try {
+      const REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+      const stamps = JSON.parse(localStorage.getItem(`tarangam_visited_ts_${courseCode}`) || '{}') || {};
+      const now = Date.now();
+      const due = visited.filter(id => {
+        const ts = stamps[id];
+        return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+      });
+      const idOf = (link) => {
+        const href = link.getAttribute('href') || '';
+        return href.replace('.html', '').split('/').pop();
+      };
+      document.querySelectorAll('.topic-link').forEach(link => {
+        if (due.includes(idOf(link))) {
+          link.classList.add('due');
+          // Review pending supersedes the completion check: swap ✓ for ↻.
+          const old = link.querySelector('.check-mark');
+          if (old) old.remove();
+          if (!link.querySelector('.due-mark')) {
+            const mark = document.createElement('span');
+            mark.className = 'due-mark';
+            mark.style.marginLeft = 'auto';
+            mark.style.color = 'var(--accent-warm)';
+            mark.style.fontSize = '12px';
+            mark.title = 'Due for spaced review (unvisited 7+ days)';
+            mark.innerText = '↻';
+            link.appendChild(mark);
+          }
+        }
+      });
+      const reviewLabel = document.getElementById('reviewLabel');
+      if (reviewLabel) {
+        reviewLabel.innerText = due.length
+          ? `${due.length} due for review ↻`
+          : (visited.length ? 'all fresh ✓' : '');
+      }
+    } catch (e) { /* private mode: review silently disabled */ }
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

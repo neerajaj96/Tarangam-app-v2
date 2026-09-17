@@ -290,6 +290,47 @@ ${edge(320, 80, 440, 155, 'a1')}${edge(440, 155, 320, 230, 'a1')}
 <g class="msg a3"><line x1="440" y1="185" x2="200" y2="185" marker-end="url(#ah)"/><text x="320" y="210" text-anchor="middle">−ve half: D3,D4 on</text></g>
 <text class="animnote a4" x="320" y="282" text-anchor="middle">pairs alternate, load current flows one way — full-wave pulsating DC</text>
 </svg>`
+  },
+
+  'compiler-pipeline': {
+    title: 'Compiler Structure: Front, Optimizer, Back',
+    svg: `<svg viewBox="0 0 640 260" role="img" aria-label="Animated compiler pipeline: front end, optimizer, back end passing IR">
+${defs}
+<g class="stagebox a1"><rect x="20" y="100" width="170" height="64" rx="10"/><text x="105" y="126">FRONT END</text><text x="105" y="146" class="sub">scan · parse · check</text></g>
+<g class="stagebox a2"><rect x="235" y="100" width="170" height="64" rx="10"/><text x="320" y="126">OPTIMIZER</text><text x="320" y="146" class="sub">IR → better IR</text></g>
+<g class="stagebox a3"><rect x="450" y="100" width="170" height="64" rx="10"/><text x="535" y="126">BACK END</text><text x="535" y="146" class="sub">codegen · target</text></g>
+<text class="flowarrow a2" x="212" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a3" x="427" y="140" text-anchor="middle">→</text>
+<text class="animnote a4" x="320" y="220" text-anchor="middle">IR is the handshake — analysis up front, synthesis at the back</text>
+</svg>`
+  },
+
+  'sr-parse': {
+    title: 'Shift-Reduce Parsing: Stack Grows, Handle Falls',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated shift-reduce: terminals shift on, then a handle reduces to a nonterminal">
+${defs}
+<text class="animcap" x="320" y="30" text-anchor="middle">stack ← shifts · handle → reduce</text>
+<g class="pkt p0 a1"><rect x="90" y="120" width="52" height="52" rx="8"/><text x="116" y="152">id</text></g>
+<g class="pkt p1 a1"><rect x="160" y="120" width="52" height="52" rx="8"/><text x="186" y="152">+</text></g>
+<g class="pkt p2 a2"><rect x="230" y="120" width="52" height="52" rx="8"/><text x="256" y="152">id</text></g>
+<g class="pkt p3 a3"><rect x="300" y="120" width="52" height="52" rx="8"/><text x="326" y="152">E</text></g>
+<rect class="winbox" x="82" y="104" width="200" height="84" rx="12"/>
+<text class="badge1 a2" x="320" y="152">shift id, shift +, shift id…</text>
+<text class="badge1 a3" x="320" y="185">handle 〈id〉 → reduce E!</text>
+<text class="animnote a4" x="320" y="250" text-anchor="middle">shift until the top spells a right-hand side, then collapse it</text>
+</svg>`
+  },
+
+  'tac-gen': {
+    title: 'Three-Address Code for a+b*c',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated TAC generation: multiply first into t1, then add into t2">
+${defs}
+<text class="animcap a1" x="320" y="30" text-anchor="middle">a + b * c · one operator per line</text>
+<text class="crcrow a1" x="60" y="100">source:  a + b * c</text>
+<text class="crcrow a2" x="60" y="150">t1 = b * c      ← * binds first</text>
+<text class="crcrow a3" x="60" y="200">t2 = a + t1     ← then +</text>
+<text class="crcres a4" x="320" y="260" text-anchor="middle">temporaries name every intermediate — quads the back end loves</text>
+</svg>`
   }
 };
 
