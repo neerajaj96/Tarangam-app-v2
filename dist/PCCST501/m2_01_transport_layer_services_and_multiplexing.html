@@ -157,6 +157,31 @@
           </a>
         </div>
       </div>
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>Physical Layer &amp; SNMP</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_network_management_snmp_architecture.html" class="topic-link " id="topic-m4_01_network_management_snmp_architecture">
+            <span class="topic-dot"></span>
+            <span>4.1 Network Management SNMP Architecture</span>
+          </a>
+          <a href="./m4_02_nyquist_shannon_channel_capacity.html" class="topic-link " id="topic-m4_02_nyquist_shannon_channel_capacity">
+            <span class="topic-dot"></span>
+            <span>4.2 Nyquist Shannon Channel Capacity</span>
+          </a>
+          <a href="./m4_03_pcm_digitization_sampling_quantization.html" class="topic-link " id="topic-m4_03_pcm_digitization_sampling_quantization">
+            <span class="topic-dot"></span>
+            <span>4.3 PCM Digitization Sampling Quantization</span>
+          </a>
+          <a href="./m4_04_modulation_ask_fsk_psk_qam.html" class="topic-link " id="topic-m4_04_modulation_ask_fsk_psk_qam">
+            <span class="topic-dot"></span>
+            <span>4.4 Modulation Ask Fsk Psk Qam</span>
+          </a>
+        </div>
+      </div>
     </nav>
 
     <div class="sidebar-foot">
@@ -165,7 +190,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel">0 of 16 completed</span>
+          <span id="progressLabel">0 of 20 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
       </div>
@@ -448,7 +473,7 @@
 
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
-    var totalTopics = Number(16) || 0;
+    var totalTopics = Number(20) || 0;
     const currentId = "m2_01_transport_layer_services_and_multiplexing";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;

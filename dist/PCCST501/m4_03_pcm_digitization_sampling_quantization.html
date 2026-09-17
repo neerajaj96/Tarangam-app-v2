@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.1 Internet Overview And Network Edge</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.1 Internet Overview And Network Edge | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.1 Internet Overview And Network Edge">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.1 Internet Overview And Network Edge">
+<title>Tarangam — 4.3 PCM Digitization Sampling Quantization</title>
+<meta name="description" content="Computer Networks (PCCST501) — 4.3 PCM Digitization Sampling Quantization | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.3 PCM Digitization Sampling Quantization">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 4.3 PCM Digitization Sampling Quantization">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,14 +66,14 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Application Layer</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m1_01_internet_overview_and_network_edge.html" class="topic-link active" id="topic-m1_01_internet_overview_and_network_edge">
+          <a href="./m1_01_internet_overview_and_network_edge.html" class="topic-link " id="topic-m1_01_internet_overview_and_network_edge">
             <span class="topic-dot"></span>
             <span>1.1 Internet Overview And Network Edge</span>
           </a>
@@ -157,8 +157,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Physical Layer &amp; SNMP</span>
           <span class="chev">&#9656;</span>
@@ -172,7 +172,7 @@
             <span class="topic-dot"></span>
             <span>4.2 Nyquist Shannon Channel Capacity</span>
           </a>
-          <a href="./m4_03_pcm_digitization_sampling_quantization.html" class="topic-link " id="topic-m4_03_pcm_digitization_sampling_quantization">
+          <a href="./m4_03_pcm_digitization_sampling_quantization.html" class="topic-link active" id="topic-m4_03_pcm_digitization_sampling_quantization">
             <span class="topic-dot"></span>
             <span>4.3 PCM Digitization Sampling Quantization</span>
           </a>
@@ -207,9 +207,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST501</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.1 Internet Overview And Network Edge</span>
+        <span style="color:var(--ink); font-weight:600;">4.3 PCM Digitization Sampling Quantization</span>
       </div>
 
       <div class="topbar-actions">
@@ -225,8 +225,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -237,122 +237,50 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Internet Overview &amp; The Network Edge</h1>
-<p><strong>End systems and hosts, access networks and physical media, and the two complementary ways of defining &quot;the Internet.&quot;</strong></p>
+<h1>PCM Digitization: Sampling &amp; Quantization</h1>
+<p><strong>Nyquist sampling theorem, quantization levels vs. bits, the three PCM steps, bit-rate math, and why your voice is 64 kbps.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Global Highway System</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine a global highway network. Cars don&#39;t teleport between cities — they travel on physical roads, pass through intersections, and eventually arrive at a driveway belonging to a house or office. The Internet works the same way, except it moves <strong>data</strong> instead of cars.</p>
-<ul>
-<li>Your laptop, phone, or a streaming server is a <strong>house</strong> — an <em>end system</em> where a trip begins or ends.</li>
-<li>The fiber, copper, or radio link connecting you to the network is the <strong>road</strong> — a <em>communication link</em>.</li>
-<li>A router is an <strong>intersection</strong> — a <em>packet switch</em> that looks at an arriving chunk of data and forwards it toward the right road out.</li>
-</ul>
-<p>Zoom out far enough, though, and this &quot;nuts and bolts&quot; picture isn&#39;t the only useful lens. A software engineer building an app for millions of users doesn&#39;t think about copper wire and fiber — they think of the Internet as a <strong>service</strong>: a distributed platform that reliably moves bytes between any two programs, anywhere. Both views are correct; they&#39;re just answering different questions (&quot;how is it built?&quot; vs. &quot;what does it do for me?&quot;).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flip-Book</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Analog voice is smooth motion; digital voice is a flip-book — freeze the motion into stills fast enough (<strong>sampling</strong>) and coarsely enough (<strong>quantization</strong>), and the eye (ear) can&#39;t tell. Sample too slowly and fast motion aliases into ghosts (a wagon wheel spinning backward on film); round too coarsely and gradients turn to stair-steps (banding in images, hiss in audio). <strong>PCM</strong> is the three-step flip-book factory: sample → quantize → encode.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The &quot;Nuts and Bolts&quot; View</h3>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Role</th>
-<th>Real-world analogy</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>End Systems (Hosts)</strong></td>
-<td>Laptops, smartphones, servers, smart TVs, IoT devices that sit at the <em>edge</em> of the network and run applications</td>
-<td>Houses and businesses</td>
-</tr>
-<tr>
-<td><strong>Communication Links</strong></td>
-<td>Fiber, copper, radio, satellite — each with its own transmission rate (bandwidth)</td>
-<td>Roads of varying width/speed</td>
-</tr>
-<tr>
-<td><strong>Packet Switches</strong></td>
-<td>Routers and switches; take packets arriving on one link and forward them out another</td>
-<td>Intersections and roundabouts</td>
-</tr>
-</tbody></table>
-<h3>2.2 The &quot;Services&quot; View</h3>
-<p>From this angle the Internet is a <strong>distributed application platform</strong>: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between.</p>
-<h3>2.3 The Network Edge</h3>
-<p>The network edge is the outermost boundary of the Internet — where end systems physically attach. Hosts here split into two functional roles:</p>
-<ul>
-<li><strong>Clients</strong> — desktops, mobile devices, laptops that <em>request</em> information.</li>
-<li><strong>Servers</strong> — always-on, powerful machines that <em>supply</em> information (web pages, video streams, email), typically housed in large data centers today.</li>
-</ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Client and Server Are Roles, Not Device Types</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exams love this trap: a &quot;server&quot; is not a special kind of computer — it is a <em>role</em> an end system plays. Your laptop is a client when it streams Netflix, but the moment it serves a file to a peer (or runs a local dev server), it is acting as a <strong>server</strong>. Classify by <em>behavior</em> (requesting vs. supplying), never by hardware size.</p>
-</div></details><h3>2.4 Access Networks — Getting From the Edge to the First Router</h3>
-<pre><code class="language-mermaid">flowchart LR
-    H[&quot;Host&lt;br/&gt;(your laptop/phone)&quot;] --&gt;|Access Network| ER[&quot;Edge Router&lt;br/&gt;(first hop into the network core)&quot;]
-    ER --&gt; CORE[&quot;Network Core&lt;br/&gt;(routers, backbone links)&quot;]
-
-    subgraph AccessTypes[&quot;Common Access Network Types&quot;]
-        direction TB
-        DSL[&quot;DSL / Cable / FTTH&lt;br/&gt;(Home Networks)&quot;]
-        ENET[&quot;Ethernet&lt;br/&gt;(Enterprise Networks)&quot;]
-        WIFI[&quot;Wi-Fi&lt;br/&gt;(Wireless LAN)&quot;]
-        CELL[&quot;4G/5G&lt;br/&gt;(Wide-Area Wireless)&quot;]
-    end
-</code></pre>
-<ul>
-<li><strong>Home Networks:</strong> DSL (over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).</li>
-<li><strong>Enterprise Networks:</strong> Devices connect via Ethernet switches, which connect to an institutional router — common in companies and universities.</li>
-<li><strong>Wireless Access Networks:</strong><ul>
-<li><strong>Wi-Fi (WLAN):</strong> short range, within a building, to a local access point.</li>
-<li><strong>Cellular (4G/5G):</strong> long range, to a cell tower kilometers away.</li>
-</ul>
-</li>
-</ul>
-<h3>2.5 Physical Media</h3>
-<p>Bits must travel across some physical medium — electromagnetic waves or light pulses.</p>
-<ul>
-<li><strong>Guided Media</strong> (waves travel along a solid path):<ul>
-<li><em>Twisted-Pair Copper</em> — cheapest, used in most Ethernet cabling (Cat5/Cat6).</li>
-<li><em>Coaxial Cable</em> — two concentric copper conductors, supports high download speeds.</li>
-<li><em>Fiber Optics</em> — pulses of light through glass fiber; extremely fast, immune to electromagnetic interference, backbone of long-haul transoceanic links.</li>
-</ul>
-</li>
-<li><strong>Unguided Media</strong> (waves propagate through open air/space):<ul>
-<li><em>Terrestrial Radio</em> — Wi-Fi, AM/FM.</li>
-<li><em>Satellite Radio</em> — geosynchronous or Low Earth Orbit (LEO, e.g., Starlink).</li>
-</ul>
-</li>
-</ul>
-<hr>
+<h3>2.1 Sampling: Nyquist Rate (the Other Nyquist!)</h3>
+<p>A signal with maximum frequency $f_{max}$ is perfectly reconstructible from samples taken at</p>
+<p>$$f_s \ge 2 f_{max} \quad \text{(samples/sec)}$$</p>
+<p>— the <strong>Nyquist rate</strong>. Undersample ($f_s &lt; 2f_{max}$) and high frequencies <em>fold back</em> as phantom low frequencies (<strong>aliasing</strong>), unfixable after the fact. Practical systems sample slightly above the minimum and low-pass-filter the input first (anti-aliasing).</p>
+<h3>2.2 Quantization: Levels, Bits, Noise</h3>
+<p>Each sample&#39;s amplitude is rounded to one of $L$ levels, encoded in $n = \log_2 L$ bits. Finer levels = smaller rounding (<strong>quantization</strong>) error = higher SNR ($\approx 6$ dB per added bit — each bit halves the step size, quartering noise power). Uniform steps suit uniform signals; voice uses <strong>non-uniform</strong> companding ($\mu$-law/A-law: fine steps near silence where ears discriminate, coarse steps at shouts).</p>
+<h3>2.3 PCM Pipeline and Bit Rate</h3>
+<p><strong>Sample</strong> (PAM pulses) → <strong>Quantize</strong> (round to levels) → <strong>Encode</strong> (bits). Total bit rate:</p>
+<p>$$R = f_s \times n \quad \text{bits/sec}$$</p>
+<p>Classic: telephone voice $f_{max} = 4$ kHz $\to f_s = 8000$/s, $n = 8$ bits ($L = 256$) $\Rightarrow R = 64$ kbps — the legendary <strong>DS0</strong> rate every phone network is dimensioned around. Audio CD: $44.1$ kHz $\times 16$ bits $\times 2$ channels $= 1.411$ Mbps.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Digitization Math</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Sample at <strong>$\ge 2f_{max}$</strong> · bits $n = \log_2 L$ · rate <strong>$R = f_s \times n$</strong> · voice: $8\text{k} \times 8 = \mathbf{64}$ kbps · SNR $\approx$ <strong>6 dB per bit</strong> · aliasing = undersampling ghosts, prevented by filtering + oversampling.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Two Nyquists, Two Different Claims</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Nyquist rate</strong> ($2f_{max}$ sampling, this topic) reconstructs <em>analog waves</em>; <strong>Nyquist bit rate</strong> ($2B\log_2 L$, last topic) caps <em>digital symbols</em>. Same Harry Nyquist, different theorems — exams deliberately place both in one question to test exactly this split. Name which one before computing.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP. Identify every &quot;nuts and bolts&quot; component involved in getting one video frame from Netflix&#39;s server to your TV screen.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing the Path</div><div class="step-content"><ol>
-<li><strong>End Systems:</strong> Netflix&#39;s server (a host, acting as <em>server</em>) and your smart TV (a host, acting as <em>client</em>).</li>
-<li><strong>Access Network (server side):</strong> Netflix&#39;s server sits in a data center connected via high-capacity enterprise-grade links into the network core.</li>
-<li><strong>Network Core:</strong> A sequence of <strong>packet switches</strong> (routers) forward the video&#39;s packets from Netflix&#39;s data center, across backbone links, toward your ISP.</li>
-<li><strong>Access Network (your side):</strong> The packets arrive at your ISP and travel over the <strong>FTTH fiber link</strong> (guided medium, physical layer) to your home router.</li>
-<li><strong>Final Hop:</strong> Your router forwards the packets over <strong>Wi-Fi</strong> (unguided medium, terrestrial radio) to the smart TV.</li>
-</ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>A single video frame crosses <em>multiple</em> communication links (fiber, backbone links, Wi-Fi) and passes through <em>multiple</em> packet switches, yet the &quot;services view&quot; hides all of this: your smart TV&#39;s app simply sees a continuous stream of video data arriving, as if the underlying nuts-and-bolts complexity didn&#39;t exist.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A music signal limited to $15$ kHz must be digitized with 12-bit quantization. (a) Minimum sampling rate? (b) Resulting bit rate? (c) If the channel offers only $200$ kbps, is this quality transmittable live — and what breaks if we sample at $20$ kHz instead?</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Sampling, Rating, Checking</div><div class="step-content"><p>(a) $f_s \ge 2 \times 15{,}000 = 30{,}000$ samples/sec. (b) $R = 30{,}000 \times 12 = 360{,}000$ bps $= 360$ kbps. (c) $360 &gt; 200$ kbps — <strong>not</strong> transmittable live at this quality (compress, cut bits, or accept delay). Sampling at $20$ kHz $&lt; 30$ kHz minimum: frequencies $10$–$15$ kHz <strong>alias</strong> into $5$–$10$ kHz ghosts — permanent corruption no filter can undo afterward.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Quality costs rate linearly in <em>both</em> knobs (samples × bits), and the sampling knob has a hard floor — below $2f_{max}$ you don&#39;t get &quot;worse audio,&quot; you get <em>wrong</em> audio. Every digitization question is: floor the rate, multiply the bits, compare with the channel.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">Human voice for telephony is band-limited to 4 kHz and quantized at 8 bits. What sampling rate and bit rate result, and why these exact numbers?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is a smartphone considered an &quot;end system&quot; or &quot;host,&quot; even though it isn&#39;t a powerful server?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because it only receives data and never sends any</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because it sits at the edge of the network and runs (hosts) application programs, regardless of whether it acts as a client or server</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because it is directly wired into the network core</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because it lacks an IP address</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>4000 samples/s and 32 kbps — sampling at fmax is sufficient</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>8000 samples/s (Nyquist minimum 2×4 kHz) and 64 kbps (8000×8) — the DS0 standard rate</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>44100 samples/s and 64 kbps — CD quality is mandatory for voice</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>8000 samples/s and 8 kbps — bits equal kilohertz by definition</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -364,21 +292,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;End system&quot; and &quot;host&quot; describe <em>position</em> (at the network&#39;s edge) and <em>function</em> (running application programs), not raw processing power. A smartphone qualifies just as much as a data-center server — it simply usually plays the <em>client</em> role rather than the <em>server</em> role.</p><pre><code>&lt;/div&gt;
+      <p>$f_s \ge 2f_{max} = 8$ kHz minimum (aliasing floor); $R = 8000 \times 8 = 64{,}000$ bps. This DS0 $64$ kbps is the atom of telephone networks (24 of them make a T1 line) — the most deployed number in telecom history.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">A 15 kHz signal is sampled at 20 kHz. What precisely goes wrong, and can post-processing rescue it?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Which of the following is an example of a &quot;packet switch&quot; rather than an &quot;end system&quot;?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>A smart TV streaming Netflix</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A laptop sending an email</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>A router forwarding packets between two communication links</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A web server hosting a website</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Nothing — 20 kHz exceeds 15 kHz so all is well</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Content between 10–15 kHz aliases down into 5–10 kHz (folding around fs/2 = 10 kHz); the ghosts are indistinguishable from genuine low frequencies, so no filter can remove them afterward</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The file is simply 10 kHz shorter in duration</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Aliasing only affects the volume, never the content</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -390,21 +317,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Packet switches (routers and switches) sit <em>inside</em> the network core or at its access points, forwarding data between links — they don&#39;t originate or consume application data themselves, which is what distinguishes them from end systems (hosts) like laptops or servers.</p><pre><code>&lt;/div&gt;
+      <p>Sampling replicates the spectrum every $f_s$; at $f_s = 20$ kHz the $10$–$15$ kHz band folds onto $5$–$10$ kHz. Post-hoc, ghost and genuine energy occupy identical frequencies — inseparable by any filter. Prevention (prefilter + $f_s \ge 2f_{max}$) is the only cure.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">Each extra quantization bit improves SNR by ≈6 dB. Why 6, and when is uniform quantization the wrong choice?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is Fiber Optic cable preferred over Twisted-Pair Copper for long-haul, transoceanic communication links?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It is cheaper to manufacture per meter</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It requires no maintenance ever</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It offers extremely high transmission rates and is immune to electromagnetic interference over very long distances</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It can only be used for wireless communication</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>6 dB is an arbitrary industry convention with no basis</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each bit halves the step size (quartering error power = 10·log₁₀4 ≈ 6 dB); uniform steps waste resolution on loud passages while starving quiet ones — voice uses μ-law companding (fine near silence, coarse at shouts) matching human hearing</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Bits add 3 dB each by international treaty</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Uniform quantization is always optimal for every signal type</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -416,7 +342,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Fiber optics carry data as light pulses through glass, which suffers far less signal degradation and interference over long distances than electrical signals in copper, making it the backbone medium of choice for undersea and cross-continental links.</p><pre><code>&lt;/div&gt;
+      <p>Halved step → quartered quantization-noise power → $10\log_{10}4 \approx 6.02$ dB per bit. But perception is logarithmic: ears resolve whispers, not shouts — so companding concentrates levels where discrimination lives. Match the quantizer to the sensor, not the math.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -425,13 +351,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <div></div>
+      <a href="./m4_02_nyquist_shannon_channel_capacity.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">4.2 Nyquist Shannon Channel Capacity</div>
+      </a>
       
       
       
-      <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m4_04_modulation_ask_fsk_psk_qam.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.2 Protocol Layering And OSI Tcpip</div>
+        <div class="ttl">4.4 Modulation Ask Fsk Psk Qam</div>
       </a>
       
     </footer>
@@ -518,7 +447,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(20) || 0;
-    const currentId = "m1_01_internet_overview_and_network_edge";
+    const currentId = "m4_03_pcm_digitization_sampling_quantization";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 

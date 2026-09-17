@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.1 Internet Overview And Network Edge</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.1 Internet Overview And Network Edge | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.1 Internet Overview And Network Edge">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.1 Internet Overview And Network Edge">
+<title>Tarangam — 4.1 Network Management SNMP Architecture</title>
+<meta name="description" content="Computer Networks (PCCST501) — 4.1 Network Management SNMP Architecture | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.1 Network Management SNMP Architecture">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 4.1 Network Management SNMP Architecture">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,14 +66,14 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Application Layer</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m1_01_internet_overview_and_network_edge.html" class="topic-link active" id="topic-m1_01_internet_overview_and_network_edge">
+          <a href="./m1_01_internet_overview_and_network_edge.html" class="topic-link " id="topic-m1_01_internet_overview_and_network_edge">
             <span class="topic-dot"></span>
             <span>1.1 Internet Overview And Network Edge</span>
           </a>
@@ -157,14 +157,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Physical Layer &amp; SNMP</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m4_01_network_management_snmp_architecture.html" class="topic-link " id="topic-m4_01_network_management_snmp_architecture">
+          <a href="./m4_01_network_management_snmp_architecture.html" class="topic-link active" id="topic-m4_01_network_management_snmp_architecture">
             <span class="topic-dot"></span>
             <span>4.1 Network Management SNMP Architecture</span>
           </a>
@@ -207,9 +207,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST501</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.1 Internet Overview And Network Edge</span>
+        <span style="color:var(--ink); font-weight:600;">4.1 Network Management SNMP Architecture</span>
       </div>
 
       <div class="topbar-actions">
@@ -225,8 +225,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -237,122 +237,85 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Internet Overview &amp; The Network Edge</h1>
-<p><strong>End systems and hosts, access networks and physical media, and the two complementary ways of defining &quot;the Internet.&quot;</strong></p>
+<h1>Network Management &amp; SNMP Architecture</h1>
+<p><strong>Managing-agent model, SMI/MIB structure, SNMP operations and versions, and why management traffic rides the very network it manages.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Global Highway System</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine a global highway network. Cars don&#39;t teleport between cities — they travel on physical roads, pass through intersections, and eventually arrive at a driveway belonging to a house or office. The Internet works the same way, except it moves <strong>data</strong> instead of cars.</p>
-<ul>
-<li>Your laptop, phone, or a streaming server is a <strong>house</strong> — an <em>end system</em> where a trip begins or ends.</li>
-<li>The fiber, copper, or radio link connecting you to the network is the <strong>road</strong> — a <em>communication link</em>.</li>
-<li>A router is an <strong>intersection</strong> — a <em>packet switch</em> that looks at an arriving chunk of data and forwards it toward the right road out.</li>
-</ul>
-<p>Zoom out far enough, though, and this &quot;nuts and bolts&quot; picture isn&#39;t the only useful lens. A software engineer building an app for millions of users doesn&#39;t think about copper wire and fiber — they think of the Internet as a <strong>service</strong>: a distributed platform that reliably moves bytes between any two programs, anywhere. Both views are correct; they&#39;re just answering different questions (&quot;how is it built?&quot; vs. &quot;what does it do for me?&quot;).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Hospital Monitor Wall</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A hospital&#39;s nurses can&#39;t stand beside every bed — instead each bed has a <strong>monitor</strong> (agent) reporting pulse and oxygen to a <strong>central wall</strong> (manager), which raises alarms and occasionally pushes new dosage settings back. Network management is identical: every router/switch/host runs a lightweight <strong>agent</strong> process exposing counters and knobs; <strong>manager</strong> stations poll readings, receive alarm <strong>traps</strong>, and push configurations — all <em>over the same network being watched</em> (in-band management, with all the irony that implies when the network itself is what&#39;s broken).</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The &quot;Nuts and Bolts&quot; View</h3>
+<h3>2.1 The Managing/Managed Model</h3>
+<ul>
+<li><strong>Managing entity:</strong> the NMS application (human console + analytics) that monitors and controls.</li>
+<li><strong>Managed devices:</strong> routers, switches, servers, printers — each hosting an <strong>agent</strong> that maintains local management data and answers the manager.</li>
+<li><strong>Management protocol (SNMP):</strong> the language between them — deliberately simple so agents stay cheap enough to embed in <em>every</em> device.</li>
+</ul>
+<h3>2.2 SMI and MIB: Naming Everything</h3>
+<ul>
+<li><strong>SMI (Structure of Management Information):</strong> the <em>grammar</em> — data types (counters that wrap, gauges, timeticks) and rules for defining objects.</li>
+<li><strong>MIB (Management Information Base):</strong> the <em>dictionary</em> — a virtual tree (OID hierarchy, e.g. <code>1.3.6.1.2.1…</code>) where each managed variable (packets forwarded, interface status, uptime) has a unique numeric address. The agent doesn&#39;t store a real &quot;database&quot; — it maps OIDs to live device state on demand.</li>
+</ul>
+<h3>2.3 SNMP Operations and Versions</h3>
 <table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Role</th>
-<th>Real-world analogy</th>
+<th>Operation</th>
+<th>Direction</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>End Systems (Hosts)</strong></td>
-<td>Laptops, smartphones, servers, smart TVs, IoT devices that sit at the <em>edge</em> of the network and run applications</td>
-<td>Houses and businesses</td>
+<td><code>GetRequest</code> / <code>GetNextRequest</code></td>
+<td>manager → agent</td>
+<td>Read one variable / walk a table row by row</td>
 </tr>
 <tr>
-<td><strong>Communication Links</strong></td>
-<td>Fiber, copper, radio, satellite — each with its own transmission rate (bandwidth)</td>
-<td>Roads of varying width/speed</td>
+<td><code>SetRequest</code></td>
+<td>manager → agent</td>
+<td>Write a configuration value</td>
 </tr>
 <tr>
-<td><strong>Packet Switches</strong></td>
-<td>Routers and switches; take packets arriving on one link and forward them out another</td>
-<td>Intersections and roundabouts</td>
+<td><code>Response</code></td>
+<td>agent → manager</td>
+<td>Answer (or error) to any request</td>
+</tr>
+<tr>
+<td><code>Trap</code></td>
+<td>agent → manager</td>
+<td><strong>Unsolicited</strong> alarm (link down, overheat) — no polling delay</td>
 </tr>
 </tbody></table>
-<h3>2.2 The &quot;Services&quot; View</h3>
-<p>From this angle the Internet is a <strong>distributed application platform</strong>: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between.</p>
-<h3>2.3 The Network Edge</h3>
-<p>The network edge is the outermost boundary of the Internet — where end systems physically attach. Hosts here split into two functional roles:</p>
 <ul>
-<li><strong>Clients</strong> — desktops, mobile devices, laptops that <em>request</em> information.</li>
-<li><strong>Servers</strong> — always-on, powerful machines that <em>supply</em> information (web pages, video streams, email), typically housed in large data centers today.</li>
+<li><strong>SNMPv1/v2c:</strong> <code>Get/Set/Trap</code> with <strong>community strings</strong> (&quot;public&quot;/&quot;private&quot;) sent in cleartext — trivially sniffed; fine for labs, negligent in production.</li>
+<li><strong>SNMPv3:</strong> adds <strong>authentication + encryption</strong> (USM) and access control (VACM) — the version any security-conscious exam answer must name.</li>
 </ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Client and Server Are Roles, Not Device Types</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exams love this trap: a &quot;server&quot; is not a special kind of computer — it is a <em>role</em> an end system plays. Your laptop is a client when it streams Netflix, but the moment it serves a file to a peer (or runs a local dev server), it is acting as a <strong>server</strong>. Classify by <em>behavior</em> (requesting vs. supplying), never by hardware size.</p>
-</div></details><h3>2.4 Access Networks — Getting From the Edge to the First Router</h3>
-<pre><code class="language-mermaid">flowchart LR
-    H[&quot;Host&lt;br/&gt;(your laptop/phone)&quot;] --&gt;|Access Network| ER[&quot;Edge Router&lt;br/&gt;(first hop into the network core)&quot;]
-    ER --&gt; CORE[&quot;Network Core&lt;br/&gt;(routers, backbone links)&quot;]
-
-    subgraph AccessTypes[&quot;Common Access Network Types&quot;]
-        direction TB
-        DSL[&quot;DSL / Cable / FTTH&lt;br/&gt;(Home Networks)&quot;]
-        ENET[&quot;Ethernet&lt;br/&gt;(Enterprise Networks)&quot;]
-        WIFI[&quot;Wi-Fi&lt;br/&gt;(Wireless LAN)&quot;]
-        CELL[&quot;4G/5G&lt;br/&gt;(Wide-Area Wireless)&quot;]
-    end
-</code></pre>
-<ul>
-<li><strong>Home Networks:</strong> DSL (over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).</li>
-<li><strong>Enterprise Networks:</strong> Devices connect via Ethernet switches, which connect to an institutional router — common in companies and universities.</li>
-<li><strong>Wireless Access Networks:</strong><ul>
-<li><strong>Wi-Fi (WLAN):</strong> short range, within a building, to a local access point.</li>
-<li><strong>Cellular (4G/5G):</strong> long range, to a cell tower kilometers away.</li>
-</ul>
-</li>
-</ul>
-<h3>2.5 Physical Media</h3>
-<p>Bits must travel across some physical medium — electromagnetic waves or light pulses.</p>
-<ul>
-<li><strong>Guided Media</strong> (waves travel along a solid path):<ul>
-<li><em>Twisted-Pair Copper</em> — cheapest, used in most Ethernet cabling (Cat5/Cat6).</li>
-<li><em>Coaxial Cable</em> — two concentric copper conductors, supports high download speeds.</li>
-<li><em>Fiber Optics</em> — pulses of light through glass fiber; extremely fast, immune to electromagnetic interference, backbone of long-haul transoceanic links.</li>
-</ul>
-</li>
-<li><strong>Unguided Media</strong> (waves propagate through open air/space):<ul>
-<li><em>Terrestrial Radio</em> — Wi-Fi, AM/FM.</li>
-<li><em>Satellite Radio</em> — geosynchronous or Low Earth Orbit (LEO, e.g., Starlink).</li>
-</ul>
-</li>
-</ul>
-<hr>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: SNMP in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agents <strong>expose</strong>, managers <strong>poll/configure</strong> · SMI = <strong>grammar</strong>, MIB = <strong>OID tree dictionary</strong> · ops: <strong>Get/GetNext/Set/Response + Trap</strong> (trap = only unsolicited one) · v1/v2c = <strong>cleartext communities</strong> · v3 = <strong>auth + encryption</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Traps Are Unreliable by Design (and That&#39;s Fine)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Traps fire over connectionless UDP with <strong>no acknowledgment</strong> — a trap can itself die in the outage it reports. Managers therefore <em>also</em> poll critical state; traps are early warnings, never the record of truth. Any &quot;trap guarantees delivery&quot; option is wrong.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP. Identify every &quot;nuts and bolts&quot; component involved in getting one video frame from Netflix&#39;s server to your TV screen.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing the Path</div><div class="step-content"><ol>
-<li><strong>End Systems:</strong> Netflix&#39;s server (a host, acting as <em>server</em>) and your smart TV (a host, acting as <em>client</em>).</li>
-<li><strong>Access Network (server side):</strong> Netflix&#39;s server sits in a data center connected via high-capacity enterprise-grade links into the network core.</li>
-<li><strong>Network Core:</strong> A sequence of <strong>packet switches</strong> (routers) forward the video&#39;s packets from Netflix&#39;s data center, across backbone links, toward your ISP.</li>
-<li><strong>Access Network (your side):</strong> The packets arrive at your ISP and travel over the <strong>FTTH fiber link</strong> (guided medium, physical layer) to your home router.</li>
-<li><strong>Final Hop:</strong> Your router forwards the packets over <strong>Wi-Fi</strong> (unguided medium, terrestrial radio) to the smart TV.</li>
-</ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>A single video frame crosses <em>multiple</em> communication links (fiber, backbone links, Wi-Fi) and passes through <em>multiple</em> packet switches, yet the &quot;services view&quot; hides all of this: your smart TV&#39;s app simply sees a continuous stream of video data arriving, as if the underlying nuts-and-bolts complexity didn&#39;t exist.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An NMS must (a) read a router&#39;s current input-octet counter, (b) discover <em>all</em> interface descriptions without knowing how many exist, (c) push a new hostname, and (d) learn instantly if a link fails. Name the SNMP operation(s) per task and the versions that secure them.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Mapping Tasks to Operations</div><div class="step-content"><p>(a) Single known OID → <strong>GetRequest</strong>. (b) Unknown table length → repeated <strong>GetNextRequest</strong> (walk until the OID prefix changes — the standard table-crawl idiom). (c) Write → <strong>SetRequest</strong> (with a write community / v3 credentials). (d) Instant alarm → agent <strong>Trap</strong> on link-down — plus continued polling as backstop, since traps are unacknowledged.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Four tasks, four idioms: Get (known reads), GetNext-walk (unknown tables), Set (writes), Trap + poll (alarms). And every Set/Trap in production rides <strong>SNMPv3</strong> — v2c cleartext communities fail any question mentioning security.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">What is the difference between SMI and MIB, and why do both exist?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is a smartphone considered an &quot;end system&quot; or &quot;host,&quot; even though it isn&#39;t a powerful server?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because it only receives data and never sends any</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because it sits at the edge of the network and runs (hosts) application programs, regardless of whether it acts as a client or server</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because it is directly wired into the network core</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because it lacks an IP address</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>They are rival protocols competing for market share</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>SMI is the grammar/rules for defining management objects; MIB is the OID-addressed dictionary of actual variables — language versus book written in it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MIB defines syntax while SMI stores live values</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>SMI replaced MIB entirely in SNMPv3</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -364,21 +327,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;End system&quot; and &quot;host&quot; describe <em>position</em> (at the network&#39;s edge) and <em>function</em> (running application programs), not raw processing power. A smartphone qualifies just as much as a data-center server — it simply usually plays the <em>client</em> role rather than the <em>server</em> role.</p><pre><code>&lt;/div&gt;
+      <p>SMI standardizes <em>how to specify</em> objects (types, status, access); the MIB <em>uses</em> those rules to name every counter/knob in a global OID tree. Confusing them is confusing the dictionary&#39;s alphabet with its entries.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">A link fails at 3 AM. The NMS learns about it within seconds without having polled. Which mechanism, and what is its built-in weakness?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Which of the following is an example of a &quot;packet switch&quot; rather than an &quot;end system&quot;?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>A smart TV streaming Netflix</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A laptop sending an email</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>A router forwarding packets between two communication links</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A web server hosting a website</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>GetNextRequest walk — weakness: it only runs hourly</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>An agent Trap — unsolicited alarm; weakness: unacknowledged UDP delivery, so it can die in the very outage it reports (polling remains the backstop)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>SetRequest — weakness: managers can&#39;t send them at night</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Community-string rotation — weakness: strings expire monthly</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -390,21 +352,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Packet switches (routers and switches) sit <em>inside</em> the network core or at its access points, forwarding data between links — they don&#39;t originate or consume application data themselves, which is what distinguishes them from end systems (hosts) like laptops or servers.</p><pre><code>&lt;/div&gt;
+      <p>Trap is SNMP&#39;s only manager-bound unsolicited message — the speed comes from skipping the poll cycle. The price is unreliability by design; robust NMS designs treat traps as hints and polling as truth.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">Why did SNMPv3 become mandatory in security-conscious networks despite v2c working fine functionally?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is Fiber Optic cable preferred over Twisted-Pair Copper for long-haul, transoceanic communication links?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It is cheaper to manufacture per meter</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It requires no maintenance ever</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It offers extremely high transmission rates and is immune to electromagnetic interference over very long distances</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It can only be used for wireless communication</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>v3 transmits data faster than v2c</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>v1/v2c community strings cross the wire in cleartext (sniffable passwords granting device control); v3 adds authentication, encryption, and access control</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>v3 uses fewer packets per operation</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>v2c cannot address more than 256 devices</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -416,7 +377,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Fiber optics carry data as light pulses through glass, which suffers far less signal degradation and interference over long distances than electrical signals in copper, making it the backbone medium of choice for undersea and cross-continental links.</p><pre><code>&lt;/div&gt;
+      <p>Functionally v2c suffices; <em>security-wise</em> it ships the keys with the locks — anyone sniffing learns &quot;private&quot; and can SetRequest your routers. v3&#39;s USM (auth/priv) + VACM (who-may-touch-what) closes exactly that hole.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -425,13 +386,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <div></div>
+      <a href="./m3_05_wireless_lan_802_11.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">3.5 Wireless Lan 802 11</div>
+      </a>
       
       
       
-      <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m4_02_nyquist_shannon_channel_capacity.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.2 Protocol Layering And OSI Tcpip</div>
+        <div class="ttl">4.2 Nyquist Shannon Channel Capacity</div>
       </a>
       
     </footer>
@@ -518,7 +482,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(20) || 0;
-    const currentId = "m1_01_internet_overview_and_network_edge";
+    const currentId = "m4_01_network_management_snmp_architecture";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 
