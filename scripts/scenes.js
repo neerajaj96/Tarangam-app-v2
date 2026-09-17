@@ -213,6 +213,83 @@ ${node(390, 150, '4', 'a4')}<text class="ordbadge a4" x="390" y="110">[4] d=8</t
 ${node(500, 220, '5', 'a5')}<text class="ordbadge a5" x="500" y="266">[5] d=10</text>
 ${node(570, 150, '6', 'a5')}<text class="ordbadge a5" x="570" y="110">[6] d=13</text>
 </svg>`
+  },
+
+  'sine-phasor': {
+    title: 'Phasor Rotation Generates the Sine Wave',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated phasor rotating on a circle projecting a sine wave point by point">
+${defs}
+<text class="animcap" x="140" y="30" text-anchor="middle">phasor · ωt</text>
+<circle class="eg" cx="140" cy="160" r="70" style="fill:none"/>
+<line class="axis" x1="140" y1="160" x2="560" y2="160"/>
+<line class="axis" x1="330" y1="60" x2="330" y2="260"/>
+<g class="msg a1"><line x1="140" y1="160" x2="210" y2="160" marker-end="url(#ah)"/><text x="140" y="250" text-anchor="middle">0° → 0</text></g>
+<g class="msg a2"><line x1="140" y1="160" x2="140" y2="90" marker-end="url(#ah)"/><text x="140" y="250" text-anchor="middle">90° → +Vm</text></g>
+<g class="msg a3"><line x1="140" y1="160" x2="70" y2="160" marker-end="url(#ah)"/><text x="140" y="250" text-anchor="middle">180° → 0</text></g>
+<path class="eg" d="M330,160 Q382,90 435,160 T540,160" style="fill:none"/>
+<text class="animcap" x="445" y="30" text-anchor="middle">v = Vm·sin ωt</text>
+<text class="badge1 a2" x="435" y="70">peak at 90°</text>
+<text class="animnote a4" x="320" y="285" text-anchor="middle">vertical projection of the tip traces the sine, one angle at a time</text>
+</svg>`
+  },
+
+  'rlc-triangle': {
+    title: 'RLC Voltage Triangle and Power Factor',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated voltage triangle: VR along x, net reactive up, VS hypotenuse at angle phi">
+${defs}
+<line class="axis" x1="80" y1="230" x2="560" y2="230"/><line class="axis" x1="80" y1="230" x2="80" y2="40"/>
+<g class="msg a1"><line x1="80" y1="230" x2="400" y2="230" marker-end="url(#ah)"/><text x="240" y="255" text-anchor="middle">VR (in phase)</text></g>
+<g class="msg a2"><line x1="400" y1="230" x2="400" y2="110" marker-end="url(#ah)"/><text x="470" y="180" text-anchor="middle">VL−VC</text></g>
+<g class="msg a3"><line x1="80" y1="230" x2="400" y2="110" marker-end="url(#ah)"/><text x="200" y="140" text-anchor="middle">VS</text></g>
+<text class="ordbadge a4" x="150" y="220">φ · cosφ = P/S</text>
+<text class="animnote a5" x="320" y="285" text-anchor="middle">resistive foot, reactive rise, supply hypotenuse — power factor is geometry</text>
+</svg>`
+  },
+
+  'star-delta': {
+    title: 'Star–Delta Resistor Networks',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated star network on the left converting to delta on the right">
+${defs}
+<text class="animcap a1" x="160" y="30" text-anchor="middle">STAR (Y) · 3 + neutral</text>
+${node(160, 160, 'N', 'a1')}
+${node(70, 90, '1', 'a1')}${node(250, 90, '2', 'a1')}${node(160, 250, '3', 'a1')}
+${edge(160, 160, 70, 90, 'a1')}${edge(160, 160, 250, 90, 'a1')}${edge(160, 160, 160, 250, 'a1')}
+<text class="bigarrow a2" x="320" y="165" text-anchor="middle">⟷ Ra=(R1R2+R2R3+R3R1)/Ropp</text>
+<text class="animcap a3" x="490" y="30" text-anchor="middle">DELTA (Δ) · mesh</text>
+${node(420, 100, '1', 'a3')}${node(560, 100, '2', 'a3')}${node(490, 230, '3', 'a3')}
+${edge(420, 100, 560, 100, 'a3')}${edge(560, 100, 490, 230, 'a3')}${edge(490, 230, 420, 100, 'a3')}
+<text class="animnote a4" x="320" y="285" text-anchor="middle">same three terminals, friendlier topology — convert, then series/parallel</text>
+</svg>`
+  },
+
+  'diode-iv': {
+    title: 'PN Diode V–I Characteristic',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated diode curve: flat reverse leakage, sharp forward knee, zener breakdown tail">
+${defs}
+<line class="axis" x1="320" y1="20" x2="320" y2="270"/><line class="axis" x1="40" y1="170" x2="600" y2="170"/>
+<text class="axislbl" x="590" y="195">V →</text><text class="axislbl" x="330" y="35">I ↑</text>
+<path class="eg a2" d="M60,165 L300,165" style="fill:none"/>
+<path class="eg a1" d="M320,170 Q360,168 380,140 Q400,100 430,60" style="fill:none"/>
+<path class="eg a3" d="M300,175 L180,178 L150,240" style="fill:none"/>
+<text class="badge1 a1" x="440" y="120">knee ≈0.7V Si</text>
+<text class="badge1 a3" x="120" y="220">zener breakdown</text>
+<text class="animnote a4" x="320" y="290" text-anchor="middle">blocks reverse, conducts past the knee, avalanches in breakdown</text>
+</svg>`
+  },
+
+  'bridge-flow': {
+    title: 'Bridge Rectifier Conduction Paths',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated bridge: one diode pair conducts each half cycle, load current never reverses">
+${defs}
+<text class="animcap" x="320" y="30" text-anchor="middle">diamond D1–D4 · load RL centre-right</text>
+${node(320, 80, 'AC', 'a1')}${node(320, 230, 'AC', 'a1')}
+${node(200, 155, 'D1·D3', 'a1')}${node(440, 155, 'D2·D4', 'a1')}
+${edge(320, 80, 200, 155, 'a1')}${edge(200, 155, 320, 230, 'a1')}
+${edge(320, 80, 440, 155, 'a1')}${edge(440, 155, 320, 230, 'a1')}
+<g class="msg a2"><line x1="200" y1="155" x2="440" y2="155" marker-end="url(#ah)"/><text x="320" y="140" text-anchor="middle">+ve half: D1,D2 on</text></g>
+<g class="msg a3"><line x1="440" y1="185" x2="200" y2="185" marker-end="url(#ah)"/><text x="320" y="210" text-anchor="middle">−ve half: D3,D4 on</text></g>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">pairs alternate, load current flows one way — full-wave pulsating DC</text>
+</svg>`
   }
 };
 

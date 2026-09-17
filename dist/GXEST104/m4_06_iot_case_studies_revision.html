@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 4.6 Iot Case Studies Revision</title>
+<meta name="description" content="Introduction to Electrical and Electronics Engineering (GXEST104) — 4.6 Iot Case Studies Revision | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.6 Iot Case Studies Revision">
+<meta property="og:description" content="Introduction to Electrical and Electronics Engineering (GXEST104) study notes: 4.6 Iot Case Studies Revision">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Introduction to Electrical and Electronics Engineering</span>
+        <span class="tag">GXEST104</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>DC Circuits &amp; Magnetic Circuits</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_ohms_kcl_kvl_division_rules.html" class="topic-link " id="topic-m1_01_ohms_kcl_kvl_division_rules">
+            <span class="topic-dot"></span>
+            <span>1.1 Ohms KCL KVL Division Rules</span>
+          </a>
+          <a href="./m1_02_capacitors_inductors_energy.html" class="topic-link " id="topic-m1_02_capacitors_inductors_energy">
+            <span class="topic-dot"></span>
+            <span>1.2 Capacitors Inductors Energy</span>
+          </a>
+          <a href="./m1_03_star_delta_conversion.html" class="topic-link " id="topic-m1_03_star_delta_conversion">
+            <span class="topic-dot"></span>
+            <span>1.3 Star Delta Conversion</span>
+          </a>
+          <a href="./m1_04_mesh_analysis_matrices.html" class="topic-link " id="topic-m1_04_mesh_analysis_matrices">
+            <span class="topic-dot"></span>
+            <span>1.4 Mesh Analysis Matrices</span>
+          </a>
+          <a href="./m1_05_nodal_analysis_matrices.html" class="topic-link " id="topic-m1_05_nodal_analysis_matrices">
+            <span class="topic-dot"></span>
+            <span>1.5 Nodal Analysis Matrices</span>
+          </a>
+          <a href="./m1_06_mesh_nodal_mixed_drill.html" class="topic-link " id="topic-m1_06_mesh_nodal_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>1.6 Mesh Nodal Mixed Drill</span>
+          </a>
+          <a href="./m1_07_magnetic_circuits_basics.html" class="topic-link " id="topic-m1_07_magnetic_circuits_basics">
+            <span class="topic-dot"></span>
+            <span>1.7 Magnetic Circuits Basics</span>
+          </a>
+          <a href="./m1_08_composite_parallel_magnetic.html" class="topic-link " id="topic-m1_08_composite_parallel_magnetic">
+            <span class="topic-dot"></span>
+            <span>1.8 Composite Parallel Magnetic</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>EMI, AC &amp; Three-Phase Systems</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_emi_faraday_lenz_inductance.html" class="topic-link " id="topic-m2_01_emi_faraday_lenz_inductance">
+            <span class="topic-dot"></span>
+            <span>2.1 Emi Faraday Lenz Inductance</span>
+          </a>
+          <a href="./m2_02_ac_fundamentals_rms_average.html" class="topic-link " id="topic-m2_02_ac_fundamentals_rms_average">
+            <span class="topic-dot"></span>
+            <span>2.2 AC Fundamentals RMS Average</span>
+          </a>
+          <a href="./m2_03_phasors_forms_operations.html" class="topic-link " id="topic-m2_03_phasors_forms_operations">
+            <span class="topic-dot"></span>
+            <span>2.3 Phasors Forms Operations</span>
+          </a>
+          <a href="./m2_04_pure_r_l_c_circuits.html" class="topic-link " id="topic-m2_04_pure_r_l_c_circuits">
+            <span class="topic-dot"></span>
+            <span>2.4 Pure R L C Circuits</span>
+          </a>
+          <a href="./m2_05_rl_rc_rlc_series.html" class="topic-link " id="topic-m2_05_rl_rc_rlc_series">
+            <span class="topic-dot"></span>
+            <span>2.5 RL RC RLC Series</span>
+          </a>
+          <a href="./m2_06_ac_power_pf_correction.html" class="topic-link " id="topic-m2_06_ac_power_pf_correction">
+            <span class="topic-dot"></span>
+            <span>2.6 AC Power Pf Correction</span>
+          </a>
+          <a href="./m2_07_three_phase_star_delta.html" class="topic-link " id="topic-m2_07_three_phase_star_delta">
+            <span class="topic-dot"></span>
+            <span>2.7 Three Phase Star Delta</span>
+          </a>
+          <a href="./m2_08_m2_mixed_drill.html" class="topic-link " id="topic-m2_08_m2_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>2.8 M2 Mixed Drill</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Electronic Devices &amp; Circuits</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_passive_active_pn_diode.html" class="topic-link " id="topic-m3_01_passive_active_pn_diode">
+            <span class="topic-dot"></span>
+            <span>3.1 Passive Active Pn Diode</span>
+          </a>
+          <a href="./m3_02_zener_avalanche_regulator.html" class="topic-link " id="topic-m3_02_zener_avalanche_regulator">
+            <span class="topic-dot"></span>
+            <span>3.2 Zener Avalanche Regulator</span>
+          </a>
+          <a href="./m3_03_dc_supply_rectifiers.html" class="topic-link " id="topic-m3_03_dc_supply_rectifiers">
+            <span class="topic-dot"></span>
+            <span>3.3 DC Supply Rectifiers</span>
+          </a>
+          <a href="./m3_04_ripple_factor_filters.html" class="topic-link " id="topic-m3_04_ripple_factor_filters">
+            <span class="topic-dot"></span>
+            <span>3.4 Ripple Factor Filters</span>
+          </a>
+          <a href="./m3_05_bjt_construction_characteristics.html" class="topic-link " id="topic-m3_05_bjt_construction_characteristics">
+            <span class="topic-dot"></span>
+            <span>3.5 BJT Construction Characteristics</span>
+          </a>
+          <a href="./m3_06_configs_biasing_loadline.html" class="topic-link " id="topic-m3_06_configs_biasing_loadline">
+            <span class="topic-dot"></span>
+            <span>3.6 Configs Biasing Loadline</span>
+          </a>
+          <a href="./m3_07_switch_amplifier.html" class="topic-link " id="topic-m3_07_switch_amplifier">
+            <span class="topic-dot"></span>
+            <span>3.7 Switch Amplifier</span>
+          </a>
+          <a href="./m3_08_rc_coupled_fet_mosfet.html" class="topic-link " id="topic-m3_08_rc_coupled_fet_mosfet">
+            <span class="topic-dot"></span>
+            <span>3.8 RC Coupled FET MOSFET</span>
+          </a>
+          <a href="./m3_09_m3_mixed_drill.html" class="topic-link " id="topic-m3_09_m3_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>3.9 M3 Mixed Drill</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>Modern Electronics &amp; Applications</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_comm_fibre_block_diagrams.html" class="topic-link " id="topic-m4_01_comm_fibre_block_diagrams">
+            <span class="topic-dot"></span>
+            <span>4.1 Comm Fibre Block Diagrams</span>
+          </a>
+          <a href="./m4_02_am_fm_superhet.html" class="topic-link " id="topic-m4_02_am_fm_superhet">
+            <span class="topic-dot"></span>
+            <span>4.2 AM FM Superhet</span>
+          </a>
+          <a href="./m4_03_wired_wireless_gsm_generations.html" class="topic-link " id="topic-m4_03_wired_wireless_gsm_generations">
+            <span class="topic-dot"></span>
+            <span>4.3 Wired Wireless GSM Generations</span>
+          </a>
+          <a href="./m4_04_instrumentation_dmm_generator.html" class="topic-link " id="topic-m4_04_instrumentation_dmm_generator">
+            <span class="topic-dot"></span>
+            <span>4.4 Instrumentation DMM Generator</span>
+          </a>
+          <a href="./m4_05_cro_lissajous.html" class="topic-link " id="topic-m4_05_cro_lissajous">
+            <span class="topic-dot"></span>
+            <span>4.5 CRO Lissajous</span>
+          </a>
+          <a href="./m4_06_iot_case_studies_revision.html" class="topic-link active" id="topic-m4_06_iot_case_studies_revision">
+            <span class="topic-dot"></span>
+            <span>4.6 Iot Case Studies Revision</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 31 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>GXEST104</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 4</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">4.6 Iot Case Studies Revision</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 3 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>IoT Case Studies &amp; M4 Revision Drill</h1>
+<p><strong>Homes, hospitals, farms on the same sense–send–decide loop — plus the module&#39;s block-diagram speed round.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Nervous System for Places</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Every IoT story shares one nervous system: <strong>sensors</strong> (skin) → <strong>connectivity</strong> (nerves: Wi-Fi/LoRa/5G) → <strong>cloud</strong> (brain: dashboards, rules, ML) → <strong>actuators</strong> (muscles: relays, pumps, alarms). Smart homes dim/cool on presence; healthcare watches hearts remotely; farms irrigate by soil numbers. Same loop, different skin and muscles — learn the loop once, dress it per case study.</p>
+</div></details><hr>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
+<h3>2.1 The three case studies (syllabus: case-study only)</h3>
+<ul>
+<li><strong>Smart homes:</strong> PIR/climate/energy sensors → hub/cloud rules → lights/HVAC/locks; wins: comfort + energy.</li>
+<li><strong>Healthcare:</strong> wearables (ECG/SpO2/glucose) → phone/cloud → clinician alerts; wins: continuous + early warning (note privacy/constraint caveats).</li>
+<li><strong>Agriculture:</strong> soil-moisture/weather/pH nodes → LoRa/gateway → irrigation scheduling; wins: water + yield.</li>
+</ul>
+<h3>2.2 M4 block-diagram speed round</h3>
+<p>Comm chain · fibre link · superhet (IFs!) · GSM (registers!) · instrument skeleton · DMM/generator modes · CRO/Lissajous rules — one role-line per box, always.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: IoT Loop</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Sense→connect→cloud→actuate</strong> · homes <strong>comfort/energy</strong> · health <strong>continuous/alerts</strong> · farms <strong>water/yield</strong>.</p>
+</div></details><details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Case study&quot; answers want loop-mapping (name each stage&#39;s parts) + two quantified-ish wins + one honest caveat (power/security/cost). Loop + wins + caveat = full marks, no derivations exist here.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>&quot;Present IoT-based smart irrigation as a case study, mapping the loop and justifying each stage choice.&quot;</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Loop in the Field</div><div class="step-content"><ol>
+<li><strong>Sense:</strong> soil-moisture + temperature nodes (battery-sipping, solar-topped).</li>
+<li><strong>Connect:</strong> LoRa to a farm gateway (kilometres, tiny payloads — mMTC thinking from the generations topic).</li>
+<li><strong>Cloud:</strong> threshold + weather-forecast rules decide tonight&#39;s watering.</li>
+<li><strong>Actuate:</strong> solenoid valves per zone; dashboard shows litres saved. Win: water $-30%$-style savings + yield steadiness; caveat: gateway power/backhaul in remote fields.</li>
+</ol>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Loop-mapping plus stage justification plus win/caveat — portable to homes (presence→HVAC) and health (wearable→alert) by swapping skin and muscles.</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Why LoRa (not Wi-Fi) for farm sensor nets?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Faster video</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Kilometre range with sip-power for tiny payloads — matches sparse-field topology and decade-battery goals; Wi-Fi&#39;s appetite/range mismatch</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cheaper phones</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Higher bandwidth need</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Match radio to traffic: bytes-per-hour over hectares wants range + frugality (mMTC/LoRa), not cafeteria broadband. Requirement-first radio choice is the design mark.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Biggest honest caveat of remote-health IoT?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Sensors are too accurate</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Privacy/security of continuous biomedical streams plus reliability/power constraints of wearables — clinical trust needs both handled</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Too little data</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Doctors dislike computers</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Case studies earn honesty marks: continuous streaming data is also attack surface, and missed alerts cost lives — state mitigations (encryption, edge fallback) alongside wins.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Mixed Revision</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Pair each IF/register to its system: $455$ kHz, $10.7$ MHz, HLR, $V_{rms}=V_m/\sqrt2$.</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>FM, AM, GSM-data, square waves</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>AM superhet IF; FM superhet IF; GSM permanent subscriber record; sine measure (M2 reuse — modules connect!)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>GSM, AM, FM, triangles</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>CRO, DMM, GSM, AM</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>$455$ kHz↔AM, $10.7$ MHz↔FM, HLR↔GSM home record, RMS↔sine. Cross-module pairs are the revision drill&#39;s point — the syllabus is one story, not four islands.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m4_05_cro_lissajous.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">4.5 CRO Lissajous</div>
+      </a>
+      
+      
+      
+      <div></div>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(31) || 0;
+    const currentId = "m4_06_iot_case_studies_revision";
+    const courseCode = "GXEST104";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    // Spaced review (v1 schedule): visited topics untouched for 7+ days are
+    // flagged in the nav; opening one refreshes its timestamp (written above).
+    try {
+      const REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+      const stamps = JSON.parse(localStorage.getItem(`tarangam_visited_ts_${courseCode}`) || '{}') || {};
+      const now = Date.now();
+      const due = visited.filter(id => {
+        const ts = stamps[id];
+        return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+      });
+      const idOf = (link) => {
+        const href = link.getAttribute('href') || '';
+        return href.replace('.html', '').split('/').pop();
+      };
+      document.querySelectorAll('.topic-link').forEach(link => {
+        if (due.includes(idOf(link))) {
+          link.classList.add('due');
+          // Review pending supersedes the completion check: swap ✓ for ↻.
+          const old = link.querySelector('.check-mark');
+          if (old) old.remove();
+          if (!link.querySelector('.due-mark')) {
+            const mark = document.createElement('span');
+            mark.className = 'due-mark';
+            mark.style.marginLeft = 'auto';
+            mark.style.color = 'var(--accent-warm)';
+            mark.style.fontSize = '12px';
+            mark.title = 'Due for spaced review (unvisited 7+ days)';
+            mark.innerText = '↻';
+            link.appendChild(mark);
+          }
+        }
+      });
+      const reviewLabel = document.getElementById('reviewLabel');
+      if (reviewLabel) {
+        reviewLabel.innerText = due.length
+          ? `${due.length} due for review ↻`
+          : (visited.length ? 'all fresh ✓' : '');
+      }
+    } catch (e) { /* private mode: review silently disabled */ }
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

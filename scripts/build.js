@@ -11,7 +11,11 @@ const COURSE_METADATA = {
   PCCST503: 'Machine Learning',
   PCCST501: 'Computer Networks',
   PCCST502: 'Design and Analysis of Algorithms',
-  PECST522: 'Artificial Intelligence'
+  PECST522: 'Artificial Intelligence',
+  GZPHT121: 'Physics for Physical Science and Life Science',
+  GAMAT301: 'Mathematics for Information Science-3',
+  PCCST303: 'Data Structures and Algorithms',
+  GXEST104: 'Introduction to Electrical and Electronics Engineering'
 };
 
 const MODULE_NAMES = {
@@ -38,6 +42,30 @@ const MODULE_NAMES = {
     2: 'Classification & Trees',
     3: 'Neural Nets & SVMs',
     4: 'PCA & Ensembles'
+  },
+  GZPHT121: {
+    1: 'Laser & Fibre Optics',
+    2: 'Interference & Diffraction',
+    3: 'Quantum Mechanics',
+    4: 'Waves & Acoustics'
+  },
+  GAMAT301: {
+    1: 'Discrete Random Variables',
+    2: 'Continuous Random Variables',
+    3: 'Limit Theorems & Stochastic Processes',
+    4: 'Markov Chains'
+  },
+  PCCST303: {
+    1: 'Basic Concepts, Stacks & Queues',
+    2: 'Linked Lists & Memory Management',
+    3: 'Trees, Heaps & Graphs',
+    4: 'Sorting, Searching & Hashing'
+  },
+  GXEST104: {
+    1: 'DC Circuits & Magnetic Circuits',
+    2: 'EMI, AC & Three-Phase Systems',
+    3: 'Electronic Devices & Circuits',
+    4: 'Modern Electronics & Applications'
   }
 };
 
@@ -58,7 +86,7 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
-const ACRONYMS = new Set(['AI', 'PEAS', 'OSI', 'TCP', 'IP', 'HTTP', 'FTP', 'DNS', 'SMTP', 'P2P', 'AVL', 'BFS', 'DFS', 'UCS', 'DLS', 'IDDFS', 'CSP', 'AC-3', 'RL', 'RAM', 'SNMP', 'VLAN', 'ARP', 'CRC', 'CSMA', 'CD', 'PCM', 'KTU', 'CSE', 'SCC', 'DP', 'TSP', 'NP', 'MLE', 'MAP', 'KNN', 'PCA', 'SVM']);
+const ACRONYMS = new Set(['AI', 'PEAS', 'OSI', 'TCP', 'IP', 'HTTP', 'FTP', 'DNS', 'SMTP', 'P2P', 'AVL', 'BFS', 'DFS', 'UCS', 'DLS', 'IDDFS', 'CSP', 'AC-3', 'RL', 'RAM', 'SNMP', 'VLAN', 'ARP', 'CRC', 'CSMA', 'CD', 'PCM', 'KTU', 'CSE', 'SCC', 'DP', 'TSP', 'NP', 'MLE', 'MAP', 'KNN', 'PCA', 'SVM', 'NA', 'SONAR', 'NDT', 'LED', 'CW', 'PIN', 'PMF', 'CDF', 'PDF', 'CLT', 'SLLN', 'RV', 'ADT', 'FIFO', 'LIFO', 'BST', 'AC', 'DC', 'RMS', 'EMF', 'MMF', 'BJT', 'FET', 'MOSFET', 'CE', 'CB', 'CC', 'AM', 'FM', 'GSM', 'CRO', 'DMM', 'KCL', 'KVL', 'RL', 'RC', 'RLC']);
 
 function titleCaseSlug(slug) {
   return slug.replace(/_/g, ' ').split(' ').map(w => {
