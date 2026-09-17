@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 🧪 Practice Lab: M1 Asymptotics And Recurrences</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 🧪 Practice Lab: M1 Asymptotics And Recurrences | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M1 Asymptotics And Recurrences">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 🧪 Practice Lab: M1 Asymptotics And Recurrences">
+<title>Tarangam — 3.3 Single Source Shortest Paths Dijkstra</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 3.3 Single Source Shortest Paths Dijkstra | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.3 Single Source Shortest Paths Dijkstra">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 3.3 Single Source Shortest Paths Dijkstra">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Analysis &amp; Recurrences</span>
           <span class="chev">&#9656;</span>
@@ -117,7 +117,7 @@
             <span class="topic-dot"></span>
             <span>1.10 AVL Tree Rotations Insertion And Deletion</span>
           </a>
-          <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link active" id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
+          <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link " id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
           </a>
@@ -148,8 +148,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Greedy, DP &amp; Backtracking</span>
           <span class="chev">&#9656;</span>
@@ -163,7 +163,7 @@
             <span class="topic-dot"></span>
             <span>3.2 Minimum Spanning Trees Kruskal Prim</span>
           </a>
-          <a href="./m3_03_single_source_shortest_paths_dijkstra.html" class="topic-link " id="topic-m3_03_single_source_shortest_paths_dijkstra">
+          <a href="./m3_03_single_source_shortest_paths_dijkstra.html" class="topic-link active" id="topic-m3_03_single_source_shortest_paths_dijkstra">
             <span class="topic-dot"></span>
             <span>3.3 Single Source Shortest Paths Dijkstra</span>
           </a>
@@ -202,9 +202,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
+        <span style="color:var(--ink); font-weight:600;">3.3 Single Source Shortest Paths Dijkstra</span>
       </div>
 
       <div class="topbar-actions">
@@ -220,8 +220,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -232,50 +232,52 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Module 1 Practice Lab: Asymptotic Proofs &amp; Recurrence Solvers</h1>
-<p><strong>Stepped calculations for Master Theorem cases, recursion tree summations, and AVL insertion rotation sequences.</strong></p>
+<h1>Single-Source Shortest Paths: Dijkstra</h1>
+<p><strong>Greedy settling order, relaxation, the non-negative-weight contract, a hand-settled trace, and why one negative edge voids everything.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Every skill in this module — proving a Big-O bound, solving a recurrence three different ways, and rebalancing an AVL tree — is something you only truly own once you&#39;ve done it yourself, by hand, several times, without a worked example to lean on. Reading a derivation is like watching someone else ride a bicycle: it looks completely obvious right up until <em>you</em> get on and have to balance yourself.</p>
-<p>This practice lab is a deliberately varied set of drills that force you to apply Module 1&#39;s tools in combination — sometimes recognising which Master Theorem case applies, sometimes drawing a small recursion tree from scratch, sometimes tracing through several AVL insertions in a row and catching every rotation as it happens. The goal isn&#39;t new theory; it&#39;s building the reflex of <em>pattern recognition</em> — glancing at a recurrence or a tree and immediately knowing which technique from this module to reach for.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Expanding Ink Blot</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Drop ink on your start city on a map of roads: the stain spreads along every road simultaneously at equal speed. The moment the ink <em>first</em> touches a city, the path it took is the shortest possible — no later arrival can beat first contact, because all spread moves at the same rate. <strong>Dijkstra&#39;s algorithm</strong> simulates exactly this blot with a priority queue: repeatedly <em>settle</em> the unsettled vertex with the smallest tentative distance (first contact = final answer), then <em>relax</em> its outgoing roads (offer neighbors a possibly shorter route through it).</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p>This lab deliberately doesn&#39;t introduce new formulas — it&#39;s a checklist of the tools from this module, and <em>when</em> to reach for each one:</p>
+<h3>2.1 Relaxation and Settling</h3>
 <ul>
-<li><strong>Given a loop (single, nested, or logarithmic)</strong> → use the summation method from &quot;Complexity Analysis of Iterative Loops&quot;: express total iterations as a sum, evaluate using arithmetic/geometric series formulas, extract the dominant term.</li>
-<li><strong>Given a recurrence and asked to <em>prove</em> a specific bound</strong> → use the <strong>substitution method</strong>: guess the bound, assume it for smaller inputs, substitute into the recurrence, verify algebraically.</li>
-<li><strong>Given a recurrence and asked to <em>find</em> the bound (with no guess supplied)</strong> → use the <strong>iteration/expansion method</strong> (unroll level by level until the pattern is clear) or the <strong>recursion tree method</strong> (draw it, sum level totals) — whichever you find more visual.</li>
-<li><strong>Given a recurrence in the exact form $T(n)=aT(n/b)+f(n)$</strong> → check whether it fits one of the three <strong>Master Theorem</strong> cases by comparing $f(n)$ to $n^{\log_b a}$; if it fits cleanly, this is the fastest route to an answer.</li>
-<li><strong>Given a sequence of AVL insertions or deletions</strong> → after each single insertion/deletion, walk from the changed node up toward the root, recomputing balance factors, and apply the correct rotation (LL/RR/LR/RL) the moment any $|BF|&gt;1$ appears, before moving on to the next operation.</li>
+<li>Maintain tentative distances $d[v]$ (∞ except $d[s]=0$). Repeatedly extract-min unsettled $u$ (<strong>settle</strong> it: $d[u]$ is final) and <strong>relax</strong> each edge $(u,v,w)$: if $d[u]+w &lt; d[v]$, set $d[v] = d[u]+w$ (and remember predecessor $u$).</li>
+<li>Correctness hinge: extraction order is nondecreasing in final distance — a settled vertex can never be improved later, <em>provided all weights are non-negative</em> (any alternative path to $u$ must extend an unsettled vertex with distance $\ge d[u]$, plus non-negative edges).</li>
 </ul>
-<p><strong>A general debugging habit worth building now:</strong> whenever a derived complexity looks suspicious (e.g., you calculated $O(n)$ for something that clearly does nested work over all pairs of elements), re-derive it a second way — if the loop-based summation and the recursion-tree method (for an equivalent recursive version of the same task) disagree, you&#39;ve made an arithmetic slip somewhere, and cross-checking is far faster than re-reading your own derivation looking for the mistake.</p>
-<hr>
+<h3>2.2 The Non-Negative Contract</h3>
+<p>One negative edge can make a <em>settled</em> vertex improvable (arrive cheaply late via the negative edge) — the extraction invariant shatters, and outputs go silently wrong (not merely slow). Negative weights demand Bellman-Ford (slower, detects negative cycles); Dijkstra simply <em>assumes them away</em>. Complexity with binary heap: $\Theta((V+E) \log V)$.</p>
+<h3>2.3 Dijkstra vs. BFS vs. Prim (the Confusion Trio)</h3>
+<ul>
+<li><strong>BFS:</strong> Dijkstra with all weights $=1$ (queue suffices; settles by hops).</li>
+<li><strong>Prim:</strong> same <em>machinery</em> (priority queue, growing frontier) but minimizes <em>attachment cost</em> (cheapest edge to tree), not <em>path distance from source</em> — identical code shape, different key, different problem.</li>
+</ul>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Dijkstra Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Loop: <strong>extract-min (settle) → relax outgoing</strong> · needs <strong>non-negative weights</strong> (else Bellman-Ford) · $\Theta((V+E)\log V)$ heap · BFS = <strong>unit-weight Dijkstra</strong> · Prim = <strong>same skeleton, edge-key instead of path-key</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Settled Means Final — Only Without Negatives</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Students trace Dijkstra on negative-weight graphs and &quot;get answers&quot; — all of them suspect. The algorithm <em>runs</em> fine (no crash); its <em>guarantee</em> evaporates. If any weight is negative, switch algorithms (Bellman-Ford), don&#39;t switch hope.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Mixed drill: (a) solve $T(n) = 4T(n/2) + n^2$ using the Master Theorem; (b) insert the keys $10, 20, 30, 40, 50$ in that order into an initially empty AVL tree, and identify every rotation triggered along the way.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>(a)</strong> Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, reference function $n^2$. Compare to $f(n)=n^2$: this is an <em>exact match</em> ($f(n) = \Theta(n^{\log_b a})$), so <strong>Case 2</strong> applies.
-<strong>(b)</strong> Insert $10$: tree is just ${10}$, balanced. Insert $20$: becomes $10$&#39;s right child; $BF(10) = -1$, fine. Insert $30$: goes right of $10$, then right of $20$; check $BF(20)$: fine (0). Check $BF(10)$: left height $-1$, right height (subtree rooted at 20, now height 1) $=1$; $BF(10) = -1-1=-2$ — imbalance! This is caused by inserting into the right subtree of the right child (30 went right of 20, which is right of 10) — an <strong>RR</strong> shape. Fix: single left rotation at $10$. Result: $20$ becomes root, $10$ its left child, $30$ its right child — balanced. Insert $40$: goes right of $30$; $BF(30)=-1$, fine; $BF(20)$ recomputed: right subtree (rooted at 30) height is now $1$, left subtree (just node 10) height $0$; $BF(20)=0-1=-1$, still fine, no rotation. Insert $50$: goes right of $40$; check up the chain: $BF(40)=-1$ fine; $BF(30)$: right subtree (rooted at 40) now height $1$, left subtree height $-1$ (empty); $BF(30) = -1-1=-2$ — imbalance, another <strong>RR</strong> shape (50 went right of 40, which is right of 30). Fix: single left rotation at $30$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>(a)</strong> By Case 2, $T(n) = \Theta(n^2 \log n)$.
-<strong>(b)</strong> Two rotations were triggered in total — both RR (single left rotations), once at node $10$ (after inserting $30$) and once at node $30$ (after inserting $50$) — leaving a final, fully balanced 5-node AVL tree with root $20$: left child $10$, right child $40$ (whose own children are $30$ and $50$). This kind of &quot;insert several keys in increasing order, watch it self-correct repeatedly&quot; drill is exactly what would otherwise degenerate into a useless straight-line BST — the whole point of Module 1&#39;s AVL topics.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Graph: $1!-!2(4), 1!-!3(2), 2!-!3(1), 2!-!4(5), 3!-!4(8), 3!-!5(10), 4!-!5(2), 4!-!6(6), 5!-!6(3)$ (undirected). Run Dijkstra from vertex 1: give the settle order and final distances. (Machine-verified.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Settling One by One</div><div class="step-content"><p>$d = {1:0}$, rest ∞. Settle <strong>1</strong> (0): relax → $d[2]=4, d[3]=2$. Settle <strong>3</strong> (2): relax → $d[2] = \min(4, 2+1) = 3$ (improved via 3!), $d[4]=10$, $d[5]=12$. Settle <strong>2</strong> (3): relax → $d[4] = \min(10, 3+5) = 8$. Settle <strong>4</strong> (8): relax → $d[5] = \min(12, 8+2) = 10$, $d[6]=14$. Settle <strong>5</strong> (10): relax → $d[6] = \min(14, 10+3) = 13$. Settle <strong>6</strong> (13). Done.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Settle order <strong>1, 3, 2, 4, 5, 6</strong> with distances <strong>{0, 3, 2, 8, 10, 13}</strong> — note vertex 2 settles <em>second</em> at distance 3 via $1\to3\to2$, beating its direct edge (4): settling order is by <em>distance</em>, not by discovery, which is exactly the beginner surprise this trace exists to deliver.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">When a recurrence is given in the exact form $T(n) = aT(n/b) + f(n)$ and you can cleanly classify $f(n)$ against $n^{\log_b a}$, which technique is usually fastest?</span>
+    <span class="quiz-category">In the worked trace, vertex 2 is discovered first (distance 4, direct edge) but settles second (distance 3, via vertex 3). What principle does this demonstrate?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Always draw a full recursion tree regardless</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Apply the Master Theorem directly, since it&#39;s a shortcut precisely for recurrences of this standard form</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Always use the substitution method with a random guess</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Rewrite the recursion as an iterative loop first</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Dijkstra processes vertices in discovery order</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Extraction is by smallest tentative distance, and relaxation can improve a discovered vertex before it settles — settling order need not match discovery order</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Vertex 2 should have settled first; the trace contains an error</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Direct edges always give final distances immediately</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -287,20 +289,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Master Theorem exists exactly to shortcut the recursion-tree/iteration reasoning for this common recurrence shape — if $f(n)$ classifies cleanly into one of the three cases, you get the answer immediately without unrolling anything by hand.</p><pre><code>&lt;/div&gt;
+      <p>Discovery $\neq$ finality: $d[2]=4$ was provisional until vertex 3 offered $2+1=3$. The priority queue always extracts the current minimum <em>unsettled</em> vertex — that ordering discipline (not arrival order) is what makes settled distances trustworthy.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">While inserting keys in strictly increasing order into an AVL tree (e.g., 10, 20, 30, 40, 50, ...), what pattern of rotations would you expect to repeatedly see, and why?</span>
+    <span class="quiz-category">A graph has one negative edge but no negative cycles. Dijkstra runs to completion and prints distances. Status of the output?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>LR and RL double rotations, because increasing order always creates zig-zag shapes</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>RR single (left) rotations, because each new maximum key extends a straight line down the right side, repeatedly triggering the &quot;straight-line-leaning-right&quot; imbalance</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>No rotations are ever needed for sorted insertion order</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>LL single rotations, because the tree leans left</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Correct — Dijkstra handles isolated negative edges fine</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Untrustworthy — the non-negative contract is violated, so the settling invariant may fail silently; Bellman-Ford is the correct tool</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Correct only for the vertices settled before the negative edge is relaxed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The algorithm crashes, so there is no output to judge</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -312,20 +314,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Inserting strictly increasing keys always extends the rightmost path of the tree — exactly the RR (straight-line-right) imbalance shape — so AVL trees repeatedly trigger single left rotations to keep correcting this lean, which is exactly the mechanism that prevents the tree from ever becoming the fully degenerate, $O(n)$-height line that a plain (non-self-balancing) BST would become under the same insertion order.</p><pre><code>&lt;/div&gt;
+      <p>Dijkstra never checks its precondition — it happily settles vertices whose distances a late-arriving negative edge could still improve. Silence, not failure, is the danger: wrong numbers with full confidence. One negative edge anywhere → switch to Bellman-Ford.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">If two different valid derivation methods (e.g., the loop-summation method and the recursion-tree method applied to an equivalent recursive formulation) give *different* final Big-O answers for what should be the same underlying algorithm, what does this most likely indicate?</span>
+    <span class="quiz-category">Dijkstra and Prim look nearly identical in code (priority queue, growing set, relaxation-like updates). What single difference separates the problems they solve?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Both answers are correct simultaneously and no contradiction exists</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>An arithmetic or setup error was made in one of the derivations, and re-deriving via the other method is a fast way to locate the mistake</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Big-O notation is inherently inconsistent between methods</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The algorithm&#39;s complexity is undefined</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Dijkstra uses a queue while Prim uses a stack</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Dijkstra keys vertices by *path distance from the source* (minimize route cost); Prim keys by *cheapest single attachment edge to the tree* (minimize connection cost) — same skeleton, different key, MST vs shortest paths</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Prim requires negative weights; Dijkstra forbids them</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>They are the same algorithm with different variable names</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -337,7 +339,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>A given algorithm has one true asymptotic complexity; every valid analysis method, applied correctly, must agree on it. A disagreement between two independently-applied methods is a strong, practical signal to recheck your work — usually faster than staring at a single derivation looking for a subtle mistake.</p><pre><code>&lt;/div&gt;
+      <p>$d[v] = $ best known <em>source→v path</em> (Dijkstra) vs. $key[v] = $ cheapest <em>edge into the tree</em> (Prim). Swap the key definition and each algorithm morphs toward the other — the classic &quot;same code, different objective&quot; pair every exam probes.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -346,16 +348,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_10_avl_tree_rotations_insertion_and_deletion.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_02_minimum_spanning_trees_kruskal_prim.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.10 AVL Tree Rotations Insertion And Deletion</div>
+        <div class="ttl">3.2 Minimum Spanning Trees Kruskal Prim</div>
       </a>
       
       
       
-      <a href="./m2_01_disjoint_sets_and_union_find.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_04_dynamic_programming_matrix_chain_knapsack.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Disjoint Sets And Union Find</div>
+        <div class="ttl">3.4 Dynamic Programming Matrix Chain Knapsack</div>
       </a>
       
     </footer>
@@ -442,7 +444,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(21) || 0;
-    const currentId = "m1_99_practice_lab_asymptotics_and_recurrences";
+    const currentId = "m3_03_single_source_shortest_paths_dijkstra";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 

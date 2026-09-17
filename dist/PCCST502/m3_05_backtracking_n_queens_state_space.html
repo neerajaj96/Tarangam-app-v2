@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 🧪 Practice Lab: M1 Asymptotics And Recurrences</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 🧪 Practice Lab: M1 Asymptotics And Recurrences | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M1 Asymptotics And Recurrences">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 🧪 Practice Lab: M1 Asymptotics And Recurrences">
+<title>Tarangam — 3.5 Backtracking N Queens State Space</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 3.5 Backtracking N Queens State Space | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.5 Backtracking N Queens State Space">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 3.5 Backtracking N Queens State Space">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Analysis &amp; Recurrences</span>
           <span class="chev">&#9656;</span>
@@ -117,7 +117,7 @@
             <span class="topic-dot"></span>
             <span>1.10 AVL Tree Rotations Insertion And Deletion</span>
           </a>
-          <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link active" id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
+          <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link " id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
           </a>
@@ -148,8 +148,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Greedy, DP &amp; Backtracking</span>
           <span class="chev">&#9656;</span>
@@ -171,7 +171,7 @@
             <span class="topic-dot"></span>
             <span>3.4 Dynamic Programming Matrix Chain Knapsack</span>
           </a>
-          <a href="./m3_05_backtracking_n_queens_state_space.html" class="topic-link " id="topic-m3_05_backtracking_n_queens_state_space">
+          <a href="./m3_05_backtracking_n_queens_state_space.html" class="topic-link active" id="topic-m3_05_backtracking_n_queens_state_space">
             <span class="topic-dot"></span>
             <span>3.5 Backtracking N Queens State Space</span>
           </a>
@@ -202,9 +202,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
+        <span style="color:var(--ink); font-weight:600;">3.5 Backtracking N Queens State Space</span>
       </div>
 
       <div class="topbar-actions">
@@ -220,7 +220,7 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge badge-accent">MODULE 3</span>
     <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
@@ -232,50 +232,62 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Module 1 Practice Lab: Asymptotic Proofs &amp; Recurrence Solvers</h1>
-<p><strong>Stepped calculations for Master Theorem cases, recursion tree summations, and AVL insertion rotation sequences.</strong></p>
+<h1>Backtracking: N-Queens &amp; State-Space Search</h1>
+<p><strong>Systematic trial with intelligent retreat: state-space trees, bounding functions, explicit vs. implicit constraints, and 4-Queens traced to both solutions.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Every skill in this module — proving a Big-O bound, solving a recurrence three different ways, and rebalancing an AVL tree — is something you only truly own once you&#39;ve done it yourself, by hand, several times, without a worked example to lean on. Reading a derivation is like watching someone else ride a bicycle: it looks completely obvious right up until <em>you</em> get on and have to balance yourself.</p>
-<p>This practice lab is a deliberately varied set of drills that force you to apply Module 1&#39;s tools in combination — sometimes recognising which Master Theorem case applies, sometimes drawing a small recursion tree from scratch, sometimes tracing through several AVL insertions in a row and catching every rotation as it happens. The goal isn&#39;t new theory; it&#39;s building the reflex of <em>pattern recognition</em> — glancing at a recurrence or a tree and immediately knowing which technique from this module to reach for.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Maze with String</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Brute force explores a maze by walking <em>every</em> path to its end. <strong>Backtracking</strong> walks with string tied at the entrance: advance while promising, and the moment a path <em>provably</em> can&#39;t work (dead end, or a bound worse than your best), rewind the string to the last fork and try the next branch — <em>pruning</em> whole subtrees without visiting them. The string (recursion stack) plus the noses for dead ends (<strong>bounding functions</strong>) turn exhaustive search from impossible into merely expensive.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p>This lab deliberately doesn&#39;t introduce new formulas — it&#39;s a checklist of the tools from this module, and <em>when</em> to reach for each one:</p>
+<h3>2.1 State-Space Tree and Constraints</h3>
 <ul>
-<li><strong>Given a loop (single, nested, or logarithmic)</strong> → use the summation method from &quot;Complexity Analysis of Iterative Loops&quot;: express total iterations as a sum, evaluate using arithmetic/geometric series formulas, extract the dominant term.</li>
-<li><strong>Given a recurrence and asked to <em>prove</em> a specific bound</strong> → use the <strong>substitution method</strong>: guess the bound, assume it for smaller inputs, substitute into the recurrence, verify algebraically.</li>
-<li><strong>Given a recurrence and asked to <em>find</em> the bound (with no guess supplied)</strong> → use the <strong>iteration/expansion method</strong> (unroll level by level until the pattern is clear) or the <strong>recursion tree method</strong> (draw it, sum level totals) — whichever you find more visual.</li>
-<li><strong>Given a recurrence in the exact form $T(n)=aT(n/b)+f(n)$</strong> → check whether it fits one of the three <strong>Master Theorem</strong> cases by comparing $f(n)$ to $n^{\log_b a}$; if it fits cleanly, this is the fastest route to an answer.</li>
-<li><strong>Given a sequence of AVL insertions or deletions</strong> → after each single insertion/deletion, walk from the changed node up toward the root, recomputing balance factors, and apply the correct rotation (LL/RR/LR/RL) the moment any $|BF|&gt;1$ appears, before moving on to the next operation.</li>
+<li>The <strong>state-space tree</strong> enumerates all candidate vectors $(x_1, \dots, x_n)$ level by level (level $i$ fixes $x_i$); a depth-first walk visits solution and dead-end leaves alike.</li>
+<li><strong>Explicit constraints</strong> bound each $x_i$ to a finite set (e.g. queen $i$ sits in some column $1..n$); <strong>implicit constraints</strong> relate variables (no two queens share a row/column/diagonal) — the rules that <em>prune</em>.</li>
+<li><strong>Bounding function:</strong> at a live node, prove no descendant can beat/improve the goal (or satisfy constraints at all); if so, <strong>kill the subtree</strong> — prune now, never revisit.</li>
 </ul>
-<p><strong>A general debugging habit worth building now:</strong> whenever a derived complexity looks suspicious (e.g., you calculated $O(n)$ for something that clearly does nested work over all pairs of elements), re-derive it a second way — if the loop-based summation and the recursion-tree method (for an equivalent recursive version of the same task) disagree, you&#39;ve made an arithmetic slip somewhere, and cross-checking is far faster than re-reading your own derivation looking for the mistake.</p>
-<hr>
+<h3>2.2 N-Queens Formulation</h3>
+<p>Place $n$ queens so none attack another. Fix queen $i$ in row $i$ (rows handled by construction); choose columns $x_i \in {1..n}$. Queen $i$ attacks queen $j$ iff $x_i = x_j$ (same column) or $|x_i - x_j| = |i - j|$ (same diagonal — equal rise over run). The killer observation: placing queen $k+1$ needs checking <em>only against queens $1..k$</em> (earlier rows), so infeasibility surfaces at the shallowest possible depth.</p>
+<pre><code class="language-text">4-Queens solution [2,4,1,3] (row i -&gt; column):
+
+. Q . .     row 1: queen at col 2
+. . . Q     row 2: queen at col 4
+Q . . .     row 3: queen at col 1
+. . Q .     row 4: queen at col 3
+(check: no shared column; diagonals |dx|=|dy| never match)
+</code></pre>
+<h3>2.3 Backtracking vs. Cousins</h3>
+<ul>
+<li>vs. <strong>brute force:</strong> identical worst case (whole tree), wildly better typical case (pruning) — backtracking is brute force <em>with a brain</em>.</li>
+<li>vs. <strong>branch &amp; bound</strong> (Module 4): backtracking prunes by <em>feasibility</em>; B&amp;B additionally prunes by <em>cost bounds</em> against the best solution so far (backtracking is B&amp;B with the cost machinery switched off).</li>
+<li>vs. <strong>DP:</strong> no overlapping-subproblem structure is exploited — each live path is explored independently; memoization across branches generally doesn&#39;t apply.</li>
+</ul>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Backtracking Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Search a <strong>state-space tree</strong> DFS-style · prune by <strong>explicit</strong> (domain) + <strong>implicit</strong> (relations) constraints · N-Queens attack test: <strong>same column or |Δcol| = |Δrow|</strong> · check new queen <strong>only against earlier rows</strong> · worst case still <strong>exponential</strong> (pruning is typical-case salvation, not a complexity cure).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Pruning Cuts Typical Cost, Never Worst-Case Guarantees</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A lucky instance prunes to near-linear; a hostile one (no early contradictions) still walks the whole tree. &quot;Backtracking is exponential&quot; and &quot;backtracking beats brute force&quot; are <em>both</em> true — worst-case vs. typical-case, the eternal pair. Never promise exponential escape; never dismiss practical pruning.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Mixed drill: (a) solve $T(n) = 4T(n/2) + n^2$ using the Master Theorem; (b) insert the keys $10, 20, 30, 40, 50$ in that order into an initially empty AVL tree, and identify every rotation triggered along the way.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>(a)</strong> Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, reference function $n^2$. Compare to $f(n)=n^2$: this is an <em>exact match</em> ($f(n) = \Theta(n^{\log_b a})$), so <strong>Case 2</strong> applies.
-<strong>(b)</strong> Insert $10$: tree is just ${10}$, balanced. Insert $20$: becomes $10$&#39;s right child; $BF(10) = -1$, fine. Insert $30$: goes right of $10$, then right of $20$; check $BF(20)$: fine (0). Check $BF(10)$: left height $-1$, right height (subtree rooted at 20, now height 1) $=1$; $BF(10) = -1-1=-2$ — imbalance! This is caused by inserting into the right subtree of the right child (30 went right of 20, which is right of 10) — an <strong>RR</strong> shape. Fix: single left rotation at $10$. Result: $20$ becomes root, $10$ its left child, $30$ its right child — balanced. Insert $40$: goes right of $30$; $BF(30)=-1$, fine; $BF(20)$ recomputed: right subtree (rooted at 30) height is now $1$, left subtree (just node 10) height $0$; $BF(20)=0-1=-1$, still fine, no rotation. Insert $50$: goes right of $40$; check up the chain: $BF(40)=-1$ fine; $BF(30)$: right subtree (rooted at 40) now height $1$, left subtree height $-1$ (empty); $BF(30) = -1-1=-2$ — imbalance, another <strong>RR</strong> shape (50 went right of 40, which is right of 30). Fix: single left rotation at $30$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>(a)</strong> By Case 2, $T(n) = \Theta(n^2 \log n)$.
-<strong>(b)</strong> Two rotations were triggered in total — both RR (single left rotations), once at node $10$ (after inserting $30$) and once at node $30$ (after inserting $50$) — leaving a final, fully balanced 5-node AVL tree with root $20$: left child $10$, right child $40$ (whose own children are $30$ and $50$). This kind of &quot;insert several keys in increasing order, watch it self-correct repeatedly&quot; drill is exactly what would otherwise degenerate into a useless straight-line BST — the whole point of Module 1&#39;s AVL topics.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve 4-Queens by backtracking (rows fixed 1–4, try columns ascending). Find all solutions, showing prunes.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Walking the Tree</div><div class="step-content"><p>$x_1 = 1$: $x_2 \in {3,4}$ (2 attacked diagonally by (1,1)... precisely column 2 shares column? no — (2,2) is diagonal $|2-1|=|2-1|$ ✓ attacked; column 1 shares column ✓ attacked). Try $x_2 = 3$: $x_3$ candidates vs {(1,1),(2,3)}: col 1 shares column ✗; col 2: vs (2,3): $|2-3|=|3-2|$ diagonal ✗; col 3 shares column ✗; col 4: vs (2,3) $|4-3|=|3-2|$ diagonal ✗ → <strong>dead end, backtrack</strong>. Try $x_2 = 4$: $x_3$ vs {(1,1),(2,4)}: col 1 ✗ column; col 2: vs (1,1)? $|2-1|=|3-1|$? $1 \ne 2$ ✓ pass; vs (2,4)? $|2-4|=|3-2|$? $2 \ne 1$ ✓ pass → $x_3 = 2$. $x_4$ vs {(1,1),(2,4),(3,2)}: col 3: column free ✓; diagonals: vs (1,1): $|3-1|=|4-1|$? $2 \ne 3$ ✓; vs (2,4): $|3-4|=|4-2|$? $1 \ne 2$ ✓; vs (3,2): $|3-2|=|4-3|$? $1 = 1$ ✗ attacked! col 1,2,4 also fail (column/diagonal) → <strong>dead end</strong>. Backtrack fully: $x_1 = 2$: symmetric search yields $x = (2,4,1,3)$ ✓ and $(3,1,4,2)$ ✓ — the two solutions (mirror images).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>4-Queens has exactly <strong>2 solutions</strong>: $[2,4,1,3]$ and $[3,1,4,2]$. The trace visited a fraction of the $4^4 = 256$ naive vectors — every dead end above pruned 4+ descendants sight unseen. That gap (visited vs. possible) <em>is</em> backtracking&#39;s entire value proposition.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">When a recurrence is given in the exact form $T(n) = aT(n/b) + f(n)$ and you can cleanly classify $f(n)$ against $n^{\log_b a}$, which technique is usually fastest?</span>
+    <span class="quiz-category">In N-Queens with queen i fixed in row i, a new queen is placed in row k+1. Against which queens must it be checked, and why is that sufficient?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Always draw a full recursion tree regardless</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Apply the Master Theorem directly, since it&#39;s a shortcut precisely for recurrences of this standard form</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Always use the substitution method with a random guess</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Rewrite the recursion as an iterative loop first</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Against all n queens, including unplaced future rows</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Only against queens 1..k (earlier rows) — future rows are empty so nothing can attack from them, and mutual attacks are symmetric so checking one direction covers the pair</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Against no one — rows alone prevent all attacks</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Only against queen 1, the most dangerous one</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -287,20 +299,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Master Theorem exists exactly to shortcut the recursion-tree/iteration reasoning for this common recurrence shape — if $f(n)$ classifies cleanly into one of the three cases, you get the answer immediately without unrolling anything by hand.</p><pre><code>&lt;/div&gt;
+      <p>Attacks are symmetric pairs; with rows $k+2..n$ empty, any attack involving the newcomer must partner a placed queen $1..k$. Checking only backward is complete <em>and</em> cheapest — forward checks would test empty squares. (This asymmetry is why row-fixing + backward-checking is the standard formulation.)</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">While inserting keys in strictly increasing order into an AVL tree (e.g., 10, 20, 30, 40, 50, ...), what pattern of rotations would you expect to repeatedly see, and why?</span>
+    <span class="quiz-category">What is the precise role of a bounding function, and how does backtracking differ from branch &amp; bound on this axis?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>LR and RL double rotations, because increasing order always creates zig-zag shapes</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>RR single (left) rotations, because each new maximum key extends a straight line down the right side, repeatedly triggering the &quot;straight-line-leaning-right&quot; imbalance</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>No rotations are ever needed for sorted insertion order</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>LL single rotations, because the tree leans left</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Bounding functions enumerate all solutions exhaustively</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A bounding function proves a live subtree cannot contain anything worth finding (infeasible or dominated) so it is pruned unvisited; backtracking bounds on feasibility while branch &amp; bound additionally bounds on cost versus the best solution so far</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Bounding functions only apply to sorting problems</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>There is no difference; the terms are synonyms</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -312,20 +324,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Inserting strictly increasing keys always extends the rightmost path of the tree — exactly the RR (straight-line-right) imbalance shape — so AVL trees repeatedly trigger single left rotations to keep correcting this lean, which is exactly the mechanism that prevents the tree from ever becoming the fully degenerate, $O(n)$-height line that a plain (non-self-balancing) BST would become under the same insertion order.</p><pre><code>&lt;/div&gt;
+      <p>Prune = prove-then-skip. Backtracking&#39;s bounds are logical (constraint violation ahead ⇒ dead); B&amp;B adds numeric bounds (even the best completion here loses to the incumbent ⇒ dead). B&amp;B strictly generalizes — backtracking is its feasibility-only special case.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">If two different valid derivation methods (e.g., the loop-summation method and the recursion-tree method applied to an equivalent recursive formulation) give *different* final Big-O answers for what should be the same underlying algorithm, what does this most likely indicate?</span>
+    <span class="quiz-category">Backtracking is called &quot;brute force with a brain,&quot; yet remains exponential in the worst case. Reconcile the praise with the bound.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Both answers are correct simultaneously and no contradiction exists</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>An arithmetic or setup error was made in one of the derivations, and re-deriving via the other method is a fast way to locate the mistake</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Big-O notation is inherently inconsistent between methods</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The algorithm&#39;s complexity is undefined</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The praise is marketing; the bound is the only truth</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Pruning slashes typical-case exploration (dead subtrees skipped sight unseen) while hostile instances with no early contradictions still force full-tree walks — worst-case analysis and practical performance describe different distributions</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Exponential worst case means it never outperforms brute force on any instance</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The brain refers to using more memory, which changes the complexity class</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -337,7 +349,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>A given algorithm has one true asymptotic complexity; every valid analysis method, applied correctly, must agree on it. A disagreement between two independently-applied methods is a strong, practical signal to recheck your work — usually faster than staring at a single derivation looking for a subtle mistake.</p><pre><code>&lt;/div&gt;
+      <p>Worst-case = adversarial input (contradictions hide at maximum depth); typical-case = early pruning collapses the tree. Both statements quantify over <em>different</em> input sets — no contradiction, just the standard worst-vs-typical distinction from Module 1 applied to search.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -346,17 +358,14 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_10_avl_tree_rotations_insertion_and_deletion.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_04_dynamic_programming_matrix_chain_knapsack.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.10 AVL Tree Rotations Insertion And Deletion</div>
+        <div class="ttl">3.4 Dynamic Programming Matrix Chain Knapsack</div>
       </a>
       
       
       
-      <a href="./m2_01_disjoint_sets_and_union_find.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Disjoint Sets And Union Find</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -442,7 +451,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(21) || 0;
-    const currentId = "m1_99_practice_lab_asymptotics_and_recurrences";
+    const currentId = "m3_05_backtracking_n_queens_state_space";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 

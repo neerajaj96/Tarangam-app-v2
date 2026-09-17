@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 🧪 Practice Lab: M1 Asymptotics And Recurrences</title>
-<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 🧪 Practice Lab: M1 Asymptotics And Recurrences | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M1 Asymptotics And Recurrences">
-<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 🧪 Practice Lab: M1 Asymptotics And Recurrences">
+<title>Tarangam — 3.2 Minimum Spanning Trees Kruskal Prim</title>
+<meta name="description" content="Design and Analysis of Algorithms (PCCST502) — 3.2 Minimum Spanning Trees Kruskal Prim | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.2 Minimum Spanning Trees Kruskal Prim">
+<meta property="og:description" content="Design and Analysis of Algorithms (PCCST502) study notes: 3.2 Minimum Spanning Trees Kruskal Prim">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Analysis &amp; Recurrences</span>
           <span class="chev">&#9656;</span>
@@ -117,7 +117,7 @@
             <span class="topic-dot"></span>
             <span>1.10 AVL Tree Rotations Insertion And Deletion</span>
           </a>
-          <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link active" id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
+          <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="topic-link " id="topic-m1_99_practice_lab_asymptotics_and_recurrences">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
           </a>
@@ -148,8 +148,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Greedy, DP &amp; Backtracking</span>
           <span class="chev">&#9656;</span>
@@ -159,7 +159,7 @@
             <span class="topic-dot"></span>
             <span>3.1 Greedy Strategy Control Abstraction</span>
           </a>
-          <a href="./m3_02_minimum_spanning_trees_kruskal_prim.html" class="topic-link " id="topic-m3_02_minimum_spanning_trees_kruskal_prim">
+          <a href="./m3_02_minimum_spanning_trees_kruskal_prim.html" class="topic-link active" id="topic-m3_02_minimum_spanning_trees_kruskal_prim">
             <span class="topic-dot"></span>
             <span>3.2 Minimum Spanning Trees Kruskal Prim</span>
           </a>
@@ -202,9 +202,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST502</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M1 Asymptotics And Recurrences</span>
+        <span style="color:var(--ink); font-weight:600;">3.2 Minimum Spanning Trees Kruskal Prim</span>
       </div>
 
       <div class="topbar-actions">
@@ -220,8 +220,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -232,50 +232,53 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Module 1 Practice Lab: Asymptotic Proofs &amp; Recurrence Solvers</h1>
-<p><strong>Stepped calculations for Master Theorem cases, recursion tree summations, and AVL insertion rotation sequences.</strong></p>
+<h1>Minimum Spanning Trees: Kruskal &amp; Prim</h1>
+<p><strong>Cut property, cycle property, Kruskal with Union-Find, Prim&#39;s frontier growth, and a hand-traced MST both ways.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Every skill in this module — proving a Big-O bound, solving a recurrence three different ways, and rebalancing an AVL tree — is something you only truly own once you&#39;ve done it yourself, by hand, several times, without a worked example to lean on. Reading a derivation is like watching someone else ride a bicycle: it looks completely obvious right up until <em>you</em> get on and have to balance yourself.</p>
-<p>This practice lab is a deliberately varied set of drills that force you to apply Module 1&#39;s tools in combination — sometimes recognising which Master Theorem case applies, sometimes drawing a small recursion tree from scratch, sometimes tracing through several AVL insertions in a row and catching every rotation as it happens. The goal isn&#39;t new theory; it&#39;s building the reflex of <em>pattern recognition</em> — glancing at a recurrence or a tree and immediately knowing which technique from this module to reach for.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Cheapest Islands Network</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Six islands need bridges so all connect, minimizing total cost. Two instincts: <strong>Kruskal</strong> — sort all possible bridges by price, build the cheapest that doesn&#39;t close a loop (global shopping list, Union-Find as the loop detector). <strong>Prim</strong> — stand on one island, repeatedly build the cheapest bridge from <em>your connected territory</em> outward (territorial growth, one tree always). Different walks, same cheapest network — because both obey one law: the cut property.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p>This lab deliberately doesn&#39;t introduce new formulas — it&#39;s a checklist of the tools from this module, and <em>when</em> to reach for each one:</p>
+<h3>2.1 The Cut Property (the Only Theorem That Matters Here)</h3>
+<p>For <strong>any</strong> cut (partition of vertices into $S$ / $V-S$), the <strong>lightest edge crossing it belongs to <em>some</em> MST</strong>. Proof sketch (exchange): if the MST-to-be skipped that edge, adding it creates a cycle crossing the cut somewhere pricier — swap and improve. Corollary (<strong>cycle property</strong>): the <em>heaviest</em> edge on any cycle belongs to <em>no</em> MST.</p>
 <ul>
-<li><strong>Given a loop (single, nested, or logarithmic)</strong> → use the summation method from &quot;Complexity Analysis of Iterative Loops&quot;: express total iterations as a sum, evaluate using arithmetic/geometric series formulas, extract the dominant term.</li>
-<li><strong>Given a recurrence and asked to <em>prove</em> a specific bound</strong> → use the <strong>substitution method</strong>: guess the bound, assume it for smaller inputs, substitute into the recurrence, verify algebraically.</li>
-<li><strong>Given a recurrence and asked to <em>find</em> the bound (with no guess supplied)</strong> → use the <strong>iteration/expansion method</strong> (unroll level by level until the pattern is clear) or the <strong>recursion tree method</strong> (draw it, sum level totals) — whichever you find more visual.</li>
-<li><strong>Given a recurrence in the exact form $T(n)=aT(n/b)+f(n)$</strong> → check whether it fits one of the three <strong>Master Theorem</strong> cases by comparing $f(n)$ to $n^{\log_b a}$; if it fits cleanly, this is the fastest route to an answer.</li>
-<li><strong>Given a sequence of AVL insertions or deletions</strong> → after each single insertion/deletion, walk from the changed node up toward the root, recomputing balance factors, and apply the correct rotation (LL/RR/LR/RL) the moment any $|BF|&gt;1$ appears, before moving on to the next operation.</li>
+<li><strong>Kruskal:</strong> process edges lightest-first; take each unless it closes a cycle (Union-Find FIND test). Every taken edge is the lightest crossing <em>its</em> cut (the cut separating its young component) — cut property per step. $\Theta(E \log E)$ sorting dominates; Union-Find adds near-linear dust.</li>
+<li><strong>Prim:</strong> grow one tree from a root; always attach the cheapest edge leaving the tree (priority queue). Each attachment invokes the cut property on (tree / rest). $\Theta(E \log V)$ with a binary heap.</li>
 </ul>
-<p><strong>A general debugging habit worth building now:</strong> whenever a derived complexity looks suspicious (e.g., you calculated $O(n)$ for something that clearly does nested work over all pairs of elements), re-derive it a second way — if the loop-based summation and the recursion-tree method (for an equivalent recursive version of the same task) disagree, you&#39;ve made an arithmetic slip somewhere, and cross-checking is far faster than re-reading your own derivation looking for the mistake.</p>
-<hr>
+<pre><code class="language-text">Kruskal (global list):            Prim from 1 (territory):
+
+edges sorted: 1,2,2,3,            {1} --2--&gt; {1,3} --1--&gt; {1,3,2}
+  4,5,6,8,10                      --5--&gt; {1,3,2,4} --2--&gt; ...
+take unless cycle                 always cheapest edge OUT
+</code></pre>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: MST Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Cut: <strong>lightest crossing edge ∈ some MST</strong> · cycle: <strong>heaviest on a cycle ∈ no MST</strong> · Kruskal: <strong>sort + Union-Find</strong>, $\Theta(E\log E)$ · Prim: <strong>grow + heap</strong>, $\Theta(E\log V)$ · dense graphs: Prim wins (no sort of $V^2$ edges); sparse: Kruskal shines.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: &quot;Some MST&quot; ≠ &quot;The MST&quot; (and Weights Must Differ for Uniqueness)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The cut property promises membership in <em>some</em> MST — with tied weights, Kruskal&#39;s and Prim&#39;s choices can legitimately differ and both be optimal. MST is <strong>unique iff all edge weights are distinct</strong>. Any &quot;the algorithm finds THE tree&quot; claim without distinctness is overstated.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Mixed drill: (a) solve $T(n) = 4T(n/2) + n^2$ using the Master Theorem; (b) insert the keys $10, 20, 30, 40, 50$ in that order into an initially empty AVL tree, and identify every rotation triggered along the way.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>(a)</strong> Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, reference function $n^2$. Compare to $f(n)=n^2$: this is an <em>exact match</em> ($f(n) = \Theta(n^{\log_b a})$), so <strong>Case 2</strong> applies.
-<strong>(b)</strong> Insert $10$: tree is just ${10}$, balanced. Insert $20$: becomes $10$&#39;s right child; $BF(10) = -1$, fine. Insert $30$: goes right of $10$, then right of $20$; check $BF(20)$: fine (0). Check $BF(10)$: left height $-1$, right height (subtree rooted at 20, now height 1) $=1$; $BF(10) = -1-1=-2$ — imbalance! This is caused by inserting into the right subtree of the right child (30 went right of 20, which is right of 10) — an <strong>RR</strong> shape. Fix: single left rotation at $10$. Result: $20$ becomes root, $10$ its left child, $30$ its right child — balanced. Insert $40$: goes right of $30$; $BF(30)=-1$, fine; $BF(20)$ recomputed: right subtree (rooted at 30) height is now $1$, left subtree (just node 10) height $0$; $BF(20)=0-1=-1$, still fine, no rotation. Insert $50$: goes right of $40$; check up the chain: $BF(40)=-1$ fine; $BF(30)$: right subtree (rooted at 40) now height $1$, left subtree height $-1$ (empty); $BF(30) = -1-1=-2$ — imbalance, another <strong>RR</strong> shape (50 went right of 40, which is right of 30). Fix: single left rotation at $30$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>(a)</strong> By Case 2, $T(n) = \Theta(n^2 \log n)$.
-<strong>(b)</strong> Two rotations were triggered in total — both RR (single left rotations), once at node $10$ (after inserting $30$) and once at node $30$ (after inserting $50$) — leaving a final, fully balanced 5-node AVL tree with root $20$: left child $10$, right child $40$ (whose own children are $30$ and $50$). This kind of &quot;insert several keys in increasing order, watch it self-correct repeatedly&quot; drill is exactly what would otherwise degenerate into a useless straight-line BST — the whole point of Module 1&#39;s AVL topics.</p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Graph on ${1..6}$ with edges (weight): 2–3(1), 1–3(2), 4–5(2), 5–6(3), 1–2(4), 2–4(5), 4–6(6), 3–4(8), 3–5(10). Run Kruskal fully (with Union-Find states) and state Prim-from-1&#39;s attachment order. (Machine-verified below.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Both</div><div class="step-content"><p><strong>Kruskal</strong> (sorted): take 2–3(1) [{2,3}]; take 1–3(2) [{1,2,3}]; take 4–5(2) [{4,5}]; skip 1–2(4) (cycle 1–3–2); take 5–6(3) [{4,5,6}]; take 2–4(5) (merges {1,2,3}+{4,5,6} — all connected); skip 4–6(6), 3–4(8), 3–5(10) (cycles). MST edges: <strong>{2–3, 1–3, 4–5, 5–6, 2–4}</strong>, cost $1+2+2+3+5 = \mathbf{13}$.
+<strong>Prim from 1:</strong> frontier cheapest out of {1}: 1–3(2) → {1,3}: cheapest out: 2–3(1) → {1,2,3}: cheapest out: 2–4(5) → {1,2,3,4}: cheapest out: 4–5(2) → add 5: cheapest out: 5–6(3). Same edge set, same cost 13 (weights here force uniqueness of the <em>set</em>, though not in general).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Both algorithms bank cost <strong>13</strong> via different disciplines — Kruskal rejected four cycle-closers (1–2, 4–6, 3–4, 3–5), Prim never considered them. Same optimum, complementary certificates: sorted-list greed vs. territorial greed, both licensed by the cut property.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">When a recurrence is given in the exact form $T(n) = aT(n/b) + f(n)$ and you can cleanly classify $f(n)$ against $n^{\log_b a}$, which technique is usually fastest?</span>
+    <span class="quiz-category">Kruskal considers edge e (weight 7) connecting two vertices already in the same Union-Find set. Why must e be skipped, and which property blesses the skip?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Always draw a full recursion tree regardless</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Apply the Master Theorem directly, since it&#39;s a shortcut precisely for recurrences of this standard form</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Always use the substitution method with a random guess</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Rewrite the recursion as an iterative loop first</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>e is skipped because 7 is always too heavy for any MST</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Its endpoints are already connected by cheaper taken edges, so e would close a cycle — and the cycle property says a heaviest-on-cycle edge belongs to no MST (e, arriving in sorted order, is the heaviest so far on that cycle)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Union-Find cannot process weight-7 edges by design</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Skipping is optional; taking it also yields an MST</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -287,20 +290,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Master Theorem exists exactly to shortcut the recursion-tree/iteration reasoning for this common recurrence shape — if $f(n)$ classifies cleanly into one of the three cases, you get the answer immediately without unrolling anything by hand.</p><pre><code>&lt;/div&gt;
+      <p>Same-set endpoints = a path already links them using only lighter taken edges; adding $e$ closes a cycle on which $e$ is heaviest (sorted processing guarantees it). The cycle property then <em>forbids</em> $e$ from every MST — skipping isn&#39;t caution, it&#39;s correctness.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">While inserting keys in strictly increasing order into an AVL tree (e.g., 10, 20, 30, 40, 50, ...), what pattern of rotations would you expect to repeatedly see, and why?</span>
+    <span class="quiz-category">Prim grows one tree from a root while Kruskal grows a forest that merges. Why are both correct despite opposite shapes?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>LR and RL double rotations, because increasing order always creates zig-zag shapes</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>RR single (left) rotations, because each new maximum key extends a straight line down the right side, repeatedly triggering the &quot;straight-line-leaning-right&quot; imbalance</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>No rotations are ever needed for sorted insertion order</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>LL single rotations, because the tree leans left</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>They solve different problems that happen to coincide here</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each step of either algorithm takes the lightest edge across *some* cut (Kruskal: its component&#39;s cut; Prim: the grown tree&#39;s cut) — the cut property licenses every single attachment in both</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Forests always outperform single trees asymptotically</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Prim secretly restarts as Kruskal halfway through</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -312,20 +315,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Inserting strictly increasing keys always extends the rightmost path of the tree — exactly the RR (straight-line-right) imbalance shape — so AVL trees repeatedly trigger single left rotations to keep correcting this lean, which is exactly the mechanism that prevents the tree from ever becoming the fully degenerate, $O(n)$-height line that a plain (non-self-balancing) BST would become under the same insertion order.</p><pre><code>&lt;/div&gt;
+      <p>Shape differs, license is identical: each committed edge is a lightest-crossing edge of the cut it bridges. Kruskal&#39;s cuts are its young components; Prim&#39;s cut is the territory boundary. One theorem, two walk styles — which is why both land on MST cost.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">If two different valid derivation methods (e.g., the loop-summation method and the recursion-tree method applied to an equivalent recursive formulation) give *different* final Big-O answers for what should be the same underlying algorithm, what does this most likely indicate?</span>
+    <span class="quiz-category">On a dense graph (E ≈ V²) versus a sparse graph (E ≈ V), which MST algorithm is preferred and why?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Both answers are correct simultaneously and no contradiction exists</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>An arithmetic or setup error was made in one of the derivations, and re-deriving via the other method is a fast way to locate the mistake</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Big-O notation is inherently inconsistent between methods</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>The algorithm&#39;s complexity is undefined</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Kruskal always — sorting is free on dense graphs</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Dense: Prim with a binary heap Θ(E log V) avoids Kruskal&#39;s Θ(E log E) = Θ(V² log V) sort wall; sparse: Kruskal&#39;s near-linear Union-Find phase after a cheap sort wins</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — MST on dense graphs is NP-hard</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Always Prim, because Kruskal cannot handle dense input</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -337,7 +340,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>A given algorithm has one true asymptotic complexity; every valid analysis method, applied correctly, must agree on it. A disagreement between two independently-applied methods is a strong, practical signal to recheck your work — usually faster than staring at a single derivation looking for a subtle mistake.</p><pre><code>&lt;/div&gt;
+      <p>Kruskal pays sorting up front: $\Theta(V^2 \log V)$ when dense. Prim&#39;s heap operations scale with actual edges touched. Sparse flips it: sorting $O(V)$ edges is trivial and Union-Find is nearly free. Match the algorithm to the density — the standard complexity tradeoff question.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -346,16 +349,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_10_avl_tree_rotations_insertion_and_deletion.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_01_greedy_strategy_control_abstraction.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.10 AVL Tree Rotations Insertion And Deletion</div>
+        <div class="ttl">3.1 Greedy Strategy Control Abstraction</div>
       </a>
       
       
       
-      <a href="./m2_01_disjoint_sets_and_union_find.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_03_single_source_shortest_paths_dijkstra.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Disjoint Sets And Union Find</div>
+        <div class="ttl">3.3 Single Source Shortest Paths Dijkstra</div>
       </a>
       
     </footer>
@@ -442,7 +445,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(21) || 0;
-    const currentId = "m1_99_practice_lab_asymptotics_and_recurrences";
+    const currentId = "m3_02_minimum_spanning_trees_kruskal_prim";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;
 
