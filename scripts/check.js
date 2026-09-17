@@ -101,6 +101,13 @@ if (fs.existsSync('dist')) {
   // dist/index.html must be standalone (no dist/ prefixes — artifact root).
   const di = fs.existsSync('dist/index.html') ? fs.readFileSync('dist/index.html', 'utf-8') : '';
   if (di.includes('href="dist/')) fail('dist/index.html still contains dist/ prefixes (artifact mode broken)');
+  // Canonical artifact depth: topic pages sit at <root>/<COURSE>/, so no
+  // asset ref may climb two levels (../../ escapes the Pages subfolder).
+  for (const page of pages) {
+    if (/href="\.\.\/\.\.|src="\.\.\/\.\./.test(fs.readFileSync(page, 'utf-8'))) {
+      fail(`dist depth escape (../../) in ${page} — must be ../ for artifact root`);
+    }
+  }
 }
 
 for (const w of warnings) console.warn('WARN: ' + w);

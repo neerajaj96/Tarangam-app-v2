@@ -200,7 +200,7 @@ function transformCustomWidgets(markdownText) {
   </div>
   <div class="video-frame-wrap">
     <video controls preload="metadata">
-      <source src="../../${safeSrc}" type="video/mp4">
+      <source src="../${safeSrc}" type="video/mp4">
       Your browser does not support embedded video.
     </video>
   </div>
@@ -227,7 +227,7 @@ function transformCustomWidgets(markdownText) {
   </div>
   <div class="video-frame-wrap">
     <video controls preload="metadata">
-      <source src="../../${safeSrc}" type="video/mp4">
+      <source src="../${safeSrc}" type="video/mp4">
       Your browser does not support embedded video.
     </video>
   </div>
@@ -414,7 +414,7 @@ export function buildSite() {
       const preprocessedMarkdown = transformCustomWidgets(rawMarkdown);
 
       // Warn on manim refs pointing at missing files (all 8 mp4s currently orphaned).
-      for (const m of preprocessedMarkdown.matchAll(/<source src="\.\.\/\.\.(.*?)" type="video\/mp4">/g)) {
+      for (const m of preprocessedMarkdown.matchAll(/<source src="\.\.\/(.*?)" type="video\/mp4">/g)) {
         const rel = m[1].replace(/^\//, '');
         if (!fs.existsSync(rel)) warnings.push(`${courseCode}/${page.filename}: video missing ${rel}`);
       }
