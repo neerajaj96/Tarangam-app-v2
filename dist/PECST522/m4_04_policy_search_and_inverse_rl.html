@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 2.1 Uninformed Search DFS BFS UCS</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 2.1 Uninformed Search DFS BFS UCS | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 2.1 Uninformed Search DFS BFS UCS">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 2.1 Uninformed Search DFS BFS UCS">
+<title>Tarangam — 4.4 Policy Search And Inverse RL</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 4.4 Policy Search And Inverse RL | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.4 Policy Search And Inverse RL">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 4.4 Policy Search And Inverse RL">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -107,14 +107,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="2">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Search &amp; Game Playing</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link active" id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+          <a href="./m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
             <span class="topic-dot"></span>
             <span>2.1 Uninformed Search DFS BFS UCS</span>
           </a>
@@ -153,8 +153,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Reinforcement Learning</span>
           <span class="chev">&#9656;</span>
@@ -172,7 +172,7 @@
             <span class="topic-dot"></span>
             <span>4.3 Active RL Q Learning And Exploration</span>
           </a>
-          <a href="./m4_04_policy_search_and_inverse_rl.html" class="topic-link " id="topic-m4_04_policy_search_and_inverse_rl">
+          <a href="./m4_04_policy_search_and_inverse_rl.html" class="topic-link active" id="topic-m4_04_policy_search_and_inverse_rl">
             <span class="topic-dot"></span>
             <span>4.4 Policy Search And Inverse RL</span>
           </a>
@@ -203,9 +203,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 2</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">2.1 Uninformed Search DFS BFS UCS</span>
+        <span style="color:var(--ink); font-weight:600;">4.4 Policy Search And Inverse RL</span>
       </div>
 
       <div class="topbar-actions">
@@ -221,8 +221,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -230,141 +230,56 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Uninformed (Blind) Search Strategies: BFS, DFS &amp; UCS</h1>
-<p><strong>Search algorithms without domain heuristics: Breadth-First Search, Depth-First Search, and Uniform-Cost Search.</strong></p>
+<h1>Policy Search &amp; Inverse Reinforcement Learning</h1>
+<p><strong>Skipping value functions: parameterized policies, hill-climbing in policy space, and flipping the problem — inferring rewards from expert behavior.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-what-is-uninformed-blind-search">1. What is Uninformed (Blind) Search?</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-evaluating-search-strategies">2. Evaluating Search Strategies →</a></p>
-<p>When an AI agent needs to find a sequence of actions from an <strong>Initial State</strong> to a <strong>Goal State</strong>, it must explore the search space.</p>
-<ul>
-<li><strong>Uninformed Search (Blind Search):</strong> Search strategies that operate with <strong>no domain-specific knowledge</strong> beyond the problem definition. They only know how to generate successor states, test legal actions, and recognize a goal state.</li>
-<li>They evaluate paths systematically without an estimate of how close a state is to the goal.</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Navigating in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine you are navigating an unlit maze without a map, compass, or signs. You can only feel the walls around your current position, test paths step-by-step, and check if you have reached an exit. Uninformed search behaves the same way—it cannot &quot;see&quot; the goal ahead; it explores the graph systematically.</p>
+<h2 id="1-beyond-value-functions">1. Beyond Value Functions</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-policy-search-hill-climbing-on-expected-reward">2. Policy Search: Hill-Climbing on… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Choreography vs. Physics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Value methods learn the <em>physics</em> of the world (how good every situation is) and derive behavior from it. <strong>Policy search</strong> skips physics and choreographs directly: parametrize the <em>dance</em> ($\pi_\theta$ — e.g. a neural net mapping sensors to motor torques), perform it, measure applause (total reward), and adjust the choreography toward what earned applause. For a robot with continuous joints, grading every (state, torque-vector) pair is hopeless — but tweaking dance parameters by feel works beautifully.</p>
 </div></details><hr>
 <p><a id="the-dimensions"></a></p>
-<h2 id="2-evaluating-search-strategies">2. Evaluating Search Strategies</h2>
-<p class="secnav"><a href="#1-what-is-uninformed-blind-search">← 1. What is Uninformed (Blind) Sear…</a><span class="secnav-sep">·</span><a href="#3-breadth-first-search-bfs">3. Breadth-First Search (BFS) →</a></p>
-<p>Every search algorithm is evaluated against <strong>four standard criteria</strong>:</p>
-<ol>
-<li><strong>Completeness:</strong> Is the algorithm guaranteed to find a solution if one exists?</li>
-<li><strong>Time Complexity:</strong> How long (or how many node expansions) does it take to find a solution?</li>
-<li><strong>Space Complexity:</strong> How much computer memory (RAM) is required to hold the frontier and explored nodes?</li>
-<li><strong>Optimality:</strong> Does the algorithm find the highest-quality (lowest total path cost) solution among all valid paths?</li>
-</ol>
-<h3>Complexity Parameters</h3>
+<h2 id="2-policy-search-hill-climbing-on-expected-reward">2. Policy Search: Hill-Climbing on Expected Reward</h2>
+<p class="secnav"><a href="#1-beyond-value-functions">← 1. Beyond Value Functions</a><span class="secnav-sep">·</span><a href="#3-inverse-rl-rewards-from-experts">3. Inverse RL: Rewards from Expert… →</a></p>
+<p>Parametrize the policy by $\theta$ (weights, thresholds, trajectory splines). Define $J(\theta) = \mathbb{E}[\text{total reward following } \pi_\theta]$. Then <strong>optimize directly</strong>:</p>
 <ul>
-<li><strong>$b$:</strong> <strong>Branching Factor</strong> (the maximum number of successors for any node).</li>
-<li><strong>$d$:</strong> <strong>Depth</strong> of the shallowest goal node.</li>
-<li><strong>$m$:</strong> <strong>Maximum Depth</strong> of the search space (can be $\infty$).</li>
+<li><strong>Finite differences / hill climbing:</strong> jiggle $\theta$, keep jiggles that score higher. Simple, gradient-free — and sample-hungry.</li>
+<li><strong>Policy gradients (REINFORCE idea):</strong> $\nabla_\theta J \approx$ average over trials of $(\text{return}) \times \nabla_\theta \log \pi_\theta(\text{actions taken})$ — actions from high-return trials get reinforced <em>in proportion to their surprise-weighted contribution</em>. Follows the gradient uphill, trial by trial.</li>
 </ul>
-<hr>
+<p>Strengths: handles <strong>continuous, high-dimensional actions</strong> (robotics, games) where $\max_a Q(s,a)$ is intractable; learns <strong>stochastic policies</strong> naturally (essential for partially observable and adversarial settings). Weaknesses: high-variance gradients, local optima, and sample hunger — the price of ignoring value structure.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Two Paradigms</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Value-based: learn $Q^<em>$, act $\arg\max_a Q^</em>$ (needs discrete/small actions). Policy-based: learn $\theta^* = \arg\max_\theta J(\theta)$ via $\nabla J$ estimates (handles continuous/stochastic). Actor-critic hybrids learn both — the actor dances, the critic (a TD value function) applauds precisely, cutting gradient variance.</p>
+</div></details><hr>
 <p><a id="terminology"></a></p>
-<h2 id="3-breadth-first-search-bfs">3. Breadth-First Search (BFS)</h2>
-<p class="secnav"><a href="#2-evaluating-search-strategies">← 2. Evaluating Search Strategies</a><span class="secnav-sep">·</span><a href="#4-depth-first-search-dfs">4. Depth-First Search (DFS) →</a></p>
-<p>Breadth-First Search expands the search tree level by level. It explores all sibling nodes at depth $k$ before expanding any nodes at depth $k+1$.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>FIFO (First-In, First-Out) Queue</strong> for the frontier.</li>
-</ul>
-<h3>ASCII Diagram: BFS Level-by-Level Expansion</h3>
-<pre><code class="language-text">           [ A ]  (Level 0 - Root)
-          /     \
-         [ B ]   [ C ]  (Level 1 - Evaluated next)
-        /     \
-       [ D ]   [ E ]  (Level 2 - Evaluated last)
-
-   Queue Order: [A] -&gt; [B, C] -&gt; [C, D, E] -&gt; [D, E] -&gt; [E]
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: BFS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^d)$ (explores all levels down to depth $d$).</li>
-<li><strong>Space Complexity:</strong> $O(b^d)$ (stores all generated nodes in the frontier queue).</li>
-<li><strong>Completeness:</strong> Yes (if branching factor $b$ is finite).</li>
-<li><strong>Optimality:</strong> Yes, <strong>if and only if</strong> all step costs are equal (finds shallowest goal).</li>
-</ul>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Memory Bottleneck of BFS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>While BFS guarantees finding the shallowest solution, its <strong>space complexity</strong> is its greatest limitation. Because all generated nodes are retained in memory, for $b = 10$ and $d = 8$, the frontier requires storing over $10^8$ nodes, exhausting RAM long before CPU time is exhausted.</p>
+<h2 id="3-inverse-rl-rewards-from-experts">3. Inverse RL: Rewards from Experts</h2>
+<p class="secnav"><a href="#2-policy-search-hill-climbing-on-expected-reward">← 2. Policy Search: Hill-Climbing on…</a><span class="secnav-sep">·</span><a href="#4-apprenticeship-on-two-features">4. Apprenticeship on Two Features →</a></p>
+<p><strong>Forward RL:</strong> reward given → learn behavior. <strong>Inverse RL:</strong> behavior (expert demonstrations) given → learn the <em>reward function</em> the expert seems to optimize. Why invert? Rewards transfer: the <em>learned reward</em> (&quot;stay on road, avoid pedestrians&quot;) ports to new cars, cities, and bodies — a copied steering policy does not.</p>
+<p>The catch — <strong>reward ambiguity</strong>: infinitely many rewards rationalize any behavior, including the degenerate all-zero reward (under which <em>everything</em> is optimal). Resolutions: ** apprenticeship/feature matching** (Abbeel &amp; Ng: match the expert&#39;s <em>feature expectations</em> — average lane-centering, speed profiles — rather than cloning actions, then optimize the matched reward); <strong>maximum-entropy IRL</strong> (among consistent rewards, prefer the one making the expert&#39;s behavior look least surprising, i.e. no extra commitments).</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Imitation ≠ Inverse RL</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Behavioral cloning</strong> (supervised learning on state→action pairs) copies the expert&#39;s <em>moves</em> — and compounds errors (one drift off-distribution, no recovery skill). <strong>Inverse RL</strong> recovers the expert&#39;s <em>objective</em> and re-optimizes — the apprentice that understands <em>why</em>, and therefore survives situations the master never demonstrated. Exams test exactly this boundary.</p>
 </div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-depth-first-search-dfs">4. Depth-First Search (DFS)</h2>
-<p class="secnav"><a href="#3-breadth-first-search-bfs">← 3. Breadth-First Search (BFS)</a><span class="secnav-sep">·</span><a href="#5-uniform-cost-search-ucs">5. Uniform-Cost Search (UCS) →</a></p>
-<p>Depth-First Search explores as deep as possible along each branch before backtracking.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>LIFO (Last-In, First-Out) Stack</strong> (or recursive function calls).</li>
-</ul>
-<h3>ASCII Diagram: DFS Deep-Dive Expansion</h3>
-<pre><code class="language-text">           [ A ]  (1. Start at root)
-          /     \
-         [ B ]   [ C ]  (3. Visited after backtracking from left branch)
-        /     
-       [ D ]   (2. Dive straight down to leaf node)
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: DFS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^m)$ (may traverse to maximum depth $m$).</li>
-<li><strong>Space Complexity:</strong> $O(b \cdot m)$ (stores only the current branch and unexpanded siblings; linear space).</li>
-<li><strong>Completeness:</strong> No (fails in infinite-depth spaces or graph cycles without cycle detection).</li>
-<li><strong>Optimality:</strong> No (may return a deep, high-cost goal before examining a shallow one).</li>
-</ul>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-uniform-cost-search-ucs">5. Uniform-Cost Search (UCS)</h2>
-<p class="secnav"><a href="#4-depth-first-search-dfs">← 4. Depth-First Search (DFS)</a><span class="secnav-sep">·</span><a href="#6-comparative-summary-matrix">6. Comparative Summary Matrix →</a></p>
-<p>When step costs vary (e.g., roads with different lengths or costs), BFS cannot guarantee the cheapest path because it optimizes step count rather than total cost. <strong>Uniform-Cost Search (UCS)</strong> addresses this by expanding the node with the lowest cumulative path cost $g(n)$.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>Priority Queue</strong> ordered by path cost $g(n)$.</li>
-</ul>
-<h3>ASCII Diagram: UCS Cost-Ordered Expansion</h3>
-<pre><code class="language-text">               (Cost: 1)
-           [ A ] -------&gt; [ B ] (Total Cost: 1)
-          |              
-  (Cost: 5)|              
-          v              
-         [ C ] (Total Cost: 5)
-
-   *UCS expands B first because g(B) = 1 is lower than g(C) = 5.*
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: UCS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Let $C^*$ be the optimal path cost and $\epsilon &gt; 0$ be the minimum step cost:</p>
-<ul>
-<li><strong>Time Complexity:</strong> $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</li>
-<li><strong>Space Complexity:</strong> $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</li>
-<li><strong>Completeness:</strong> Yes (if all step costs satisfy $c(s, a, s&#39;) \ge \epsilon &gt; 0$).</li>
-<li><strong>Optimality:</strong> Yes (guaranteed to find the lowest-cost path for arbitrary non-negative costs).</li>
-</ul>
-</div></details><hr>
-<h2 id="6-comparative-summary-matrix">6. Comparative Summary Matrix</h2>
-<p class="secnav"><a href="#5-uniform-cost-search-ucs">← 5. Uniform-Cost Search (UCS)</a><span class="secnav-sep">·</span><a href="#7-active-recall-quizzes">7. Active Recall Quizzes →</a></p>
-<pre><code class="language-text">+---------------------+----------------+-----------------+-------------------------------+
-| Criterion           | BFS            | DFS             | UCS                           |
-+=====================+================+=================+===============================+
-| **Frontier Data**   | FIFO Queue     | LIFO Stack      | Priority Queue by $g(n)$      |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Complete?**       | Yes (finite b) | No (loops/inf)  | Yes ($c \ge \epsilon &gt; 0$)    |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Optimal?**        | Yes (cost = 1) | No              | YES (arbitrary non-neg costs) |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Time Complexity** | $O(b^d)$       | $O(b^m)$        | $O(b^{1 + \lfloor C^*/\epsilon \rfloor})$ |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Space Complexity**| $O(b^d)$       | $O(b \cdot m)$  | $O(b^{1 + \lfloor C^*/\epsilon \rfloor})$ |
-+---------------------+----------------+-----------------+-------------------------------+
-</code></pre>
+<p><a id="worked-example"></a></p>
+<h2 id="4-apprenticeship-on-two-features">4. Apprenticeship on Two Features</h2>
+<p class="secnav"><a href="#3-inverse-rl-rewards-from-experts">← 3. Inverse RL: Rewards from Expert…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p>Expert taxi demonstrations average features: $\mu_E = (\text{lane-centering } 0.9,\ \text{speed-limit adherence } 0.8)$. Our policy $\pi_0$ (always crawl at half speed, dead center) yields $\mu(\pi_0) = (1.0, 0.4)$.</p>
+<p>Apprenticeship loop: find weights $w$ making the expert look optimal (here: reward adherence more than centering, since the expert sacrifices some centering for speed); optimize $w$-rewarded MDP → $\pi_1$ with $\mu(\pi_1) = (0.92, 0.75)$; compare $|\mu_E - \mu(\pi_1)|$ vs tolerance. Iterate: each round the reward weights shift to explain the <em>residual</em> gap, each policy closes it. Termination ($|\cdot| &lt; \epsilon$) certifies performance <em>near the expert&#39;s</em> under the expert&#39;s own (unknown) true reward — the Abbeel–Ng guarantee — without ever writing down what &quot;good driving&quot; means.</p>
 <hr>
 <p><a id="self-check"></a></p>
-<h2 id="7-active-recall-quizzes">7. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#6-comparative-summary-matrix">← 6. Comparative Summary Matrix</a><span class="secnav-sep">·</span><a href="#8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-apprenticeship-on-two-features">← 4. Apprenticeship on Two Features</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why is Breadth-First Search (BFS) suboptimal when step costs along edges are unequal?</span>
+    <span class="quiz-category">A 7-joint robot arm must learn smooth reaching motions. Why is policy search favored over Q-learning here?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because BFS has infinite space complexity.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because BFS optimizes for the fewest depth steps rather than cumulative numerical path cost, choosing shorter step paths over cheaper total cost paths.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because BFS uses a priority queue.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because BFS cannot branch more than twice per node.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Q-learning is mathematically incorrect for robots</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The action space (7 continuous torques) makes maxₐ Q(s,a) intractable, while a parameterized stochastic policy can be hill-climbed directly on measured returns</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Robots cannot receive numeric rewards at all</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Policy search needs no trials, unlike Q-learning</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -376,20 +291,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>BFS identifies the shallowest goal in terms of depth steps. If a 1-step path costs $100 and a 3-step path costs $5, BFS selects the $100 path because it has fewer steps. Uniform-Cost Search (UCS) must be used when edge weights vary.</p><pre><code>&lt;/div&gt;
+      <p>Q-learning&#39;s decision rule is an <em>optimization over actions</em> — trivial for 4 grid moves, impossible over $\mathbb{R}^7$ torques every 10 ms. Policy search replaces the intractable $\arg\max$ with direct gradient ascent on policy parameters, and stochastic policies additionally cover sensor limits and adversarial unpredictability.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the main memory advantage of Depth-First Search (DFS) over Breadth-First Search (BFS)?</span>
+    <span class="quiz-category">What is the fundamental ill-posedness of inverse RL, and which fix does maximum-entropy IRL apply?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>DFS has constant $O(1)$ space complexity.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>DFS only stores the single active path from root to leaf plus unexpanded siblings, giving a linear space complexity of $O(bm)$ compared to BFS&#39;s exponential $O(b^d)$ frontier.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>DFS stores nodes in an indexed hash map.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>DFS never expands duplicate nodes.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Experts demonstrate too few actions to fill a table; max-entropy invents extra demonstrations</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Infinitely many rewards (including all-zero) rationalize any behavior; max-entropy selects among them the reward under which the expert looks least surprising — no unjustified extra commitments</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Inverse RL cannot represent stochastic experts; max-entropy forces determinism</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>There is no ill-posedness; rewards are uniquely determined</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -401,20 +316,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>DFS maintains only the current branch down to depth $m$ in its LIFO stack. This linear space requirement $O(bm)$ uses vastly less RAM than BFS, which stores entire exponential tiers of nodes.</p><pre><code>&lt;/div&gt;
+      <p>Behavior underdetermines objectives: laziness (all-zero reward) &quot;explains&quot; everything and nothing. Max-entropy breaks the tie by the least-commitment principle — matching observed feature statistics while maximizing uncertainty elsewhere — yielding rewards that generalize instead of memorizing.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Which uninformed search algorithm guarantees finding the lowest-cost solution when step costs vary, assuming all step costs are strictly positive ($\epsilon &gt; 0$)?</span>
+    <span class="quiz-category">Contrast behavioral cloning with apprenticeship (feature-matching) IRL on a driving task, specifically on unseen situations.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Depth-First Search</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Breadth-First Search</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Uniform-Cost Search (UCS)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Random Walk Search</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>They are identical methods with different names</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Cloning copies state→action mappings and compounds drift errors off-distribution; apprenticeship recovers an objective (feature weights) and re-optimizes, so the apprentice handles novel states the expert never showed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cloning generalizes better because it uses deeper networks</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>IRL cannot handle unseen situations by definition</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -426,50 +341,37 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Uniform-Cost Search always expands the frontier node with the lowest cumulative path cost $g(n)$ using a priority queue, guaranteeing cost-optimality when all edge costs are non-negative.</p><pre><code>&lt;/div&gt;
+      <p>Cloning learns <em>what the master did</em>; IRL learns <em>what the master wanted</em>. Off the demonstration manifold, the cloner has no relevant training pairs and drifts irrecoverably, while the apprentice&#39;s recovered reward still scores actions correctly — objectives transfer, trajectories don&#39;t.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2 id="8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#7-active-recall-quizzes">← 7. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> State the 4 evaluation criteria for search algorithms or compare time/space complexities of BFS and DFS.</li>
-<li><strong>7 Marks:</strong> Explain Uniform-Cost Search with an illustrative graph trace, showing queue updates at each step.</li>
+<li><strong>3 Marks:</strong> Policy search idea, IRL definition, or imitation-vs-IRL distinction.</li>
+<li><strong>7 Marks:</strong> Value-based vs policy-based comparison, or apprenticeship loop with the performance guarantee.</li>
 </ul>
 </div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Compare the time and space complexities of BFS and DFS. Which algorithm is more prone to running out of memory?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>BFS:</strong> Time $O(b^d)$, Space $O(b^d)$ (exponential in depth).</li>
-<li><strong>DFS:</strong> Time $O(b^m)$, Space $O(bm)$ (linear in depth).</li>
-<li><strong>Memory Comparison:</strong> <strong>BFS</strong> is far more prone to running out of memory because its space complexity grows exponentially with depth, requiring every frontier node to be kept in RAM simultaneously.</li>
-</ul>
+<p><strong>Q: Define inverse reinforcement learning and state its core difficulty.</strong></p>
+<p><strong>Model Answer:</strong> IRL infers the reward function an expert appears to optimize, from demonstrations. Core difficulty: <strong>reward ambiguity</strong> — infinitely many rewards (including degenerate all-zero) are consistent with any behavior; methods like max-entropy or feature matching add principled tie-breaking.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Explain the Uniform-Cost Search (UCS) algorithm. How does it guarantee optimality on graphs with variable step costs?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Definition (2 Marks):</strong> UCS is an uninformed graph search strategy that expands the node $n$ with the lowest cumulative path cost $g(n)$ from the root node. It manages its frontier with a Priority Queue.</li>
-<li><strong>Difference from BFS (2 Marks):</strong> BFS expands nodes strictly by depth level (FIFO queue), which assumes uniform unit costs. UCS expands nodes in order of cumulative cost $g(n)$, regardless of their depth.</li>
-<li><strong>Optimality Proof Concept (3 Marks):</strong> Because all step costs are strictly positive ($c \ge \epsilon &gt; 0$), cumulative path costs increase monotonically along any search path. Therefore, whenever UCS selects a goal node for expansion from the priority queue, no unexpanded node on the frontier can lead to a cheaper path to the goal, guaranteeing optimality.</li>
-</ol>
+<p><strong>Q: Compare value-based and policy-based RL on representation, action spaces, and variance. Where do actor-critic methods fit?</strong></p>
+<p><strong>Model Answer:</strong> Value-based learns $Q^<em>$ then $\arg\max_a$ — sample-efficient with structure, but needs tractable action maximization (discrete/small actions) and yields deterministic policies. Policy-based learns $\theta^</em> = \arg\max J(\theta)$ via gradient estimates — handles continuous/stochastic actions natively, at the cost of high-variance, local-optima-prone search. <strong>Actor-critic</strong> hybrids keep both: a TD critic supplies low-variance value baselines that stabilize the actor&#39;s gradient steps — the standard architecture behind modern deep RL successes.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_99_practice_lab_agents_and_problem_formulation.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m4_03_active_rl_q_learning_and_exploration.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">🧪 Practice Lab: M1 Agents And Problem Formulation</div>
+        <div class="ttl">4.3 Active RL Q Learning And Exploration</div>
       </a>
       
       
       
-      <a href="./m2_02_iterative_deepening_and_depth_limited.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.2 Iterative Deepening And Depth Limited</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -555,7 +457,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(19) || 0;
-    const currentId = "m2_01_uninformed_search_dfs_bfs_ucs";
+    const currentId = "m4_04_policy_search_and_inverse_rl";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 

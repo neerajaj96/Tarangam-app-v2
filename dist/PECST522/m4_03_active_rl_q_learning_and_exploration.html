@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 2.1 Uninformed Search DFS BFS UCS</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 2.1 Uninformed Search DFS BFS UCS | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 2.1 Uninformed Search DFS BFS UCS">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 2.1 Uninformed Search DFS BFS UCS">
+<title>Tarangam — 4.3 Active RL Q Learning And Exploration</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 4.3 Active RL Q Learning And Exploration | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.3 Active RL Q Learning And Exploration">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 4.3 Active RL Q Learning And Exploration">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -107,14 +107,14 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="2">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>Search &amp; Game Playing</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link active" id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
+          <a href="./m2_01_uninformed_search_dfs_bfs_ucs.html" class="topic-link " id="topic-m2_01_uninformed_search_dfs_bfs_ucs">
             <span class="topic-dot"></span>
             <span>2.1 Uninformed Search DFS BFS UCS</span>
           </a>
@@ -153,8 +153,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="4">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Reinforcement Learning</span>
           <span class="chev">&#9656;</span>
@@ -168,7 +168,7 @@
             <span class="topic-dot"></span>
             <span>4.2 Passive RL Utility Adp And Td</span>
           </a>
-          <a href="./m4_03_active_rl_q_learning_and_exploration.html" class="topic-link " id="topic-m4_03_active_rl_q_learning_and_exploration">
+          <a href="./m4_03_active_rl_q_learning_and_exploration.html" class="topic-link active" id="topic-m4_03_active_rl_q_learning_and_exploration">
             <span class="topic-dot"></span>
             <span>4.3 Active RL Q Learning And Exploration</span>
           </a>
@@ -203,9 +203,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 2</span>
+        <span>Module 4</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">2.1 Uninformed Search DFS BFS UCS</span>
+        <span style="color:var(--ink); font-weight:600;">4.3 Active RL Q Learning And Exploration</span>
       </div>
 
       <div class="topbar-actions">
@@ -221,8 +221,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -230,141 +230,67 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
     <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Uninformed (Blind) Search Strategies: BFS, DFS &amp; UCS</h1>
-<p><strong>Search algorithms without domain heuristics: Breadth-First Search, Depth-First Search, and Uniform-Cost Search.</strong></p>
+<h1>Active RL: Q-Learning &amp; Exploration</h1>
+<p><strong>Action-values, the off-policy Q-update, exploration vs. exploitation, ε-greedy, and GLIE schedules that provably converge.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-what-is-uninformed-blind-search">1. What is Uninformed (Blind) Search?</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-evaluating-search-strategies">2. Evaluating Search Strategies →</a></p>
-<p>When an AI agent needs to find a sequence of actions from an <strong>Initial State</strong> to a <strong>Goal State</strong>, it must explore the search space.</p>
-<ul>
-<li><strong>Uninformed Search (Blind Search):</strong> Search strategies that operate with <strong>no domain-specific knowledge</strong> beyond the problem definition. They only know how to generate successor states, test legal actions, and recognize a goal state.</li>
-<li>They evaluate paths systematically without an estimate of how close a state is to the goal.</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Navigating in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine you are navigating an unlit maze without a map, compass, or signs. You can only feel the walls around your current position, test paths step-by-step, and check if you have reached an exit. Uninformed search behaves the same way—it cannot &quot;see&quot; the goal ahead; it explores the graph systematically.</p>
+<h2 id="1-the-explorer-s-dilemma">1. The Explorer&#39;s Dilemma</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-q-values-and-the-off-policy-update">2. Q-Values and the Off-Policy Upd… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The New Town Foodie</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>You move to a new town. <strong>Exploit</strong>: eat every meal at the first decent café — guaranteed okay dinners, possibly missing the legendary place two streets over. <strong>Explore</strong>: try random doors — most mediocre, one life-changing. The dilemma is <em>temporal</em>: exploration pays in <em>information</em> (future meals), exploitation pays in <em>reward</em> (tonight). Active RL is this dilemma formalized: the agent must deliberately take actions it currently believes are <em>suboptimal</em>, because beliefs without evidence are just prejudices.</p>
 </div></details><hr>
 <p><a id="the-dimensions"></a></p>
-<h2 id="2-evaluating-search-strategies">2. Evaluating Search Strategies</h2>
-<p class="secnav"><a href="#1-what-is-uninformed-blind-search">← 1. What is Uninformed (Blind) Sear…</a><span class="secnav-sep">·</span><a href="#3-breadth-first-search-bfs">3. Breadth-First Search (BFS) →</a></p>
-<p>Every search algorithm is evaluated against <strong>four standard criteria</strong>:</p>
-<ol>
-<li><strong>Completeness:</strong> Is the algorithm guaranteed to find a solution if one exists?</li>
-<li><strong>Time Complexity:</strong> How long (or how many node expansions) does it take to find a solution?</li>
-<li><strong>Space Complexity:</strong> How much computer memory (RAM) is required to hold the frontier and explored nodes?</li>
-<li><strong>Optimality:</strong> Does the algorithm find the highest-quality (lowest total path cost) solution among all valid paths?</li>
-</ol>
-<h3>Complexity Parameters</h3>
-<ul>
-<li><strong>$b$:</strong> <strong>Branching Factor</strong> (the maximum number of successors for any node).</li>
-<li><strong>$d$:</strong> <strong>Depth</strong> of the shallowest goal node.</li>
-<li><strong>$m$:</strong> <strong>Maximum Depth</strong> of the search space (can be $\infty$).</li>
-</ul>
-<hr>
+<h2 id="2-q-values-and-the-off-policy-update">2. Q-Values and the Off-Policy Update</h2>
+<p class="secnav"><a href="#1-the-explorer-s-dilemma">← 1. The Explorer&#39;s Dilemma</a><span class="secnav-sep">·</span><a href="#3-exploration-schedules-greedy-and-glie">3. Exploration Schedules: ε-Greedy… →</a></p>
+<p>Passive methods learn state values $U^\pi$ — useless for <em>choosing</em> without a model (which action leads where?). <strong>Action-values</strong> $Q(s,a)$ grade <em>state–action pairs</em> directly, so the greedy policy $\arg\max_a Q(s,a)$ needs no transition model at all.</p>
+<p><strong>Q-learning</strong> (model-free, <strong>off-policy</strong>): after $(s,a) \xrightarrow{r} s&#39;$,
+$$Q(s,a) \leftarrow Q(s,a) + \alpha,[,r + \gamma \max_{a&#39;} Q(s&#39;,a&#39;) - Q(s,a),]$$
+The $\max$ is the magic: the update targets the <em>optimal</em> continuation regardless of which (possibly exploratory) action was actually taken — so Q-learning converges to $Q^*$ even while behaving randomly. (SARSA, its on-policy sibling, backs up the <em>actually taken</em> $a&#39;$ instead — safer during learning, optimal only in the limit of vanishing exploration.)</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Q-Update Anatomy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Target $= r + \gamma \max_{a&#39;} Q(s&#39;,a&#39;)$ (best imaginable future) · error $=$ target $-$ current · step $\alpha$ toward it. Off-policy because the $\max$ detaches the <em>learned</em> value from the <em>behavior</em> policy. Converges to $Q^*$ under infinite state-action visitation + decaying $\alpha$.</p>
+</div></details><hr>
 <p><a id="terminology"></a></p>
-<h2 id="3-breadth-first-search-bfs">3. Breadth-First Search (BFS)</h2>
-<p class="secnav"><a href="#2-evaluating-search-strategies">← 2. Evaluating Search Strategies</a><span class="secnav-sep">·</span><a href="#4-depth-first-search-dfs">4. Depth-First Search (DFS) →</a></p>
-<p>Breadth-First Search expands the search tree level by level. It explores all sibling nodes at depth $k$ before expanding any nodes at depth $k+1$.</p>
+<h2 id="3-exploration-schedules-greedy-and-glie">3. Exploration Schedules: ε-Greedy and GLIE</h2>
+<p class="secnav"><a href="#2-q-values-and-the-off-policy-update">← 2. Q-Values and the Off-Policy Upd…</a><span class="secnav-sep">·</span><a href="#4-one-q-update-by-hand">4. One Q-Update by Hand →</a></p>
 <ul>
-<li><strong>Data Structure:</strong> Uses a <strong>FIFO (First-In, First-Out) Queue</strong> for the frontier.</li>
+<li><strong>ε-greedy:</strong> with probability $\epsilon$ act randomly, else greedily. Fixed $\epsilon$ explores forever (never fully exploits) — fine for non-stationary worlds, suboptimal asymptotically.</li>
+<li><strong>GLIE</strong> (Greedy in the Limit of Infinite Exploration): $\epsilon_t \to 0$ (e.g. $\epsilon = 1/t$) while every $(s,a)$ is still tried infinitely often. Early chaos, eventual purity — Q-learning + GLIE + decaying $\alpha$ converges to optimal <em>behavior</em>, not just optimal values.</li>
 </ul>
-<h3>ASCII Diagram: BFS Level-by-Level Expansion</h3>
-<pre><code class="language-text">           [ A ]  (Level 0 - Root)
-          /     \
-         [ B ]   [ C ]  (Level 1 - Evaluated next)
-        /     \
-       [ D ]   [ E ]  (Level 2 - Evaluated last)
-
-   Queue Order: [A] -&gt; [B, C] -&gt; [C, D, E] -&gt; [D, E] -&gt; [E]
+<pre><code class="language-text">regret
+^
+| * .                                     ε-greedy (fixed ε):
+| *  .  *                                linear regret forever
+| *    .   *
+| *-----------*----*----*----*----&gt; time   (keeps paying exploration tax)
+|
+| *                                           GLIE (ε = 1/t):
+| * *                                     regret flattens — exploration
+| *   *  *  *  *  *  *  *&gt; time            tax decays to zero
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: BFS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^d)$ (explores all levels down to depth $d$).</li>
-<li><strong>Space Complexity:</strong> $O(b^d)$ (stores all generated nodes in the frontier queue).</li>
-<li><strong>Completeness:</strong> Yes (if branching factor $b$ is finite).</li>
-<li><strong>Optimality:</strong> Yes, <strong>if and only if</strong> all step costs are equal (finds shallowest goal).</li>
-</ul>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Memory Bottleneck of BFS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>While BFS guarantees finding the shallowest solution, its <strong>space complexity</strong> is its greatest limitation. Because all generated nodes are retained in memory, for $b = 10$ and $d = 8$, the frontier requires storing over $10^8$ nodes, exhausting RAM long before CPU time is exhausted.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Exploration Is Not Noise for Its Own Sake</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Random actions are <em>experiments with a purpose</em>: each untried $(s,a)$ hides a value estimate with infinite uncertainty. Undirected thrashing (pure random forever) learns values but never <em>uses</em> them; pure greedy never <em>corrects</em> them. Schedules like GLIE exist because both extremes fail — the exam rewards answers that price exploration in <em>information</em>, not motion.</p>
 </div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-depth-first-search-dfs">4. Depth-First Search (DFS)</h2>
-<p class="secnav"><a href="#3-breadth-first-search-bfs">← 3. Breadth-First Search (BFS)</a><span class="secnav-sep">·</span><a href="#5-uniform-cost-search-ucs">5. Uniform-Cost Search (UCS) →</a></p>
-<p>Depth-First Search explores as deep as possible along each branch before backtracking.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>LIFO (Last-In, First-Out) Stack</strong> (or recursive function calls).</li>
-</ul>
-<h3>ASCII Diagram: DFS Deep-Dive Expansion</h3>
-<pre><code class="language-text">           [ A ]  (1. Start at root)
-          /     \
-         [ B ]   [ C ]  (3. Visited after backtracking from left branch)
-        /     
-       [ D ]   (2. Dive straight down to leaf node)
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: DFS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^m)$ (may traverse to maximum depth $m$).</li>
-<li><strong>Space Complexity:</strong> $O(b \cdot m)$ (stores only the current branch and unexpanded siblings; linear space).</li>
-<li><strong>Completeness:</strong> No (fails in infinite-depth spaces or graph cycles without cycle detection).</li>
-<li><strong>Optimality:</strong> No (may return a deep, high-cost goal before examining a shallow one).</li>
-</ul>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-uniform-cost-search-ucs">5. Uniform-Cost Search (UCS)</h2>
-<p class="secnav"><a href="#4-depth-first-search-dfs">← 4. Depth-First Search (DFS)</a><span class="secnav-sep">·</span><a href="#6-comparative-summary-matrix">6. Comparative Summary Matrix →</a></p>
-<p>When step costs vary (e.g., roads with different lengths or costs), BFS cannot guarantee the cheapest path because it optimizes step count rather than total cost. <strong>Uniform-Cost Search (UCS)</strong> addresses this by expanding the node with the lowest cumulative path cost $g(n)$.</p>
-<ul>
-<li><strong>Data Structure:</strong> Uses a <strong>Priority Queue</strong> ordered by path cost $g(n)$.</li>
-</ul>
-<h3>ASCII Diagram: UCS Cost-Ordered Expansion</h3>
-<pre><code class="language-text">               (Cost: 1)
-           [ A ] -------&gt; [ B ] (Total Cost: 1)
-          |              
-  (Cost: 5)|              
-          v              
-         [ C ] (Total Cost: 5)
-
-   *UCS expands B first because g(B) = 1 is lower than g(C) = 5.*
-</code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: UCS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Let $C^*$ be the optimal path cost and $\epsilon &gt; 0$ be the minimum step cost:</p>
-<ul>
-<li><strong>Time Complexity:</strong> $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</li>
-<li><strong>Space Complexity:</strong> $O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</li>
-<li><strong>Completeness:</strong> Yes (if all step costs satisfy $c(s, a, s&#39;) \ge \epsilon &gt; 0$).</li>
-<li><strong>Optimality:</strong> Yes (guaranteed to find the lowest-cost path for arbitrary non-negative costs).</li>
-</ul>
-</div></details><hr>
-<h2 id="6-comparative-summary-matrix">6. Comparative Summary Matrix</h2>
-<p class="secnav"><a href="#5-uniform-cost-search-ucs">← 5. Uniform-Cost Search (UCS)</a><span class="secnav-sep">·</span><a href="#7-active-recall-quizzes">7. Active Recall Quizzes →</a></p>
-<pre><code class="language-text">+---------------------+----------------+-----------------+-------------------------------+
-| Criterion           | BFS            | DFS             | UCS                           |
-+=====================+================+=================+===============================+
-| **Frontier Data**   | FIFO Queue     | LIFO Stack      | Priority Queue by $g(n)$      |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Complete?**       | Yes (finite b) | No (loops/inf)  | Yes ($c \ge \epsilon &gt; 0$)    |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Optimal?**        | Yes (cost = 1) | No              | YES (arbitrary non-neg costs) |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Time Complexity** | $O(b^d)$       | $O(b^m)$        | $O(b^{1 + \lfloor C^*/\epsilon \rfloor})$ |
-+---------------------+----------------+-----------------+-------------------------------+
-| **Space Complexity**| $O(b^d)$       | $O(b \cdot m)$  | $O(b^{1 + \lfloor C^*/\epsilon \rfloor})$ |
-+---------------------+----------------+-----------------+-------------------------------+
-</code></pre>
+<p><a id="worked-example"></a></p>
+<h2 id="4-one-q-update-by-hand">4. One Q-Update by Hand</h2>
+<p class="secnav"><a href="#3-exploration-schedules-greedy-and-glie">← 3. Exploration Schedules: ε-Greedy…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p>$Q(A,\text{left}) = 2.0$; from $A$ the agent takes $\text{left}$, gets $r = 0$, lands in $B$ where $Q(B,\text{left}) = 1.0$, $Q(B,\text{right}) = 4.0$. $\alpha = 0.5$, $\gamma = 0.9$.</p>
+<p>Target: $0 + 0.9 \times \max(1.0, 4.0) = 3.6$. Error: $3.6 - 2.0 = 1.6$. Update: $Q(A,\text{left}) \leftarrow 2.0 + 0.5 \times 1.6 = 2.8$. Note what did <em>not</em> matter: which action the agent takes <em>next</em> in $B$ — even if it explores with $\text{left}$, the update aims at the <em>best</em> continuation ($\text{right}$). Off-policy in one line.</p>
 <hr>
 <p><a id="self-check"></a></p>
-<h2 id="7-active-recall-quizzes">7. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#6-comparative-summary-matrix">← 6. Comparative Summary Matrix</a><span class="secnav-sep">·</span><a href="#8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-one-q-update-by-hand">← 4. One Q-Update by Hand</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why is Breadth-First Search (BFS) suboptimal when step costs along edges are unequal?</span>
+    <span class="quiz-category">What makes Q-learning off-policy, and why does that matter for exploration?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Because BFS has infinite space complexity.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because BFS optimizes for the fewest depth steps rather than cumulative numerical path cost, choosing shorter step paths over cheaper total cost paths.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because BFS uses a priority queue.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Because BFS cannot branch more than twice per node.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It ignores rewards entirely and follows a fixed script</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Its update targets maxₐ′ Q(s′,a′) — the optimal continuation — regardless of the (possibly random) action actually taken, so it can learn optimal values while exploring freely</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It requires a perfect transition model before acting</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Off-policy means it never updates Q-values at all</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -376,20 +302,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>BFS identifies the shallowest goal in terms of depth steps. If a 1-step path costs $100 and a 3-step path costs $5, BFS selects the $100 path because it has fewer steps. Uniform-Cost Search (UCS) must be used when edge weights vary.</p><pre><code>&lt;/div&gt;
+      <p>On-policy methods (SARSA) learn the value <em>of the behavior being executed</em>, exploration warts included; Q-learning&#39;s $\max$ decouples learning target from behavior, so wild exploration never corrupts the optimal-value estimates. Freedom to explore + safety of estimates = the algorithm&#39;s whole appeal.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the main memory advantage of Depth-First Search (DFS) over Breadth-First Search (BFS)?</span>
+    <span class="quiz-category">A fixed ε = 0.1 greedy agent runs forever in a stationary world. What is true asymptotically?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>DFS has constant $O(1)$ space complexity.</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>DFS only stores the single active path from root to leaf plus unexpanded siblings, giving a linear space complexity of $O(bm)$ compared to BFS&#39;s exponential $O(b^d)$ frontier.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>DFS stores nodes in an indexed hash map.</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>DFS never expands duplicate nodes.</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It converges to exactly optimal behavior with zero regret</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It keeps taking random actions 10% of the time forever, paying permanent linear regret — GLIE-style decaying ε is needed to close the gap</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It stops exploring after exactly 10 episodes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>ε-greedy is only defined for bandits, never MDPs</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -401,20 +327,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>DFS maintains only the current branch down to depth $m$ in its LIFO stack. This linear space requirement $O(bm)$ uses vastly less RAM than BFS, which stores entire exponential tiers of nodes.</p><pre><code>&lt;/div&gt;
+      <p>Fixed $\epsilon$ never retires exploration: 1-in-10 actions stay random to the end of time, each costing expected regret. GLIE ($\epsilon_t \to 0$ with infinite visitation) spends the exploration budget early and banks optimal behavior late.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Which uninformed search algorithm guarantees finding the lowest-cost solution when step costs vary, assuming all step costs are strictly positive ($\epsilon &gt; 0$)?</span>
+    <span class="quiz-category">Why do active methods need action-values Q(s,a) rather than the state-values U(s) that passive methods learn?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Depth-First Search</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Breadth-First Search</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Uniform-Cost Search (UCS)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Random Walk Search</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Q-values use less memory than state values</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Acting greedily on U(s) requires predicting which action leads to the best successor — impossible without a transition model; Q(s,a) grades actions directly, so argmax needs no model</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>State values cannot represent stochastic policies</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Q-learning was invented before state values existed</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -426,49 +352,39 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Uniform-Cost Search always expands the frontier node with the lowest cumulative path cost $g(n)$ using a priority queue, guaranteeing cost-optimality when all edge costs are non-negative.</p><pre><code>&lt;/div&gt;
+      <p>$\pi(s) = \arg\max_a \sum_{s&#39;} P(s&#39;|s,a)U(s&#39;)$ needs $P$ — the model passive evaluation never learned. $Q^<em>(s,a)$ already <em>contains</em> the consequence knowledge, so $\arg\max_a Q^</em>$ acts optimally model-free. That single representational shift is what makes model-free control possible.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2 id="8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#7-active-recall-quizzes">← 7. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> State the 4 evaluation criteria for search algorithms or compare time/space complexities of BFS and DFS.</li>
-<li><strong>7 Marks:</strong> Explain Uniform-Cost Search with an illustrative graph trace, showing queue updates at each step.</li>
+<li><strong>3 Marks:</strong> Q-learning update rule, ε-greedy, or GLIE conditions.</li>
+<li><strong>7 Marks:</strong> Off-policy vs on-policy (Q-learning vs SARSA), or exploration-exploitation with regret reasoning.</li>
 </ul>
 </div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Compare the time and space complexities of BFS and DFS. Which algorithm is more prone to running out of memory?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>BFS:</strong> Time $O(b^d)$, Space $O(b^d)$ (exponential in depth).</li>
-<li><strong>DFS:</strong> Time $O(b^m)$, Space $O(bm)$ (linear in depth).</li>
-<li><strong>Memory Comparison:</strong> <strong>BFS</strong> is far more prone to running out of memory because its space complexity grows exponentially with depth, requiring every frontier node to be kept in RAM simultaneously.</li>
-</ul>
+<p><em><em>Q: State the Q-learning update and the two conditions for convergence to Q</em>.</em>*</p>
+<p><strong>Model Answer:</strong> $Q(s,a) \leftarrow Q(s,a) + \alpha,[r + \gamma \max_{a&#39;} Q(s&#39;,a&#39;) - Q(s,a)]$. Converges under (1) infinite visitation of every $(s,a)$ pair and (2) decaying $\alpha$ (stochastic-approximation conditions) — plus GLIE exploration if optimal <em>behavior</em> (not just values) is required.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Explain the Uniform-Cost Search (UCS) algorithm. How does it guarantee optimality on graphs with variable step costs?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Definition (2 Marks):</strong> UCS is an uninformed graph search strategy that expands the node $n$ with the lowest cumulative path cost $g(n)$ from the root node. It manages its frontier with a Priority Queue.</li>
-<li><strong>Difference from BFS (2 Marks):</strong> BFS expands nodes strictly by depth level (FIFO queue), which assumes uniform unit costs. UCS expands nodes in order of cumulative cost $g(n)$, regardless of their depth.</li>
-<li><strong>Optimality Proof Concept (3 Marks):</strong> Because all step costs are strictly positive ($c \ge \epsilon &gt; 0$), cumulative path costs increase monotonically along any search path. Therefore, whenever UCS selects a goal node for expansion from the priority queue, no unexpanded node on the frontier can lead to a cheaper path to the goal, guaranteeing optimality.</li>
-</ol>
+<p><strong>Q: &quot;Exploration and exploitation conflict fundamentally.&quot; Discuss with ε-greedy and GLIE, and explain how Q-learning&#39;s off-policy nature softens the conflict.</strong></p>
+<p><strong>Model Answer:</strong> Exploitation banks known rewards; exploration buys information at immediate cost — finite experience cannot maximize both simultaneously (regret formalism, §3 sketch). Fixed-$\epsilon$ pays linear regret forever; GLIE decays exploration while preserving infinite visitation, converging to optimal behavior. Q-learning softens the dilemma (not removes it): because updates target $\max_{a&#39;}$, exploratory actions still teach optimal values — the agent can <em>behave</em> foolishly while <em>learning</em> wisely, which on-policy SARSA cannot do.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_99_practice_lab_agents_and_problem_formulation.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m4_02_passive_rl_utility_adp_and_td.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">🧪 Practice Lab: M1 Agents And Problem Formulation</div>
+        <div class="ttl">4.2 Passive RL Utility Adp And Td</div>
       </a>
       
       
       
-      <a href="./m2_02_iterative_deepening_and_depth_limited.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m4_04_policy_search_and_inverse_rl.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.2 Iterative Deepening And Depth Limited</div>
+        <div class="ttl">4.4 Policy Search And Inverse RL</div>
       </a>
       
     </footer>
@@ -555,7 +471,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(19) || 0;
-    const currentId = "m2_01_uninformed_search_dfs_bfs_ucs";
+    const currentId = "m4_03_active_rl_q_learning_and_exploration";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 
