@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.5 File Transfer Protocol FTP</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.5 File Transfer Protocol FTP | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.5 File Transfer Protocol FTP">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.5 File Transfer Protocol FTP">
+<title>Tarangam — 3.5 Wireless Lan 802 11</title>
+<meta name="description" content="Computer Networks (PCCST501) — 3.5 Wireless Lan 802 11 | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.5 Wireless Lan 802 11">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 3.5 Wireless Lan 802 11">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Application Layer</span>
           <span class="chev">&#9656;</span>
@@ -89,7 +89,7 @@
             <span class="topic-dot"></span>
             <span>1.4 World Wide Web And HTTP</span>
           </a>
-          <a href="./m1_05_file_transfer_protocol_ftp.html" class="topic-link active" id="topic-m1_05_file_transfer_protocol_ftp">
+          <a href="./m1_05_file_transfer_protocol_ftp.html" class="topic-link " id="topic-m1_05_file_transfer_protocol_ftp">
             <span class="topic-dot"></span>
             <span>1.5 File Transfer Protocol FTP</span>
           </a>
@@ -128,8 +128,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Data Link Layer</span>
           <span class="chev">&#9656;</span>
@@ -151,7 +151,7 @@
             <span class="topic-dot"></span>
             <span>3.4 Lan Addressing ARP Switches And Vlans</span>
           </a>
-          <a href="./m3_05_wireless_lan_802_11.html" class="topic-link " id="topic-m3_05_wireless_lan_802_11">
+          <a href="./m3_05_wireless_lan_802_11.html" class="topic-link active" id="topic-m3_05_wireless_lan_802_11">
             <span class="topic-dot"></span>
             <span>3.5 Wireless Lan 802 11</span>
           </a>
@@ -182,9 +182,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST501</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.5 File Transfer Protocol FTP</span>
+        <span style="color:var(--ink); font-weight:600;">3.5 Wireless Lan 802 11</span>
       </div>
 
       <div class="topbar-actions">
@@ -200,8 +200,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -212,108 +212,57 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>File Transfer Protocol (FTP)</h1>
-<p><strong>Out-of-band control vs. data connections, the FTP session lifecycle, Active vs. Passive mode, and stateful session tracking.</strong></p>
+<h1>Wireless LAN: 802.11, CSMA/CA &amp; Mobility</h1>
+<p><strong>Why wireless can&#39;t detect collisions, hidden/exposed terminals, RTS/CTS reservation, the 802.11 frame, association, and handoff.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Ordering a Refrigerator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine ordering a refrigerator from a store. You call the store on the telephone to place the order, confirm your identity, and specify what you want — this phone conversation is entirely separate from what happens next: the store dispatches a large delivery truck carrying the actual refrigerator to your house. The conversation and the heavy lifting travel over two completely different channels.</p>
-<p>This is exactly how <strong>FTP</strong> works. The <strong>telephone call</strong> is the <strong>Control Connection (Port 21)</strong> — used for login, browsing directories, and issuing commands like &quot;send me this file.&quot; The <strong>delivery truck</strong> is the <strong>Data Connection (Port 20)</strong> — used strictly to carry the actual file bytes. Because control information travels on a separate channel from the data, FTP is said to use <strong>out-of-band</strong> control — in sharp contrast to HTTP, which mixes its request headers and payload data into the very same connection (<strong>in-band</strong> control).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Polite Conversation in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Wired Ethernet is a lit room: you <em>see</em> interruptions mid-sentence (collision detection). <strong>Wi-Fi is a dark room of polite speakers</strong>: you can&#39;t hear collisions while talking (your own voice deafens you), and two people may both clearly hear the host yet be inaudible to <em>each other</em> (<strong>hidden terminals</strong>). So instead of detecting collisions, wireless speakers <strong>avoid</strong> them: listen first, announce &quot;I will speak for 5 seconds&quot; (<strong>RTS</strong>), wait for the host&#39;s &quot;floor is yours&quot; (<strong>CTS</strong>), then speak — while everyone else, hearing the reservation, stays politely silent.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Dual-Connection Architecture</h3>
-<pre><code class="language-mermaid">flowchart LR
-    subgraph Client
-        C[FTP Client]
-    end
-    subgraph Server
-        S[FTP Server]
-    end
-    C &lt;--&gt;|&quot;Control Connection&lt;br/&gt;Port 21 — stays open&lt;br/&gt;entire session&quot;| S
-    C &lt;--&gt;|&quot;Data Connection&lt;br/&gt;Port 20 — opened/closed&lt;br/&gt;per file transfer&quot;| S
-</code></pre>
+<h3>2.1 Why CSMA/CD Dies on Radio (Two Killers)</h3>
 <ul>
-<li><strong>Control Connection (Port 21):</strong> carries login credentials, directory-navigation commands (<code>CWD</code>), and transfer commands (<code>STOR</code> to upload, <code>RETR</code> to download). Remains open for the <strong>entire session</strong>.</li>
-<li><strong>Data Connection (Port 20):</strong> carries only raw file bytes. A <strong>new</strong> data connection is opened and closed for <strong>every individual file</strong>.</li>
+<li><strong>Self-deafening:</strong> a transmitting radio drowns out incoming signals at its own antenna — collision <em>detection</em> during transmission is physically impossible.</li>
+<li><strong>Hidden terminals:</strong> A and C both reach access point B but not each other; both sense silence, transmit together, collide <em>at B</em> — a collision neither sender could hear. (Mirror image: <strong>exposed terminals</strong> B→A and C→D could safely overlap, but carrier sense needlessly silences C — lost parallelism.)</li>
 </ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Two Numbers, Two Rules</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Port 20 is the <em>active-mode</em> data port</strong> — in passive mode the server instead opens a random high port (see §2.3), so never write &quot;data = always 20&quot; without the active-mode qualifier. And the counting rule is fixed: <strong>1 control connection per session, 1 fresh data connection per file</strong> — a 3-file download means 1 + 3, never 3 + 3.</p>
-</div></details><h3>2.2 The FTP Session Lifecycle</h3>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant C as Client
-    participant S as Server
-    C-&gt;&gt;S: Open Control Connection (Port 21)
-    C-&gt;&gt;S: Username + Password
-    S-&gt;&gt;C: Authenticated
-    C-&gt;&gt;S: CWD /videos (change directory)
-    S-&gt;&gt;C: Directory changed
-    C-&gt;&gt;S: RETR movie.mp4
-    Note over C,S: Server opens Data Connection (Port 20)
-    S-&gt;&gt;C: [file bytes over Data Connection]
-    Note over C,S: Data Connection closes after transfer
-    C-&gt;&gt;S: RETR song.mp3
-    Note over C,S: A brand-new Data Connection is opened
-    S-&gt;&gt;C: [file bytes over new Data Connection]
-    C-&gt;&gt;S: QUIT
-    Note over C,S: Control Connection finally closes
-</code></pre>
-<h3>2.3 Active vs. Passive FTP</h3>
-<p>Firewalls, by design, block unsolicited incoming connections — which causes trouble for FTP&#39;s original design:</p>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>Behavior</th>
-<th>Firewall Compatibility</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Active Mode</strong></td>
-<td>Client opens a random port and tells the server to connect <em>back</em> to it</td>
-<td>Often <strong>blocked</strong> — client&#39;s own firewall rejects the server&#39;s inbound connection attempt</td>
-</tr>
-<tr>
-<td><strong>Passive Mode (<code>PASV</code>)</strong></td>
-<td>Client asks the server to open a random high port; client then connects <em>outbound</em> to that port</td>
-<td>Works well — the client always initiates outbound, which firewalls typically allow</td>
-</tr>
-</tbody></table>
-<h3>2.4 FTP is Stateful</h3>
-<p>Unlike HTTP, the FTP server <strong>remembers</strong> things about each connected user throughout the session:</p>
-<ul>
-<li>The user&#39;s current working directory (so relative paths like <code>CWD ../reports</code> make sense).</li>
-<li>The user&#39;s authentication/authorization state.</li>
-</ul>
-<p><em>Trade-off:</em> maintaining this per-user state limits how many simultaneous sessions a single FTP server can sustain, compared to a stateless HTTP server that can serve far more clients with the same resources.</p>
-<hr>
+<h3>2.2 CSMA/CA: Avoidance by Reservation</h3>
+<ol>
+<li>Sense: idle for <strong>DIFS</strong> → may transmit; busy → <strong>binary exponential backoff</strong> (like Ethernet&#39;s, but no abort mid-frame — the frame always completes).</li>
+<li>Optional <strong>RTS/CTS handshake</strong>: sender&#39;s RTS (with duration) → AP&#39;s CTS (echoing duration) silences <em>all</em> hearers — including nodes hidden from the sender. Short control frames collide cheaply instead of long data frames.</li>
+<li>Receiver <strong>ACKs</strong> every data frame (wireless loss is normal — errors, not just collisions — so link-layer ACKs + retransmission are mandatory here, unlike wired Ethernet).</li>
+</ol>
+<h3>2.3 The 802.11 Frame &amp; Joining a Network</h3>
+<p>Four address fields (vs. Ethernet&#39;s two — relaying through the AP needs source, destination, transmitter, <em>and</em> receiver addresses), sequence control, duration field (reserves the channel in everyone&#39;s NAV timer). Joining: <strong>scan</strong> (passive listen / active probe) → <strong>associate</strong> (AP assigns association ID) → <strong>authenticate</strong>; moving between APs = <strong>handoff/reassociation</strong> (same subnet: Layer-2 handoff; across subnets: Mobile IP territory).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Wireless Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>No CD (self-deaf + hidden) → <strong>CA with RTS/CTS + backoff + per-frame ACKs</strong> · hidden = can&#39;t hear each other, collide at AP · exposed = silenced needlessly · <strong>4 address fields</strong> (AP relaying) · join = <strong>scan → associate → authenticate</strong> · errors normal ⇒ <strong>link ACKs mandatory</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: RTS/CTS Reserves, It Doesn&#39;t Detect</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>RTS/CTS never <em>detects</em> a collision — it <em>prices</em> collisions down (short control frames risk the channel instead of 1500-byte data frames) and <em>informs</em> hidden nodes via the CTS echo. Any option claiming CTS &quot;measures collisions&quot; confuses the mechanism&#39;s purpose.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A user connects to an FTP server, changes into a <code>/videos</code> directory, downloads two files (<code>movie.mp4</code> and <code>trailer.mp4</code>), then disconnects. Count how many Control Connections and how many Data Connections are used in total.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Connections</div><div class="step-content"><ol>
-<li><strong>Control Connection opened</strong> (Port 21) — used for login and the <code>CWD /videos</code> command. <strong>1 control connection total</strong>, and it stays open the whole time.</li>
-<li><code>RETR movie.mp4</code> is issued over the control connection → the server opens a <strong>new Data Connection</strong>, transfers the file, then closes that data connection.</li>
-<li><code>RETR trailer.mp4</code> is issued over the <em>same</em> control connection → the server opens <strong>another new Data Connection</strong> (a second one), transfers the file, then closes it.</li>
-<li><code>QUIT</code> is sent over the control connection, which finally closes.</li>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Stations A and C are hidden from each other; both associate to AP B. A wants to send a 1500-byte frame to B while C also has traffic. Trace the RTS/CTS exchange and show exactly which transmissions each party hears.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Reserving the Air</div><div class="step-content"><ol>
+<li>A senses idle for DIFS, sends short <strong>RTS</strong> (duration = CTS + DATA + ACK time). B hears it; C (out of A&#39;s range) hears <strong>nothing</strong>.</li>
+<li>B replies <strong>CTS</strong> (same duration). Both A <em>and</em> C hear the CTS (both in B&#39;s range) → C sets its NAV timer and stays silent for the whole reservation, despite never hearing A&#39;s RTS.</li>
+<li>A sends DATA; B <strong>ACKs</strong>. Only then does C&#39;s NAV expire and contend normally.</li>
 </ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The session uses exactly <strong>1 Control Connection</strong> (open for the whole session) and <strong>2 separate Data Connections</strong> (one per file transferred). This demonstrates FTP&#39;s defining rule: the control channel is long-lived and shared across the whole session, while a fresh data channel is created and torn down for every single file.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The CTS echo is the entire trick: one broadcast from the <em>center</em> informs nodes the <em>edge</em> cannot reach. Worst case without it — A&#39;s 1500 bytes destroyed by C mid-flight, both backing off blindly; with it, collisions (if any) strike 20-byte control frames. Hidden terminals neutralized by topology-aware protocol design.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">Which two physical facts together make CSMA/CD unusable on Wi-Fi, forcing CSMA/CA?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>What does it mean when we say FTP uses &quot;out-of-band&quot; control?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>FTP does not use TCP for either connection</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Control information (commands, login) travels over a separate connection (Port 21) from the actual file data (Port 20), unlike HTTP which mixes both into one connection</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP control messages are encrypted while data is not</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP has no concept of a control connection at all</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Low bandwidth and high latency of radio links</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The sender&#39;s own transmission deafens its receiver (no in-transmission detection), and hidden terminals collide at the AP unheard by either sender</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Wi-Fi frames are too short to detect</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Radio waves travel slower than electrical signals</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -325,21 +274,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Out-of-band&quot; specifically means the signaling/control channel is physically separate from the data channel — FTP&#39;s Port 21 (control) and Port 20 (data) are two entirely distinct TCP connections, whereas HTTP sends both requests and data &quot;in-band&quot; over the same single connection.</p><pre><code>&lt;/div&gt;
+      <p>CD needs <em>detect-while-sending</em> (impossible: self-deafening) <em>and</em> all contenders hearing each other (false: hidden terminals). Both premises fail on radio, so 802.11 replaces detection with avoidance — reservations, backoff, and ACKs.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">In the hidden-terminal scenario (A and C hidden, sharing AP B), what precisely does B&#39;s CTS accomplish that A&#39;s RTS alone cannot?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why did FTP introduce &quot;Passive Mode&quot;?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>To make file transfers faster by compressing data</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because in Active Mode, client-side firewalls typically block the server&#39;s unsolicited inbound connection attempt; Passive Mode has the client always initiate outbound connections instead</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>To eliminate the need for a control connection entirely</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>To allow multiple users to share the same data connection simultaneously</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It encrypts the upcoming data frame</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It informs C — which never heard the RTS — of the reservation duration, silencing a collider the sender cannot reach</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It measures the exact collision probability for A</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It disconnects C from the network temporarily</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -351,21 +299,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Active Mode requires the <em>server</em> to open a new connection back to the client, which most client firewalls block by default (since it looks like unsolicited incoming traffic). Passive Mode flips this: the client always initiates the data connection outbound to a port the server opens, which firewalls generally permit.</p><pre><code>&lt;/div&gt;
+      <p>RTS reaches only the sender&#39;s audible neighborhood; CTS, broadcast from the <em>AP at the center</em>, reaches <em>everyone in the cell</em> including nodes hidden from the sender. The echo converts a one-sided announcement into cell-wide silence (NAV timers).</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">Why does 802.11 mandate per-frame link-layer ACKs while classic wired Ethernet skips them?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why does maintaining FTP&#39;s stateful session information limit server scalability compared to stateless HTTP?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>FTP servers use more expensive hardware than HTTP servers</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>The server must keep dedicated per-user state (current directory, authentication) in memory for the duration of each session, consuming resources that scale with the number of simultaneously connected users</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP cannot support more than one user at a time</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP requires more physical cabling than HTTP</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Wireless adapters have spare memory with nothing better to do</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Bit errors (not just collisions) are routine on radio, so silent corruption is common — fast link-local retransmission beats waiting for TCP&#39;s coarse end-to-end timer; wired BER is negligible so the machinery would add pure overhead</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>ACKs are required by all IEEE standards regardless of medium</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Ethernet cables acknowledge optically instead</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -377,7 +324,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Because FTP tracks per-session context (like the current working directory) rather than treating each request independently, a busy FTP server must dedicate ongoing resources to every connected user — unlike a stateless HTTP server, which can process each request without holding onto any long-lived per-client memory.</p><pre><code>&lt;/div&gt;
+      <p>Same layering-economics argument as the framing topic: buy reliability machinery exactly where the medium&#39;s loss rate justifies it. Wireless BER makes per-frame ACKs profitable; wired BER makes them rounding error — so Ethernet omits them and lets TCP handle the rare loss.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -386,17 +333,14 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_04_world_wide_web_and_http.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_04_lan_addressing_arp_switches_and_vlans.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.4 World Wide Web And HTTP</div>
+        <div class="ttl">3.4 Lan Addressing ARP Switches And Vlans</div>
       </a>
       
       
       
-      <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="nav-card next" id="nextTopicLink">
-        <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Transport Layer Services And Multiplexing</div>
-      </a>
+      <div></div>
       
     </footer>
   </div>
@@ -482,7 +426,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(16) || 0;
-    const currentId = "m1_05_file_transfer_protocol_ftp";
+    const currentId = "m3_05_wireless_lan_802_11";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 

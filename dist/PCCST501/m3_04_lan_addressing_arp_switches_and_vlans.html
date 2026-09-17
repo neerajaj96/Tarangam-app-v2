@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.5 File Transfer Protocol FTP</title>
-<meta name="description" content="Computer Networks (PCCST501) — 1.5 File Transfer Protocol FTP | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.5 File Transfer Protocol FTP">
-<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.5 File Transfer Protocol FTP">
+<title>Tarangam — 3.4 Lan Addressing ARP Switches And Vlans</title>
+<meta name="description" content="Computer Networks (PCCST501) — 3.4 Lan Addressing ARP Switches And Vlans | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.4 Lan Addressing ARP Switches And Vlans">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 3.4 Lan Addressing ARP Switches And Vlans">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>Application Layer</span>
           <span class="chev">&#9656;</span>
@@ -89,7 +89,7 @@
             <span class="topic-dot"></span>
             <span>1.4 World Wide Web And HTTP</span>
           </a>
-          <a href="./m1_05_file_transfer_protocol_ftp.html" class="topic-link active" id="topic-m1_05_file_transfer_protocol_ftp">
+          <a href="./m1_05_file_transfer_protocol_ftp.html" class="topic-link " id="topic-m1_05_file_transfer_protocol_ftp">
             <span class="topic-dot"></span>
             <span>1.5 File Transfer Protocol FTP</span>
           </a>
@@ -128,8 +128,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Data Link Layer</span>
           <span class="chev">&#9656;</span>
@@ -147,7 +147,7 @@
             <span class="topic-dot"></span>
             <span>3.3 Multiple Access Protocols</span>
           </a>
-          <a href="./m3_04_lan_addressing_arp_switches_and_vlans.html" class="topic-link " id="topic-m3_04_lan_addressing_arp_switches_and_vlans">
+          <a href="./m3_04_lan_addressing_arp_switches_and_vlans.html" class="topic-link active" id="topic-m3_04_lan_addressing_arp_switches_and_vlans">
             <span class="topic-dot"></span>
             <span>3.4 Lan Addressing ARP Switches And Vlans</span>
           </a>
@@ -182,9 +182,9 @@
       <div class="crumb" id="crumb">
         <span>PCCST501</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.5 File Transfer Protocol FTP</span>
+        <span style="color:var(--ink); font-weight:600;">3.4 Lan Addressing ARP Switches And Vlans</span>
       </div>
 
       <div class="topbar-actions">
@@ -200,8 +200,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -212,108 +212,60 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>File Transfer Protocol (FTP)</h1>
-<p><strong>Out-of-band control vs. data connections, the FTP session lifecycle, Active vs. Passive mode, and stateful session tracking.</strong></p>
+<h1>LAN Addressing: MAC, ARP, Switches &amp; VLANs</h1>
+<p><strong>48-bit hardware addresses, how ARP binds IP to MAC, self-learning switches vs. dumb hubs, and carving one LAN into many with VLANs.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Ordering a Refrigerator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine ordering a refrigerator from a store. You call the store on the telephone to place the order, confirm your identity, and specify what you want — this phone conversation is entirely separate from what happens next: the store dispatches a large delivery truck carrying the actual refrigerator to your house. The conversation and the heavy lifting travel over two completely different channels.</p>
-<p>This is exactly how <strong>FTP</strong> works. The <strong>telephone call</strong> is the <strong>Control Connection (Port 21)</strong> — used for login, browsing directories, and issuing commands like &quot;send me this file.&quot; The <strong>delivery truck</strong> is the <strong>Data Connection (Port 20)</strong> — used strictly to carry the actual file bytes. Because control information travels on a separate channel from the data, FTP is said to use <strong>out-of-band</strong> control — in sharp contrast to HTTP, which mixes its request headers and payload data into the very same connection (<strong>in-band</strong> control).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Names vs. Seat Numbers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Your <strong>IP address</strong> is your <em>name</em> — portable, hierarchical, routable across the world (and changeable when you move networks). Your <strong>MAC address</strong> is the <em>seat number bolted to your chair</em> — flat, burned into the adapter at the factory, meaningful only inside this one room (LAN). <strong>ARP</strong> is the usher holding the seating chart: given a name (&quot;who sits as 192.168.1.5?&quot;), it shouts once to the room and remembers the answer. <strong>Switches</strong> are ushers who <em>learn</em> traffic patterns and hand-deliver; <strong>hubs</strong> just yell every message at everyone.</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Dual-Connection Architecture</h3>
-<pre><code class="language-mermaid">flowchart LR
-    subgraph Client
-        C[FTP Client]
-    end
-    subgraph Server
-        S[FTP Server]
-    end
-    C &lt;--&gt;|&quot;Control Connection&lt;br/&gt;Port 21 — stays open&lt;br/&gt;entire session&quot;| S
-    C &lt;--&gt;|&quot;Data Connection&lt;br/&gt;Port 20 — opened/closed&lt;br/&gt;per file transfer&quot;| S
-</code></pre>
+<h3>2.1 MAC Addresses (48-bit, Flat, Permanent)</h3>
+<p>Six hex bytes (<code>AA:BB:CC:DD:EE:FF</code>), globally unique per adapter, first half = manufacturer OUI. <strong>Flat</strong> (no structure encoding location — unlike hierarchical IP prefixes), <strong>portable</strong> (moves with the device), and valid only <strong>within one broadcast domain</strong> — routers never forward by MAC.</p>
+<h3>2.2 ARP: The Binding Protocol</h3>
+<p>To send an IP datagram to 192.168.1.5 on the local LAN, the sender needs the <em>destination MAC</em>:</p>
+<ol>
+<li>Check the <strong>ARP table</strong> (cache of IP→MAC with TTL aging). Hit? Done.</li>
+<li>Miss → <strong>broadcast</strong> an ARP query (&quot;who has 192.168.1.5? tell 192.168.1.1&quot;) to <code>FF:FF:FF:FF:FF:FF</code>.</li>
+<li>Only the owner replies (<strong>unicast</strong> with its MAC); sender caches it. Gratuitous ARP (claiming your own mapping unprompted) also detects IP conflicts and poisons... legitimately updates stale caches.</li>
+</ol>
+<h3>2.3 Hubs vs. Switches (Collision Domains Die Here)</h3>
 <ul>
-<li><strong>Control Connection (Port 21):</strong> carries login credentials, directory-navigation commands (<code>CWD</code>), and transfer commands (<code>STOR</code> to upload, <code>RETR</code> to download). Remains open for the <strong>entire session</strong>.</li>
-<li><strong>Data Connection (Port 20):</strong> carries only raw file bytes. A <strong>new</strong> data connection is opened and closed for <strong>every individual file</strong>.</li>
+<li><strong>Hub:</strong> physical-layer repeater — every bit out of every port. One <strong>collision domain</strong> for all; CSMA/CD mandatory; half-duplex.</li>
+<li><strong>Switch:</strong> link-layer device with per-port buffers + a <strong>self-learning forwarding table</strong> (source MAC → ingress port, learned from passing traffic, aged out). Forwards <em>only</em> to the destination&#39;s port (floods unknown destinations); each port is its <strong>own collision domain</strong> — full-duplex, no collisions, no CD needed.</li>
 </ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Two Numbers, Two Rules</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Port 20 is the <em>active-mode</em> data port</strong> — in passive mode the server instead opens a random high port (see §2.3), so never write &quot;data = always 20&quot; without the active-mode qualifier. And the counting rule is fixed: <strong>1 control connection per session, 1 fresh data connection per file</strong> — a 3-file download means 1 + 3, never 3 + 3.</p>
-</div></details><h3>2.2 The FTP Session Lifecycle</h3>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant C as Client
-    participant S as Server
-    C-&gt;&gt;S: Open Control Connection (Port 21)
-    C-&gt;&gt;S: Username + Password
-    S-&gt;&gt;C: Authenticated
-    C-&gt;&gt;S: CWD /videos (change directory)
-    S-&gt;&gt;C: Directory changed
-    C-&gt;&gt;S: RETR movie.mp4
-    Note over C,S: Server opens Data Connection (Port 20)
-    S-&gt;&gt;C: [file bytes over Data Connection]
-    Note over C,S: Data Connection closes after transfer
-    C-&gt;&gt;S: RETR song.mp3
-    Note over C,S: A brand-new Data Connection is opened
-    S-&gt;&gt;C: [file bytes over new Data Connection]
-    C-&gt;&gt;S: QUIT
-    Note over C,S: Control Connection finally closes
-</code></pre>
-<h3>2.3 Active vs. Passive FTP</h3>
-<p>Firewalls, by design, block unsolicited incoming connections — which causes trouble for FTP&#39;s original design:</p>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>Behavior</th>
-<th>Firewall Compatibility</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Active Mode</strong></td>
-<td>Client opens a random port and tells the server to connect <em>back</em> to it</td>
-<td>Often <strong>blocked</strong> — client&#39;s own firewall rejects the server&#39;s inbound connection attempt</td>
-</tr>
-<tr>
-<td><strong>Passive Mode (<code>PASV</code>)</strong></td>
-<td>Client asks the server to open a random high port; client then connects <em>outbound</em> to that port</td>
-<td>Works well — the client always initiates outbound, which firewalls typically allow</td>
-</tr>
-</tbody></table>
-<h3>2.4 FTP is Stateful</h3>
-<p>Unlike HTTP, the FTP server <strong>remembers</strong> things about each connected user throughout the session:</p>
-<ul>
-<li>The user&#39;s current working directory (so relative paths like <code>CWD ../reports</code> make sense).</li>
-<li>The user&#39;s authentication/authorization state.</li>
-</ul>
-<p><em>Trade-off:</em> maintaining this per-user state limits how many simultaneous sessions a single FTP server can sustain, compared to a stateless HTTP server that can serve far more clients with the same resources.</p>
-<hr>
+<h3>2.4 VLANs: Many LANs, One Switch</h3>
+<p>A <strong>VLAN</strong> partitions one physical switch into multiple <em>logical</em> broadcast domains via 802.1Q tags (4 extra bytes: 12-bit VLAN ID). Broadcasts stay inside the VLAN; inter-VLAN traffic must pass through a router. Why: security/isolation (HR vs. guest traffic), broadcast containment, and organizational grouping independent of physical ports.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: LAN Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MAC = <strong>48-bit, flat, factory-burned</strong> · ARP = <strong>broadcast query, unicast reply, cached with TTL</strong> · hub = <strong>one collision domain</strong> · switch = <strong>self-learned table, per-port domains, flood-if-unknown</strong> · VLAN = <strong>802.1Q tag, broadcast isolation, router to cross</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: ARP Is LAN-Local (and Trusts Everyone)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>ARP resolves addresses only <strong>within one broadcast domain</strong> — crossing subnets is the <em>router&#39;s</em> job (sender ARPs for its gateway&#39;s MAC, not the far host&#39;s). And ARP has <strong>zero authentication</strong>: any host may answer any query — the mechanism behind ARP spoofing/poisoning attacks. &quot;Secure because it&#39;s low-level&quot; is dangerously backwards.</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A user connects to an FTP server, changes into a <code>/videos</code> directory, downloads two files (<code>movie.mp4</code> and <code>trailer.mp4</code>), then disconnects. Count how many Control Connections and how many Data Connections are used in total.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Connections</div><div class="step-content"><ol>
-<li><strong>Control Connection opened</strong> (Port 21) — used for login and the <code>CWD /videos</code> command. <strong>1 control connection total</strong>, and it stays open the whole time.</li>
-<li><code>RETR movie.mp4</code> is issued over the control connection → the server opens a <strong>new Data Connection</strong>, transfers the file, then closes that data connection.</li>
-<li><code>RETR trailer.mp4</code> is issued over the <em>same</em> control connection → the server opens <strong>another new Data Connection</strong> (a second one), transfers the file, then closes it.</li>
-<li><code>QUIT</code> is sent over the control connection, which finally closes.</li>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Host A (192.168.1.10, MAC AA) wants its first-ever datagram to host B (192.168.1.20) on the same switch. A&#39;s ARP table is empty. Trace every frame: who sends what, to which MAC, and what each device learns.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">The Exchange</div><div class="step-content"><ol>
+<li>A <strong>broadcasts</strong> ARP query (dst <code>FF:...:FF</code>): &quot;who has .20? tell .10 (AA)&quot;. Switch <strong>floods</strong> it (unknown destination) and <strong>learns</strong> AA↔port-1.</li>
+<li>B <strong>unicasts</strong> ARP reply (dst AA): &quot;.20 is at BB&quot;. Switch learns BB↔port-2, forwards to port-1.</li>
+<li>A caches (.20→BB), then sends the <strong>data frame</strong> (src AA, dst BB). Switch forwards port-1→port-2 directly — no flood, no collision, no other host disturbed.</li>
 </ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The session uses exactly <strong>1 Control Connection</strong> (open for the whole session) and <strong>2 separate Data Connections</strong> (one per file transferred). This demonstrates FTP&#39;s defining rule: the control channel is long-lived and shared across the whole session, while a fresh data channel is created and torn down for every single file.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One broadcast bootstrapped everything; from then on, switch tables + ARP caches make delivery surgical. The price of the first packet (flood + query) amortizes across the whole cached session — exactly the pattern (broadcast-to-learn, unicast-forever-after) that scales LANs.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Foundational Concept</span>
+    <span class="quiz-category">Host A must send to far-away host Z on another continent. For whose MAC does A ARP?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>What does it mean when we say FTP uses &quot;out-of-band&quot; control?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>FTP does not use TCP for either connection</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Control information (commands, login) travels over a separate connection (Port 21) from the actual file data (Port 20), unlike HTTP which mixes both into one connection</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP control messages are encrypted while data is not</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP has no concept of a control connection at all</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Z&#39;s MAC, learned via intercontinental ARP broadcast</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Its own gateway router&#39;s MAC — ARP never crosses subnets; the router takes it from there</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No ARP is needed for intercontinental traffic</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The DNS server&#39;s MAC address</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -325,21 +277,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Out-of-band&quot; specifically means the signaling/control channel is physically separate from the data channel — FTP&#39;s Port 21 (control) and Port 20 (data) are two entirely distinct TCP connections, whereas HTTP sends both requests and data &quot;in-band&quot; over the same single connection.</p><pre><code>&lt;/div&gt;
+      <p>ARP is strictly LAN-local (broadcasts die at routers). A addresses the data frame to its <em>gateway&#39;s</em> MAC (IP header still names Z); each subsequent router repeats the pattern — ARP for the next hop&#39;s MAC, hop by hop, all the way across.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">A switch receives a frame destined for a MAC address absent from its forwarding table. What does it do, and why is this safe?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why did FTP introduce &quot;Passive Mode&quot;?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>To make file transfers faster by compressing data</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Because in Active Mode, client-side firewalls typically block the server&#39;s unsolicited inbound connection attempt; Passive Mode has the client always initiate outbound connections instead</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>To eliminate the need for a control connection entirely</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>To allow multiple users to share the same data connection simultaneously</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Drops it — unknown destinations are always hostile</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Floods it out all ports except ingress (like a hub, once), while learning the source; the reply teaches the table, so flooding is self-extinguishing</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Broadcasts an ARP query on behalf of the sender</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Shuts down the ingress port as a precaution</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -351,21 +302,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Active Mode requires the <em>server</em> to open a new connection back to the client, which most client firewalls block by default (since it looks like unsolicited incoming traffic). Passive Mode flips this: the client always initiates the data connection outbound to a port the server opens, which firewalls generally permit.</p><pre><code>&lt;/div&gt;
+      <p>Unknown-unicast flooding guarantees delivery on the first try; the destination&#39;s reply then populates the table (source MAC + port learned both ways), so subsequent frames go direct. One flood per unknown address — the table converges instead of flapping.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Foundational Concept</span>
+    <span class="quiz-category">Two departments share one physical switch but must never see each other&#39;s broadcasts. What mechanism, and what crosses between them?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why does maintaining FTP&#39;s stateful session information limit server scalability compared to stateless HTTP?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>FTP servers use more expensive hardware than HTTP servers</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>The server must keep dedicated per-user state (current directory, authentication) in memory for the duration of each session, consuming resources that scale with the number of simultaneously connected users</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP cannot support more than one user at a time</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>FTP requires more physical cabling than HTTP</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>A hub — hubs isolate traffic by definition</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>VLANs (802.1Q tags) split the switch into separate broadcast domains; traffic crosses only via a router between the VLANs</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Longer Ethernet cables physically block broadcasts</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Assign both departments the same subnet to merge them</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -377,7 +327,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Because FTP tracks per-session context (like the current working directory) rather than treating each request independently, a busy FTP server must dedicate ongoing resources to every connected user — unlike a stateless HTTP server, which can process each request without holding onto any long-lived per-client memory.</p><pre><code>&lt;/div&gt;
+      <p>VLAN tags make one switch behave as several isolated switches — broadcasts (ARP, DHCP) stay inside each VLAN. Inter-VLAN communication is <em>routing</em>, with ACLs/policies enforced at the router: isolation plus controlled crossing, on shared hardware.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -386,16 +336,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_04_world_wide_web_and_http.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_03_multiple_access_protocols.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.4 World Wide Web And HTTP</div>
+        <div class="ttl">3.3 Multiple Access Protocols</div>
       </a>
       
       
       
-      <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m3_05_wireless_lan_802_11.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.1 Transport Layer Services And Multiplexing</div>
+        <div class="ttl">3.5 Wireless Lan 802 11</div>
       </a>
       
     </footer>
@@ -482,7 +432,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(16) || 0;
-    const currentId = "m1_05_file_transfer_protocol_ftp";
+    const currentId = "m3_04_lan_addressing_arp_switches_and_vlans";
     const courseCode = "PCCST501";
     if (totalTopics === 0 || !currentId) return;
 
