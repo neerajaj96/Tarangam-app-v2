@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 4.4 Policy Search And Inverse RL</title>
-<meta name="description" content="Artificial Intelligence (PECST522) — 4.4 Policy Search And Inverse RL | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 4.4 Policy Search And Inverse RL">
-<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 4.4 Policy Search And Inverse RL">
+<title>Tarangam — 🧪 Practice Lab: M3 Logic Drills</title>
+<meta name="description" content="Artificial Intelligence (PECST522) — 🧪 Practice Lab: M3 Logic Drills | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 🧪 Practice Lab: M3 Logic Drills">
+<meta property="og:description" content="Artificial Intelligence (PECST522) study notes: 🧪 Practice Lab: M3 Logic Drills">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -132,8 +132,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block " data-mod="3">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M3</span>
           <span>Knowledge &amp; Logic</span>
           <span class="chev">&#9656;</span>
@@ -155,14 +155,14 @@
             <span class="topic-dot"></span>
             <span>3.4 First Order Logic Unification And Lifting</span>
           </a>
-          <a href="./m3_99_practice_lab_logic_drills.html" class="topic-link " id="topic-m3_99_practice_lab_logic_drills">
+          <a href="./m3_99_practice_lab_logic_drills.html" class="topic-link active" id="topic-m3_99_practice_lab_logic_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M3 Logic Drills</span>
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="4">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M4</span>
           <span>Reinforcement Learning</span>
           <span class="chev">&#9656;</span>
@@ -180,7 +180,7 @@
             <span class="topic-dot"></span>
             <span>4.3 Active RL Q Learning And Exploration</span>
           </a>
-          <a href="./m4_04_policy_search_and_inverse_rl.html" class="topic-link active" id="topic-m4_04_policy_search_and_inverse_rl">
+          <a href="./m4_04_policy_search_and_inverse_rl.html" class="topic-link " id="topic-m4_04_policy_search_and_inverse_rl">
             <span class="topic-dot"></span>
             <span>4.4 Policy Search And Inverse RL</span>
           </a>
@@ -211,9 +211,9 @@
       <div class="crumb" id="crumb">
         <span>PECST522</span>
         <span class="crumb-sep">/</span>
-        <span>Module 4</span>
+        <span>Module 3</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">4.4 Policy Search And Inverse RL</span>
+        <span style="color:var(--ink); font-weight:600;">🧪 Practice Lab: M3 Logic Drills</span>
       </div>
 
       <div class="topbar-actions">
@@ -229,65 +229,98 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
-<h1>Policy Search &amp; Inverse Reinforcement Learning</h1>
-<p><strong>Skipping value functions: parameterized policies, hill-climbing in policy space, and flipping the problem — inferring rewards from expert behavior.</strong></p>
+<h1>Module 3 Practice Lab: Logic Drills</h1>
+<p><strong>Wumpus safety proofs, model-counting races, three-step refutations, unification trials, and exam essay models.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-beyond-value-functions">1. Beyond Value Functions</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-policy-search-hill-climbing-on-expected-reward">2. Policy Search: Hill-Climbing on… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Choreography vs. Physics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Value methods learn the <em>physics</em> of the world (how good every situation is) and derive behavior from it. <strong>Policy search</strong> skips physics and choreographs directly: parametrize the <em>dance</em> ($\pi_\theta$ — e.g. a neural net mapping sensors to motor torques), perform it, measure applause (total reward), and adjust the choreography toward what earned applause. For a robot with continuous joints, grading every (state, torque-vector) pair is hopeless — but tweaking dance parameters by feel works beautifully.</p>
-</div></details><hr>
+<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<h3>Scenario 1: Safety Proof Under Time Pressure (Wumpus Rules Apply)</h3>
+<p>Visited (1,1): silence (¬B, ¬S). Visited (2,1): breeze, no stench. Prove (1,2) safe, decide (2,2) and (3,1) in 60 seconds: breeze rule at (2,1) gives $P_{1,1} \lor P_{3,1} \lor P_{2,2}$; $\lnot P_{1,1}$ (visited) leaves $P_{3,1} \lor P_{2,2}$ — both suspects, neither provable. At (1,1): $\lnot B_{1,1}$ forces $\lnot P_{2,1} \land \lnot P_{1,2}$; $\lnot S_{1,1}$ forces $\lnot W_{2,1} \land \lnot W_{1,2}$. Verdict: <strong>(1,2) provably safe</strong> (no pit, no Wumpus), (2,2)/(3,1) each possibly mined — probe (1,2). Disjunctions locate <em>suspicion</em>; only negated rules locate <em>safety</em>.</p>
+<h3>Scenario 2: Model-Counting Race (3 Atoms, 8 Rows, 1 Verdict)</h3>
+<p>KB: $A$, $A \Rightarrow B$, $(B \land C) \Rightarrow D$... precisely in clausal spirit: facts ${A, \lnot B \lor C}$ plus query $C$? No — query must <em>follow</em>: KB $= {A,\ A \Rightarrow B}$ (2 atoms relevant, third atom $Z$ free). Rows: 8 total; $A$ kills 4; $A \Rightarrow B$ kills $A$-true-$B$-false rows (2 of the 4); survivors: $(A,B,Z) \in {(T,T,T),(T,T,F)}$ — $B$ true in both: $KB \models B$ proven. The free atom $Z$ doubles rows and changes nothing — model counting prices <em>relevant</em> atoms; vending-machine $2^n$ counts the irrelevant too (the inefficiency, demonstrated).</p>
+<h3>Scenario 3: Three-Step Refutation (No Survivors)</h3>
+<p>Clauses: $(\lnot A \lor B)$, $(\lnot B \lor C)$, $(A)$, plus negated query $(\lnot C)$. Resolve $(A) \otimes (\lnot A \lor B) \to (B)$; $(B) \otimes (\lnot B \lor C) \to (C)$; $(C) \otimes (\lnot C) \to \Box$. Contradiction in three steps — entailment certified without enumerating a single model. Compare Scenario 2&#39;s 8-row census: same verdict class, no census bureau.</p>
+<h3>Scenario 4: Unification Trials (Three Calls, Three Fates)</h3>
+<p>(a) $\text{Loves}(x, y)$ vs. $\text{Loves}(\text{Mary}, z)$ → $\theta = {x/\text{Mary},\ y/z}$ — clean, most general, nothing extra. (b) $\text{Knows}(\text{John}, x)$ vs. $\text{Knows}(y, \text{Mother}(y))$ → bind $y$ first (${y/\text{John}}$), compose through, then $x/\text{Mother}(\text{John})$ — order matters, generality preserved. (c) $P(x, f(x))$ vs. $P(y, y)$ → $x$ meets $y$, then $f(x)$ meets $x$: <strong>occur-check failure</strong> ($x$ inside its own partner) — unify must refuse, or infinite regress $x = f(x) = f(f(x))\dots$ follows. Success, composition, refusal: the complete trial docket.</p>
+<hr>
 <p><a id="the-dimensions"></a></p>
-<h2 id="2-policy-search-hill-climbing-on-expected-reward">2. Policy Search: Hill-Climbing on Expected Reward</h2>
-<p class="secnav"><a href="#1-beyond-value-functions">← 1. Beyond Value Functions</a><span class="secnav-sep">·</span><a href="#3-inverse-rl-rewards-from-experts">3. Inverse RL: Rewards from Expert… →</a></p>
-<p>Parametrize the policy by $\theta$ (weights, thresholds, trajectory splines). Define $J(\theta) = \mathbb{E}[\text{total reward following } \pi_\theta]$. Then <strong>optimize directly</strong>:</p>
-<ul>
-<li><strong>Finite differences / hill climbing:</strong> jiggle $\theta$, keep jiggles that score higher. Simple, gradient-free — and sample-hungry.</li>
-<li><strong>Policy gradients (REINFORCE idea):</strong> $\nabla_\theta J \approx$ average over trials of $(\text{return}) \times \nabla_\theta \log \pi_\theta(\text{actions taken})$ — actions from high-return trials get reinforced <em>in proportion to their surprise-weighted contribution</em>. Follows the gradient uphill, trial by trial.</li>
-</ul>
-<p>Strengths: handles <strong>continuous, high-dimensional actions</strong> (robotics, games) where $\max_a Q(s,a)$ is intractable; learns <strong>stochastic policies</strong> naturally (essential for partially observable and adversarial settings). Weaknesses: high-variance gradients, local optima, and sample hunger — the price of ignoring value structure.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Two Paradigms</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Value-based: learn $Q^<em>$, act $\arg\max_a Q^</em>$ (needs discrete/small actions). Policy-based: learn $\theta^* = \arg\max_\theta J(\theta)$ via $\nabla J$ estimates (handles continuous/stochastic). Actor-critic hybrids learn both — the actor dances, the critic (a TD value function) applauds precisely, cutting gradient variance.</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-inverse-rl-rewards-from-experts">3. Inverse RL: Rewards from Experts</h2>
-<p class="secnav"><a href="#2-policy-search-hill-climbing-on-expected-reward">← 2. Policy Search: Hill-Climbing on…</a><span class="secnav-sep">·</span><a href="#4-apprenticeship-on-two-features">4. Apprenticeship on Two Features →</a></p>
-<p><strong>Forward RL:</strong> reward given → learn behavior. <strong>Inverse RL:</strong> behavior (expert demonstrations) given → learn the <em>reward function</em> the expert seems to optimize. Why invert? Rewards transfer: the <em>learned reward</em> (&quot;stay on road, avoid pedestrians&quot;) ports to new cars, cities, and bodies — a copied steering policy does not.</p>
-<p>The catch — <strong>reward ambiguity</strong>: infinitely many rewards rationalize any behavior, including the degenerate all-zero reward (under which <em>everything</em> is optimal). Resolutions: ** apprenticeship/feature matching** (Abbeel &amp; Ng: match the expert&#39;s <em>feature expectations</em> — average lane-centering, speed profiles — rather than cloning actions, then optimize the matched reward); <strong>maximum-entropy IRL</strong> (among consistent rewards, prefer the one making the expert&#39;s behavior look least surprising, i.e. no extra commitments).</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Imitation ≠ Inverse RL</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Behavioral cloning</strong> (supervised learning on state→action pairs) copies the expert&#39;s <em>moves</em> — and compounds errors (one drift off-distribution, no recovery skill). <strong>Inverse RL</strong> recovers the expert&#39;s <em>objective</em> and re-optimizes — the apprentice that understands <em>why</em>, and therefore survives situations the master never demonstrated. Exams test exactly this boundary.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="4-apprenticeship-on-two-features">4. Apprenticeship on Two Features</h2>
-<p class="secnav"><a href="#3-inverse-rl-rewards-from-experts">← 3. Inverse RL: Rewards from Expert…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
-<p>Expert taxi demonstrations average features: $\mu_E = (\text{lane-centering } 0.9,\ \text{speed-limit adherence } 0.8)$. Our policy $\pi_0$ (always crawl at half speed, dead center) yields $\mu(\pi_0) = (1.0, 0.4)$.</p>
-<p>Apprenticeship loop: find weights $w$ making the expert look optimal (here: reward adherence more than centering, since the expert sacrifices some centering for speed); optimize $w$-rewarded MDP → $\pi_1$ with $\mu(\pi_1) = (0.92, 0.75)$; compare $|\mu_E - \mu(\pi_1)|$ vs tolerance. Iterate: each round the reward weights shift to explain the <em>residual</em> gap, each policy closes it. Termination ($|\cdot| &lt; \epsilon$) certifies performance <em>near the expert&#39;s</em> under the expert&#39;s own (unknown) true reward — the Abbeel–Ng guarantee — without ever writing down what &quot;good driving&quot; means.</p>
+<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
+<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tell vs. Ask</td>
+<td>Add sentences vs. query entailment (KB loop: perceive-Tell, decide-Ask)</td>
+</tr>
+<tr>
+<td>Entailment vs. derivation</td>
+<td>Semantic truth-in-all-models vs. syntactic rule-pushing (soundness + completeness bridge them)</td>
+</tr>
+<tr>
+<td>Valid vs. satisfiable vs. unsat</td>
+<td>All models / some model / no models (refutation needs the third)</td>
+</tr>
+<tr>
+<td>MP vs. MT vs. fallacies</td>
+<td>$P,P\Rightarrow Q\vdash Q$ and contrapositive only — affirming/denying variants invalid</td>
+</tr>
+<tr>
+<td>Model checking vs. resolution</td>
+<td>$2^n$ census (complete, hopeless) vs. refutation proofs (complete, directed)</td>
+</tr>
+<tr>
+<td>Horn vs. general clauses</td>
+<td>≤1 positive literal (chaining-complete) vs. resolution-only territory</td>
+</tr>
+<tr>
+<td>Forward vs. backward chaining</td>
+<td>Fire-all vs. goal-driven (demand-shaped effort on huge KBs)</td>
+</tr>
+<tr>
+<td>$\forall$+$\Rightarrow$ vs. $\exists$+$\land$</td>
+<td>Correct pairings; swapped versions state nonsense/vacuities</td>
+</tr>
+<tr>
+<td>Unify order</td>
+<td>Bind-then-compose (early bindings flow into later pairs)</td>
+</tr>
+<tr>
+<td>Standardize apart</td>
+<td>Fresh names per rule-use before every UNIFY (no binding leakage)</td>
+</tr>
+</tbody></table>
 <hr>
 <p><a id="self-check"></a></p>
-<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-apprenticeship-on-two-features">← 4. Apprenticeship on Two Features</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
+<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A 7-joint robot arm must learn smooth reaching motions. Why is policy search favored over Q-learning here?</span>
+    <span class="quiz-category">KB = {A, A⇒B} over atoms {A, B, Z}. How many rows survive model checking, and what does the free atom Z teach about the method&#39;s cost?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Q-learning is mathematically incorrect for robots</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>The action space (7 continuous torques) makes maxₐ Q(s,a) intractable, while a parameterized stochastic policy can be hill-climbed directly on measured returns</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Robots cannot receive numeric rewards at all</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Policy search needs no trials, unlike Q-learning</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>8 rows survive; Z proves model checking is efficient</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>2 rows survive ({A,B} true, Z either way); Z doubles rows while changing nothing — model checking prices irrelevant atoms identically to relevant ones, which is exactly why it scales as 2^n</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>0 rows survive; the KB is contradictory</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Z must be deleted from the language first</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -299,20 +332,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Q-learning&#39;s decision rule is an <em>optimization over actions</em> — trivial for 4 grid moves, impossible over $\mathbb{R}^7$ torques every 10 ms. Policy search replaces the intractable $\arg\max$ with direct gradient ascent on policy parameters, and stochastic policies additionally cover sensor limits and adversarial unpredictability.</p><pre><code>&lt;/div&gt;
+      <p>Filtering keeps only $A \land B$ rows (2 of 8); $Z$&#39;s two values ride along irrelevantly — yet were enumerated and tested. Cost tracks <em>vocabulary</em>, not <em>content</em>: 10 idle atoms cost $1024\times$ for zero information. Resolution (Scenario 3) never names $Z$ at all — the efficiency gap, quantified.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the fundamental ill-posedness of inverse RL, and which fix does maximum-entropy IRL apply?</span>
+    <span class="quiz-category">P(x, f(x)) vs. P(y, y): walk the unification to its verdict.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Experts demonstrate too few actions to fill a table; max-entropy invents extra demonstrations</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Infinitely many rewards (including all-zero) rationalize any behavior; max-entropy selects among them the reward under which the expert looks least surprising — no unjustified extra commitments</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Inverse RL cannot represent stochastic experts; max-entropy forces determinism</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>There is no ill-posedness; rewards are uniquely determined</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Succeeds with θ = {x/y} — the nesting is harmless</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>x meets y (bind), then f(x) meets x — x occurs inside its own partner: occur-check failure, refuse (else infinite regress x = f(x) = f(f(x))…)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Succeeds with θ = {y/f(y)} by symmetric reasoning</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Unification is undefined for nested terms</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -324,20 +357,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Behavior underdetermines objectives: laziness (all-zero reward) &quot;explains&quot; everything and nothing. Max-entropy breaks the tie by the least-commitment principle — matching observed feature statistics while maximizing uncertainty elsewhere — yielding rewards that generalize instead of memorizing.</p><pre><code>&lt;/div&gt;
+      <p>After ${x/y}$, the second pair is $f(x)$ vs. $x$ — a variable against a term <em>containing it</em>. Accepting builds $x = f(x)$, an infinite term no finite structure satisfies. The occur check exists for exactly this shape; Prolog&#39;s skipping it (for speed) is a documented unsoundness, not an optimization free lunch.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Contrast behavioral cloning with apprenticeship (feature-matching) IRL on a driving task, specifically on unseen situations.</span>
+    <span class="quiz-category">Forward chaining floods all consequences; backward chaining works back from the query. A million-rule KB faces one focused diagnostic question. Which engine and what complexity reality?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They are identical methods with different names</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Cloning copies state→action mappings and compounds drift errors off-distribution; apprenticeship recovers an objective (feature weights) and re-optimizes, so the apprentice handles novel states the expert never showed</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Cloning generalizes better because it uses deeper networks</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>IRL cannot handle unseen situations by definition</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Forward — completeness demands total derivation</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Backward — demand-driven grounding explores only goal-relevant rules (potentially logarithmic slice of the KB); forward&#39;s linear-in-KB flood is complete but wasteful here</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — million-rule KBs are undecidable in principle</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both explore identically; the names are historical</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -349,37 +382,65 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Cloning learns <em>what the master did</em>; IRL learns <em>what the master wanted</em>. Off the demonstration manifold, the cloner has no relevant training pairs and drifts irrecoverably, while the apprentice&#39;s recovered reward still scores actions correctly — objectives transfer, trajectories don&#39;t.</p><pre><code>&lt;/div&gt;
+      <p>Effort follows relevance: backward chaining&#39;s recursion visits the query&#39;s premise cone only — vast KB regions never load. Forward chaining&#39;s virtue (everything derived, query-agnostic reuse) is exactly its cost when one question needs one corner. Engine choice = workload shape, always.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Stench at (1,2), visited-safe (1,1), wall at (0,2). A student concludes &quot;Wumpus at (1,3), certainly.&quot; Give the correct conclusion with its logical form.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The student is right — stench pinpoints uniquely</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Disjunction $W_{1,3} \lor W_{2,2}$ (candidates after eliminating (1,1) and the wall) — certainty about a *set*, ignorance within it; probing must respect the disjunction (retreat to testable squares, never assume a disjunct)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No conclusion whatsoever follows from stench</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The Wumpus is certainly at (2,2) by elimination</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>One percept, two surviving candidates — logic delivers <em>disjunctive</em> knowledge honestly instead of guessing. Acting on $W_{1,3}$-certainty risks the $W_{2,2}$ world (death by overconfidence); acting on the disjunction (probe elsewhere, gather more percepts) is rationality under uncertainty — Module 1&#39;s moral, wearing Logic&#39;s clothes.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
 <p><a id="exam-focus"></a></p>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> Policy search idea, IRL definition, or imitation-vs-IRL distinction.</li>
-<li><strong>7 Marks:</strong> Value-based vs policy-based comparison, or apprenticeship loop with the performance guarantee.</li>
+<li><strong>3 Marks:</strong> Any cheat-table row (MP/MT and Horn lead); single MGU computations.</li>
+<li><strong>7 Marks:</strong> Wumpus safety proofs with sentences, refutation traces to □, or UNIFY traces with ordering rationale.</li>
 </ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Define inverse reinforcement learning and state its core difficulty.</strong></p>
-<p><strong>Model Answer:</strong> IRL infers the reward function an expert appears to optimize, from demonstrations. Core difficulty: <strong>reward ambiguity</strong> — infinitely many rewards (including degenerate all-zero) are consistent with any behavior; methods like max-entropy or feature matching add principled tie-breaking.</p>
-<h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Compare value-based and policy-based RL on representation, action spaces, and variance. Where do actor-critic methods fit?</strong></p>
-<p><strong>Model Answer:</strong> Value-based learns $Q^<em>$ then $\arg\max_a$ — sample-efficient with structure, but needs tractable action maximization (discrete/small actions) and yields deterministic policies. Policy-based learns $\theta^</em> = \arg\max J(\theta)$ via gradient estimates — handles continuous/stochastic actions natively, at the cost of high-variance, local-optima-prone search. <strong>Actor-critic</strong> hybrids keep both: a TD critic supplies low-variance value baselines that stabilize the actor&#39;s gradient steps — the standard architecture behind modern deep RL successes.</p>
+</div></details><h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: From clauses (¬A∨B), (¬B∨C), (A), prove C by resolution, showing each resolvent and the complementary pair used. Why does □ end the proof?</strong></p>
+<p><strong>Model Answer:</strong> $(A) \otimes (\lnot A \lor B)$ on $A$/$\lnot A$ → $(B)$. $(B) \otimes (\lnot B \lor C)$ on $B$/$\lnot B$ → $(C)$. $(C) \otimes (\lnot C)$ [negated query] → $\Box$. The empty clause = derived contradiction under the assumption $\lnot C$ alongside the KB — since $KB \land \lnot C$ is unsatisfiable, $KB \models C$ (deduction theorem). □ isn&#39;t another fact; it&#39;s the <em>absence</em> of survivors — proof by &quot;no counter-model left standing.&quot;</p>
+<h3>Essay Question 2 (7 Marks)</h3>
+<p><strong>Q: Unify Knows(John, x) with Knows(y, Mother(y)) showing composition order, and explain why binding y first is load-bearing plus what the occur check would catch in P(x,f(x)) vs P(y,y).</strong></p>
+<p><strong>Model Answer:</strong> Left-to-right: $y$ vs. $\text{John}$ → $\theta_1 = {y/\text{John}}$; compose through remaining problem ($x$ vs. $\text{Mother}(\text{John})$) → $\theta_2 = {x/\text{Mother}(\text{John})}$; MGU ${y/\text{John}, x/\text{Mother}(\text{John})}$. Binding $y$ first matters because $x$&#39;s partner <em>contains</em> $y$ — reversed order over-binds or fails to find the most general form. Occur check: $P(x,f(x))$ vs $P(y,y)$ reduces (after $x/y$) to $x$ vs. $f(x)$ — self-containing partner ⇒ refuse, blocking the infinite regress $x = f(x) = f(f(x))\dots$ that naive unifiers construct.</p>
 
     </main>
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m4_03_active_rl_q_learning_and_exploration.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m3_04_first_order_logic_unification_and_lifting.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">4.3 Active RL Q Learning And Exploration</div>
+        <div class="ttl">3.4 First Order Logic Unification And Lifting</div>
       </a>
       
       
       
-      <div></div>
+      <a href="./m4_01_reinforcement_learning_learning_from_rewards.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">4.1 Reinforcement Learning Learning From Rewards</div>
+      </a>
       
     </footer>
   </div>
@@ -465,7 +526,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(21) || 0;
-    const currentId = "m4_04_policy_search_and_inverse_rl";
+    const currentId = "m3_99_practice_lab_logic_drills";
     const courseCode = "PECST522";
     if (totalTopics === 0 || !currentId) return;
 
