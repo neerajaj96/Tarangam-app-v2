@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 2.9 IPV4 Addressing Forwarding NAT ICMP</title>
+<meta name="description" content="Computer Networks (PCCST501) — 2.9 IPV4 Addressing Forwarding NAT ICMP | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.9 IPV4 Addressing Forwarding NAT ICMP">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 2.9 IPV4 Addressing Forwarding NAT ICMP">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Computer Networks</span>
+        <span class="tag">PCCST501</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Application Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_internet_overview_and_network_edge.html" class="topic-link " id="topic-m1_01_internet_overview_and_network_edge">
+            <span class="topic-dot"></span>
+            <span>1.1 Internet Overview And Network Edge</span>
+          </a>
+          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link " id="topic-m1_02_protocol_layering_and_osi_tcpip">
+            <span class="topic-dot"></span>
+            <span>1.2 Protocol Layering And OSI Tcpip</span>
+          </a>
+          <a href="./m1_03_application_layer_paradigms.html" class="topic-link " id="topic-m1_03_application_layer_paradigms">
+            <span class="topic-dot"></span>
+            <span>1.3 Application Layer Paradigms</span>
+          </a>
+          <a href="./m1_04_world_wide_web_and_http.html" class="topic-link " id="topic-m1_04_world_wide_web_and_http">
+            <span class="topic-dot"></span>
+            <span>1.4 World Wide Web And HTTP</span>
+          </a>
+          <a href="./m1_05_file_transfer_protocol_ftp.html" class="topic-link " id="topic-m1_05_file_transfer_protocol_ftp">
+            <span class="topic-dot"></span>
+            <span>1.5 File Transfer Protocol FTP</span>
+          </a>
+          <a href="./m1_06_electronic_mail_smtp_pop3_imap.html" class="topic-link " id="topic-m1_06_electronic_mail_smtp_pop3_imap">
+            <span class="topic-dot"></span>
+            <span>1.6 Electronic Mail SMTP POP3 IMAP</span>
+          </a>
+          <a href="./m1_07_domain_name_system_dns.html" class="topic-link " id="topic-m1_07_domain_name_system_dns">
+            <span class="topic-dot"></span>
+            <span>1.7 Domain Name System DNS</span>
+          </a>
+          <a href="./m1_08_peer_to_peer_bittorrent.html" class="topic-link " id="topic-m1_08_peer_to_peer_bittorrent">
+            <span class="topic-dot"></span>
+            <span>1.8 Peer To Peer Bittorrent</span>
+          </a>
+          <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Application Layer Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Transport &amp; Network Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="topic-link " id="topic-m2_01_transport_layer_services_and_multiplexing">
+            <span class="topic-dot"></span>
+            <span>2.1 Transport Layer Services And Multiplexing</span>
+          </a>
+          <a href="./m2_02_udp_segment_structure_and_checksum.html" class="topic-link " id="topic-m2_02_udp_segment_structure_and_checksum">
+            <span class="topic-dot"></span>
+            <span>2.2 Udp Segment Structure And Checksum</span>
+          </a>
+          <a href="./m2_03_tcp_segment_structure_and_rtt.html" class="topic-link " id="topic-m2_03_tcp_segment_structure_and_rtt">
+            <span class="topic-dot"></span>
+            <span>2.3 TCP Segment Structure And Rtt</span>
+          </a>
+          <a href="./m2_04_reliable_transfer_gbn_and_sr.html" class="topic-link " id="topic-m2_04_reliable_transfer_gbn_and_sr">
+            <span class="topic-dot"></span>
+            <span>2.4 Reliable Transfer Gbn And Sr</span>
+          </a>
+          <a href="./m2_05_tcp_flow_control_and_connection_management.html" class="topic-link " id="topic-m2_05_tcp_flow_control_and_connection_management">
+            <span class="topic-dot"></span>
+            <span>2.5 TCP Flow Control And Connection Management</span>
+          </a>
+          <a href="./m2_06_congestion_control_principles_and_tcp.html" class="topic-link " id="topic-m2_06_congestion_control_principles_and_tcp">
+            <span class="topic-dot"></span>
+            <span>2.6 Congestion Control Principles And TCP</span>
+          </a>
+          <a href="./m2_07_multicast_routing_trees_rpf.html" class="topic-link " id="topic-m2_07_multicast_routing_trees_rpf">
+            <span class="topic-dot"></span>
+            <span>2.7 Multicast Routing Trees RPF</span>
+          </a>
+          <a href="./m2_08_quality_of_service_qos_mechanisms.html" class="topic-link " id="topic-m2_08_quality_of_service_qos_mechanisms">
+            <span class="topic-dot"></span>
+            <span>2.8 Quality Of Service QOS Mechanisms</span>
+          </a>
+          <a href="./m2_09_ipv4_addressing_forwarding_nat_icmp.html" class="topic-link active" id="topic-m2_09_ipv4_addressing_forwarding_nat_icmp">
+            <span class="topic-dot"></span>
+            <span>2.9 IPV4 Addressing Forwarding NAT ICMP</span>
+          </a>
+          <a href="./m2_10_unicast_routing_link_state_distance_vector.html" class="topic-link " id="topic-m2_10_unicast_routing_link_state_distance_vector">
+            <span class="topic-dot"></span>
+            <span>2.10 Unicast Routing Link State Distance Vector</span>
+          </a>
+          <a href="./m2_11_ipv6_next_generation_transition.html" class="topic-link " id="topic-m2_11_ipv6_next_generation_transition">
+            <span class="topic-dot"></span>
+            <span>2.11 IPV6 Next Generation Transition</span>
+          </a>
+          <a href="./m2_99_practice_lab_transport_drills.html" class="topic-link " id="topic-m2_99_practice_lab_transport_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M2 Transport Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Data Link Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_datalink_layer_services_and_framing.html" class="topic-link " id="topic-m3_01_datalink_layer_services_and_framing">
+            <span class="topic-dot"></span>
+            <span>3.1 Datalink Layer Services And Framing</span>
+          </a>
+          <a href="./m3_02_error_detection_crc_checksums_parity.html" class="topic-link " id="topic-m3_02_error_detection_crc_checksums_parity">
+            <span class="topic-dot"></span>
+            <span>3.2 Error Detection CRC Checksums Parity</span>
+          </a>
+          <a href="./m3_03_multiple_access_protocols.html" class="topic-link " id="topic-m3_03_multiple_access_protocols">
+            <span class="topic-dot"></span>
+            <span>3.3 Multiple Access Protocols</span>
+          </a>
+          <a href="./m3_04_lan_addressing_arp_switches_and_vlans.html" class="topic-link " id="topic-m3_04_lan_addressing_arp_switches_and_vlans">
+            <span class="topic-dot"></span>
+            <span>3.4 Lan Addressing ARP Switches And Vlans</span>
+          </a>
+          <a href="./m3_05_wireless_lan_802_11.html" class="topic-link " id="topic-m3_05_wireless_lan_802_11">
+            <span class="topic-dot"></span>
+            <span>3.5 Wireless Lan 802 11</span>
+          </a>
+          <a href="./m3_06_mobile_ip_agents_tunneling.html" class="topic-link " id="topic-m3_06_mobile_ip_agents_tunneling">
+            <span class="topic-dot"></span>
+            <span>3.6 Mobile IP Agents Tunneling</span>
+          </a>
+          <a href="./m3_99_practice_lab_datalink_drills.html" class="topic-link " id="topic-m3_99_practice_lab_datalink_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M3 Datalink Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>Physical Layer &amp; SNMP</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_network_management_snmp_architecture.html" class="topic-link " id="topic-m4_01_network_management_snmp_architecture">
+            <span class="topic-dot"></span>
+            <span>4.1 Network Management SNMP Architecture</span>
+          </a>
+          <a href="./m4_02_nyquist_shannon_channel_capacity.html" class="topic-link " id="topic-m4_02_nyquist_shannon_channel_capacity">
+            <span class="topic-dot"></span>
+            <span>4.2 Nyquist Shannon Channel Capacity</span>
+          </a>
+          <a href="./m4_03_pcm_digitization_sampling_quantization.html" class="topic-link " id="topic-m4_03_pcm_digitization_sampling_quantization">
+            <span class="topic-dot"></span>
+            <span>4.3 PCM Digitization Sampling Quantization</span>
+          </a>
+          <a href="./m4_04_modulation_ask_fsk_psk_qam.html" class="topic-link " id="topic-m4_04_modulation_ask_fsk_psk_qam">
+            <span class="topic-dot"></span>
+            <span>4.4 Modulation Ask Fsk Psk Qam</span>
+          </a>
+          <a href="./m4_05_transmission_media_guided_unguided.html" class="topic-link " id="topic-m4_05_transmission_media_guided_unguided">
+            <span class="topic-dot"></span>
+            <span>4.5 Transmission Media Guided Unguided</span>
+          </a>
+          <a href="./m4_06_bandwidth_utilization_multiplexing_spread.html" class="topic-link " id="topic-m4_06_bandwidth_utilization_multiplexing_spread">
+            <span class="topic-dot"></span>
+            <span>4.6 Bandwidth Utilization Multiplexing Spread</span>
+          </a>
+          <a href="./m4_07_asn1_smi_mib_language.html" class="topic-link " id="topic-m4_07_asn1_smi_mib_language">
+            <span class="topic-dot"></span>
+            <span>4.7 ASN1 SMI MIB Language</span>
+          </a>
+          <a href="./m4_99_practice_lab_management_physical_drills.html" class="topic-link " id="topic-m4_99_practice_lab_management_physical_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M4 Management Physical Drills</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 36 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST501</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 2</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">2.9 IPV4 Addressing Forwarding NAT ICMP</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>IPv4 Addressing, Forwarding, NAT &amp; ICMP</h1>
+<p><strong>Prefixes, masks, longest-match forwarding, private realms behind NAT, and the control messages that ping the path — the network layer&#39;s datagram core.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Postcodes, Sorting Offices, Return Stamps</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>An <strong>IPv4 address</strong> is house + postcode (host + prefix); the <strong>mask</strong> draws the line between them. <strong>Forwarding</strong> is the sorting office: longest matching postcode wins (most specific route first). <strong>NAT</strong> is a company mailroom — one public address fronts a private floor (return stamps rewritten both ways). <strong>ICMP</strong> is the postal inspector&#39;s red stickers (unreachable, time-exceeded) that <code>ping</code> and <code>traceroute</code> read back.</p>
+</div></details><p>MAC addresses (M3.4) name interfaces on one wire; IP names hosts across the planet — flat local names versus hierarchical global ones.</p>
+<hr>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
+<h3>2.1 Addresses, subnets, forwarding</h3>
+<p>CIDR <code>a.b.c.d/n</code>: first $n$ bits network, rest host; usable hosts $= 2^{32-n} - 2$ (network + broadcast reserved). Subnetting borrows host bits ($/24 \to 4 \times /26$s). Forwarding table: (prefix, mask, next-hop, interface); <strong>longest-prefix match</strong> decides — $/26$ beats $/24$ beats default $0.0.0.0/0$. Private realms $10/8$, $172.16/12$, $192.168/16$ never route publicly.</p>
+<h3>2.2 NAT and ICMP</h3>
+<p>Basic NAT rewrites (private IP, port) ↔ (public IP, new port) per flow in a translation table — return traffic un-rewrites by lookup. ICMP rides IP (protocol $1$): echo request/reply ($8$/$0$) for <code>ping</code>, TTL-expiry ($11$) for <code>traceroute</code>&#39;s hop-by-hop map, destination-unreachable ($3$) for dead ends.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: IPv4</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Usable $= 2^{32-n} - 2$ · longest prefix wins · privates $10/8$, $172.16/12$, $192.168/16$ · NAT $=$ per-flow rewrite table · ICMP $8/0$ echo, $11$ expiry, $3$ unreachable.</p>
+</div></details><p>NAT breaks end-to-end (inbound needs port-forwarding; IPsec AH chokes on rewrites) — address conservation bought with transparency, the tradeoff behind every &quot;why is P2P hard at home&quot; question (M1.8&#39;s reunion).</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Classful Nostalgia</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Classes A/B/C are museum pieces — CIDR ($/n$ anywhere) replaced them decades ago. An option sizing $192.168.x.x$ as &quot;Class C, $254$ hosts&quot; by class (not mask) fails subnetted networks ($/26 \to 62$) and wastes the question&#39;s given prefix.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Network $192.168.10.0/24$ split into $4$ equal subnets. (a) New prefix length and per-subnet usable hosts? (b) Packet to $192.168.10.75$ with table ${192.168.10.0/24 \to R1,\ 192.168.10.64/26 \to R2,\ 0.0.0.0/0 \to R3}$: next hop?</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Borrowing and Matching</div><div class="step-content"><p>(a) $4$ subnets need $2$ borrowed bits: $/24 \to /26$. Ranges: $.0/26$ ($0$–$63$), $.64/26$ ($64$–$127$), $.128/26$, $.192/26$. Usable each $= 2^{6} - 2 = 62$ (network + broadcast reserved per subnet — $4 \times 62 = 248 &lt; 254$, the subnetting tax). (b) $.75$ matches $/24$ (R1) and $.64/26$ ($64 \le 75 \le 127$, R2) — longest ($/26$) wins → R2. Default R3 never consulted.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$/26$ quartets of $62$ usable; $.75 \to$ R2 by longest match. Specificity beats order — table sequence is irrelevant, prefix length decides, which is why default routes sit harmlessly last.</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Host Math</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>$10.20.0.0/16$ into $256$ equal subnets. New prefix and hosts each?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$/24$, $254$ each</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$/24$ ($16 + 8$ borrowed bits), $2^{8} - 2 = 254$ usable each — $256 \times 254 = 65{,}024$ vs $65{,}534$ unsubnetted: $256$ subnets reserve $2$ apiece ($512$) against the parent&#39;s $2$, net tax $510$ addresses</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$/25$, $126$ each</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$/16$ unchanged, subnets are free</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>$256 = 2^8$ subnets consume $8$ host bits: $/16 \to /24$. Each subnet donates network+broadcast — hierarchy always costs addresses, budget it.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: NAT Direction</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Inside host $10.0.0.5{:}5000$ opens a flow; NAT public $203.0.113.7$, assigns $61000$. Return packet arrives for $203.0.113.7{:}61000$. Fate?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Dropped, NAT is outbound-only</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Table lookup $(203.0.113.7, 61000) \to (10.0.0.5, 5000)$, rewrite destination, forward inside — stateful un-rewrite is NAT&#39;s entire return path; without the prior outbound entry the packet dies</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Broadcast to all inside hosts</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Sent to $10.0.0.5{:}61000$ unrewritten</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The translation table is directional memory: outbound created the binding, inbound consumes it. Unsolicited arrivals (no binding) drop — the statefulness that is simultaneously NAT&#39;s firewall side-effect and its P2P headache.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: Traceroute Logic</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Hop $5$ never replies; hops $1$–$4$, $6$+ fine. Diagnosis?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Destination down</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Hop-$5$&#39;s router silently drops expired TTLs (no ICMP $11$ sent — many operators rate-limit or suppress it) while forwarding fine — path alive, measurement blind at one hop; the classic &quot;stars mid-trace, target replies&quot; pattern</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Loop between $4$ and $5$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>TTL too large</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p><code>traceroute</code> maps by <em>provoked errors</em>: a quiet hop forwards (data plane healthy) but won&#39;t complain (control plane muted). Stars mean silence, not failure — reply from beyond proves transit worked.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m2_08_quality_of_service_qos_mechanisms.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">2.8 Quality Of Service QOS Mechanisms</div>
+      </a>
+      
+      
+      
+      <a href="./m2_10_unicast_routing_link_state_distance_vector.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">2.10 Unicast Routing Link State Distance Vector</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(36) || 0;
+    const currentId = "m2_09_ipv4_addressing_forwarding_nat_icmp";
+    const courseCode = "PCCST501";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    // Spaced review (v1 schedule): visited topics untouched for 7+ days are
+    // flagged in the nav; opening one refreshes its timestamp (written above).
+    try {
+      const REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+      const stamps = JSON.parse(localStorage.getItem(`tarangam_visited_ts_${courseCode}`) || '{}') || {};
+      const now = Date.now();
+      const due = visited.filter(id => {
+        const ts = stamps[id];
+        return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+      });
+      const idOf = (link) => {
+        const href = link.getAttribute('href') || '';
+        return href.replace('.html', '').split('/').pop();
+      };
+      document.querySelectorAll('.topic-link').forEach(link => {
+        if (due.includes(idOf(link))) {
+          link.classList.add('due');
+          // Review pending supersedes the completion check: swap ✓ for ↻.
+          const old = link.querySelector('.check-mark');
+          if (old) old.remove();
+          if (!link.querySelector('.due-mark')) {
+            const mark = document.createElement('span');
+            mark.className = 'due-mark';
+            mark.style.marginLeft = 'auto';
+            mark.style.color = 'var(--accent-warm)';
+            mark.style.fontSize = '12px';
+            mark.title = 'Due for spaced review (unvisited 7+ days)';
+            mark.innerText = '↻';
+            link.appendChild(mark);
+          }
+        }
+      });
+      const reviewLabel = document.getElementById('reviewLabel');
+      if (reviewLabel) {
+        reviewLabel.innerText = due.length
+          ? `${due.length} due for review ↻`
+          : (visited.length ? 'all fresh ✓' : '');
+      }
+    } catch (e) { /* private mode: review silently disabled */ }
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

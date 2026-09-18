@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 4.6 MDS Multidimensional Scaling</title>
+<meta name="description" content="Machine Learning (PCCST503) — 4.6 MDS Multidimensional Scaling | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.6 MDS Multidimensional Scaling">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 4.6 MDS Multidimensional Scaling">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Machine Learning</span>
+        <span class="tag">PCCST503</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Foundations &amp; Regression</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_ml_definition_paradigms_and_types.html" class="topic-link " id="topic-m1_01_ml_definition_paradigms_and_types">
+            <span class="topic-dot"></span>
+            <span>1.1 ML Definition Paradigms And Types</span>
+          </a>
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
+            <span class="topic-dot"></span>
+            <span>1.2 Probability MLE MAP Estimation</span>
+          </a>
+          <a href="./m1_03_linear_regression_least_squares.html" class="topic-link " id="topic-m1_03_linear_regression_least_squares">
+            <span class="topic-dot"></span>
+            <span>1.3 Linear Regression Least Squares</span>
+          </a>
+          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link " id="topic-m1_04_multiple_regression_model_assessment">
+            <span class="topic-dot"></span>
+            <span>1.4 Multiple Regression Model Assessment</span>
+          </a>
+          <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Foundations Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Classification &amp; Trees</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_classification_boundaries_knn.html" class="topic-link " id="topic-m2_01_classification_boundaries_knn">
+            <span class="topic-dot"></span>
+            <span>2.1 Classification Boundaries KNN</span>
+          </a>
+          <a href="./m2_02_logistic_regression_sigmoid_loss.html" class="topic-link " id="topic-m2_02_logistic_regression_sigmoid_loss">
+            <span class="topic-dot"></span>
+            <span>2.2 Logistic Regression Sigmoid Loss</span>
+          </a>
+          <a href="./m2_03_naive_bayes_generative_models.html" class="topic-link " id="topic-m2_03_naive_bayes_generative_models">
+            <span class="topic-dot"></span>
+            <span>2.3 Naive Bayes Generative Models</span>
+          </a>
+          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link " id="topic-m2_04_decision_trees_entropy_information_gain">
+            <span class="topic-dot"></span>
+            <span>2.4 Decision Trees Entropy Information Gain</span>
+          </a>
+          <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
+            <span class="topic-dot"></span>
+            <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M2 Classification Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Neural Nets &amp; SVMs</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_perceptron_learning_rule.html" class="topic-link " id="topic-m3_01_perceptron_learning_rule">
+            <span class="topic-dot"></span>
+            <span>3.1 Perceptron Learning Rule</span>
+          </a>
+          <a href="./m3_02_multilayer_networks_backpropagation.html" class="topic-link " id="topic-m3_02_multilayer_networks_backpropagation">
+            <span class="topic-dot"></span>
+            <span>3.2 Multilayer Networks Backpropagation</span>
+          </a>
+          <a href="./m3_03_maximum_margin_svm.html" class="topic-link " id="topic-m3_03_maximum_margin_svm">
+            <span class="topic-dot"></span>
+            <span>3.3 Maximum Margin SVM</span>
+          </a>
+          <a href="./m3_04_kernels_soft_margins.html" class="topic-link " id="topic-m3_04_kernels_soft_margins">
+            <span class="topic-dot"></span>
+            <span>3.4 Kernels Soft Margins</span>
+          </a>
+          <a href="./m3_99_practice_lab_networks_svm_drills.html" class="topic-link " id="topic-m3_99_practice_lab_networks_svm_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M3 Networks SVM Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>PCA &amp; Ensembles</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_clustering_kmeans.html" class="topic-link " id="topic-m4_01_clustering_kmeans">
+            <span class="topic-dot"></span>
+            <span>4.1 Clustering Kmeans</span>
+          </a>
+          <a href="./m4_02_hierarchical_clustering.html" class="topic-link " id="topic-m4_02_hierarchical_clustering">
+            <span class="topic-dot"></span>
+            <span>4.2 Hierarchical Clustering</span>
+          </a>
+          <a href="./m4_03_pca_dimensionality_reduction.html" class="topic-link " id="topic-m4_03_pca_dimensionality_reduction">
+            <span class="topic-dot"></span>
+            <span>4.3 PCA Dimensionality Reduction</span>
+          </a>
+          <a href="./m4_04_ensemble_bagging_random_forests.html" class="topic-link " id="topic-m4_04_ensemble_bagging_random_forests">
+            <span class="topic-dot"></span>
+            <span>4.4 Ensemble Bagging Random Forests</span>
+          </a>
+          <a href="./m4_05_boosting_adaboost.html" class="topic-link " id="topic-m4_05_boosting_adaboost">
+            <span class="topic-dot"></span>
+            <span>4.5 Boosting Adaboost</span>
+          </a>
+          <a href="./m4_06_mds_multidimensional_scaling.html" class="topic-link active" id="topic-m4_06_mds_multidimensional_scaling">
+            <span class="topic-dot"></span>
+            <span>4.6 MDS Multidimensional Scaling</span>
+          </a>
+          <a href="./m4_99_practice_lab_unsupervised_ensemble_drills.html" class="topic-link " id="topic-m4_99_practice_lab_unsupervised_ensemble_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M4 Unsupervised Ensemble Drills</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel">0 of 23 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <span>PCCST503</span>
+        <span class="crumb-sep">/</span>
+        <span>Module 4</span>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">4.6 MDS Multidimensional Scaling</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>MDS: Maps From Mileage Tables</h1>
+<p><strong>Coordinates from distances alone — double-centering traced on a 3-4-5 triangle, eigenvalues as the dimension ledger, and why Euclidean MDS is PCA in disguise.</strong></p>
+<p><a id="the-intuition"></a></p>
+<h2 id="1-the-intuition">1. The Intuition</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Map From Mileages</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A road atlas lists city-to-city mileages, never coordinates — yet cartographers drew the map from exactly such tables. <strong>Classical MDS</strong> does the same algebra: square the distances, <strong>double-center</strong> (subtract row/column means, add grand mean) to get inner products, eigendecompose, and read coordinates off scaled eigenvectors. PCA (M4.3) starts from coordinates and finds spread axes; MDS starts from mileages and rebuilds the map — same geometry, opposite entrances.</p>
+</div></details><pre><code class="language-text">D (distances) --square--&gt; D2 --double-center--&gt; B = -1/2 J D2 J
+B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
+</code></pre>
+<hr>
+<p><a id="the-math"></a></p>
+<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
+<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
+<h3>2.1 Double-centering and the ledger</h3>
+<p>For $n$ points with squared-distance matrix $D^2$: $B_{ij} = -\tfrac{1}{2}(D^2_{ij} - \bar{r}_i - \bar{r}_j + \bar{g})$ (row means, grand mean) converts distances to centered inner products. Eigendecompose $B = V\Lambda V^T$; coordinates $= V_k \Lambda_k^{1/2}$ (top $k$). Built-in certificates: rows of $B$ sum to $0$ (centering — one eigenvalue exactly $0$ for the all-ones vector), $\mathrm{tr}(B) = \sum \lambda_i$ (variance ledger, same checksum habit as PCA).</p>
+<h3>2.2 Stress and the PCA identity</h3>
+<p>Fewer dimensions than rank $\Rightarrow$ distortion, priced by <strong>stress</strong> (Kruskal: mismatch between true and embedded distances). <strong>Classical MDS on Euclidean distances recovers PCA&#39;s embedding</strong> (same inner-product matrix, rotated axes) — mileage-table input, PCA-grade map output. Non-metric MDS (rank-order only) lives outside this syllabus.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: MDS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$B = -\tfrac{1}{2}JD^2J$ · coords $= V_k\sqrt{\Lambda_k}$ · rows sum $0$, trace $= \sum\lambda$ · Euclidean MDS $\equiv$ PCA · stress prices compression.</p>
+</div></details><p>MDS needs <em>dissimilarities</em>, not features — gene-expression correlations, survey proximities, road mileages all embed; PCA cannot start there at all.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Distances-In-Coordinates-Out Confusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MDS input is a <em>distance matrix</em> ($n \times n$), not a data matrix ($n \times d$) — feeding raw features where mileages belong (or vice versa) is the standard setup error. Squaring first ($D^2$, not $D$) is the second: the centering identity is quadratic, and linear distances centre into nonsense.</p>
+</div></details><hr>
+<p><a id="worked-example"></a></p>
+<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
+<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Three depots with mileages $d_{12} = 3$, $d_{13} = 4$, $d_{23} = 5$ (a 3-4-5 triangle). Double-center to $B$, verify both certificates (row sums, trace), and state the eigenvalue ledger.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Centering the Triangle</div><div class="step-content"><p>$D^2 = [[0,9,16],[9,0,25],[16,25,0]]$. Row means: $25/3 \approx 8.333$, $34/3 \approx 11.333$, $41/3 \approx 13.667$; grand mean $100/9 \approx 11.111$. $B_{11} = -\tfrac{1}{2}(0 - 8.333 - 8.333 + 11.111) = 2.778$; $B_{22} = 5.778$; $B_{33} = 8.111$; $B_{12} = -0.222$; $B_{13} = -2.556$; $B_{23} = -5.556$. Certificates: row $1$ sums $2.778 - 0.222 - 2.556 = 0$ ✓ (centering holds); trace $= 2.778 + 5.778 + 8.111 = 16.667$. Eigenvalues: $\lambda_1 \approx 12.965$, $\lambda_2 \approx 3.702$, $\lambda_3 = 0$ (sums $16.667$ ✓, forced zero by centering). Dim-$1$ keeps $12.965/16.667 \approx 77.8%$; dim-$2$ keeps $100%$ (rank $2$ — the triangle is flat, so two axes suffice exactly).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$B$ built, both certificates green, ledger $12.965 + 3.702 + 0$. A 1-D line keeps $77.8%$ (flattened triangle, stress $&gt; 0$); 2-D recovers the exact right triangle ($3$-$4$-$5$ verifies: legs $3,4$, hypotenuse $5$). Mileages in, map out — no coordinates were harmed (none were given).</p>
+</div></div><hr>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q1: Centering Drill</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>$D^2 = [[0,1],[1,0]]$ (two points, distance $1$). $B_{11}$?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$0$, diagonal stays zero</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$0.25$ — row means $0.5$, $0.5$, grand $0.5$: $B_{11} = -0.5(0 - 0.5 - 0.5 + 0.5) = 0.25$; eigenvalues $\{0.5, 0\}$ place the pair at $\pm 0.5$ on one axis, distance $1$ preserved exactly</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$1$, distances pass through</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$-0.5$, sign flipped</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Centering manufactures coordinates ($\pm 0.5$), not copies distances: $B$ holds inner products of the <em>centered</em> layout. Row-sum zero ($0.25 - 0.25$) certifies before any eigendecomposition — certificate first, coordinates second.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q2: Ledger Check</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>$B$ is $4 \times 4$ with eigenvalues $9, 4, 1, 0$. Embedding dims and dim-2 share?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>$4$ dims needed, share $9/14$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Rank $3$ (one forced zero), so $3$ dims exact; top-$2$ keeps $(9+4)/14 = 13/14 \approx 92.9\%$ — the zero eigenvalue is centering&#39;s signature, never information, and denominators sum *kept plus dropped*</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$2$ dims exact always</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Share $9/9 = 100\%$ in dim $1$</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Trace $= 14$ is total variance; $13/14$ in two axes. The $0$ belongs to the all-ones vector (rows sum $0$), so &quot;four eigenvalues&quot; means three dimensions — counting rank, not matrix size, is the ledger discipline.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q3: MDS vs PCA</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Euclidean distance matrix of a dataset, classical MDS vs PCA scatter. Relation?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Unrelated projections</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Identical up to rotation — same centered inner-product matrix eigendecomposed, so coordinates match after an orthogonal shrug; MDS just arrived via mileages while PCA came via features</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MDS needs labels, PCA doesn&#39;t</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>PCA preserves distances, MDS preserves variance</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>One Gram matrix, two doorways: $XX^T$ from features (PCA) versus double-centered $D^2$ (MDS) coincide for Euclidean $D$. Rotation-freedom absorbs the basis difference — geometry equal, paperwork different, the identity examiners quote.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m4_05_boosting_adaboost.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">4.5 Boosting Adaboost</div>
+      </a>
+      
+      
+      
+      <a href="./m4_99_practice_lab_unsupervised_ensemble_drills.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">🧪 Practice Lab: M4 Unsupervised Ensemble Drills</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking
+  (function trackTopicProgress() {
+    var totalTopics = Number(23) || 0;
+    const currentId = "m4_06_mds_multidimensional_scaling";
+    const courseCode = "PCCST503";
+    if (totalTopics === 0 || !currentId) return;
+
+    const storageKey = `tarangam_visited_${courseCode}`;
+    let visited = [];
+    try {
+      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(visited)) visited = [];
+    } catch (e) { visited = []; }
+
+    // Every page counts, including practice labs (denominator includes them).
+    if (!visited.includes(currentId)) {
+      visited.push(currentId);
+      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
+    }
+    // Timestamp map for future spaced-repetition scheduling (additive; the
+    // visited array above stays the source of truth for progress).
+    try {
+      const tsKey = `tarangam_visited_ts_${courseCode}`;
+      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
+      stamps[currentId] = Date.now();
+      localStorage.setItem(tsKey, JSON.stringify(stamps));
+    } catch (e) { /* quota/private mode */ }
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    
+    if (progressFill && progressLabel) {
+      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
+      progressFill.style.width = pct + '%';
+      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
+    }
+    
+    document.querySelectorAll('.topic-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (href) {
+        const topicId = href.replace('.html', '').split('/').pop();
+        if (visited.includes(topicId)) {
+          link.classList.add('visited');
+          if (!link.querySelector('.check-mark')) {
+            const check = document.createElement('span');
+            check.className = 'check-mark';
+            check.style.marginLeft = 'auto';
+            check.style.color = 'var(--correct)';
+            check.style.fontSize = '12px';
+            check.innerText = '✓';
+            link.appendChild(check);
+          }
+        }
+      }
+    });
+
+    // Spaced review (v1 schedule): visited topics untouched for 7+ days are
+    // flagged in the nav; opening one refreshes its timestamp (written above).
+    try {
+      const REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+      const stamps = JSON.parse(localStorage.getItem(`tarangam_visited_ts_${courseCode}`) || '{}') || {};
+      const now = Date.now();
+      const due = visited.filter(id => {
+        const ts = stamps[id];
+        return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+      });
+      const idOf = (link) => {
+        const href = link.getAttribute('href') || '';
+        return href.replace('.html', '').split('/').pop();
+      };
+      document.querySelectorAll('.topic-link').forEach(link => {
+        if (due.includes(idOf(link))) {
+          link.classList.add('due');
+          // Review pending supersedes the completion check: swap ✓ for ↻.
+          const old = link.querySelector('.check-mark');
+          if (old) old.remove();
+          if (!link.querySelector('.due-mark')) {
+            const mark = document.createElement('span');
+            mark.className = 'due-mark';
+            mark.style.marginLeft = 'auto';
+            mark.style.color = 'var(--accent-warm)';
+            mark.style.fontSize = '12px';
+            mark.title = 'Due for spaced review (unvisited 7+ days)';
+            mark.innerText = '↻';
+            link.appendChild(mark);
+          }
+        }
+      });
+      const reviewLabel = document.getElementById('reviewLabel');
+      if (reviewLabel) {
+        reviewLabel.innerText = due.length
+          ? `${due.length} due for review ↻`
+          : (visited.length ? 'all fresh ✓' : '');
+      }
+    } catch (e) { /* private mode: review silently disabled */ }
+
+    const resetBtn = document.getElementById('resetProgress');
+    if (resetBtn) {
+      resetBtn.onclick = () => {
+        localStorage.removeItem(storageKey);
+        location.reload();
+      };
+    }
+  })();
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

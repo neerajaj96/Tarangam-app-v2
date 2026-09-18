@@ -25,6 +25,10 @@
 
 Version `-sV` (banner+probe matching), OS `-O` (TCP/IP stack fingerprint quirks), timing `-T0..T5` (paranoia↔insane), output `-oN/-oX` (evidence files!).
 
+### 2.2 SuperScan: the Windows GUI counterpart
+
+**SuperScan** (Foundstone/McAfee, Windows-only) runs the *same* underlying techniques — TCP connect scans, SYN scans, ping sweeps, banner grabs — behind point-and-click presets with HTML reports, plus Windows-flavoured extras (NetBIOS/share enumeration). Tradeoff vs Nmap: approachable and report-ready out of the box, but narrower (no NSE scripting engine, no OS breadth, slower at scale). Exam rule: techniques transfer one-to-one (a SYN scan is a SYN scan); only the *interface and extensibility* differ — and both tools need the same written authorization, GUI or CLI.
+
 ::: callout-formula KTU Formula Vault: Knocks
 SYN = **default half-open** · FIN-family = **silence-means-open** · UDP = **ICMP-or-silence** · Nmap flags **-sS/-sV/-O/-T**.
 :::

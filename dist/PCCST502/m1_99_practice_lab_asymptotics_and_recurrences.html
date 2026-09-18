@@ -146,6 +146,10 @@
             <span class="topic-dot"></span>
             <span>2.4 Divide And Conquer Merge Sort And Strassen</span>
           </a>
+          <a href="./m2_05_topological_sorting_dag_linearization.html" class="topic-link " id="topic-m2_05_topological_sorting_dag_linearization">
+            <span class="topic-dot"></span>
+            <span>2.5 Topological Sorting DAG Linearization</span>
+          </a>
           <a href="./m2_99_practice_lab_graphs_divide_drills.html" class="topic-link " id="topic-m2_99_practice_lab_graphs_divide_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M2 Graphs Divide Drills</span>
@@ -178,6 +182,10 @@
           <a href="./m3_05_backtracking_n_queens_state_space.html" class="topic-link " id="topic-m3_05_backtracking_n_queens_state_space">
             <span class="topic-dot"></span>
             <span>3.5 Backtracking N Queens State Space</span>
+          </a>
+          <a href="./m3_06_floyd_warshall_all_pairs_shortest.html" class="topic-link " id="topic-m3_06_floyd_warshall_all_pairs_shortest">
+            <span class="topic-dot"></span>
+            <span>3.6 Floyd Warshall All Pairs Shortest</span>
           </a>
           <a href="./m3_99_practice_lab_greedy_dp_backtracking_drills.html" class="topic-link " id="topic-m3_99_practice_lab_greedy_dp_backtracking_drills">
             <span class="topic-dot"></span>
@@ -226,7 +234,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel">0 of 29 completed</span>
+          <span id="progressLabel">0 of 31 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -302,7 +310,7 @@
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Mixed drill: (a) solve $T(n) = 4T(n/2) + n^2$ using the Master Theorem; (b) insert the keys $10, 20, 30, 40, 50$ in that order into an initially empty AVL tree, and identify every rotation triggered along the way.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>(a)</strong> Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, reference function $n^2$. Compare to $f(n)=n^2$: this is an <em>exact match</em> ($f(n) = \Theta(n^{\log_b a})$), so <strong>Case 2</strong> applies.
-<strong>(b)</strong> Insert $10$: tree is just ${10}$, balanced. Insert $20$: becomes $10$&#39;s right child; $BF(10) = -1$, fine. Insert $30$: goes right of $10$, then right of $20$; check $BF(20)$: fine (0). Check $BF(10)$: left height $-1$, right height (subtree rooted at 20, now height 1) $=1$; $BF(10) = -1-1=-2$ — imbalance! This is caused by inserting into the right subtree of the right child (30 went right of 20, which is right of 10) — an <strong>RR</strong> shape. Fix: single left rotation at $10$. Result: $20$ becomes root, $10$ its left child, $30$ its right child — balanced. Insert $40$: goes right of $30$; $BF(30)=-1$, fine; $BF(20)$ recomputed: right subtree (rooted at 30) height is now $1$, left subtree (just node 10) height $0$; $BF(20)=0-1=-1$, still fine, no rotation. Insert $50$: goes right of $40$; check up the chain: $BF(40)=-1$ fine; $BF(30)$: right subtree (rooted at 40) now height $1$, left subtree height $-1$ (empty); $BF(30) = -1-1=-2$ — imbalance, another <strong>RR</strong> shape (50 went right of 40, which is right of 30). Fix: single left rotation at $30$.</p>
+<strong>(b)</strong> Insert $10$: tree is just ${10}$, balanced. Insert $20$: becomes $10$&#39;s right child; $BF(10) = -1$, fine. Insert $30$: goes right of $10$, then right of $20$; check $BF(20)$: left empty ($-1$), right child $30$ (height $0$) gives $-1$ — fine, no rotation. Check $BF(10)$: left height $-1$, right height (subtree rooted at 20, now height 1) $=1$; $BF(10) = -1-1=-2$ — imbalance! This is caused by inserting into the right subtree of the right child (30 went right of 20, which is right of 10) — an <strong>RR</strong> shape. Fix: single left rotation at $10$. Result: $20$ becomes root, $10$ its left child, $30$ its right child — balanced. Insert $40$: goes right of $30$; $BF(30)=-1$, fine; $BF(20)$ recomputed: right subtree (rooted at 30) height is now $1$, left subtree (just node 10) height $0$; $BF(20)=0-1=-1$, still fine, no rotation. Insert $50$: goes right of $40$; check up the chain: $BF(40)=-1$ fine; $BF(30)$: right subtree (rooted at 40) now height $1$, left subtree height $-1$ (empty); $BF(30) = -1-1=-2$ — imbalance, another <strong>RR</strong> shape (50 went right of 40, which is right of 30). Fix: single left rotation at $30$.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><strong>(a)</strong> By Case 2, $T(n) = \Theta(n^2 \log n)$.
 <strong>(b)</strong> Two rotations were triggered in total — both RR (single left rotations), once at node $10$ (after inserting $30$) and once at node $30$ (after inserting $50$) — leaving a final, fully balanced 5-node AVL tree with root $20$: left child $10$, right child $40$ (whose own children are $30$ and $50$). This kind of &quot;insert several keys in increasing order, watch it self-correct repeatedly&quot; drill is exactly what would otherwise degenerate into a useless straight-line BST — the whole point of Module 1&#39;s AVL topics.</p>
 </div></div><hr>
@@ -485,7 +493,7 @@
 
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
-    var totalTopics = Number(29) || 0;
+    var totalTopics = Number(31) || 0;
     const currentId = "m1_99_practice_lab_asymptotics_and_recurrences";
     const courseCode = "PCCST502";
     if (totalTopics === 0 || !currentId) return;

@@ -63,11 +63,11 @@ $\pi_2 = 0.5$ from balance; return time $1/0.5 = 2$ (there-and-back through eith
 ::: quiz Q2: Mixed Drill
 $p = 0.55$ gambler, $k = 4$, $N = 10$. Success probability?
 (A) $0.4$
-(*B) $r = 0.45/0.55 \approx 0.8182$: ruin $= (r^{10}-r^4)/(r^{10}-1) \approx (0.137-0.448)/(0.137-1) \approx 0.360$; success $\approx 0.640$
+(*B) $r = 0.45/0.55 \approx 0.8182$: ruin $= (r^{10}-r^4)/(r^{10}-1) \approx (0.134-0.448)/(0.134-1) \approx 0.362$; success $\approx 0.638$
 (C) $0.55$
 (D) $0.818$
 ::: explanation
-Ruin $\approx 0.36$, so success $\approx 0.64$ — favourable odds plus modest goal beat the house edge. Always convert ruin↔success by complement; questions mix which they ask.
+Ruin $\approx 0.362$, so success $\approx 0.638$ — favourable odds plus modest goal beat the house edge. Always convert ruin↔success by complement; questions mix which they ask.
 :::
 
 ::: quiz Q3: Mixed Drill

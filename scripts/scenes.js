@@ -648,6 +648,117 @@ ${edge(470, 160, 400, 250, 'a4')}
 <text class="badge1 a4" x="470" y="205">2 ≤ α ✂ cut!</text>
 <text class="animnote a5" x="320" y="292" text-anchor="middle">4 leaves evaluated, 2 never born — same move, less work</text>
 </svg>`
+  },
+
+  'dns-resolve': {
+    title: 'DNS Resolution: Climbing Down the Hierarchy',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated DNS: client asks local server, which climbs root, TLD, authoritative in turn">
+${defs}
+${node(90, 150, 'YOU', 'a1')}
+${node(250, 150, 'LOCAL', 'a2')}
+${node(410, 80, 'ROOT', 'a3')}${node(410, 220, 'TLD', 'a3')}
+${node(560, 150, 'AUTH', 'a4')}
+${edge(90, 150, 250, 150, 'a1')}
+${edge(250, 150, 410, 80, 'a3')}${edge(250, 150, 410, 220, 'a3')}${edge(250, 150, 560, 150, 'a4')}
+<text class="badge1 a2" x="250" y="195">caches first!</text>
+<text class="badge1 a4" x="560" y="195">IP at last</text>
+<text class="animnote a5" x="320" y="282" text-anchor="middle">8 messages worst case — every cache hit deletes a round trip</text>
+</svg>`
+  },
+
+  'multicast-rpf': {
+    title: 'RPF Check: Forward on Tree, Drop the Loop',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated multicast: packet arriving on the shortest-path interface forwards to members, looped copy fails RPF and drops">
+${defs}
+${node(90, 150, 'S', 'a1')}
+${node(270, 150, 'R1', 'a2')}
+${node(450, 80, 'H1 ✓', 'a3')}${node(450, 220, 'R2', 'a3')}
+${node(570, 220, 'H3 ✓', 'a4')}
+${edge(90, 150, 270, 150, 'a1')}
+${edge(270, 150, 450, 80, 'a3')}${edge(270, 150, 450, 220, 'a3')}
+${edge(450, 220, 570, 220, 'a4')}
+<text class="badge1 a2" x="270" y="195">RPF: eth0 ✓ fwd ×2</text>
+<text class="badge1 a5" x="270" y="115">loop on eth1 ✂ drop</text>
+<text class="animnote a5" x="320" y="282" text-anchor="middle">on-tree arrival copies once per member link — off-tree arrival dies silently</text>
+</svg>`
+  },
+
+  'leaky-bucket': {
+    title: 'Token Bucket: Burst Capped, Rate Metered',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated token bucket: tokens accrue at fixed rate up to depth, each packet spends one">
+${defs}
+<g class="cell a1"><rect x="60" y="90" width="170" height="120" rx="10"/><text x="145" y="120">bucket C=6</text><text x="145" y="145">tokens +1/s… r=3</text></g>
+<g class="msg a2"><line x1="230" y1="150" x2="330" y2="150" marker-end="url(#ah)"/><text x="280" y="130" text-anchor="middle">burst 10</text></g>
+<g class="cell a3"><rect x="330" y="90" width="120" height="120" rx="10"/><text x="390" y="130">6 pass ✓</text><text x="390" y="155">4 wait/drop</text></g>
+<g class="msg a4"><line x1="450" y1="150" x2="550" y2="150" marker-end="url(#ah)"/><text x="500" y="130" text-anchor="middle">steady 3/s</text></g>
+<text class="animnote a5" x="320" y="262" text-anchor="middle">depth absorbs bursts, rate meters the flow — conform ≤ C + rT always</text>
+</svg>`
+  },
+
+  'mobile-ip-tunnel': {
+    title: 'Mobile IP: Triangle Routing via Home Agent',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Mobile IP: correspondent sends to home agent, which tunnels to foreign agent, which delivers to mobile node">
+${defs}
+${node(90, 80, 'YOU', 'a1')}
+${node(320, 60, 'HA', 'a2')}
+${node(320, 220, 'FA', 'a3')}
+${node(550, 220, 'MN', 'a4')}
+${edge(90, 80, 320, 60, 'a1')}
+${edge(320, 60, 320, 220, 'a2')}
+${edge(320, 220, 550, 220, 'a3')}
+<text class="badge1 a2" x="205" y="50">leg 1: to home</text>
+<text class="badge1 a3" x="240" y="160">leg 2: tunnel IP-in-IP</text>
+<text class="badge1 a4" x="460" y="260">leg 3: deliver</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">3 legs by default, 1 after route optimization — bindings trade messages for shortcuts</text>
+</svg>`
+  },
+
+  'fiber-tir': {
+    title: 'Fibre TIR: Zigzag Trapped by Critical Angle',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated fibre: light ray zigzags down the core, each wall hit above critical angle reflects fully">
+${defs}
+<line class="axis" x1="60" y1="90" x2="580" y2="90"/><line class="axis" x1="60" y1="210" x2="580" y2="210"/>
+<text class="axislbl" x="320" y="75">cladding n=1.46</text><text class="axislbl" x="320" y="235">cladding n=1.46</text>
+<text class="animcap a1" x="320" y="150" text-anchor="middle">core n=1.48</text>
+<path class="eg a2" d="M70,200 L200,100 L330,200 L460,100 L570,180" style="fill:none"/>
+<text class="badge1 a3" x="200" y="85">hit &gt; 80.6°? reflect!</text>
+<text class="badge1 a4" x="460" y="240">leak &lt; 80.6°? escape…</text>
+<text class="animnote a5" x="320" y="275" text-anchor="middle">dense-to-rare past critical angle: zero loss per bounce, gigahertz per second</text>
+</svg>`
+  },
+
+  'floyd-via-k': {
+    title: 'Floyd-Warshall: Detour via k Beats Direct',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Floyd-Warshall: direct edge 1 to 3 costs 8, detour via 2 costs 5, matrix updates">
+${defs}
+${node(120, 150, '1', 'a1')}
+${node(320, 80, '2', 'a2')}
+${node(520, 150, '3', 'a3')}
+${edge(120, 150, 320, 80, 'a1')}${edge(320, 80, 520, 150, 'a2')}${edge(120, 150, 520, 150, 'a3')}
+<text class="animcap a1" x="220" y="90">3</text>
+<text class="animcap a2" x="420" y="90">2</text>
+<text class="badge1 a3" x="320" y="200">direct 8 → via-2: 5 ✓</text>
+<text class="crcres a4" x="320" y="240" text-anchor="middle">D[1][3] = min(8, 3+2) = 5</text>
+<text class="animnote a5" x="320" y="275" text-anchor="middle">k = 2 unlocks vertex 2 as midpoint — every pair re-asks each round</text>
+</svg>`
+  },
+
+  'dv-count': {
+    title: 'Distance Vector: Stale News Counts to Infinity',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated count to infinity: broken link costs climb round by round until poisoned reverse stops the rumour">
+${defs}
+${node(120, 150, 'A', 'a1')}
+${node(320, 150, 'B', 'a2')}
+${node(520, 150, 'C', 'a3')}
+${edge(120, 150, 320, 150, 'a1')}
+<line class="eg a3" x1="320" y1="150" x2="520" y2="150" stroke-dasharray="6 5"/>
+<text class="animcap a1" x="220" y="125">cost 1 ✓</text>
+<text class="badge1 a3" x="420" y="125">link dead ✗</text>
+<text class="crcrow a2" x="120" y="220">B hears A=3 → B=4</text>
+<text class="crcrow a3" x="120" y="250">A hears B=4 → A=5 …</text>
+<text class="crcres a4" x="480" y="250" text-anchor="middle">poison ✂ stops it</text>
+<text class="animnote a5" x="320" y="285" text-anchor="middle">rumours loop upward — never advertise a route back to its source</text>
+</svg>`
   }
 };
 
