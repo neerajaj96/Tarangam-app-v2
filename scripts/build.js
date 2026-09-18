@@ -21,7 +21,8 @@ const COURSE_METADATA = {
   PBCST604: 'Fundamentals of Cyber Security',
   PECST632: 'Deep Learning',
   PECST637: 'Fundamentals of Cryptography',
-  PECST631: 'Software Testing'
+  PECST631: 'Software Testing',
+  GXEST605: 'Design Thinking and Product Development'
 };
 
 const MODULE_NAMES = {
@@ -108,6 +109,12 @@ const MODULE_NAMES = {
     2: 'Unit & Mutation Testing',
     3: 'White-Box & Security Testing',
     4: 'Black-Box, Grey-Box & PEX'
+  },
+  GXEST605: {
+    1: 'Fundamentals & Self-Check',
+    2: 'Empathize & Define',
+    3: 'Ideate & PoC',
+    4: 'Design, Prototype & Pilot'
   }
 };
 
@@ -128,7 +135,7 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
-const ACRONYMS = new Set(['AI', 'PEAS', 'OSI', 'TCP', 'IP', 'HTTP', 'FTP', 'DNS', 'SMTP', 'P2P', 'AVL', 'BFS', 'DFS', 'UCS', 'DLS', 'IDDFS', 'CSP', 'AC-3', 'RL', 'RAM', 'SNMP', 'VLAN', 'ARP', 'CRC', 'CSMA', 'CD', 'PCM', 'KTU', 'CSE', 'SCC', 'DP', 'TSP', 'NP', 'MLE', 'MAP', 'KNN', 'PCA', 'SVM', 'NA', 'SONAR', 'NDT', 'LED', 'CW', 'PIN', 'PMF', 'CDF', 'PDF', 'CLT', 'SLLN', 'RV', 'ADT', 'FIFO', 'LIFO', 'BST', 'AC', 'DC', 'RMS', 'EMF', 'MMF', 'BJT', 'FET', 'MOSFET', 'CE', 'CB', 'CC', 'AM', 'FM', 'GSM', 'CRO', 'DMM', 'KCL', 'KVL', 'RL', 'RC', 'RLC', 'TAC', 'IR', 'LR', 'LL', 'LVN', 'YACC', 'AST', 'HPC', 'HTC', 'VM', 'VMM', 'GPU', 'P2P', 'SSI', 'HA', 'IPC', 'API', 'IaaS', 'PaaS', 'SaaS', 'IoT', 'CPS', 'SQL', 'XSS', 'CSRF', 'DNS', 'DNSSEC', 'DOS', 'DDOS', 'ARP', 'NMAP', 'DVWA', 'ZAP', 'OWASP', 'PBL', 'VAPT', 'MLP', 'SGD', 'CNN', 'RNN', 'LSTM', 'GAN', 'RELU', 'RBM', 'BPTT', 'DES', 'AES', 'RSA', 'SHA', 'MD5', 'MAC', 'PKI', 'CRT', 'JUNIT', 'ECP', 'BVA', 'CFG', 'PEX', 'GENAI', 'QA']);
+const ACRONYMS = new Set(['AI', 'PEAS', 'OSI', 'TCP', 'IP', 'HTTP', 'FTP', 'DNS', 'SMTP', 'P2P', 'AVL', 'BFS', 'DFS', 'UCS', 'DLS', 'IDDFS', 'CSP', 'AC-3', 'RL', 'RAM', 'SNMP', 'VLAN', 'ARP', 'CRC', 'CSMA', 'CD', 'PCM', 'KTU', 'CSE', 'SCC', 'DP', 'TSP', 'NP', 'MLE', 'MAP', 'KNN', 'PCA', 'SVM', 'NA', 'SONAR', 'NDT', 'LED', 'CW', 'PIN', 'PMF', 'CDF', 'PDF', 'CLT', 'SLLN', 'RV', 'ADT', 'FIFO', 'LIFO', 'BST', 'AC', 'DC', 'RMS', 'EMF', 'MMF', 'BJT', 'FET', 'MOSFET', 'CE', 'CB', 'CC', 'AM', 'FM', 'GSM', 'CRO', 'DMM', 'KCL', 'KVL', 'RL', 'RC', 'RLC', 'TAC', 'IR', 'LR', 'LL', 'LVN', 'YACC', 'AST', 'HPC', 'HTC', 'VM', 'VMM', 'GPU', 'P2P', 'SSI', 'HA', 'IPC', 'API', 'IaaS', 'PaaS', 'SaaS', 'IoT', 'CPS', 'SQL', 'XSS', 'CSRF', 'DNS', 'DNSSEC', 'DOS', 'DDOS', 'ARP', 'NMAP', 'DVWA', 'ZAP', 'OWASP', 'PBL', 'VAPT', 'MLP', 'SGD', 'CNN', 'RNN', 'LSTM', 'GAN', 'RELU', 'RBM', 'BPTT', 'DES', 'AES', 'RSA', 'SHA', 'MD5', 'MAC', 'PKI', 'CRT', 'JUNIT', 'ECP', 'BVA', 'CFG', 'PEX', 'GENAI', 'QA', 'HCD', 'TRL', 'USP', 'SRD', 'SRS', 'DFM', 'DFMEA', 'POC', 'BMC']);
 
 function titleCaseSlug(slug) {
   return slug.replace(/_/g, ' ').split(' ').map(w => {

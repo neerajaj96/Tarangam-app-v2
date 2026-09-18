@@ -529,6 +529,45 @@ ${defs}
 <g class="cell cand a3"><rect x="450" y="110" width="130" height="80" rx="8"/><text x="515" y="145">lived: 3</text><text x="515" y="168">suite blind!</text></g>
 <text class="crcres a4" x="320" y="250" text-anchor="middle">score = 17/20 = 85% — survivors name the missing tests</text>
 </svg>`
+  },
+
+  'dt-loop': {
+    title: 'Design Thinking Loop: Five Phases, Infinite Laps',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated design thinking loop: empathize, define, ideate, prototype, test cycling">
+${defs}
+${node(320, 60, 'EMP', 'a1')}
+${node(500, 150, 'DEF', 'a1')}${node(140, 150, 'TEST', 'a5')}
+${node(430, 250, 'PROTO', 'a4')}${node(210, 250, 'IDEA', 'a3')}
+${edge(320, 60, 500, 150, 'a1')}${edge(500, 150, 430, 250, 'a2')}
+${edge(430, 250, 210, 250, 'a3')}${edge(210, 250, 140, 150, 'a4')}${edge(140, 150, 320, 60, 'a5')}
+<text class="animnote a5" x="320" y="292" text-anchor="middle">test results re-enter empathize — laps, not lines</text>
+</svg>`
+  },
+
+  'empathy-map': {
+    title: 'Empathy Map: Four Quadrants, One User',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated empathy map quadrants: says, thinks, does, feels around a user">
+${defs}
+${node(320, 150, 'USER', 'a1')}
+<g class="cell a2"><rect x="60" y="40" width="140" height="70" rx="8"/><text x="130" y="70">SAYS</text><text x="130" y="92">quotes</text></g>
+<g class="cell a2"><rect x="440" y="40" width="140" height="70" rx="8"/><text x="510" y="70">THINKS</text><text x="510" y="92">beliefs</text></g>
+<g class="cell a3"><rect x="60" y="190" width="140" height="70" rx="8"/><text x="130" y="220">DOES</text><text x="130" y="242">actions</text></g>
+<g class="cell a3"><rect x="440" y="190" width="140" height="70" rx="8"/><text x="510" y="220">FEELS</text><text x="510" y="242">emotions</text></g>
+<text class="animnote a4" x="320" y="290" text-anchor="middle">says+does are observed, thinks+feels inferred — label which is which</text>
+</svg>`
+  },
+
+  'pilot-ladder': {
+    title: 'PoC to Production: The Maturity Ladder',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated ladder: PoC, design, alpha, beta, pilot, production climbing in fidelity and cost">
+${defs}
+<g class="stagebox a1"><rect x="20" y="180" width="90" height="60" rx="8"/><text x="65" y="204">PoC</text><text x="65" y="222" class="sub">risk?</text></g>
+<g class="stagebox a2"><rect x="140" y="150" width="90" height="60" rx="8"/><text x="185" y="174">ALPHA</text><text x="185" y="192" class="sub">works?</text></g>
+<g class="stagebox a3"><rect x="260" y="120" width="90" height="60" rx="8"/><text x="305" y="144">BETA</text><text x="305" y="162" class="sub">users?</text></g>
+<g class="stagebox a4"><rect x="380" y="90" width="90" height="60" rx="8"/><text x="425" y="114">PILOT</text><text x="425" y="132" class="sub">scale?</text></g>
+<g class="stagebox a5"><rect x="500" y="60" width="110" height="60" rx="8"/><text x="555" y="84">PROD</text><text x="555" y="102" class="sub">sustain?</text></g>
+<text class="animnote a5" x="320" y="272" text-anchor="middle">fidelity and cost climb together — kill cheap ideas at the bottom</text>
+</svg>`
   }
 };
 
