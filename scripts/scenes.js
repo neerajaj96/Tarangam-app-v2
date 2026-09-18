@@ -451,6 +451,84 @@ ${defs}
 <text class="animcap" x="320" y="60" text-anchor="middle">cell state runs the straight rail above the gates</text>
 <text class="animnote a4" x="320" y="250" text-anchor="middle">sigmoid bouncers (0/1-ish) × tanh candidates — gradients ride the rail, not the gates</text>
 </svg>`
+  },
+
+  'dh-exchange': {
+    title: 'Diffie–Hellman: Public Swap, Private Secret',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Diffie-Hellman: Alice and Bob swap public values and derive the same secret">
+${defs}
+${node(110, 150, 'A', 'a1')}
+${node(530, 150, 'B', 'a1')}
+<g class="msg a2"><line x1="110" y1="150" x2="530" y2="150" marker-end="url(#ah)"/><text x="320" y="130" text-anchor="middle">swap g^a, g^b (public!)</text></g>
+<g class="msg a3"><line x1="530" y1="180" x2="110" y2="180" marker-end="url(#ah)"/><text x="320" y="205" text-anchor="middle">shared: g^ab (private!)</text></g>
+<text class="animcap a1" x="320" y="40" text-anchor="middle">secrets a, b never travel</text>
+<text class="badge1 a3" x="320" y="250">eavesdropper sees g^a, g^b — discrete log stands guard</text>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">public arithmetic in transit, private exponents at home</text>
+</svg>`
+  },
+
+  'feistel-round': {
+    title: 'Feistel Round: Split, Mix, Swap',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Feistel round: left half mixes through F with the key then halves swap">
+${defs}
+${node(200, 80, 'L', 'a1')}${node(440, 80, 'R', 'a1')}
+<g class="msg a2"><line x1="440" y1="80" x2="440" y2="170" marker-end="url(#ah)"/><text x="510" y="130" text-anchor="middle">F(R,K)</text></g>
+<g class="msg a3"><line x1="200" y1="80" x2="440" y2="220" marker-end="url(#ah)"/><text x="270" y="180" text-anchor="middle">L⊕F → new R</text></g>
+${node(200, 230, 'R', 'a3')}${node(440, 230, 'L’', 'a3')}
+<text class="animnote a4" x="320" y="282" text-anchor="middle">F needn't invert — decryption runs rounds backwards</text>
+</svg>`
+  },
+
+  'hash-chain': {
+    title: 'Hash Chain: Blocks Linked by Digests',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated hash chain: each block embeds the previous digest so edits cascade">
+${defs}
+<g class="cell a1"><rect x="40" y="100" width="150" height="100" rx="8"/><text x="115" y="145">blk 1</text><text x="115" y="170">h0 inside</text></g>
+<g class="cell a2"><rect x="245" y="100" width="150" height="100" rx="8"/><text x="320" y="145">blk 2</text><text x="320" y="170">h1 inside</text></g>
+<g class="cell a3"><rect x="450" y="100" width="150" height="100" rx="8"/><text x="525" y="145">blk 3</text><text x="525" y="170">h2 inside</text></g>
+<g class="msg a2"><line x1="190" y1="150" x2="245" y2="150" marker-end="url(#ah)"/></g>
+<g class="msg a3"><line x1="395" y1="150" x2="450" y2="150" marker-end="url(#ah)"/></g>
+<text class="animnote a4" x="320" y="262" text-anchor="middle">edit blk 1 → every downstream digest breaks — tampering glows</text>
+</svg>`
+  },
+
+  'test-pyramid': {
+    title: 'Test Pyramid: Many Unit, Few E2E',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated test pyramid: broad unit base, service middle, thin UI and exploratory peak">
+${defs}
+<g class="stagebox a3"><rect x="270" y="40" width="100" height="44" rx="8"/><text x="320" y="67">UI / E2E</text></g>
+<g class="stagebox a2"><rect x="210" y="100" width="220" height="44" rx="8"/><text x="320" y="127">service / API</text></g>
+<g class="stagebox a1"><rect x="140" y="160" width="360" height="44" rx="8"/><text x="320" y="187">unit (broad base!)</text></g>
+<text class="badge1 a2" x="320" y="232">cost+speed rise upward — bulk lives at the base</text>
+<text class="animnote a4" x="320" y="272" text-anchor="middle">inverted pyramid (E2E-heavy) is slow, flaky, expensive — flip it</text>
+</svg>`
+  },
+
+  'cfg-cover': {
+    title: 'CFG Coverage: Node, Edge, Path',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated control-flow graph: node coverage first, then edges, then paths">
+${defs}
+${node(320, 60, 'S', 'a1')}
+${node(200, 150, 'A', 'a1')}${node(440, 150, 'B', 'a1')}
+${node(320, 240, 'E', 'a1')}
+${edge(320, 60, 200, 150, 'a2')}${edge(320, 60, 440, 150, 'a2')}
+${edge(200, 150, 320, 240, 'a2')}${edge(440, 150, 320, 240, 'a2')}
+<text class="animcap a1" x="320" y="30" text-anchor="middle">nodes: visit all four</text>
+<text class="badge1 a2" x="100" y="270">edges: ride all four</text>
+<text class="badge1 a3" x="540" y="270">paths: S-A-E, S-B-E…</text>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">each rung subsumes below — paths imply edges imply nodes</text>
+</svg>`
+  },
+
+  'mutant-score': {
+    title: 'Mutation Score: Killed vs Survived',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated mutation score: seeded mutants killed by tests raise the score, survivors indict the suite">
+${defs}
+<g class="cell a1"><rect x="60" y="110" width="130" height="80" rx="8"/><text x="125" y="145">mutants: 20</text><text x="125" y="168">seeded faults</text></g>
+<g class="cell a2"><rect x="255" y="110" width="130" height="80" rx="8"/><text x="320" y="145">killed: 17</text><text x="320" y="168">tests caught</text></g>
+<g class="cell cand a3"><rect x="450" y="110" width="130" height="80" rx="8"/><text x="515" y="145">lived: 3</text><text x="515" y="168">suite blind!</text></g>
+<text class="crcres a4" x="320" y="250" text-anchor="middle">score = 17/20 = 85% — survivors name the missing tests</text>
+</svg>`
   }
 };
 

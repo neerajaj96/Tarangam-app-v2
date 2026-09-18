@@ -22,7 +22,7 @@ content/<COURSE>/m{mod}_{seq}_{slug}.md
   seq 99 = practice lab (optional, one per module, sorts last)
 ```
 
-Current truth (2026-09-17) — full syllabus complete, 308 topics:
+Current truth (2026-09-17) — full syllabus complete, 359 topics:
 - `PCCST501` Computer Networks: M1–M4 complete (24 topics)
 - `PCCST502` DAA: M1–M4 complete (29 topics, incl. `m1_00` overview + `m1_99` lab)
 - `PECST522` AI: M1–M4 complete (22 topics, incl. `m1_99` lab)
@@ -35,6 +35,8 @@ Current truth (2026-09-17) — full syllabus complete, 308 topics:
 - `PCCST602` Advanced Computing Systems (S6): M1–M4 theory complete (23 topics, no lab, 3 animated SVG scenes)
 - `PBCST604` Fundamentals of Cyber Security (S6, PBL): M1–M4 theory complete (26 topics, no lab, 3 animated SVG scenes)
 - `PECST632` Deep Learning (S6 elective): M1–M4 theory complete (25 topics, no lab, 3 animated SVG scenes)
+- `PECST637` Fundamentals of Cryptography (S6 elective): M1–M4 theory complete (25 topics, no lab, 3 animated SVG scenes)
+- `PECST631` Software Testing (S6 elective): M1–M4 theory complete (26 topics, no lab, 3 animated SVG scenes)
 - Dashboard `index.html`: every card unlocked, zero `TODO content/…` remaining
 - All 8 `assets/videos/*.mp4` wired into topics via `::: manim` (0 orphan warnings)
 - `npm run check`: 0 errors, 0 warnings (was: 8 orphan-video warnings at peak)
@@ -43,7 +45,7 @@ Current truth (2026-09-17) — full syllabus complete, 308 topics:
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic (308 `.md` files: 12 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Topic-by-topic breakdown** — Module → smallest topic (359 `.md` files: 14 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
 - **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
 - **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
 - **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).
@@ -71,7 +73,11 @@ Content is decoupled from the shell. To add, say, DBMS as `PCCXX999`:
 
 ## Adding a new year/semester
 
-The dashboard (`index.html`) groups subjects under year blocks (`1st`–`4th Year`) containing semester blocks (`S1/S2`–`S8`), with year + semester pills that filter them (choice persists in `localStorage`). To add a subject, drop its `course-section` into the right semester block (or add a new semester block copying the `.sem-block` pattern with an `empty-note` removed); empty semesters render a "check back soon" note with no dead links. All cards stay in the DOM so `npm run check` still validates every link.
+The dashboard (`index.html`) is a stepped flow: **Years view** (4 year cards) → **Semesters view** (semester cards for that year) → **Subjects view** (course sections for that semester), with breadcrumb back-links and the position persisted in `localStorage` (`tarangam_dash_nav`). To add a subject, drop its `course-section` into the right semester block (year blocks carry `data-year`, semester blocks `data-sem`); then bump the hardcoded subject counts on the corresponding year card, semester card, and semester label. Empty semesters render a "check back soon" note with no dead links. All cards stay in the DOM so `npm run check` still validates every link.
+
+## Elective policy
+
+Add exactly the required number of electives per slot — one representative subject, not the full option list (already-added extras are grandfathered, not removed).
 
 ## Design notes
 

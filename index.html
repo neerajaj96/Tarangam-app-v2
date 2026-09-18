@@ -64,49 +64,113 @@
     color: #94a3b8;
     margin-top: 0.5rem;
   }
-  .pill-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-bottom: 0.75rem;
+  .view[hidden] {
+    display: none;
   }
-  .pill-bar.sem-bar {
-    margin-bottom: 0.5rem;
+  .year-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
   }
-  .pill {
+  .year-card {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #94a3b8;
     background-color: #121824;
     border: 1px solid #1e293b;
-    border-radius: 9999px;
-    padding: 0.4rem 1rem;
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    color: inherit;
     cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: left;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
   }
-  .pill:hover {
-    color: #f1f5f9;
+  .year-card:hover {
+    transform: translateY(-3px);
     border-color: #38bdf8;
+    background-color: #1a2232;
   }
-  .pill.active {
-    color: #38bdf8;
-    border-color: rgba(56, 189, 248, 0.5);
-    background-color: rgba(56, 189, 248, 0.1);
+  .year-card-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #f9fafb;
+    letter-spacing: -0.01em;
   }
-  .pill .count {
+  .year-card-sub {
+    color: #94a3b8;
+    font-size: 0.85rem;
+  }
+  .year-card-count {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    opacity: 0.8;
-    margin-left: 0.3rem;
+    color: #38bdf8;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-top: 0.4rem;
   }
-  .filter-meta {
-    text-align: center;
-    color: #64748b;
-    font-size: 0.8rem;
-    margin-bottom: 2rem;
-    min-height: 1.2em;
+  .sem-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .sem-card {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #121824;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: left;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .sem-card:hover {
+    transform: translateY(-3px);
+    border-color: #38bdf8;
+    background-color: #1a2232;
+  }
+  .sem-card-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #38bdf8;
+  }
+  .sem-card-sub {
+    color: #94a3b8;
+    font-size: 0.85rem;
+  }
+  .crumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+  }
+  .crumb-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    background: none;
+    border: none;
+    color: #38bdf8;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+  }
+  .crumb-btn:hover {
+    text-decoration: underline;
+  }
+  .crumb-sep {
+    color: #475569;
+  }
+  .crumb-current {
+    color: #f1f5f9;
+    font-weight: 600;
   }
   .year-block {
     margin-bottom: 2.5rem;
@@ -267,24 +331,86 @@
       <p>Interactive Notes &middot; KTU 2024 Scheme &middot; S5–S6 Computer Science, S3 Maths & DSA, S1/S2 Physics & Electrical</p>
     </div>
 
-    <div class="pill-bar year-bar" role="group" aria-label="Filter by year">
-      <button class="pill active" data-year="all">All Years</button>
-      <button class="pill" data-year="y1">1st Year</button>
-      <button class="pill" data-year="y2">2nd Year</button>
-      <button class="pill" data-year="y3">3rd Year</button>
-      <button class="pill" data-year="y4">4th Year</button>
+    <!-- STEP 1: pick a year -->
+    <div id="view-years" class="view">
+      <div class="year-cards">
+        <button class="year-card" data-go-year="y1">
+          <span class="year-card-name">1st Year</span>
+          <span class="year-card-sub">B.Tech S1 / S2 &middot; Common courses</span>
+          <span class="year-card-count">2 subjects</span>
+        </button>
+        <button class="year-card" data-go-year="y2">
+          <span class="year-card-name">2nd Year</span>
+          <span class="year-card-sub">B.Tech S3 / S4 &middot; Branch core + mathematics</span>
+          <span class="year-card-count">2 subjects</span>
+        </button>
+        <button class="year-card" data-go-year="y3">
+          <span class="year-card-name">3rd Year</span>
+          <span class="year-card-sub">B.Tech S5 / S6 &middot; Computer Science core</span>
+          <span class="year-card-count">10 subjects</span>
+        </button>
+        <button class="year-card" data-go-year="y4">
+          <span class="year-card-name">4th Year</span>
+          <span class="year-card-sub">B.Tech S7 / S8 &middot; Electives, seminar & project</span>
+          <span class="year-card-count">Coming soon</span>
+        </button>
+      </div>
     </div>
-    <div class="pill-bar sem-bar" role="group" aria-label="Filter by semester">
-      <button class="pill active" data-sem="all">All Semesters</button>
-      <button class="pill" data-sem="s1s2">S1 / S2</button>
-      <button class="pill" data-sem="s3">S3</button>
-      <button class="pill" data-sem="s4">S4</button>
-      <button class="pill" data-sem="s5">S5</button>
-      <button class="pill" data-sem="s6">S6</button>
-      <button class="pill" data-sem="s7">S7</button>
-      <button class="pill" data-sem="s8">S8</button>
+
+    <!-- STEP 2: pick a semester -->
+    <div id="view-semesters" class="view" hidden>
+      <div class="crumbs">
+        <button class="crumb-btn" data-nav="years">&larr; Years</button>
+        <span class="crumb-sep">&rsaquo;</span>
+        <span class="crumb-current" id="crumbYear">Year</span>
+      </div>
+      <div class="sem-cards" data-sem-pick="y1" hidden>
+        <button class="sem-card" data-go-sem="s1s2">
+          <span class="sem-card-name">S1 / S2</span>
+          <span class="sem-card-sub">First & second semester &middot; 2 subjects</span>
+        </button>
+      </div>
+      <div class="sem-cards" data-sem-pick="y2" hidden>
+        <button class="sem-card" data-go-sem="s3">
+          <span class="sem-card-name">S3</span>
+          <span class="sem-card-sub">Third semester &middot; 2 subjects</span>
+        </button>
+        <button class="sem-card" data-go-sem="s4">
+          <span class="sem-card-name">S4</span>
+          <span class="sem-card-sub">Fourth semester &middot; coming soon</span>
+        </button>
+      </div>
+      <div class="sem-cards" data-sem-pick="y3" hidden>
+        <button class="sem-card" data-go-sem="s5">
+          <span class="sem-card-name">S5</span>
+          <span class="sem-card-sub">Fifth semester &middot; 4 subjects</span>
+        </button>
+        <button class="sem-card" data-go-sem="s6">
+          <span class="sem-card-name">S6</span>
+          <span class="sem-card-sub">Sixth semester &middot; 6 subjects</span>
+        </button>
+      </div>
+      <div class="sem-cards" data-sem-pick="y4" hidden>
+        <button class="sem-card" data-go-sem="s7">
+          <span class="sem-card-name">S7</span>
+          <span class="sem-card-sub">Seventh semester &middot; coming soon</span>
+        </button>
+        <button class="sem-card" data-go-sem="s8">
+          <span class="sem-card-name">S8</span>
+          <span class="sem-card-sub">Eighth semester &middot; coming soon</span>
+        </button>
+      </div>
     </div>
-    <div class="filter-meta" id="filterMeta"></div>
+
+    <!-- STEP 3: subjects -->
+    <div id="view-subjects" class="view" hidden>
+      <div class="crumbs">
+        <button class="crumb-btn" data-nav="years">&larr; Years</button>
+        <span class="crumb-sep">&rsaquo;</span>
+        <button class="crumb-btn" data-nav="semesters" id="crumbYearBtn">Year</button>
+        <span class="crumb-sep">&rsaquo;</span>
+        <span class="crumb-current" id="crumbSem">Semester</span>
+      </div>
 
     <!-- ================= 1ST YEAR ================= -->
     <div class="year-block" data-year="y1">
@@ -586,7 +712,7 @@
       <div class="sem-block" data-sem="s6">
         <div class="sem-label">
           <span class="sem-tag">S6</span>
-          <span class="sem-name">Sixth semester &middot; 4 subjects</span>
+          <span class="sem-name">Sixth semester &middot; 6 subjects</span>
         </div>
 
         <!-- PCCST601: Compiler Design (S6, theory only) -->
@@ -708,6 +834,66 @@
             </a>
           </div>
         </div>
+
+        <!-- PECST637: Fundamentals of Cryptography (S6 elective) -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Fundamentals of Cryptography <span style="color:#64748b; font-size:0.85rem; font-weight:400;">(Elective)</span></div>
+            <span class="course-code">PECST637</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PECST637/m1_01_divisibility_euclid.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Number Theory</h2>
+              <p>Euclid, modular arithmetic, Fermat/Euler, primitive roots, Miller–Rabin, CRT + drill.</p>
+            </a>
+            <a href="dist/PECST637/m2_01_attacks_services_principles.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Classical Ciphers</h2>
+              <p>Attack models, symmetric model, substitution, transposition, Feistel + drill.</p>
+            </a>
+            <a href="dist/PECST637/m3_01_des_structure_strength.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>Modern Ciphers & RSA</h2>
+              <p>DES, AES, RC4, public-key principles, RSA, Diffie–Hellman + drill.</p>
+            </a>
+            <a href="dist/PECST637/m4_01_hash_md5_sha.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Hashes & PKI</h2>
+              <p>Hash grades, SHA-3, HMAC, signatures, key management, X.509 + drills.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- PECST631: Software Testing (S6 elective) -->
+        <div class="course-section">
+          <div class="course-header">
+            <div class="course-title">Software Testing <span style="color:#64748b; font-size:0.85rem; font-weight:400;">(Elective)</span></div>
+            <span class="course-code">PECST631</span>
+          </div>
+          <div class="card-grid">
+            <a href="dist/PECST631/m1_01_concepts_quality_failures.html" class="card">
+              <span class="module-tag">Module 1</span>
+              <h2>Foundations</h2>
+              <p>Quality, famous failures, terminology, test types, box methods, automation + drill.</p>
+            </a>
+            <a href="dist/PECST631/m2_01_unit_static_dynamic_control.html" class="card">
+              <span class="module-tag">Module 2</span>
+              <h2>Unit & Mutation</h2>
+              <p>Static/dynamic/control-flow, data-flow, mutants & score, JUnit, AI tools + drill.</p>
+            </a>
+            <a href="dist/PECST631/m3_01_graph_coverage_prime_paths.html" class="card">
+              <span class="module-tag">Module 3</span>
+              <h2>White-Box & Security</h2>
+              <p>Graph coverage, du-paths, CFGs, design testing, OWASP/Burp + drills.</p>
+            </a>
+            <a href="dist/PECST631/m4_01_isp_ecp_bva.html" class="card">
+              <span class="module-tag">Module 4</span>
+              <h2>Black-Box & PEX</h2>
+              <p>ECP/BVA, decision tables, grey-box, performance, symbolic execution + drill.</p>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -734,64 +920,90 @@
         <div class="empty-note">No S8 subjects yet &mdash; check back soon.</div>
       </div>
     </div>
+    </div>
   </div>
 <script>
-  // Dashboard year + semester filtering (progressive enhancement; all cards stay in the DOM).
+  // Dashboard stepped navigation: Years -> Semesters -> Subjects.
+  // Progressive enhancement; every card stays in the DOM, so link checks keep passing.
   (function () {
-    var KEY = 'tarangam_dash_filter';
-    var state = { year: 'all', sem: 'all' };
+    var KEY = 'tarangam_dash_nav';
+    var state = { view: 'years', year: null, sem: null };
     try {
       var saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+      if (saved.view) state.view = saved.view;
       if (saved.year) state.year = saved.year;
       if (saved.sem) state.sem = saved.sem;
     } catch (e) { /* private mode: defaults */ }
 
-    var yearNames = { all: 'all years', y1: '1st Year', y2: '2nd Year', y3: '3rd Year', y4: '4th Year' };
-    var semNames = { all: 'all semesters', s1s2: 'S1/S2', s3: 'S3', s4: 'S4', s5: 'S5', s6: 'S6', s7: 'S7', s8: 'S8' };
+    var yearNames = { y1: '1st Year', y2: '2nd Year', y3: '3rd Year', y4: '4th Year' };
+    var semNames = { s1s2: 'S1 / S2', s3: 'S3', s4: 'S4', s5: 'S5', s6: 'S6', s7: 'S7', s8: 'S8' };
+    var validYears = ['y1', 'y2', 'y3', 'y4'];
+    var validSems = { y1: ['s1s2'], y2: ['s3', 's4'], y3: ['s5', 's6'], y4: ['s7', 's8'] };
+
+    function $(id) { return document.getElementById(id); }
 
     function apply() {
-      var visibleSubjects = 0;
-      var visibleSems = 0;
-      var years = document.querySelectorAll('.year-block');
-      years.forEach(function (yb) {
-        var yearOk = state.year === 'all' || yb.getAttribute('data-year') === state.year;
-        var yearHasVisible = false;
-        yb.querySelectorAll('.sem-block').forEach(function (sb) {
-          var semOk = state.sem === 'all' || sb.getAttribute('data-sem') === state.sem;
-          var show = yearOk && semOk;
-          sb.style.display = show ? '' : 'none';
-          if (show) {
-            yearHasVisible = true;
-            visibleSems++;
-            visibleSubjects += sb.querySelectorAll('.course-section').length;
-          }
-        });
-        yb.style.display = yearHasVisible ? '' : 'none';
-      });
-      document.querySelectorAll('.year-bar .pill').forEach(function (p) {
-        p.classList.toggle('active', p.getAttribute('data-year') === state.year);
-      });
-      document.querySelectorAll('.sem-bar .pill').forEach(function (p) {
-        p.classList.toggle('active', p.getAttribute('data-sem') === state.sem);
-      });
-      var meta = document.getElementById('filterMeta');
-      if (meta) {
-        meta.textContent = 'Showing ' + visibleSubjects + ' subject' + (visibleSubjects === 1 ? '' : 's') +
-          ' · ' + (yearNames[state.year] || state.year) + ' · ' + (semNames[state.sem] || state.sem);
+      // Validate (guards stale saved values from older nav shapes).
+      if (validYears.indexOf(state.year) === -1) { state.year = null; state.view = 'years'; }
+      var sems = state.year ? validSems[state.year] : [];
+      if (sems.indexOf(state.sem) === -1) {
+        state.sem = null;
+        if (state.view === 'subs') state.view = 'sems';
       }
+      if (state.view !== 'years' && state.view !== 'sems' && state.view !== 'subs') state.view = 'years';
+      if (state.view !== 'years' && !state.year) state.view = 'years';
+      if (state.view === 'subs' && !state.sem) state.view = 'sems';
+
+      $('view-years').hidden = state.view !== 'years';
+      $('view-semesters').hidden = state.view !== 'sems';
+      $('view-subjects').hidden = state.view !== 'subs';
+
+      // Semester pick cards: only this year's group.
+      document.querySelectorAll('[data-sem-pick]').forEach(function (g) {
+        g.hidden = g.getAttribute('data-sem-pick') !== state.year;
+      });
+
+      // Subject blocks: only the chosen year + semester.
+      document.querySelectorAll('.year-block').forEach(function (yb) {
+        var showYear = yb.getAttribute('data-year') === state.year;
+        yb.style.display = showYear ? '' : 'none';
+        if (showYear) {
+          yb.querySelectorAll('.sem-block').forEach(function (sb) {
+            sb.style.display = sb.getAttribute('data-sem') === state.sem ? '' : 'none';
+          });
+        }
+      });
+
+      // Breadcrumbs.
+      var cy = $('crumbYear'); if (cy) cy.textContent = yearNames[state.year] || 'Year';
+      var cyb = $('crumbYearBtn'); if (cyb) cyb.textContent = '← ' + (yearNames[state.year] || 'Year');
+      var cs = $('crumbSem'); if (cs) cs.textContent = semNames[state.sem] || 'Semester';
+
       try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
     }
 
-    document.querySelectorAll('.year-bar .pill').forEach(function (p) {
-      p.addEventListener('click', function () { state.year = p.getAttribute('data-year'); apply(); });
+    function go(view, year, sem) {
+      if (year !== undefined) state.year = year;
+      if (sem !== undefined) state.sem = sem;
+      state.view = view;
+      apply();
+      window.scrollTo(0, 0);
+    }
+
+    document.querySelectorAll('[data-go-year]').forEach(function (b) {
+      b.addEventListener('click', function () { go('sems', b.getAttribute('data-go-year'), null); });
     });
-    document.querySelectorAll('.sem-bar .pill').forEach(function (p) {
-      p.addEventListener('click', function () { state.sem = p.getAttribute('data-sem'); apply(); });
+    document.querySelectorAll('[data-go-sem]').forEach(function (b) {
+      b.addEventListener('click', function () { go('subs', undefined, b.getAttribute('data-go-sem')); });
+    });
+    document.querySelectorAll('[data-nav]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var dest = b.getAttribute('data-nav');
+        if (dest === 'years') go('years', null, null);
+        else if (dest === 'semesters') go('sems');
+      });
     });
 
-    // Guard against stale saved values from older pill sets.
-    if (!yearNames[state.year]) state.year = 'all';
-    if (!semNames[state.sem]) state.sem = 'all';
     apply();
   })();
 </script>
