@@ -59,7 +59,7 @@ Dual-route verification (arithmetic honesty!), relay narration (message-level!),
 ::: quiz Q1: Numerical Drill
 $p=23,g=5,a=6$. Alice sends?
 (A) $30$
-(*B) $5^6=15625$; $15625\bmod23$: $23\times679=15617$ → $8$ (square-chain: $25\equiv2$, $2^2=4$, $2^4=16$, $2^8\equiv256\equiv3$? Recompute: $5^2=25\equiv2$; $5^4\equiv4$; $5^6=5^4\cdot5^2\equiv4\cdot2=8$ ✓ — chain beats division!)
+(*B) $5^6=15625$; $15625\bmod23$: $23\times679=15617$ → $8$ (square-chain: $5^2\equiv2$, $5^4\equiv4$, $5^6=5^4\cdot5^2\equiv4\cdot2=8$ ✓ — chain beats division!)
 (C) $6$
 (D) $11$
 ::: explanation

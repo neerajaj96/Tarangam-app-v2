@@ -7,7 +7,7 @@
 
 ### Scenario 1: The Bound Race (TSP, Same Matrix, Three Timings)
 
-Instance from M4 (optimum 35, root bound 35, forbid-1→2 bound 39). Three counterfactuals: (a) incumbent starts at 39 (nearest-neighbor): root 35 < 39 → branch; include-side resolves tour 35 (new incumbent); forbid-side bound 39 ≥ 35 → prune; done — 1 branch, 1 prune. (b) Incumbent starts at 35 (lucky heuristic): root bound 35 ≥ ... precisely, bound == incumbent → **optimal proven with zero branching** (nothing can beat what's already certified). (c) Incumbent starts at 60 (terrible): both branches live longer (forbid-side 39 < 60 survives!), search sprawls until tour 35 surfaces. Moral: incumbent quality *is* search cost — good heuristics aren't polish, they're pruning fuel.
+Instance from M4 (optimum 35, root bound 35, forbid-1→2 bound 39). Three counterfactuals: (a) incumbent starts at 39 (nearest-neighbor): root 35 < 39 → branch; include-side resolves tour 35 (new incumbent); forbid-side bound 39 ≥ 35 → prune; done — 1 branch, 1 prune. (b) Incumbent starts at 35 (lucky heuristic): root bound 35 == incumbent 35 → **optimal proven with zero branching** (nothing can beat what's already certified). (c) Incumbent starts at 60 (terrible): both branches live longer (forbid-side 39 < 60 survives!), search sprawls until tour 35 surfaces. Moral: incumbent quality *is* search cost — good heuristics aren't polish, they're pruning fuel.
 
 ### Scenario 2: Reduction Autopsy (Three Verdicts, One Autopsy Each)
 
@@ -15,7 +15,7 @@ Instance from M4 (optimum 35, root bound 35, forbid-1→2 bound 39). Three count
 
 ### Scenario 3: FFD Packing Trace (Capacity 10)
 
-Items $[7, 6, 5, 4, 4, 3, 2, 2]$ (already descending — sorting free this once). $7\to$B1; $6\to$B2; $5\to$B3 (fits neither B1 $12 > 10$ nor B2 $11 > 10$); $4\to$B2 ($6+4=10$ ✓); $4\to$B3 ($5+4=9$ ✓); $3\to$B1 ($7+3=10$ ✓); $2\to$B4 (B1/B2/B3 all overflow); $2\to$B4 ($4$ ✓). **4 bins** vs. lower bound $\lceil 33/10 \rceil = 4$ — optimal, certified. (Trace verified.)
+Items $[7, 6, 5, 4, 4, 3, 2, 2]$ (already descending — sorting free this once). $7\to$B1; $6\to$B2; $5\to$B3 (fits neither B1 $12 > 10$ nor B2 $11 > 10$); $4\to$B2 ($6+4=10$ ✓); $4\to$B3 ($5+4=9$ ✓); $3\to$B1 ($7+3=10$ ✓); $2\to$B4 (B1/B2/B3 all overflow); $2\to$B4 ($4$ ✓). **4 bins** vs. lower bound $\lceil 33/10 \rceil = 4$ — optimal, certified.
 
 ### Scenario 4: Amplification Checkout
 

@@ -42,7 +42,7 @@ Students trace Dijkstra on negative-weight graphs and "get answers" — all of t
 ## 3. Worked Example / Step-by-Step Scenario
 
 ::: step [Step 1: Setup] Formulating the Problem
-Graph: $1\!-\!2(4), 1\!-\!3(2), 2\!-\!3(1), 2\!-\!4(5), 3\!-\!4(8), 3\!-\!5(10), 4\!-\!5(2), 4\!-\!6(6), 5\!-\!6(3)$ (undirected). Run Dijkstra from vertex 1: give the settle order and final distances. (Machine-verified.)
+Graph: $1\!-\!2(4), 1\!-\!3(2), 2\!-\!3(1), 2\!-\!4(5), 3\!-\!4(8), 3\!-\!5(10), 4\!-\!5(2), 4\!-\!6(6), 5\!-\!6(3)$ (undirected). Run Dijkstra from vertex 1: give the settle order and final distances.
 :::
 
 ::: step [Step 2: Execution] Settling One by One

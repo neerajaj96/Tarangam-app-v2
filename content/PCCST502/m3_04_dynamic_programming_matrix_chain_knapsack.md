@@ -51,7 +51,7 @@ Optimal substructure *alone* does not justify DP — merge sort has it and needs
 ## 3. Worked Example / Step-by-Step Scenario
 
 ::: step [Step 1: Setup] Formulating the Problem
-Chain $A_1(30\times35)\, A_2(35\times15)\, A_3(15\times5)\, A_4(5\times10)\, A_5(10\times20)\, A_6(20\times25)$ — the classic CLRS instance. Compute the optimal cost and parenthesization. (Machine-verified: optimal $15{,}125$.)
+Chain $A_1(30\times35)\, A_2(35\times15)\, A_3(15\times5)\, A_4(5\times10)\, A_5(10\times20)\, A_6(20\times25)$ — the classic CLRS instance. Compute the optimal cost and parenthesization.
 :::
 
 ::: step [Step 2: Execution] Filling by Chain Length

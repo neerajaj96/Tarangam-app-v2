@@ -42,7 +42,7 @@ All-paths infinite with loops (unbounded laps!) — prime paths bound it *intell
 
 ::: step [Step 2: Execution] Routes Listed
 1. (a) Simple maximals: S-A-E, S-B-E, S-A-B-E, plus singles S,A,B,E (maximality trims subsumed!). A-B diagonal creates the $3$-route richness.
-2. (b) One tour S-A-B-E covers all edges *and* prime S-A-B-E; plus S-B-E?? Covered? S-B-E nodes/edges all inside tour? Edges S-B ✓, B-E ✓ (tour traverses B→E ✓) — single tour covers *all* (sidetrip-free even!). Minimal = $1$.
+2. (b) No single tour covers all five edges — S-A-B-E misses S-B and A-E (check every edge against the tour!). Minimal = $3$ tours: S-A-B-E (covers S-A, A-B, B-E) + S-A-E (adds A-E) + S-B-E (adds S-B). Proof of minimality: edge A-E forces tour S-A-E, edge S-B forces S-B-E, edge A-B forces S-A-B-E (S is unrevisitable, so no tour hosts two of them) — three forced tours, hence minimal. Each prime path is toured by its own tour.
 3. (c) No cycles (DAG!) — round-trip vacuous here (loops absent, nothing to trip!). Note explicitly (vacuous-coverage honesty!).
 :::
 

@@ -57,7 +57,7 @@ Derive $E_n$ for an electron in a $1$ nm box and compute $E_1$ in eV. Where are 
 
 ::: step [Step 2: Execution] Constants In, Answer Out
 1. Follow §2.1–2.2 to $E_n = n^2h^2/8mL^2$.
-2. $h^2 = (6.626\times10^{-34})^2 = 43.9\times10^{-68}$; $8mL^2 = 8\times9.1\times10^{-31}\times10^{-18} = 72.8\times10^{-49}$. $E_1 = 43.9\times10^{-68}/72.8\times10^{-49} \approx 6.03\times10^{-19}$ J $\approx 3.77$ eV.
+2. $h^2 = (6.626\times10^{-34})^2 = 43.9\times10^{-68}$; $8mL^2 = 8\times9.1\times10^{-31}\times10^{-18} = 72.8\times10^{-49}$. $E_1 = 43.9\times10^{-68}/72.8\times10^{-49} = 0.603\times10^{-19} \approx 6.03\times10^{-20}$ J $\approx 0.38$ eV.
 3. $n=3$: zeros at $x = 0, L/3, 2L/3, L$ — two interior nodes, three humps.
 :::
 

@@ -63,7 +63,7 @@ Table-then-sum-then-reduce-then-verify (four beats!). $17\bmod12=5$ reduction st
 ::: quiz Q2: Foundational Concept
 RSA-CRT's $\approx4\times$ speedup comes from:
 (A) Better hardware
-(*B) Halved exponents *and* halved moduli (cubic-ish cost in bits: $2\times((1/2)^3+(1/2)^3)=1/4$ work!) twice over — size-halving compounds cubically, glue negligible
+(*B) Halved exponents *and* halved moduli (cubic-ish cost in bits: two half-size modexps at $(1/2)^3$ each $= 1/4$ total work!) — size-halving compounds cubically, glue negligible
 (C) Skipping decryption
 (D) Smaller keys overall
 ::: explanation

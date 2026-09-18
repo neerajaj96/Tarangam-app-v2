@@ -297,7 +297,7 @@
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>$S \to aSb \mid ab$ (i.e. $a^nb^n$). (a) LR(0) shape sketch? (b) Trace <code>aabb$</code> actions? (c) Any conflicts expected?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Inventories and Swings</div><div class="step-content"><ol>
 <li>States track $a$-runs then $b$-matching: $I_0$ closure ${S&#39;\to\bullet S, S\to\bullet aSb, S\to\bullet ab}$; goto-$a$ loops/stacks; items stay deterministic (no shared-prefix ambiguity in LR view).</li>
-<li>shift $a$, shift $a$, shift $b$, reduce $S\to ab$?? — careful: stack $a,a,b$: top $ab$ reduces to $S$ → stack $aSb$ → reduce $S\to aSb$ → $S$, accept on $$$. Handles innermost-first.</li>
+<li>Shift $a$, shift $a$, shift $b$ (stack $aab$, input $b$$); reduce $S\to ab$ on the top handle → stack $aS$; shift $b$ → stack $aSb$; reduce $S\to aSb$ → $S$; accept on $$$. Handles innermost-first — note the second shift <em>between</em> the reductions (reducing twice in a row would strand the final $b$ unread).</li>
 <li>Canonical tables conflict-free (language is deterministic context-free); SLR likewise here — verdict: clean, cite innermost-handle order as evidence.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Nested languages reduce inside-out; conflict-freedom argued from deterministic handle choice. Inside-out order is the trace&#39;s signature to highlight.</p>

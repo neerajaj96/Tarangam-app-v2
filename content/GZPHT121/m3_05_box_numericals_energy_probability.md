@@ -42,7 +42,7 @@ Electron in $L = 0.5$ nm box: (a) $E_1, E_2$; (b) photon from $2\to1$; (c) proba
 :::
 
 ::: step [Step 2: Execution] Three Moves
-1. $E_1 \propto 1/L^2$: halving $1$ nm ($3.77$ eV) quadruples → $E_1 \approx 15.1$ eV, $E_2 = 4E_1 \approx 60.3$ eV.
+1. $E_1 \propto 1/L^2$: halving $1$ nm ($0.38$ eV) quadruples → $E_1 \approx 1.51$ eV, $E_2 = 4E_1 \approx 6.03$ eV.
 2. $\Delta E = 3E_1 \approx 45.2$ eV → $\lambda = 1240/45.2 \approx 27.4$ nm (extreme UV).
 3. $P = [x/L - \sin(2\pi x/L)/2\pi]_{1/3}^{2/3} = (1/3 + \sqrt{3}/2\pi) \approx 0.333 + 0.276 \approx 0.609$ → $\approx 61\%$.
 :::

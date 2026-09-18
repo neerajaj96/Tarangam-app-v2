@@ -38,7 +38,7 @@ The 9-marker pairs an RLC series solve (with power + PF) and a three-phase line/
 ::: step [Step 2: Execution] Three Gifts
 1. $70.7/\sqrt2 = 50$ V ($50\sqrt2\approx70.7$ engineered).
 2. $|Z| = 13$ ($5$-$12$-$13$!): $I = 10$ A; PF $= 5/13 \approx 0.385$ (lagging if $X_L>X_C$).
-3. $P = \sqrt3(400)(8.66)(0.9) = 1.732\times400\times8.66\times0.9 \approx 5.4$ kW ($8.66 = 5\sqrt3$: $P = 3\times400\times5\times0.9/… = 5400$ W exactly — rigged numbers confess).
+3. $P = \sqrt3(400)(8.66)(0.9) = 1.732\times400\times8.66\times0.9 \approx 5.4$ kW ($8.66 = 5\sqrt3$: $P = 3\times400\times5\times0.9 = 5400$ W exactly — rigged numbers confess).
 :::
 
 ::: step [Step 3: Conclusion] Final Result

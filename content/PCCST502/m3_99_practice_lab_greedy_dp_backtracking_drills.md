@@ -11,11 +11,11 @@ Items $(v,w)$: $(60,10), (100,20), (120,30)$, capacity $50$. **Ratio-greedy**: d
 
 ### Scenario 2: Chain-Split Race (4 Matrices, All Splits Shown)
 
-Dims $[5,10,3,12,5]$ ($A_1$–$A_4$). Length-2 costs: $m_{12} = 5\cdot10\cdot3 = 150$; $m_{23} = 10\cdot3\cdot12 = 360$; $m_{34} = 3\cdot12\cdot5 = 180$. Length-3: $m_{13} = \min(960, 330) = 330$ (split $k=2$: $m_{12} + p_0p_2p_3 = 150 + 180$); $m_{24} = \min(330, 960) = 330$ (split $k=2$: $m_{34} + p_1p_2p_4 = 180 + 150$). Full: $m_{14} = \min(580, 405, 630) = \mathbf{405}$ at split $k=2$: $((A_1A_2)(A_3A_4))$. (All values machine-verified.)
+Dims $[5,10,3,12,5]$ ($A_1$–$A_4$). Length-2 costs: $m_{12} = 5\cdot10\cdot3 = 150$; $m_{23} = 10\cdot3\cdot12 = 360$; $m_{34} = 3\cdot12\cdot5 = 180$. Length-3: $m_{13} = \min(960, 330) = 330$ (split $k=2$: $m_{12} + p_0p_2p_3 = 150 + 180$); $m_{24} = \min(330, 960) = 330$ (split $k=2$: $m_{34} + p_1p_2p_4 = 180 + 150$). Full: $m_{14} = \min(580, 405, 630) = \mathbf{405}$ at split $k=2$: $((A_1A_2)(A_3A_4))$.
 
 ### Scenario 3: Activity Race and Its Certificate
 
-$A(1,3), B(2,5), C(4,6), D(6,8)$. Earliest-finish greedy: $A$ (finish 3) → $C$ (4 ≥ 3) → $D$ (6 ≥ 6) = $\{A,C,D\}$, size 3. Brute-force check over all $2^4$ subsets: maximum compatible size is 3 (only $\{A,C,D\}$ and $\{B,D\}$-plus... precisely, $\{B,D\}$ has size 2; no size-4 subset is compatible) — greedy optimal, certificate included. The exchange argument promised this *before* the brute force confirmed it.
+$A(1,3), B(2,5), C(4,6), D(6,8)$. Earliest-finish greedy: $A$ (finish 3) → $C$ (4 ≥ 3) → $D$ (6 ≥ 6) = $\{A,C,D\}$, size 3. Brute-force check over all $2^4$ subsets: maximum compatible size is $3$, achieved only by $\{A,C,D\}$ ($\{B,D\}$ has size $2$; no size-$4$ subset is compatible) — greedy optimal, certificate included. The exchange argument promised this *before* the brute force confirmed it.
 
 ---
 

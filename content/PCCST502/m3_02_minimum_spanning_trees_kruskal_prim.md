@@ -43,12 +43,12 @@ The cut property promises membership in *some* MST — with tied weights, Kruska
 ## 3. Worked Example / Step-by-Step Scenario
 
 ::: step [Step 1: Setup] Formulating the Problem
-Graph on $\{1..6\}$ with edges (weight): 2–3(1), 1–3(2), 4–5(2), 5–6(3), 1–2(4), 2–4(5), 4–6(6), 3–4(8), 3–5(10). Run Kruskal fully (with Union-Find states) and state Prim-from-1's attachment order. (Machine-verified below.)
+Graph on $\{1..6\}$ with edges (weight): 2–3(1), 1–3(2), 4–5(2), 5–6(3), 1–2(4), 2–4(5), 4–6(6), 3–4(8), 3–5(10). Run Kruskal fully (with Union-Find states) and state Prim-from-1's attachment order.
 :::
 
 ::: step [Step 2: Execution] Tracing Both
 **Kruskal** (sorted): take 2–3(1) [{2,3}]; take 1–3(2) [{1,2,3}]; take 4–5(2) [{4,5}]; skip 1–2(4) (cycle 1–3–2); take 5–6(3) [{4,5,6}]; take 2–4(5) (merges {1,2,3}+{4,5,6} — all connected); skip 4–6(6), 3–4(8), 3–5(10) (cycles). MST edges: **{2–3, 1–3, 4–5, 5–6, 2–4}**, cost $1+2+2+3+5 = \mathbf{13}$.
-**Prim from 1:** frontier cheapest out of {1}: 1–3(2) → {1,3}: cheapest out: 2–3(1) → {1,2,3}: cheapest out: 2–4(5) → {1,2,3,4}: cheapest out: 4–5(2) → add 5: cheapest out: 5–6(3). Same edge set, same cost 13 (weights here force uniqueness of the *set*, though not in general).
+**Prim from 1:** frontier cheapest out of {1}: 1–3(2) → {1,3}: cheapest out: 2–3(1) → {1,2,3}: cheapest out: 2–4(5) → {1,2,3,4}: cheapest out: 4–5(2) → add 5: cheapest out: 5–6(3). Same edge set, same cost 13 (both methods agree here, though the tied weight-2 edges mean uniqueness isn't forced in general — each tied edge just happens to be forced by its own cut).
 :::
 
 ::: step [Step 3: Conclusion] Final Result

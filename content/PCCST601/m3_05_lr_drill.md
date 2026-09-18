@@ -37,7 +37,7 @@ $S \to aSb \mid ab$ (i.e. $a^nb^n$). (a) LR(0) shape sketch? (b) Trace `aabb$` a
 
 ::: step [Step 2: Execution] Inventories and Swings
 1. States track $a$-runs then $b$-matching: $I_0$ closure $\{S'\to\bullet S, S\to\bullet aSb, S\to\bullet ab\}$; goto-$a$ loops/stacks; items stay deterministic (no shared-prefix ambiguity in LR view).
-2. shift $a$, shift $a$, shift $b$, reduce $S\to ab$?? — careful: stack $a\,a\,b$: top $ab$ reduces to $S$ → stack $aSb$ → reduce $S\to aSb$ → $S$, accept on $\$$. Handles innermost-first.
+2. Shift $a$, shift $a$, shift $b$ (stack $aab$, input $b\$$); reduce $S\to ab$ on the top handle → stack $aS$; shift $b$ → stack $aSb$; reduce $S\to aSb$ → $S$; accept on $\$$. Handles innermost-first — note the second shift *between* the reductions (reducing twice in a row would strand the final $b$ unread).
 3. Canonical tables conflict-free (language is deterministic context-free); SLR likewise here — verdict: clean, cite innermost-handle order as evidence.
 :::
 

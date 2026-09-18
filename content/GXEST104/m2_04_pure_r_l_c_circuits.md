@@ -62,17 +62,17 @@ $X_L$ of $0.2$ H at $50$ Hz and at $100$ Hz?
 (C) $125.7$ and $62.8$
 (D) $0.2$ and $0.4$
 ::: explanation
-$X_L = 2\pi fL$: $314\times0.2 = 62.8$; $628\times0.2 = 125.7$. Linear-in-$f$ is the choke principle — quote the scaling, not just numbers.
+$X_L = 2\pi fL$: $314.2\times0.2 \approx 62.8$; $628.3\times0.2 \approx 125.7$. Linear-in-$f$ is the choke principle — quote the scaling, not just numbers.
 :::
 
 ::: quiz Q2: Numerical Drill
 $X_C$ of $47\,\mu$F at $50$ Hz?
 (A) $147.9\,\Omega$
-(*B) $1/(314\times47\times10^{-6}) \approx 67.7\,\Omega$
+(*B) $1/(314.16\times47\times10^{-6}) \approx 67.7\,\Omega$
 (C) $14.76\,\Omega$
 (D) $677\,\Omega$
 ::: explanation
-Denominator $314\times47\times10^{-6} \approx 0.01476$; reciprocal $\approx 67.7\,\Omega$. Decimal-decade slips (µ vs m) decade-shift answers — track micro explicitly.
+Denominator $314.16\times47\times10^{-6} \approx 0.01477$; reciprocal $\approx 67.7\,\Omega$. Decimal-decade slips (µ vs m) decade-shift answers — track micro explicitly.
 :::
 
 ::: quiz Q3: Foundational Concept

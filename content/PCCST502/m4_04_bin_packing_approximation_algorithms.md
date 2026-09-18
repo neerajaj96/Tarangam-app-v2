@@ -39,7 +39,7 @@ $11/9 \cdot OPT + 1$ promises FFD is *never worse* than that — typical instanc
 ## 3. Worked Example / Step-by-Step Scenario
 
 ::: step [Step 1: Setup] Formulating the Problem
-Capacity $10$, items $[6, 5, 5, 4, 4, 3, 2]$ (total $29$ → lower bound $\lceil 2.9 \rceil = 3$ bins). Run First Fit, then First-Fit Decreasing, and certify optimality. (Arithmetic verified.)
+Capacity $10$, items $[6, 5, 5, 4, 4, 3, 2]$ (total $29$ → lower bound $\lceil 2.9 \rceil = 3$ bins). Run First Fit, then First-Fit Decreasing, and certify optimality.
 :::
 
 ::: step [Step 2: Execution] Packing Twice

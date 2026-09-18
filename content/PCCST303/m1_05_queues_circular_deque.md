@@ -20,18 +20,18 @@ Customers join the back (enqueue) and leave from the front (dequeue) — first-i
 
 ### 2.2 Circular queue mechanics
 
-`rear = (rear+1) % MAX`, `front = (front+1) % MAX`. Full: `(rear+1) % MAX == front`; empty: `front == -1` (or a count/size field). Full vs empty ambiguity resolved by sacrificing one cell or keeping `count`.
+`rear = (rear+1) % MAX`, `front = (front+1) % MAX`. Full: `(rear+1) % MAX == front`; empty: `front == -1` (reset there when the last element leaves). Distinct markers — no ambiguity and no wasted cell (the rival `front == rear`-empty school instead sacrifices one slot, but that is not this convention).
 
 ### 2.3 Deque variants
 
 Input-restricted (one entry end) vs output-restricted (one exit end); palindrome checking and sliding-window maxima are the classic deque showcases. Priority queues differ (service by key, not order) — M3's heaps cover them.
 
 ::: callout-formula KTU Formula Vault: Queue Ring
-Enqueue/dequeue **$O(1)$** · wrap **$\%MAX$** · full **$(rear+1)\%MAX==front$** · one cell sacrificed (or count kept).
+Enqueue/dequeue **$O(1)$** · wrap **$\%MAX$** · full **$(rear+1)\%MAX==front$** · empty **`front==-1`** · capacity **MAX** (every cell usable).
 :::
 
-::: callout-pitfall Full Looks Like Empty
-`front == rear` after wraps is ambiguous (one element? full ring?). The sacrificed-cell rule (full = *next*-rear hits front) disambiguates — forgetting *why* one cell stays empty is the theory mark most missed.
+::: callout-pitfall Empty Marker vs Full Collision
+Empty is `front == -1`; full is next-rear colliding with front. Importing the rival school's sacrificed cell here undercounts capacity by one — pick one convention and simulate it consistently.
 :::
 
 ---
@@ -40,16 +40,16 @@ Enqueue/dequeue **$O(1)$** · wrap **$\%MAX$** · full **$(rear+1)\%MAX==front$*
 ## 3. Worked Example / Step-by-Step Scenario
 
 ::: step [Step 1: Setup] Formulating the Problem
-Circular queue, MAX $= 4$ (holds $3$): enqueue A, B, C; dequeue; enqueue D, E. Show indices ($\%4$) and flag any overflow.
+Circular queue, MAX $= 4$ (holds $4$): enqueue A, B, C; dequeue; enqueue D, E. Show indices ($\%4$) and flag any overflow.
 :::
 
 ::: step [Step 2: Execution] Wrapping Walk
-1. A@0, B@1, C@2 (rear $= 2$; next $3 \ne$ front $0$ — not full since one cell rule? $(2+1)\%4 = 3 \ne 0$, room for one more).
-2. Dequeue A (front $0\to1$). Enqueue D@3. Enqueue E: $(3+1)\%4 = 0$? front is $1$ — $(rear+1)\%4 = 0 \ne 1$, so E@0. Queue [E@0, B@1, C@2, D@3]... wait capacity holds $3$ with one sacrificed: rear $= 0$, $(0+1)\%4 = 1 ==$ front → **full** exactly. No overflow; ring absorbed the freed cell.
+1. A@0, B@1, C@2 (rear $= 2$; $(2+1)\%4 = 3 \ne$ front $0$ — not full, room for one more).
+2. Dequeue A (front $0\to1$). Enqueue D@3. Enqueue E: $(3+1)\%4 = 0 \ne$ front $1$, so E@0. Queue [E@0, B@1, C@2, D@3]: rear $= 0$, $(0+1)\%4 = 1 ==$ front → **full** exactly with $4$ elements. No overflow; ring absorbed the freed cell.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-Modulo reuses freed front cells; the sacrificed cell separates full from empty. Simulations must show *indices*, not just contents.
+Modulo reuses freed front cells; empty-`front == -1` versus full-collision keeps the states distinct. Simulations must show *indices*, not just contents.
 :::
 
 ---
@@ -70,11 +70,11 @@ Marching pointers abandon the front region — the queue reports full with space
 ::: quiz Q2: Numerical Drill
 Circular MAX $= 5$, front $= 2$, rear $= 1$. Full or holding how many?
 (A) Empty
-(*B) Full — $(1+1)\%5 = 2 ==$ front (one cell sacrificed, holds $4$)
+(*B) Full — $(1+1)\%5 = 2 ==$ front (ring completely full, holding $5$)
 (C) Holds $1$
 (D) Overflow error state
 ::: explanation
-Next-rear meets front: the ring is full with $MAX-1 = 4$ elements. Reading `(rear+1)%MAX==front` mechanically beats intuition here.
+Next-rear meets front: the ring is full with $MAX = 5$ elements. Reading `(rear+1)%MAX==front` mechanically beats intuition here.
 :::
 
 ::: quiz Q3: Foundational Concept

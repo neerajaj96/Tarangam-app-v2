@@ -48,7 +48,7 @@ An electron is localised to an atom ($\Delta x \sim 10^{-10}$ m). Estimate the m
 
 ::: step [Step 2: Execution] Order-of-Magnitude
 1. $\Delta p \ge \hbar/(2\Delta x) \approx 1.055\times10^{-34}/(2\times10^{-10}) \approx 5.3\times10^{-25}$ kg·m/s.
-2. $v \sim \Delta p/m \approx 5.3\times10^{-25}/9.1\times10^{-31} \approx 5.8\times10^5$ m/s; KE $\sim p^2/2m \approx$ few eV — the atom's own binding scale. The electron cannot sit still at a point; jitter *is* its ground state.
+2. $v \sim \Delta p/m \approx 5.3\times10^{-25}/9.1\times10^{-31} \approx 5.8\times10^5$ m/s; KE $\sim p^2/2m \approx 1$ eV — the atom's own binding scale. The electron cannot sit still at a point; jitter *is* its ground state.
 :::
 
 ::: step [Step 3: Conclusion] Final Result

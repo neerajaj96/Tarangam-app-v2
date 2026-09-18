@@ -21,7 +21,7 @@ A salesperson must visit 4 cities and return. Before planning any route, a cleve
 * **Column reduction** on the result (every tour uses exactly one entry per column). **Bound = row total + column total.** Forbid used edges/self-loops with $\infty$ (never the minimum — reductions skip infinities).
 * **Branch:** pick an edge $e$: *include* it (delete its row/column, ban the return edge to forbid subtours) vs. *exclude* it (set cost $\infty$), recompute bounds, prune branches $\ge$ incumbent (start incumbent = any heuristic tour, e.g. nearest-neighbor).
 
-### 2.2 The Worked Instance (Machine-Verified)
+### 2.2 The Worked Instance
 
 Cost matrix (row $i$ → column $j$):
 
@@ -49,7 +49,7 @@ Row+column reduction solves the *assignment* problem (each city one in-edge + on
 ## 3. Worked Example / Step-by-Step Scenario
 
 ::: step [Step 1: Setup] Formulating the Problem
-Using the matrix above (root bound 35, incumbent 39): branch on edge $1 \to 2$. Compute the exclude-branch bound (edge banned) and resolve the include side down to a tour. (All bounds machine-verified.)
+Using the matrix above (root bound 35, incumbent 39): branch on edge $1 \to 2$. Compute the exclude-branch bound (edge banned) and resolve the include side down to a tour.
 :::
 
 ::: step [Step 2: Execution] Branching
@@ -58,7 +58,7 @@ Using the matrix above (root bound 35, incumbent 39): branch on edge $1 \to 2$. 
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-Optimum **35** ($1 \to 2 \to 4 \to 3 \to 1$), certified by the root floor: no tour exists below 35 (bound), one exists at 35 (tour) — squeeze complete. One exclusion-prune + one inclusion-descent solved a $3$-tour... precisely, a $(4-1)!/2 = 3$-tour problem with barely any search — bounds doing the exponential heavy lifting.
+Optimum **35** ($1 \to 2 \to 4 \to 3 \to 1$), certified by the root floor: no tour exists below 35 (bound), one exists at 35 (tour) — squeeze complete. One exclusion-prune + one inclusion-descent solved a 3-tour problem with barely any search — bounds doing the exponential heavy lifting.
 :::
 
 ---
