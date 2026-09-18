@@ -331,6 +331,126 @@ ${defs}
 <text class="crcrow a3" x="60" y="200">t2 = a + t1     ← then +</text>
 <text class="crcres a4" x="320" y="260" text-anchor="middle">temporaries name every intermediate — quads the back end loves</text>
 </svg>`
+  },
+
+  'cluster-arch': {
+    title: 'Cluster Architecture: Head Node and Workers',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated cluster: head node fans jobs out to worker nodes over fast interconnect">
+${defs}
+${node(320, 70, 'HEAD', 'a1')}
+${node(120, 200, 'W1', 'a2')}${node(260, 200, 'W2', 'a2')}${node(380, 200, 'W3', 'a2')}${node(520, 200, 'W4', 'a2')}
+${edge(320, 70, 120, 200, 'a2')}${edge(320, 70, 260, 200, 'a2')}${edge(320, 70, 380, 200, 'a2')}${edge(320, 70, 520, 200, 'a2')}
+<text class="animcap a1" x="320" y="30" text-anchor="middle">scheduler + single system image</text>
+<text class="badge1 a3" x="320" y="140">jobs fan out · results gather</text>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">one login, many machines — interconnect speed is the ceiling</text>
+</svg>`
+  },
+
+  'virt-levels': {
+    title: 'Virtualization Levels: ISA to Application',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated stack of virtualization levels from hardware up to libraries">
+${defs}
+<g class="stagebox a1"><rect x="170" y="30" width="300" height="44" rx="8"/><text x="320" y="57">application / library level</text></g>
+<g class="stagebox a2"><rect x="170" y="84" width="300" height="44" rx="8"/><text x="320" y="111">OS level · containers</text></g>
+<g class="stagebox a3"><rect x="170" y="138" width="300" height="44" rx="8"/><text x="320" y="165">ISA / ABI level · VMM</text></g>
+<g class="stagebox a4"><rect x="170" y="192" width="300" height="44" rx="8"/><text x="320" y="219">hardware abstraction layer</text></g>
+<text class="animnote a5" x="320" y="272" text-anchor="middle">higher = lighter + weaker isolation · lower = heavier + full guests</text>
+</svg>`
+  },
+
+  'docker-arch': {
+    title: 'Docker: Engine, Images, Containers',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated docker: one engine running three isolated containers from layered images">
+${defs}
+<rect class="host" x="90" y="60" width="460" height="190" rx="10"/><text class="hostlbl" x="320" y="85">host OS + Docker engine</text>
+<g class="cell a1"><rect x="120" y="110" width="120" height="110" rx="8"/><text x="180" y="155">web</text><text x="180" y="180">image layers</text></g>
+<g class="cell a2"><rect x="260" y="110" width="120" height="110" rx="8"/><text x="320" y="155">api</text><text x="320" y="180">image layers</text></g>
+<g class="cell a3"><rect x="400" y="110" width="120" height="110" rx="8"/><text x="460" y="155">db</text><text x="460" y="180">image layers</text></g>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">shared kernel, separate filesystems — VMs' weight without their hunger</text>
+</svg>`
+  },
+
+  'attack-chain': {
+    title: 'Attack Chain: Recon to Covering Tracks',
+    svg: `<svg viewBox="0 0 640 260" role="img" aria-label="Animated kill chain: recon, scan, exploit, persist, cover tracks">
+${defs}
+<g class="stagebox a1"><rect x="10" y="100" width="112" height="64" rx="10"/><text x="66" y="126">1 · RECON</text><text x="66" y="146" class="sub">whois · DNS</text></g>
+<g class="stagebox a2"><rect x="142" y="100" width="112" height="64" rx="10"/><text x="198" y="126">2 · SCAN</text><text x="198" y="146" class="sub">nmap · ports</text></g>
+<g class="stagebox a3"><rect x="274" y="100" width="112" height="64" rx="10"/><text x="330" y="126">3 · EXPLOIT</text><text x="330" y="146" class="sub">metasploit</text></g>
+<g class="stagebox a4"><rect x="406" y="100" width="112" height="64" rx="10"/><text x="462" y="126">4 · PERSIST</text><text x="462" y="146" class="sub">escalate · stay</text></g>
+<g class="stagebox a5"><rect x="528" y="100" width="102" height="64" rx="10"/><text x="579" y="126">5 · COVER</text><text x="579" y="146" class="sub">wipe logs</text></g>
+<text class="animnote a5" x="320" y="220" text-anchor="middle">defenders break any link — recon traces, closed ports, patched holes, watched logs</text>
+</svg>`
+  },
+
+  'xss-flow': {
+    title: 'Stored XSS: Attacker Poisons, Victim Executes',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated stored XSS: attacker stores script, victim loads page, browser runs it">
+${defs}
+${node(110, 150, 'ATK', 'a1')}
+${node(320, 150, 'SITE', 'a2')}
+${node(530, 150, 'YOU', 'a3')}
+<g class="msg a1"><line x1="110" y1="150" x2="320" y2="150" marker-end="url(#ah)"/><text x="215" y="130" text-anchor="middle">1 · plants script</text></g>
+<g class="msg a2"><line x1="320" y1="150" x2="530" y2="150" marker-end="url(#ah)"/><text x="425" y="130" text-anchor="middle">2 · serves page</text></g>
+<g class="msg a3"><line x1="530" y1="180" x2="320" y2="200" marker-end="url(#ah)"/><text x="425" y="225" text-anchor="middle">3 · cookie leaks back</text></g>
+<text class="animnote a4" x="320" y="270" text-anchor="middle">server parrots input unescaped — browser can't tell data from code</text>
+</svg>`
+  },
+
+  'ddos-flood': {
+    title: 'DDoS: Botnet Flood vs Lone DoS',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated DDoS: many bots flood one server while a lone attacker is filterable">
+${defs}
+${node(520, 150, 'SRV', 'a3')}
+${node(90, 70, 'B1', 'a1')}${node(90, 150, 'B2', 'a1')}${node(90, 230, 'B3', 'a1')}
+${node(260, 150, '1', 'a2')}
+${edge(90, 70, 260, 150, 'a1')}${edge(90, 150, 260, 150, 'a1')}${edge(90, 230, 260, 150, 'a1')}
+${edge(260, 150, 520, 150, 'a2')}
+<text class="animcap a1" x="90" y="30" text-anchor="middle">botnet ×1000s</text>
+<text class="badge1 a2" x="260" y="110">one IP? block it.</text>
+<text class="badge1 a3" x="390" y="120">1000 IPs? drown.</text>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">distribution defeats address-blocking — absorb, scrub, anycast</text>
+</svg>`
+  },
+
+  'mlp-layers': {
+    title: 'MLP Forward Pass: Layers of Weighted Votes',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated MLP: inputs fan into hidden units then to output, layer by layer">
+${defs}
+${node(90, 100, 'x1', 'a1')}${node(90, 200, 'x2', 'a1')}
+${node(280, 75, 'h1', 'a2')}${node(280, 150, 'h2', 'a2')}${node(280, 225, 'h3', 'a2')}
+${node(480, 150, 'y', 'a3')}
+${edge(90, 100, 280, 75, 'a2')}${edge(90, 100, 280, 150, 'a2')}${edge(90, 100, 280, 225, 'a2')}
+${edge(90, 200, 280, 75, 'a2')}${edge(90, 200, 280, 150, 'a2')}${edge(90, 200, 280, 225, 'a2')}
+${edge(280, 75, 480, 150, 'a3')}${edge(280, 150, 480, 150, 'a3')}${edge(280, 225, 480, 150, 'a3')}
+<text class="animnote a4" x="320" y="282" text-anchor="middle">each layer votes with weights — depth stacks the electorates</text>
+</svg>`
+  },
+
+  'conv-slide': {
+    title: 'Convolution: Filter Slides, Feature Map Grows',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated convolution: a small filter window slides across an input grid producing one map cell per stop">
+${defs}
+<text class="animcap a1" x="160" y="30" text-anchor="middle">input 5×5</text>
+<g class="cell a1"><rect x="80" y="60" width="160" height="160" rx="8"/></g>
+<g class="cell cand a2"><rect x="80" y="60" width="64" height="64" rx="6"/><text x="112" y="97">3×3</text></g>
+<g class="msg a3"><line x1="260" y1="140" x2="340" y2="140" marker-end="url(#ah)"/><text x="300" y="125" text-anchor="middle">dot</text></g>
+<g class="cell a3"><rect x="360" y="60" width="160" height="160" rx="8"/><text x="440" y="140">map</text></g>
+<text class="animnote a4" x="320" y="272" text-anchor="middle">one window stop = one dot product = one map cell — weights shared everywhere</text>
+</svg>`
+  },
+
+  'lstm-cell': {
+    title: 'LSTM Cell: Gates Guard the Conveyor',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated LSTM: forget, input and output gates guarding a running cell state">
+${defs}
+<line class="axis" x1="40" y1="150" x2="600" y2="150"/>
+<g class="stagebox a1"><rect x="90" y="120" width="110" height="60" rx="10"/><text x="145" y="144">FORGET</text><text x="145" y="162" class="sub">keep?</text></g>
+<g class="stagebox a2"><rect x="265" y="120" width="110" height="60" rx="10"/><text x="320" y="144">INPUT</text><text x="320" y="162" class="sub">write?</text></g>
+<g class="stagebox a3"><rect x="440" y="120" width="110" height="60" rx="10"/><text x="495" y="144">OUTPUT</text><text x="495" y="162" class="sub">reveal?</text></g>
+<text class="animcap" x="320" y="60" text-anchor="middle">cell state runs the straight rail above the gates</text>
+<text class="animnote a4" x="320" y="250" text-anchor="middle">sigmoid bouncers (0/1-ish) × tanh candidates — gradients ride the rail, not the gates</text>
+</svg>`
   }
 };
 

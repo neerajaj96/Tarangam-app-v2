@@ -22,7 +22,7 @@ content/<COURSE>/m{mod}_{seq}_{slug}.md
   seq 99 = practice lab (optional, one per module, sorts last)
 ```
 
-Current truth (2026-09-17) — full syllabus complete, 234 topics:
+Current truth (2026-09-17) — full syllabus complete, 308 topics:
 - `PCCST501` Computer Networks: M1–M4 complete (24 topics)
 - `PCCST502` DAA: M1–M4 complete (29 topics, incl. `m1_00` overview + `m1_99` lab)
 - `PECST522` AI: M1–M4 complete (22 topics, incl. `m1_99` lab)
@@ -32,6 +32,9 @@ Current truth (2026-09-17) — full syllabus complete, 234 topics:
 - `PCCST303` Data Structures and Algorithms (S3): M1–M4 theory complete (27 topics, no lab)
 - `GXEST104` Intro to Electrical & Electronics Eng. (S1/S2, Groups A & B): M1–M4 complete (31 topics, no lab, 5 animated SVG scenes)
 - `PCCST601` Compiler Design (S6): M1–M4 theory complete (29 topics, no lab, 3 animated SVG scenes)
+- `PCCST602` Advanced Computing Systems (S6): M1–M4 theory complete (23 topics, no lab, 3 animated SVG scenes)
+- `PBCST604` Fundamentals of Cyber Security (S6, PBL): M1–M4 theory complete (26 topics, no lab, 3 animated SVG scenes)
+- `PECST632` Deep Learning (S6 elective): M1–M4 theory complete (25 topics, no lab, 3 animated SVG scenes)
 - Dashboard `index.html`: every card unlocked, zero `TODO content/…` remaining
 - All 8 `assets/videos/*.mp4` wired into topics via `::: manim` (0 orphan warnings)
 - `npm run check`: 0 errors, 0 warnings (was: 8 orphan-video warnings at peak)
@@ -40,7 +43,7 @@ Current truth (2026-09-17) — full syllabus complete, 234 topics:
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic (234 `.md` files: 9 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Topic-by-topic breakdown** — Module → smallest topic (308 `.md` files: 12 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
 - **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
 - **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
 - **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).
