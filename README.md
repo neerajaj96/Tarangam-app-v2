@@ -71,11 +71,11 @@ Content is decoupled from the shell. To add, say, DBMS as `PCCXX999`:
 
 1. Create `content/PCCXX999/m1_01_*.md` following `m{mod}_{seq}_{slug}.md` + widget syntax (`::: callout-*`, `::: quiz`, `::: step`, `::: toggle`, `::: manim`).
 2. Add `PCCXX999: 'Name'` to `COURSE_METADATA` + module titles to `MODULE_NAMES` in `scripts/build.js:9`.
-3. Rebuild; add unlocked cards in `index.html` (copy `.card` pattern, never point at missing files).
+3. Rebuild; add a `course-section` with a `subject-btn` (`data-go-subject` + empty `data-topic-count` span) in `index.html` — `node scripts/build.js` then fills the Topics-step detail blocks and topic counts from content (never hand-write topic links).
 
 ## Adding a new year/semester
 
-The dashboard (`index.html`) is a stepped flow: **Years view** (4 year cards) → **Semesters view** (semester cards for that year) → **Subjects view** (course sections for that semester), with breadcrumb back-links and the position persisted in `localStorage` (`tarangam_dash_nav`). To add a subject, drop its `course-section` into the right semester block (year blocks carry `data-year`, semester blocks `data-sem`); then bump the hardcoded subject counts on the corresponding year card, semester card, and semester label. Empty semesters render a "check back soon" note with no dead links. All cards stay in the DOM so `npm run check` still validates every link.
+The dashboard (`index.html`) is a stepped flow: **Years view** (4 year cards) → **Semesters view** (semester cards for that year) → **Subjects view** (one button per course) → **Topics view** (that subject's 4 modules as dropdowns listing every topic), with breadcrumb back-links and the position persisted in `localStorage` (`tarangam_dash_nav`). To add a subject, drop its `course-section` into the right semester block (year blocks carry `data-year`, semester blocks `data-sem`); then bump the hardcoded subject counts on the corresponding year card, semester card, and semester label. Empty semesters render a "check back soon" note with no dead links. All cards and topic links stay in the DOM so `npm run check` still validates every link.
 
 ## Elective policy
 

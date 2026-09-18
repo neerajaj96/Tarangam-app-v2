@@ -420,6 +420,41 @@ function renderNavTree(modules, currentMod, currentId) {
   return html;
 }
 
+// Dashboard subject order (matches the Year → Semester layout in index.html;
+// unknown codes append alphabetically so new courses never silently vanish).
+const DASHBOARD_ORDER = ['GXEST104', 'GZPHT121', 'GAMAT301', 'PCCST303', 'PCCST503', 'PCCST501', 'PCCST502', 'PECST522', 'PCCST601', 'PCCST602', 'PBCST604', 'PECST632', 'PECST637', 'PECST631', 'GXEST605', 'OECST614'];
+
+// Static subject-detail blocks for the dashboard Topics step
+// (Years → Semesters → Subjects → Topics). Generated from the same
+// coursesData as the topic pages, so lists can never drift from content.
+// Links use the root-mode `dist/` prefix; the dist-copy rewrite below
+// converts them to `./` for artifact mode, exactly like hand-written cards.
+function renderSubjectDetails(coursesData) {
+  const codes = [
+    ...DASHBOARD_ORDER.filter((c) => coursesData[c]),
+    ...Object.keys(coursesData).filter((c) => !DASHBOARD_ORDER.includes(c)).sort()
+  ];
+  return codes.map((code) => {
+    const course = coursesData[code];
+    const mods = Object.values(course.modules).sort((a, b) => a.num - b.num);
+    const total = mods.reduce((n, m) => n + m.topics.length, 0);
+    const modHtml = mods.map((mod, mi) => {
+      const links = mod.topics.map((t) =>
+        `          <a class="topic-btn" href="dist/${escapeHtml(code)}/${escapeHtml(t.filename)}"><span>${escapeHtml(t.title)}</span></a>`
+      ).join('\n');
+      return `      <details class="module-drop"${mi === 0 ? ' open' : ''}>\n` +
+        `        <summary><span class="module-tag">Module ${escapeHtml(String(mod.num))}</span><span>${escapeHtml(mod.title)}</span><span class="module-count">${mod.topics.length} topics</span></summary>\n` +
+        `        <div class="topic-links">\n${links}\n        </div>\n` +
+        `      </details>`;
+    }).join('\n');
+    return `    <div class="subject-block" data-subject="${escapeHtml(code)}" hidden>\n` +
+      `      <div class="subject-detail-head">\n` +
+      `        <div class="subject-detail-title">${escapeHtml(course.name)}</div>\n` +
+      `        <div class="subject-detail-sub">${escapeHtml(code)} · ${total} topics · ${mods.length} modules</div>\n` +
+      `      </div>\n${modHtml}\n    </div>`;
+  }).join('\n');
+}
+
 function renderTemplate(templateStr, data) {
   let result = templateStr;
 
@@ -633,6 +668,34 @@ export function buildSite() {
 
   // Create .nojekyll in dist
   fs.writeFileSync(path.join(OUTPUT_DIR, '.nojekyll'), '', 'utf-8');
+
+  // Dashboard subject-detail injection (Topics step of the flow).
+  // Root index.html carries empty TARANGAM-SUBJECT-DETAILS markers; the
+  // build fills them with per-course module/topic blocks so both Pages
+  // modes (branch root + artifact) serve identical lists with zero fetching.
+  // Replacement is deterministic (same content → same bytes), so diffs stay
+  // reviewable; missing markers fail loudly instead of shipping empty screens.
+  if (fs.existsSync('index.html')) {
+    const START = '<!-- TARANGAM-SUBJECT-DETAILS:START -->';
+    const END = '<!-- TARANGAM-SUBJECT-DETAILS:END -->';
+    let rootIndex = fs.readFileSync('index.html', 'utf-8');
+    const si = rootIndex.indexOf(START);
+    const ei = rootIndex.indexOf(END);
+    if (si === -1 || ei === -1 || ei < si) {
+      throw new Error('index.html missing TARANGAM-SUBJECT-DETAILS markers — dashboard topics view cannot be built');
+    }
+    const detailsHtml = renderSubjectDetails(coursesData);
+    rootIndex = rootIndex.slice(0, si + START.length) + '\n' + detailsHtml + '\n' + rootIndex.slice(ei);
+    // Fill per-subject topic counts on the subject buttons (same determinism).
+    rootIndex = rootIndex.replace(
+      /<span class="subject-count" data-topic-count="([A-Za-z0-9]+)">.*?<\/span>/g,
+      (m, code) => {
+        const n = Object.values((coursesData[code] || {}).modules || {}).reduce((a, mod) => a + mod.topics.length, 0);
+        return `<span class="subject-count" data-topic-count="${code}">${n} topics</span>`;
+      }
+    );
+    fs.writeFileSync('index.html', rootIndex, 'utf-8');
+  }
 
   // Copy root index.html to dist/index.html with adjusted paths for standalone hosting.
   // Root uses dist/<COURSE>/... links (branch-root mode); inside dist/ the

@@ -265,51 +265,9 @@
     font-size: 0.8rem;
     font-weight: 600;
   }
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-  }
-  .card {
-    background-color: #121824;
-    border: 1px solid #1e293b;
-    border-radius: 12px;
-    padding: 1.25rem;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-    display: flex;
-    flex-direction: column;
-  }
-  .card:hover {
-    transform: translateY(-3px);
-    border-color: #38bdf8;
-    background-color: #1a2232;
-  }
-  .card.is-locked {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-  .card.is-locked:hover {
-    transform: none;
-    border-color: #1e293b;
-    background-color: #121824;
-  }
   .module-tag.is-locked {
     background-color: rgba(148, 163, 184, 0.12);
     color: #94a3b8;
-  }
-  .card h2 {
-    margin: 0 0 0.4rem 0;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: #f1f5f9;
-  }
-  .card p {
-    margin: 0;
-    color: #94a3b8;
-    font-size: 0.82rem;
-    line-height: 1.45;
   }
   .module-tag {
     display: inline-block;
@@ -321,6 +279,117 @@
     font-weight: 600;
     margin-bottom: 0.6rem;
     align-self: flex-start;
+  }
+  .subject-btn {
+    font-family: 'Space Grotesk', sans-serif;
+    width: 100%;
+    background-color: #121824;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 1.25rem;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .subject-btn:hover {
+    transform: translateY(-3px);
+    border-color: #38bdf8;
+    background-color: #1a2232;
+  }
+  .subject-btn-main {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+  .subject-count {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #38bdf8;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .subject-block[hidden] {
+    display: none;
+  }
+  .subject-detail-head {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #1e293b;
+  }
+  .subject-detail-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #f1f5f9;
+  }
+  .subject-detail-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #38bdf8;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+  .module-drop {
+    background-color: #121824;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .module-drop summary {
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #f1f5f9;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .module-drop summary::-webkit-details-marker {
+    display: none;
+  }
+  .module-drop summary::before {
+    content: '▸';
+    color: #38bdf8;
+  }
+  .module-drop[open] summary::before {
+    content: '▾';
+  }
+  .module-drop summary .module-tag {
+    margin-bottom: 0;
+  }
+  .module-count {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-left: auto;
+  }
+  .topic-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1.25rem 1.25rem 1.25rem;
+  }
+  .topic-btn {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    background-color: rgba(18, 24, 36, 0.6);
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    text-decoration: none;
+    color: #f1f5f9;
+    font-size: 0.88rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .topic-btn:hover {
+    border-color: #38bdf8;
+    background-color: #1a2232;
   }
 </style>
 </head>
@@ -434,28 +503,10 @@
             <div class="course-title">Introduction to Electrical & Electronics Engineering</div>
             <span class="course-code">GXEST104</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/GXEST104/m1_01_ohms_kcl_kvl_division_rules.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>DC & Magnetic Circuits</h2>
-              <p>Ohm/KCL/KVL, C & L energy, star-delta, mesh/nodal matrices, magnetics + drills.</p>
-            </a>
-            <a href="dist/GXEST104/m2_02_ac_fundamentals_rms_average.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>AC & Three-Phase</h2>
-              <p>EMI, RMS/phasors, R/L/C, RLC resonance, power & PF, star/delta + drills.</p>
-            </a>
-            <a href="dist/GXEST104/m3_01_passive_active_pn_diode.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Devices & Circuits</h2>
-              <p>Diodes, Zener regulation, rectifiers & ripple, BJT, biasing, amplifiers, MOSFETs + drill.</p>
-            </a>
-            <a href="dist/GXEST104/m4_01_comm_fibre_block_diagrams.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Comms & Instruments</h2>
-              <p>Comm/fibre blocks, AM/FM receivers, GSM & generations, DMM, CRO, IoT + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="GXEST104" data-subject-name="Introduction to Electrical & Electronics Engineering">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="GXEST104">31 topics</span>
+          </button>
         </div>
 
         <!-- GZPHT121: Physics for Physical Science and Life Science (S1/S2, theory only) -->
@@ -464,28 +515,10 @@
             <div class="course-title">Physics for Physical Science and Life Science</div>
             <span class="course-code">GZPHT121</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/GZPHT121/m1_01_optical_processes_absorption_spontaneous_stimulated.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Laser & Fibre Optics</h2>
-              <p>Emission processes, inversion & pumping, Ruby/CO2/diode lasers, fibre types, NA derivation, link block diagram + drills.</p>
-            </a>
-            <a href="dist/GZPHT121/m2_01_superposition_path_difference_cosine_law.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Interference & Diffraction</h2>
-              <p>Superposition, thin films, Newton's rings, air wedge, single slit, grating equation, powers + mixed numerical drill.</p>
-            </a>
-            <a href="dist/GZPHT121/m3_01_uncertainty_principle_conjugate_observables.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Quantum Mechanics</h2>
-              <p>Uncertainty + applications, wavefunction & Schrodinger equations, 1D box derivation, energy/probability drills, tunnelling.</p>
-            </a>
-            <a href="dist/GZPHT121/m4_01_wave_types_frequency_wavelength.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Waves & Acoustics</h2>
-              <p>Wave basics, stretched string + laws, Sabine reverberation + drill, piezoelectric & diffractometer, SONAR/NDT, ultrasound.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="GZPHT121" data-subject-name="Physics for Physical Science and Life Science">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="GZPHT121">26 topics</span>
+          </button>
         </div>
       </div>
     </div>
@@ -509,28 +542,10 @@
             <div class="course-title">Mathematics for Information Science-3</div>
             <span class="course-code">GAMAT301</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/GAMAT301/m1_01_random_variables_pmf_cdf.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Discrete Random Variables</h2>
-              <p>pmf & cdf, expectation & variance, binomial, Poisson limit, joint pmf, functions of RVs + drill.</p>
-            </a>
-            <a href="dist/GAMAT301/m2_01_continuous_rv_pdf_cdf_expectation.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Continuous Random Variables</h2>
-              <p>pdf & cdf, uniform, normal standardisation, exponential memorylessness, joint pdf + mixed drill.</p>
-            </a>
-            <a href="dist/GAMAT301/m3_01_markov_chebyshev_inequalities.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Limit Theorems & Processes</h2>
-              <p>Markov & Chebyshev bounds, SLLN & CLT approximations, counting processes, Poisson process + drills.</p>
-            </a>
-            <a href="dist/GAMAT301/m4_01_markov_chains_transition_matrix.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Markov Chains</h2>
-              <p>Transition matrix, random walk & ruin, Chapman–Kolmogorov, classification, stationary distribution + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="GAMAT301" data-subject-name="Mathematics for Information Science-3">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="GAMAT301">24 topics</span>
+          </button>
         </div>
 
         <!-- PCCST303: Data Structures and Algorithms (S3, theory only) -->
@@ -539,28 +554,10 @@
             <div class="course-title">Data Structures and Algorithms</div>
             <span class="course-code">PCCST303</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PCCST303/m1_01_data_structures_adt_abstraction.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Stacks & Queues</h2>
-              <p>ADTs, complexity & notations, sparse matrices, stacks, queues, expression traces + drill.</p>
-            </a>
-            <a href="dist/PCCST303/m2_01_singly_linked_list_operations.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Linked Lists & Memory</h2>
-              <p>Singly/doubly/circular lists, linked stacks & queues, fit strategies, GC & compaction + drill.</p>
-            </a>
-            <a href="dist/PCCST303/m3_01_trees_binary_foundations.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Trees & Graphs</h2>
-              <p>Binary trees, traversals, BST, heaps, graph representation, BFS/DFS + drill.</p>
-            </a>
-            <a href="dist/PCCST303/m4_01_selection_insertion_sort.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Sorting & Hashing</h2>
-              <p>Selection/insertion/quick/merge/heap/radix sorts, binary search, hashing + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PCCST303" data-subject-name="Data Structures and Algorithms">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PCCST303">27 topics</span>
+          </button>
         </div>
       </div>
 
@@ -592,28 +589,10 @@
             <div class="course-title">Machine Learning</div>
             <span class="course-code">PCCST503</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PCCST503/m1_01_ml_definition_paradigms_and_types.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Parameter Estimation</h2>
-              <p>MLE, MAP, regression models, and mathematical foundations.</p>
-            </a>
-            <a href="dist/PCCST503/m2_01_classification_boundaries_knn.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Supervised Learning</h2>
-              <p>Logistic Regression, Naive Bayes, KNN, and Decision Trees.</p>
-            </a>
-            <a href="dist/PCCST503/m3_01_perceptron_learning_rule.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>SVMs & Neural Networks</h2>
-              <p>Maximum margin hyperplanes, Perceptrons, and Backpropagation.</p>
-            </a>
-            <a href="dist/PCCST503/m4_01_clustering_kmeans.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Unsupervised & Ensembles</h2>
-              <p>K-Means, Hierarchical Clustering, PCA, Bagging, and Boosting.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PCCST503" data-subject-name="Machine Learning">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PCCST503">23 topics</span>
+          </button>
         </div>
 
         <!-- PCCST501: Computer Networks -->
@@ -622,28 +601,10 @@
             <div class="course-title">Computer Networks</div>
             <span class="course-code">PCCST501</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PCCST501/m1_01_internet_overview_and_network_edge.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Application Layer</h2>
-              <p>Internet overview, OSI & TCP/IP, HTTP, DNS, FTP, SMTP, and P2P.</p>
-            </a>
-            <a href="dist/PCCST501/m2_01_transport_layer_services_and_multiplexing.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Transport & Network Layer</h2>
-              <p>TCP, UDP, Congestion Control, IPv4/IPv6, and Routing Algorithms.</p>
-            </a>
-            <a href="dist/PCCST501/m3_01_datalink_layer_services_and_framing.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Data Link Layer</h2>
-              <p>Framing, CRC error detection, CSMA/CD, ARP, VLANs, and 802.11.</p>
-            </a>
-            <a href="dist/PCCST501/m4_01_network_management_snmp_architecture.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Physical Layer & Management</h2>
-              <p>SNMP, Nyquist & Shannon limits, PCM, and Modulation techniques.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PCCST501" data-subject-name="Computer Networks">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PCCST501">36 topics</span>
+          </button>
         </div>
 
         <!-- PCCST502: Algorithm Design -->
@@ -652,28 +613,10 @@
             <div class="course-title">Design and Analysis of Algorithms</div>
             <span class="course-code">PCCST502</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PCCST502/m1_01_algorithm_definition_and_criteria.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Asymptotics & Recurrences</h2>
-              <p>Complexity analysis, Master theorem, Recursion trees, and AVL trees.</p>
-            </a>
-            <a href="dist/PCCST502/m2_01_disjoint_sets_and_union_find.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Graphs & Divide and Conquer</h2>
-              <p>Union-Find, BFS/DFS, Kosaraju SCC, Merge Sort, and Strassen.</p>
-            </a>
-            <a href="dist/PCCST502/m3_01_greedy_strategy_control_abstraction.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Greedy, DP & Backtracking</h2>
-              <p>Kruskal, Prim, Dijkstra, Matrix Chain Multiplication, and N-Queens.</p>
-            </a>
-            <a href="dist/PCCST502/m4_01_branch_and_bound_control_abstraction.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Branch & Bound & Complexity</h2>
-              <p>TSP, NP-Completeness proofs, Bin Packing, and Randomized Algorithms.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PCCST502" data-subject-name="Design and Analysis of Algorithms">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PCCST502">31 topics</span>
+          </button>
         </div>
 
         <!-- PECST522: Artificial Intelligence -->
@@ -682,33 +625,10 @@
             <div class="course-title">Artificial Intelligence</div>
             <span class="course-code">PECST522</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PECST522/m1_01_ai_definition_foundations_and_history.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Agents & Problem Solving</h2>
-              <p>PEAS framework, agent architectures, and classic AI toy problems.</p>
-            </a>
-            <a href="dist/PECST522/m1_99_practice_lab_agents_and_problem_formulation.html" class="card" style="border-color: rgba(56, 189, 248, 0.4); background: linear-gradient(180deg, #121b2d 0%, #0e1524 100%);">
-              <span class="module-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">🧪 Module 1 Lab</span>
-              <h2>Practice Lab: Agents & PEAS</h2>
-              <p>Real-world scenario matrix, cheat tables, active recall quizzes, and KTU 7-mark model solutions.</p>
-            </a>
-            <a href="dist/PECST522/m2_01_uninformed_search_dfs_bfs_ucs.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Search & Game Playing</h2>
-              <p>A* Search, CSPs, AC-3, Minimax, and Alpha-Beta pruning.</p>
-            </a>
-            <a href="dist/PECST522/m3_01_knowledge_based_agents_and_wumpus_world.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Knowledge & Logic</h2>
-              <p>Wumpus World, Propositional & First-Order Logic, Unification, and Chaining.</p>
-            </a>
-            <a href="dist/PECST522/m4_01_reinforcement_learning_learning_from_rewards.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Reinforcement Learning</h2>
-              <p>Passive & Active RL, Q-Learning, Policy Search, and Inverse RL.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PECST522" data-subject-name="Artificial Intelligence">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PECST522">30 topics</span>
+          </button>
         </div>
       </div>
 
@@ -724,28 +644,10 @@
             <div class="course-title">Compiler Design</div>
             <span class="course-code">PCCST601</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PCCST601/m1_01_compiler_structure_phases.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Front End & Scanners</h2>
-              <p>Compiler phases, regex & FSA, RE-to-scanner pipeline, Lex hands-on + drill.</p>
-            </a>
-            <a href="dist/PCCST601/m2_01_parsing_grammars_ambiguity.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Top-Down Parsing</h2>
-              <p>Grammars & ambiguity, left recursion/factoring, recursive descent, LL(1) tables + drills.</p>
-            </a>
-            <a href="dist/PCCST601/m3_01_shift_reduce_handles.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Bottom-Up & IR</h2>
-              <p>Shift-reduce, LR(1)/LALR, YACC, IR taxonomy, TAC, SDT + drills.</p>
-            </a>
-            <a href="dist/PCCST601/m4_01_codegen_arithmetic.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Codegen & Optimization</h2>
-              <p>Code shapes, LVN, unrolling, liveness, placement + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PCCST601" data-subject-name="Compiler Design">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PCCST601">29 topics</span>
+          </button>
         </div>
 
         <!-- PCCST602: Advanced Computing Systems (S6, theory only) -->
@@ -754,28 +656,10 @@
             <div class="course-title">Advanced Computing Systems</div>
             <span class="course-code">PCCST602</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PCCST602/m1_01_hpc_htc_paradigms.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Distributed Models</h2>
-              <p>HPC/HTC, IoT & CPS, multicore/GPU, clusters/grids/P2P/clouds + drill.</p>
-            </a>
-            <a href="dist/PCCST602/m2_01_cluster_objectives_issues.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Clusters & Jobs</h2>
-              <p>Availability, architecture & SSI, HA & checkpoints, scheduling, migration + drill.</p>
-            </a>
-            <a href="dist/PCCST602/m3_01_virtualization_levels_comparison.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Virtualization</h2>
-              <p>Levels, VMM & containers, CPU/mem/IO techniques, live migration + drill.</p>
-            </a>
-            <a href="dist/PCCST602/m4_01_cloud_models_cost.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Cloud & Containers</h2>
-              <p>Cloud models & cost, IaaS/PaaS/SaaS, microservices, Docker + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PCCST602" data-subject-name="Advanced Computing Systems">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PCCST602">23 topics</span>
+          </button>
         </div>
 
         <!-- PBCST604: Fundamentals of Cyber Security (S6, PBL theory) -->
@@ -784,28 +668,10 @@
             <div class="course-title">Fundamentals of Cyber Security</div>
             <span class="course-code">PBCST604</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PBCST604/m1_01_infosec_threats_risk.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>InfoSec & VAPT</h2>
-              <p>Threats & risk, recon, buffer overflows, format strings, Burp & Metasploit + drill.</p>
-            </a>
-            <a href="dist/PBCST604/m2_01_sql_injection.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Web & DNS Security</h2>
-              <p>SQLi, XSS, CSRF, DNSSEC, ZAP/DVWA labs, email security + drill.</p>
-            </a>
-            <a href="dist/PBCST604/m3_01_netsec_terms_devices.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Network Security</h2>
-              <p>DoS/DDoS, ARP spoofing, sniffing tricks, Nmap, Wireshark + chain drill.</p>
-            </a>
-            <a href="dist/PBCST604/m4_01_windows_attacks_hardening.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>System Security</h2>
-              <p>Windows & Linux hardening, SELinux, PBL project guide + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PBCST604" data-subject-name="Fundamentals of Cyber Security">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PBCST604">26 topics</span>
+          </button>
         </div>
 
         <!-- PECST632: Deep Learning (S6 elective) -->
@@ -814,28 +680,10 @@
             <div class="course-title">Deep Learning <span style="color:#64748b; font-size:0.85rem; font-weight:400;">(Elective)</span></div>
             <span class="course-code">PECST632</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PECST632/m1_01_mlp_forward_pass.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>MLP & Backprop</h2>
-              <p>Forward pass, backprop + Adam, SGD regimes, curse of dimensionality, deep plumbing + drill.</p>
-            </a>
-            <a href="dist/PECST632/m2_01_ml_vs_dl_representation.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Depth & Autoencoders</h2>
-              <p>Representation learning, ReLU family, RBMs, autoencoders, applications + drill.</p>
-            </a>
-            <a href="dist/PECST632/m3_01_cnn_layers_filters.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>CNNs & RNNs</h2>
-              <p>Convolutions, AlexNet/ResNet, BPTT, seq2seq, LSTM/GRU, dim drills + drill.</p>
-            </a>
-            <a href="dist/PECST632/m4_01_cv_speech_nlp_cases.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>GANs & Advanced AEs</h2>
-              <p>CV/speech/NLP cases, sparse/denoising/VAE/contractive AEs, GAN zoo + drills.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PECST632" data-subject-name="Deep Learning">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PECST632">25 topics</span>
+          </button>
         </div>
 
         <!-- PECST637: Fundamentals of Cryptography (S6 elective) -->
@@ -844,28 +692,10 @@
             <div class="course-title">Fundamentals of Cryptography <span style="color:#64748b; font-size:0.85rem; font-weight:400;">(Elective)</span></div>
             <span class="course-code">PECST637</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PECST637/m1_01_divisibility_euclid.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Number Theory</h2>
-              <p>Euclid, modular arithmetic, Fermat/Euler, primitive roots, Miller–Rabin, CRT + drill.</p>
-            </a>
-            <a href="dist/PECST637/m2_01_attacks_services_principles.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Classical Ciphers</h2>
-              <p>Attack models, symmetric model, substitution, transposition, Feistel + drill.</p>
-            </a>
-            <a href="dist/PECST637/m3_01_des_structure_strength.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Modern Ciphers & RSA</h2>
-              <p>DES, AES, RC4, public-key principles, RSA, Diffie–Hellman + drill.</p>
-            </a>
-            <a href="dist/PECST637/m4_01_hash_md5_sha.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Hashes & PKI</h2>
-              <p>Hash grades, SHA-3, HMAC, signatures, key management, X.509 + drills.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PECST637" data-subject-name="Fundamentals of Cryptography">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PECST637">25 topics</span>
+          </button>
         </div>
 
         <!-- PECST631: Software Testing (S6 elective) -->
@@ -874,28 +704,10 @@
             <div class="course-title">Software Testing <span style="color:#64748b; font-size:0.85rem; font-weight:400;">(Elective)</span></div>
             <span class="course-code">PECST631</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/PECST631/m1_01_concepts_quality_failures.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Foundations</h2>
-              <p>Quality, famous failures, terminology, test types, box methods, automation + drill.</p>
-            </a>
-            <a href="dist/PECST631/m2_01_unit_static_dynamic_control.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Unit & Mutation</h2>
-              <p>Static/dynamic/control-flow, data-flow, mutants & score, JUnit, AI tools + drill.</p>
-            </a>
-            <a href="dist/PECST631/m3_01_graph_coverage_prime_paths.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>White-Box & Security</h2>
-              <p>Graph coverage, du-paths, CFGs, design testing, OWASP/Burp + drills.</p>
-            </a>
-            <a href="dist/PECST631/m4_01_isp_ecp_bva.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Black-Box & PEX</h2>
-              <p>ECP/BVA, decision tables, grey-box, performance, symbolic execution + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="PECST631" data-subject-name="Software Testing">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="PECST631">26 topics</span>
+          </button>
         </div>
 
         <!-- GXEST605: Design Thinking and Product Development (S6) -->
@@ -904,28 +716,10 @@
             <div class="course-title">Design Thinking and Product Development</div>
             <span class="course-code">GXEST605</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/GXEST605/m1_01_lifecycle_dt_defined.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>Fundamentals</h2>
-              <p>Lifecycle, design thinking defined, social impact, sustainability, idea self-check + drill.</p>
-            </a>
-            <a href="dist/GXEST605/m2_01_phases_empathy_role.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Empathize & Define</h2>
-              <p>Phases, 5 Why, empathy maps, journey maps, personas, POV + drills.</p>
-            </a>
-            <a href="dist/GXEST605/m3_01_ideation_tools.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Ideate & PoC</h2>
-              <p>Ideation tools, research, feasibility, PoC validation + drills.</p>
-            </a>
-            <a href="dist/GXEST605/m4_01_detailed_design_srd_dfmea.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Design to Pilot</h2>
-              <p>SRD, DFMEA, prototyping, pilot build, BMC, journal guide + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="GXEST605" data-subject-name="Design Thinking and Product Development">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="GXEST605">24 topics</span>
+          </button>
         </div>
 
         <!-- OECST614: Machine Learning for Engineers (S6 OE-1 elective) -->
@@ -934,28 +728,10 @@
             <div class="course-title">Machine Learning for Engineers <span style="color:#64748b; font-size:0.85rem; font-weight:400;">(Elective)</span></div>
             <span class="course-code">OECST614</span>
           </div>
-          <div class="card-grid">
-            <a href="dist/OECST614/m1_01_ml_vs_traditional_paradigms.html" class="card">
-              <span class="module-tag">Module 1</span>
-              <h2>ML Basics & Regression</h2>
-              <p>ML vs rules, paradigms, MLE/MAP, features & loss, single & multi-variable regression + drill.</p>
-            </a>
-            <a href="dist/OECST614/m2_01_naive_bayes_classifier.html" class="card">
-              <span class="module-tag">Module 2</span>
-              <h2>Classification & Evaluation</h2>
-              <p>Naive Bayes, KNN, overfitting & LASSO/RIDGE, splits, precision/recall/ROC & MAE/RMSE + drill.</p>
-            </a>
-            <a href="dist/OECST614/m3_01_perceptron_learning.html" class="card">
-              <span class="module-tag">Module 3</span>
-              <h2>Neural Nets & Trees</h2>
-              <p>Perceptron, MLP & activations, backprop, info gain & ID3 + drills.</p>
-            </a>
-            <a href="dist/OECST614/m4_01_similarity_hierarchical_clustering.html" class="card">
-              <span class="module-tag">Module 4</span>
-              <h2>Clustering & Ensembles</h2>
-              <p>Similarity & HAC, k-means, PCA, bagging/boosting, CV & bias–variance + drill.</p>
-            </a>
-          </div>
+          <button class="subject-btn" data-go-subject="OECST614" data-subject-name="Machine Learning for Engineers">
+            <span class="subject-btn-main">Browse 4 modules & topics →</span>
+            <span class="subject-count" data-topic-count="OECST614">24 topics</span>
+          </button>
         </div>
       </div>
     </div>
@@ -984,18 +760,882 @@
       </div>
     </div>
     </div>
+
+    <!-- STEP 4: topics of one subject (blocks injected by scripts/build.js) -->
+    <div id="view-topics" class="view" hidden>
+      <div class="crumbs">
+        <button class="crumb-btn" data-nav="years">&larr; Years</button>
+        <span class="crumb-sep">&rsaquo;</span>
+        <button class="crumb-btn" data-nav="semesters" id="crumbYearBtn2">Year</button>
+        <span class="crumb-sep">&rsaquo;</span>
+        <button class="crumb-btn" data-nav="subjects" id="crumbSemBtn">Semester</button>
+        <span class="crumb-sep">&rsaquo;</span>
+        <span class="crumb-current" id="crumbSub">Subject</span>
+      </div>
+      <div id="subject-detail">
+<!-- TARANGAM-SUBJECT-DETAILS:START -->
+    <div class="subject-block" data-subject="GXEST104" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Introduction to Electrical and Electronics Engineering</div>
+        <div class="subject-detail-sub">GXEST104 · 31 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>DC Circuits &amp; Magnetic Circuits</span><span class="module-count">8 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST104/m1_01_ohms_kcl_kvl_division_rules.html"><span>1.1 Ohms KCL KVL Division Rules</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m1_02_capacitors_inductors_energy.html"><span>1.2 Capacitors Inductors Energy</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m1_03_star_delta_conversion.html"><span>1.3 Star Delta Conversion</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m1_04_mesh_analysis_matrices.html"><span>1.4 Mesh Analysis Matrices</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m1_05_nodal_analysis_matrices.html"><span>1.5 Nodal Analysis Matrices</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m1_06_mesh_nodal_mixed_drill.html"><span>1.6 Mesh Nodal Mixed Drill</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m1_07_magnetic_circuits_basics.html"><span>1.7 Magnetic Circuits Basics</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m1_08_composite_parallel_magnetic.html"><span>1.8 Composite Parallel Magnetic</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>EMI, AC &amp; Three-Phase Systems</span><span class="module-count">8 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST104/m2_01_emi_faraday_lenz_inductance.html"><span>2.1 Emi Faraday Lenz Inductance</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m2_02_ac_fundamentals_rms_average.html"><span>2.2 AC Fundamentals RMS Average</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m2_03_phasors_forms_operations.html"><span>2.3 Phasors Forms Operations</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m2_04_pure_r_l_c_circuits.html"><span>2.4 Pure R L C Circuits</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m2_05_rl_rc_rlc_series.html"><span>2.5 RL RC RLC Series</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m2_06_ac_power_pf_correction.html"><span>2.6 AC Power Pf Correction</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m2_07_three_phase_star_delta.html"><span>2.7 Three Phase Star Delta</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m2_08_m2_mixed_drill.html"><span>2.8 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Electronic Devices &amp; Circuits</span><span class="module-count">9 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST104/m3_01_passive_active_pn_diode.html"><span>3.1 Passive Active Pn Diode</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_02_zener_avalanche_regulator.html"><span>3.2 Zener Avalanche Regulator</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_03_dc_supply_rectifiers.html"><span>3.3 DC Supply Rectifiers</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_04_ripple_factor_filters.html"><span>3.4 Ripple Factor Filters</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_05_bjt_construction_characteristics.html"><span>3.5 BJT Construction Characteristics</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_06_configs_biasing_loadline.html"><span>3.6 Configs Biasing Loadline</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_07_switch_amplifier.html"><span>3.7 Switch Amplifier</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_08_rc_coupled_fet_mosfet.html"><span>3.8 RC Coupled FET MOSFET</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m3_09_m3_mixed_drill.html"><span>3.9 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Modern Electronics &amp; Applications</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST104/m4_01_comm_fibre_block_diagrams.html"><span>4.1 Comm Fibre Block Diagrams</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m4_02_am_fm_superhet.html"><span>4.2 AM FM Superhet</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m4_03_wired_wireless_gsm_generations.html"><span>4.3 Wired Wireless GSM Generations</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m4_04_instrumentation_dmm_generator.html"><span>4.4 Instrumentation DMM Generator</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m4_05_cro_lissajous.html"><span>4.5 CRO Lissajous</span></a>
+          <a class="topic-btn" href="dist/GXEST104/m4_06_iot_case_studies_revision.html"><span>4.6 Iot Case Studies Revision</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="GZPHT121" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Physics for Physical Science and Life Science</div>
+        <div class="subject-detail-sub">GZPHT121 · 26 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Laser &amp; Fibre Optics</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GZPHT121/m1_01_optical_processes_absorption_spontaneous_stimulated.html"><span>1.1 Optical Processes Absorption Spontaneous Stimulated</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m1_02_laser_principle_population_inversion_pumping.html"><span>1.2 Laser Principle Population Inversion Pumping</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m1_03_ruby_co2_semiconductor_lasers.html"><span>1.3 Ruby Co2 Semiconductor Lasers</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m1_04_optical_fibre_types_propagation.html"><span>1.4 Optical Fibre Types Propagation</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m1_05_numerical_aperture_acceptance_angle_problems.html"><span>1.5 Numerical Aperture Acceptance Angle Problems</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m1_06_fibre_communication_block_diagram_drill.html"><span>1.6 Fibre Communication Block Diagram Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Interference &amp; Diffraction</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GZPHT121/m2_01_superposition_path_difference_cosine_law.html"><span>2.1 Superposition Path Difference Cosine Law</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m2_02_thin_films_colours_wedge_fringes.html"><span>2.2 Thin Films Colours Wedge Fringes</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m2_03_newtons_rings_wavelength.html"><span>2.3 Newtons Rings Wavelength</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m2_04_newtons_rings_liquid_air_wedge_thickness.html"><span>2.4 Newtons Rings Liquid Air Wedge Thickness</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m2_05_single_slit_diffraction_width.html"><span>2.5 Single Slit Diffraction Width</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m2_06_diffraction_grating_equation_powers.html"><span>2.6 Diffraction Grating Equation Powers</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m2_07_module2_mixed_numerical_drill.html"><span>2.7 Module2 Mixed Numerical Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Quantum Mechanics</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GZPHT121/m3_01_uncertainty_principle_conjugate_observables.html"><span>3.1 Uncertainty Principle Conjugate Observables</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m3_02_uncertainty_applications_nucleus_broadening.html"><span>3.2 Uncertainty Applications Nucleus Broadening</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m3_03_wavefunction_schrodinger_equations.html"><span>3.3 Wavefunction Schrodinger Equations</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m3_04_particle_in_box_derivation.html"><span>3.4 Particle In Box Derivation</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m3_05_box_numericals_energy_probability.html"><span>3.5 Box Numericals Energy Probability</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m3_06_quantum_tunnelling_concept_drill.html"><span>3.6 Quantum Tunnelling Concept Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Waves &amp; Acoustics</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GZPHT121/m4_01_wave_types_frequency_wavelength.html"><span>4.1 Wave Types Frequency Wavelength</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m4_02_stretched_string_velocity_laws.html"><span>4.2 Stretched String Velocity Laws</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m4_03_reverberation_sabine_hall_acoustics.html"><span>4.3 Reverberation Sabine Hall Acoustics</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m4_04_sabine_numerical_drill.html"><span>4.4 Sabine Numerical Drill</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m4_05_ultrasonics_piezoelectric_diffractometer.html"><span>4.5 Ultrasonics Piezoelectric Diffractometer</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m4_06_sonar_ndt_pulse_echo.html"><span>4.6 SONAR NDT Pulse Echo</span></a>
+          <a class="topic-btn" href="dist/GZPHT121/m4_07_medical_ultrasound_revision_drill.html"><span>4.7 Medical Ultrasound Revision Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="GAMAT301" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Mathematics for Information Science-3</div>
+        <div class="subject-detail-sub">GAMAT301 · 24 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Discrete Random Variables</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GAMAT301/m1_01_random_variables_pmf_cdf.html"><span>1.1 Random Variables PMF CDF</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m1_02_expectation_mean_variance.html"><span>1.2 Expectation Mean Variance</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m1_03_binomial_distribution_problems.html"><span>1.3 Binomial Distribution Problems</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m1_04_poisson_distribution_binomial_limit.html"><span>1.4 Poisson Distribution Binomial Limit</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m1_05_joint_pmf_marginals_independence.html"><span>1.5 Joint PMF Marginals Independence</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m1_06_expectation_functions_m1_drill.html"><span>1.6 Expectation Functions M1 Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Continuous Random Variables</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GAMAT301/m2_01_continuous_rv_pdf_cdf_expectation.html"><span>2.1 Continuous RV PDF CDF Expectation</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m2_02_uniform_distribution_problems.html"><span>2.2 Uniform Distribution Problems</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m2_03_normal_distribution_standardisation.html"><span>2.3 Normal Distribution Standardisation</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m2_04_exponential_distribution_memoryless.html"><span>2.4 Exponential Distribution Memoryless</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m2_05_joint_pdf_marginals_independence.html"><span>2.5 Joint PDF Marginals Independence</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m2_06_m2_mixed_drill_model_selection.html"><span>2.6 M2 Mixed Drill Model Selection</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Limit Theorems &amp; Stochastic Processes</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GAMAT301/m3_01_markov_chebyshev_inequalities.html"><span>3.1 Markov Chebyshev Inequalities</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m3_02_slln_clt_approximations.html"><span>3.2 SLLN CLT Approximations</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m3_03_stochastic_counting_processes.html"><span>3.3 Stochastic Counting Processes</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m3_04_poisson_process_interarrival.html"><span>3.4 Poisson Process Interarrival</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m3_05_poisson_process_drill.html"><span>3.5 Poisson Process Drill</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m3_06_m3_mixed_drill.html"><span>3.6 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Markov Chains</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GAMAT301/m4_01_markov_chains_transition_matrix.html"><span>4.1 Markov Chains Transition Matrix</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m4_02_random_walk_gambler_ruin.html"><span>4.2 Random Walk Gambler Ruin</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m4_03_chapman_kolmogorov_equations.html"><span>4.3 Chapman Kolmogorov Equations</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m4_04_classification_states_irreducible_recurrent.html"><span>4.4 Classification States Irreducible Recurrent</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m4_05_long_run_stationary_distribution.html"><span>4.5 Long Run Stationary Distribution</span></a>
+          <a class="topic-btn" href="dist/GAMAT301/m4_06_m4_mixed_drill.html"><span>4.6 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PCCST303" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Data Structures and Algorithms</div>
+        <div class="subject-detail-sub">PCCST303 · 27 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Basic Concepts, Stacks &amp; Queues</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST303/m1_01_data_structures_adt_abstraction.html"><span>1.1 Data Structures ADT Abstraction</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m1_02_complexity_asymptotic_notations.html"><span>1.2 Complexity Asymptotic Notations</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m1_03_polynomial_sparse_matrix_arrays.html"><span>1.3 Polynomial Sparse Matrix Arrays</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m1_04_stacks_multistacks_applications.html"><span>1.4 Stacks Multistacks Applications</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m1_05_queues_circular_deque.html"><span>1.5 Queues Circular Deque</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m1_06_infix_postfix_evaluation.html"><span>1.6 Infix Postfix Evaluation</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m1_07_m1_mixed_drill.html"><span>1.7 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Linked Lists &amp; Memory Management</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST303/m2_01_singly_linked_list_operations.html"><span>2.1 Singly Linked List Operations</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m2_02_stacks_queues_polynomial_linked.html"><span>2.2 Stacks Queues Polynomial Linked</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m2_03_doubly_linked_list.html"><span>2.3 Doubly Linked List</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m2_04_circular_linked_list_variations.html"><span>2.4 Circular Linked List Variations</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m2_05_memory_allocation_fits.html"><span>2.5 Memory Allocation Fits</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m2_06_garbage_compaction_m2_drill.html"><span>2.6 Garbage Compaction M2 Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Trees, Heaps &amp; Graphs</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST303/m3_01_trees_binary_foundations.html"><span>3.1 Trees Binary Foundations</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m3_02_traversals_operations.html"><span>3.2 Traversals Operations</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m3_03_expression_trees_bst.html"><span>3.3 Expression Trees BST</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m3_04_binary_heaps_priority_queue.html"><span>3.4 Binary Heaps Priority Queue</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m3_05_graphs_definitions_representation.html"><span>3.5 Graphs Definitions Representation</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m3_06_bfs_dfs_shortest_paths.html"><span>3.6 BFS DFS Shortest Paths</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m3_07_m3_mixed_drill.html"><span>3.7 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Sorting, Searching &amp; Hashing</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST303/m4_01_selection_insertion_sort.html"><span>4.1 Selection Insertion Sort</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m4_02_quick_sort_analysis.html"><span>4.2 Quick Sort Analysis</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m4_03_merge_heap_sort.html"><span>4.3 Merge Heap Sort</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m4_04_radix_sort_comparison_drill.html"><span>4.4 Radix Sort Comparison Drill</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m4_05_linear_binary_search.html"><span>4.5 Linear Binary Search</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m4_06_hashing_functions_collisions.html"><span>4.6 Hashing Functions Collisions</span></a>
+          <a class="topic-btn" href="dist/PCCST303/m4_07_m4_mixed_drill.html"><span>4.7 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PCCST503" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Machine Learning</div>
+        <div class="subject-detail-sub">PCCST503 · 23 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Foundations &amp; Regression</span><span class="module-count">5 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST503/m1_01_ml_definition_paradigms_and_types.html"><span>1.1 ML Definition Paradigms And Types</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m1_02_probability_mle_map_estimation.html"><span>1.2 Probability MLE MAP Estimation</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m1_03_linear_regression_least_squares.html"><span>1.3 Linear Regression Least Squares</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m1_04_multiple_regression_model_assessment.html"><span>1.4 Multiple Regression Model Assessment</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m1_99_practice_lab_foundations_drills.html"><span>🧪 Practice Lab: M1 Foundations Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Classification &amp; Trees</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST503/m2_01_classification_boundaries_knn.html"><span>2.1 Classification Boundaries KNN</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m2_02_logistic_regression_sigmoid_loss.html"><span>2.2 Logistic Regression Sigmoid Loss</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m2_03_naive_bayes_generative_models.html"><span>2.3 Naive Bayes Generative Models</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m2_04_decision_trees_entropy_information_gain.html"><span>2.4 Decision Trees Entropy Information Gain</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m2_05_gradient_descent_training_engine.html"><span>2.5 Gradient Descent Training Engine</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m2_99_practice_lab_classification_drills.html"><span>🧪 Practice Lab: M2 Classification Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Neural Nets &amp; SVMs</span><span class="module-count">5 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST503/m3_01_perceptron_learning_rule.html"><span>3.1 Perceptron Learning Rule</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m3_02_multilayer_networks_backpropagation.html"><span>3.2 Multilayer Networks Backpropagation</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m3_03_maximum_margin_svm.html"><span>3.3 Maximum Margin SVM</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m3_04_kernels_soft_margins.html"><span>3.4 Kernels Soft Margins</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m3_99_practice_lab_networks_svm_drills.html"><span>🧪 Practice Lab: M3 Networks SVM Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>PCA &amp; Ensembles</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST503/m4_01_clustering_kmeans.html"><span>4.1 Clustering Kmeans</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m4_02_hierarchical_clustering.html"><span>4.2 Hierarchical Clustering</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m4_03_pca_dimensionality_reduction.html"><span>4.3 PCA Dimensionality Reduction</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m4_04_ensemble_bagging_random_forests.html"><span>4.4 Ensemble Bagging Random Forests</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m4_05_boosting_adaboost.html"><span>4.5 Boosting Adaboost</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m4_06_mds_multidimensional_scaling.html"><span>4.6 MDS Multidimensional Scaling</span></a>
+          <a class="topic-btn" href="dist/PCCST503/m4_99_practice_lab_unsupervised_ensemble_drills.html"><span>🧪 Practice Lab: M4 Unsupervised Ensemble Drills</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PCCST501" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Computer Networks</div>
+        <div class="subject-detail-sub">PCCST501 · 36 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Application Layer</span><span class="module-count">9 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST501/m1_01_internet_overview_and_network_edge.html"><span>1.1 Internet Overview And Network Edge</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_02_protocol_layering_and_osi_tcpip.html"><span>1.2 Protocol Layering And OSI Tcpip</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_03_application_layer_paradigms.html"><span>1.3 Application Layer Paradigms</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_04_world_wide_web_and_http.html"><span>1.4 World Wide Web And HTTP</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_05_file_transfer_protocol_ftp.html"><span>1.5 File Transfer Protocol FTP</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_06_electronic_mail_smtp_pop3_imap.html"><span>1.6 Electronic Mail SMTP POP3 IMAP</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_07_domain_name_system_dns.html"><span>1.7 Domain Name System DNS</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_08_peer_to_peer_bittorrent.html"><span>1.8 Peer To Peer Bittorrent</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m1_99_practice_lab_application_layer_drills.html"><span>🧪 Practice Lab: M1 Application Layer Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Transport &amp; Network Layer</span><span class="module-count">12 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST501/m2_01_transport_layer_services_and_multiplexing.html"><span>2.1 Transport Layer Services And Multiplexing</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_02_udp_segment_structure_and_checksum.html"><span>2.2 Udp Segment Structure And Checksum</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_03_tcp_segment_structure_and_rtt.html"><span>2.3 TCP Segment Structure And Rtt</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_04_reliable_transfer_gbn_and_sr.html"><span>2.4 Reliable Transfer Gbn And Sr</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_05_tcp_flow_control_and_connection_management.html"><span>2.5 TCP Flow Control And Connection Management</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_06_congestion_control_principles_and_tcp.html"><span>2.6 Congestion Control Principles And TCP</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_07_multicast_routing_trees_rpf.html"><span>2.7 Multicast Routing Trees RPF</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_08_quality_of_service_qos_mechanisms.html"><span>2.8 Quality Of Service QOS Mechanisms</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_09_ipv4_addressing_forwarding_nat_icmp.html"><span>2.9 IPV4 Addressing Forwarding NAT ICMP</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_10_unicast_routing_link_state_distance_vector.html"><span>2.10 Unicast Routing Link State Distance Vector</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_11_ipv6_next_generation_transition.html"><span>2.11 IPV6 Next Generation Transition</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m2_99_practice_lab_transport_drills.html"><span>🧪 Practice Lab: M2 Transport Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Data Link Layer</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST501/m3_01_datalink_layer_services_and_framing.html"><span>3.1 Datalink Layer Services And Framing</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m3_02_error_detection_crc_checksums_parity.html"><span>3.2 Error Detection CRC Checksums Parity</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m3_03_multiple_access_protocols.html"><span>3.3 Multiple Access Protocols</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m3_04_lan_addressing_arp_switches_and_vlans.html"><span>3.4 Lan Addressing ARP Switches And Vlans</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m3_05_wireless_lan_802_11.html"><span>3.5 Wireless Lan 802 11</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m3_06_mobile_ip_agents_tunneling.html"><span>3.6 Mobile IP Agents Tunneling</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m3_99_practice_lab_datalink_drills.html"><span>🧪 Practice Lab: M3 Datalink Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Physical Layer &amp; SNMP</span><span class="module-count">8 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST501/m4_01_network_management_snmp_architecture.html"><span>4.1 Network Management SNMP Architecture</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m4_02_nyquist_shannon_channel_capacity.html"><span>4.2 Nyquist Shannon Channel Capacity</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m4_03_pcm_digitization_sampling_quantization.html"><span>4.3 PCM Digitization Sampling Quantization</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m4_04_modulation_ask_fsk_psk_qam.html"><span>4.4 Modulation Ask Fsk Psk Qam</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m4_05_transmission_media_guided_unguided.html"><span>4.5 Transmission Media Guided Unguided</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m4_06_bandwidth_utilization_multiplexing_spread.html"><span>4.6 Bandwidth Utilization Multiplexing Spread</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m4_07_asn1_smi_mib_language.html"><span>4.7 ASN1 SMI MIB Language</span></a>
+          <a class="topic-btn" href="dist/PCCST501/m4_99_practice_lab_management_physical_drills.html"><span>🧪 Practice Lab: M4 Management Physical Drills</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PCCST502" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Design and Analysis of Algorithms</div>
+        <div class="subject-detail-sub">PCCST502 · 31 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Analysis &amp; Recurrences</span><span class="module-count">12 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST502/m1_00_module_overview.html"><span>Module 1 Overview: Module Overview</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_01_algorithm_definition_and_criteria.html"><span>1.1 Algorithm Definition And Criteria</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_02_time_space_complexity_best_worst_average.html"><span>1.2 Time Space Complexity Best Worst Average</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_03_asymptotic_notations_and_properties.html"><span>1.3 Asymptotic Notations And Properties</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_04_complexity_calculation_of_iterative_algorithms.html"><span>1.4 Complexity Calculation Of Iterative Algorithms</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_05_recurrence_equations_and_substitution_method.html"><span>1.5 Recurrence Equations And Substitution Method</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_06_recurrence_iteration_method.html"><span>1.6 Recurrence Iteration Method</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_07_recursion_tree_method.html"><span>1.7 Recursion Tree Method</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_08_master_theorem_and_cases.html"><span>1.8 Master Theorem And Cases</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_09_balanced_search_trees_avl_foundations.html"><span>1.9 Balanced Search Trees AVL Foundations</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_10_avl_tree_rotations_insertion_and_deletion.html"><span>1.10 AVL Tree Rotations Insertion And Deletion</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m1_99_practice_lab_asymptotics_and_recurrences.html"><span>🧪 Practice Lab: M1 Asymptotics And Recurrences</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Graphs &amp; Divide/Conquer</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST502/m2_01_disjoint_sets_and_union_find.html"><span>2.1 Disjoint Sets And Union Find</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m2_02_graph_traversals_bfs_and_dfs.html"><span>2.2 Graph Traversals BFS And DFS</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m2_03_strongly_connected_components_kosaraju.html"><span>2.3 Strongly Connected Components Kosaraju</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m2_04_divide_and_conquer_merge_sort_and_strassen.html"><span>2.4 Divide And Conquer Merge Sort And Strassen</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m2_05_topological_sorting_dag_linearization.html"><span>2.5 Topological Sorting DAG Linearization</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m2_99_practice_lab_graphs_divide_drills.html"><span>🧪 Practice Lab: M2 Graphs Divide Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Greedy, DP &amp; Backtracking</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST502/m3_01_greedy_strategy_control_abstraction.html"><span>3.1 Greedy Strategy Control Abstraction</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m3_02_minimum_spanning_trees_kruskal_prim.html"><span>3.2 Minimum Spanning Trees Kruskal Prim</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m3_03_single_source_shortest_paths_dijkstra.html"><span>3.3 Single Source Shortest Paths Dijkstra</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m3_04_dynamic_programming_matrix_chain_knapsack.html"><span>3.4 Dynamic Programming Matrix Chain Knapsack</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m3_05_backtracking_n_queens_state_space.html"><span>3.5 Backtracking N Queens State Space</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m3_06_floyd_warshall_all_pairs_shortest.html"><span>3.6 Floyd Warshall All Pairs Shortest</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m3_99_practice_lab_greedy_dp_backtracking_drills.html"><span>🧪 Practice Lab: M3 Greedy DP Backtracking Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Branch/Bound &amp; Complexity</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST502/m4_01_branch_and_bound_control_abstraction.html"><span>4.1 Branch And Bound Control Abstraction</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m4_02_tsp_branch_and_bound.html"><span>4.2 TSP Branch And Bound</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m4_03_np_completeness_p_np_reductions.html"><span>4.3 NP Completeness P NP Reductions</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m4_04_bin_packing_approximation_algorithms.html"><span>4.4 Bin Packing Approximation Algorithms</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m4_05_randomized_algorithms_las_vegas_monte_carlo.html"><span>4.5 Randomized Algorithms Las Vegas Monte Carlo</span></a>
+          <a class="topic-btn" href="dist/PCCST502/m4_99_practice_lab_branchbound_complexity_drills.html"><span>🧪 Practice Lab: M4 Branchbound Complexity Drills</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PECST522" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Artificial Intelligence</div>
+        <div class="subject-detail-sub">PECST522 · 30 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Agents &amp; Problem Solving</span><span class="module-count">8 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST522/m1_01_ai_definition_foundations_and_history.html"><span>1.1 AI Definition Foundations And History</span></a>
+          <a class="topic-btn" href="dist/PECST522/m1_02_agents_and_environments_peas.html"><span>1.2 Agents And Environments PEAS</span></a>
+          <a class="topic-btn" href="dist/PECST522/m1_03_concept_of_rationality.html"><span>1.3 Concept Of Rationality</span></a>
+          <a class="topic-btn" href="dist/PECST522/m1_04_nature_of_task_environments.html"><span>1.4 Nature Of Task Environments</span></a>
+          <a class="topic-btn" href="dist/PECST522/m1_05_agent_architectures_reflex_to_learning.html"><span>1.5 Agent Architectures Reflex To Learning</span></a>
+          <a class="topic-btn" href="dist/PECST522/m1_06_problem_solving_agents_and_search_trees.html"><span>1.6 Problem Solving Agents And Search Trees</span></a>
+          <a class="topic-btn" href="dist/PECST522/m1_07_classic_ai_toy_problems.html"><span>1.7 Classic AI Toy Problems</span></a>
+          <a class="topic-btn" href="dist/PECST522/m1_99_practice_lab_agents_and_problem_formulation.html"><span>🧪 Practice Lab: M1 Agents And Problem Formulation</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Search &amp; Game Playing</span><span class="module-count">10 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST522/m2_01_uninformed_search_dfs_bfs_ucs.html"><span>2.1 Uninformed Search DFS BFS UCS</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_02_iterative_deepening_and_depth_limited.html"><span>2.2 Iterative Deepening And Depth Limited</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_03_informed_heuristic_search_and_functions.html"><span>2.3 Informed Heuristic Search And Functions</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_04_greedy_best_first_search.html"><span>2.4 Greedy Best First Search</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_05_a_star_optimal_search.html"><span>2.5 A Star Optimal Search</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_06_generate_and_test.html"><span>2.6 Generate And Test</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_07_csp_arc_consistency_ac3.html"><span>2.7 CSP Arc Consistency AC3</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_08_games_minimax_optimal_play.html"><span>2.8 Games Minimax Optimal Play</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_09_alpha_beta_pruning.html"><span>2.9 Alpha Beta Pruning</span></a>
+          <a class="topic-btn" href="dist/PECST522/m2_99_practice_lab_search_strategies_drills.html"><span>🧪 Practice Lab: M2 Search Strategies Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Knowledge &amp; Logic</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST522/m3_01_knowledge_based_agents_and_wumpus_world.html"><span>3.1 Knowledge Based Agents And Wumpus World</span></a>
+          <a class="topic-btn" href="dist/PECST522/m3_02_propositional_logic_syntax_semantics.html"><span>3.2 Propositional Logic Syntax Semantics</span></a>
+          <a class="topic-btn" href="dist/PECST522/m3_03_inference_resolution_and_horn_clauses.html"><span>3.3 Inference Resolution And Horn Clauses</span></a>
+          <a class="topic-btn" href="dist/PECST522/m3_04_first_order_logic_unification_and_lifting.html"><span>3.4 First Order Logic Unification And Lifting</span></a>
+          <a class="topic-btn" href="dist/PECST522/m3_05_propositional_vs_fol_inference.html"><span>3.5 Propositional Vs FOL Inference</span></a>
+          <a class="topic-btn" href="dist/PECST522/m3_99_practice_lab_logic_drills.html"><span>🧪 Practice Lab: M3 Logic Drills</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Reinforcement Learning</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST522/m4_01_reinforcement_learning_learning_from_rewards.html"><span>4.1 Reinforcement Learning Learning From Rewards</span></a>
+          <a class="topic-btn" href="dist/PECST522/m4_02_passive_rl_utility_adp_and_td.html"><span>4.2 Passive RL Utility Adp And Td</span></a>
+          <a class="topic-btn" href="dist/PECST522/m4_03_active_rl_q_learning_and_exploration.html"><span>4.3 Active RL Q Learning And Exploration</span></a>
+          <a class="topic-btn" href="dist/PECST522/m4_04_policy_search_and_inverse_rl.html"><span>4.4 Policy Search And Inverse RL</span></a>
+          <a class="topic-btn" href="dist/PECST522/m4_05_generalization_applications_rl.html"><span>4.5 Generalization Applications RL</span></a>
+          <a class="topic-btn" href="dist/PECST522/m4_99_practice_lab_rl_drills.html"><span>🧪 Practice Lab: M4 RL Drills</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PCCST601" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Compiler Design</div>
+        <div class="subject-detail-sub">PCCST601 · 29 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Front End &amp; Scanners</span><span class="module-count">5 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST601/m1_01_compiler_structure_phases.html"><span>1.1 Compiler Structure Phases</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m1_02_regex_fsa_brushup.html"><span>1.2 Regex Fsa Brushup</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m1_03_re_to_scanner_construction.html"><span>1.3 Re To Scanner Construction</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m1_04_lex_hands_on.html"><span>1.4 Lex Hands On</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m1_05_m1_mixed_drill.html"><span>1.5 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Top-Down Parsing</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST601/m2_01_parsing_grammars_ambiguity.html"><span>2.1 Parsing Grammars Ambiguity</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m2_02_left_recursion_factoring.html"><span>2.2 Left Recursion Factoring</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m2_03_recursive_descent_predictive.html"><span>2.3 Recursive Descent Predictive</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m2_04_ll1_first_follow_tables.html"><span>2.4 Ll1 First Follow Tables</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m2_05_ll1_traces_errors.html"><span>2.5 Ll1 Traces Errors</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m2_06_grammar_transform_drill.html"><span>2.6 Grammar Transform Drill</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m2_07_m2_mixed_drill.html"><span>2.7 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Bottom-Up Parsing &amp; IR</span><span class="module-count">9 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST601/m3_01_shift_reduce_handles.html"><span>3.1 Shift Reduce Handles</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_02_lr1_algorithm_items.html"><span>3.2 Lr1 Algorithm Items</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_03_lr_tables_lalr_shrinking.html"><span>3.3 LR Tables Lalr Shrinking</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_04_yacc_calculator_conflicts.html"><span>3.4 YACC Calculator Conflicts</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_05_lr_drill.html"><span>3.5 LR Drill</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_06_ir_taxonomy_graphical.html"><span>3.6 IR Taxonomy Graphical</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_07_linear_ir_tac.html"><span>3.7 Linear IR TAC</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_08_sdt_expressions_control.html"><span>3.8 Sdt Expressions Control</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m3_09_m3_mixed_drill.html"><span>3.9 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Code Generation &amp; Optimization</span><span class="module-count">8 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST601/m4_01_codegen_arithmetic.html"><span>4.1 Codegen Arithmetic</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m4_02_codegen_boolean_relational.html"><span>4.2 Codegen Boolean Relational</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m4_03_codegen_control_calls.html"><span>4.3 Codegen Control Calls</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m4_04_optimization_opportunities_scope.html"><span>4.4 Optimization Opportunities Scope</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m4_05_local_lvn_balancing.html"><span>4.5 Local LVN Balancing</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m4_06_regional_superlocal_unrolling.html"><span>4.6 Regional Superlocal Unrolling</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m4_07_global_live_placement.html"><span>4.7 Global Live Placement</span></a>
+          <a class="topic-btn" href="dist/PCCST601/m4_08_m4_mixed_drill.html"><span>4.8 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PCCST602" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Advanced Computing Systems</div>
+        <div class="subject-detail-sub">PCCST602 · 23 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Distributed Models &amp; Enablers</span><span class="module-count">5 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST602/m1_01_hpc_htc_paradigms.html"><span>1.1 HPC HTC Paradigms</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m1_02_iot_cps.html"><span>1.2 Iot CPS</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m1_03_multicore_gpu.html"><span>1.3 Multicore GPU</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m1_04_vms_system_models.html"><span>1.4 Vms System Models</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m1_05_m1_mixed_drill.html"><span>1.5 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Clusters &amp; Job Management</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST602/m2_01_cluster_objectives_issues.html"><span>2.1 Cluster Objectives Issues</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m2_02_cluster_arch_gpu_ssi.html"><span>2.2 Cluster Arch GPU SSI</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m2_03_ha_fault_checkpoint.html"><span>2.3 HA Fault Checkpoint</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m2_04_job_scheduling.html"><span>2.4 Job Scheduling</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m2_05_job_management_migration.html"><span>2.5 Job Management Migration</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m2_06_m2_mixed_drill.html"><span>2.6 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Virtualization</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST602/m3_01_virtualization_levels_comparison.html"><span>3.1 Virtualization Levels Comparison</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m3_02_vmm_requirements_os_level.html"><span>3.2 VMM Requirements Os Level</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m3_03_structures_cpu_virtualization.html"><span>3.3 Structures Cpu Virtualization</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m3_04_memory_io_virtualization.html"><span>3.4 Memory Io Virtualization</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m3_05_virtual_clusters_live_migration.html"><span>3.5 Virtual Clusters Live Migration</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m3_06_m3_mixed_drill.html"><span>3.6 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Cloud, Microservices &amp; Containers</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PCCST602/m4_01_cloud_models_cost.html"><span>4.1 Cloud Models Cost</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m4_02_iaas_paas_saas.html"><span>4.2 Iaas Paas Saas</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m4_03_microservices_pros_cons.html"><span>4.3 Microservices Pros Cons</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m4_04_ipc_discovery_gateway.html"><span>4.4 IPC Discovery Gateway</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m4_05_containers_docker.html"><span>4.5 Containers Docker</span></a>
+          <a class="topic-btn" href="dist/PCCST602/m4_06_m4_mixed_drill.html"><span>4.6 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PBCST604" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Fundamentals of Cyber Security</div>
+        <div class="subject-detail-sub">PBCST604 · 26 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>InfoSec, Recon &amp; VAPT</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PBCST604/m1_01_infosec_threats_risk.html"><span>1.1 Infosec Threats Risk</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m1_02_reconnaissance_gathering.html"><span>1.2 Reconnaissance Gathering</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m1_03_buffer_stack_overflow.html"><span>1.3 Buffer Stack Overflow</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m1_04_format_string_vuln_drill.html"><span>1.4 Format String Vuln Drill</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m1_05_vapt_burp_metasploit.html"><span>1.5 VAPT Burp Metasploit</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m1_06_m1_mixed_drill.html"><span>1.6 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Web &amp; DNS Security</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PBCST604/m2_01_sql_injection.html"><span>2.1 SQL Injection</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m2_02_xss_types_fixes.html"><span>2.2 XSS Types Fixes</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m2_03_csrf_defenses.html"><span>2.3 CSRF Defenses</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m2_04_dns_security_dnssec.html"><span>2.4 DNS Security DNSSEC</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m2_05_zap_webgoat_dvwa_mirror.html"><span>2.5 ZAP Webgoat DVWA Mirror</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m2_06_email_security.html"><span>2.6 Email Security</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m2_07_m2_mixed_drill.html"><span>2.7 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Network Security</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PBCST604/m3_01_netsec_terms_devices.html"><span>3.1 Netsec Terms Devices</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m3_02_dos_ddos.html"><span>3.2 DOS DDOS</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m3_03_arp_spoofing_hijacking.html"><span>3.3 ARP Spoofing Hijacking</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m3_04_traffic_capture_tricks.html"><span>3.4 Traffic Capture Tricks</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m3_05_port_scanning_nmap.html"><span>3.5 Port Scanning NMAP</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m3_06_wireshark_analysis.html"><span>3.6 Wireshark Analysis</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m3_07_m3_attack_chain_drill.html"><span>3.7 M3 Attack Chain Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>System Security &amp; Projects</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PBCST604/m4_01_windows_attacks_hardening.html"><span>4.1 Windows Attacks Hardening</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m4_02_windows_safe_defender.html"><span>4.2 Windows Safe Defender</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m4_03_linux_attacks_physical_config.html"><span>4.3 Linux Attacks Physical Config</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m4_04_linux_auth_selinux.html"><span>4.4 Linux Auth Selinux</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m4_05_pbl_project_guide.html"><span>4.5 PBL Project Guide</span></a>
+          <a class="topic-btn" href="dist/PBCST604/m4_06_m4_mixed_drill.html"><span>4.6 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PECST632" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Deep Learning</div>
+        <div class="subject-detail-sub">PECST632 · 25 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>MLP, Backprop &amp; SGD</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST632/m1_01_mlp_forward_pass.html"><span>1.1 MLP Forward Pass</span></a>
+          <a class="topic-btn" href="dist/PECST632/m1_02_backprop_variants.html"><span>1.2 Backprop Variants</span></a>
+          <a class="topic-btn" href="dist/PECST632/m1_03_sgd_schedules.html"><span>1.3 SGD Schedules</span></a>
+          <a class="topic-btn" href="dist/PECST632/m1_04_curse_dimensionality.html"><span>1.4 Curse Dimensionality</span></a>
+          <a class="topic-btn" href="dist/PECST632/m1_05_deep_feedforward_init.html"><span>1.5 Deep Feedforward Init</span></a>
+          <a class="topic-btn" href="dist/PECST632/m1_06_m1_mixed_drill.html"><span>1.6 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Depth, Activations &amp; Autoencoders</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST632/m2_01_ml_vs_dl_representation.html"><span>2.1 ML Vs Dl Representation</span></a>
+          <a class="topic-btn" href="dist/PECST632/m2_02_activations_relu_family.html"><span>2.2 Activations RELU Family</span></a>
+          <a class="topic-btn" href="dist/PECST632/m2_03_unsupervised_rbm.html"><span>2.3 Unsupervised RBM</span></a>
+          <a class="topic-btn" href="dist/PECST632/m2_04_autoencoders.html"><span>2.4 Autoencoders</span></a>
+          <a class="topic-btn" href="dist/PECST632/m2_05_dl_applications.html"><span>2.5 Dl Applications</span></a>
+          <a class="topic-btn" href="dist/PECST632/m2_06_m2_mixed_drill.html"><span>2.6 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>CNNs &amp; RNNs</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST632/m3_01_cnn_layers_filters.html"><span>3.1 CNN Layers Filters</span></a>
+          <a class="topic-btn" href="dist/PECST632/m3_02_regularization_alexnet_resnet.html"><span>3.2 Regularization Alexnet Resnet</span></a>
+          <a class="topic-btn" href="dist/PECST632/m3_03_rnn_bptt.html"><span>3.3 RNN BPTT</span></a>
+          <a class="topic-btn" href="dist/PECST632/m3_04_birnn_seq2seq.html"><span>3.4 Birnn Seq2seq</span></a>
+          <a class="topic-btn" href="dist/PECST632/m3_05_lstm_gru.html"><span>3.5 LSTM Gru</span></a>
+          <a class="topic-btn" href="dist/PECST632/m3_06_dimension_param_drill.html"><span>3.6 Dimension Param Drill</span></a>
+          <a class="topic-btn" href="dist/PECST632/m3_07_m3_mixed_drill.html"><span>3.7 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Applications, GANs &amp; Advanced AEs</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST632/m4_01_cv_speech_nlp_cases.html"><span>4.1 Cv Speech Nlp Cases</span></a>
+          <a class="topic-btn" href="dist/PECST632/m4_02_regularized_autoencoders.html"><span>4.2 Regularized Autoencoders</span></a>
+          <a class="topic-btn" href="dist/PECST632/m4_03_stochastic_contractive.html"><span>4.3 Stochastic Contractive</span></a>
+          <a class="topic-btn" href="dist/PECST632/m4_04_gan_variants.html"><span>4.4 GAN Variants</span></a>
+          <a class="topic-btn" href="dist/PECST632/m4_05_gan_dynamics_drill.html"><span>4.5 GAN Dynamics Drill</span></a>
+          <a class="topic-btn" href="dist/PECST632/m4_06_m4_mixed_drill.html"><span>4.6 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PECST637" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Fundamentals of Cryptography</div>
+        <div class="subject-detail-sub">PECST637 · 25 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Number Theory</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST637/m1_01_divisibility_euclid.html"><span>1.1 Divisibility Euclid</span></a>
+          <a class="topic-btn" href="dist/PECST637/m1_02_modular_arithmetic.html"><span>1.2 Modular Arithmetic</span></a>
+          <a class="topic-btn" href="dist/PECST637/m1_03_fermat_euler_totient.html"><span>1.3 Fermat Euler Totient</span></a>
+          <a class="topic-btn" href="dist/PECST637/m1_04_primitive_roots_discrete_log.html"><span>1.4 Primitive Roots Discrete Log</span></a>
+          <a class="topic-btn" href="dist/PECST637/m1_05_miller_rabin_primality.html"><span>1.5 Miller Rabin Primality</span></a>
+          <a class="topic-btn" href="dist/PECST637/m1_06_crt_applications.html"><span>1.6 CRT Applications</span></a>
+          <a class="topic-btn" href="dist/PECST637/m1_07_m1_mixed_drill.html"><span>1.7 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Classical Ciphers</span><span class="module-count">5 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST637/m2_01_attacks_services_principles.html"><span>2.1 Attacks Services Principles</span></a>
+          <a class="topic-btn" href="dist/PECST637/m2_02_symmetric_model.html"><span>2.2 Symmetric Model</span></a>
+          <a class="topic-btn" href="dist/PECST637/m2_03_substitution_cryptanalysis.html"><span>2.3 Substitution Cryptanalysis</span></a>
+          <a class="topic-btn" href="dist/PECST637/m2_04_transposition_feistel.html"><span>2.4 Transposition Feistel</span></a>
+          <a class="topic-btn" href="dist/PECST637/m2_05_m2_mixed_drill.html"><span>2.5 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Modern Ciphers &amp; RSA</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST637/m3_01_des_structure_strength.html"><span>3.1 DES Structure Strength</span></a>
+          <a class="topic-btn" href="dist/PECST637/m3_02_aes_structure_modes.html"><span>3.2 AES Structure Modes</span></a>
+          <a class="topic-btn" href="dist/PECST637/m3_03_stream_rc4.html"><span>3.3 Stream Rc4</span></a>
+          <a class="topic-btn" href="dist/PECST637/m3_04_publickey_principles.html"><span>3.4 Publickey Principles</span></a>
+          <a class="topic-btn" href="dist/PECST637/m3_05_rsa_keygen_decrypt.html"><span>3.5 RSA Keygen Decrypt</span></a>
+          <a class="topic-btn" href="dist/PECST637/m3_06_diffie_hellman_mitm.html"><span>3.6 Diffie Hellman Mitm</span></a>
+          <a class="topic-btn" href="dist/PECST637/m3_07_m3_mixed_drill.html"><span>3.7 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Hashes, Signatures &amp; PKI</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST637/m4_01_hash_md5_sha.html"><span>4.1 Hash MD5 SHA</span></a>
+          <a class="topic-btn" href="dist/PECST637/m4_02_sha3_hmac.html"><span>4.2 Sha3 Hmac</span></a>
+          <a class="topic-btn" href="dist/PECST637/m4_03_digital_signatures.html"><span>4.3 Digital Signatures</span></a>
+          <a class="topic-btn" href="dist/PECST637/m4_04_key_mgmt_pki.html"><span>4.4 Key Mgmt PKI</span></a>
+          <a class="topic-btn" href="dist/PECST637/m4_05_protocol_drill.html"><span>4.5 Protocol Drill</span></a>
+          <a class="topic-btn" href="dist/PECST637/m4_06_m4_mixed_drill.html"><span>4.6 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="PECST631" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Software Testing</div>
+        <div class="subject-detail-sub">PECST631 · 26 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Testing Foundations &amp; Automation</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST631/m1_01_concepts_quality_failures.html"><span>1.1 Concepts Quality Failures</span></a>
+          <a class="topic-btn" href="dist/PECST631/m1_02_processes_terminology.html"><span>1.2 Processes Terminology</span></a>
+          <a class="topic-btn" href="dist/PECST631/m1_03_test_types_pyramid.html"><span>1.3 Test Types Pyramid</span></a>
+          <a class="topic-btn" href="dist/PECST631/m1_04_box_methods.html"><span>1.4 Box Methods</span></a>
+          <a class="topic-btn" href="dist/PECST631/m1_05_automation_ai_trends.html"><span>1.5 Automation AI Trends</span></a>
+          <a class="topic-btn" href="dist/PECST631/m1_06_m1_mixed_drill.html"><span>1.6 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Unit &amp; Mutation Testing</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST631/m2_01_unit_static_dynamic_control.html"><span>2.1 Unit Static Dynamic Control</span></a>
+          <a class="topic-btn" href="dist/PECST631/m2_02_dataflow_domain.html"><span>2.2 Dataflow Domain</span></a>
+          <a class="topic-btn" href="dist/PECST631/m2_03_mutation_operators_score.html"><span>2.3 Mutation Operators Score</span></a>
+          <a class="topic-btn" href="dist/PECST631/m2_04_junit_automation.html"><span>2.4 JUNIT Automation</span></a>
+          <a class="topic-btn" href="dist/PECST631/m2_05_ai_testing_tools.html"><span>2.5 AI Testing Tools</span></a>
+          <a class="topic-btn" href="dist/PECST631/m2_06_m2_mixed_drill.html"><span>2.6 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>White-Box &amp; Security Testing</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST631/m3_01_graph_coverage_prime_paths.html"><span>3.1 Graph Coverage Prime Paths</span></a>
+          <a class="topic-btn" href="dist/PECST631/m3_02_dataflow_subsumption.html"><span>3.2 Dataflow Subsumption</span></a>
+          <a class="topic-btn" href="dist/PECST631/m3_03_cfg_loops_exceptions.html"><span>3.3 CFG Loops Exceptions</span></a>
+          <a class="topic-btn" href="dist/PECST631/m3_04_design_call_inheritance.html"><span>3.4 Design Call Inheritance</span></a>
+          <a class="topic-btn" href="dist/PECST631/m3_05_security_owasp_burp.html"><span>3.5 Security OWASP Burp</span></a>
+          <a class="topic-btn" href="dist/PECST631/m3_06_coverage_numerics_drill.html"><span>3.6 Coverage Numerics Drill</span></a>
+          <a class="topic-btn" href="dist/PECST631/m3_07_m3_mixed_drill.html"><span>3.7 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Black-Box, Grey-Box &amp; PEX</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/PECST631/m4_01_isp_ecp_bva.html"><span>4.1 Isp ECP BVA</span></a>
+          <a class="topic-btn" href="dist/PECST631/m4_02_decision_random_domain.html"><span>4.2 Decision Random Domain</span></a>
+          <a class="topic-btn" href="dist/PECST631/m4_03_grey_matrix_regression_oa.html"><span>4.3 Grey Matrix Regression Oa</span></a>
+          <a class="topic-btn" href="dist/PECST631/m4_04_performance_responsive.html"><span>4.4 Performance Responsive</span></a>
+          <a class="topic-btn" href="dist/PECST631/m4_05_pex_symbolic_put.html"><span>4.5 PEX Symbolic Put</span></a>
+          <a class="topic-btn" href="dist/PECST631/m4_06_genai_advanced_case.html"><span>4.6 GENAI Advanced Case</span></a>
+          <a class="topic-btn" href="dist/PECST631/m4_07_m4_mixed_drill.html"><span>4.7 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="GXEST605" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Design Thinking and Product Development</div>
+        <div class="subject-detail-sub">GXEST605 · 24 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>Fundamentals &amp; Self-Check</span><span class="module-count">5 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST605/m1_01_lifecycle_dt_defined.html"><span>1.1 Lifecycle Dt Defined</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m1_02_social_hcd_inclusion.html"><span>1.2 Social HCD Inclusion</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m1_03_sustainability_trl.html"><span>1.3 Sustainability TRL</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m1_04_idea_self_check.html"><span>1.4 Idea Self Check</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m1_05_m1_mixed_drill.html"><span>1.5 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Empathize &amp; Define</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST605/m2_01_phases_empathy_role.html"><span>2.1 Phases Empathy Role</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m2_02_why_wh_maps.html"><span>2.2 Why Wh Maps</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m2_03_journey_personas.html"><span>2.3 Journey Personas</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m2_04_define_story_items_success.html"><span>2.4 Define Story Items Success</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m2_05_workshop_drill.html"><span>2.5 Workshop Drill</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m2_06_m2_mixed_drill.html"><span>2.6 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Ideate &amp; PoC</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST605/m3_01_ideation_tools.html"><span>3.1 Ideation Tools</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m3_02_research_trends.html"><span>3.2 Research Trends</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m3_03_feasibility_sessions.html"><span>3.3 Feasibility Sessions</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m3_04_poc_objectives_validation.html"><span>3.4 POC Objectives Validation</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m3_05_ideation_workshop_drill.html"><span>3.5 Ideation Workshop Drill</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m3_06_m3_mixed_drill.html"><span>3.6 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Design, Prototype &amp; Pilot</span><span class="module-count">7 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/GXEST605/m4_01_detailed_design_srd_dfmea.html"><span>4.1 Detailed Design SRD DFMEA</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m4_02_standards_code_future.html"><span>4.2 Standards Code Future</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m4_03_prototyping_alpha_beta.html"><span>4.3 Prototyping Alpha Beta</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m4_04_pilot_scaling.html"><span>4.4 Pilot Scaling</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m4_05_bmc_production_visit.html"><span>4.5 BMC Production Visit</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m4_06_usability_testing_iteration.html"><span>4.6 Usability Testing Iteration</span></a>
+          <a class="topic-btn" href="dist/GXEST605/m4_07_drill_journal_guide.html"><span>4.7 Drill Journal Guide</span></a>
+        </div>
+      </details>
+    </div>
+    <div class="subject-block" data-subject="OECST614" hidden>
+      <div class="subject-detail-head">
+        <div class="subject-detail-title">Machine Learning for Engineers</div>
+        <div class="subject-detail-sub">OECST614 · 24 topics · 4 modules</div>
+      </div>
+      <details class="module-drop" open>
+        <summary><span class="module-tag">Module 1</span><span>ML Basics &amp; Regression</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/OECST614/m1_01_ml_vs_traditional_paradigms.html"><span>1.1 ML Vs Traditional Paradigms</span></a>
+          <a class="topic-btn" href="dist/OECST614/m1_02_mle_map_bayesian_estimation.html"><span>1.2 MLE MAP Bayesian Estimation</span></a>
+          <a class="topic-btn" href="dist/OECST614/m1_03_features_problem_loss_optimization.html"><span>1.3 Features Problem Loss Optimization</span></a>
+          <a class="topic-btn" href="dist/OECST614/m1_04_linear_regression_single_variable.html"><span>1.4 Linear Regression Single Variable</span></a>
+          <a class="topic-btn" href="dist/OECST614/m1_05_multivariate_gradient_matrix_method.html"><span>1.5 Multivariate Gradient Matrix Method</span></a>
+          <a class="topic-btn" href="dist/OECST614/m1_06_m1_mixed_drill.html"><span>1.6 M1 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 2</span><span>Classification &amp; Evaluation</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/OECST614/m2_01_naive_bayes_classifier.html"><span>2.1 Naive Bayes Classifier</span></a>
+          <a class="topic-btn" href="dist/OECST614/m2_02_knn_lazy_learning.html"><span>2.2 KNN Lazy Learning</span></a>
+          <a class="topic-btn" href="dist/OECST614/m2_03_overfitting_lasso_ridge.html"><span>2.3 Overfitting LASSO RIDGE</span></a>
+          <a class="topic-btn" href="dist/OECST614/m2_04_train_test_validation_splits.html"><span>2.4 Train Test Validation Splits</span></a>
+          <a class="topic-btn" href="dist/OECST614/m2_05_classification_regression_metrics.html"><span>2.5 Classification Regression Metrics</span></a>
+          <a class="topic-btn" href="dist/OECST614/m2_06_m2_mixed_drill.html"><span>2.6 M2 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 3</span><span>Neural Nets &amp; Trees</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/OECST614/m3_01_perceptron_learning.html"><span>3.1 Perceptron Learning</span></a>
+          <a class="topic-btn" href="dist/OECST614/m3_02_mlp_activations_forward.html"><span>3.2 MLP Activations Forward</span></a>
+          <a class="topic-btn" href="dist/OECST614/m3_03_backpropagation_algorithm.html"><span>3.3 Backpropagation Algorithm</span></a>
+          <a class="topic-btn" href="dist/OECST614/m3_04_decision_trees_info_gain_ratio.html"><span>3.4 Decision Trees Info Gain Ratio</span></a>
+          <a class="topic-btn" href="dist/OECST614/m3_05_id3_algorithm_worked.html"><span>3.5 ID3 Algorithm Worked</span></a>
+          <a class="topic-btn" href="dist/OECST614/m3_06_m3_mixed_drill.html"><span>3.6 M3 Mixed Drill</span></a>
+        </div>
+      </details>
+      <details class="module-drop">
+        <summary><span class="module-tag">Module 4</span><span>Clustering &amp; Ensembles</span><span class="module-count">6 topics</span></summary>
+        <div class="topic-links">
+          <a class="topic-btn" href="dist/OECST614/m4_01_similarity_hierarchical_clustering.html"><span>4.1 Similarity Hierarchical Clustering</span></a>
+          <a class="topic-btn" href="dist/OECST614/m4_02_kmeans_partitional_clustering.html"><span>4.2 Kmeans Partitional Clustering</span></a>
+          <a class="topic-btn" href="dist/OECST614/m4_03_pca_dimensionality_reduction.html"><span>4.3 PCA Dimensionality Reduction</span></a>
+          <a class="topic-btn" href="dist/OECST614/m4_04_mds_ensemble_bagging_boosting.html"><span>4.4 MDS Ensemble Bagging Boosting</span></a>
+          <a class="topic-btn" href="dist/OECST614/m4_05_resampling_bias_variance_tradeoff.html"><span>4.5 Resampling Bias Variance Tradeoff</span></a>
+          <a class="topic-btn" href="dist/OECST614/m4_06_m4_mixed_drill.html"><span>4.6 M4 Mixed Drill</span></a>
+        </div>
+      </details>
+    </div>
+<!-- TARANGAM-SUBJECT-DETAILS:END -->
+      </div>
+    </div>
   </div>
 <script>
-  // Dashboard stepped navigation: Years -> Semesters -> Subjects.
+  // Dashboard stepped navigation: Years -> Semesters -> Subjects -> Topics.
   // Progressive enhancement; every card stays in the DOM, so link checks keep passing.
   (function () {
     var KEY = 'tarangam_dash_nav';
-    var state = { view: 'years', year: null, sem: null };
+    var state = { view: 'years', year: null, sem: null, subject: null };
     try {
       var saved = JSON.parse(localStorage.getItem(KEY) || '{}');
       if (saved.view) state.view = saved.view;
       if (saved.year) state.year = saved.year;
       if (saved.sem) state.sem = saved.sem;
+      if (saved.subject) state.subject = saved.subject;
     } catch (e) { /* private mode: defaults */ }
 
     var yearNames = { y1: '1st Year', y2: '2nd Year', y3: '3rd Year', y4: '4th Year' };
@@ -1005,21 +1645,36 @@
 
     function $(id) { return document.getElementById(id); }
 
+    // A subject is selectable only when its button lives in the chosen year+semester.
+    function subjectVisible(code) {
+      if (!code) return false;
+      var btn = document.querySelector('[data-go-subject="' + code + '"]');
+      if (!btn) return false;
+      var yb = btn.closest('.year-block');
+      var sb = btn.closest('.sem-block');
+      return !!yb && !!sb &&
+        yb.getAttribute('data-year') === state.year &&
+        sb.getAttribute('data-sem') === state.sem;
+    }
+
     function apply() {
       // Validate (guards stale saved values from older nav shapes).
       if (validYears.indexOf(state.year) === -1) { state.year = null; state.view = 'years'; }
       var sems = state.year ? validSems[state.year] : [];
       if (sems.indexOf(state.sem) === -1) {
         state.sem = null;
-        if (state.view === 'subs') state.view = 'sems';
+        if (state.view === 'subs' || state.view === 'topics') state.view = 'sems';
       }
-      if (state.view !== 'years' && state.view !== 'sems' && state.view !== 'subs') state.view = 'years';
+      if (state.view !== 'years' && state.view !== 'sems' && state.view !== 'subs' && state.view !== 'topics') state.view = 'years';
       if (state.view !== 'years' && !state.year) state.view = 'years';
-      if (state.view === 'subs' && !state.sem) state.view = 'sems';
+      if ((state.view === 'subs' || state.view === 'topics') && !state.sem) state.view = 'sems';
+      if (state.view === 'topics' && !subjectVisible(state.subject)) { state.subject = null; state.view = 'subs'; }
+      if (state.view !== 'topics') state.subject = null;
 
       $('view-years').hidden = state.view !== 'years';
       $('view-semesters').hidden = state.view !== 'sems';
       $('view-subjects').hidden = state.view !== 'subs';
+      $('view-topics').hidden = state.view !== 'topics';
 
       // Semester pick cards: only this year's group.
       document.querySelectorAll('[data-sem-pick]').forEach(function (g) {
@@ -1037,33 +1692,50 @@
         }
       });
 
+      // Subject detail: only the chosen subject's block.
+      document.querySelectorAll('#subject-detail .subject-block').forEach(function (b) {
+        b.hidden = b.getAttribute('data-subject') !== state.subject;
+      });
+
       // Breadcrumbs.
       var cy = $('crumbYear'); if (cy) cy.textContent = yearNames[state.year] || 'Year';
       var cyb = $('crumbYearBtn'); if (cyb) cyb.textContent = '← ' + (yearNames[state.year] || 'Year');
       var cs = $('crumbSem'); if (cs) cs.textContent = semNames[state.sem] || 'Semester';
+      var cyb2 = $('crumbYearBtn2'); if (cyb2) cyb2.textContent = '← ' + (yearNames[state.year] || 'Year');
+      var csb = $('crumbSemBtn'); if (csb) csb.textContent = '← ' + (semNames[state.sem] || 'Semester');
+      var csub = $('crumbSub');
+      if (csub) {
+        var sbtn = state.subject ? document.querySelector('[data-go-subject="' + state.subject + '"]') : null;
+        csub.textContent = (sbtn && sbtn.getAttribute('data-subject-name')) || state.subject || 'Subject';
+      }
 
       try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
     }
 
-    function go(view, year, sem) {
+    function go(view, year, sem, subject) {
       if (year !== undefined) state.year = year;
       if (sem !== undefined) state.sem = sem;
+      if (subject !== undefined) state.subject = subject;
       state.view = view;
       apply();
       window.scrollTo(0, 0);
     }
 
     document.querySelectorAll('[data-go-year]').forEach(function (b) {
-      b.addEventListener('click', function () { go('sems', b.getAttribute('data-go-year'), null); });
+      b.addEventListener('click', function () { go('sems', b.getAttribute('data-go-year'), null, null); });
     });
     document.querySelectorAll('[data-go-sem]').forEach(function (b) {
-      b.addEventListener('click', function () { go('subs', undefined, b.getAttribute('data-go-sem')); });
+      b.addEventListener('click', function () { go('subs', undefined, b.getAttribute('data-go-sem'), null); });
+    });
+    document.querySelectorAll('[data-go-subject]').forEach(function (b) {
+      b.addEventListener('click', function () { go('topics', undefined, undefined, b.getAttribute('data-go-subject')); });
     });
     document.querySelectorAll('[data-nav]').forEach(function (b) {
       b.addEventListener('click', function () {
         var dest = b.getAttribute('data-nav');
-        if (dest === 'years') go('years', null, null);
-        else if (dest === 'semesters') go('sems');
+        if (dest === 'years') go('years', null, null, null);
+        else if (dest === 'semesters') go('sems', undefined, undefined, null);
+        else if (dest === 'subjects') go('subs', undefined, undefined, null);
       });
     });
 
