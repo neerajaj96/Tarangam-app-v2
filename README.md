@@ -22,10 +22,10 @@ content/<COURSE>/m{mod}_{seq}_{slug}.md
   seq 99 = practice lab (optional, one per module, sorts last)
 ```
 
-Current truth (2026-09-17) — full syllabus complete, 382 topics:
+Current truth (2026-09-18) — full syllabus complete, 414 topics:
 - `PCCST501` Computer Networks: M1–M4 complete (24 topics)
 - `PCCST502` DAA: M1–M4 complete (29 topics, incl. `m1_00` overview + `m1_99` lab)
-- `PECST522` AI: M1–M4 complete (22 topics, incl. `m1_99` lab)
+- `PECST522` AI: M1–M4 complete (30 topics, incl. `m1_99` lab; M2 now covers greedy, A*, generate-and-test, CSP/AC-3, minimax, alpha-beta)
 - `PCCST503` Machine Learning: M1–M4 complete (22 topics)
 - `GZPHT121` Physics for Physical Science and Life Science (S1/S2, Groups C & D): M1–M4 theory complete (26 topics, no lab)
 - `GAMAT301` Mathematics for Information Science-3 (S3, Group A): M1–M4 complete (24 topics, no lab)
@@ -38,6 +38,7 @@ Current truth (2026-09-17) — full syllabus complete, 382 topics:
 - `PECST637` Fundamentals of Cryptography (S6 elective): M1–M4 theory complete (25 topics, no lab, 3 animated SVG scenes)
 - `PECST631` Software Testing (S6 elective): M1–M4 theory complete (26 topics, no lab, 3 animated SVG scenes)
 - `GXEST605` Design Thinking and Product Development (S6): M1–M4 complete (23 topics, no lab, 3 animated SVG scenes)
+- `OECST614` Machine Learning for Engineers (S6 OE-1 elective): M1–M4 theory complete (24 topics, no lab, 3 new animated SVG scenes + 1 reused)
 - Dashboard `index.html`: every card unlocked, zero `TODO content/…` remaining
 - All 8 `assets/videos/*.mp4` wired into topics via `::: manim` (0 orphan warnings)
 - `npm run check`: 0 errors, 0 warnings (was: 8 orphan-video warnings at peak)
@@ -46,7 +47,7 @@ Current truth (2026-09-17) — full syllabus complete, 382 topics:
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic (382 `.md` files: 15 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Topic-by-topic breakdown** — Module → smallest topic (414 `.md` files: 16 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
 - **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
 - **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
 - **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).

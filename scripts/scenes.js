@@ -568,6 +568,86 @@ ${defs}
 <g class="stagebox a5"><rect x="500" y="60" width="110" height="60" rx="8"/><text x="555" y="84">PROD</text><text x="555" y="102" class="sub">sustain?</text></g>
 <text class="animnote a5" x="320" y="272" text-anchor="middle">fidelity and cost climb together — kill cheap ideas at the bottom</text>
 </svg>`
+  },
+
+  'gradient-descent': {
+    title: 'Gradient Descent: Downhill Steps to the Minimum',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated gradient descent: a ball takes shrinking steps down a cost bowl to the minimum">
+${defs}
+<line class="axis" x1="80" y1="40" x2="80" y2="260"/><line class="axis" x1="80" y1="260" x2="600" y2="260"/>
+<text class="axislbl" x="45" y="150">J</text><text class="axislbl" x="340" y="285">w →</text>
+<path class="eg" d="M100,80 Q320,100 340,230 Q360,100 560,90" style="fill:none"/>
+<g class="nd a1"><circle cx="160" cy="105" r="10"/><text x="160" y="80">α big</text></g>
+<g class="nd a2"><circle cx="250" cy="140" r="10"/><text x="250" y="115">step</text></g>
+<g class="nd a3"><circle cx="310" cy="200" r="10"/><text x="310" y="175">step</text></g>
+<g class="nd a4"><circle cx="340" cy="230" r="12"/><text x="340" y="258">min ✓</text></g>
+<text class="animnote a5" x="340" y="35" text-anchor="middle">big steps rush, small steps crawl — overshoot vs creep is the rate bargain</text>
+</svg>`
+  },
+
+  'roc-tradeoff': {
+    title: 'ROC Curve: TPR vs FPR Tradeoff',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated ROC: curve climbs above the diagonal, higher AUC means better ranking">
+${defs}
+<line class="axis" x1="100" y1="30" x2="100" y2="250"/><line class="axis" x1="100" y1="250" x2="540" y2="250"/>
+<text class="axislbl" x="40" y="140">TPR</text><text class="axislbl" x="320" y="278">FPR →</text>
+<line class="eg" x1="100" y1="250" x2="540" y2="30"/>
+<path class="eg a2" d="M100,250 Q200,120 300,90 Q420,60 540,40" style="fill:none"/>
+<g class="nd a1"><circle cx="100" cy="250" r="10"/><text x="100" y="272">0,0</text></g>
+<g class="nd a3"><circle cx="300" cy="90" r="10"/><text x="300" y="70">knee</text></g>
+<g class="nd a4"><circle cx="540" cy="40" r="10"/><text x="540" y="62">1,1</text></g>
+<text class="badge1 a3" x="430" y="150">AUC = area above diagonal</text>
+<text class="animnote a5" x="320" y="15" text-anchor="middle">threshold slides along the curve — recall bought with false alarms</text>
+</svg>`
+  },
+
+  'kmeans-loop': {
+    title: 'K-Means: Assign, Move, Repeat',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated k-means: points assigned to nearest centroid, centroids move to means, repeat">
+${defs}
+<text class="animcap a1" x="160" y="30" text-anchor="middle">ASSIGN · nearest wins</text>
+${node(120, 110, '●', 'a1')}${node(180, 140, '●', 'a1')}${node(450, 110, '▲', 'a1')}${node(510, 140, '▲', 'a1')}
+<text class="bigarrow a2" x="320" y="150" text-anchor="middle">assign ⟷ update</text>
+<text class="animcap a3" x="480" y="30" text-anchor="middle">UPDATE · mean moves ✚</text>
+${node(150, 220, '✚', 'a3')}${node(480, 220, '✚', 'a3')}
+<text class="animnote a4" x="320" y="282" text-anchor="middle">labels fix → centres move → labels re-fix until nobody switches</text>
+</svg>`
+  },
+
+  'minimax-backup': {
+    title: 'Minimax Backup: MIN Floors, MAX Picks',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated minimax: MIN nodes take the smallest leaf below them, MAX root takes the largest">
+${defs}
+${node(320, 60, 'MAX', 'a1')}
+${node(170, 160, 'MIN', 'a2')}${node(470, 160, 'MIN', 'a2')}
+${edge(320, 60, 170, 160, 'a1')}${edge(320, 60, 470, 160, 'a1')}
+${node(100, 250, '3', 'a3')}${node(170, 250, '12', 'a3')}${node(240, 250, '8', 'a3')}
+${node(400, 250, '2', 'a4')}${node(470, 250, '4', 'a4')}${node(540, 250, '6', 'a4')}
+${edge(170, 160, 100, 250, 'a3')}${edge(170, 160, 170, 250, 'a3')}${edge(170, 160, 240, 250, 'a3')}
+${edge(470, 160, 400, 250, 'a4')}${edge(470, 160, 470, 250, 'a4')}${edge(470, 160, 540, 250, 'a4')}
+<text class="badge1 a3" x="170" y="205">min → 3</text>
+<text class="badge1 a4" x="470" y="205">min → 2</text>
+<text class="crcres a5" x="320" y="292" text-anchor="middle">root = max(3, 2) = 3 · move left</text>
+</svg>`
+  },
+
+  'alphabeta-cut': {
+    title: 'Alpha-Beta Cutoff: Bounds That Prune',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated alpha-beta: after the left branch returns 3, the right branch is abandoned once it proves worse">
+${defs}
+${node(320, 60, 'MAX', 'a1')}
+${node(170, 160, 'MIN', 'a2')}${node(470, 160, 'MIN', 'a2')}
+${edge(320, 60, 170, 160, 'a1')}${edge(320, 60, 470, 160, 'a1')}
+${node(100, 250, '3', 'a3')}${node(170, 250, '12', 'a3')}${node(240, 250, '8', 'a3')}
+${node(400, 250, '2', 'a4')}
+<g class="cell cand a5"><rect x="448" y="228" width="44" height="44" rx="8"/><text x="470" y="256">?</text></g>
+<g class="cell cand a5"><rect x="518" y="228" width="44" height="44" rx="8"/><text x="540" y="256">?</text></g>
+${edge(170, 160, 100, 250, 'a3')}${edge(170, 160, 170, 250, 'a3')}${edge(170, 160, 240, 250, 'a3')}
+${edge(470, 160, 400, 250, 'a4')}
+<text class="badge1 a3" x="170" y="205">α = 3 set</text>
+<text class="badge1 a4" x="470" y="205">2 ≤ α ✂ cut!</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">4 leaves evaluated, 2 never born — same move, less work</text>
+</svg>`
   }
 };
 
