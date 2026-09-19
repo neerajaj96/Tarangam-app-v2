@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/neerajaj96/Tarangam-app-v2/blob/main/data/topic-schema.json",
+  "title": "Tarangam Topic Metadata",
+  "description": "Canonical metadata schema for one Tarangam study topic. Foundation only: existing Markdown topics are NOT required to carry this metadata yet (see data/topic-metadata.example.json for a valid example). Field shapes mirror the current build conventions: id matches the Markdown filename without extension (m{module}_{sequence}_{slug}), courseCode matches a data/curriculum.json course key and a content/<COURSE>/ directory, module/sequence match the filename convention (00 = module overview, 99 = practice lab).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "courseCode",
+    "module",
+    "sequence",
+    "title",
+    "difficulty",
+    "estimatedMinutes",
+    "learningObjectives",
+    "concepts",
+    "prerequisites",
+    "examRelevance",
+    "tags"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Topic id = Markdown filename without .md (e.g. m1_01_random_variables_pmf_cdf).",
+      "pattern": "^m[0-9]+_[0-9]+_[a-z0-9_]+$"
+    },
+    "courseCode": {
+      "type": "string",
+      "description": "Course key as listed in data/curriculum.json and content/ (e.g. GAMAT301).",
+      "pattern": "^[A-Z]{2,}[0-9]+$"
+    },
+    "module": {
+      "type": "integer",
+      "description": "Module number from the filename (m{module}_...). Current courses use 1-4.",
+      "minimum": 1,
+      "maximum": 8
+    },
+    "sequence": {
+      "type": "integer",
+      "description": "Topic sequence within the module from the filename (m{module}_{sequence}_...). 0 = module overview, 99 = practice lab.",
+      "minimum": 0,
+      "maximum": 99
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable topic title as rendered on the page.",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "difficulty": {
+      "type": "string",
+      "description": "Author-assessed difficulty of the topic.",
+      "enum": ["beginner", "intermediate", "advanced"]
+    },
+    "estimatedMinutes": {
+      "type": "integer",
+      "description": "Estimated reading time in minutes (build currently derives ~words/180; this field is the future canonical source).",
+      "minimum": 1,
+      "maximum": 180
+    },
+    "learningObjectives": {
+      "type": "array",
+      "description": "What the learner will be able to do after this topic. At least one objective.",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "concepts": {
+      "type": "array",
+      "description": "Key concepts/tags for future search and concept mapping. May be empty.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Ids of prerequisite topics (same id format). Empty when the topic stands alone. Prerequisites are NOT yet attached to actual topics.",
+      "items": { "type": "string", "pattern": "^m[0-9]+_[0-9]+_[a-z0-9_]+$" }
+    },
+    "examRelevance": {
+      "type": "string",
+      "description": "Author-assessed KTU exam weight of the topic.",
+      "enum": ["low", "medium", "high"]
+    },
+    "tags": {
+      "type": "array",
+      "description": "Free-form slug tags for future filtering. May be empty.",
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" }
+    }
+  }
+}
