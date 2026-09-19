@@ -25,6 +25,11 @@ import {
   collectTopicMetadataCoverage,
   formatCoverageSummary,
 } from './topic-metadata.js';
+import {
+  buildTopicGraph,
+  analyzeTopicGraph,
+  formatGraphReport,
+} from './topic-graph.js';
 
 const errors = [];
 const warnings = [];
@@ -326,6 +331,28 @@ if (fs.existsSync('dist')) {
       for (const e of item.errors) fail(e);
     }
     console.log(formatCoverageSummary(coverage));
+  }
+}
+
+// 7. Topic knowledge-graph integrity (scripts/topic-graph.js): missing,
+// self, and circular prerequisites fail; cross-course, later-sequence,
+// and orphan findings are warnings only. Prints a concise report.
+{
+  let graphSchema = null;
+  try {
+    graphSchema = loadTopicSchema();
+  } catch {
+    graphSchema = null; // section 6 already reports schema load failures
+  }
+  if (graphSchema && curriculumDoc) {
+    const graph = buildTopicGraph({ curriculumDoc, schema: graphSchema });
+    for (const item of graph.metadataErrors) {
+      for (const e of item.errors) fail(e);
+    }
+    const analysis = analyzeTopicGraph(graph);
+    for (const e of analysis.errors) fail(`topic-graph: ${e}`);
+    for (const w of analysis.warnings) warn(`topic-graph: ${w}`);
+    for (const line of formatGraphReport(analysis)) console.log(line);
   }
 }
 
