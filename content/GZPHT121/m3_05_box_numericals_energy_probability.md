@@ -1,3 +1,25 @@
+---
+id: m3_05_box_numericals_energy_probability
+courseCode: GZPHT121
+module: 3
+sequence: 5
+title: 'Box Numericals: Energy, Wavelength & Probability'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Compute level gaps, transition photons and de Broglie checks
+  - Evaluate probability slices from the squared eigenstates
+  - Answer box-size and mass scaling questions in one line
+concepts:
+  - box energy levels
+  - probability density
+prerequisites:
+  - m3_04_particle_in_box_derivation
+examRelevance: high
+tags:
+  - quantum-mechanics
+  - particle-in-box
+---
 # Box Numericals: Energy, Wavelength & Probability
 
 **Every computational variation — level gaps, photon jumps, de Broglie check, probability slices, and box-size scaling.**

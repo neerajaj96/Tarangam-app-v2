@@ -1,3 +1,25 @@
+---
+id: m3_03_wavefunction_schrodinger_equations
+courseCode: GZPHT121
+module: 3
+sequence: 3
+title: Wavefunction & Schrödinger Equations
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Interpret the wavefunction through Born probability with its validity conditions
+  - Write the time-dependent Schrödinger equation for a given potential
+  - Reduce stationary states to the time-independent equation
+concepts:
+  - Born interpretation
+  - time-dependent equation
+  - time-independent equation
+prerequisites: []
+examRelevance: medium
+tags:
+  - quantum-mechanics
+  - schrodinger-equation
+---
 # Wavefunction & Schrödinger Equations
 
 **What $\Psi$ means, what it must obey, and the time-dependent vs time-independent equations KTU asks to "formulate".**

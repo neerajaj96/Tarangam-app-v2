@@ -1,3 +1,25 @@
+---
+id: m1_04_optical_fibre_types_propagation
+courseCode: GZPHT121
+module: 1
+sequence: 4
+title: 'Optical Fibre: Propagation, Structure and Types'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Explain light guiding by total internal reflection with core and cladding roles
+  - Classify fibres across the step/graded and single/multimode matrix
+  - Contrast single, multimode and graded fibres for exam comparisons
+concepts:
+  - total internal reflection
+  - step-index fibre
+  - graded-index fibre
+prerequisites: []
+examRelevance: medium
+tags:
+  - fibre-optics
+  - waveguiding
+---
 # Optical Fibre: Propagation, Structure and Types
 
 **Total internal reflection guiding light for kilometres — core, cladding, and the four-way type matrix KTU loves.**

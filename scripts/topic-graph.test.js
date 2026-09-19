@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 88 metadata-bearing', () => {
+  it('discovers all 432 topics with 114 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 88);
+    assert.equal(analysis.coverage.metadata, 114);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -175,7 +175,8 @@ describe('live repo graph', () => {
     const kinds = new Map(built.edges.map((e) => [`${e.from} -> ${e.to}`, e.kind]));
     assert.equal(kinds.get('GAMAT301/m1_06_expectation_functions_m1_drill -> GAMAT301/m1_05_joint_pmf_marginals_independence'), 'internal');
     assert.equal(kinds.get('PCCST501/m1_08_peer_to_peer_bittorrent -> PCCST501/m1_04_world_wide_web_and_http'), 'internal');
-    assert.equal(analysis.edgeCount, 108);
+    assert.equal(kinds.get('GZPHT121/m2_04_newtons_rings_liquid_air_wedge_thickness -> GZPHT121/m2_03_newtons_rings_wavelength'), 'internal');
+    assert.equal(analysis.edgeCount, 139);
   });
 
   it('computes chain depths', () => {
@@ -183,6 +184,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('GAMAT301/m1_06_expectation_functions_m1_drill').depth, 2);
     assert.equal(built.nodes.get('PCCST501/m1_07_domain_name_system_dns').depth, 5);
     assert.equal(built.nodes.get('GXEST104/m2_09_m2_mixed_drill').depth, 8);
+    assert.equal(built.nodes.get('GZPHT121/m2_07_module2_mixed_numerical_drill').depth, 4);
     assert.equal(analysis.maxDepth, 8);
   });
 

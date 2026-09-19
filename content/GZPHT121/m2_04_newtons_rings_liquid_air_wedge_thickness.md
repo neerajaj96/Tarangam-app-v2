@@ -1,3 +1,26 @@
+---
+id: m2_04_newtons_rings_liquid_air_wedge_thickness
+courseCode: GZPHT121
+module: 2
+sequence: 4
+title: Newton's Rings in Liquid & Air-Wedge Thickness
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Find a liquid's refractive index from ring shrinkage ratios
+  - Measure wire and sheet thickness from air-wedge fringe counts
+  - Convert one fringe shift into half-wavelength thickness change
+concepts:
+  - liquid refractive index
+  - air-wedge thickness
+prerequisites:
+  - m2_02_thin_films_colours_wedge_fringes
+  - m2_03_newtons_rings_wavelength
+examRelevance: high
+tags:
+  - interference
+  - newtons-rings
+---
 # Newton's Rings in Liquid & Air-Wedge Thickness
 
 **Two high-yield variations: refractive index of a liquid from ring shrinkage, and wire/thin-sheet thickness from wedge fringes.**

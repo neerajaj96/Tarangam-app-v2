@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **88**
-- Pending: **344**
-- Coverage: **20.37%** (tracked by `npm run check`)
+- Migrated: **114**
+- Pending: **318**
+- Coverage: **26.39%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,14 +19,15 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - GZPHT121 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GXEST104 — Module 1 in progress (33 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   2. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   3. PCCST501 — Computer Networks (started — see step 1)
-   4. GZPHT121 — Physics for Physical Science and Life Science
+   1. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   2. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   3. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   4. PCCST501 — Computer Networks (started — see step 1)
    5. PCCST303 — Data Structures and Algorithms
    6. PCCST503 — Machine Learning
    7. PCCST502 — Design and Analysis of Algorithms
@@ -40,6 +41,37 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## GZPHT121 — Physics for Physical Science and Life Science (26/26 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Laser & Fibre Optics | 01 | `m1_01_optical_processes_absorption_spontaneous_stimulated.md` | `m1_01_optical_processes_absorption_spontaneous_stimulated` | migrated |
+| M1 Laser & Fibre Optics | 02 | `m1_02_laser_principle_population_inversion_pumping.md` | `m1_02_laser_principle_population_inversion_pumping` | migrated |
+| M1 Laser & Fibre Optics | 03 | `m1_03_ruby_co2_semiconductor_lasers.md` | `m1_03_ruby_co2_semiconductor_lasers` | migrated |
+| M1 Laser & Fibre Optics | 04 | `m1_04_optical_fibre_types_propagation.md` | `m1_04_optical_fibre_types_propagation` | migrated |
+| M1 Laser & Fibre Optics | 05 | `m1_05_numerical_aperture_acceptance_angle_problems.md` | `m1_05_numerical_aperture_acceptance_angle_problems` | migrated |
+| M1 Laser & Fibre Optics | 06 | `m1_06_fibre_communication_block_diagram_drill.md` | `m1_06_fibre_communication_block_diagram_drill` | migrated |
+| M2 Interference & Diffraction | 01 | `m2_01_superposition_path_difference_cosine_law.md` | `m2_01_superposition_path_difference_cosine_law` | migrated |
+| M2 Interference & Diffraction | 02 | `m2_02_thin_films_colours_wedge_fringes.md` | `m2_02_thin_films_colours_wedge_fringes` | migrated |
+| M2 Interference & Diffraction | 03 | `m2_03_newtons_rings_wavelength.md` | `m2_03_newtons_rings_wavelength` | migrated |
+| M2 Interference & Diffraction | 04 | `m2_04_newtons_rings_liquid_air_wedge_thickness.md` | `m2_04_newtons_rings_liquid_air_wedge_thickness` | migrated |
+| M2 Interference & Diffraction | 05 | `m2_05_single_slit_diffraction_width.md` | `m2_05_single_slit_diffraction_width` | migrated |
+| M2 Interference & Diffraction | 06 | `m2_06_diffraction_grating_equation_powers.md` | `m2_06_diffraction_grating_equation_powers` | migrated |
+| M2 Interference & Diffraction | 07 | `m2_07_module2_mixed_numerical_drill.md` | `m2_07_module2_mixed_numerical_drill` | migrated |
+| M3 Quantum Mechanics | 01 | `m3_01_uncertainty_principle_conjugate_observables.md` | `m3_01_uncertainty_principle_conjugate_observables` | migrated |
+| M3 Quantum Mechanics | 02 | `m3_02_uncertainty_applications_nucleus_broadening.md` | `m3_02_uncertainty_applications_nucleus_broadening` | migrated |
+| M3 Quantum Mechanics | 03 | `m3_03_wavefunction_schrodinger_equations.md` | `m3_03_wavefunction_schrodinger_equations` | migrated |
+| M3 Quantum Mechanics | 04 | `m3_04_particle_in_box_derivation.md` | `m3_04_particle_in_box_derivation` | migrated |
+| M3 Quantum Mechanics | 05 | `m3_05_box_numericals_energy_probability.md` | `m3_05_box_numericals_energy_probability` | migrated |
+| M3 Quantum Mechanics | 06 | `m3_06_quantum_tunnelling_concept_drill.md` | `m3_06_quantum_tunnelling_concept_drill` | migrated |
+| M4 Waves & Acoustics | 01 | `m4_01_wave_types_frequency_wavelength.md` | `m4_01_wave_types_frequency_wavelength` | migrated |
+| M4 Waves & Acoustics | 02 | `m4_02_stretched_string_velocity_laws.md` | `m4_02_stretched_string_velocity_laws` | migrated |
+| M4 Waves & Acoustics | 03 | `m4_03_reverberation_sabine_hall_acoustics.md` | `m4_03_reverberation_sabine_hall_acoustics` | migrated |
+| M4 Waves & Acoustics | 04 | `m4_04_sabine_numerical_drill.md` | `m4_04_sabine_numerical_drill` | migrated |
+| M4 Waves & Acoustics | 05 | `m4_05_ultrasonics_piezoelectric_diffractometer.md` | `m4_05_ultrasonics_piezoelectric_diffractometer` | migrated |
+| M4 Waves & Acoustics | 06 | `m4_06_sonar_ndt_pulse_echo.md` | `m4_06_sonar_ndt_pulse_echo` | migrated |
+| M4 Waves & Acoustics | 07 | `m4_07_medical_ultrasound_revision_drill.md` | `m4_07_medical_ultrasound_revision_drill` | migrated |
 
 ## GXEST104 — Introduction to Electrical and Electronics Engineering (33/33 migrated)
 
@@ -148,37 +180,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## GZPHT121 — Physics for Physical Science and Life Science (0/26 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Laser & Fibre Optics | 01 | `m1_01_optical_processes_absorption_spontaneous_stimulated.md` | `m1_01_optical_processes_absorption_spontaneous_stimulated` | pending |
-| M1 Laser & Fibre Optics | 02 | `m1_02_laser_principle_population_inversion_pumping.md` | `m1_02_laser_principle_population_inversion_pumping` | pending |
-| M1 Laser & Fibre Optics | 03 | `m1_03_ruby_co2_semiconductor_lasers.md` | `m1_03_ruby_co2_semiconductor_lasers` | pending |
-| M1 Laser & Fibre Optics | 04 | `m1_04_optical_fibre_types_propagation.md` | `m1_04_optical_fibre_types_propagation` | pending |
-| M1 Laser & Fibre Optics | 05 | `m1_05_numerical_aperture_acceptance_angle_problems.md` | `m1_05_numerical_aperture_acceptance_angle_problems` | pending |
-| M1 Laser & Fibre Optics | 06 | `m1_06_fibre_communication_block_diagram_drill.md` | `m1_06_fibre_communication_block_diagram_drill` | pending |
-| M2 Interference & Diffraction | 01 | `m2_01_superposition_path_difference_cosine_law.md` | `m2_01_superposition_path_difference_cosine_law` | pending |
-| M2 Interference & Diffraction | 02 | `m2_02_thin_films_colours_wedge_fringes.md` | `m2_02_thin_films_colours_wedge_fringes` | pending |
-| M2 Interference & Diffraction | 03 | `m2_03_newtons_rings_wavelength.md` | `m2_03_newtons_rings_wavelength` | pending |
-| M2 Interference & Diffraction | 04 | `m2_04_newtons_rings_liquid_air_wedge_thickness.md` | `m2_04_newtons_rings_liquid_air_wedge_thickness` | pending |
-| M2 Interference & Diffraction | 05 | `m2_05_single_slit_diffraction_width.md` | `m2_05_single_slit_diffraction_width` | pending |
-| M2 Interference & Diffraction | 06 | `m2_06_diffraction_grating_equation_powers.md` | `m2_06_diffraction_grating_equation_powers` | pending |
-| M2 Interference & Diffraction | 07 | `m2_07_module2_mixed_numerical_drill.md` | `m2_07_module2_mixed_numerical_drill` | pending |
-| M3 Quantum Mechanics | 01 | `m3_01_uncertainty_principle_conjugate_observables.md` | `m3_01_uncertainty_principle_conjugate_observables` | pending |
-| M3 Quantum Mechanics | 02 | `m3_02_uncertainty_applications_nucleus_broadening.md` | `m3_02_uncertainty_applications_nucleus_broadening` | pending |
-| M3 Quantum Mechanics | 03 | `m3_03_wavefunction_schrodinger_equations.md` | `m3_03_wavefunction_schrodinger_equations` | pending |
-| M3 Quantum Mechanics | 04 | `m3_04_particle_in_box_derivation.md` | `m3_04_particle_in_box_derivation` | pending |
-| M3 Quantum Mechanics | 05 | `m3_05_box_numericals_energy_probability.md` | `m3_05_box_numericals_energy_probability` | pending |
-| M3 Quantum Mechanics | 06 | `m3_06_quantum_tunnelling_concept_drill.md` | `m3_06_quantum_tunnelling_concept_drill` | pending |
-| M4 Waves & Acoustics | 01 | `m4_01_wave_types_frequency_wavelength.md` | `m4_01_wave_types_frequency_wavelength` | pending |
-| M4 Waves & Acoustics | 02 | `m4_02_stretched_string_velocity_laws.md` | `m4_02_stretched_string_velocity_laws` | pending |
-| M4 Waves & Acoustics | 03 | `m4_03_reverberation_sabine_hall_acoustics.md` | `m4_03_reverberation_sabine_hall_acoustics` | pending |
-| M4 Waves & Acoustics | 04 | `m4_04_sabine_numerical_drill.md` | `m4_04_sabine_numerical_drill` | pending |
-| M4 Waves & Acoustics | 05 | `m4_05_ultrasonics_piezoelectric_diffractometer.md` | `m4_05_ultrasonics_piezoelectric_diffractometer` | pending |
-| M4 Waves & Acoustics | 06 | `m4_06_sonar_ndt_pulse_echo.md` | `m4_06_sonar_ndt_pulse_echo` | pending |
-| M4 Waves & Acoustics | 07 | `m4_07_medical_ultrasound_revision_drill.md` | `m4_07_medical_ultrasound_revision_drill` | pending |
 
 ## PCCST303 — Data Structures and Algorithms (0/27 migrated)
 

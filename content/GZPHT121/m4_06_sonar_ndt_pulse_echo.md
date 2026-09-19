@@ -1,3 +1,25 @@
+---
+id: m4_06_sonar_ndt_pulse_echo
+courseCode: GZPHT121
+module: 4
+sequence: 6
+title: 'SONAR & NDT Pulse-Echo: Depth and Flaws'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Range sea depth with SONAR using the round-trip halving rule
+  - Detect internal flaws with the pulse-echo NDT signature
+  - Justify ultrasound over audible sound for ranging and testing
+concepts:
+  - SONAR ranging
+  - pulse-echo testing
+prerequisites:
+  - m4_05_ultrasonics_piezoelectric_diffractometer
+examRelevance: medium
+tags:
+  - ultrasonics
+  - sonar-ndt
+---
 # SONAR & NDT Pulse-Echo: Depth and Flaws
 
 **Echo-ranging at sea and inside steel — one equation ($d = vt/2$), two industries, all numerical twists.**

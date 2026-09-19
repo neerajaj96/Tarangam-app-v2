@@ -1,3 +1,24 @@
+---
+id: m2_05_single_slit_diffraction_width
+courseCode: GZPHT121
+module: 2
+sequence: 5
+title: 'Single-Slit Diffraction: Minima and Width'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Locate dark fringes with the single-slit minima condition
+  - Measure slit width from the central-maximum spread
+  - Distinguish Fresnel and Fraunhofer diffraction setups in one line
+concepts:
+  - single-slit diffraction
+  - central maximum
+prerequisites: []
+examRelevance: medium
+tags:
+  - diffraction
+  - single-slit
+---
 # Single-Slit Diffraction: Minima and Width
 
 **Bending around one slit — central maximum, dark-fringe ladder, and slit-width measurement.**

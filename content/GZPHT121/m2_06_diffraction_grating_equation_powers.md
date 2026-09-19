@@ -1,3 +1,26 @@
+---
+id: m2_06_diffraction_grating_equation_powers
+courseCode: GZPHT121
+module: 2
+sequence: 6
+title: 'Diffraction Grating: Equation, Dispersive and Resolving Power'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Apply the grating equation to spectra orders and laser wavelength
+  - Define dispersive and resolving power for qualitative answers
+  - Predict order cutoffs and colour deviation direction in spectra
+concepts:
+  - grating equation
+  - dispersive power
+  - resolving power
+prerequisites:
+  - m2_05_single_slit_diffraction_width
+examRelevance: high
+tags:
+  - diffraction
+  - grating
+---
 # Diffraction Grating: Equation, Dispersive and Resolving Power
 
 **Thousands of slits acting as one — the grating equation, spectra orders, and the two "powers" asked only qualitatively.**

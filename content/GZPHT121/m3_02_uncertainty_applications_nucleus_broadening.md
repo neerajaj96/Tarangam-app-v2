@@ -1,3 +1,25 @@
+---
+id: m3_02_uncertainty_applications_nucleus_broadening
+courseCode: GZPHT121
+module: 3
+sequence: 2
+title: 'Uncertainty Applications: Nucleus & Line Broadening'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Prove electrons cannot reside in the nucleus with confinement numbers
+  - Estimate natural line width from excited-state lifetimes
+  - Reproduce both staple proofs with full numerical steps
+concepts:
+  - nuclear electron exclusion
+  - natural line broadening
+prerequisites:
+  - m3_01_uncertainty_principle_conjugate_observables
+examRelevance: high
+tags:
+  - quantum-mechanics
+  - uncertainty
+---
 # Uncertainty Applications: Nucleus & Line Broadening
 
 **Two KTU-staple proofs — no electron inside the nucleus, and why spectral lines have natural width — with full numbers.**

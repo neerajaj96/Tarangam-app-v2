@@ -1,3 +1,24 @@
+---
+id: m3_01_uncertainty_principle_conjugate_observables
+courseCode: GZPHT121
+module: 3
+sequence: 1
+title: Uncertainty Principle & Conjugate Observables
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - State both uncertainty relations with the reduced Planck constant
+  - Name the conjugate observable pairs with qualitative meaning
+  - Correct the common overstatements of what the principle forbids
+concepts:
+  - uncertainty principle
+  - conjugate observables
+prerequisites: []
+examRelevance: medium
+tags:
+  - quantum-mechanics
+  - uncertainty
+---
 # Uncertainty Principle & Conjugate Observables
 
 **Why position–momentum and energy–time cannot both be sharp — statement, meaning, and conjugate pairs.**

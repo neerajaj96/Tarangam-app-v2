@@ -1,3 +1,26 @@
+---
+id: m1_02_laser_principle_population_inversion_pumping
+courseCode: GZPHT121
+module: 1
+sequence: 2
+title: 'Laser Principle: Inversion, Pumping & Resonant Cavity'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - State the five sustained-lasing conditions with inversion and threshold gain
+  - Contrast three-level and four-level pumping schemes by threshold effort
+  - Name the three basic laser components with one example each
+concepts:
+  - population inversion
+  - metastable state
+  - resonant cavity
+prerequisites:
+  - m1_01_optical_processes_absorption_spontaneous_stimulated
+examRelevance: high
+tags:
+  - lasers
+  - population-inversion
+---
 # Laser Principle: Inversion, Pumping & Resonant Cavity
 
 **Population inversion, metastable states, pumping schemes, and the two components that turn amplification into sustained lasing.**

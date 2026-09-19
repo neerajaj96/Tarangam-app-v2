@@ -1,3 +1,26 @@
+---
+id: m4_02_stretched_string_velocity_laws
+courseCode: GZPHT121
+module: 4
+sequence: 2
+title: 'Stretched String: Velocity, Frequency & Laws'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Derive the transverse velocity on a stretched string
+  - State the three vibration laws with the frequency formula
+  - Connect Melde's experiment to the theory for lab-linked marks
+concepts:
+  - string velocity
+  - laws of vibration
+  - Melde's experiment
+prerequisites:
+  - m4_01_wave_types_frequency_wavelength
+examRelevance: high
+tags:
+  - waves
+  - stretched-string
+---
 # Stretched String: Velocity, Frequency & Laws
 
 **The one full derivation of Module 4 — $v = \sqrt{T/\mu}$, $f = (1/2L)\sqrt{T/\mu}$, the three laws, and Melde's experiment.**

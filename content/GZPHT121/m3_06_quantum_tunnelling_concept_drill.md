@@ -1,3 +1,27 @@
+---
+id: m3_06_quantum_tunnelling_concept_drill
+courseCode: GZPHT121
+module: 3
+sequence: 6
+title: Quantum Tunnelling & Module 3 Concept Drill
+difficulty: intermediate
+estimatedMinutes: 4
+learningObjectives:
+  - Explain barrier leakage qualitatively with the decaying tail picture
+  - Point tunnelling at alpha decay, STM and tunnel-diode questions
+  - Recite the Module 3 rapid-fire facts verbatim under time pressure
+concepts:
+  - quantum tunnelling
+  - barrier penetration
+prerequisites:
+  - m3_01_uncertainty_principle_conjugate_observables
+  - m3_03_wavefunction_schrodinger_equations
+  - m3_04_particle_in_box_derivation
+examRelevance: medium
+tags:
+  - quantum-mechanics
+  - m3-drill
+---
 # Quantum Tunnelling & Module 3 Concept Drill
 
 **Leaking through forbidden walls — alpha decay, STM, tunnel diode — plus the "no-derivation" safety net for the chapter.**

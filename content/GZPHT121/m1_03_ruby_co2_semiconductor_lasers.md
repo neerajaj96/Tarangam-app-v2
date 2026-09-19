@@ -1,3 +1,26 @@
+---
+id: m1_03_ruby_co2_semiconductor_lasers
+courseCode: GZPHT121
+module: 1
+sequence: 3
+title: 'Ruby, CO2 & Semiconductor Lasers: Construction and Working'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Describe Ruby construction and pulsed red working with its three-level limit
+  - Describe CO2 construction with N2 transfer and He roles for CW infrared power
+  - Explain the diode laser qualitatively with junction current and cleaved faces
+concepts:
+  - ruby laser
+  - CO2 laser
+  - semiconductor laser
+prerequisites:
+  - m1_02_laser_principle_population_inversion_pumping
+examRelevance: high
+tags:
+  - lasers
+  - laser-types
+---
 # Ruby, CO2 & Semiconductor Lasers: Construction and Working
 
 **Three KTU-favourite lasers side by side — levels, pump, wavelength, and one-line exam contrasts.**

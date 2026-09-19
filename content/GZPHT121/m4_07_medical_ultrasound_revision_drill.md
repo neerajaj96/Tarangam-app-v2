@@ -1,3 +1,28 @@
+---
+id: m4_07_medical_ultrasound_revision_drill
+courseCode: GZPHT121
+module: 4
+sequence: 7
+title: Medical Ultrasound & Module 4 Revision Drill
+difficulty: intermediate
+estimatedMinutes: 4
+learningObjectives:
+  - Describe medical scanning modes with gel coupling and safety logic
+  - Trade resolution against penetration with the frequency rule
+  - Recite the Module 4 rapid-fire facts across strings, halls and echoes
+concepts:
+  - medical ultrasound modes
+  - resolution-penetration trade-off
+prerequisites:
+  - m4_02_stretched_string_velocity_laws
+  - m4_03_reverberation_sabine_hall_acoustics
+  - m4_05_ultrasonics_piezoelectric_diffractometer
+  - m4_06_sonar_ndt_pulse_echo
+examRelevance: high
+tags:
+  - ultrasonics
+  - m4-drill
+---
 # Medical Ultrasound & Module 4 Revision Drill
 
 **Scanning the body with echoes — A/B/M modes, why gel, resolution vs penetration — plus the chapter's mixed drill.**

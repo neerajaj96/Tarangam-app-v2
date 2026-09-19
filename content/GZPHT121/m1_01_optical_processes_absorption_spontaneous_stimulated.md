@@ -1,3 +1,25 @@
+---
+id: m1_01_optical_processes_absorption_spontaneous_stimulated
+courseCode: GZPHT121
+module: 1
+sequence: 1
+title: 'Optical Processes: Absorption, Spontaneous & Stimulated Emission'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Distinguish absorption, spontaneous and stimulated emission by trigger and photon character
+  - Apply the Einstein rate relations with the Boltzmann equilibrium ratio
+  - Explain why net amplification needs population inversion against equilibrium
+concepts:
+  - stimulated emission
+  - Einstein coefficients
+  - population inversion
+prerequisites: []
+examRelevance: high
+tags:
+  - lasers
+  - emission-processes
+---
 # Optical Processes: Absorption, Spontaneous & Stimulated Emission
 
 **The three light–matter interactions behind every laser — what absorbs, what glows randomly, and what amplifies coherently.**

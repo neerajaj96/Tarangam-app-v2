@@ -1,3 +1,25 @@
+---
+id: m2_02_thin_films_colours_wedge_fringes
+courseCode: GZPHT121
+module: 2
+sequence: 2
+title: 'Thin Films & Colours: Wedge Conditions'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Explain thin-film colours with near-normal reflected conditions
+  - Measure small angles with the wedge-fringe width ruler
+  - Choose the bright-or-dark condition for reflected versus liquid cases
+concepts:
+  - thin-film colours
+  - wedge fringes
+prerequisites:
+  - m2_01_superposition_path_difference_cosine_law
+examRelevance: high
+tags:
+  - interference
+  - thin-films
+---
 # Thin Films & Colours: Wedge Conditions
 
 **Why soap bubbles shimmer — near-normal film colours, order sorting, and the wedge-fringe ruler.**

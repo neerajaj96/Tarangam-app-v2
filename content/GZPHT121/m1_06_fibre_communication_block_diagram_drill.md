@@ -1,3 +1,27 @@
+---
+id: m1_06_fibre_communication_block_diagram_drill
+courseCode: GZPHT121
+module: 1
+sequence: 6
+title: Fibre Optic Communication & Module 1 Numerical Drill
+difficulty: intermediate
+estimatedMinutes: 4
+learningObjectives:
+  - Draw the fibre link block diagram from transmitter to receiver
+  - Solve photon-energy and dB-loss problems with the mixed toolkit
+  - Run the mixed Module 1 drill across lasers, fibres and photon numbers
+concepts:
+  - fibre link block diagram
+  - photon energy
+prerequisites:
+  - m1_03_ruby_co2_semiconductor_lasers
+  - m1_04_optical_fibre_types_propagation
+  - m1_05_numerical_aperture_acceptance_angle_problems
+examRelevance: high
+tags:
+  - fibre-optics
+  - m1-drill
+---
 # Fibre Optic Communication & Module 1 Numerical Drill
 
 **Block diagram of the link plus a mixed drill: laser, fibre and photon-energy problems in one place.**

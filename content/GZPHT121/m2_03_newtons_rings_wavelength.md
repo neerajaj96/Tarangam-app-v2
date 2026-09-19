@@ -1,3 +1,26 @@
+---
+id: m2_03_newtons_rings_wavelength
+courseCode: GZPHT121
+module: 2
+sequence: 3
+title: Newton's Rings: Wavelength Measurement
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Explain ring formation as equal-thickness interference with a dark centre
+  - Derive the diameter-squared law from the lens geometry
+  - Measure wavelength from diameter differences across orders
+concepts:
+  - Newton's rings
+  - diameter-squared law
+prerequisites:
+  - m2_01_superposition_path_difference_cosine_law
+  - m2_02_thin_films_colours_wedge_fringes
+examRelevance: high
+tags:
+  - interference
+  - newtons-rings
+---
 # Newton's Rings: Wavelength Measurement
 
 **Rings of equal thickness under a lens — geometry, dark-centre logic, and the diameter-squared law.**

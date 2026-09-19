@@ -1,3 +1,25 @@
+---
+id: m3_04_particle_in_box_derivation
+courseCode: GZPHT121
+module: 3
+sequence: 4
+title: 'Particle in a 1D Box: Derivation'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Set up the time-independent equation inside and outside the well
+  - Quantise energies and states with the boundary conditions
+  - Normalise the eigenstates and read off nodes and zero-point energy
+concepts:
+  - energy quantisation
+  - normalised eigenstates
+prerequisites:
+  - m3_03_wavefunction_schrodinger_equations
+examRelevance: high
+tags:
+  - quantum-mechanics
+  - particle-in-box
+---
 # Particle in a 1D Box: Derivation
 
 **The full KTU derivation — TISE inside and outside, boundary conditions, quantised energies and normalised states.**

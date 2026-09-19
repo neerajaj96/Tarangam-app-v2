@@ -1,3 +1,25 @@
+---
+id: m4_01_wave_types_frequency_wavelength
+courseCode: GZPHT121
+module: 4
+sequence: 1
+title: 'Waves: Transverse, Longitudinal & Basic Terms'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Classify waves as transverse or longitudinal with sound as reference
+  - Relate velocity, frequency and wavelength for numerical use
+  - Use polarisation as the divider between the two wave families
+concepts:
+  - transverse waves
+  - longitudinal waves
+  - wave parameters
+prerequisites: []
+examRelevance: medium
+tags:
+  - waves
+  - wave-basics
+---
 # Waves: Transverse, Longitudinal & Basic Terms
 
 **The vocabulary every later derivation assumes — displacement vs pressure waves, $v = f\lambda$, and polarisation as the divider.**

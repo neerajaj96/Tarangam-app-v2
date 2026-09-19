@@ -1,3 +1,25 @@
+---
+id: m4_05_ultrasonics_piezoelectric_diffractometer
+courseCode: GZPHT121
+module: 4
+sequence: 5
+title: 'Ultrasonics: Piezoelectric Source & Diffractometer'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Explain ultrasonic production with the converse piezoelectric effect
+  - Measure ultrasonic velocity with the optical diffractometer grating
+  - Solve frequency-wavelength-velocity problems for crystal sources
+concepts:
+  - piezoelectric effect
+  - ultrasonic diffractometer
+prerequisites:
+  - m4_01_wave_types_frequency_wavelength
+examRelevance: medium
+tags:
+  - ultrasonics
+  - piezoelectric
+---
 # Ultrasonics: Piezoelectric Source & Diffractometer
 
 **Making MHz sound with crystals, and weighing its speed with light — construction, working, and $v = f\lambda$ problems.**

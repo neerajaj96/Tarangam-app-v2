@@ -1,3 +1,25 @@
+---
+id: m2_01_superposition_path_difference_cosine_law
+courseCode: GZPHT121
+module: 2
+sequence: 1
+title: Superposition, Path Difference & the Cosine Law
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Add two light waves with the superposition and coherence conditions
+  - Convert between phase difference and optical path difference
+  - Apply the reflected-system cosine law for bright and dark fringes
+concepts:
+  - superposition
+  - path difference
+  - cosine law
+prerequisites: []
+examRelevance: medium
+tags:
+  - interference
+  - superposition
+---
 # Superposition, Path Difference & the Cosine Law
 
 **How two light waves add — constructive vs destructive, optical path, phase difference, and the reflected-system cosine law.**

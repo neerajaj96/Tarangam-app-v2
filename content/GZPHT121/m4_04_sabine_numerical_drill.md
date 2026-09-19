@@ -1,3 +1,25 @@
+---
+id: m4_04_sabine_numerical_drill
+courseCode: GZPHT121
+module: 4
+sequence: 4
+title: 'Sabine Numerical Drill: Every Variation'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Rearrange Sabine's formula for time, volume and absorption unknowns
+  - Handle occupant swings and absorption algebra without unit traps
+  - Design added absorption to hit a target reverberation time
+concepts:
+  - absorption coefficients
+  - target reverberation design
+prerequisites:
+  - m4_03_reverberation_sabine_hall_acoustics
+examRelevance: medium
+tags:
+  - acoustics
+  - sabine
+---
 # Sabine Numerical Drill: Every Variation
 
 **Pure problem training — absorption algebra, occupant swings, target-$T_R$ design, and unit traps.**

@@ -1,3 +1,26 @@
+---
+id: m1_05_numerical_aperture_acceptance_angle_problems
+courseCode: GZPHT121
+module: 1
+sequence: 5
+title: 'Numerical Aperture & Acceptance Angle: Derivation and Problems'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Derive numerical aperture and acceptance angle from the fibre geometry
+  - Compute NA, acceptance angle and V-number across KTU numerical variations
+  - Apply the single-mode V-number cutoff with fractional index change
+concepts:
+  - numerical aperture
+  - acceptance angle
+  - V-number
+prerequisites:
+  - m1_04_optical_fibre_types_propagation
+examRelevance: high
+tags:
+  - fibre-optics
+  - numerical-aperture
+---
 # Numerical Aperture & Acceptance Angle: Derivation and Problems
 
 **The two most-numerical formulas of Module 1 — derived once, then drilled through every KTU variation.**

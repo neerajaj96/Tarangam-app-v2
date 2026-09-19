@@ -1,3 +1,29 @@
+---
+id: m2_07_module2_mixed_numerical_drill
+courseCode: GZPHT121
+module: 2
+sequence: 7
+title: 'Module 2 Numerical Drill: Interference–Diffraction Mix'
+difficulty: intermediate
+estimatedMinutes: 4
+learningObjectives:
+  - Sort any Module 2 problem into its film, rings, wedge, slit or grating pattern
+  - Enforce unit discipline across nanometres, millimetres and centimetres
+  - Clear order cutoffs and ratio-style questions under time pressure
+concepts:
+  - pattern recognition
+  - unit discipline
+prerequisites:
+  - m2_02_thin_films_colours_wedge_fringes
+  - m2_03_newtons_rings_wavelength
+  - m2_04_newtons_rings_liquid_air_wedge_thickness
+  - m2_05_single_slit_diffraction_width
+  - m2_06_diffraction_grating_equation_powers
+examRelevance: high
+tags:
+  - interference
+  - m2-drill
+---
 # Module 2 Numerical Drill: Interference–Diffraction Mix
 
 **Every KTU problem pattern from Module 2 in one drill — film, rings, wedge, slit, grating, and order cutoffs.**

@@ -1,3 +1,25 @@
+---
+id: m4_03_reverberation_sabine_hall_acoustics
+courseCode: GZPHT121
+module: 4
+sequence: 3
+title: Reverberation, Sabine & Hall Acoustics
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Separate echo, reverberation and reverberation time with thresholds
+  - Apply Sabine's formula with absorption coefficients and sabins
+  - List the factors of good hall acoustics for checklist answers
+concepts:
+  - reverberation time
+  - Sabine's formula
+  - hall acoustics
+prerequisites: []
+examRelevance: medium
+tags:
+  - acoustics
+  - sabine
+---
 # Reverberation, Sabine & Hall Acoustics
 
 **Echo vs reverberation, reverberation time, Sabine's formula, and the checklist for a good-sounding hall.**
