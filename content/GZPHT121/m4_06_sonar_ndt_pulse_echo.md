@@ -9,6 +9,10 @@
 Shout at a cliff, time the echo, halve the round trip — that is SONAR vertically (seabed) and NDT internally (crack). The pulse is a flash-bang of ultrasound; each interface (water–steel, steel–crack–air) echoes a fraction back. Delay gives depth; size of the echo gives the flaw's seriousness. Halving is the whole game because the sound travels down *and* back.
 :::
 
+::: anim pulse-echo Fire, Flaw, Back Wall
+A-scan pips in time order — emission, flaw, wall — with $d = vt/2$ on each leg.
+:::
+
 ---
 
 <a id="the-math"></a>

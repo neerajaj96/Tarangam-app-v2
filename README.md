@@ -22,15 +22,15 @@ content/<COURSE>/m{mod}_{seq}_{slug}.md
   seq 99 = practice lab (optional, one per module, sorts last)
 ```
 
-Current truth (2026-09-18) — full syllabus complete, 430 topics:
+Current truth (2026-09-18) — full syllabus complete, 432 topics:
 - `PCCST501` Computer Networks: M1–M4 complete (36 topics)
 - `PCCST502` DAA: M1–M4 complete (31 topics, incl. `m1_00` overview + `m1_99` lab)
 - `PECST522` AI: M1–M4 complete (30 topics, incl. `m1_99` lab; M2 now covers greedy, A*, generate-and-test, CSP/AC-3, minimax, alpha-beta)
 - `PCCST503` Machine Learning: M1–M4 complete (23 topics)
-- `GZPHT121` Physics for Physical Science and Life Science (S1/S2, Groups C & D): M1–M4 theory complete (26 topics, no lab)
-- `GAMAT301` Mathematics for Information Science-3 (S3, Group A): M1–M4 complete (24 topics, no lab)
+- `GZPHT121` Physics for Physical Science and Life Science (S1/S2, Groups C & D): M1–M4 theory complete (26 topics, no lab, 14 animated SVG scenes + graphs + tables — fully enriched)
+- `GAMAT301` Mathematics for Information Science-3 (S3, Group A): M1–M4 complete (24 topics, no lab, 14 animated SVG scenes + graphs so far — fully enriched)
 - `PCCST303` Data Structures and Algorithms (S3): M1–M4 theory complete (27 topics, no lab)
-- `GXEST104` Intro to Electrical & Electronics Eng. (S1/S2, Groups A & B): M1–M4 complete (31 topics, no lab, 5 animated SVG scenes)
+- `GXEST104` Intro to Electrical & Electronics Eng. (S1/S2, Groups A & B): M1–M4 complete (33 topics, no lab, 5 animated SVG scenes)
 - `PCCST601` Compiler Design (S6): M1–M4 theory complete (29 topics, no lab, 3 animated SVG scenes)
 - `PCCST602` Advanced Computing Systems (S6): M1–M4 theory complete (23 topics, no lab, 3 animated SVG scenes)
 - `PBCST604` Fundamentals of Cyber Security (S6, PBL): M1–M4 theory complete (26 topics, no lab, 3 animated SVG scenes)
@@ -47,7 +47,7 @@ Current truth (2026-09-18) — full syllabus complete, 430 topics:
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic (430 `.md` files: 16 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Topic-by-topic breakdown** — Module → smallest topic (432 `.md` files: 16 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
 - **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
 - **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
 - **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).
@@ -84,3 +84,12 @@ Add exactly the required number of electives per slot — one representative sub
 ## Design notes
 
 Palette and type were chosen deliberately for this subject (a technical, formula-heavy set of notes meant for focused reading), not the default AI-generated look — see the "Restraint and self-critique" section of the brief this was built against. Space Grotesk (display) + Source Serif 4 (body) + IBM Plex Mono (data/labels); a cobalt/amber accent pair rather than the usual cream-and-terracotta combo; module numbers used as real navigation info, not decoration.
+
+## Component rules (whole project — every component flexible, perfect in context)
+
+1. **One source per component.** Widget markup comes from exactly one place (`transformCustomWidgets` in `scripts/build.js`, `SCENES` in `scripts/scenes.js`, dashboard blocks in `index.html`) — never hand-duplicated.
+2. **Theme discipline.** Topic pages use `style.css` variables only (no hardcoded colors except intentional swatches); the dashboard is a fixed dark system with one shared accent pair.
+3. **`hidden` always pairs with CSS.** Any element toggled via the `hidden` attribute gets an explicit `[hidden]{display:none}` rule at equal-or-higher specificity — bare `hidden` loses to any author `display` (this exact bug once showed every semester at once).
+4. **Static-first.** No fetching for content: `build.js` injects dashboard topic lists at build time, so `file://`, offline, and both Pages modes render identically.
+5. **Responsive + motion-safe.** New components must survive 360px (wrap, never fixed widths) and add no motion outside the `prefers-reduced-motion` guard that collapses scenes to final state.
+6. **Check-validated links.** Every link stays in static DOM so `npm run check` validates it; generated regions are delimited by markers and deterministic (same content → same bytes).

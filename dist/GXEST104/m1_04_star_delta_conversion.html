@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 2.2 AC Fundamentals RMS Average</title>
-<meta name="description" content="Introduction to Electrical and Electronics Engineering (GXEST104) — 2.2 AC Fundamentals RMS Average | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 2.2 AC Fundamentals RMS Average">
-<meta property="og:description" content="Introduction to Electrical and Electronics Engineering (GXEST104) study notes: 2.2 AC Fundamentals RMS Average">
+<title>Tarangam — 1.4 Star Delta Conversion</title>
+<meta name="description" content="Introduction to Electrical and Electronics Engineering (GXEST104) — 1.4 Star Delta Conversion | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.4 Star Delta Conversion">
+<meta property="og:description" content="Introduction to Electrical and Electronics Engineering (GXEST104) study notes: 1.4 Star Delta Conversion">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,8 +66,8 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block " data-mod="1">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>DC Circuits &amp; Magnetic Circuits</span>
           <span class="chev">&#9656;</span>
@@ -85,7 +85,7 @@
             <span class="topic-dot"></span>
             <span>1.3 Capacitors Inductors Energy</span>
           </a>
-          <a href="./m1_04_star_delta_conversion.html" class="topic-link " id="topic-m1_04_star_delta_conversion">
+          <a href="./m1_04_star_delta_conversion.html" class="topic-link active" id="topic-m1_04_star_delta_conversion">
             <span class="topic-dot"></span>
             <span>1.4 Star Delta Conversion</span>
           </a>
@@ -111,8 +111,8 @@
           </a>
         </div>
       </div>
-      <div class="module-block open" data-mod="2">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>EMI, AC &amp; Three-Phase Systems</span>
           <span class="chev">&#9656;</span>
@@ -122,7 +122,7 @@
             <span class="topic-dot"></span>
             <span>2.1 Emi Faraday Lenz Inductance</span>
           </a>
-          <a href="./m2_02_ac_fundamentals_rms_average.html" class="topic-link active" id="topic-m2_02_ac_fundamentals_rms_average">
+          <a href="./m2_02_ac_fundamentals_rms_average.html" class="topic-link " id="topic-m2_02_ac_fundamentals_rms_average">
             <span class="topic-dot"></span>
             <span>2.2 AC Fundamentals RMS Average</span>
           </a>
@@ -262,9 +262,9 @@
       <div class="crumb" id="crumb">
         <span>GXEST104</span>
         <span class="crumb-sep">/</span>
-        <span>Module 2</span>
+        <span>Module 1</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">2.2 AC Fundamentals RMS Average</span>
+        <span style="color:var(--ink); font-weight:600;">1.4 Star Delta Conversion</span>
       </div>
 
       <div class="topbar-actions">
@@ -280,7 +280,7 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge badge-accent">MODULE 1</span>
     <span class="badge">⏱️ 3 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
@@ -292,58 +292,58 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>AC Fundamentals: Generation, RMS, Average &amp; Form Factor</h1>
-<p><strong>Coil in a magnetic field makes sine waves — frequency/period, average vs RMS, and form-factor problems.</strong></p>
+<h1>Star–Delta Conversion of Resistive Networks</h1>
+<p><strong>Collapsing 3-terminal tangles — both conversion formulas, when to convert, and full reduction traces.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Spinning Ladder Shadow</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Rotate a ladder (coil) in sunlight (magnetic field): its shadow length swings $+max\to0\to-max$ sinusoidally — that&#39;s generation (flux-linkage $NAB\cos\omega t$ differentiated). <strong>Average</strong> over a half-cycle rectifies-then-means ($2V_m/\pi$); <strong>RMS</strong> squares first (heating-equivalent DC: $V_m/\sqrt2$). Heaters care about RMS; rectifiers about average; their ratio (form factor $1.11$) fingerprints sine purity.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Rewiring the Junction</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A <strong>star (Y)</strong> ties three resistors to one centre node; a <strong>delta (Δ)</strong> chains them in a triangle between the same three outer terminals. Same terminals, same behaviour — if the resistor values translate correctly. Convert whichever shape blocks series/parallel progress, collapse, repeat. Balanced networks ($R$ everywhere) collapse to $R/3$ (Δ→Y) or $3R$ (Y→Δ) by inspection.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
-    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Phasor Spins, Sine Appears</span>
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Star to Delta, Same Terminals</span>
   </div>
   <div class="video-frame-wrap">
-    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated phasor rotating on a circle projecting a sine wave point by point">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated star network on the left converting to delta on the right">
 <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
-<text class="animcap" x="140" y="30" text-anchor="middle">phasor · ωt</text>
-<circle class="eg" cx="140" cy="160" r="70" style="fill:none"/>
-<line class="axis" x1="140" y1="160" x2="560" y2="160"/>
-<line class="axis" x1="330" y1="60" x2="330" y2="260"/>
-<g class="msg a1"><line x1="140" y1="160" x2="210" y2="160" marker-end="url(#ah)"/><text x="140" y="250" text-anchor="middle">0° → 0</text></g>
-<g class="msg a2"><line x1="140" y1="160" x2="140" y2="90" marker-end="url(#ah)"/><text x="140" y="250" text-anchor="middle">90° → +Vm</text></g>
-<g class="msg a3"><line x1="140" y1="160" x2="70" y2="160" marker-end="url(#ah)"/><text x="140" y="250" text-anchor="middle">180° → 0</text></g>
-<path class="eg" d="M330,160 Q382,90 435,160 T540,160" style="fill:none"/>
-<text class="animcap" x="445" y="30" text-anchor="middle">v = Vm·sin ωt</text>
-<text class="badge1 a2" x="435" y="70">peak at 90°</text>
-<text class="animnote a4" x="320" y="285" text-anchor="middle">vertical projection of the tip traces the sine, one angle at a time</text>
+<text class="animcap a1" x="160" y="30" text-anchor="middle">STAR (Y) · 3 + neutral</text>
+<g class="nd a1"><circle cx="160" cy="160" r="22"/><text x="160" y="166">N</text></g>
+<g class="nd a1"><circle cx="70" cy="90" r="22"/><text x="70" y="96">1</text></g><g class="nd a1"><circle cx="250" cy="90" r="22"/><text x="250" y="96">2</text></g><g class="nd a1"><circle cx="160" cy="250" r="22"/><text x="160" y="256">3</text></g>
+<line class="eg a1" x1="160" y1="160" x2="70" y2="90"/><line class="eg a1" x1="160" y1="160" x2="250" y2="90"/><line class="eg a1" x1="160" y1="160" x2="160" y2="250"/>
+<text class="bigarrow a2" x="320" y="165" text-anchor="middle">⟷ Ra=(R1R2+R2R3+R3R1)/Ropp</text>
+<text class="animcap a3" x="490" y="30" text-anchor="middle">DELTA (Δ) · mesh</text>
+<g class="nd a3"><circle cx="420" cy="100" r="22"/><text x="420" y="106">1</text></g><g class="nd a3"><circle cx="560" cy="100" r="22"/><text x="560" y="106">2</text></g><g class="nd a3"><circle cx="490" cy="230" r="22"/><text x="490" y="236">3</text></g>
+<line class="eg a3" x1="420" y1="100" x2="560" y2="100"/><line class="eg a3" x1="560" y1="100" x2="490" y2="230"/><line class="eg a3" x1="490" y1="230" x2="420" y2="100"/>
+<text class="animnote a4" x="320" y="285" text-anchor="middle">same three terminals, friendlier topology — convert, then series/parallel</text>
 </svg>
   </div>
   <div class="video-studio-foot">
-    <p class="video-caption"><strong>Key Insight:</strong> Phasor Spins, Sine Appears</p>
-    <div class="video-observations"><strong>What to observe:</strong> Track the tip&#39;s height as the phasor turns: 0° → zero, 90° → peak, 180° → zero — the wave is the rotation&#39;s shadow.</div>
+    <p class="video-caption"><strong>Key Insight:</strong> Star to Delta, Same Terminals</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the centre node dissolve into the triangle: Ra sits opposite terminal 1, built from the two stars touching it plus the product-over-opposite rule.</div>
   </div>
 </div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Generation and wave terms</h3>
-<p>$e = E_m\sin\omega t$ from rotation at $\omega = 2\pi f$; $f = 1/T$; instantaneous/peak/peak-to-peak ($2V_m$).</p>
-<h3>2.2 Average, RMS, form factor (sine)</h3>
-<p>$$V_{avg} = \frac{2V_m}{\pi} \approx 0.637V_m \quad (\text{half-cycle}), \qquad V_{rms} = \frac{V_m}{\sqrt2} \approx 0.707V_m$$</p>
-<p>$$k_f = \frac{\text{RMS}}{\text{Average}} = \frac{\pi}{2\sqrt2} \approx 1.11, \qquad k_p = \frac{\text{peak}}{\text{RMS}} = \sqrt2 \approx 1.414$$</p>
-<p>Full-cycle average of pure sine $= 0$ (symmetry) — average always means half-cycle (rectified) unless stated.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: AC Measures</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Avg <strong>$0.637V_m$</strong> · RMS <strong>$0.707V_m$</strong> · form <strong>$1.11$</strong> · peak factor <strong>$1.414$</strong> · full-cycle avg <strong>$0$</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Mains $230$ V Is RMS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$230$ V wall supply peaks at $230\sqrt2 \approx 325$ V. Using $230$ as $V_m$ undersizes insulation questions by $41%$ — convert RMS→peak first whenever peaks matter.</p>
+<h3>2.1 Formulas (use, don&#39;t derive — syllabus says so)</h3>
+<p>Δ ($R_a, R_b, R_c$) → Y ($R_1, R_2, R_3$), with $R_a$ opposite terminal $1$:</p>
+<p>$$R_1 = \frac{R_bR_c}{R_a+R_b+R_c} \quad \text{(product of adjacent / sum)}$$</p>
+<p>Y → Δ:</p>
+<p>$$R_a = \frac{R_1R_2+R_2R_3+R_3R_1}{R_1} \quad \text{(sum of pairwise / opposite star arm)}$$</p>
+<p>Balanced: $R_Y = R_\Delta/3$.</p>
+<h3>2.2 Reduction protocol</h3>
+<p>Spot the Y/Δ blocking progress → convert → series/parallel collapse → repeat. Bridge circuits that resist series/parallel <em>are</em> the convert signal.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Y–Δ</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Δ→Y: <strong>adjacent product / perimeter sum</strong> · Y→Δ: <strong>pairwise sum / opposite</strong> · balanced <strong>$\div3$ / $\times3$</strong>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Opposite-Arm Mapping</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$R_a$ (between terminals 2–3) pairs with star arm $R_1$ (terminal 1) — <em>opposite</em>, not adjacent. Misaligned mapping converts the wrong triangle; label terminals $1,2,3$ on both shapes before substituting.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Sine voltage, $V_m = 100$ V. Find $V_{avg}$ (half-cycle), $V_{rms}$, form factor. Then: $50$ Hz mains — period and $\omega$?</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Two Ratios, One Clock</div><div class="step-content"><ol>
-<li>$V_{avg} = 0.637\times100 = 63.7$ V; $V_{rms} = 70.7$ V; $k_f = 70.7/63.7 \approx 1.11$.</li>
-<li>$T = 1/50 = 20$ ms; $\omega = 314$ rad/s.</li>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Δ of $6, 6, 6,\Omega$ between A–B–C. Convert to Y, then find $R_{AB}$ with C open.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Convert Then Read</div><div class="step-content"><ol>
+<li>Balanced: $R_Y = 6/3 = 2,\Omega$ per arm.</li>
+<li>C open: A→centre→B path $= 2+2 = 4,\Omega$. (Direct: Δ A–B arm $6 \parallel (6+6) = 6\parallel12 = 4,\Omega$ ✓ — both routes agree, the standard self-check.)</li>
 </ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$0.637/0.707/1.11$ for sines; $20$ ms/$314$ rad/s for $50$ Hz mains. These five numbers answer every AC-fundamentals numerical&#39;s first half.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Balanced networks convert mentally; agreement between Δ-direct and Y-converted readings certifies the mapping. Show the cross-check — it doubles as error insurance.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
@@ -353,13 +353,13 @@
     <span class="quiz-category">Q1: Numerical Drill</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Sine current $I_m = 14.14$ A. RMS and half-cycle average?</p>
+  <div class="quiz-prompt"><p>Y of $2, 2, 2,\Omega$. Equivalent Δ arms?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$14.14$ and $14.14$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$14.14/\sqrt2 = 10$ A; $0.637\times14.14 \approx 9.0$ A</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$10$ and $10$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$7.07$ and $4.5$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>$2\,\Omega$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$3\times2 = 6\,\Omega$ each (balanced Y→Δ triples)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$2/3\,\Omega$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$4\,\Omega$</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -371,21 +371,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$14.14 = 10\sqrt2$ is engineered: RMS exactly $10$ A, average $\approx 9$ A. Recognise $\sqrt2$-scaled round numbers — examiners plant them as gifts.</p><pre><code>&lt;/div&gt;
+      <p>Balanced shortcut: $R_\Delta = 3R_Y = 6,\Omega$. Full formula agrees: $(4+4+4)/2 = 6$. Tripling/doubling by direction is the one-line balanced answer.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Foundational Concept</span>
+    <span class="quiz-category">Q2: Numerical Drill</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why is full-cycle average of a sine zero, yet average is quoted $0.637V_m$?</p>
+  <div class="quiz-prompt"><p>Δ arms $R_a = 10$ (opp. 1), $R_b = 20$, $R_c = 30$. Star arm $R_1$?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Contradiction in theory</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Symmetric halves cancel over full cycles; &quot;average&quot; by convention means the rectified (absolute) half-cycle mean used by meters</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>RMS replaces it</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Frequency is too high</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>$10\,\Omega$</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$R_bR_c/\sum = 600/60 = 10\,\Omega$ — adjacent product over perimeter sum</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$60\,\Omega$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$6\,\Omega$</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -397,21 +397,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Positive and negative lobes annihilate in a plain mean. Instruments rectify first (or compute RMS); convention follows the use — half-cycle mean for average-responding meters, RMS for heating.</p><pre><code>&lt;/div&gt;
+      <p>$R_1$ touches terminal $1$, so it uses the arms <em>meeting away</em> from $1$ ($R_b, R_c$): $20\times30/60 = 10$. Opposite-mapping stated first, arithmetic second.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Numerical Drill</span>
+    <span class="quiz-category">Q3: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$230$ V, $50$ Hz mains. Peak voltage and peak factor?</p>
+  <div class="quiz-prompt"><p>When is star–delta conversion the right move?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$230$ V, $1.0$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$230\sqrt2 \approx 325$ V; $k_p = 1.414$ — insulation must survive $325$ V, not $230$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$460$ V, $2.0$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$162$ V, $0.707$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Always, for every circuit</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>When a Y or Δ sub-network blocks all series/parallel reduction (bridges, meshes) — convert it into a collapsible shape</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Only for balanced networks</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Never in exams</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -423,7 +423,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Peak $= $ RMS$\times\sqrt2$; crest factor $1.414$ for sines. Mains-flavoured questions test exactly this conversion — RMS in, peak out.</p><pre><code>&lt;/div&gt;
+      <p>Conversion is a means to series/parallel, not a ritual: no blocked reduction, no conversion. Bridges that laugh at series/parallel are the diagnostic — convert the offender and continue collapsing.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -432,16 +432,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m2_01_emi_faraday_lenz_inductance.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_03_capacitors_inductors_energy.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">2.1 Emi Faraday Lenz Inductance</div>
+        <div class="ttl">1.3 Capacitors Inductors Energy</div>
       </a>
       
       
       
-      <a href="./m2_03_phasors_forms_operations.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m1_05_mesh_analysis_matrices.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">2.3 Phasors Forms Operations</div>
+        <div class="ttl">1.5 Mesh Analysis Matrices</div>
       </a>
       
     </footer>
@@ -528,7 +528,7 @@
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
     var totalTopics = Number(33) || 0;
-    const currentId = "m2_02_ac_fundamentals_rms_average";
+    const currentId = "m1_04_star_delta_conversion";
     const courseCode = "GXEST104";
     if (totalTopics === 0 || !currentId) return;
 

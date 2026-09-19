@@ -262,7 +262,32 @@
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Steady Rain</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Raindrops hit a tile as steady random rain: counts per minute are Poisson (M1&#39;s law returns with $\lambda t$), while gaps between consecutive drops are exponential with the same rate — short gaps common, long gaps rare, no memory. &quot;How many by time $t$?&quot; and &quot;how long till the next?&quot; are two camera angles on one rain.</p>
-</div></details><hr>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Ticks, Gaps, Counts</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Timeline with irregular arrival ticks, gap brackets and count labels">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="axis" x1="40" y1="200" x2="610" y2="200"/>
+<text class="axislbl" x="600" y="222">time →</text>
+<line class="eg a1" x1="110" y1="200" x2="110" y2="120"/>
+<line class="eg a1" x1="175" y1="200" x2="175" y2="120"/>
+<line class="eg a1" x1="195" y1="200" x2="195" y2="120"/>
+<line class="eg a1" x1="290" y1="200" x2="290" y2="120"/>
+<line class="eg a1" x1="420" y1="200" x2="420" y2="120"/>
+<line class="eg a1" x1="445" y1="200" x2="445" y2="120"/>
+<line class="eg a1" x1="560" y1="200" x2="560" y2="120"/>
+<text class="badge1 a2" x="230" y="100">gaps ~ Exp(λ) — short common!</text>
+<text class="badge1 a3" x="420" y="260">counts in window ~ Poisson(λt)</text>
+<text class="animnote a4" x="320" y="35" text-anchor="middle">same rain, two cameras: gaps between ticks, totals per window</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Ticks, Gaps, Counts</p>
+    <div class="video-observations"><strong>What to observe:</strong> Irregular ticks with Exp gaps and Poisson window counts — gaps common-short, totals $\lambda t$ on average.</div>
+  </div>
+</div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>

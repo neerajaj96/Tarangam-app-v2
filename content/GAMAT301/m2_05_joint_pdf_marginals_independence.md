@@ -9,6 +9,10 @@
 The joint pdf $f(x,y)$ is terrain height over the $xy$-plain; probability over a region is the *earth volume* above it. **Marginals** are the silhouettes — squash the terrain flat along $y$ (integrate it out) to see $X$'s profile. **Independence** means the terrain is a multiplied landscape $g(x)h(y)$ — every cross-section a scaled copy, no diagonal ridges.
 :::
 
+::: anim joint-region Patch, Volume, Squash
+Shade $x+y<1$ for probability; squash an axis for margins — the two joint operations drawn once.
+:::
+
 ---
 
 <a id="the-math"></a>

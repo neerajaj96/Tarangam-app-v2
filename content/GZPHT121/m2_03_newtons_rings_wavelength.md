@@ -9,6 +9,10 @@
 Rest a watch-glass (curved lens) on a flat mirror: the air gap is zero at the centre and grows outward like a bowl. Each ring marks places where the gap has the *same* thickness — a contour map of the bowl in light. Bigger lens radius = flatter bowl = wider-spaced rings; shorter wavelength = finer ruler = tighter rings.
 :::
 
+::: anim newton-rings Contours With Roots for Radii
+Each ring one thickness contour — radii $\propto\sqrt{n}$, so diameters squared run $1$:$2$:$3$:$4$ and the difference law needs no $R$ recalibration.
+:::
+
 ---
 
 <a id="the-math"></a>

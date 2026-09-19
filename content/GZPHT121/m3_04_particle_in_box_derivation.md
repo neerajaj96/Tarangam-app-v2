@@ -9,6 +9,10 @@
 A guitar string fixed at both ends supports only hum, octave, twelfth — standing waves with nodes at the frets. An electron trapped between infinite walls is the same: $\psi$ must vanish at both walls, so only sine waves with integer half-waves fit. Each fitting pattern is an energy level; squeezing the box (shorter string) raises every pitch as $1/L^2$.
 :::
 
+::: anim box-states Humps Count n, Energies Square n²
+Nodes $0$, $1$, $2$ with energies $E_1$, $4E_1$, $9E_1$ — count humps for $n$, square for $E_n$.
+:::
+
 ---
 
 <a id="the-math"></a>

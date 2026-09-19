@@ -9,6 +9,10 @@
 Pluck a loose rope: the bulge crawls. Tighten it (more tension $T$) and the bulge races; swap in a heavier chain (more mass per metre $\mu$) and it lumbers. Speed balances pull against inertia: $v = \sqrt{T/\mu}$. Fix both ends and only whole half-waves fit — the string quantises itself exactly like the quantum box, lowest hum to shrill overtones.
 :::
 
+::: anim string-modes Halves Fit, Frequencies Multiply
+Fundamental plus two overtones with nodes pinned — $f$, $2f$, $3f$, the box ladder made audible.
+:::
+
 ---
 
 <a id="the-math"></a>

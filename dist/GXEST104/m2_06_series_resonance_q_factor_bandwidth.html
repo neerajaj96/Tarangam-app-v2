@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0f17">
-<title>Tarangam — 1.6 Mesh Nodal Mixed Drill</title>
-<meta name="description" content="Introduction to Electrical and Electronics Engineering (GXEST104) — 1.6 Mesh Nodal Mixed Drill | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
-<meta property="og:title" content="Tarangam — 1.6 Mesh Nodal Mixed Drill">
-<meta property="og:description" content="Introduction to Electrical and Electronics Engineering (GXEST104) study notes: 1.6 Mesh Nodal Mixed Drill">
+<title>Tarangam — 2.6 Series Resonance Q Factor Bandwidth</title>
+<meta name="description" content="Introduction to Electrical and Electronics Engineering (GXEST104) — 2.6 Series Resonance Q Factor Bandwidth | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.6 Series Resonance Q Factor Bandwidth">
+<meta property="og:description" content="Introduction to Electrical and Electronics Engineering (GXEST104) study notes: 2.6 Series Resonance Q Factor Bandwidth">
 <meta property="og:type" content="article">
 <script>
   // Pre-paint: apply stored theme/size before first render (no FOUC).
@@ -66,36 +66,36 @@
 
     <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
       
-      <div class="module-block open" data-mod="1">
-        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M1</span>
           <span>DC Circuits &amp; Magnetic Circuits</span>
           <span class="chev">&#9656;</span>
         </button>
         <div class="topic-list">
-          <a href="./m1_01_ohms_kcl_kvl_division_rules.html" class="topic-link " id="topic-m1_01_ohms_kcl_kvl_division_rules">
+          <a href="./m1_01_ohms_kcl_kvl.html" class="topic-link " id="topic-m1_01_ohms_kcl_kvl">
             <span class="topic-dot"></span>
-            <span>1.1 Ohms KCL KVL Division Rules</span>
+            <span>1.1 Ohms KCL KVL</span>
           </a>
-          <a href="./m1_02_capacitors_inductors_energy.html" class="topic-link " id="topic-m1_02_capacitors_inductors_energy">
+          <a href="./m1_02_voltage_current_division_relative_potential.html" class="topic-link " id="topic-m1_02_voltage_current_division_relative_potential">
             <span class="topic-dot"></span>
-            <span>1.2 Capacitors Inductors Energy</span>
+            <span>1.2 Voltage Current Division Relative Potential</span>
           </a>
-          <a href="./m1_03_star_delta_conversion.html" class="topic-link " id="topic-m1_03_star_delta_conversion">
+          <a href="./m1_03_capacitors_inductors_energy.html" class="topic-link " id="topic-m1_03_capacitors_inductors_energy">
             <span class="topic-dot"></span>
-            <span>1.3 Star Delta Conversion</span>
+            <span>1.3 Capacitors Inductors Energy</span>
           </a>
-          <a href="./m1_04_mesh_analysis_matrices.html" class="topic-link " id="topic-m1_04_mesh_analysis_matrices">
+          <a href="./m1_04_star_delta_conversion.html" class="topic-link " id="topic-m1_04_star_delta_conversion">
             <span class="topic-dot"></span>
-            <span>1.4 Mesh Analysis Matrices</span>
+            <span>1.4 Star Delta Conversion</span>
           </a>
-          <a href="./m1_05_nodal_analysis_matrices.html" class="topic-link " id="topic-m1_05_nodal_analysis_matrices">
+          <a href="./m1_05_mesh_analysis_matrices.html" class="topic-link " id="topic-m1_05_mesh_analysis_matrices">
             <span class="topic-dot"></span>
-            <span>1.5 Nodal Analysis Matrices</span>
+            <span>1.5 Mesh Analysis Matrices</span>
           </a>
-          <a href="./m1_06_mesh_nodal_mixed_drill.html" class="topic-link active" id="topic-m1_06_mesh_nodal_mixed_drill">
+          <a href="./m1_06_nodal_analysis_matrices.html" class="topic-link " id="topic-m1_06_nodal_analysis_matrices">
             <span class="topic-dot"></span>
-            <span>1.6 Mesh Nodal Mixed Drill</span>
+            <span>1.6 Nodal Analysis Matrices</span>
           </a>
           <a href="./m1_07_magnetic_circuits_basics.html" class="topic-link " id="topic-m1_07_magnetic_circuits_basics">
             <span class="topic-dot"></span>
@@ -105,10 +105,14 @@
             <span class="topic-dot"></span>
             <span>1.8 Composite Parallel Magnetic</span>
           </a>
+          <a href="./m1_09_mixed_drill.html" class="topic-link " id="topic-m1_09_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>1.9 Mixed Drill</span>
+          </a>
         </div>
       </div>
-      <div class="module-block " data-mod="2">
-        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
           <span class="module-num">M2</span>
           <span>EMI, AC &amp; Three-Phase Systems</span>
           <span class="chev">&#9656;</span>
@@ -134,17 +138,21 @@
             <span class="topic-dot"></span>
             <span>2.5 RL RC RLC Series</span>
           </a>
-          <a href="./m2_06_ac_power_pf_correction.html" class="topic-link " id="topic-m2_06_ac_power_pf_correction">
+          <a href="./m2_06_series_resonance_q_factor_bandwidth.html" class="topic-link active" id="topic-m2_06_series_resonance_q_factor_bandwidth">
             <span class="topic-dot"></span>
-            <span>2.6 AC Power Pf Correction</span>
+            <span>2.6 Series Resonance Q Factor Bandwidth</span>
           </a>
-          <a href="./m2_07_three_phase_star_delta.html" class="topic-link " id="topic-m2_07_three_phase_star_delta">
+          <a href="./m2_07_ac_power_pf_correction.html" class="topic-link " id="topic-m2_07_ac_power_pf_correction">
             <span class="topic-dot"></span>
-            <span>2.7 Three Phase Star Delta</span>
+            <span>2.7 AC Power Pf Correction</span>
           </a>
-          <a href="./m2_08_m2_mixed_drill.html" class="topic-link " id="topic-m2_08_m2_mixed_drill">
+          <a href="./m2_08_three_phase_star_delta.html" class="topic-link " id="topic-m2_08_three_phase_star_delta">
             <span class="topic-dot"></span>
-            <span>2.8 M2 Mixed Drill</span>
+            <span>2.8 Three Phase Star Delta</span>
+          </a>
+          <a href="./m2_09_m2_mixed_drill.html" class="topic-link " id="topic-m2_09_m2_mixed_drill">
+            <span class="topic-dot"></span>
+            <span>2.9 M2 Mixed Drill</span>
           </a>
         </div>
       </div>
@@ -234,7 +242,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel">0 of 31 completed</span>
+          <span id="progressLabel">0 of 33 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -254,9 +262,9 @@
       <div class="crumb" id="crumb">
         <span>GXEST104</span>
         <span class="crumb-sep">/</span>
-        <span>Module 1</span>
+        <span>Module 2</span>
         <span class="crumb-sep">/</span>
-        <span style="color:var(--ink); font-weight:600;">1.6 Mesh Nodal Mixed Drill</span>
+        <span style="color:var(--ink); font-weight:600;">2.6 Series Resonance Q Factor Bandwidth</span>
       </div>
 
       <div class="topbar-actions">
@@ -272,8 +280,8 @@
     <main class="content" id="content">
       <div class="topic-header">
   <div class="topic-badges">
-    <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 3 MIN READ</span>
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -284,78 +292,47 @@
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
-<h1>Mesh + Nodal Mixed Drill: Every Variation</h1>
-<p><strong>Method selection in 10 seconds, supermesh/supernode, dependent sources, and power balance audits.</strong></p>
+<h1>Series Resonance, Q-Factor &amp; Bandwidth</h1>
+<p><strong>When reactances cancel — resonant frequency, magnification, selectivity, and the Q that prices them all.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Triage Desk</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Count meshes vs nodes (smaller wins) → scan source types (current→nodal, voltage→mesh) → flag shared/floating sources (super-structures) → solve → audit with power balance ($\sum$ delivered = $\sum$ absorbed). Diagnosis first, algebra second — wrong method with perfect math still bleeds time.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Swing Pushed in Rhythm</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Push a swing randomly and it wobbles; push in rhythm and tiny pushes build a huge arc. Series resonance is electrical rhythm-matching: at $f_0$ the inductor&#39;s lag and capacitor&#39;s lead annihilate ($X_L = X_C$), leaving bare resistance — current peaks, and the coil/cap voltages balloon to $Q$ times the supply. <strong>Q-factor</strong> is the swing&#39;s patience (energy stored per cycle ÷ energy lost); <strong>bandwidth</strong> is how fussy the rhythm is (high Q = narrow taste).</p>
 </div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Triage and audit kit</h3>
-<table>
-<thead>
-<tr>
-<th>Signal</th>
-<th>Move</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>fewer nodes</td>
-<td>nodal ($G$ matrix)</td>
-</tr>
-<tr>
-<td>fewer meshes</td>
-<td>mesh ($R$ matrix)</td>
-</tr>
-<tr>
-<td>shared current source</td>
-<td>supermesh + difference constraint</td>
-</tr>
-<tr>
-<td>floating voltage source</td>
-<td>supernode + difference constraint</td>
-</tr>
-<tr>
-<td>dependent source</td>
-<td>constraint expressing it in unknowns, substitute before solving</td>
-</tr>
-<tr>
-<td>any solution</td>
-<td>power audit: $\sum VI$ delivered $=$ absorbed</td>
-</tr>
-</tbody></table>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Triage</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Small count wins · currents→<strong>nodal</strong>, voltages→<strong>mesh</strong> · shared/floating→<strong>super</strong> · always <strong>power-audit</strong>.</p>
-</div></details><details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The 9-marker is one 2-mesh/2-node solve with a twist (shared source or dependent source) plus branch-current/power questions. Method-choice line first — it earns the diagnosis mark even under time pressure.</p>
+<h3>2.1 Resonance condition and friends</h3>
+<p>$X_L = X_C \Rightarrow \omega_0L = 1/\omega_0C$: $f_0 = 1/(2\pi\sqrt{LC})$, $Z_{min} = R$, $I_{max} = V/R$, PF $= 1$. $Q = \omega_0L/R = 1/(\omega_0CR) = (1/R)\sqrt{L/C}$; $V_L = V_C = QV$ (magnification!); half-power bandwidth $BW = f_0/Q = R/(2\pi L)$.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Resonance</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$X_L=X_C$ at $f_0$ · <strong>$f_0=1/2\pi\sqrt{LC}$</strong> · <strong>$Q=\omega_0L/R$</strong> · <strong>$V_L=QV$</strong> · <strong>$BW=f_0/Q$</strong> · PF $=1$ at peak.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Resonance Means Minimum Z, Not Zero</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$Z = R$ at $f_0$ — the resistance remains, so current is $V/R$, finite. &quot;Resonance shorts the circuit&quot; confuses cancelled reactance with vanished resistance; the $R$ floor bounds everything (and sets $Q$).</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>$10$ V source ($+$ top) feeds node A through $2,\Omega$; node A ties to ground through $3,\Omega$; a $2$ A source injects upward into A from ground. Find $V_A$ and audit power.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Nodal Solve, Then Audit</div><div class="step-content"><ol>
-<li><strong>KCL at A</strong> (leaving positive): $(V_A-10)/2 + V_A/3 = 2$ → $\times6$: $3V_A-30+2V_A = 12$ → $V_A = 8.4$ V.</li>
-<li>Branch currents: $2,\Omega$: $(8.4-10)/2 = -0.8$ A (i.e. $0.8$ A flows back toward the source top); $3,\Omega$: $2.8$ A down. Check: $-0.8+2.8 = 2.0$ ✓ equals injection.</li>
-<li><strong>Power audit:</strong> $2$ A source delivers $8.4\times2 = 16.8$ W; $10$ V source absorbs $10\times0.8 = 8$ W (being charged). Resistors absorb $0.8^2\times2 + 2.8^2\times3 = 1.28+23.52 = 24.8$ W $= 16.8+8$ ✓ balanced.</li>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Series $R = 10,\Omega$, $L = 0.1$ H, $C = 100,\mu$F, supply $230$ V. Find $f_0$, $Q$, resonant current, coil voltage, and bandwidth.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Peak and Its Price</div><div class="step-content"><ol>
+<li>$LC = 10^{-5}$: $f_0 = 1/(2\pi\sqrt{10^{-5}}) = 1/(2\pi\times3.162\times10^{-3}) \approx 50.3$ Hz.</li>
+<li>$\omega_0 \approx 316.2$: $Q = 316.2\times0.1/10 \approx 3.16$. $I_0 = 230/10 = 23$ A.</li>
+<li>$V_L = QV = 3.16\times230 \approx 727$ V across the coil (and equal capacitor volts opposing) — magnified $3.16\times$ over supply. $BW = 50.3/3.16 \approx 15.9$ Hz (check: $R/2\pi L = 10/0.628 \approx 15.9$ ✓).</li>
 </ol>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Sign discipline (leaving-positive KCL) writes the equation; power balance certifies it. Two audit lines buy near-certainty against sign slips.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$f_0 \approx 50.3$ Hz, $Q \approx 3.16$, $23$ A peak with $727$ V swinging inside a $230$ V circuit. Magnification is why resonance both selects stations and stresses insulation — same $Q$, two readings.</p>
 </div></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Mixed Drill</span>
+    <span class="quiz-category">Q1: Numerical Drill</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$3$ meshes, $2$ non-reference nodes, no special sources. Fastest?</p>
+  <div class="quiz-prompt"><p>$L = 0.4$ H, $C = 100,\mu$F. Resonant frequency?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Mesh, $3\times3$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Nodal, $2\times2$ — fewer unknowns, smaller determinant, less arithmetic</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Star-delta first always</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Equal effort</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>$50.3$ Hz</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$LC = 4\times10^{-5}$: $f_0 = 1/(2\pi\times6.325\times10^{-3}) \approx 25.2$ Hz — same $C$, quadrupled $L$ halves $f_0$ ($\sqrt{LC}$ doubles)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$100$ Hz</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$12.6$ Hz</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -367,21 +344,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$2\times2$ determinants are one line; $3\times3$ invite cofactor errors. Equation count is a reliable proxy for exam-minutes — count first.</p><pre><code>&lt;/div&gt;
+      <p>$f_0$ follows $\sqrt{LC}$ inversely: $4\times$ inductance $\to$ $2\times$ root $\to$ half frequency. Ratio thinking ($f_0 \propto 1/\sqrt{LC}$) beats recomputation — scale, don&#39;t recalculate.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Mixed Drill</span>
+    <span class="quiz-category">Q2: Numerical Drill</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Why audit with power balance?</p>
+  <div class="quiz-prompt"><p>At resonance with $Q = 1.58$ on a $100$ V supply, coil voltage? And $R = 20,\Omega$, $L = 0.1$ H, $C = 100,\mu$F gives this $Q$ — verify.</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>It finds the currents</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It verifies consistency — KCL+KVL solutions must conserve energy; imbalance pinpoints sign/arithmetic slips without re-solving</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>It replaces analysis</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Examiners ignore it</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>$100$ V</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$158$ V — and $Q = 316.2\times0.1/20 = 31.62/20 \approx 1.58$ ✓ consistent</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$63$ V</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$1000$ V</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -393,21 +370,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\sum P = 0$ (signed) is independent of the solution path — a failed audit means a slip <em>somewhere</em>, and per-element powers localise it. Two audit lines buy near-certainty.</p><pre><code>&lt;/div&gt;
+      <p>Magnification is multiplication: $V_L = QV$. The $Q$ recompute closes the loop — given $R,L,C$, $Q$ is determined, and the coil volts follow without fresh tricks.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Mixed Drill</span>
+    <span class="quiz-category">Q3: Foundational Concept</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Dependent source $3V_x$ (where $V_x$ is a resistor drop) appears. Extra step?</p>
+  <div class="quiz-prompt"><p>Why does current peak (not dip) at series resonance?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Ignore dependency</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Express the dependency in chosen unknowns ($V_x$ as mesh/node difference) and substitute before solving — same matrix size, modified entries</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>New super-structure always</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Unsolvable</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Resistance vanishes</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Net reactance zeroes ($X_L - X_C = 0$), leaving minimum $|Z| = R$ — smallest denominator, largest current; parallel resonance dual flips this (maximum $|Z|$, minimum line current)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Inductor shorts</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Capacitor opens</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -419,7 +396,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Dependencies add relations, not unknowns: rewrite $3V_x$ via unknown differences, fold into the matrix. Count stays; entries change — the only twist.</p><pre><code>&lt;/div&gt;
+      <p>Peak current is minimum impedance, and minimum impedance here is $R$ itself. Series dips $|Z|$, parallel peaks it — the dual pair examiners love to swap.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -428,16 +405,16 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_05_nodal_analysis_matrices.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_05_rl_rc_rlc_series.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.5 Nodal Analysis Matrices</div>
+        <div class="ttl">2.5 RL RC RLC Series</div>
       </a>
       
       
       
-      <a href="./m1_07_magnetic_circuits_basics.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_07_ac_power_pf_correction.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">1.7 Magnetic Circuits Basics</div>
+        <div class="ttl">2.7 AC Power Pf Correction</div>
       </a>
       
     </footer>
@@ -523,8 +500,8 @@
 
   // 3. Client-Side Topic Completion & Checkmark Tracking
   (function trackTopicProgress() {
-    var totalTopics = Number(31) || 0;
-    const currentId = "m1_06_mesh_nodal_mixed_drill";
+    var totalTopics = Number(33) || 0;
+    const currentId = "m2_06_series_resonance_q_factor_bandwidth";
     const courseCode = "GXEST104";
     if (totalTopics === 0 || !currentId) return;
 

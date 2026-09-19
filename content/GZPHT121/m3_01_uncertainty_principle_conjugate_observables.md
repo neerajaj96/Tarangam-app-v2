@@ -9,6 +9,10 @@
 To see an electron you must bounce light off it — but the bounce kicks it. Short-wavelength (precise) light kicks hard (momentum ruined); gentle long-wavelength light kicks softly but locates poorly. Sharpening one reading blurs the other, not because instruments are crude but because *nature* stores the pair as a spread-out wave. Conjugate pairs are like a waterbed: press one side flat, the other bulges.
 :::
 
+::: anim uncertainty-tradeoff Waterbed Drawn as a Curve
+Momentum fuzz falls as position fuzz grows — everything below the hyperbola is forbidden territory.
+:::
+
 ---
 
 <a id="the-math"></a>

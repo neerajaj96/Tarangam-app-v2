@@ -9,6 +9,10 @@
 A new bulb and a bulb that survived $1000$ hours have the *same* remaining-life distribution — the bulb "forgets" its age. That is memorylessness: surviving $s$ hours tells you nothing, because failures strike as a steady Poisson rain, not by wearing out. Mean wait $1/\lambda$ is just the rain rate inverted.
 :::
 
+::: anim exp-decay Restart Retraces the Tail
+Survive to $s$ and the dashed future overlays the solid past — memorylessness as overlapping curves.
+:::
+
 ---
 
 <a id="the-math"></a>

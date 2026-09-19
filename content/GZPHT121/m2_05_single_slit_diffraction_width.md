@@ -9,6 +9,10 @@
 A wide door lets a crowd march straight (sharp shadow); a narrow door forces them to fan out sideways (spreading). Light through a slit of width $a \sim \lambda$ fans into a broad central hump flanked by dark gaps. Narrower slit = wider fan (uncertainty-like trade: confine position, spread direction). The dark gaps sit exactly where wavelets from the two half-slits cancel pairwise.
 :::
 
+::: anim slit-envelope Hump With Dark Ladders
+One broad central maximum with dark minima at $a\sin\theta = n\lambda$ — sketch this before any slit-width arithmetic.
+:::
+
 ---
 
 <a id="the-math"></a>

@@ -20,7 +20,7 @@ Cascaded gain multiplies ($A = A_1A_2$, phases add: two inversions $= 0^\circ$ n
 
 ### 2.2 FET and MOSFET (N/P)
 
-JFET/FET: gate field pinches the channel (depletion control), $I_D$ vs $V_{GS}$ curves, cutoff at pinch-off. **MOSFET**: insulated gate (MOS stack); N-channel (electrons, +gate enhances) vs P-channel (holes, mirrored supplies); enhancement (needs $V_{GS} > V_T$ to *create* channel) vs depletion (built-in channel, $\pm$ control). Near-infinite $Z_{in}$, voltage drive, CMOS pairs N+P.
+JFET/FET: gate field pinches the channel (depletion control), $I_D$ vs $V_{GS}$ curves, cutoff at pinch-off, transfer law $I_D = I_{DSS}(1-V_{GS}/V_P)^2$ (e.g. $I_{DSS} = 8$ mA, $V_P = -4$ V, $V_{GS} = -2$ V → $I_D = 8(0.5)^2 = 2$ mA: half gate, quarter current — square law!). **MOSFET**: insulated gate (MOS stack); N-channel (electrons, +gate enhances) vs P-channel (holes, mirrored supplies); enhancement (needs $V_{GS} > V_T$ to *create* channel) vs depletion (built-in channel, $\pm$ control). Near-infinite $Z_{in}$, voltage drive, CMOS pairs N+P.
 
 ::: callout-formula KTU Formula Vault: Coupling + FET
 Gains **multiply**, dB **adds** · $f_L$ = max of high-passes · $f_H$ = min of low-passes · MOSFET: **insulated gate, N/P + enhancement/depletion**.

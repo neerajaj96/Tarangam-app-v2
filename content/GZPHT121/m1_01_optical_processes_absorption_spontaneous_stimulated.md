@@ -13,6 +13,10 @@ Picture electrons on a staircase (energy levels $E_1$ ground, $E_2$ excited):
 * **Stimulated emission:** a ball flies past an electron already on the top step and *shouts it down* — the electron drops and throws an identical twin ball: same direction, same phase, same energy. One photon in, two identical photons out. This cloning is the entire laser.
 :::
 
+::: anim stimulated-emission One In, Two Identical Out
+A passing photon stimulates the excited electron down — twins leave in lockstep, the coherence all later topics assume.
+:::
+
 ---
 
 <a id="the-math"></a>

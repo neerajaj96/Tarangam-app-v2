@@ -9,6 +9,10 @@
 A classical ball rolls back from a hill taller than its energy; a quantum wave *seeps* into the hill (exponential tail $e^{-\kappa x}$) and a surviving sliver re-emerges on the far side. Thinner/higher hills leak less — but never zero. Alpha particles escape nuclei, STM tips "feel" atoms, and tunnel diodes conduct through barriers this way: ghosts paying exponentially for wall thickness.
 :::
 
+::: anim tunnel-tail Seep In, Trickle Out
+Incoming wave, exponential tail $e^{-\kappa x}$ inside, surviving sliver out with $T \propto e^{-2\kappa a}$ — the STM's ruler drawn.
+:::
+
 ---
 
 <a id="the-math"></a>

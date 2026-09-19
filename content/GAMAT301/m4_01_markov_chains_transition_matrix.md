@@ -9,6 +9,10 @@
 A traveller hops between cities, choosing the next city by rolling dice kept *in the current city only* — how they arrived is forgotten. The **transition matrix** $P$ lists every city's dice ($P_{ij}$ = hop $i\to j$); rows sum to $1$. Multi-step forecasts multiply the dice: two hops = $P^2$, initial crowd $\pi^{(0)}$ spreads as $\pi^{(0)}P^n$.
 :::
 
+::: anim chain-graph Dice in Each City
+Sunny keeps $0.8$, rains $0.2$; Rainy dries $0.4$, stays $0.6$ — rows sum to $1$, the worked matrix drawn.
+:::
+
 ---
 
 <a id="the-math"></a>

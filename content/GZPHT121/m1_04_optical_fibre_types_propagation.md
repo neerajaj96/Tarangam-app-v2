@@ -9,6 +9,10 @@
 Shine a torch into a stream of water in a dark room — light stays trapped inside the stream, bending with it. An optical fibre is that stream frozen into glass: a high-index **core** wrapped in a lower-index **cladding**. Any ray hitting the wall at a grazing enough angle suffers **total internal reflection** and zig-zags forward instead of escaping. Step-index is a pipe with a sharp wall (rays take different-length zig-zag paths → pulses spread); graded-index is a pipe whose glass gets gradually thinner toward the edge, continuously bending rays into smooth sine curves so all paths arrive together.
 :::
 
+::: anim fiber-tir Zigzag Trapped Past Critical Angle
+Each wall hit past $\theta_c$ reflects fully — the ray zigzags for kilometres, the mechanism every fibre type shares.
+:::
+
 ---
 
 <a id="the-math"></a>

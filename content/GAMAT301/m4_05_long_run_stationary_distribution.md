@@ -9,6 +9,10 @@
 Commuters redistribute among districts nightly per fixed moving fractions. Equilibrium means tonight's arrivals exactly refill each district's departures — inflow $=$ outflow everywhere (**global balance** $\pi = \pi P$). Start anywhere reasonable and the crowd converges to these fixed shares: the **long-run fraction** of nights spent in each district.
 :::
 
+::: anim balance-flows Inflow Equals Outflow
+Dry and Wet trade $0.171$ each way nightly at shares $0.43$/$0.57$ — the worked equilibrium drawn.
+:::
+
 ---
 
 <a id="the-math"></a>

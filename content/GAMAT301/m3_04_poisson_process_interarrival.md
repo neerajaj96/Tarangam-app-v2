@@ -9,6 +9,10 @@
 Raindrops hit a tile as steady random rain: counts per minute are Poisson (M1's law returns with $\lambda t$), while gaps between consecutive drops are exponential with the same rate — short gaps common, long gaps rare, no memory. "How many by time $t$?" and "how long till the next?" are two camera angles on one rain.
 :::
 
+::: anim poisson-rain Ticks, Gaps, Counts
+Irregular ticks with Exp gaps and Poisson window counts — gaps common-short, totals $\lambda t$ on average.
+:::
+
 ---
 
 <a id="the-math"></a>

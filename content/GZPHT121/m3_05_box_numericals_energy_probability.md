@@ -24,6 +24,18 @@ Probability in $[a,b]$: $P = \int_a^b |\psi_n|^2 dx = \int_a^b (2/L)\sin^2(n\pi 
 
 $L \to 2L$: all $E_n$ quarter. $m \to 2m$ (proton vs electron): levels halve per mass ratio ($\approx 1/1836$). $n = 1 \to 2$ gap $= 3E_1$; $2 \to 3$ gap $= 5E_1$.
 
+### 2.3 Box-size ladder (electron $E_1$, order-of-magnitude)
+
+| Box $L$ | $E_1$ | Regime |
+|---|---|---|
+| $0.1$ nm (atom) | $\approx 38$ eV | X-ray / core |
+| $1$ nm (molecule) | $\approx 0.38$ eV | chemistry |
+| $10$ nm (dot) | $\approx 3.8$ meV | infrared |
+| $1\,\mu$m (grain) | $\approx 3.8\times10^{-7}$ eV | effectively continuous |
+| $1$ cm (lab) | $\approx 3.8\times10^{-15}$ eV | continuum |
+
+Read down: $10\times$ smaller box, $100\times$ hotter ground state ($1/L^2$ in one glance).
+
 ::: callout-formula KTU Formula Vault: Box Numerics
 **$E_n=n^2E_1$**, $E_1=h^2/8mL^2$ · jump **$hc/\Delta E$** · $\lambda_n=2L/n$ · $P=\int|\psi|^2$ · $E\propto1/L^2$, $E\propto1/m$.
 :::

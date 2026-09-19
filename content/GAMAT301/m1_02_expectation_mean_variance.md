@@ -9,6 +9,10 @@
 **Expectation** $E[X]$ is the balance point of a seesaw with probability-weights: values far out pull harder per unit mass. **Variance** is how scattered the weights sit around that pivot — all mass at the centre (constant) means zero wobble; split extremes mean wild swinging. The shortcut $Var = E[X^2] - \mu^2$ just says: average the squares, then subtract the square of the average.
 :::
 
+::: anim seesaw-mean Masses Balance at μ = 0.4
+Probability blocks ($-1$: $0.2$, $0$: $0.5$, $2$: $0.3$) teeter exactly at the worked mean — move any block and the pivot must follow.
+:::
+
 ---
 
 <a id="the-math"></a>

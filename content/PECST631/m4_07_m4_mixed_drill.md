@@ -64,11 +64,11 @@ Ambiguity-as-finding (filed queries with tests both ways!) — testers expose ga
 ::: quiz Q2: Mixed Drill
 Pairwise ($3\times3\times2$, browsers×OS×roles): rows ≈?
 (A) $18$ (exhaustive!)
-(*B) $\approx9$-$12$ (covering-array size for strength-$2$ — generator-computed exact, estimate $9$+; every pair somewhere!)
+(*B) $9$ (lower bound $3\times3$ OS-browser pairs, one per row; achievable — role $=(i+j)\bmod2$ covers the rest; every pair somewhere!)
 (C) $6$
 (D) $3$
 ::: explanation
-Covering-array economics ($N$ for $v^k$ strength-$2$ — small $N$ suffices: $9$-ish here!) — generator tools compute exact (PICT-style!). Estimate-then-generate (rough $9$, tool-exact!) is the workflow.
+Covering-array economics ($9$ rows for $3\times3\times2$ strength-$2$: lower bound meets construction — PICT-style tools confirm!). Estimate-then-generate (rough $9$, tool-exact!) is the workflow.
 :::
 
 ::: quiz Q3: Mixed Drill

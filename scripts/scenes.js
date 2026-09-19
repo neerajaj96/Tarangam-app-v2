@@ -759,6 +759,419 @@ ${edge(120, 150, 320, 150, 'a1')}
 <text class="crcres a4" x="480" y="250" text-anchor="middle">poison ✂ stops it</text>
 <text class="animnote a5" x="320" y="285" text-anchor="middle">rumours loop upward — never advertise a route back to its source</text>
 </svg>`
+  },
+
+  'stimulated-emission': {
+    title: 'Stimulated Emission: One Photon In, Two Clones Out',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated stimulated emission: a photon strikes an excited atom and two identical photons leave">
+${defs}
+<line class="axis" x1="180" y1="110" x2="460" y2="110"/><text class="axislbl" x="470" y="114">E2 excited</text>
+<line class="axis" x1="180" y1="210" x2="460" y2="210"/><text class="axislbl" x="470" y="214">E1 ground</text>
+${node(320, 110, 'e-', 'a1')}
+<g class="msg a2"><line x1="40" y1="110" x2="170" y2="110" marker-end="url(#ah)"/><text x="105" y="90" text-anchor="middle">hν in</text></g>
+<g class="msg a3"><line x1="470" y1="100" x2="600" y2="100" marker-end="url(#ah)"/><text x="535" y="85" text-anchor="middle">clone 1</text></g>
+<g class="msg a3"><line x1="470" y1="120" x2="600" y2="120" marker-end="url(#ah)"/><text x="535" y="145" text-anchor="middle">clone 2</text></g>
+${node(320, 210, 'e-', 'a4')}
+<text class="animnote a5" x="320" y="272" text-anchor="middle">same energy, phase and direction — cloning is the entire laser</text>
+</svg>`
+  },
+
+  'laser-cavity': {
+    title: 'Laser Cavity: Mirrors Multiply Light to Threshold',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated laser cavity: photons bounce between full and partial mirrors, amplifying until a beam escapes">
+${defs}
+<g class="cell a1"><rect x="50" y="90" width="26" height="120" rx="6"/><text x="63" y="155">100%</text></g>
+<g class="cell a1"><rect x="564" y="90" width="26" height="120" rx="6"/><text x="577" y="155">~99%</text></g>
+<text class="animcap a1" x="320" y="60" text-anchor="middle">active medium (inverted!)</text>
+<path class="eg a2" d="M80,150 Q200,110 320,150 T560,150" style="fill:none"/>
+<g class="msg a3"><line x1="200" y1="190" x2="440" y2="190" marker-end="url(#ah)"/><text x="320" y="212" text-anchor="middle">round-trip gain ×2, ×4…</text></g>
+<g class="msg a4"><line x1="590" y1="150" x2="635" y2="150" marker-end="url(#ah)"/><text x="612" y="135" text-anchor="middle">beam</text></g>
+<text class="animnote a5" x="320" y="272" text-anchor="middle">gain per pass must beat mirror + scattering losses — threshold decides lasing</text>
+</svg>`
+  },
+
+  'fiber-cone': {
+    title: 'Acceptance Cone: Only Head-On Rays Get Trapped',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated acceptance cone: rays inside theta-a refract in and trap, steeper rays escape">
+${defs}
+<line class="axis" x1="230" y1="110" x2="600" y2="110"/><line class="axis" x1="230" y1="190" x2="600" y2="190"/>
+<text class="axislbl" x="415" y="95">cladding</text>
+<text class="animcap a1" x="415" y="155" text-anchor="middle">core n1</text>
+<g class="msg a2"><line x1="60" y1="130" x2="230" y2="145" marker-end="url(#ah)"/><text x="120" y="115" text-anchor="middle">θa ✓ in</text></g>
+<g class="msg a3"><line x1="60" y1="80" x2="230" y2="130" marker-end="url(#ah)"/><text x="120" y="65" text-anchor="middle">too steep ✗ out</text></g>
+<path class="eg a4" d="M230,145 L350,175 L470,125 L590,175" style="fill:none"/>
+<text class="badge1 a4" x="415" y="230">NA = sinθa = √(n1²−n2²)</text>
+<text class="animnote a5" x="320" y="272" text-anchor="middle">funnel mouth set by the index step — wider step, fatter cone, more modes</text>
+</svg>`
+  },
+
+  'fringe-profile': {
+    title: 'Two-Slit Fringes: Equal Peaks, Equal Spacing',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed fringe profile: equal cos-squared peaks separated by dark zeros">
+${defs}
+<line class="axis" x1="40" y1="250" x2="610" y2="250"/><line class="axis" x1="40" y1="250" x2="40" y2="40"/>
+<text class="axislbl" x="600" y="272">position →</text><text class="axislbl" x="8" y="60">I</text>
+<path class="eg a1" d="M40,250 Q70,110 100,250 Q130,110 160,250 Q190,110 220,250 Q250,110 280,250 Q310,110 340,250 Q370,110 400,250 Q430,110 460,250 Q490,110 520,250 Q550,110 580,250 L610,250" style="fill:none"/>
+<text class="badge1 a2" x="340" y="130">bright: path diff = nλ</text>
+<text class="badge1 a3" x="160" y="265">dark: (2n+1)λ/2</text>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">equal spacing, equal height — the two-slit signature (envelope comes with finite slits)</text>
+</svg>`
+  },
+
+  'slit-envelope': {
+    title: 'Single-Slit Envelope: One Wide Hump, Dark Ladders',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed single-slit pattern: broad central maximum with dark minima ladders each side">
+${defs}
+<line class="axis" x1="30" y1="250" x2="610" y2="250"/><line class="axis" x1="30" y1="250" x2="30" y2="40"/>
+<text class="axislbl" x="600" y="272">θ →</text><text class="axislbl" x="8" y="60">I</text>
+<path class="eg a2" d="M40,250 Q55,215 70,250" style="fill:none"/>
+<path class="eg a1" d="M140,250 C220,250 220,80 320,80 C420,80 420,250 500,250" style="fill:none"/>
+<path class="eg a2" d="M570,250 Q585,215 600,250" style="fill:none"/>
+<text class="badge1 a3" x="140" y="272">−1st min</text>
+<text class="badge1 a3" x="470" y="272">+1st min</text>
+<text class="badge1 a4" x="320" y="60">central max (a·sinθ = 0)</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">narrower slit, wider fan — dark ladders at a·sinθ = nλ</text>
+</svg>`
+  },
+
+  'newton-rings': {
+    title: "Newton's Rings: Contours of Equal Thickness",
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Diagram of Newton rings: concentric circles crowding outward with radii proportional to root-n">
+${defs}
+<circle class="eg a1" cx="200" cy="150" r="30" style="fill:none"/>
+<circle class="eg a2" cx="200" cy="150" r="42" style="fill:none"/>
+<circle class="eg a3" cx="200" cy="150" r="52" style="fill:none"/>
+<circle class="eg a4" cx="200" cy="150" r="60" style="fill:none"/>
+<circle class="eg a1" cx="200" cy="150" r="4"/>
+<text class="animcap a2" x="200" y="40" text-anchor="middle">n = 1 · 2 · 3 · 4</text>
+<text class="badge1 a3" x="470" y="110" text-anchor="middle">r_n ∝ √n — crowd outward</text>
+<text class="crcres a4" x="470" y="150" text-anchor="middle">D_n² = 4nλR</text>
+<text class="badge1 a5" x="470" y="190" text-anchor="middle">centre dark (flip!)</text>
+<text class="animnote a5" x="320" y="272" text-anchor="middle">each ring a thickness contour — diameters squared run 1:2:3:4…</text>
+</svg>`
+  },
+
+  'grating-fan': {
+    title: 'Grating Orders: Staircase Echo Fans Into Spectra',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Diagram of grating orders: zero order straight, higher orders fanning wider with red outermost">
+${defs}
+<line class="axis" x1="220" y1="30" x2="220" y2="270"/>
+<text class="axislbl" x="220" y="290" text-anchor="middle">grating (N lines)</text>
+<g class="msg a1"><line x1="40" y1="150" x2="210" y2="150" marker-end="url(#ah)"/><text x="120" y="130" text-anchor="middle">white in</text></g>
+<g class="msg a2"><line x1="230" y1="150" x2="600" y2="150" marker-end="url(#ah)"/><text x="420" y="135" text-anchor="middle">n = 0 (white!)</text></g>
+<g class="msg a3"><line x1="230" y1="150" x2="560" y2="90" marker-end="url(#ah)"/><text x="430" y="95" text-anchor="middle">n = +1</text></g>
+<g class="msg a3"><line x1="230" y1="150" x2="560" y2="210" marker-end="url(#ah)"/><text x="430" y="220" text-anchor="middle">n = −1</text></g>
+<g class="msg a4"><line x1="230" y1="150" x2="500" y2="50" marker-end="url(#ah)"/><text x="400" y="45" text-anchor="middle">n = +2</text></g>
+<text class="badge1 a4" x="420" y="260">red fans widest · violet hugs zero</text>
+<text class="animnote a5" x="150" y="260" text-anchor="middle">(a+b)·sinθ = nλ per colour</text>
+</svg>`
+  },
+
+  'uncertainty-tradeoff': {
+    title: 'Uncertainty Tradeoff: Squeeze x, p Bulges',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed tradeoff: momentum spread falls hyperbolically as position spread grows, forbidden zone below">
+${defs}
+<line class="axis" x1="70" y1="30" x2="70" y2="260"/><line class="axis" x1="70" y1="260" x2="610" y2="260"/>
+<text class="axislbl" x="600" y="282">Δx →</text><text class="axislbl" x="30" y="50">Δp</text>
+<path class="eg a1" d="M90,80 C220,95 260,140 590,240" style="fill:none"/>
+<text class="animcap a2" x="420" y="120" text-anchor="middle">allowed (Δx·Δp ≥ ℏ/2)</text>
+<text class="badge1 a3" x="180" y="250">forbidden!</text>
+<text class="badge1 a4" x="480" y="80">pin x → p explodes</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">waterbed rule drawn: flatten one side, the other bulges past ℏ/2</text>
+</svg>`
+  },
+
+  'box-states': {
+    title: 'Box States: Humps Multiply, Energies Square',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed box states: one, two and three hump wavefunctions with energies E1, 4E1, 9E1">
+${defs}
+<line class="axis" x1="60" y1="250" x2="360" y2="250"/>
+<text class="axislbl" x="350" y="272">x: 0 → L</text>
+<path class="eg a1" d="M100,230 C160,230 160,160 210,160 C260,160 260,230 320,230" style="fill:none"/>
+<path class="eg a2" d="M100,180 Q155,105 210,180 Q265,105 320,180" style="fill:none"/>
+<path class="eg a3" d="M100,120 Q137,60 173,120 Q210,60 247,120 Q283,60 320,120" style="fill:none"/>
+<text class="animcap a1" x="90" y="235">n=1</text>
+<text class="animcap a2" x="90" y="185">n=2</text>
+<text class="animcap a3" x="90" y="125">n=3</text>
+<text class="crcres a4" x="480" y="130" text-anchor="middle">E1 · 4E1 · 9E1</text>
+<text class="badge1 a4" x="480" y="160" text-anchor="middle">nodes: 0 · 1 · 2</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">humps count n, energies square n² — the guitar-string ladder drawn</text>
+</svg>`
+  },
+
+  'tunnel-tail': {
+    title: 'Tunnelling Tail: Seep In, Trickle Out',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Diagram of tunnelling: incoming wave, exponential tail inside the barrier, small transmitted wave">
+${defs}
+<path class="eg a1" d="M30,150 Q60,110 90,150 Q120,190 150,150 Q180,110 210,150" style="fill:none"/>
+<g class="cell a2"><rect x="230" y="60" width="180" height="180" rx="8"/><text x="320" y="140">V0 &gt; E</text><text x="320" y="165">width a</text></g>
+<path class="eg a3" d="M230,150 C280,150 300,170 350,196 C380,212 395,218 410,220" style="fill:none"/>
+<path class="eg a4" d="M430,220 Q450,200 470,220 Q490,240 510,220 Q530,200 550,220 Q570,240 590,220" style="fill:none"/>
+<text class="badge1 a3" x="320" y="250">tail e^(−κx) inside</text>
+<text class="badge1 a4" x="520" y="255">sliver out: T ∝ e^(−2κa)</text>
+<text class="animnote a5" x="320" y="285" text-anchor="middle">classically zero beyond the wall — quantumly an exponential whisper survives</text>
+</svg>`
+  },
+
+  'string-modes': {
+    title: 'String Modes: Halves Fit, Frequencies Multiply',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed string modes: fundamental and two overtones with nodes marked and frequencies f, 2f, 3f">
+${defs}
+<line class="axis" x1="100" y1="30" x2="100" y2="260"/><line class="axis" x1="320" y1="30" x2="320" y2="260"/>
+<path class="eg a1" d="M100,230 Q210,140 320,230" style="fill:none"/>
+<path class="eg a2" d="M100,160 Q155,95 210,160 Q265,95 320,160" style="fill:none"/>
+<path class="eg a3" d="M100,90 Q128,40 155,90 Q182,40 210,90 Q237,40 265,90 Q292,40 320,90" style="fill:none"/>
+<text class="animcap a1" x="420" y="230">n=1 · f</text>
+<text class="animcap a2" x="420" y="160">n=2 · 2f</text>
+<text class="animcap a3" x="420" y="90">n=3 · 3f</text>
+<text class="badge1 a4" x="210" y="285">nodes pinned at walls — only half-waves fit</text>
+<text class="animnote a5" x="420" y="285" text-anchor="middle">same quantising as the box, audible</text>
+</svg>`
+  },
+
+  'sabine-decay': {
+    title: 'Sabine Decay: Live Halls Linger, Dead Rooms Drop',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed reverberation decay: slow live-hall curve and fast dead-room curve to the minus-60dB line">
+${defs}
+<line class="axis" x1="70" y1="30" x2="70" y2="260"/><line class="axis" x1="70" y1="260" x2="610" y2="260"/>
+<text class="axislbl" x="600" y="282">time →</text><text class="axislbl" x="25" y="60">level dB</text>
+<line class="eg" x1="70" y1="240" x2="610" y2="240" stroke-dasharray="8 6"/>
+<text class="axislbl" x="560" y="232">−60 dB</text>
+<path class="eg a1" d="M80,70 C250,90 400,150 540,240" style="fill:none"/>
+<path class="eg a2" d="M80,70 C150,150 200,220 270,248" style="fill:none"/>
+<text class="badge1 a3" x="430" y="180">live hall: long TR</text>
+<text class="badge1 a4" x="200" y="130">dead room: short TR</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">TR = seconds to the −60 dB line — drain size sets the tail</text>
+</svg>`
+  },
+
+  'pulse-echo': {
+    title: 'Pulse-Echo A-Scan: Fire, Flaw, Back Wall',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="A-scan trace: tall fire pip, medium flaw pip, tall back-wall pip with depth labels">
+${defs}
+<line class="axis" x1="50" y1="230" x2="610" y2="230"/><line class="axis" x1="50" y1="230" x2="50" y2="40"/>
+<text class="axislbl" x="600" y="252">time →</text><text class="axislbl" x="20" y="60">echo</text>
+<line class="eg a1" x1="110" y1="230" x2="110" y2="80"/>
+<line class="eg a2" x1="300" y1="230" x2="300" y2="150"/>
+<line class="eg a3" x1="490" y1="230" x2="490" y2="100"/>
+<text class="animcap a1" x="110" y="65">fire</text>
+<text class="animcap a2" x="300" y="135">flaw d=vt₁/2</text>
+<text class="animcap a3" x="490" y="85">wall d=vt₂/2</text>
+<text class="badge1 a4" x="320" y="272">early small pip + late weak wall = defect signature</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">delay gives depth, pip size gives seriousness — halve always</text>
+</svg>`
+  },
+
+  'pmf-cdf-bars': {
+    title: 'pmf Bars With cdf Steps (Two Coins)',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed pmf bars for two coins with cdf step line climbing to one">
+${defs}
+<line class="axis" x1="70" y1="30" x2="70" y2="250"/><line class="axis" x1="70" y1="250" x2="610" y2="250"/>
+<text class="axislbl" x="600" y="272">x (heads)</text><text class="axislbl" x="25" y="50">p</text>
+<g class="cell a1"><rect x="140" y="200" width="60" height="50" rx="4"/><text x="170" y="228">1/4</text></g>
+<g class="cell a1"><rect x="290" y="150" width="60" height="100" rx="4"/><text x="320" y="205">1/2</text></g>
+<g class="cell a1"><rect x="440" y="200" width="60" height="50" rx="4"/><text x="470" y="228">1/4</text></g>
+<path class="eg a2" d="M70,250 L140,250 L140,200 L290,200 L290,100 L440,100 L440,50 L610,50" style="fill:none"/>
+<text class="animcap a2" x="215" y="185">F=0.25</text><text class="animcap a2" x="365" y="85">F=0.75</text><text class="animcap a2" x="525" y="35">F=1.0</text>
+<text class="badge1 a3" x="470" y="30">bars = exactly · steps = up-to</text>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">cdf steps at each value by its bar height — running total drawn</text>
+</svg>`
+  },
+
+  'seesaw-mean': {
+    title: 'Seesaw Mean: Probability Mass Balances at μ',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Diagram of expectation as a seesaw balancing probability weights at the mean">
+${defs}
+<line class="eg a1" x1="90" y1="180" x2="550" y2="180"/>
+<path class="eg a2" d="M294,180 L270,250 L318,250 Z" style="fill:none"/>
+<g class="cell a1"><rect x="118" y="156" width="44" height="24" rx="4"/><text x="140" y="150">−1·.2</text></g>
+<g class="cell a1"><rect x="228" y="120" width="44" height="60" rx="4"/><text x="250" y="112">0·.5</text></g>
+<g class="cell a1"><rect x="448" y="144" width="44" height="36" rx="4"/><text x="470" y="136">2·.3</text></g>
+<g class="msg a3"><line x1="294" y1="180" x2="294" y2="262" marker-end="url(#ah)"/><text x="294" y="282" text-anchor="middle">μ = 0.4 pivot</text></g>
+<text class="animnote a4" x="320" y="35" text-anchor="middle">far values pull harder per unit mass — balance point is the mean</text>
+</svg>`
+  },
+
+  'binomial-shapes': {
+    title: 'Binomial Shapes: Symmetric at p=1/2, Skewed Elsewhere',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed binomial bars: symmetric at p one-half, right-skewed at p two-tenths">
+${defs}
+<text class="animcap a1" x="170" y="30" text-anchor="middle">n=4, p=1/2</text>
+<g class="cell a1"><rect x="80" y="230" width="28" height="20" rx="3"/><rect x="112" y="170" width="28" height="80" rx="3"/><rect x="144" y="130" width="28" height="120" rx="3"/><rect x="176" y="170" width="28" height="80" rx="3"/><rect x="208" y="230" width="28" height="20" rx="3"/></g>
+<text class="animcap a2" x="470" y="30" text-anchor="middle">n=4, p=0.2</text>
+<g class="cell a2"><rect x="380" y="152" width="28" height="98" rx="3"/><rect x="412" y="152" width="28" height="98" rx="3"/><rect x="444" y="213" width="28" height="37" rx="3"/><rect x="476" y="244" width="28" height="6" rx="3"/><rect x="508" y="248" width="28" height="2" rx="3"/></g>
+<text class="badge1 a3" x="170" y="272">pile centre</text>
+<text class="badge1 a3" x="470" y="272">pile left (np=0.8!)</text>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">same n, moved p — symmetry only at one-half, mean np drags the pile</text>
+</svg>`
+  },
+
+  'pdf-cdf-area': {
+    title: 'pdf Area With cdf Sweep (Two Panels)',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed density with shaded interval beside its rising cdf curve">
+${defs}
+<text class="animcap a1" x="200" y="30" text-anchor="middle">pdf: area = probability</text>
+<path class="eg a1" d="M90,230 C160,230 170,120 240,120 C310,120 320,230 390,230" style="fill:none"/>
+<g class="cell a2"><rect x="210" y="170" width="70" height="60" rx="4"/><text x="245" y="205">P(a,b)</text></g>
+<text class="animcap a3" x="500" y="30" text-anchor="middle">cdf: swept sand</text>
+<path class="eg a3" d="M400,230 C470,230 450,120 520,100 C560,90 580,85 600,84" style="fill:none"/>
+<text class="badge1 a4" x="470" y="200">F(a)</text>
+<text class="badge1 a4" x="550" y="70">F(b)</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">shade between a,b on the left; read the rise between F(a),F(b) on the right</text>
+</svg>`
+  },
+
+  'normal-bell': {
+    title: 'Normal Bell: σ Bands With 68-95-99.7',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed normal bell with one-two-three sigma bands and empirical percentages">
+${defs}
+<line class="axis" x1="40" y1="250" x2="610" y2="250"/>
+<path class="eg a1" d="M80,250 C180,250 190,70 320,70 C450,70 460,250 560,250" style="fill:none"/>
+<g class="cell a2"><rect x="255" y="150" width="130" height="100" rx="4"/></g>
+<text class="animcap a3" x="320" y="40" text-anchor="middle">μ</text>
+<text class="badge1 a3" x="320" y="272">±1σ: 68% · ±2σ: 95% · ±3σ: 99.7%</text>
+<text class="badge1 a4" x="150" y="130">tails thin fast</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">standardise to Z, then read one table for every bell ever</text>
+</svg>`
+  },
+
+  'exp-decay': {
+    title: 'Exponential Tail: Same Shape After Any s',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed exponential decay with restarted same-shape tail from survival point s">
+${defs}
+<line class="axis" x1="60" y1="30" x2="60" y2="260"/><line class="axis" x1="60" y1="260" x2="610" y2="260"/>
+<text class="axislbl" x="600" y="282">t →</text><text class="axislbl" x="25" y="50">f</text>
+<path class="eg a1" d="M60,70 C200,80 320,150 590,250" style="fill:none"/>
+<path class="eg a2" d="M300,140 C400,150 480,200 590,250" style="fill:none" stroke-dasharray="8 6"/>
+<text class="animcap a3" x="300" y="125">survived to s…</text>
+<text class="badge1 a4" x="450" y="170">…same decay ahead</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">dashed restart retraces the solid — memorylessness drawn</text>
+</svg>`
+  },
+
+  'joint-region': {
+    title: 'Joint Region: Volume Above the Patch',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Diagram of unit square with shaded triangle region and marginal squash arrows">
+${defs}
+<g class="cell a1"><rect x="140" y="60" width="200" height="200" rx="8"/></g>
+<path class="eg a2" d="M140,60 L340,260 L140,260 Z" style="fill:none"/>
+<text class="animcap a2" x="200" y="220">x+y&lt;1</text>
+<g class="msg a3"><line x1="340" y1="160" x2="470" y2="160" marker-end="url(#ah)"/><text x="410" y="145" text-anchor="middle">squash → fX</text></g>
+<g class="msg a3"><line x1="240" y1="260" x2="240" y2="290" marker-end="url(#ah)"/></g>
+<text class="animcap a3" x="330" y="285">squash → fY</text>
+<text class="badge1 a4" x="470" y="220">P = volume above patch</text>
+<text class="animnote a5" x="320" y="35" text-anchor="middle">integrate the patch for probability, squash an axis for margins</text>
+</svg>`
+  },
+
+  'tail-bounds': {
+    title: 'Tail Bounds Hover Above Truth',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed tail probability with Markov bound hyperbola floating above the true curve">
+${defs}
+<line class="axis" x1="60" y1="30" x2="60" y2="260"/><line class="axis" x1="60" y1="260" x2="610" y2="260"/>
+<text class="axislbl" x="600" y="282">a →</text><text class="axislbl" x="20" y="50">P(X≥a)</text>
+<path class="eg a1" d="M80,230 C200,220 300,150 580,110" style="fill:none"/>
+<path class="eg a2" d="M80,60 C250,80 400,130 580,175" style="fill:none" stroke-dasharray="8 6"/>
+<text class="badge1 a1" x="450" y="140">truth (exact tail)</text>
+<text class="badge1 a2" x="420" y="75">Markov μ/a (ceiling!)</text>
+<text class="animnote a3" x="320" y="292" text-anchor="middle">bounds never dip below truth — looseness is the price of knowing only μ</text>
+</svg>`
+  },
+
+  'clt-narrow': {
+    title: 'CLT Narrowing: Means Huddle as n Grows',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Graphed sampling bells narrowing around mu as sample size grows">
+${defs}
+<line class="axis" x1="40" y1="250" x2="610" y2="250"/>
+<text class="axislbl" x="600" y="272">x̄</text>
+<path class="eg a1" d="M60,250 C150,250 160,140 320,140 C480,140 490,250 580,250" style="fill:none"/>
+<path class="eg a2" d="M140,250 C220,250 230,105 320,105 C410,105 420,250 500,250" style="fill:none"/>
+<path class="eg a3" d="M240,250 C280,250 285,55 320,55 C355,55 360,250 400,250" style="fill:none"/>
+<text class="animcap a1" x="90" y="230">n=1</text>
+<text class="animcap a2" x="170" y="200">n=16</text>
+<text class="animcap a3" x="410" y="120">n=100</text>
+<text class="badge1 a4" x="320" y="30" text-anchor="middle">width σ/√n · centre μ — SLLN+CLT drawn</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">destination μ, landing pattern bell — sample more, huddle tighter</text>
+</svg>`
+  },
+
+  'poisson-rain': {
+    title: 'Poisson Rain: Ticks, Gaps, Counts',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Timeline with irregular arrival ticks, gap brackets and count labels">
+${defs}
+<line class="axis" x1="40" y1="200" x2="610" y2="200"/>
+<text class="axislbl" x="600" y="222">time →</text>
+<line class="eg a1" x1="110" y1="200" x2="110" y2="120"/>
+<line class="eg a1" x1="175" y1="200" x2="175" y2="120"/>
+<line class="eg a1" x1="195" y1="200" x2="195" y2="120"/>
+<line class="eg a1" x1="290" y1="200" x2="290" y2="120"/>
+<line class="eg a1" x1="420" y1="200" x2="420" y2="120"/>
+<line class="eg a1" x1="445" y1="200" x2="445" y2="120"/>
+<line class="eg a1" x1="560" y1="200" x2="560" y2="120"/>
+<text class="badge1 a2" x="230" y="100">gaps ~ Exp(λ) — short common!</text>
+<text class="badge1 a3" x="420" y="260">counts in window ~ Poisson(λt)</text>
+<text class="animnote a4" x="320" y="35" text-anchor="middle">same rain, two cameras: gaps between ticks, totals per window</text>
+</svg>`
+  },
+
+  'process-grid': {
+    title: 'Process Grid: Time Type × State Type',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Two-by-two grid sorting processes by discrete or continuous time and state">
+${defs}
+<g class="stagebox a1"><rect x="60" y="60" width="240" height="90" rx="10"/><text x="180" y="95">discrete t · discrete X</text><text x="180" y="120" class="sub">Markov chains (M4!)</text></g>
+<g class="stagebox a2"><rect x="340" y="60" width="240" height="90" rx="10"/><text x="460" y="95">discrete t · continuous X</text><text x="460" y="120" class="sub">prices, AR models</text></g>
+<g class="stagebox a3"><rect x="60" y="170" width="240" height="90" rx="10"/><text x="180" y="205">continuous t · discrete X</text><text x="180" y="230" class="sub">Poisson process!</text></g>
+<g class="stagebox a4"><rect x="340" y="170" width="240" height="90" rx="10"/><text x="460" y="205">continuous t · continuous X</text><text x="460" y="230" class="sub">Brownian (horizon!)</text></g>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">two axes, four families — classify first, model second</text>
+</svg>`
+  },
+
+  'chain-graph': {
+    title: 'Sunny–Rainy Chain: Dice in Each City',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Two-state chain diagram with self-loops and crossing probabilities from the worked example">
+${defs}
+${node(170, 150, 'SUN', 'a1')}
+${node(470, 150, 'RAIN', 'a1')}
+<path class="eg a2" d="M140,128 C110,88 200,88 185,126" style="fill:none"/>
+<text class="animcap a2" x="120" y="80">0.8</text>
+<path class="eg a2" d="M500,128 C530,88 440,88 455,126" style="fill:none"/>
+<text class="animcap a2" x="520" y="80">0.6</text>
+<g class="msg a3"><line x1="192" y1="150" x2="448" y2="150" marker-end="url(#ah)"/><text x="320" y="130" text-anchor="middle">0.2</text></g>
+<g class="msg a4"><line x1="448" y1="180" x2="192" y2="180" marker-end="url(#ah)"/><text x="320" y="205" text-anchor="middle">0.4</text></g>
+<text class="animnote a5" x="320" y="272" text-anchor="middle">rows sum to 1 — two hops out is P², crowd spreads as πPⁿ</text>
+</svg>`
+  },
+
+  'ruin-walk': {
+    title: "Gambler's Walk: Wiggle Between Two Walls",
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Fortune path wiggling from stake k to an absorbing wall at ruin or goal">
+${defs}
+<line class="axis" x1="80" y1="230" x2="560" y2="230"/>
+<text class="axislbl" x="590" y="252">steps →</text>
+<line class="eg a1" x1="120" y1="60" x2="120" y2="230"/>
+<line class="eg a1" x1="520" y1="60" x2="520" y2="230"/>
+<text class="animcap a1" x="120" y="45" text-anchor="middle">ruin 0</text>
+<text class="animcap a1" x="520" y="45" text-anchor="middle">goal N</text>
+<path class="eg a2" d="M200,200 L240,160 L280,190 L320,150 L360,180 L400,140 L440,170 L470,200 L500,230" style="fill:none"/>
+<text class="badge1 a3" x="200" y="225">stake k</text>
+<text class="badge1 a4" x="500" y="255">absorbed!</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">fate = formula in k, p, N — walls decide, wiggles merely travel</text>
+</svg>`
+  },
+
+  'balance-flows': {
+    title: 'Stationary Balance: Inflow Equals Outflow',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Two districts exchanging equal flows at stationary shares">
+${defs}
+${node(170, 150, 'DRY', 'a1')}
+${node(470, 150, 'WET', 'a1')}
+<text class="animcap a1" x="170" y="210">π=0.43</text>
+<text class="animcap a1" x="470" y="210">π=0.57</text>
+<g class="msg a2"><line x1="192" y1="130" x2="448" y2="130" marker-end="url(#ah)"/><text x="320" y="110" text-anchor="middle">0.171 out</text></g>
+<g class="msg a3"><line x1="448" y1="170" x2="192" y2="170" marker-end="url(#ah)"/><text x="320" y="195" text-anchor="middle">0.171 in</text></g>
+<text class="crcres a4" x="320" y="262" text-anchor="middle">0.43×0.4 = 0.57×0.3 ✓ balanced</text>
+<text class="animnote a5" x="320" y="285" text-anchor="middle">arrivals refill departures nightly — crowd converges to these shares</text>
+</svg>`
   }
 };
 

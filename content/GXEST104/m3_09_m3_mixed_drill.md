@@ -16,7 +16,7 @@ Diodes: *assume a state, verify it*. Transistors: *assume a region, verify $V_{C
 
 ### 2.1 Habit sheet
 
-Diode ON iff solved $I>0$ (else OFF) · BJT active iff $V_{CE}>0.2$ after $\beta$-math (else saturation) · $A_V=-R_C/r_e'$, $r_e'=25\text{mV}/I_E$ · Zener: $I_S=I_Z+I_L$ · ripple ladder $1.21/0.482$/filtered.
+Diode ON iff solved $I>0$ (else OFF) · BJT active iff $V_{CE}>0.2$ after $\beta$-math (else saturation) · $A_V=-R_C/r_e'$, $r_e'=25\text{mV}/I_E$ · JFET $I_D=I_{DSS}(1-V_{GS}/V_P)^2$, MOSFET needs $V_{GS}>V_T$ (N-enhancement) · Zener: $I_S=I_Z+I_L$ · ripple ladder $1.21/0.482$/filtered.
 
 ::: callout-formula KTU Formula Vault: M3 Habits
 Verify **state/region** · gain by **ratios** · Zener **seesaw** · ripple **ladder**.

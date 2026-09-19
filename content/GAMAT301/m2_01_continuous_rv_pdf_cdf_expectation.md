@@ -9,6 +9,10 @@
 A pmf stacks discrete bricks; a pdf spreads a sand pile — the height at one grain means nothing, but the *area* over an interval is the probability. The cdf is the sand swept up to point $x$. A single exact point has zero width, hence zero area: $P(X = x) = 0$ for every $x$ — only intervals count.
 :::
 
+::: anim pdf-cdf-area Area Left, Sweep Right
+Shade $[a,b]$ under the density; read $F(b)-F(a)$ off the cdf rise — two panels, one probability.
+:::
+
 ---
 
 <a id="the-math"></a>

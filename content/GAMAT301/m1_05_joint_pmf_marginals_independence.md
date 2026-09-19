@@ -20,6 +20,16 @@ $$p(x,y) = P(X=x, Y=y) \ge 0, \quad \sum_x\sum_y p(x,y) = 1$$
 
 $$p_X(x) = \sum_y p(x,y), \qquad p_Y(y) = \sum_x p(x,y)$$
 
+The worked table below, with margins attached:
+
+| $X\backslash Y$ | $0$ | $1$ | $p_X$ |
+|---|---|---|---|
+| $0$ | $0.2$ | $0.3$ | $0.5$ |
+| $1$ | $0.1$ | $0.4$ | $0.5$ |
+| $p_Y$ | $0.3$ | $0.7$ | $1.0$ |
+
+Margins sum to $1.0$ both ways — the two-second audit before any independence test.
+
 ### 2.2 Independence test
 
 $X, Y$ independent iff every cell factorises:

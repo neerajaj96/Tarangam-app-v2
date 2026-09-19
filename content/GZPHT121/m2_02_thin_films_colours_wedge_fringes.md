@@ -38,6 +38,15 @@ Reflected bright **$2\mu t\cos r=n\lambda$** · wedge width **$\beta=\lambda/(2\
 Apex ($t=0$) is *dark* in reflection, bright in transmission. Writing "apex bright" for a reflected wedge instantly contradicts the half-wave flip — examiners deduct for it every time.
 :::
 
+### 2.4 Bright-or-dark chooser (which condition where)
+
+| Setup | Bright | Dark | It measures |
+|---|---|---|---|
+| Film, reflected | $2\mu t\cos r = n\lambda$ | $2\mu t\cos r = (2n+1)\lambda/2$ | $t$, $\lambda$, $\mu$ |
+| Film, transmitted | swapped (no net flip) | swapped | same, cross-check |
+| Air wedge | same reflected pair, $\beta = \lambda/2\alpha$ | apex dark always | $\alpha$, sheet $d$ |
+| Newton's rings | $D_n^2 = 4n\lambda R$ | centre dark | $\lambda$, liquid $\mu$ |
+
 ---
 
 <a id="worked-example"></a>

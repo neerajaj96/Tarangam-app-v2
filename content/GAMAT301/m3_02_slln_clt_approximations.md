@@ -9,6 +9,10 @@
 Toss a coin $10$ times: $80\%$ heads happens. Toss $10{,}000$: the fraction glues to $1/2$ (**SLLN** — the average *settles*). Zoom into the remaining wobble and it is always bell-shaped with width $\sigma/\sqrt{n}$ (**CLT** — the *shape* of the error is universal). SLLN picks the destination; CLT describes the landing pattern.
 :::
 
+::: anim clt-narrow Huddle Tighter With n
+Bells for $n = 1, 16, 100$ around $\mu$ with widths $\sigma/\sqrt{n}$ — destination plus landing pattern drawn.
+:::
+
 ---
 
 <a id="the-math"></a>

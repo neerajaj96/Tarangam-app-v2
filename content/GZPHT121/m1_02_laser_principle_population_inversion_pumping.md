@@ -9,6 +9,10 @@
 Normally the ground floor (ground state) is packed and the balcony (excited state) is empty — anyone shouting (photon) gets absorbed by the crowd below. **Population inversion** flips this: balcony packed, ground floor empty, so every shout triggers *two* shouts back. But balconies empty fast (excited states decay in $\sim 10^{-8}$ s), so you need a **metastable balcony** — a platform with a broken ladder where people get stuck for $\sim 10^{-3}$ s, long enough for the crowd to pile up. **Pumping** is the escalator forcing people upstairs against nature, and the **resonant cavity** (two mirrors) is the hall of mirrors that sends each shout back through the crowd to collect more echoes until it escapes as the beam.
 :::
 
+::: anim laser-cavity Mirrors Multiply to Threshold
+Photons bounce between the full and partial mirrors through the inverted medium — gain per pass must beat losses before the beam escapes.
+:::
+
 ---
 
 <a id="the-math"></a>

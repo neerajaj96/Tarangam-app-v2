@@ -16,7 +16,7 @@ RMS/avg by $0.707/0.637$ · phasor sums in rect, answers in polar · $Z$ triangl
 
 ### 2.1 Reflex sheet
 
-$V_m \to$ RMS/avg · $a+jb \leftrightarrows M\angle\phi$ · $Z = R+j(X_L-X_C)$, resonance $1/2\pi\sqrt{LC}$ · $P = VI\cos\phi$, correction $\parallel C$ · star $V_L=\sqrt3V_{ph}$ / delta $I_L=\sqrt3I_{ph}$.
+$V_m \to$ RMS/avg · $a+jb \leftrightarrows M\angle\phi$ · $Z = R+j(X_L-X_C)$, resonance $1/2\pi\sqrt{LC}$ · $Q=\omega_0L/R$, BW $= f_0/Q$, magnification $V_L = QV$ · $P = VI\cos\phi$, correction $\parallel C$ · star $V_L=\sqrt3V_{ph}$ / delta $I_L=\sqrt3I_{ph}$.
 
 ::: callout-formula KTU Formula Vault: M2 Reflexes
 $0.707/0.637$ · rect-add/polar-report · $3$-$4$-$5$ · $P=VI\cos\phi$ · star-V/delta-I.

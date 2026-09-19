@@ -28,6 +28,15 @@ $n \to \infty$, $p \to 0$, $np = \lambda$ fixed: $\binom{n}{x}p^x(1-p)^{n-x} \to
 
 Counts in a fixed interval (calls/hour, typos/page, arrivals/minute) with no natural $n$; rate $\lambda$ given or $= np$. $P(X = 0) = e^{-\lambda}$ is the most-used single value.
 
+### Binomial or Poisson? (triage table)
+
+| Symptom | Model | First move |
+|---|---|---|
+| fixed $n$ trials, stable $p$ | Binomial | $\binom{n}{x}p^xq^{n-x}$ |
+| $n \ge 50$, $p \le 0.05$ | Poisson ($\lambda = np$) | $e^{-\lambda}\lambda^x/x!$ |
+| interval counts, no $n$ | Poisson (rate given) | rescale $\lambda t$ first |
+| mean $\ne$ variance claimed | neither — recheck | Poisson forces $\mu = \sigma^2$ |
+
 ::: callout-formula KTU Formula Vault: Poisson
 **$e^{-\lambda}\lambda^x/x!$** · **$\mu=\sigma^2=\lambda$** · limit needs **$n$ large, $p$ small, $np=\lambda$** · $P(0)=e^{-\lambda}$.
 :::

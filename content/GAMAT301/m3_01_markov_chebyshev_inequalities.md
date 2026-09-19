@@ -9,6 +9,10 @@
 **Markov:** if the class average is $50$, at most half the class can score $\ge 100$ — big values "spend" the average budget, capping how many can be huge. **Chebyshev:** if spread $\sigma$ is small, hardly anyone strays $k$ spreads from the mean (at most $1/k^2$) — tight piles can't have fat tails. Both buy certainty with minimal information, so the bounds are loose but universal.
 :::
 
+::: anim tail-bounds Ceilings Above Truth
+True tail below, Markov hyperbola above — looseness is the price of knowing only $\mu$.
+:::
+
 ---
 
 <a id="the-math"></a>

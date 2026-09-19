@@ -9,6 +9,10 @@
 A drunk steps right (+1, prob $p$) or left (−1, $q = 1-p$) each second: position after $n$ steps is the sum of $n$ independent $\pm1$ variables — a binomial walk in disguise. Fair coins ($p = 1/2$) wander with zero drift but $\sqrt{n}$ spread; biased coins march away. Barriers (ruin at $0$, target at $N$) turn wandering into a gambler's fate with an exact formula.
 :::
 
+::: anim ruin-walk Wiggle Between Walls
+Stake $k$ wanders to absorption — fate by formula in $k$, $p$, $N$, not by path-watching.
+:::
+
 ---
 
 <a id="the-math"></a>

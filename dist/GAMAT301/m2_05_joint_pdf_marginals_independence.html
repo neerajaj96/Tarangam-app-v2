@@ -262,7 +262,28 @@
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Terrain Map</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The joint pdf $f(x,y)$ is terrain height over the $xy$-plain; probability over a region is the <em>earth volume</em> above it. <strong>Marginals</strong> are the silhouettes — squash the terrain flat along $y$ (integrate it out) to see $X$&#39;s profile. <strong>Independence</strong> means the terrain is a multiplied landscape $g(x)h(y)$ — every cross-section a scaled copy, no diagonal ridges.</p>
-</div></details><hr>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Patch, Volume, Squash</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Diagram of unit square with shaded triangle region and marginal squash arrows">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<g class="cell a1"><rect x="140" y="60" width="200" height="200" rx="8"/></g>
+<path class="eg a2" d="M140,60 L340,260 L140,260 Z" style="fill:none"/>
+<text class="animcap a2" x="200" y="220">x+y&lt;1</text>
+<g class="msg a3"><line x1="340" y1="160" x2="470" y2="160" marker-end="url(#ah)"/><text x="410" y="145" text-anchor="middle">squash → fX</text></g>
+<g class="msg a3"><line x1="240" y1="260" x2="240" y2="290" marker-end="url(#ah)"/></g>
+<text class="animcap a3" x="330" y="285">squash → fY</text>
+<text class="badge1 a4" x="470" y="220">P = volume above patch</text>
+<text class="animnote a5" x="320" y="35" text-anchor="middle">integrate the patch for probability, squash an axis for margins</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Patch, Volume, Squash</p>
+    <div class="video-observations"><strong>What to observe:</strong> Shade $x+y&lt;1$ for probability; squash an axis for margins — the two joint operations drawn once.</div>
+  </div>
+</div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>

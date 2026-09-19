@@ -1,6 +1,6 @@
-# Mesh + Nodal Mixed Drill: Every Variation
+# M1 Mixed Drill: Every Variation
 
-**Method selection in 10 seconds, supermesh/supernode, dependent sources, and power balance audits.**
+**Method selection in 10 seconds, supermesh/supernode, power audits, and magnetic-path triage — the whole module in one sitting.**
 
 <a id="the-intuition"></a>
 ## 1. The Intuition
@@ -23,6 +23,9 @@ Count meshes vs nodes (smaller wins) → scan source types (current→nodal, vol
 | shared current source | supermesh + difference constraint |
 | floating voltage source | supernode + difference constraint |
 | dependent source | constraint expressing it in unknowns, substitute before solving |
+| series magnetic path | reluctances add ($\mathcal{R}_{iron} + \mathcal{R}_{gap}$), flux $= NI/\sum\mathcal{R}$ |
+| parallel magnetic limbs | MMF common, flux divides inverse to $\mathcal{R}$ (current-division grammar) |
+| air gap in iron ring | gap reluctance dominates ($\times\mu_r$ leverage — check it first) |
 | any solution | power audit: $\sum VI$ delivered $=$ absorbed |
 
 ::: callout-formula KTU Formula Vault: Triage

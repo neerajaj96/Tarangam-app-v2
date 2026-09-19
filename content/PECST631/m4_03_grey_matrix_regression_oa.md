@@ -39,7 +39,7 @@ Pairwise misses $3$+-factor interactions (crypto-protocol corners, config pileup
 
 ::: step [Step 2: Execution] Fill, Compress, Guard
 1. (a) Admin+MFA+Chrome (crown path!) → role/browser spread → exotic cells last (risk-ranked fill, gaps signed!).
-2. (b) Full $18$ → pairwise $\approx9$-ish rows (every OS-browser, OS-role, browser-role pair covered!; generator-verified!).
+2. (b) Full $18$ → pairwise $9$ rows exactly (lower bound: $9$ OS-browser pairs, one per row; role $=(i+j)\bmod2$ covers every OS-role and browser-role pair too).
 3. (c) Auth suites + neighbours (session/profile!) + smoke-all (broad sanity!) — impact-radius selection (change blast map!).
 :::
 

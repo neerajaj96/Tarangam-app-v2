@@ -9,6 +9,10 @@
 One slit whispers in all directions; $N$ evenly spaced slits shout in step only along directions where every slit's wave arrives in phase — a staircase where each step adds exactly one wavelength of delay. Other directions self-cancel. Finer grating (more lines per cm) = steeper staircase = colours fan wider (dispersion); more total lines = narrower, sharper shouts (resolution).
 :::
 
+::: anim grating-fan Zero Straight, Orders Fanned
+$n = 0$ stays white and straight; $\pm1$, $\pm2$ fan wider per order with red outermost — the equation drawn, not just written.
+:::
+
 ---
 
 <a id="the-math"></a>

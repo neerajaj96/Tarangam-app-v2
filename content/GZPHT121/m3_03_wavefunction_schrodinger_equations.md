@@ -9,6 +9,10 @@
 $\Psi(x,t)$ is a haze map: where the haze $|\Psi|^2$ is thick, the electron is likely found; where thin, rarely. The map flows by strict rules (Schrödinger's equation) the way water flows by Navier–Stokes — and like water in a closed tank, only certain sloshing patterns (standing waves) fit, which is where quantisation comes from. The time-dependent equation directs the movie; the time-independent equation lists the allowed frozen frames (energy states).
 :::
 
+::: anim box-states Frozen Frames Preview
+One, two, three humps with energies $E_1$, $4E_1$, $9E_1$ — the standing-wave shapes the next topic derives, shown here as $|\psi|^2$ humps.
+:::
+
 ---
 
 <a id="the-math"></a>

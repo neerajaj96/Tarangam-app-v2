@@ -24,6 +24,17 @@
 
 Audible $20$ Hz–$20$ kHz; infrasonic below; **ultrasonic** above $20$ kHz (the NDT/medical band). Speed in air $\approx 340$ m/s, water $\approx 1500$ m/s, steel $\approx 5000$ m/s — denser/stiffer usually faster.
 
+### 2.3 Medium–speed reference (used across M4)
+
+| Medium | $v$ (m/s) | Shows up in |
+|---|---|---|
+| Air | $\approx 340$ | tuning-fork $\lambda$, $17$ m echo |
+| Seawater | $\approx 1500$ | SONAR ranging |
+| Soft tissue | $\approx 1540$ | ultrasound imaging |
+| Steel (longitudinal) | $\approx 5900$ | NDT flaw sizing |
+
+One table, four later topics — memorise the column, spend the questions.
+
 ::: callout-formula KTU Formula Vault: Wave Basics
 **$v = f\lambda = \lambda/T$** · transverse ⊥, longitudinal ∥ · only transverse **polarises** · ultrasound $> 20$ kHz.
 :::

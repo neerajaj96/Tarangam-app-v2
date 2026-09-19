@@ -9,6 +9,10 @@
 Shout in a bathroom: sound sloshes wall-to-wall, decaying as walls and bodies soak it up — that lingering tail is **reverberation** (dense overlapping echoes). Shout at a cliff: one clean late repeat returns — an **echo**. Too long a tail (cathedral) muddles speech; too short (padded cell) starves music. Sabine's formula is the drain-size equation: bigger room holds more slosh, more absorption drains it faster.
 :::
 
+::: anim sabine-decay Live Lingers, Dead Drops
+Two tails to the $-60$ dB line — absorption sets the slope, volume sets the starting slosh.
+:::
+
 ---
 
 <a id="the-math"></a>

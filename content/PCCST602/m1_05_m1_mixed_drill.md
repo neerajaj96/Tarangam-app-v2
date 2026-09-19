@@ -53,11 +53,11 @@ Arithmetic, coupling verdict, trust design — M1's complete triage in three lin
 ::: quiz Q1: Mixed Drill
 Doubling cores $8\to16$ on $90\%$-parallel code gains:
 (A) $2\times$
-(*B) $1/(0.1+0.9/8)=5.26\times$ → $1/(0.1+0.9/16)=6.4\times$: $+22\%$, not double — serial $10\%$ taxes scaling
+(*B) $1/(0.1+0.9/8)=4.71\times$ → $1/(0.1+0.9/16)=6.4\times$: $+36\%$, not double — serial $10\%$ taxes scaling
 (C) $16\times$
 (D) Nothing
 ::: explanation
-$5.26\to6.4$: the serial tenth dominates at scale. Diminishing-returns arithmetic is the "worth upgrading?" answer — compute both ends, quote the delta.
+$4.71\to6.4$: the serial tenth dominates at scale. Diminishing-returns arithmetic is the "worth upgrading?" answer — compute both ends, quote the delta.
 :::
 
 ::: quiz Q2: Mixed Drill

@@ -9,6 +9,10 @@
 Delhi → Chennai via Mumbai, Hyderabad, or direct: total odds = sum over layovers (to-layover × from-layover). Chapman–Kolmogorov says every $m+n$-step trip factorises through *wherever you were at step $m$* — enumerate middles, multiply legs, add. Matrix squaring is just all layover-sums at once.
 :::
 
+::: anim chain-graph Routes Through Middles
+Two-hop forecasts sum over the middle city — the same dice, now read as layovers.
+:::
+
 ---
 
 <a id="the-math"></a>

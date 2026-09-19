@@ -30,7 +30,7 @@ Amdahl **$1/(s+(1-s)/p)$** (fixed size) · Gustafson **scaled** (growing size) �
 :::
 
 ::: callout-pitfall Cores ≠ Speedup Without Parallel Fraction
-32 cores on 90%-sequential code caps near $10\times$ (Amdahl) — hardware can't parallelise the inherently serial. Profile $s$ first; buy cores for parallel fractions, clocks/memory for serial ones.
+32 cores on 90%-parallel code reaches $\approx7.8\times$ toward a $10\times$ asymptote ($1/(0.1+0.9/32)$ — Amdahl) — hardware can't parallelise the serial tenth. Profile $s$ first; buy cores for parallel fractions, clocks/memory for serial ones.
 :::
 
 ---

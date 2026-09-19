@@ -9,6 +9,10 @@
 A random variable is one photo (one uncertain number); a **stochastic process** $\{X(t)\}$ is the whole film (an uncertain number *at every instant*). Freeze time $t$ → one RV $X(t)$; run time → a random path. **Counting processes** only tick upward ($0,1,2,\dots$ arrivals); whether the film runs in frames (discrete $n = 0,1,2,\dots$) or continuously decides the family.
 :::
 
+::: anim process-grid Two Axes, Four Families
+Time type $\times$ state type with residents named — classify first, model second.
+:::
+
 ---
 
 <a id="the-math"></a>

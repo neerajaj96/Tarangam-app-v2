@@ -9,6 +9,10 @@
 A fibre is a funnel for light: rays entering nearly head-on get trapped; rays entering too sideways smash through the wall and escape. The **acceptance angle** $\theta_a$ is how wide you can open the funnel mouth; the **numerical aperture** $\text{NA} = \sin\theta_a$ is that width as a single number. Bigger index step ($n_1 - n_2$) = wider mouth = more light gathered but more modes and dispersion.
 :::
 
+::: anim fiber-cone Funnel Mouth Sets the Catch
+Rays inside $\theta_a$ refract in and trap; steeper rays smash through — $\text{NA} = \sin\theta_a$ prices the mouth about to be derived.
+:::
+
 ---
 
 <a id="the-math"></a>

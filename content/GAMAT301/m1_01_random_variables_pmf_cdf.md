@@ -9,6 +9,10 @@
 A **random variable** is just a number attached to each lottery outcome: toss two coins, and $X$ = "number of heads" turns $\{TT, TH, HT, HH\}$ into $\{0, 1, 1, 2\}$. The **pmf** lists each value's winning chance ($P(X=0)=1/4$, $P(X=1)=1/2$, $P(X=2)=1/4$). The **cdf** $F(x) = P(X \le x)$ is the running total — "chance of *at most* $x$". pmf answers "exactly"; cdf answers "up to".
 :::
 
+::: anim pmf-cdf-bars Bars for Exactly, Steps for Up-To
+Two-coin bars ($1/4$, $1/2$, $1/4$) with the cdf staircase climbing $0.25 \to 0.75 \to 1.0$ — read heights for points, step levels for intervals.
+:::
+
 ---
 
 <a id="the-math"></a>

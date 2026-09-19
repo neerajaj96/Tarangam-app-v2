@@ -245,7 +245,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 3 MIN READ</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -273,6 +273,36 @@
 <p>$n \to \infty$, $p \to 0$, $np = \lambda$ fixed: $\binom{n}{x}p^x(1-p)^{n-x} \to e^{-\lambda}\lambda^x/x!$. Working rule: $n \ge 20$–$50$ with $p \le 0.05$–$0.1$ (and $np$ modest) → Poisson with $\lambda = np$ is exam-acceptable.</p>
 <h3>2.3 Recognition</h3>
 <p>Counts in a fixed interval (calls/hour, typos/page, arrivals/minute) with no natural $n$; rate $\lambda$ given or $= np$. $P(X = 0) = e^{-\lambda}$ is the most-used single value.</p>
+<h3>Binomial or Poisson? (triage table)</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Model</th>
+<th>First move</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>fixed $n$ trials, stable $p$</td>
+<td>Binomial</td>
+<td>$\binom{n}{x}p^xq^{n-x}$</td>
+</tr>
+<tr>
+<td>$n \ge 50$, $p \le 0.05$</td>
+<td>Poisson ($\lambda = np$)</td>
+<td>$e^{-\lambda}\lambda^x/x!$</td>
+</tr>
+<tr>
+<td>interval counts, no $n$</td>
+<td>Poisson (rate given)</td>
+<td>rescale $\lambda t$ first</td>
+</tr>
+<tr>
+<td>mean $\ne$ variance claimed</td>
+<td>neither — recheck</td>
+<td>Poisson forces $\mu = \sigma^2$</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Poisson</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>$e^{-\lambda}\lambda^x/x!$</strong> · <strong>$\mu=\sigma^2=\lambda$</strong> · limit needs <strong>$n$ large, $p$ small, $np=\lambda$</strong> · $P(0)=e^{-\lambda}$.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Mean Equals Variance — Use It</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>If a computed Poisson variance differs from its mean, the arithmetic is wrong — period. This self-check catches more errors than any re-derivation, so verify $\mu = \sigma^2$ before boxing the answer.</p>
 </div></details><hr>

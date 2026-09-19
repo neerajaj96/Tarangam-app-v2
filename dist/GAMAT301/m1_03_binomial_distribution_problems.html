@@ -262,7 +262,27 @@
 <h2 id="1-the-intuition">1. The Intuition</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Coin Factory</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Flip a biased coin $n$ times ($P(\text{head}) = p$ each flip, independent). Pick <em>which</em> $x$ flips land heads ($\binom{n}{x}$ ways), then charge $p^x(1-p)^{n-x}$ for that exact pattern. Mean $np$ just scales one flip&#39;s average; the distribution piles symmetrically only at $p = 1/2$, skewing otherwise.</p>
-</div></details><hr>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Same n, Moved p</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Graphed binomial bars: symmetric at p one-half, right-skewed at p two-tenths">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="170" y="30" text-anchor="middle">n=4, p=1/2</text>
+<g class="cell a1"><rect x="80" y="230" width="28" height="20" rx="3"/><rect x="112" y="170" width="28" height="80" rx="3"/><rect x="144" y="130" width="28" height="120" rx="3"/><rect x="176" y="170" width="28" height="80" rx="3"/><rect x="208" y="230" width="28" height="20" rx="3"/></g>
+<text class="animcap a2" x="470" y="30" text-anchor="middle">n=4, p=0.2</text>
+<g class="cell a2"><rect x="380" y="152" width="28" height="98" rx="3"/><rect x="412" y="152" width="28" height="98" rx="3"/><rect x="444" y="213" width="28" height="37" rx="3"/><rect x="476" y="244" width="28" height="6" rx="3"/><rect x="508" y="248" width="28" height="2" rx="3"/></g>
+<text class="badge1 a3" x="170" y="272">pile centre</text>
+<text class="badge1 a3" x="470" y="272">pile left (np=0.8!)</text>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">same n, moved p — symmetry only at one-half, mean np drags the pile</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Same n, Moved p</p>
+    <div class="video-observations"><strong>What to observe:</strong> $n = 4$ symmetric at $p = 1/2$ versus piled-left at $p = 0.2$ ($np = 0.8$) — the mean drags the pile it scales.</div>
+  </div>
+</div><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
 <p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>

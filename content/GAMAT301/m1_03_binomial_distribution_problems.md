@@ -9,6 +9,10 @@
 Flip a biased coin $n$ times ($P(\text{head}) = p$ each flip, independent). Pick *which* $x$ flips land heads ($\binom{n}{x}$ ways), then charge $p^x(1-p)^{n-x}$ for that exact pattern. Mean $np$ just scales one flip's average; the distribution piles symmetrically only at $p = 1/2$, skewing otherwise.
 :::
 
+::: anim binomial-shapes Same n, Moved p
+$n = 4$ symmetric at $p = 1/2$ versus piled-left at $p = 0.2$ ($np = 0.8$) — the mean drags the pile it scales.
+:::
+
 ---
 
 <a id="the-math"></a>

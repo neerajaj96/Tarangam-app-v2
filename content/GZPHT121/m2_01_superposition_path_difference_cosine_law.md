@@ -9,6 +9,10 @@
 Drop two stones in a pond: where crest meets crest the water jumps double (constructive); where crest meets trough they flatten (destructive). Light does the same, but the "distance" that matters is counted in *wavelengths travelled inside each material* — the **optical path** $n \times$ geometric path. A mirror flip adds a hidden half-wavelength penalty (phase reversal), which is why thin-film formulas carry that mysterious extra $\lambda/2$.
 :::
 
+::: anim fringe-profile Equal Peaks, Equal Zeros
+Bright where path difference hits $n\lambda$, dark at half-steps — the profile every interference question sketches first.
+:::
+
 ---
 
 <a id="the-math"></a>

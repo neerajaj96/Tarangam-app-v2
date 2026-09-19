@@ -9,6 +9,10 @@
 Heights, errors, exam scores — sums of many small independent nudges all relax into the same bell. **Standardisation** $Z = (X-\mu)/\sigma$ just re-centres the pile at $0$ and re-scales its width to $1$, so one printed table answers every bell question ever: convert units to "standard deviations from the mean", then read area.
 :::
 
+::: anim normal-bell Bands at 68-95-99.7
+$\sigma$-bands shaded with empirical percentages — standardise first, then read the area your $z$ falls in.
+:::
+
 ---
 
 <a id="the-math"></a>
