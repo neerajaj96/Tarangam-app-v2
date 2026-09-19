@@ -22,6 +22,13 @@
 import fs from 'fs';
 import path from 'path';
 import { CURRICULUM_PATH } from './curriculum.js';
+import {
+  CONTENT_DIR,
+  listContentCourses,
+  resolveCoursePath,
+  listTopicFiles,
+  parseTopicFile,
+} from './content.js';
 
 export const TOPIC_SCHEMA_PATH = path.join('data', 'topic-schema.json');
 export const TOPIC_METADATA_EXAMPLE_PATH = path.join('data', 'topic-metadata.example.json');
@@ -174,6 +181,84 @@ export function parseAndValidateTopicFrontMatter(
     );
   }
   return { metadata, body };
+}
+
+// Scan every Markdown topic and report front-matter metadata coverage.
+// Returns { total, withValidMetadata, withoutMetadata, invalid, byCourse,
+// byModule, coveragePct }, where invalid is a list of
+// { courseCode, filename, id, errors }. Uses parseTopicFrontMatter +
+// validateTopicMetadata (no duplicated parsing); topics with invalid
+// front-matter land in `invalid` and are never counted as valid coverage.
+// Metadata stays optional: metadata-less topics are counted, not failed.
+export function collectTopicMetadataCoverage({ contentDir = CONTENT_DIR, schema = null, curriculumDoc = null } = {}) {
+  const report = {
+    total: 0,
+    withValidMetadata: 0,
+    withoutMetadata: 0,
+    invalid: [],
+    byCourse: {},
+    byModule: {},
+  };
+  for (const courseCode of listContentCourses(contentDir)) {
+    const coursePath = resolveCoursePath(contentDir, courseCode);
+    for (const filename of listTopicFiles(coursePath)) {
+      const parsed = parseTopicFile(coursePath, filename);
+      report.total += 1;
+      const raw = fs.readFileSync(parsed.sourcePath, 'utf-8');
+      let frontMatter;
+      try {
+        frontMatter = parseTopicFrontMatter(raw);
+      } catch (e) {
+        report.invalid.push({
+          courseCode,
+          filename,
+          id: null,
+          errors: [`topic-metadata: ${courseCode}/${filename} has malformed front-matter (${(e.cause && e.cause.message) || e.message}) — expected valid YAML matching data/topic-schema.json`],
+        });
+        continue;
+      }
+      if (frontMatter.metadata === null) {
+        report.withoutMetadata += 1;
+        continue;
+      }
+      const validationErrors = schema
+        ? validateTopicMetadata(frontMatter.metadata, {
+          schema,
+          curriculumDoc,
+          contentDir,
+          label: `topic-metadata: ${courseCode}/${filename}#front-matter`,
+        })
+        : [];
+      if (validationErrors.length) {
+        report.invalid.push({
+          courseCode,
+          filename,
+          id: frontMatter.metadata.id ?? null,
+          errors: validationErrors,
+        });
+        continue;
+      }
+      report.withValidMetadata += 1;
+      report.byCourse[courseCode] = (report.byCourse[courseCode] || 0) + 1;
+      const moduleKey = `${courseCode}:M${frontMatter.metadata.module}`;
+      report.byModule[moduleKey] = (report.byModule[moduleKey] || 0) + 1;
+    }
+  }
+  report.coveragePct = report.total ? (report.withValidMetadata / report.total) * 100 : 0;
+  return report;
+}
+
+// One-line human summary of a coverage report, e.g.
+// "metadata coverage: 2/432 topics (0.46%) — by course: GAMAT301:1,
+// PCCST501:1 — by module: GAMAT301:M1:1, PCCST501:M1:1".
+export function formatCoverageSummary(report) {
+  const parts = [
+    `metadata coverage: ${report.withValidMetadata}/${report.total} topics (${report.coveragePct.toFixed(2)}%)`,
+  ];
+  const courses = Object.keys(report.byCourse).sort().map((c) => `${c}:${report.byCourse[c]}`).join(', ') || 'none';
+  const modules = Object.keys(report.byModule).sort().map((m) => `${m}:${report.byModule[m]}`).join(', ') || 'none';
+  parts.push(`by course: ${courses}`, `by module: ${modules}`);
+  return parts.join(' — ');
 }
 
 function typeMatches(value, type) {

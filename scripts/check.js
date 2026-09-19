@@ -21,8 +21,9 @@ import {
   TOPIC_METADATA_EXAMPLE_PATH,
   loadTopicSchema,
   loadTopicMetadata,
-  parseTopicFrontMatter,
   validateTopicMetadata,
+  collectTopicMetadataCoverage,
+  formatCoverageSummary,
 } from './topic-metadata.js';
 
 const errors = [];
@@ -288,10 +289,11 @@ if (fs.existsSync('dist')) {
   }
 }
 
-// 6. Topic metadata fixture validation (schema foundation only — no
-// migration of the 432 Markdown topics yet). Loading and validation live
-// in scripts/topic-metadata.js; the checker only maps loader failures
-// and collects the returned error strings as QA failures.
+// 6. Topic metadata fixture validation + coverage report (migration is
+// still opt-in: only topics carrying a front-matter block are validated).
+// Loading, validation, and coverage live in scripts/topic-metadata.js;
+// the checker only maps loader failures, collects invalid-topic errors
+// as QA failures, and prints the concise coverage summary.
 {
   let schema = null;
   let fixture = null;
@@ -316,29 +318,14 @@ if (fs.existsSync('dist')) {
       label: `topic-metadata: ${TOPIC_METADATA_EXAMPLE_PATH}`,
     })) fail(e);
   }
-  // Front-matter pilot validation: topics carrying a front-matter block
-  // are validated against the same schema; metadata-less topics remain
-  // valid during the migration phase.
+  // Coverage scan: invalid front-matter fails, metadata-less topics remain
+  // valid, and the migration baseline is printed on every check run.
   if (schemaOk) {
-    for (const course of courses) {
-      const dir = path.join('content', course);
-      for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.md'))) {
-        const raw = fs.readFileSync(path.join(dir, f), 'utf-8');
-        let parsed;
-        try {
-          parsed = parseTopicFrontMatter(raw);
-        } catch (e) {
-          fail(`topic-metadata: ${course}/${f} has malformed front-matter (${(e.cause && e.cause.message) || e.message}) — expected valid YAML matching data/topic-schema.json`);
-          continue;
-        }
-        if (parsed.metadata === null) continue;
-        for (const e of validateTopicMetadata(parsed.metadata, {
-          schema,
-          curriculumDoc,
-          label: `topic-metadata: ${course}/${f}#front-matter`,
-        })) fail(e);
-      }
+    const coverage = collectTopicMetadataCoverage({ schema, curriculumDoc });
+    for (const item of coverage.invalid) {
+      for (const e of item.errors) fail(e);
     }
+    console.log(formatCoverageSummary(coverage));
   }
 }
 
