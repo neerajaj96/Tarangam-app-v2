@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **2**
-- Pending: **430**
-- Coverage: **0.46%** (tracked by `npm run check`)
+- Migrated: **8**
+- Pending: **424**
+- Coverage: **1.85%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,8 +19,8 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
-   - GAMAT301 — Module 1 in progress (1 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST501 — Module 1 in progress (1 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
+   - GAMAT301 — Module 1 in progress (6 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
+   - PCCST501 — Module 1 in progress (2 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
    1. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
    2. PCCST501 — Computer Networks (started — see step 1)
@@ -40,16 +40,16 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
 
-## GAMAT301 — Mathematics for Computer and Information Science-3 (1/24 migrated)
+## GAMAT301 — Mathematics for Computer and Information Science-3 (6/24 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
 | M1 Discrete Random Variables | 01 | `m1_01_random_variables_pmf_cdf.md` | `m1_01_random_variables_pmf_cdf` | migrated |
-| M1 Discrete Random Variables | 02 | `m1_02_expectation_mean_variance.md` | `m1_02_expectation_mean_variance` | pending |
-| M1 Discrete Random Variables | 03 | `m1_03_binomial_distribution_problems.md` | `m1_03_binomial_distribution_problems` | pending |
-| M1 Discrete Random Variables | 04 | `m1_04_poisson_distribution_binomial_limit.md` | `m1_04_poisson_distribution_binomial_limit` | pending |
-| M1 Discrete Random Variables | 05 | `m1_05_joint_pmf_marginals_independence.md` | `m1_05_joint_pmf_marginals_independence` | pending |
-| M1 Discrete Random Variables | 06 | `m1_06_expectation_functions_m1_drill.md` | `m1_06_expectation_functions_m1_drill` | pending |
+| M1 Discrete Random Variables | 02 | `m1_02_expectation_mean_variance.md` | `m1_02_expectation_mean_variance` | migrated |
+| M1 Discrete Random Variables | 03 | `m1_03_binomial_distribution_problems.md` | `m1_03_binomial_distribution_problems` | migrated |
+| M1 Discrete Random Variables | 04 | `m1_04_poisson_distribution_binomial_limit.md` | `m1_04_poisson_distribution_binomial_limit` | migrated |
+| M1 Discrete Random Variables | 05 | `m1_05_joint_pmf_marginals_independence.md` | `m1_05_joint_pmf_marginals_independence` | migrated |
+| M1 Discrete Random Variables | 06 | `m1_06_expectation_functions_m1_drill.md` | `m1_06_expectation_functions_m1_drill` | migrated |
 | M2 Continuous Random Variables | 01 | `m2_01_continuous_rv_pdf_cdf_expectation.md` | `m2_01_continuous_rv_pdf_cdf_expectation` | pending |
 | M2 Continuous Random Variables | 02 | `m2_02_uniform_distribution_problems.md` | `m2_02_uniform_distribution_problems` | pending |
 | M2 Continuous Random Variables | 03 | `m2_03_normal_distribution_standardisation.md` | `m2_03_normal_distribution_standardisation` | pending |
@@ -69,11 +69,11 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Markov Chains | 05 | `m4_05_long_run_stationary_distribution.md` | `m4_05_long_run_stationary_distribution` | pending |
 | M4 Markov Chains | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
 
-## PCCST501 — Computer Networks (1/36 migrated)
+## PCCST501 — Computer Networks (2/36 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
-| M1 Application Layer | 01 | `m1_01_internet_overview_and_network_edge.md` | `m1_01_internet_overview_and_network_edge` | pending |
+| M1 Application Layer | 01 | `m1_01_internet_overview_and_network_edge.md` | `m1_01_internet_overview_and_network_edge` | migrated |
 | M1 Application Layer | 02 | `m1_02_protocol_layering_and_osi_tcpip.md` | `m1_02_protocol_layering_and_osi_tcpip` | migrated |
 | M1 Application Layer | 03 | `m1_03_application_layer_paradigms.md` | `m1_03_application_layer_paradigms` | pending |
 | M1 Application Layer | 04 | `m1_04_world_wide_web_and_http.md` | `m1_04_world_wide_web_and_http` | pending |
