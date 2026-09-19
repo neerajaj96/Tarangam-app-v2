@@ -1,3 +1,31 @@
+---
+id: m1_01_internet_overview_and_network_edge
+courseCode: PCCST501
+module: 1
+sequence: 1
+title: Internet Overview & The Network Edge
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Describe the Internet with the nuts-and-bolts and services views
+  - Distinguish end systems, communication links, and packet switches
+  - Contrast client and server as roles rather than device types
+  - Compare home, enterprise, and wireless access networks
+  - Classify guided versus unguided physical media
+concepts:
+  - end systems
+  - hosts
+  - packet switches
+  - network edge
+  - access networks
+  - physical media
+prerequisites: []
+examRelevance: medium
+tags:
+  - internet-overview
+  - network-edge
+  - access-networks
+---
 # Internet Overview & The Network Edge
 
 **End systems and hosts, access networks and physical media, and the two complementary ways of defining "the Internet."**

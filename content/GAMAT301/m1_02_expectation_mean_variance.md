@@ -1,3 +1,29 @@
+---
+id: m1_02_expectation_mean_variance
+courseCode: GAMAT301
+module: 1
+sequence: 2
+title: Expectation, Mean & Variance
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Define expectation, variance, and standard deviation for a discrete variable
+  - Compute variance with the shortcut Var(X) = E[X^2] - mu^2
+  - Apply linear-transformation properties E[aX+b] and Var(aX+b)
+concepts:
+  - expectation
+  - mean
+  - variance
+  - standard deviation
+  - linearity of expectation
+prerequisites:
+  - m1_01_random_variables_pmf_cdf
+examRelevance: high
+tags:
+  - probability
+  - expectation
+  - variance
+---
 # Expectation, Mean & Variance
 
 **The weighted average, the spread, and the shortcut formulas — plus every property KTU tests.**

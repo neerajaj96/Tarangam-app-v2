@@ -1,3 +1,30 @@
+---
+id: m1_03_binomial_distribution_problems
+courseCode: GAMAT301
+module: 1
+sequence: 3
+title: Binomial Distribution & Problems
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Recognize binomial settings with the four-point checklist
+  - Compute binomial probabilities for exactly-x and tail questions
+  - Quote mean np and variance npq directly for moments questions
+  - Distinguish binomial from hypergeometric sampling
+concepts:
+  - binomial distribution
+  - Bernoulli trials
+  - mean
+  - variance
+  - complement rule
+prerequisites:
+  - m1_01_random_variables_pmf_cdf
+  - m1_02_expectation_mean_variance
+examRelevance: high
+tags:
+  - probability
+  - binomial-distribution
+---
 # Binomial Distribution & Problems
 
 **Repeated yes/no trials — pmf, mean $np$, and the four standard question shapes.**
