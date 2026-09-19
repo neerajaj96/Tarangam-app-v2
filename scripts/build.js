@@ -11,19 +11,28 @@ import {
 import {
   readTopicMarkdown,
   renderMarkdown,
-  escapeHtml,
   linkSections,
   buildJumpPills,
 } from './markdown.js';
 import { transformCustomWidgets } from './widgets.js';
 import {
   formatTopicTitle,
-  renderSubjectDetails,
   renderTopicDocument,
 } from './pages.js';
+import {
+  OUTPUT_DIR,
+  cleanOutputDir,
+  ensureCourseDir,
+  writeTopicHtml,
+  writeNavigationIndex,
+  writeSitemap,
+  writeStaticRootFiles,
+  injectDashboardSubjectDetails,
+  writeStandaloneIndex,
+  copyAssetDirs,
+} from './output.js';
 
 const CONTENT_DIR = 'content';
-const OUTPUT_DIR = 'dist';
 const TEMPLATE_PATH = path.join('templates', 'base.html');
 
 // Single source of truth: all curriculum metadata (course names, module
@@ -47,7 +56,10 @@ const MODULE_NAMES = Object.fromEntries(
 // shared scripts/markdown.js module; custom `:::` widget preprocessing
 // (callouts, quizzes, steps, toggles, manim, scenes) lives in the shared
 // scripts/widgets.js module; navigation, subject-detail, template, and
-// topic-page HTML assembly live in the shared scripts/pages.js module.
+// topic-page HTML assembly live in the shared scripts/pages.js module;
+// dist/ creation/cleaning, generated-file writes, sitemap, dashboard
+// injection, and asset copying live in the shared scripts/output.js
+// module; this file orchestrates data preparation and the build.
 
 export function buildSite() {
   const templateStr = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
@@ -55,10 +67,7 @@ export function buildSite() {
   const warnings = [];
 
   // Clean output first so renamed/deleted .md files don't leave stale .html behind.
-  if (fs.existsSync(OUTPUT_DIR)) {
-    fs.rmSync(OUTPUT_DIR, { recursive: true, force: true });
-  }
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  cleanOutputDir(OUTPUT_DIR);
 
   // Course/topic discovery comes from the shared scripts/content.js
   // module (course dirs, sorted .md files, file-path resolution); topic
@@ -68,10 +77,7 @@ export function buildSite() {
   for (const courseCode of courseCodes) {
     const coursePath = resolveCoursePath(CONTENT_DIR, courseCode);
 
-    const courseOutDir = path.join(OUTPUT_DIR, courseCode);
-    if (!fs.existsSync(courseOutDir)) {
-      fs.mkdirSync(courseOutDir, { recursive: true });
-    }
+    const courseOutDir = ensureCourseDir(OUTPUT_DIR, courseCode);
 
     // The curriculum entry is mandatory: a content directory without a
     // data/curriculum.json entry fails the build (no silent fallback).
@@ -153,8 +159,7 @@ export function buildSite() {
         readTime,
       });
 
-      const targetPath = path.join(courseOutDir, page.filename);
-      fs.writeFileSync(targetPath, fullHtmlDoc, 'utf-8');
+      writeTopicHtml(courseOutDir, page.filename, fullHtmlDoc);
     }
 
     coursesData[courseCode] = {
@@ -163,77 +168,19 @@ export function buildSite() {
     };
   }
 
-  fs.writeFileSync(path.join(OUTPUT_DIR, 'navigation_index.json'), JSON.stringify(coursesData, null, 2), 'utf-8');
+  // Generated-file writes, sitemap, static files, dashboard injection,
+  // standalone index, and asset copies live in scripts/output.js.
+  writeNavigationIndex(OUTPUT_DIR, coursesData);
 
-  // Sitemap for SEO (relative URLs; Pages serves dist/ as root).
-  {
-    const urls = ['index.html'];
-    for (const [courseCode, course] of Object.entries(coursesData)) {
-      for (const mod of Object.values(course.modules)) {
-        for (const topic of mod.topics) urls.push(`${courseCode}/${topic.filename}`);
-      }
-    }
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-      urls.map(u => `  <url><loc>${escapeHtml(u)}</loc></url>`).join('\n') + `\n</urlset>\n`;
-    fs.writeFileSync(path.join(OUTPUT_DIR, 'sitemap.xml'), sitemap, 'utf-8');
-  }
+  writeSitemap(OUTPUT_DIR, coursesData);
 
-  // Copy style.css to dist
-  if (fs.existsSync('style.css')) {
-    fs.copyFileSync('style.css', path.join(OUTPUT_DIR, 'style.css'));
-  }
+  writeStaticRootFiles(OUTPUT_DIR);
 
-  // Create .nojekyll in dist
-  fs.writeFileSync(path.join(OUTPUT_DIR, '.nojekyll'), '', 'utf-8');
+  injectDashboardSubjectDetails(coursesData, CURRICULUM_DOC.dashboardOrder);
 
-  // Dashboard subject-detail injection (Topics step of the flow).
-  // Root index.html carries empty TARANGAM-SUBJECT-DETAILS markers; the
-  // build fills them with per-course module/topic blocks so both Pages
-  // modes (branch root + artifact) serve identical lists with zero fetching.
-  // Replacement is deterministic (same content → same bytes), so diffs stay
-  // reviewable; missing markers fail loudly instead of shipping empty screens.
-  if (fs.existsSync('index.html')) {
-    const START = '<!-- TARANGAM-SUBJECT-DETAILS:START -->';
-    const END = '<!-- TARANGAM-SUBJECT-DETAILS:END -->';
-    let rootIndex = fs.readFileSync('index.html', 'utf-8');
-    const si = rootIndex.indexOf(START);
-    const ei = rootIndex.indexOf(END);
-    if (si === -1 || ei === -1 || ei < si) {
-      throw new Error('index.html missing TARANGAM-SUBJECT-DETAILS markers — dashboard topics view cannot be built');
-    }
-    const detailsHtml = renderSubjectDetails(coursesData, CURRICULUM_DOC.dashboardOrder);
-    rootIndex = rootIndex.slice(0, si + START.length) + '\n' + detailsHtml + '\n' + rootIndex.slice(ei);
-    // Fill per-subject topic counts on the subject buttons (same determinism).
-    rootIndex = rootIndex.replace(
-      /<span class="subject-count" data-topic-count="([A-Za-z0-9]+)">.*?<\/span>/g,
-      (m, code) => {
-        const n = Object.values((coursesData[code] || {}).modules || {}).reduce((a, mod) => a + mod.topics.length, 0);
-        return `<span class="subject-count" data-topic-count="${code}">${n} topics</span>`;
-      }
-    );
-    fs.writeFileSync('index.html', rootIndex, 'utf-8');
-  }
+  writeStandaloneIndex(OUTPUT_DIR);
 
-  // Copy root index.html to dist/index.html with adjusted paths for standalone hosting.
-  // Root uses dist/<COURSE>/... links (branch-root mode); inside dist/ the
-  // same cards must be explicitly relative (./<COURSE>/...) for artifact mode.
-  // NOTE: a hardcoded /Tarangam-app-v2/ base is deliberately NOT used — it
-  // would break one of the two modes (branch root needs dist/ prefix,
-  // artifact root must not have it). Explicit relative paths serve both.
-  if (fs.existsSync('index.html')) {
-    let rootIndex = fs.readFileSync('index.html', 'utf-8');
-    // Replace "dist/" prefix for links inside dist/
-    const standaloneIndex = rootIndex.replace(/href="dist\//g, 'href="./');
-    fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), standaloneIndex, 'utf-8');
-  }
-
-  // Copy assets and media if they exist
-  if (fs.existsSync('assets')) {
-    fs.cpSync('assets', path.join(OUTPUT_DIR, 'assets'), { recursive: true });
-  }
-  if (fs.existsSync('media')) {
-    fs.cpSync('media', path.join(OUTPUT_DIR, 'media'), { recursive: true });
-  }
+  copyAssetDirs(OUTPUT_DIR);
 
   console.log('✅ Tarangam curriculum compilation completed successfully.');
   if (warnings.length) {
