@@ -1,3 +1,25 @@
+---
+id: m4_05_transmission_media_guided_unguided
+courseCode: PCCST501
+module: 4
+sequence: 5
+title: 'Transmission Media: Guided & Unguided'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Match copper, coax, and fibre to rate-reach budgets
+  - Apply total internal reflection trapping conditions
+  - Separate bandwidth fatness from propagation delay
+concepts:
+  - guided media
+  - unguided media
+  - propagation delay
+prerequisites: []
+examRelevance: medium
+tags:
+  - transmission-media
+  - fibre
+---
 # Transmission Media: Guided & Unguided
 
 **Copper, glass, and thin air — twisted pair vs coax vs fibre, radio vs microwave vs satellite vs infrared, and two hand-computed propagation numbers.**

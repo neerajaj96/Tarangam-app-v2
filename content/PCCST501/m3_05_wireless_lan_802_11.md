@@ -1,3 +1,26 @@
+---
+id: m3_05_wireless_lan_802_11
+courseCode: PCCST501
+module: 3
+sequence: 5
+title: 'Wireless LAN: 802.11, CSMA/CA & Mobility'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Explain why collision detection dies on radio
+  - Reserve airtime with RTS/CTS against hidden terminals
+  - Read the four-address 802.11 frame and join sequence
+concepts:
+  - CSMA/CA
+  - hidden terminals
+  - 802.11 framing
+prerequisites:
+  - m3_03_multiple_access_protocols
+examRelevance: medium
+tags:
+  - wireless
+  - wifi
+---
 # Wireless LAN: 802.11, CSMA/CA & Mobility
 
 **Why wireless can't detect collisions, hidden/exposed terminals, RTS/CTS reservation, the 802.11 frame, association, and handoff.**

@@ -1,3 +1,26 @@
+---
+id: m3_02_slln_clt_approximations
+courseCode: GAMAT301
+module: 3
+sequence: 2
+title: Strong Law of Large Numbers & Central Limit Theorem
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Separate SLLN convergence from CLT bell-shaped fluctuation
+  - Approximate sum and mean probabilities with continuity correction
+  - Scale standard errors by one over root n
+concepts:
+  - strong law of large numbers
+  - central limit theorem
+  - standard error
+prerequisites:
+  - m2_03_normal_distribution_standardisation
+examRelevance: high
+tags:
+  - probability
+  - limit-theorems
+---
 # Strong Law of Large Numbers & Central Limit Theorem
 
 **Averages converge (SLLN) and fluctuate normally (CLT) — statements plus the approximation engine for sums and means.**

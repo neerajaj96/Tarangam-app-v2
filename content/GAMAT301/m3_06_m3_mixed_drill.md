@@ -1,3 +1,28 @@
+---
+id: m3_06_m3_mixed_drill
+courseCode: GAMAT301
+module: 3
+sequence: 6
+title: 'M3 Mixed Drill: Bounds, CLT & Arrivals'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Diagnose bound, CLT, or arrival doors from given data
+  - State the door explicitly for diagnosis marks
+  - Contrast certain-loose, approximate-tight, and exact answers
+concepts:
+  - model triage
+  - tail bounds
+  - CLT approximation
+prerequisites:
+  - m3_01_markov_chebyshev_inequalities
+  - m3_02_slln_clt_approximations
+  - m3_04_poisson_process_interarrival
+examRelevance: high
+tags:
+  - probability
+  - m3-drill
+---
 # M3 Mixed Drill: Bounds, CLT & Arrivals
 
 **Inequality vs exact, mean vs sum standardisation, counts vs gaps — the three confusions, drilled out.**

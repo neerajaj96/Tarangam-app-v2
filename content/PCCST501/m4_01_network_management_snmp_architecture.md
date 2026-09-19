@@ -1,3 +1,25 @@
+---
+id: m4_01_network_management_snmp_architecture
+courseCode: PCCST501
+module: 4
+sequence: 1
+title: Network Management & SNMP Architecture
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Separate managing entities, agents, and the SNMP language
+  - Read SMI grammar versus MIB dictionary entries
+  - Assign Get, Set, and Trap idioms with version security
+concepts:
+  - SNMP
+  - SMI/MIB
+  - traps
+prerequisites: []
+examRelevance: high
+tags:
+  - snmp
+  - network-management
+---
 # Network Management & SNMP Architecture
 
 **Managing-agent model, SMI/MIB structure, SNMP operations and versions, and why management traffic rides the very network it manages.**

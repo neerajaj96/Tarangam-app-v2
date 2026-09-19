@@ -1,3 +1,25 @@
+---
+id: m3_03_multiple_access_protocols
+courseCode: PCCST501
+module: 3
+sequence: 3
+title: 'Multiple Access: Sharing One Channel'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Contrast partitioning with random-access etiquette
+  - Rank Aloha, slotted Aloha, CSMA, and CSMA/CD by efficiency
+  - Assign CD to wire and CA to radio from the physics
+concepts:
+  - TDMA
+  - Aloha
+  - CSMA/CD
+prerequisites: []
+examRelevance: high
+tags:
+  - data-link
+  - multiple-access
+---
 # Multiple Access: Sharing One Channel
 
 **Channel partitioning (TDMA/FDMA/CDMA), random access (Aloha, CSMA, CSMA/CD), efficiency math, and why Ethernet listens before and during talking.**

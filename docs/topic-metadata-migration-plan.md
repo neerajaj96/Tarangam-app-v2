@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **31**
-- Pending: **401**
-- Coverage: **7.18%** (tracked by `npm run check`)
+- Migrated: **55**
+- Pending: **377**
+- Coverage: **12.73%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,8 +19,8 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
-   - GAMAT301 — Module 1 in progress (12 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST501 — Module 1 in progress (19 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
+   - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
+   - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
    1. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
    2. PCCST501 — Computer Networks (started — see step 1)
@@ -40,7 +40,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
 
-## GAMAT301 — Mathematics for Computer and Information Science-3 (12/24 migrated)
+## GAMAT301 — Mathematics for Computer and Information Science-3 (24/24 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -56,20 +56,20 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M2 Continuous Random Variables | 04 | `m2_04_exponential_distribution_memoryless.md` | `m2_04_exponential_distribution_memoryless` | migrated |
 | M2 Continuous Random Variables | 05 | `m2_05_joint_pdf_marginals_independence.md` | `m2_05_joint_pdf_marginals_independence` | migrated |
 | M2 Continuous Random Variables | 06 | `m2_06_m2_mixed_drill_model_selection.md` | `m2_06_m2_mixed_drill_model_selection` | migrated |
-| M3 Limit Theorems & Stochastic Processes | 01 | `m3_01_markov_chebyshev_inequalities.md` | `m3_01_markov_chebyshev_inequalities` | pending |
-| M3 Limit Theorems & Stochastic Processes | 02 | `m3_02_slln_clt_approximations.md` | `m3_02_slln_clt_approximations` | pending |
-| M3 Limit Theorems & Stochastic Processes | 03 | `m3_03_stochastic_counting_processes.md` | `m3_03_stochastic_counting_processes` | pending |
-| M3 Limit Theorems & Stochastic Processes | 04 | `m3_04_poisson_process_interarrival.md` | `m3_04_poisson_process_interarrival` | pending |
-| M3 Limit Theorems & Stochastic Processes | 05 | `m3_05_poisson_process_drill.md` | `m3_05_poisson_process_drill` | pending |
-| M3 Limit Theorems & Stochastic Processes | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | pending |
-| M4 Markov Chains | 01 | `m4_01_markov_chains_transition_matrix.md` | `m4_01_markov_chains_transition_matrix` | pending |
-| M4 Markov Chains | 02 | `m4_02_random_walk_gambler_ruin.md` | `m4_02_random_walk_gambler_ruin` | pending |
-| M4 Markov Chains | 03 | `m4_03_chapman_kolmogorov_equations.md` | `m4_03_chapman_kolmogorov_equations` | pending |
-| M4 Markov Chains | 04 | `m4_04_classification_states_irreducible_recurrent.md` | `m4_04_classification_states_irreducible_recurrent` | pending |
-| M4 Markov Chains | 05 | `m4_05_long_run_stationary_distribution.md` | `m4_05_long_run_stationary_distribution` | pending |
-| M4 Markov Chains | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
+| M3 Limit Theorems & Stochastic Processes | 01 | `m3_01_markov_chebyshev_inequalities.md` | `m3_01_markov_chebyshev_inequalities` | migrated |
+| M3 Limit Theorems & Stochastic Processes | 02 | `m3_02_slln_clt_approximations.md` | `m3_02_slln_clt_approximations` | migrated |
+| M3 Limit Theorems & Stochastic Processes | 03 | `m3_03_stochastic_counting_processes.md` | `m3_03_stochastic_counting_processes` | migrated |
+| M3 Limit Theorems & Stochastic Processes | 04 | `m3_04_poisson_process_interarrival.md` | `m3_04_poisson_process_interarrival` | migrated |
+| M3 Limit Theorems & Stochastic Processes | 05 | `m3_05_poisson_process_drill.md` | `m3_05_poisson_process_drill` | migrated |
+| M3 Limit Theorems & Stochastic Processes | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | migrated |
+| M4 Markov Chains | 01 | `m4_01_markov_chains_transition_matrix.md` | `m4_01_markov_chains_transition_matrix` | migrated |
+| M4 Markov Chains | 02 | `m4_02_random_walk_gambler_ruin.md` | `m4_02_random_walk_gambler_ruin` | migrated |
+| M4 Markov Chains | 03 | `m4_03_chapman_kolmogorov_equations.md` | `m4_03_chapman_kolmogorov_equations` | migrated |
+| M4 Markov Chains | 04 | `m4_04_classification_states_irreducible_recurrent.md` | `m4_04_classification_states_irreducible_recurrent` | migrated |
+| M4 Markov Chains | 05 | `m4_05_long_run_stationary_distribution.md` | `m4_05_long_run_stationary_distribution` | migrated |
+| M4 Markov Chains | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | migrated |
 
-## PCCST501 — Computer Networks (19/36 migrated)
+## PCCST501 — Computer Networks (31/36 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -94,19 +94,19 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M2 Transport & Network Layer | 10 | `m2_10_unicast_routing_link_state_distance_vector.md` | `m2_10_unicast_routing_link_state_distance_vector` | migrated |
 | M2 Transport & Network Layer | 11 | `m2_11_ipv6_next_generation_transition.md` | `m2_11_ipv6_next_generation_transition` | migrated |
 | M2 Transport & Network Layer | 99 | `m2_99_practice_lab_transport_drills.md` | `m2_99_practice_lab_transport_drills` | pending |
-| M3 Data Link Layer | 01 | `m3_01_datalink_layer_services_and_framing.md` | `m3_01_datalink_layer_services_and_framing` | pending |
-| M3 Data Link Layer | 02 | `m3_02_error_detection_crc_checksums_parity.md` | `m3_02_error_detection_crc_checksums_parity` | pending |
-| M3 Data Link Layer | 03 | `m3_03_multiple_access_protocols.md` | `m3_03_multiple_access_protocols` | pending |
-| M3 Data Link Layer | 04 | `m3_04_lan_addressing_arp_switches_and_vlans.md` | `m3_04_lan_addressing_arp_switches_and_vlans` | pending |
-| M3 Data Link Layer | 05 | `m3_05_wireless_lan_802_11.md` | `m3_05_wireless_lan_802_11` | pending |
-| M3 Data Link Layer | 06 | `m3_06_mobile_ip_agents_tunneling.md` | `m3_06_mobile_ip_agents_tunneling` | pending |
+| M3 Data Link Layer | 01 | `m3_01_datalink_layer_services_and_framing.md` | `m3_01_datalink_layer_services_and_framing` | migrated |
+| M3 Data Link Layer | 02 | `m3_02_error_detection_crc_checksums_parity.md` | `m3_02_error_detection_crc_checksums_parity` | migrated |
+| M3 Data Link Layer | 03 | `m3_03_multiple_access_protocols.md` | `m3_03_multiple_access_protocols` | migrated |
+| M3 Data Link Layer | 04 | `m3_04_lan_addressing_arp_switches_and_vlans.md` | `m3_04_lan_addressing_arp_switches_and_vlans` | migrated |
+| M3 Data Link Layer | 05 | `m3_05_wireless_lan_802_11.md` | `m3_05_wireless_lan_802_11` | migrated |
+| M3 Data Link Layer | 06 | `m3_06_mobile_ip_agents_tunneling.md` | `m3_06_mobile_ip_agents_tunneling` | migrated |
 | M3 Data Link Layer | 99 | `m3_99_practice_lab_datalink_drills.md` | `m3_99_practice_lab_datalink_drills` | pending |
-| M4 Physical Layer & SNMP | 01 | `m4_01_network_management_snmp_architecture.md` | `m4_01_network_management_snmp_architecture` | pending |
-| M4 Physical Layer & SNMP | 02 | `m4_02_nyquist_shannon_channel_capacity.md` | `m4_02_nyquist_shannon_channel_capacity` | pending |
-| M4 Physical Layer & SNMP | 03 | `m4_03_pcm_digitization_sampling_quantization.md` | `m4_03_pcm_digitization_sampling_quantization` | pending |
-| M4 Physical Layer & SNMP | 04 | `m4_04_modulation_ask_fsk_psk_qam.md` | `m4_04_modulation_ask_fsk_psk_qam` | pending |
-| M4 Physical Layer & SNMP | 05 | `m4_05_transmission_media_guided_unguided.md` | `m4_05_transmission_media_guided_unguided` | pending |
-| M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | pending |
+| M4 Physical Layer & SNMP | 01 | `m4_01_network_management_snmp_architecture.md` | `m4_01_network_management_snmp_architecture` | migrated |
+| M4 Physical Layer & SNMP | 02 | `m4_02_nyquist_shannon_channel_capacity.md` | `m4_02_nyquist_shannon_channel_capacity` | migrated |
+| M4 Physical Layer & SNMP | 03 | `m4_03_pcm_digitization_sampling_quantization.md` | `m4_03_pcm_digitization_sampling_quantization` | migrated |
+| M4 Physical Layer & SNMP | 04 | `m4_04_modulation_ask_fsk_psk_qam.md` | `m4_04_modulation_ask_fsk_psk_qam` | migrated |
+| M4 Physical Layer & SNMP | 05 | `m4_05_transmission_media_guided_unguided.md` | `m4_05_transmission_media_guided_unguided` | migrated |
+| M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
 

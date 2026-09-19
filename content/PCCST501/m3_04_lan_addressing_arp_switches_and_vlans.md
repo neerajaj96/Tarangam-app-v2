@@ -1,3 +1,27 @@
+---
+id: m3_04_lan_addressing_arp_switches_and_vlans
+courseCode: PCCST501
+module: 3
+sequence: 4
+title: 'LAN Addressing: MAC, ARP, Switches & VLANs'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Contrast flat MAC names with hierarchical IP names
+  - Trace ARP queries, replies, and cache aging
+  - Separate switch learning from hub flooding
+  - Isolate broadcast domains with VLAN tags
+concepts:
+  - MAC addresses
+  - ARP
+  - switches
+  - VLANs
+prerequisites: []
+examRelevance: medium
+tags:
+  - data-link
+  - lan
+---
 # LAN Addressing: MAC, ARP, Switches & VLANs
 
 **48-bit hardware addresses, how ARP binds IP to MAC, self-learning switches vs. dumb hubs, and carving one LAN into many with VLANs.**

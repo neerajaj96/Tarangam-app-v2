@@ -1,3 +1,26 @@
+---
+id: m4_04_classification_states_irreducible_recurrent
+courseCode: GAMAT301
+module: 4
+sequence: 4
+title: 'Classification: Irreducible, Recurrent & Transient'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Partition states into communicating classes
+  - Test closedness and return-everywhere recurrence
+  - Run reachability, classes, closedness, and recurrence in order
+concepts:
+  - communicating classes
+  - recurrence
+  - transience
+prerequisites:
+  - m4_01_markov_chains_transition_matrix
+examRelevance: medium
+tags:
+  - markov-chains
+  - classification
+---
 # Classification: Irreducible, Recurrent & Transient
 
 **Can you get there from here — and do you come back? Communicating classes, closed sets, and return behaviour.**

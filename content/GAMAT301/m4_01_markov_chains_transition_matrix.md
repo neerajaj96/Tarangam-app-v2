@@ -1,3 +1,24 @@
+---
+id: m4_01_markov_chains_transition_matrix
+courseCode: GAMAT301
+module: 4
+sequence: 1
+title: 'Markov Chains: Memoryless Jumps & Transition Matrix'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - State the Markov property as present-screening-past
+  - Audit stochastic rows and evolve distributions with matrix powers
+  - Keep vector-on-left order in n-step forecasts
+concepts:
+  - Markov property
+  - transition matrix
+prerequisites: []
+examRelevance: medium
+tags:
+  - markov-chains
+  - stochastic-matrix
+---
 # Markov Chains: Memoryless Jumps & Transition Matrix
 
 **Tomorrow depends only on today — the Markov property, one-step matrix, and $n$-step evolution.**

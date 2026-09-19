@@ -1,3 +1,25 @@
+---
+id: m3_03_stochastic_counting_processes
+courseCode: GAMAT301
+module: 3
+sequence: 3
+title: 'Stochastic Processes: Discrete, Continuous & Counting'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Define a stochastic process as time-indexed random variables
+  - Classify processes on the time-by-state grid
+  - Test counting checklists and stationary independent increments
+concepts:
+  - stochastic process
+  - counting process
+  - stationary increments
+prerequisites: []
+examRelevance: medium
+tags:
+  - probability
+  - stochastic-processes
+---
 # Stochastic Processes: Discrete, Continuous & Counting
 
 **Collections of random variables indexed by time — the taxonomy M3's processes live in.**

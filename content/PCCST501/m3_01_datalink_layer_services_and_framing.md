@@ -1,3 +1,26 @@
+---
+id: m3_01_datalink_layer_services_and_framing
+courseCode: PCCST501
+module: 3
+sequence: 1
+title: 'Data Link Layer: Services & Framing'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Name the four link-layer services for one hop
+  - Compare count, byte-stuffing, and bit-stuffing framing
+  - Separate per-hop reliability from end-to-end correctness
+concepts:
+  - framing
+  - byte stuffing
+  - bit stuffing
+  - link access
+prerequisites: []
+examRelevance: high
+tags:
+  - data-link
+  - framing
+---
 # Data Link Layer: Services & Framing
 
 **Node-to-node delivery, framing with byte/bit stuffing, link access, reliable delivery on noisy links, and error control placement.**

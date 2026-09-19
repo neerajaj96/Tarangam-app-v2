@@ -1,3 +1,26 @@
+---
+id: m4_04_modulation_ask_fsk_psk_qam
+courseCode: PCCST501
+module: 4
+sequence: 4
+title: 'Modulation: ASK, FSK, PSK & QAM'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Match ASK, FSK, and PSK to their noise trade-offs
+  - Pack bits per symbol on QAM constellations
+  - Never confuse baud with bit rate except for binary
+concepts:
+  - ASK/FSK/PSK
+  - QAM
+  - baud rate
+prerequisites:
+  - m4_02_nyquist_shannon_channel_capacity
+examRelevance: high
+tags:
+  - modulation
+  - qam
+---
 # Modulation: ASK, FSK, PSK & QAM
 
 **Why baseband can't travel, amplitude/frequency/phase keying, constellation diagrams, baud vs. bit rate, and QAM arithmetic.**

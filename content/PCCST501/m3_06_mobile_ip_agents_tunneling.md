@@ -1,3 +1,26 @@
+---
+id: m3_06_mobile_ip_agents_tunneling
+courseCode: PCCST501
+module: 3
+sequence: 6
+title: 'Mobile IP: Keeping Your Address While Roaming'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Run discovery, registration, and tunneling in order
+  - Price triangle routing against route optimization
+  - Split home identity from care-of location
+concepts:
+  - home agent
+  - tunneling
+  - triangle routing
+prerequisites:
+  - m3_05_wireless_lan_802_11
+examRelevance: medium
+tags:
+  - mobile-ip
+  - mobility
+---
 # Mobile IP: Keeping Your Address While Roaming
 
 **Home agents, foreign agents, care-of addresses — discovery, registration, tunneling, and the triangle-routing tax with its route-optimized refund.**

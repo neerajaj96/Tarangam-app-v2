@@ -1,3 +1,25 @@
+---
+id: m3_01_markov_chebyshev_inequalities
+courseCode: GAMAT301
+module: 3
+sequence: 1
+title: Markov & Chebyshev Inequalities
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Bound tails with Markov from the mean alone
+  - Bound deviations with Chebyshev from mean and variance
+  - Refuse Markov for variables that go negative
+concepts:
+  - Markov inequality
+  - Chebyshev inequality
+prerequisites:
+  - m1_02_expectation_mean_variance
+examRelevance: high
+tags:
+  - probability
+  - tail-bounds
+---
 # Markov & Chebyshev Inequalities
 
 **Distribution-free guarantees — bounding tails from mean alone, or mean plus variance.**

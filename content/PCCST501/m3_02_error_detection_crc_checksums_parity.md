@@ -1,3 +1,26 @@
+---
+id: m3_02_error_detection_crc_checksums_parity
+courseCode: PCCST501
+module: 3
+sequence: 2
+title: 'Error Detection: Parity, Checksums & CRC'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - State what parity, 2D parity, and checksums each miss
+  - Divide out CRC remainders by hand in GF(2)
+  - Separate detection verdicts from correction ability
+concepts:
+  - parity
+  - checksum
+  - CRC
+prerequisites:
+  - m2_02_udp_segment_structure_and_checksum
+examRelevance: high
+tags:
+  - data-link
+  - error-detection
+---
 # Error Detection: Parity, Checksums & CRC
 
 **Single/2D parity limits, Internet checksum reuse, polynomial CRC division with a hand-worked trace, and what each method can and cannot catch.**

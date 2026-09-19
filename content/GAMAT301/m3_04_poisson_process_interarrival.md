@@ -1,3 +1,28 @@
+---
+id: m3_04_poisson_process_interarrival
+courseCode: GAMAT301
+module: 3
+sequence: 4
+title: Poisson Process & Interarrival Times
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Count arrivals with rescaled Poisson rate-times-window terms
+  - Convert gap questions into exponential tails
+  - Multiply rate by time before opening any formula
+concepts:
+  - Poisson process
+  - interarrival times
+  - rate scaling
+prerequisites:
+  - m1_04_poisson_distribution_binomial_limit
+  - m2_04_exponential_distribution_memoryless
+  - m3_03_stochastic_counting_processes
+examRelevance: medium
+tags:
+  - probability
+  - poisson-process
+---
 # Poisson Process & Interarrival Times
 
 **The arrival process: Poisson counts, exponential gaps, and why the two are the same fact.**

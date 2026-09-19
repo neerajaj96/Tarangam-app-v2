@@ -1,3 +1,25 @@
+---
+id: m4_06_bandwidth_utilization_multiplexing_spread
+courseCode: PCCST501
+module: 4
+sequence: 6
+title: 'Bandwidth Utilization: Multiplexing & Spread Spectrum'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Price FDM guards and TDM framing overhead by hand
+  - Separate port sharing from slice sharing across layers
+  - Trade spreading bandwidth for graceful degradation
+concepts:
+  - FDM/TDM/WDM
+  - spread spectrum
+prerequisites:
+  - m2_01_transport_layer_services_and_multiplexing
+examRelevance: medium
+tags:
+  - multiplexing
+  - spread-spectrum
+---
 # Bandwidth Utilization: Multiplexing & Spread Spectrum
 
 **Sharing one fat link — FDM slices frequency, TDM slices time, WDM slices light, spread spectrum hides in plain sight, all priced by hand.**

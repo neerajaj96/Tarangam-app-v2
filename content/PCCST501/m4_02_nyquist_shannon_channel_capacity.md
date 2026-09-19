@@ -1,3 +1,25 @@
+---
+id: m4_02_nyquist_shannon_channel_capacity
+courseCode: PCCST501
+module: 4
+sequence: 2
+title: 'Channel Capacity: Nyquist & Shannon Limits'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Compute noiseless ceilings with Nyquist levels math
+  - Convert decibels before applying Shannon capacity
+  - Take the minimum of both laws as the binding limit
+concepts:
+  - Nyquist limit
+  - Shannon capacity
+  - SNR
+prerequisites: []
+examRelevance: high
+tags:
+  - capacity
+  - shannon
+---
 # Channel Capacity: Nyquist & Shannon Limits
 
 **Noiseless signaling ceilings, noisy-channel capacity, SNR in decibels, and the two worked numericals that anchor every exam.**

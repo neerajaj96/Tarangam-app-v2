@@ -1,3 +1,26 @@
+---
+id: m4_03_pcm_digitization_sampling_quantization
+courseCode: PCCST501
+module: 4
+sequence: 3
+title: 'PCM Digitization: Sampling & Quantization'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Floor sampling rates at twice the maximum frequency
+  - Price bits against SNR at six decibels per bit
+  - Multiply samples by bits into pipeline bit rates
+concepts:
+  - sampling theorem
+  - quantization
+  - PCM
+prerequisites:
+  - m4_02_nyquist_shannon_channel_capacity
+examRelevance: medium
+tags:
+  - pcm
+  - digitization
+---
 # PCM Digitization: Sampling & Quantization
 
 **Nyquist sampling theorem, quantization levels vs. bits, the three PCM steps, bit-rate math, and why your voice is 64 kbps.**

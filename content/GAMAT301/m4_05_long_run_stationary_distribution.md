@@ -1,3 +1,27 @@
+---
+id: m4_05_long_run_stationary_distribution
+courseCode: GAMAT301
+module: 4
+sequence: 5
+title: Long-Run Proportions & Stationary Distribution
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Solve balance equations with normalisation
+  - Apply the two-state incoming-rate shortcut
+  - Read stationary shares as time fractions and return times
+concepts:
+  - stationary distribution
+  - balance equations
+  - mean recurrence time
+prerequisites:
+  - m4_01_markov_chains_transition_matrix
+  - m4_04_classification_states_irreducible_recurrent
+examRelevance: high
+tags:
+  - markov-chains
+  - stationary-distribution
+---
 # Long-Run Proportions & Stationary Distribution
 
 **Where the chain settles — balance equations $\pi = \pi P$, solving them, and reading them as time-fractions.**

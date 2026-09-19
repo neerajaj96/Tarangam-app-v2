@@ -1,3 +1,29 @@
+---
+id: m4_06_m4_mixed_drill
+courseCode: GAMAT301
+module: 4
+sequence: 6
+title: 'M4 Mixed Drill: Matrices to Steady State'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Run the five-station chain assembly line in order
+  - Split 9-marker time across stations evenly
+  - Separate periodicity oscillation from balance existence
+concepts:
+  - chain assembly line
+  - ergodic chains
+prerequisites:
+  - m4_01_markov_chains_transition_matrix
+  - m4_02_random_walk_gambler_ruin
+  - m4_03_chapman_kolmogorov_equations
+  - m4_04_classification_states_irreducible_recurrent
+  - m4_05_long_run_stationary_distribution
+examRelevance: high
+tags:
+  - markov-chains
+  - m4-drill
+---
 # M4 Mixed Drill: Matrices to Steady State
 
 **Full-chain workout — $n$-step via C-K, ruin, classification, and stationary in one sitting.**

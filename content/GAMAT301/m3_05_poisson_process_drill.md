@@ -1,3 +1,26 @@
+---
+id: m3_05_poisson_process_drill
+courseCode: GAMAT301
+module: 3
+sequence: 5
+title: 'Poisson Process Drill: Rates, Windows & Gaps'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Rescale rates to windows before computing terms
+  - Chain disjoint windows by multiplication
+  - Discard waited time with memorylessness by name
+concepts:
+  - rate rescaling
+  - complements
+  - memoryless application
+prerequisites:
+  - m3_04_poisson_process_interarrival
+examRelevance: medium
+tags:
+  - probability
+  - poisson-drill
+---
 # Poisson Process Drill: Rates, Windows & Gaps
 
 **Pure problem training — rescaling, multi-window chains, and gap/count crossovers.**

@@ -1,3 +1,26 @@
+---
+id: m4_02_random_walk_gambler_ruin
+courseCode: GAMAT301
+module: 4
+sequence: 2
+title: Random Walk Model & Gambler's Fortune
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Model positions as binomial sums with mean and variance
+  - Apply the ruin formula with the losers-over-winners ratio
+  - Recognize walks as Markov chains from the present-only update
+concepts:
+  - random walk
+  - gambler's ruin
+prerequisites:
+  - m1_03_binomial_distribution_problems
+  - m4_01_markov_chains_transition_matrix
+examRelevance: medium
+tags:
+  - markov-chains
+  - random-walk
+---
 # Random Walk Model & Gambler's Fortune
 
 **Simple symmetric and biased walks — position as a sum, and ruin probabilities.**

@@ -1,3 +1,25 @@
+---
+id: m4_03_chapman_kolmogorov_equations
+courseCode: GAMAT301
+module: 4
+sequence: 3
+title: Chapman–Kolmogorov Equations
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Factor multi-step trips through intermediate states
+  - Read matrix multiplication as layover sums
+  - Condition on split times instead of start states
+concepts:
+  - Chapman-Kolmogorov equations
+  - matrix powers
+prerequisites:
+  - m4_01_markov_chains_transition_matrix
+examRelevance: high
+tags:
+  - markov-chains
+  - multi-step
+---
 # Chapman–Kolmogorov Equations
 
 **Going via middle states — the matrix-multiplication law behind every multi-step forecast.**
