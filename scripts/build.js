@@ -7,123 +7,52 @@ const CONTENT_DIR = 'content';
 const OUTPUT_DIR = 'dist';
 const TEMPLATE_PATH = path.join('templates', 'base.html');
 
-const COURSE_METADATA = {
-  PCCST503: 'Machine Learning',
-  PCCST501: 'Computer Networks',
-  PCCST502: 'Design and Analysis of Algorithms',
-  PECST522: 'Artificial Intelligence',
-  GZPHT121: 'Physics for Physical Science and Life Science',
-  GAMAT301: 'Mathematics for Information Science-3',
-  PCCST303: 'Data Structures and Algorithms',
-  GXEST104: 'Introduction to Electrical and Electronics Engineering',
-  PCCST601: 'Compiler Design',
-  PCCST602: 'Advanced Computing Systems',
-  PBCST604: 'Fundamentals of Cyber Security',
-  PECST632: 'Deep Learning',
-  PECST637: 'Fundamentals of Cryptography',
-  PECST631: 'Software Testing',
-  GXEST605: 'Design Thinking and Product Development',
-  OECST614: 'Machine Learning for Engineers'
-};
+const CURRICULUM_PATH = path.join('data', 'curriculum.json');
 
-const MODULE_NAMES = {
-  PECST522: {
-    1: 'Agents & Problem Solving',
-    2: 'Search & Game Playing',
-    3: 'Knowledge & Logic',
-    4: 'Reinforcement Learning'
-  },
-  PCCST502: {
-    1: 'Analysis & Recurrences',
-    2: 'Graphs & Divide/Conquer',
-    3: 'Greedy, DP & Backtracking',
-    4: 'Branch/Bound & Complexity'
-  },
-  PCCST501: {
-    1: 'Application Layer',
-    2: 'Transport & Network Layer',
-    3: 'Data Link Layer',
-    4: 'Physical Layer & SNMP'
-  },
-  PCCST503: {
-    1: 'Foundations & Regression',
-    2: 'Classification & Trees',
-    3: 'Neural Nets & SVMs',
-    4: 'PCA & Ensembles'
-  },
-  GZPHT121: {
-    1: 'Laser & Fibre Optics',
-    2: 'Interference & Diffraction',
-    3: 'Quantum Mechanics',
-    4: 'Waves & Acoustics'
-  },
-  GAMAT301: {
-    1: 'Discrete Random Variables',
-    2: 'Continuous Random Variables',
-    3: 'Limit Theorems & Stochastic Processes',
-    4: 'Markov Chains'
-  },
-  PCCST303: {
-    1: 'Basic Concepts, Stacks & Queues',
-    2: 'Linked Lists & Memory Management',
-    3: 'Trees, Heaps & Graphs',
-    4: 'Sorting, Searching & Hashing'
-  },
-  GXEST104: {
-    1: 'DC Circuits & Magnetic Circuits',
-    2: 'EMI, AC & Three-Phase Systems',
-    3: 'Electronic Devices & Circuits',
-    4: 'Modern Electronics & Applications'
-  },
-  PCCST601: {
-    1: 'Front End & Scanners',
-    2: 'Top-Down Parsing',
-    3: 'Bottom-Up Parsing & IR',
-    4: 'Code Generation & Optimization'
-  },
-  PCCST602: {
-    1: 'Distributed Models & Enablers',
-    2: 'Clusters & Job Management',
-    3: 'Virtualization',
-    4: 'Cloud, Microservices & Containers'
-  },
-  PBCST604: {
-    1: 'InfoSec, Recon & VAPT',
-    2: 'Web & DNS Security',
-    3: 'Network Security',
-    4: 'System Security & Projects'
-  },
-  PECST632: {
-    1: 'MLP, Backprop & SGD',
-    2: 'Depth, Activations & Autoencoders',
-    3: 'CNNs & RNNs',
-    4: 'Applications, GANs & Advanced AEs'
-  },
-  PECST637: {
-    1: 'Number Theory',
-    2: 'Classical Ciphers',
-    3: 'Modern Ciphers & RSA',
-    4: 'Hashes, Signatures & PKI'
-  },
-  PECST631: {
-    1: 'Testing Foundations & Automation',
-    2: 'Unit & Mutation Testing',
-    3: 'White-Box & Security Testing',
-    4: 'Black-Box, Grey-Box & PEX'
-  },
-  GXEST605: {
-    1: 'Fundamentals & Self-Check',
-    2: 'Empathize & Define',
-    3: 'Ideate & PoC',
-    4: 'Design, Prototype & Pilot'
-  },
-  OECST614: {
-    1: 'ML Basics & Regression',
-    2: 'Classification & Evaluation',
-    3: 'Neural Nets & Trees',
-    4: 'Clustering & Ensembles'
+// Single source of truth: all curriculum metadata (course names, module
+// names, dashboard ordering) comes from data/curriculum.json. Topic counts
+// and topic lists always come from content/ — never from the JSON.
+function loadCurriculum() {
+  let raw;
+  try {
+    raw = fs.readFileSync(CURRICULUM_PATH, 'utf-8');
+  } catch (err) {
+    throw new Error(
+      `Cannot load curriculum metadata from ${CURRICULUM_PATH}: ${err.message}. ` +
+      `The build requires data/curriculum.json as its single source of truth; ` +
+      `there is no hardcoded fallback.`
+    );
   }
-};
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    throw new Error(
+      `Cannot parse ${CURRICULUM_PATH}: ${err.message}. ` +
+      `Fix the JSON — the build has no hardcoded fallback.`
+    );
+  }
+  if (!parsed || typeof parsed !== 'object' ||
+      !parsed.curriculum || typeof parsed.curriculum !== 'object' ||
+      !Array.isArray(parsed.dashboardOrder)) {
+    throw new Error(
+      `${CURRICULUM_PATH} must contain a top-level "curriculum" object and a ` +
+      `"dashboardOrder" array. Fix the JSON — the build has no hardcoded fallback.`
+    );
+  }
+  return parsed;
+}
+
+const CURRICULUM_DOC = loadCurriculum();
+
+// Derived view over the canonical document (same shape the build
+// previously hardcoded inline, so the rest of the pipeline is untouched).
+const MODULE_NAMES = Object.fromEntries(
+  Object.values(CURRICULUM_DOC.curriculum).map((c) => [
+    c.code,
+    Object.fromEntries((c.modules || []).map((m) => [m.number, m.name]))
+  ])
+);
 
 // Configure marked
 marked.setOptions({
@@ -420,9 +349,10 @@ function renderNavTree(modules, currentMod, currentId) {
   return html;
 }
 
-// Dashboard subject order (matches the Year → Semester layout in index.html;
-// unknown codes append alphabetically so new courses never silently vanish).
-const DASHBOARD_ORDER = ['GXEST104', 'GZPHT121', 'GAMAT301', 'PCCST303', 'PCCST503', 'PCCST501', 'PCCST502', 'PECST522', 'PCCST601', 'PCCST602', 'PBCST604', 'PECST632', 'PECST637', 'PECST631', 'GXEST605', 'OECST614'];
+// Dashboard subject order comes from data/curriculum.json (matches the
+// Year → Semester layout in index.html; unknown codes append
+// alphabetically so new courses never silently vanish).
+const DASHBOARD_ORDER = [...CURRICULUM_DOC.dashboardOrder];
 
 // Static subject-detail blocks for the dashboard Topics step
 // (Years → Semesters → Subjects → Topics). Generated from the same
@@ -551,7 +481,16 @@ export function buildSite() {
       fs.mkdirSync(courseOutDir, { recursive: true });
     }
 
-    const courseName = COURSE_METADATA[courseCode] || courseCode;
+    // The curriculum entry is mandatory: a content directory without a
+    // data/curriculum.json entry fails the build (no silent fallback).
+    const curriculumEntry = CURRICULUM_DOC.curriculum[courseCode];
+    if (!curriculumEntry) {
+      throw new Error(
+        `Content course "${courseCode}" (content/${courseCode}/) has no entry in ` +
+        `${CURRICULUM_PATH}. Add it to data/curriculum.json — the build has no hardcoded fallback.`
+      );
+    }
+    const courseName = curriculumEntry.name;
     const modules = {};
     const pages = [];
 
