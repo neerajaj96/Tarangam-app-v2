@@ -1,3 +1,26 @@
+---
+id: m4_04_policy_search_and_inverse_rl
+courseCode: PECST522
+module: 4
+sequence: 4
+title: Policy Search & Inverse Reinforcement Learning
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Compare value-based and policy-based learning on action spaces
+  - Climb policy space where action maximization turns intractable
+  - Infer rewards from experts with the apprenticeship loop
+concepts:
+  - policy search
+  - inverse reinforcement learning
+  - actor-critic placement
+prerequisites:
+  - m4_03_active_rl_q_learning_and_exploration
+examRelevance: medium
+tags:
+  - reinforcement-learning
+  - policy-search
+---
 # Policy Search & Inverse Reinforcement Learning
 
 **Skipping value functions: parameterized policies, hill-climbing in policy space, and flipping the problem — inferring rewards from expert behavior.**

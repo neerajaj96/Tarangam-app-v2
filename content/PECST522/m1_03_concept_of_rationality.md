@@ -1,3 +1,26 @@
+---
+id: m1_03_concept_of_rationality
+courseCode: PECST522
+module: 1
+sequence: 3
+title: The Concept of Rationality & Omniscience
+difficulty: beginner
+estimatedMinutes: 8
+learningObjectives:
+  - Define rational action with its four contributing factors
+  - Separate rationality from omniscience and raw success
+  - Price exploration, learning and autonomy for exam answers
+concepts:
+  - rational action
+  - omniscience contrast
+  - agent autonomy
+prerequisites:
+  - m1_02_agents_and_environments_peas
+examRelevance: medium
+tags:
+  - agents
+  - rationality
+---
 # The Concept of Rationality & Omniscience
 
 **Definition of rational action, the 4 factors of rationality, rationality vs. omniscience/success, exploration, learning, and autonomy.**

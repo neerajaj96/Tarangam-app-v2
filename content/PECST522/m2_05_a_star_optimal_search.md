@@ -1,3 +1,26 @@
+---
+id: m2_05_a_star_optimal_search
+courseCode: PECST522
+module: 2
+sequence: 5
+title: 'A* Search: Optimal and Optimally Efficient'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Combine bill and guess with the f-equals-g-plus-h rule
+  - Buy optimality with the admissibility contract on the failed greedy trace
+  - Price the memory ceiling that bounds optimal rivals
+concepts:
+  - A-star search
+  - optimal efficiency
+prerequisites:
+  - m2_03_informed_heuristic_search_and_functions
+  - m2_04_greedy_best_first_search
+examRelevance: high
+tags:
+  - search
+  - a-star
+---
 # A* Search: Optimal and Optimally Efficient
 
 **Bill plus guess, $f = g + h$ — the full hand-trace where greedy failed, the admissibility contract that buys optimality, and why no optimal rival expands less.**

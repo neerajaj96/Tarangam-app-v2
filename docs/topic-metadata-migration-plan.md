@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **187**
-- Pending: **245**
-- Coverage: **43.29%** (tracked by `npm run check`)
+- Migrated: **213**
+- Pending: **219**
+- Coverage: **49.31%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PECST522 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST502 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST503 — Module 1 in progress (19 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST303 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -27,14 +28,14 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   2. PCCST503 — Machine Learning (started — see step 1)
-   3. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   4. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   5. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   6. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   7. PCCST501 — Computer Networks (started — see step 1)
-   8. PECST522 — Artificial Intelligence
+   1. PECST522 — Artificial Intelligence (started — see step 1)
+   2. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   3. PCCST503 — Machine Learning (started — see step 1)
+   4. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   5. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   6. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   7. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   8. PCCST501 — Computer Networks (started — see step 1)
    9. PCCST601 — Compiler Design
    10. PCCST602 — Advanced Computing Systems
    11. PBCST604 — Fundamentals of Cyber Security
@@ -44,6 +45,41 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PECST522 — Artificial Intelligence (26/30 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Agents & Problem Solving | 01 | `m1_01_ai_definition_foundations_and_history.md` | `m1_01_ai_definition_foundations_and_history` | migrated |
+| M1 Agents & Problem Solving | 02 | `m1_02_agents_and_environments_peas.md` | `m1_02_agents_and_environments_peas` | migrated |
+| M1 Agents & Problem Solving | 03 | `m1_03_concept_of_rationality.md` | `m1_03_concept_of_rationality` | migrated |
+| M1 Agents & Problem Solving | 04 | `m1_04_nature_of_task_environments.md` | `m1_04_nature_of_task_environments` | migrated |
+| M1 Agents & Problem Solving | 05 | `m1_05_agent_architectures_reflex_to_learning.md` | `m1_05_agent_architectures_reflex_to_learning` | migrated |
+| M1 Agents & Problem Solving | 06 | `m1_06_problem_solving_agents_and_search_trees.md` | `m1_06_problem_solving_agents_and_search_trees` | migrated |
+| M1 Agents & Problem Solving | 07 | `m1_07_classic_ai_toy_problems.md` | `m1_07_classic_ai_toy_problems` | migrated |
+| M1 Agents & Problem Solving | 99 | `m1_99_practice_lab_agents_and_problem_formulation.md` | `m1_99_practice_lab_agents_and_problem_formulation` | pending |
+| M2 Search & Game Playing | 01 | `m2_01_uninformed_search_dfs_bfs_ucs.md` | `m2_01_uninformed_search_dfs_bfs_ucs` | migrated |
+| M2 Search & Game Playing | 02 | `m2_02_iterative_deepening_and_depth_limited.md` | `m2_02_iterative_deepening_and_depth_limited` | migrated |
+| M2 Search & Game Playing | 03 | `m2_03_informed_heuristic_search_and_functions.md` | `m2_03_informed_heuristic_search_and_functions` | migrated |
+| M2 Search & Game Playing | 04 | `m2_04_greedy_best_first_search.md` | `m2_04_greedy_best_first_search` | migrated |
+| M2 Search & Game Playing | 05 | `m2_05_a_star_optimal_search.md` | `m2_05_a_star_optimal_search` | migrated |
+| M2 Search & Game Playing | 06 | `m2_06_generate_and_test.md` | `m2_06_generate_and_test` | migrated |
+| M2 Search & Game Playing | 07 | `m2_07_csp_arc_consistency_ac3.md` | `m2_07_csp_arc_consistency_ac3` | migrated |
+| M2 Search & Game Playing | 08 | `m2_08_games_minimax_optimal_play.md` | `m2_08_games_minimax_optimal_play` | migrated |
+| M2 Search & Game Playing | 09 | `m2_09_alpha_beta_pruning.md` | `m2_09_alpha_beta_pruning` | migrated |
+| M2 Search & Game Playing | 99 | `m2_99_practice_lab_search_strategies_drills.md` | `m2_99_practice_lab_search_strategies_drills` | pending |
+| M3 Knowledge & Logic | 01 | `m3_01_knowledge_based_agents_and_wumpus_world.md` | `m3_01_knowledge_based_agents_and_wumpus_world` | migrated |
+| M3 Knowledge & Logic | 02 | `m3_02_propositional_logic_syntax_semantics.md` | `m3_02_propositional_logic_syntax_semantics` | migrated |
+| M3 Knowledge & Logic | 03 | `m3_03_inference_resolution_and_horn_clauses.md` | `m3_03_inference_resolution_and_horn_clauses` | migrated |
+| M3 Knowledge & Logic | 04 | `m3_04_first_order_logic_unification_and_lifting.md` | `m3_04_first_order_logic_unification_and_lifting` | migrated |
+| M3 Knowledge & Logic | 05 | `m3_05_propositional_vs_fol_inference.md` | `m3_05_propositional_vs_fol_inference` | migrated |
+| M3 Knowledge & Logic | 99 | `m3_99_practice_lab_logic_drills.md` | `m3_99_practice_lab_logic_drills` | pending |
+| M4 Reinforcement Learning | 01 | `m4_01_reinforcement_learning_learning_from_rewards.md` | `m4_01_reinforcement_learning_learning_from_rewards` | migrated |
+| M4 Reinforcement Learning | 02 | `m4_02_passive_rl_utility_adp_and_td.md` | `m4_02_passive_rl_utility_adp_and_td` | migrated |
+| M4 Reinforcement Learning | 03 | `m4_03_active_rl_q_learning_and_exploration.md` | `m4_03_active_rl_q_learning_and_exploration` | migrated |
+| M4 Reinforcement Learning | 04 | `m4_04_policy_search_and_inverse_rl.md` | `m4_04_policy_search_and_inverse_rl` | migrated |
+| M4 Reinforcement Learning | 05 | `m4_05_generalization_applications_rl.md` | `m4_05_generalization_applications_rl` | migrated |
+| M4 Reinforcement Learning | 99 | `m4_99_practice_lab_rl_drills.md` | `m4_99_practice_lab_rl_drills` | pending |
 
 ## PCCST502 — Design and Analysis of Algorithms (27/31 migrated)
 
@@ -279,41 +315,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PECST522 — Artificial Intelligence (0/30 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Agents & Problem Solving | 01 | `m1_01_ai_definition_foundations_and_history.md` | `m1_01_ai_definition_foundations_and_history` | pending |
-| M1 Agents & Problem Solving | 02 | `m1_02_agents_and_environments_peas.md` | `m1_02_agents_and_environments_peas` | pending |
-| M1 Agents & Problem Solving | 03 | `m1_03_concept_of_rationality.md` | `m1_03_concept_of_rationality` | pending |
-| M1 Agents & Problem Solving | 04 | `m1_04_nature_of_task_environments.md` | `m1_04_nature_of_task_environments` | pending |
-| M1 Agents & Problem Solving | 05 | `m1_05_agent_architectures_reflex_to_learning.md` | `m1_05_agent_architectures_reflex_to_learning` | pending |
-| M1 Agents & Problem Solving | 06 | `m1_06_problem_solving_agents_and_search_trees.md` | `m1_06_problem_solving_agents_and_search_trees` | pending |
-| M1 Agents & Problem Solving | 07 | `m1_07_classic_ai_toy_problems.md` | `m1_07_classic_ai_toy_problems` | pending |
-| M1 Agents & Problem Solving | 99 | `m1_99_practice_lab_agents_and_problem_formulation.md` | `m1_99_practice_lab_agents_and_problem_formulation` | pending |
-| M2 Search & Game Playing | 01 | `m2_01_uninformed_search_dfs_bfs_ucs.md` | `m2_01_uninformed_search_dfs_bfs_ucs` | pending |
-| M2 Search & Game Playing | 02 | `m2_02_iterative_deepening_and_depth_limited.md` | `m2_02_iterative_deepening_and_depth_limited` | pending |
-| M2 Search & Game Playing | 03 | `m2_03_informed_heuristic_search_and_functions.md` | `m2_03_informed_heuristic_search_and_functions` | pending |
-| M2 Search & Game Playing | 04 | `m2_04_greedy_best_first_search.md` | `m2_04_greedy_best_first_search` | pending |
-| M2 Search & Game Playing | 05 | `m2_05_a_star_optimal_search.md` | `m2_05_a_star_optimal_search` | pending |
-| M2 Search & Game Playing | 06 | `m2_06_generate_and_test.md` | `m2_06_generate_and_test` | pending |
-| M2 Search & Game Playing | 07 | `m2_07_csp_arc_consistency_ac3.md` | `m2_07_csp_arc_consistency_ac3` | pending |
-| M2 Search & Game Playing | 08 | `m2_08_games_minimax_optimal_play.md` | `m2_08_games_minimax_optimal_play` | pending |
-| M2 Search & Game Playing | 09 | `m2_09_alpha_beta_pruning.md` | `m2_09_alpha_beta_pruning` | pending |
-| M2 Search & Game Playing | 99 | `m2_99_practice_lab_search_strategies_drills.md` | `m2_99_practice_lab_search_strategies_drills` | pending |
-| M3 Knowledge & Logic | 01 | `m3_01_knowledge_based_agents_and_wumpus_world.md` | `m3_01_knowledge_based_agents_and_wumpus_world` | pending |
-| M3 Knowledge & Logic | 02 | `m3_02_propositional_logic_syntax_semantics.md` | `m3_02_propositional_logic_syntax_semantics` | pending |
-| M3 Knowledge & Logic | 03 | `m3_03_inference_resolution_and_horn_clauses.md` | `m3_03_inference_resolution_and_horn_clauses` | pending |
-| M3 Knowledge & Logic | 04 | `m3_04_first_order_logic_unification_and_lifting.md` | `m3_04_first_order_logic_unification_and_lifting` | pending |
-| M3 Knowledge & Logic | 05 | `m3_05_propositional_vs_fol_inference.md` | `m3_05_propositional_vs_fol_inference` | pending |
-| M3 Knowledge & Logic | 99 | `m3_99_practice_lab_logic_drills.md` | `m3_99_practice_lab_logic_drills` | pending |
-| M4 Reinforcement Learning | 01 | `m4_01_reinforcement_learning_learning_from_rewards.md` | `m4_01_reinforcement_learning_learning_from_rewards` | pending |
-| M4 Reinforcement Learning | 02 | `m4_02_passive_rl_utility_adp_and_td.md` | `m4_02_passive_rl_utility_adp_and_td` | pending |
-| M4 Reinforcement Learning | 03 | `m4_03_active_rl_q_learning_and_exploration.md` | `m4_03_active_rl_q_learning_and_exploration` | pending |
-| M4 Reinforcement Learning | 04 | `m4_04_policy_search_and_inverse_rl.md` | `m4_04_policy_search_and_inverse_rl` | pending |
-| M4 Reinforcement Learning | 05 | `m4_05_generalization_applications_rl.md` | `m4_05_generalization_applications_rl` | pending |
-| M4 Reinforcement Learning | 99 | `m4_99_practice_lab_rl_drills.md` | `m4_99_practice_lab_rl_drills` | pending |
 
 ## PCCST601 — Compiler Design (0/29 migrated)
 

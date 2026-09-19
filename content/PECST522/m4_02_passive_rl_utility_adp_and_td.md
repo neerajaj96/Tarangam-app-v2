@@ -1,3 +1,26 @@
+---
+id: m4_02_passive_rl_utility_adp_and_td
+courseCode: PECST522
+module: 4
+sequence: 2
+title: 'Passive RL: Direct Utility, ADP & Temporal Differences'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Grade fixed policies with direct averaging, ADP and TD updates
+  - Define bootstrapping and name exactly which methods do it
+  - Compare the three methods on data hunger and model dependence
+concepts:
+  - policy evaluation
+  - temporal differences
+  - bootstrapping
+prerequisites:
+  - m4_01_reinforcement_learning_learning_from_rewards
+examRelevance: medium
+tags:
+  - reinforcement-learning
+  - policy-evaluation
+---
 # Passive RL: Direct Utility, ADP & Temporal Differences
 
 **Grading a fixed policy three ways — naive averaging, model-based dynamic programming, and the model-free TD update that powers modern RL.**

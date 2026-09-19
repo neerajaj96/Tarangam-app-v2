@@ -1,3 +1,26 @@
+---
+id: m2_07_csp_arc_consistency_ac3
+courseCode: PECST522
+module: 2
+sequence: 7
+title: 'CSPs & AC-3: Constrain, Propagate, Then Search'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Frame problems as variables, domains and constraints
+  - Prune with arc consistency before any guessing starts
+  - Trace AC-3 queue revisions to quiescence by hand
+concepts:
+  - constraint satisfaction
+  - arc consistency
+  - AC-3 algorithm
+prerequisites:
+  - m2_06_generate_and_test
+examRelevance: medium
+tags:
+  - search
+  - csp
+---
 # CSPs & AC-3: Constrain, Propagate, Then Search
 
 **Variables, domains, constraints — node/arc consistency as a pruning engine, one AC-3 trace solved without search, and the triangle that proves propagation is not enough.**

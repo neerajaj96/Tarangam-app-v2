@@ -1,3 +1,26 @@
+---
+id: m2_02_iterative_deepening_and_depth_limited
+courseCode: PECST522
+module: 2
+sequence: 2
+title: 'Depth-Limited Search (DLS), Iterative Deepening (IDS) & Bidirectional Search'
+difficulty: beginner
+estimatedMinutes: 9
+learningObjectives:
+  - Cap DFS with depth limits against incompleteness
+  - Price the 11 percent IDS overhead with the geometric series
+  - Halve exponents with bidirectional search arithmetic
+concepts:
+  - iterative deepening
+  - depth-limited search
+  - bidirectional search
+prerequisites:
+  - m2_01_uninformed_search_dfs_bfs_ucs
+examRelevance: high
+tags:
+  - search
+  - uninformed-search
+---
 # Depth-Limited Search (DLS), Iterative Deepening (IDS) & Bidirectional Search
 
 **Hybrid and advanced blind search strategies: Overcoming the BFS memory bottleneck and DFS incompleteness.**

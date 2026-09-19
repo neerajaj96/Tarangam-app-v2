@@ -1,3 +1,26 @@
+---
+id: m1_07_classic_ai_toy_problems
+courseCode: PECST522
+module: 1
+sequence: 7
+title: Classic AI Toy Problems & Real-World Formulations
+difficulty: beginner
+estimatedMinutes: 9
+learningObjectives:
+  - Formulate Vacuum World, 8-Puzzle and 8-Queens exactly
+  - Count reachable states against parity constraints
+  - Lift toy formulations to real-world search problems
+concepts:
+  - vacuum world
+  - sliding puzzles
+  - state counting
+prerequisites:
+  - m1_06_problem_solving_agents_and_search_trees
+examRelevance: medium
+tags:
+  - agents
+  - toy-problems
+---
 # Classic AI Toy Problems & Real-World Formulations
 
 **Formal problem formulations: Vacuum World, Sliding 8-Puzzle, 8-Queens problem, and real-world search problems.**

@@ -1,3 +1,26 @@
+---
+id: m2_08_games_minimax_optimal_play
+courseCode: PECST522
+module: 2
+sequence: 8
+title: 'Games & Minimax: Optimal Play Against an Adversary'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Back up MAX and MIN values from terminal utilities
+  - Name the winning move on the full 3-versus-2 trace
+  - Price full-width backup against game-length exponents
+concepts:
+  - minimax algorithm
+  - zero-sum games
+  - backward backup
+prerequisites:
+  - m2_01_uninformed_search_dfs_bfs_ucs
+examRelevance: high
+tags:
+  - search
+  - game-playing
+---
 # Games & Minimax: Optimal Play Against an Adversary
 
 **Zero-sum games as MAX/MIN trees, optimal decisions by backward backup, and the full 3-vs-2 trace that names the winning move.**

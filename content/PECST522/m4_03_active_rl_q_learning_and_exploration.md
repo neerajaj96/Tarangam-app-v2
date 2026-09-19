@@ -1,3 +1,26 @@
+---
+id: m4_03_active_rl_q_learning_and_exploration
+courseCode: PECST522
+module: 4
+sequence: 3
+title: 'Active RL: Q-Learning & Exploration'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Learn action-values off-policy with the max-detached Q-update
+  - Price exploration with epsilon-greedy regret against GLIE convergence
+  - Explain why choosing needs Q-values rather than state values
+concepts:
+  - Q-learning
+  - exploration-exploitation
+  - GLIE schedules
+prerequisites:
+  - m4_02_passive_rl_utility_adp_and_td
+examRelevance: high
+tags:
+  - reinforcement-learning
+  - q-learning
+---
 # Active RL: Q-Learning & Exploration
 
 **Action-values, the off-policy Q-update, exploration vs. exploitation, ε-greedy, and GLIE schedules that provably converge.**

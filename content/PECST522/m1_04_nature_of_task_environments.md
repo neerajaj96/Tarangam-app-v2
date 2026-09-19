@@ -1,3 +1,26 @@
+---
+id: m1_04_nature_of_task_environments
+courseCode: PECST522
+module: 1
+sequence: 4
+title: The Nature of Task Environments
+difficulty: beginner
+estimatedMinutes: 10
+learningObjectives:
+  - Classify environments along all seven task dimensions
+  - Model transitions from state to state under actions
+  - Predict agent difficulty from environment properties
+concepts:
+  - task dimensions
+  - transition models
+  - observability
+prerequisites:
+  - m1_02_agents_and_environments_peas
+examRelevance: medium
+tags:
+  - agents
+  - environments
+---
 # The Nature of Task Environments
 
 **The 7 dimensions of task environments: observability, single vs. multi-agent, determinism, episodic vs. sequential, static vs. dynamic, discrete vs. continuous, and known vs. unknown.**

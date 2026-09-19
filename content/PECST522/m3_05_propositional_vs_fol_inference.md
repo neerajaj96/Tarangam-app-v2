@@ -1,3 +1,26 @@
+---
+id: m3_05_propositional_vs_fol_inference
+courseCode: PECST522
+module: 3
+sequence: 5
+title: Propositional vs First-Order Inference
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Quantify grounding blowup against propositional decidability
+  - Escape with lifted inference, Datalog limits or Prolog trades
+  - State the semi-decidability contrast plainly for comparisons
+concepts:
+  - grounding blowup
+  - decidability contrast
+prerequisites:
+  - m3_03_inference_resolution_and_horn_clauses
+  - m3_04_first_order_logic_unification_and_lifting
+examRelevance: medium
+tags:
+  - logic
+  - inference-comparison
+---
 # Propositional vs First-Order Inference
 
 **Grounding blowup quantified, lifted inference as the escape, decidability contrast stated plainly — the syllabus comparison as its own topic.**

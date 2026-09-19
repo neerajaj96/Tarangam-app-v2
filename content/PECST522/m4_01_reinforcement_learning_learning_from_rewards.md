@@ -1,3 +1,25 @@
+---
+id: m4_01_reinforcement_learning_learning_from_rewards
+courseCode: PECST522
+module: 4
+sequence: 1
+title: 'Reinforcement Learning: MDPs & Learning from Rewards'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Specify Markov decision processes with the five-tuple contract
+  - Back up Bellman values by hand toward true utilities
+  - Split passive grading from active improvement for the module map
+concepts:
+  - Markov decision processes
+  - Bellman equations
+  - passive-active split
+prerequisites: []
+examRelevance: high
+tags:
+  - reinforcement-learning
+  - mdp
+---
 # Reinforcement Learning: MDPs & Learning from Rewards
 
 **Markov decision processes, transition models, discounted rewards, Bellman equations, and the passive-vs-active learning split that organizes this module.**

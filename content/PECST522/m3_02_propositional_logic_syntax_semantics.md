@@ -1,3 +1,26 @@
+---
+id: m3_02_propositional_logic_syntax_semantics
+courseCode: PECST522
+module: 3
+sequence: 2
+title: 'Propositional Logic: Syntax, Semantics & Entailment'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Build sentences with connectives in precedence order
+  - Prove entailment by hand on Wumpus fragments with model sets
+  - Price truth-table scaling that motivates inference machinery
+concepts:
+  - propositional syntax
+  - model checking
+  - validity
+prerequisites:
+  - m3_01_knowledge_based_agents_and_wumpus_world
+examRelevance: medium
+tags:
+  - logic
+  - propositional-logic
+---
 # Propositional Logic: Syntax, Semantics & Entailment
 
 **Atomic sentences, connectives and precedence, models, entailment vs. validity vs. satisfiability, and why truth tables don't scale.**

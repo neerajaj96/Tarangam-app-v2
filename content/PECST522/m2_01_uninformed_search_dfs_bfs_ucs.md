@@ -1,3 +1,26 @@
+---
+id: m2_01_uninformed_search_dfs_bfs_ucs
+courseCode: PECST522
+module: 2
+sequence: 1
+title: 'Uninformed (Blind) Search Strategies: BFS, DFS & UCS'
+difficulty: beginner
+estimatedMinutes: 8
+learningObjectives:
+  - Run BFS, DFS and UCS with exact time and space costs
+  - Price optimal path cost against minimum step cost bounds
+  - Pick the blind strategy that fits the exam scenario
+concepts:
+  - breadth-first search
+  - depth-first search
+  - uniform-cost search
+prerequisites:
+  - m1_06_problem_solving_agents_and_search_trees
+examRelevance: high
+tags:
+  - search
+  - uninformed-search
+---
 # Uninformed (Blind) Search Strategies: BFS, DFS & UCS
 
 **Search algorithms without domain heuristics: Breadth-First Search, Depth-First Search, and Uniform-Cost Search.**

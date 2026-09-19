@@ -1,3 +1,25 @@
+---
+id: m2_06_generate_and_test
+courseCode: PECST522
+module: 2
+sequence: 6
+title: 'Generate-and-Test: The Weak Method That Frames Them All'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Exhaust complete candidates with generate, test and repeat
+  - Price worst-case candidate counts for exam arithmetic
+  - Fail fast on constraint order against doomed prefixes
+concepts:
+  - generate and test
+  - exhaustive search
+prerequisites:
+  - m2_01_uninformed_search_dfs_bfs_ucs
+examRelevance: medium
+tags:
+  - search
+  - brute-force
+---
 # Generate-and-Test: The Weak Method That Frames Them All
 
 **Propose a complete candidate, test it against every constraint, repeat — exhaustive, honest, and the baseline that makes every smarter method earn its keep.**

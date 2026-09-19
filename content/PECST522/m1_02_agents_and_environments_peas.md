@@ -1,3 +1,26 @@
+---
+id: m1_02_agents_and_environments_peas
+courseCode: PECST522
+module: 1
+sequence: 2
+title: 'Agents and Environments: The PEAS Framework'
+difficulty: beginner
+estimatedMinutes: 10
+learningObjectives:
+  - Separate agent functions from agent programs with percept sequences
+  - Specify any task with Performance, Environment, Actuators and Sensors
+  - Trace sensors to actuators through the agent loop
+concepts:
+  - agent function
+  - PEAS specification
+  - percept sequences
+prerequisites:
+  - m1_01_ai_definition_foundations_and_history
+examRelevance: high
+tags:
+  - agents
+  - peas
+---
 # Agents and Environments: The PEAS Framework
 
 **Sensors, actuators, percept sequences, agent functions vs. agent programs, and PEAS specification.**

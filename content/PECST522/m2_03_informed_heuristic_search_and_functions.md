@@ -1,3 +1,26 @@
+---
+id: m2_03_informed_heuristic_search_and_functions
+courseCode: PECST522
+module: 2
+sequence: 3
+title: 'Informed (Heuristic) Search & Designing Heuristic Functions'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Test heuristics for admissibility against true cheapest cost
+  - Enforce consistency across every successor with step costs
+  - Dominate weak heuristics with relaxed-problem designs
+concepts:
+  - heuristic functions
+  - admissibility
+  - consistency
+prerequisites:
+  - m2_01_uninformed_search_dfs_bfs_ucs
+examRelevance: high
+tags:
+  - search
+  - heuristics
+---
 # Informed (Heuristic) Search & Designing Heuristic Functions
 
 **Heuristic search fundamentals: Evaluation functions, admissibility, consistency, relaxed problems, and heuristic dominance.**

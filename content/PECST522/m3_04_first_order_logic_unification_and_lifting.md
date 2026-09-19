@@ -1,3 +1,27 @@
+---
+id: m3_04_first_order_logic_unification_and_lifting
+courseCode: PECST522
+module: 3
+sequence: 4
+title: 'First-Order Logic: Quantifiers, Unification & Lifting'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Quantify objects, relations and functions with scope discipline
+  - Unify with most general unifiers under the occur check
+  - Lift Modus Ponens and chaining from propositional to first-order
+concepts:
+  - first-order quantification
+  - unification
+  - lifted inference
+prerequisites:
+  - m3_02_propositional_logic_syntax_semantics
+  - m3_03_inference_resolution_and_horn_clauses
+examRelevance: high
+tags:
+  - logic
+  - first-order-logic
+---
 # First-Order Logic: Quantifiers, Unification & Lifting
 
 **Objects, relations, and functions; ∀/∃ semantics; most general unifiers with the occur check; lifting Modus Ponens and chaining to FOL.**

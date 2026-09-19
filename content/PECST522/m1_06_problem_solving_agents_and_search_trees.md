@@ -1,3 +1,27 @@
+---
+id: m1_06_problem_solving_agents_and_search_trees
+courseCode: PECST522
+module: 1
+sequence: 6
+title: Problem-Solving Agents & Search Trees
+difficulty: beginner
+estimatedMinutes: 8
+learningObjectives:
+  - Formulate problems with the five-component contract
+  - Separate state space from search tree with node expansion
+  - Measure search with completeness, optimality, time and space
+concepts:
+  - problem formulation
+  - search trees
+  - node expansion
+prerequisites:
+  - m1_02_agents_and_environments_peas
+  - m1_05_agent_architectures_reflex_to_learning
+examRelevance: high
+tags:
+  - agents
+  - problem-formulation
+---
 # Problem-Solving Agents & Search Trees
 
 **Goal formulation, the 5 components of a well-defined problem, state space vs. search tree, node expansion, and how search performance is measured.**

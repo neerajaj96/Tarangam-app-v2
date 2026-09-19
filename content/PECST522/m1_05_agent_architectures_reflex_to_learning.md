@@ -1,3 +1,28 @@
+---
+id: m1_05_agent_architectures_reflex_to_learning
+courseCode: PECST522
+module: 1
+sequence: 5
+title: 'Structure of Agents: From Reflex to Learning Agents'
+difficulty: beginner
+estimatedMinutes: 12
+learningObjectives:
+  - Climb the five architectures from reflex to learning agents
+  - Maintain internal state with percepts, actions and models
+  - Trade goal satisfaction against utility scoring for decisions
+concepts:
+  - reflex agents
+  - goal-based agents
+  - learning agents
+prerequisites:
+  - m1_02_agents_and_environments_peas
+  - m1_03_concept_of_rationality
+  - m1_04_nature_of_task_environments
+examRelevance: medium
+tags:
+  - agents
+  - architectures
+---
 # Structure of Agents: From Reflex to Learning Agents
 
 **The anatomy of an intelligent agent: Simple Reflex, Model-Based Reflex, Goal-Based, Utility-Based, and Learning Agent architectures.**

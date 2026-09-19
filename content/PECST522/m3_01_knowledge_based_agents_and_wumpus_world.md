@@ -1,3 +1,26 @@
+---
+id: m3_01_knowledge_based_agents_and_wumpus_world
+courseCode: PECST522
+module: 3
+sequence: 1
+title: Knowledge-Based Agents & the Wumpus World
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Separate entailment as semantic fact from inference as procedure
+  - Specify the Wumpus PEAS with its five percept meanings
+  - Derive safe squares from percept histories with Tell and Ask
+concepts:
+  - knowledge bases
+  - entailment
+  - Wumpus world
+prerequisites:
+  - m1_02_agents_and_environments_peas
+examRelevance: high
+tags:
+  - knowledge-representation
+  - wumpus-world
+---
 # Knowledge-Based Agents & the Wumpus World
 
 **Tell/Ask knowledge bases, entailment vs. inference, the Wumpus PEAS and percept rules, and why this toy dungeon drives all of logic-based AI.**

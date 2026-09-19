@@ -1,3 +1,27 @@
+---
+id: m4_05_generalization_applications_rl
+courseCode: PECST522
+module: 4
+sequence: 5
+title: Generalization & Applications of RL
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Trace linear temporal-difference updates with feature weights
+  - Diagnose deadly-triad divergence on off-policy bootstrapped nets
+  - Place games, robots and scheduling among shipping applications
+concepts:
+  - function approximation
+  - deadly triad
+  - RL applications
+prerequisites:
+  - m4_02_passive_rl_utility_adp_and_td
+  - m4_04_policy_search_and_inverse_rl
+examRelevance: medium
+tags:
+  - reinforcement-learning
+  - generalization
+---
 # Generalization & Applications of RL
 
 **From table lookup to function approximation — one linear-TD update traced, then where RL actually ships: games, robots, and beyond.**

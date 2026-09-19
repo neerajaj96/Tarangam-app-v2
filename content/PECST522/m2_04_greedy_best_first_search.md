@@ -1,3 +1,25 @@
+---
+id: m2_04_greedy_best_first_search
+courseCode: PECST522
+module: 2
+sequence: 4
+title: 'Greedy Best-First Search: Chasing the Heuristic'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Expand minimum heuristic nodes with the f-equals-h rule
+  - Trace the small graph where greed goes provably wrong
+  - Keep the explored set mandatory despite the speed
+concepts:
+  - greedy best-first search
+  - heuristic expansion
+prerequisites:
+  - m2_03_informed_heuristic_search_and_functions
+examRelevance: medium
+tags:
+  - search
+  - greedy-search
+---
 # Greedy Best-First Search: Chasing the Heuristic
 
 **Expand whatever looks closest to the goal, ignore the bill so far — fast, memory-light, and provably non-optimal on one small graph you will trace by hand.**

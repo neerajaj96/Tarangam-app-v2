@@ -1,3 +1,27 @@
+---
+id: m3_03_inference_resolution_and_horn_clauses
+courseCode: PECST522
+module: 3
+sequence: 3
+title: 'Inference: Resolution, Horn Clauses & Chaining'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Prove by refutation with CNF conversion to the empty clause
+  - Restrict to Horn form for complete forward and backward chaining
+  - Trace chaining to goals on Wumpus fragments
+concepts:
+  - resolution refutation
+  - Horn clauses
+  - forward-backward chaining
+prerequisites:
+  - m3_01_knowledge_based_agents_and_wumpus_world
+  - m3_02_propositional_logic_syntax_semantics
+examRelevance: high
+tags:
+  - logic
+  - inference
+---
 # Inference: Resolution, Horn Clauses & Chaining
 
 **CNF conversion, the resolution rule and refutation proofs, Horn form, and forward vs. backward chaining with the Wumpus agent.**

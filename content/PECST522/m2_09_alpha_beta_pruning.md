@@ -1,3 +1,25 @@
+---
+id: m2_09_alpha_beta_pruning
+courseCode: PECST522
+module: 2
+sequence: 9
+title: 'Alpha-Beta Pruning: Same Move, Less Work'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Cut branches with the alpha-beta window mechanics
+  - Prove identical minimax values on every input
+  - Double effective depth with best-first move ordering
+concepts:
+  - alpha-beta pruning
+  - move ordering
+prerequisites:
+  - m2_08_games_minimax_optimal_play
+examRelevance: high
+tags:
+  - search
+  - game-playing
+---
 # Alpha-Beta Pruning: Same Move, Less Work
 
 **Bounds that behead branches — $\alpha$/$\beta$ window mechanics, the 4-of-6 trace on the minimax tree, move ordering that doubles the cut rate.**

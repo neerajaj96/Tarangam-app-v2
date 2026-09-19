@@ -1,3 +1,25 @@
+---
+id: m1_01_ai_definition_foundations_and_history
+courseCode: PECST522
+module: 1
+sequence: 1
+title: 'Introduction to AI: Foundations & History'
+difficulty: beginner
+estimatedMinutes: 10
+learningObjectives:
+  - Define AI across thinking, acting, human and rational framings
+  - Judge machine thinking with the Turing Test contract
+  - Place Dartmouth and the AI cycles on the history line
+concepts:
+  - Turing Test
+  - rational agents
+  - AI history cycles
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - history
+---
 # Introduction to AI: Foundations & History
 
 **The Turing Test, definitions of AI (Thinking/Acting Humanly/Rationally), Dartmouth workshop, and historical AI cycles.**
