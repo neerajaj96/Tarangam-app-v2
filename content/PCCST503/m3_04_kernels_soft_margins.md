@@ -51,6 +51,10 @@ A kernel *re-represents* separability already latent in features — garbage fea
 One squaring turned impossible into trivial — and the kernel lesson: nobody needed the *coordinates* $4$ and $0.25$ as geometry, only their *separability*. RBF does this to *every* finite dataset simultaneously (infinite dimensions always suffice), which is precisely why its $\gamma$ dial — not its existence — is the entire modeling decision.
 :::
 
+::: anim kernel-lift Squaring Turns Impossible Into Trivial
+Watch the alternating line refuse every threshold, then crumple into two clean clusters under φ(x) = x² — separability without ever visiting the lofty coordinates.
+:::
+
 ---
 
 <a id="self-check"></a>

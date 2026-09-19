@@ -77,7 +77,7 @@ $120/6 = 20$ per fold; each rotation holds out a fresh $20$ and trains the other
 :::
 
 ::: quiz Q3: Tradeoff Prescription
-Bias$^2 = 9$, variance $= 1$ (underfit) versus bias$^2 = 1$, variance $= 8$ (overfit). Moves?
+Bias$^2 = 9$, variance $= 1$ (underfit) versus bias$^2 = 1$, variance $= 9$ (overfit). Moves?
 (A) Same fix both: more capacity
 (*B) First needs capacity (features, depth, smaller $\lambda$); second needs discipline (regularize, bag, more data) — error totals tie at $10$ but medicines oppose
 (C) Both need more data only

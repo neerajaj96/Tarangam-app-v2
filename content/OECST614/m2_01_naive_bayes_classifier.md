@@ -51,6 +51,10 @@ Spam score $= 0.3 \times 0.4 \times 0.1 = 0.012$. Ham score $= 0.7 \times 0.05 \
 Ham wins ($0.5932$ vs $0.4068$). Lesson: strong single clues lose to prior-plus-two-mild-clues — always multiply all three factors, never eyeball one word.
 :::
 
+::: anim nb-posterior Prior Plus Two Clues Outvote One Scream
+Watch the scores build then normalize — 0.012 against 0.0175 becoming 0.4068 against 0.5932 — since posterior, not likelihood, is the verdict.
+:::
+
 ---
 
 <a id="self-check"></a>

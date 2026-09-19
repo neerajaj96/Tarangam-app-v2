@@ -284,7 +284,31 @@
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Estimating Both Ways</div><div class="step-content"><p><strong>MLE:</strong> $\hat{\mu} = \bar{x} = 5.0$ — data only, no negotiation.
 <strong>MAP:</strong> precisions $n/\sigma^2 = 1$, $1/\tau^2 = 1$ — dead tie, so the answer splits the difference: $\hat{\mu}_{MAP} = \frac{1 \times 5.0 + 1 \times 0}{1 + 1} = \mathbf{2.5}$. The strong prior ($\tau^2 = 1$ vs data precision $1$) drags the estimate halfway home.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>MLE $5.0$ vs MAP $2.5$ on identical data — the gap <em>is</em> the prior speaking. With $n = 400$ instead, data precision $100$ would swamp the prior ($100/101 \approx 0.99$ weight) and MAP $\approx 4.95 \approx$ MLE: beliefs matter most exactly when data is scarcest — the exam-ready moral.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Data Pulls to 5, Prior Anchors 0</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated precision tug of war: data pulls to 5.0, prior anchors 0, MAP splits at 2.5, then n equals 400 drags MAP to 4.95">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="36" text-anchor="middle">sensor: x̄ = 5.0 (n = 4, σ² = 4) · prior μ₀ = 0 (τ² = 1)</text>
+<line class="axis" x1="60" y1="130" x2="580" y2="130"/>
+<text class="animcap a1" x="80" y="160" text-anchor="middle">prior 0</text>
+<text class="animcap a1" x="560" y="160" text-anchor="middle">MLE 5.0</text>
+<circle class="a1" cx="80" cy="130" r="7" fill="var(--accent)"/>
+<circle class="a1" cx="560" cy="130" r="7" fill="var(--accent)"/>
+<g class="msg a2"><line x1="300" y1="200" x2="120" y2="200" marker-end="url(#ah)"/><text x="210" y="190" text-anchor="middle">prior w = 1/τ² = 1</text></g>
+<g class="msg a2"><line x1="340" y1="200" x2="520" y2="200" marker-end="url(#ah)"/><text x="430" y="190" text-anchor="middle">data w = n/σ² = 1</text></g>
+<text class="crcrow a2" x="320" y="248" text-anchor="middle">dead tie → MAP = (5.0 + 0)/2 = 2.5</text>
+<circle class="a2" cx="320" cy="130" r="9" fill="var(--accent-warm)"/>
+<text class="crcres a3" x="320" y="278" text-anchor="middle">n = 400: data w = 100 → MAP ≈ 4.95 ≈ MLE ✓</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Data Pulls to 5, Prior Anchors 0</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the dead-tie precisions split the difference at 2.5 — then n = 400 drag the marker to 4.95, almost home to MLE.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

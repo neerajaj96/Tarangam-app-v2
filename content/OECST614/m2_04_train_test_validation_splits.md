@@ -51,6 +51,10 @@ Train: $700$ motors, faulty $\approx 70$. Validation: $150$ motors, faulty $\app
 $700/70$, $150/15$, $150/15$ (size/faulty). Fifteen faulty test motors is a thin but usable verdict — with only $30$ faulty motors total, abandon fixed splits for cross-validation (M4.5).
 :::
 
+::: anim split-buckets Stratify or the Minority Vanishes
+Watch the three buckets fill at the 10 percent rate — 700/70, 150/15, 150/15 — since unstratified rare classes vanish by chance, not by verdict.
+:::
+
 ---
 
 <a id="self-check"></a>

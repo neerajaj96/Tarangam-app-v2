@@ -48,6 +48,10 @@ Max-heap insert $10, 20, 5$ into empty, then extract-max. Show the array after e
 Insert challenges upward; extraction sinks downward — name the direction per op and show the array, since index arithmetic is what's graded.
 :::
 
+::: anim heap-siftup 1 Bubbles 6 to 3 to 1
+Watch the appended 1 swap upward row by row — the index halves per swap while the array stays gap-free.
+:::
+
 ---
 
 <a id="self-check"></a>

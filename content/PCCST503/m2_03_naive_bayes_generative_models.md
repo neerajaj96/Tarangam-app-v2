@@ -57,6 +57,10 @@ Scores: $S: 0.4 \times 0.5 \times 0.1 = 0.020$; $H: 0.6 \times 0.286 \times 0.57
 Without smoothing, $P(\text{lunch}|S)=0$ would zero spam's score *regardless* of "free" — one unseen word holding the whole class hostage. Laplace's $+1$ prices ignorance gracefully instead: unseen ≠ impossible, merely rare. That single $+1$ is doing more classification work than the entire independence assumption.
 :::
 
+::: anim nb-scores Ham Wins 5 to 1 on Free Lunch
+Watch the two products build factor by factor — 0.020 against 0.098 — with the +1-rescued lunch likelihood doing the heaviest lifting in the smaller bar.
+:::
+
 ---
 
 <a id="self-check"></a>

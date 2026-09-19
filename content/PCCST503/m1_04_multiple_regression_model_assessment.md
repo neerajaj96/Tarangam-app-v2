@@ -56,6 +56,10 @@ Means $\bar{x} = 3.5$, $\bar{y} = 30$. Slope $= \sum(x-\bar{x})(y-\bar{y})/\sum(
 Train $R^2 \approx 0.997$ *and* held-out error $\approx 0$ — both grades agree, so the fit is genuine, not memorized. Had the left-out error been $15$ with $R^2$ still $0.997$, that divergence *would be* the overfitting diagnosis — agreement between the two grades is the certificate.
 :::
 
+::: anim ucurve-overfit Train Falls, Test U-Turns
+Watch train error fall while test error bottoms and rises — the file's own verdict (R² 0.997 with LOO ≈ 0) sits at the sweet spot, not the right wall.
+:::
+
 ---
 
 <a id="self-check"></a>

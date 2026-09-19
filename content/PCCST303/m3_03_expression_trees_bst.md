@@ -48,6 +48,10 @@ The inorder successor may own a right child — after copying its value up, bypa
 Expression traces show stack states; BST deletion names the case (0/1/2 children) before acting. Case-first is the grading trigger.
 :::
 
+::: anim bst-successor-swap Deleting 30 via Successor 40
+Watch 30 flagged, successor 40 rise into its slot, and the after-tree hold the invariant — copy up, remove the origin.
+:::
+
 ---
 
 <a id="self-check"></a>

@@ -45,6 +45,10 @@ Sort $[29, 10, 14, 37, 13]$ by selection (show array per pass) and count inserti
 Selection traces show the growing sorted prefix + shrinking scan zone; insertion traces count shifts per card. Prefix/zone discipline is what graders check per pass.
 :::
 
+::: anim selection-passes Selection Drafts 10, 13, Then 29
+Watch each pass draft its minimum to the boundary — pass 3 holds 14, pass 4 swaps 29 home, ten comparisons total and never fewer.
+:::
+
 ---
 
 <a id="self-check"></a>

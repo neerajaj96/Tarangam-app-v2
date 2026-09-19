@@ -44,7 +44,7 @@ The theorem's fine print *is* the theorem: inseparable data ⇒ infinite cycling
 ## 3. Worked Example / Step-by-Step Scenario
 
 ::: step [Step 1: Setup] Formulating the Problem
-Points $A(2,2){+}$, $B(3,3){+}$, $C(0,1){-}$, $D(1,0){-}$ (separable: $x_1 = 2$ splits them). Run the perceptron ($\eta=1$, order A,B,C,D cycling) from zeros. (Trace machine-verified.)
+Points $A(2,2){+}$, $B(3,3){+}$, $C(0,1){-}$, $D(1,0){-}$ (separable: $x_1 = 2$ splits them). Run the perceptron ($\eta=1$, order A,B,C,D cycling) from zeros.
 :::
 
 ::: step [Step 2: Execution] Mistakes Only
@@ -53,6 +53,10 @@ Start $w=[0,0], b=0$. **Epoch 0:** A: score $0 \to +$ ✓; B: $0 \to +$ ✓; C: 
 
 ::: step [Step 3: Conclusion] Final Result
 Final $w=[1,0], b=-2$: boundary $x_1 = 2$ — exactly the human-obvious split, *discovered* through 4 mistakes and zero calculus. Scoreboard: separable data + mistake-driven updates = finite errors, guaranteed. (Try XOR points through the same procedure and watch it cycle forever — the wall, demonstrated.)
+:::
+
+::: anim perceptron-trace Four Mistakes, Then Silence at x1 = 2
+Watch the rope-line settle at x₁ = 2 through four mistakes and a clean final pass — finite errors, guaranteed, with the XOR wall waiting next door.
 :::
 
 ---

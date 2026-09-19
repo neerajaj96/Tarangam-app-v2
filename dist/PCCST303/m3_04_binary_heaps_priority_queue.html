@@ -294,7 +294,43 @@
 <li>Extract: swap root/last → $[5,10]$, drop $20$; sift-down $5$ past $10$: $[10,5]$. Output $20$.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Insert challenges upward; extraction sinks downward — name the direction per op and show the array, since index arithmetic is what&#39;s graded.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; 1 Bubbles 6 to 3 to 1</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated min-heap insert: appended 1 swaps past 3 then 2 giving 1 5 2 9 6 3">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="22" text-anchor="middle">min-heap [2,5,3,9,6] + insert 1</text>
+<text class="crcrow a1" x="24" y="94">1 @ i=6</text>
+<g class="cell a1"><rect x="180" y="60" width="62" height="52" rx="8"/><text x="211" y="94" text-anchor="middle">2</text></g>
+<g class="cell a1"><rect x="250" y="60" width="62" height="52" rx="8"/><text x="281" y="94" text-anchor="middle">5</text></g>
+<g class="cell a1"><rect x="320" y="60" width="62" height="52" rx="8"/><text x="351" y="94" text-anchor="middle">3</text></g>
+<g class="cell a1"><rect x="390" y="60" width="62" height="52" rx="8"/><text x="421" y="94" text-anchor="middle">9</text></g>
+<g class="cell a1"><rect x="460" y="60" width="62" height="52" rx="8"/><text x="491" y="94" text-anchor="middle">6</text></g>
+<g class="cell cand a1"><rect x="530" y="60" width="62" height="52" rx="8"/><text x="561" y="94" text-anchor="middle">1</text></g>
+<text class="crcrow a2" x="24" y="166">1 @ i=3</text>
+<g class="cell a2"><rect x="180" y="132" width="62" height="52" rx="8"/><text x="211" y="166" text-anchor="middle">2</text></g>
+<g class="cell a2"><rect x="250" y="132" width="62" height="52" rx="8"/><text x="281" y="166" text-anchor="middle">5</text></g>
+<g class="cell cand a2"><rect x="320" y="132" width="62" height="52" rx="8"/><text x="351" y="166" text-anchor="middle">1</text></g>
+<g class="cell a2"><rect x="390" y="132" width="62" height="52" rx="8"/><text x="421" y="166" text-anchor="middle">9</text></g>
+<g class="cell a2"><rect x="460" y="132" width="62" height="52" rx="8"/><text x="491" y="166" text-anchor="middle">6</text></g>
+<g class="cell a2"><rect x="530" y="132" width="62" height="52" rx="8"/><text x="561" y="166" text-anchor="middle">3</text></g>
+<text class="crcrow a3" x="24" y="238">1 @ i=1 ✓</text>
+<g class="cell cand a3"><rect x="180" y="204" width="62" height="52" rx="8"/><text x="211" y="238" text-anchor="middle">1</text></g>
+<g class="cell a3"><rect x="250" y="204" width="62" height="52" rx="8"/><text x="281" y="238" text-anchor="middle">5</text></g>
+<g class="cell a3"><rect x="320" y="204" width="62" height="52" rx="8"/><text x="351" y="238" text-anchor="middle">2</text></g>
+<g class="cell a3"><rect x="390" y="204" width="62" height="52" rx="8"/><text x="421" y="238" text-anchor="middle">9</text></g>
+<g class="cell a3"><rect x="460" y="204" width="62" height="52" rx="8"/><text x="491" y="238" text-anchor="middle">6</text></g>
+<g class="cell a3"><rect x="530" y="204" width="62" height="52" rx="8"/><text x="561" y="238" text-anchor="middle">3</text></g>
+<text class="animnote a4" x="320" y="284" text-anchor="middle">each swap halves the index — O(log n) hops, array stays gap-free</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> 1 Bubbles 6 to 3 to 1</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the appended 1 swap upward row by row — the index halves per swap while the array stays gap-free.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

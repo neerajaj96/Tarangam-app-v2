@@ -277,7 +277,28 @@
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>$n = 100$ training points, $B = 200$ bagged trees. (a) How many points does one bootstrap sample leave out on average, and how many trees is a given point OOB for? (b) Predictor variance $\sigma^2 = 4$, pairwise $\rho = 0.3$: ensemble variance at $B = 200$ vs a single tree?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting and Averaging</div><div class="step-content"><p>(a) Omitted fraction $(1 - 1/100)^{100} \approx 1/e \approx 0.368$: ~<strong>37 points</strong> left out per sample; each point OOB for $\approx 0.368 \times 200 \approx$ <strong>74 trees</strong> — a 74-model validation jury per point, free. (b) Ensemble variance $= 0.3 \times 4 + \frac{0.7}{200} \times 4 = 1.2 + 0.014 = \mathbf{1.214}$ vs single-tree $4$ — a $3.3\times$ cut, bounded below by the correlated floor $1.2$ no $B$ can breach.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Bagging turned variance $4 \to 1.21$ while bias sat untouched — and the 37% OOB mechanism graded everything without spending a single held-out point. The residual $1.2$ floor is exactly why forests exist: only <em>decorrelation</em> (random features) lowers $\rho$ itself, the one knob bagging cannot turn.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Bagging Hits the Correlated Floor</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated variance bars: single tree 4.0, bagged ensemble 1.214, correlated floor 1.2">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="36" text-anchor="middle">σ² = 4 · ρ = 0.3 · B = 200</text>
+<text class="crcrow a1" x="40" y="110">single tree: 4.0</text>
+<rect class="a1" x="300" y="92" width="270" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a2" x="40" y="170">bagged: 1.214</text>
+<rect class="a2" x="300" y="152" width="82" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="crcrow a3" x="40" y="230">floor ρσ² = 1.2</text>
+<rect class="a3" x="300" y="212" width="81" height="20" rx="4" fill="var(--accent)"/>
+<text class="animnote a4" x="320" y="272" text-anchor="middle">3.3× cut — and no B breaches 1.2: only decorrelation (forests) lowers ρ</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Bagging Hits the Correlated Floor</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch variance collapse 4 to 1.214 and stop dead at the 1.2 floor — the bar that no B breaches, and the reason forests exist.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

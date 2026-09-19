@@ -55,6 +55,10 @@ Radix-sort $[170, 45, 75, 90, 802, 24, 2, 66]$ (LSD, base $10$). Show state afte
 Stable re-gathering is the step students skip in traces — show bucket contents *and* gathered order per pass, both graded.
 :::
 
+::: anim radix-buckets Radix Pigeonholes, Ones to Hundreds
+Watch each digit pass bucket then re-gather stably — buckets and gathered order both shown, since both are graded and stability is the mechanism.
+:::
+
 ---
 
 <a id="self-check"></a>

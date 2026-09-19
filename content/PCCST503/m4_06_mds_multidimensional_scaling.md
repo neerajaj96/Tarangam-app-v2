@@ -54,6 +54,10 @@ $D^2 = [[0,9,16],[9,0,25],[16,25,0]]$. Row means: $25/3 \approx 8.333$, $34/3 \a
 $B$ built, both certificates green, ledger $12.965 + 3.702 + 0$. A 1-D line keeps $77.8\%$ (flattened triangle, stress $> 0$); 2-D recovers the exact right triangle ($3$-$4$-$5$ verifies: legs $3,4$, hypotenuse $5$). Mileages in, map out — no coordinates were harmed (none were given).
 :::
 
+::: anim mds-ledger Eigenvalues Ledger the Triangle
+Watch the ledger balance — 12.965 plus 3.702 plus centering's zero equals the trace — with dim-1 keeping 77.8% and dim-2 the exact triangle.
+:::
+
 ---
 
 <a id="self-check"></a>

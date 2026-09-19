@@ -45,6 +45,10 @@ Binary-search $23$ in $[2, 5, 8, 12, 16, 23, 38, 56]$. Show lo/mid/hi per iterat
 Trace tables (lo, mid, value, action) are the graded artefact; $\log_2 n$ ceilings answer all "how many steps" follow-ups.
 :::
 
+::: anim binary-halving 23 Found in Two Halvings
+Watch mid-3 discard the left half, then mid-5 hit — lo/mid/hi per iteration is the graded trace, and log ceilings close every step-count question.
+:::
+
 ---
 
 <a id="self-check"></a>

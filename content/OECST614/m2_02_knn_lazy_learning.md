@@ -51,6 +51,10 @@ $d(A,Q) = \sqrt{4+4} \approx 2.828$; $d(B,Q) = \sqrt{1+1} \approx 1.414$; $d(C,Q
 $k = 3$ predicts $+$ (2-vs-1), $k = 1$ predicts $+$ via $B$. Note the symmetry trap: $A$ and $C$ tie at $2.828$ but $B$ breaks it — always sort fully before voting, never eyeball "closest cluster".
 :::
 
+::: anim knn-tiebreak A and C Tie, B Breaks It
+Watch all four arrows land with the A–C tie at 2.828 in the open — sorted fully, never eyeballed, with B breaking the symmetry.
+:::
+
 ---
 
 <a id="self-check"></a>
@@ -69,7 +73,7 @@ $k = 2$ binary votes can split $1$-$1$ with no majority. A stated tie-break is m
 ::: quiz Q2: Scaling Verdict
 Features: age $[0, 100]$, salary $[0, 100000]$. Raw Euclidean KNN. Problem?
 (A) None, Euclidean handles scales
-(*B) Salary differences dominate squared distance by up to $10^{10}$-scale factors, so age is effectively ignored until both axes are standardized
+(*B) Salary differences dominate squared distance — salary terms reach $10^{10}$-scale while age terms peak at $10^4$-scale, so age is effectively ignored until both axes are standardized
 (C) Age dominates instead
 (D) KNN cannot use numeric features
 ::: explanation

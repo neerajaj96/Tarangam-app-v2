@@ -215,6 +215,539 @@ ${node(570, 150, '6', 'a5')}<text class="ordbadge a5" x="570" y="110">[6] d=13</
 </svg>`
   },
 
+  'traversal-orders': {
+    title: 'In, Pre, Post on the Worked Tree',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated traversals on root 1 with left 2 holding 4 and 5 and right 3: inorder 4 2 5 1 3, preorder 1 2 4 5 3, postorder 4 5 2 3 1">
+${defs}
+<text class="animcap a1" x="150" y="24" text-anchor="middle">worked tree</text>
+${edge(170, 52, 100, 140, 'a1')}${edge(170, 52, 240, 140, 'a1')}${edge(100, 140, 62, 228, 'a1')}${edge(100, 140, 138, 228, 'a1')}
+${node(170, 52, '1', 'a1')}${node(100, 140, '2', 'a1')}${node(240, 140, '3', 'a1')}${node(62, 228, '4', 'a1')}${node(138, 228, '5', 'a1')}
+<text class="crcrow a2" x="330" y="95">In: 4 2 5 1 3</text>
+<text class="crcrow a3" x="330" y="145">Pre: 1 2 4 5 3</text>
+<text class="crcrow a4" x="330" y="195">Post: 4 5 2 3 1</text>
+<text class="animnote a5" x="320" y="262" text-anchor="middle">level 1 2 3 4 5 · pre+in rebuilds — pre+post cannot</text>
+</svg>`
+  },
+
+  'bst-successor-swap': {
+    title: 'Deleting 30 via Successor 40',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated BST deletion: node 30 with children 20 and 40 is replaced by inorder successor 40">
+${defs}
+<text class="animcap a1" x="160" y="24" text-anchor="middle">before: delete 30?</text>
+<text class="animcap a4" x="480" y="24" text-anchor="middle">after</text>
+${edge(160, 62, 100, 142, 'a1')}${edge(160, 62, 220, 142, 'a1')}${edge(100, 142, 66, 224, 'a1')}${edge(100, 142, 134, 224, 'a1')}
+${node(160, 62, '50', 'a1')}${node(100, 142, '30', 'a1')}${node(220, 142, '70', 'a1')}${node(66, 224, '20', 'a1')}${node(134, 224, '40', 'a1')}
+<text class="ordbadge a2" x="100" y="108" text-anchor="middle">✕ delete (2 children)</text>
+<text class="ordbadge a2" x="134" y="272" text-anchor="middle">successor 40 ↑</text>
+<text class="bigarrow a3" x="320" y="150" text-anchor="middle">⟶</text>
+${edge(480, 62, 420, 142, 'a4')}${edge(480, 62, 540, 142, 'a4')}${edge(420, 142, 386, 224, 'a4')}
+${node(480, 62, '50', 'a4')}${node(420, 142, '40', 'a4')}${node(540, 142, '70', 'a4')}${node(386, 224, '20', 'a4')}
+<text class="ordbadge a4" x="480" y="272" text-anchor="middle">40 copied up, origin removed</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">successor fits the vacated bounds exactly — invariant holds</text>
+</svg>`
+  },
+
+  'heap-siftup': {
+    title: '1 Bubbles 6 to 3 to 1',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated min-heap insert: appended 1 swaps past 3 then 2 giving 1 5 2 9 6 3">
+${defs}
+<text class="animcap a1" x="320" y="22" text-anchor="middle">min-heap [2,5,3,9,6] + insert 1</text>
+<text class="crcrow a1" x="24" y="94">1 @ i=6</text>
+<g class="cell a1"><rect x="180" y="60" width="62" height="52" rx="8"/><text x="211" y="94" text-anchor="middle">2</text></g>
+<g class="cell a1"><rect x="250" y="60" width="62" height="52" rx="8"/><text x="281" y="94" text-anchor="middle">5</text></g>
+<g class="cell a1"><rect x="320" y="60" width="62" height="52" rx="8"/><text x="351" y="94" text-anchor="middle">3</text></g>
+<g class="cell a1"><rect x="390" y="60" width="62" height="52" rx="8"/><text x="421" y="94" text-anchor="middle">9</text></g>
+<g class="cell a1"><rect x="460" y="60" width="62" height="52" rx="8"/><text x="491" y="94" text-anchor="middle">6</text></g>
+<g class="cell cand a1"><rect x="530" y="60" width="62" height="52" rx="8"/><text x="561" y="94" text-anchor="middle">1</text></g>
+<text class="crcrow a2" x="24" y="166">1 @ i=3</text>
+<g class="cell a2"><rect x="180" y="132" width="62" height="52" rx="8"/><text x="211" y="166" text-anchor="middle">2</text></g>
+<g class="cell a2"><rect x="250" y="132" width="62" height="52" rx="8"/><text x="281" y="166" text-anchor="middle">5</text></g>
+<g class="cell cand a2"><rect x="320" y="132" width="62" height="52" rx="8"/><text x="351" y="166" text-anchor="middle">1</text></g>
+<g class="cell a2"><rect x="390" y="132" width="62" height="52" rx="8"/><text x="421" y="166" text-anchor="middle">9</text></g>
+<g class="cell a2"><rect x="460" y="132" width="62" height="52" rx="8"/><text x="491" y="166" text-anchor="middle">6</text></g>
+<g class="cell a2"><rect x="530" y="132" width="62" height="52" rx="8"/><text x="561" y="166" text-anchor="middle">3</text></g>
+<text class="crcrow a3" x="24" y="238">1 @ i=1 ✓</text>
+<g class="cell cand a3"><rect x="180" y="204" width="62" height="52" rx="8"/><text x="211" y="238" text-anchor="middle">1</text></g>
+<g class="cell a3"><rect x="250" y="204" width="62" height="52" rx="8"/><text x="281" y="238" text-anchor="middle">5</text></g>
+<g class="cell a3"><rect x="320" y="204" width="62" height="52" rx="8"/><text x="351" y="238" text-anchor="middle">2</text></g>
+<g class="cell a3"><rect x="390" y="204" width="62" height="52" rx="8"/><text x="421" y="238" text-anchor="middle">9</text></g>
+<g class="cell a3"><rect x="460" y="204" width="62" height="52" rx="8"/><text x="491" y="238" text-anchor="middle">6</text></g>
+<g class="cell a3"><rect x="530" y="204" width="62" height="52" rx="8"/><text x="561" y="238" text-anchor="middle">3</text></g>
+<text class="animnote a4" x="320" y="284" text-anchor="middle">each swap halves the index — O(log n) hops, array stays gap-free</text>
+</svg>`
+  },
+
+  'adjlist-vs-matrix': {
+    title: 'Path 1-2-3-4 in Three Formats',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated graph representations of path 1-2-3-4 as drawing, adjacency lists and matrix">
+${defs}
+<text class="animcap a1" x="120" y="24" text-anchor="middle">path 1–2–3–4</text>
+${edge(120, 60, 120, 125, 'a1')}${edge(120, 125, 120, 190, 'a1')}${edge(120, 190, 120, 255, 'a1')}
+${node(120, 60, '1', 'a1')}${node(120, 125, '2', 'a1')}${node(120, 190, '3', 'a1')}${node(120, 255, '4', 'a1')}
+<text class="animcap a2" x="300" y="60">adj lists:</text>
+<text class="crcrow a2" x="300" y="95">1 : [2]</text>
+<text class="crcrow a2" x="300" y="125">2 : [1, 3]</text>
+<text class="crcrow a2" x="300" y="155">3 : [2, 4]</text>
+<text class="crcrow a2" x="300" y="185">4 : [3]</text>
+<text class="animcap a3" x="480" y="60">matrix 4×4:</text>
+<text class="crcrow a3" x="480" y="95">0 1 0 0</text>
+<text class="crcrow a3" x="480" y="125">1 0 1 0</text>
+<text class="crcrow a3" x="480" y="155">0 1 0 1</text>
+<text class="crcrow a3" x="480" y="185">0 0 1 0</text>
+<text class="animnote a4" x="320" y="282" text-anchor="middle">10⁶ cities, 3·10⁶ roads → lists Θ(V+E); matrix needs 10¹² cells</text>
+</svg>`
+  },
+
+  'lomuto-partition': {
+    title: 'Pivot 24 Goes Home to Slot 2',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Lomuto partition of 24 10 36 15 28 placing pivot 24 at index 2">
+${defs}
+<text class="animcap a1" x="320" y="30" text-anchor="middle">partition [24,10,36,15,28] — pivot 24</text>
+<g class="cell a1"><rect x="150" y="52" width="66" height="52" rx="8"/><text x="183" y="86" text-anchor="middle">24</text></g>
+<g class="cell a1"><rect x="228" y="52" width="66" height="52" rx="8"/><text x="261" y="86" text-anchor="middle">10</text></g>
+<g class="cell a1"><rect x="306" y="52" width="66" height="52" rx="8"/><text x="339" y="86" text-anchor="middle">36</text></g>
+<g class="cell a1"><rect x="384" y="52" width="66" height="52" rx="8"/><text x="417" y="86" text-anchor="middle">15</text></g>
+<g class="cell a1"><rect x="462" y="52" width="66" height="52" rx="8"/><text x="495" y="86" text-anchor="middle">28</text></g>
+<text class="crcrow a2" x="24" y="170">scan: {10,15} left</text>
+<g class="cell a2"><rect x="150" y="136" width="66" height="52" rx="8"/><text x="183" y="170" text-anchor="middle">10</text></g>
+<g class="cell a2"><rect x="228" y="136" width="66" height="52" rx="8"/><text x="261" y="170" text-anchor="middle">15</text></g>
+<g class="cell cand a2"><rect x="306" y="136" width="66" height="52" rx="8"/><text x="339" y="170" text-anchor="middle">24</text></g>
+<g class="cell a2"><rect x="384" y="136" width="66" height="52" rx="8"/><text x="417" y="170" text-anchor="middle">36</text></g>
+<g class="cell a2"><rect x="462" y="136" width="66" height="52" rx="8"/><text x="495" y="170" text-anchor="middle">28</text></g>
+<text class="crcrow a3" x="320" y="226" text-anchor="middle">24 home @ slot 2 → recurse [10,15] · [36,28]</text>
+<text class="animnote a4" x="320" y="264" text-anchor="middle">each partition places its pivot — depth mirrors split quality</text>
+</svg>`
+  },
+
+  'merge-zip': {
+    title: 'Merge-Sort [38,27,43,3], Level by Level',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated merge sort splits and zips of 38 27 43 3 ending 3 27 38 43">
+${defs}
+<text class="animcap a1" x="320" y="40" text-anchor="middle">merge-sort [38, 27, 43, 3]</text>
+<text class="crcrow a1" x="320" y="85" text-anchor="middle">[38, 27, 43, 3]</text>
+<text class="crcrow a2" x="320" y="130" text-anchor="middle">[38, 27] · [43, 3] → [38][27] · [43][3]</text>
+<text class="crcrow a3" x="320" y="175" text-anchor="middle">zip → [27, 38] · [3, 43]</text>
+<text class="crcres a4" x="320" y="220" text-anchor="middle">zip → [3, 27, 38, 43] ✓</text>
+<text class="animnote a5" x="320" y="264" text-anchor="middle">log n levels × linear zips — halves, not pivots: the guarantee</text>
+</svg>`
+  },
+
+  'binary-halving': {
+    title: '23 Found in Two Halvings',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated binary search for 23: mid 3 is 12 so go right, mid 5 hits 23">
+${defs}
+<text class="animcap a1" x="320" y="28" text-anchor="middle">search 23 in [2,5,8,12,16,23,38,56]</text>
+<text class="animcap a1" x="92" y="58" text-anchor="middle">0</text><text class="animcap a1" x="156" y="58" text-anchor="middle">1</text><text class="animcap a1" x="220" y="58" text-anchor="middle">2</text><text class="animcap a1" x="284" y="58" text-anchor="middle">3</text><text class="animcap a1" x="348" y="58" text-anchor="middle">4</text><text class="animcap a1" x="412" y="58" text-anchor="middle">5</text><text class="animcap a1" x="476" y="58" text-anchor="middle">6</text><text class="animcap a1" x="540" y="58" text-anchor="middle">7</text>
+<g class="cell a1"><rect x="64" y="68" width="56" height="48" rx="8"/><text x="92" y="99" text-anchor="middle">2</text></g>
+<g class="cell a1"><rect x="128" y="68" width="56" height="48" rx="8"/><text x="156" y="99" text-anchor="middle">5</text></g>
+<g class="cell a1"><rect x="192" y="68" width="56" height="48" rx="8"/><text x="220" y="99" text-anchor="middle">8</text></g>
+<g class="cell cand a1"><rect x="256" y="68" width="56" height="48" rx="8"/><text x="284" y="99" text-anchor="middle">12</text></g>
+<g class="cell a1"><rect x="320" y="68" width="56" height="48" rx="8"/><text x="348" y="99" text-anchor="middle">16</text></g>
+<g class="cell a1"><rect x="384" y="68" width="56" height="48" rx="8"/><text x="412" y="99" text-anchor="middle">23</text></g>
+<g class="cell a1"><rect x="448" y="68" width="56" height="48" rx="8"/><text x="476" y="99" text-anchor="middle">38</text></g>
+<g class="cell a1"><rect x="512" y="68" width="56" height="48" rx="8"/><text x="540" y="99" text-anchor="middle">56</text></g>
+<text class="crcrow a2" x="320" y="150" text-anchor="middle">lo0 hi7 mid3 = 12 &lt; 23 → lo = 4 (left half discarded)</text>
+<g class="cell a3"><rect x="192" y="166" width="56" height="48" rx="8"/><text x="220" y="197" text-anchor="middle">16</text></g>
+<g class="cell cand a3"><rect x="256" y="166" width="56" height="48" rx="8"/><text x="284" y="197" text-anchor="middle">23</text></g>
+<g class="cell a3"><rect x="320" y="166" width="56" height="48" rx="8"/><text x="348" y="197" text-anchor="middle">38</text></g>
+<g class="cell a3"><rect x="384" y="166" width="56" height="48" rx="8"/><text x="412" y="197" text-anchor="middle">56</text></g>
+<text class="crcres a3" x="500" y="197">mid5 ✓ 2 iters</text>
+<text class="animnote a4" x="320" y="262" text-anchor="middle">worst case ⌈log₂n⌉ probes: n=1000 → 10 · n=10⁶ → 20</text>
+</svg>`
+  },
+
+  'probe-walk': {
+    title: '14 Walks 0 to 1 to 2',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated linear probing: key 14 hashes to 0, finds 0 and 1 busy, lands in 2">
+${defs}
+<text class="animcap a1" x="320" y="30" text-anchor="middle">m = 7: 700@0 · 50@1 · 76@6 — insert 14, h = 0</text>
+<text class="animcap a1" x="99" y="62" text-anchor="middle">0</text><text class="animcap a1" x="171" y="62" text-anchor="middle">1</text><text class="animcap a1" x="243" y="62" text-anchor="middle">2</text><text class="animcap a1" x="315" y="62" text-anchor="middle">3</text><text class="animcap a1" x="387" y="62" text-anchor="middle">4</text><text class="animcap a1" x="459" y="62" text-anchor="middle">5</text><text class="animcap a1" x="531" y="62" text-anchor="middle">6</text>
+<g class="cell a1"><rect x="68" y="72" width="62" height="52" rx="8"/><text x="99" y="106" text-anchor="middle">700</text></g>
+<g class="cell a1"><rect x="140" y="72" width="62" height="52" rx="8"/><text x="171" y="106" text-anchor="middle">50</text></g>
+<g class="cell a1"><rect x="212" y="72" width="62" height="52" rx="8"/><text x="243" y="106" text-anchor="middle">·</text></g>
+<g class="cell a1"><rect x="284" y="72" width="62" height="52" rx="8"/><text x="315" y="106" text-anchor="middle">·</text></g>
+<g class="cell a1"><rect x="356" y="72" width="62" height="52" rx="8"/><text x="387" y="106" text-anchor="middle">·</text></g>
+<g class="cell a1"><rect x="428" y="72" width="62" height="52" rx="8"/><text x="459" y="106" text-anchor="middle">·</text></g>
+<g class="cell a1"><rect x="500" y="72" width="62" height="52" rx="8"/><text x="531" y="106" text-anchor="middle">76</text></g>
+${msg(99, 160, 171, 160, 'busy', 150, 'a2')}
+${msg(171, 195, 243, 195, 'busy', 185, 'a3')}
+<text class="crcres a4" x="320" y="240" text-anchor="middle">slot 2 free — 14 lands · chain [0→1→2] ✓</text>
+<text class="animnote a5" x="320" y="274" text-anchor="middle">probe walks narrate clustering's birth — the graded content</text>
+</svg>`
+  },
+
+  'selection-passes': {
+    title: 'Selection Drafts 10, 13, Then 29',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated selection sort passes on 29 10 14 37 13 placing 10 then 13 then 29">
+${defs}
+<text class="animcap a1" x="320" y="26" text-anchor="middle">selection on [29,10,14,37,13]</text>
+<text class="crcrow a1" x="24" y="80">start</text>
+<g class="cell a1"><rect x="170" y="48" width="64" height="48" rx="8"/><text x="202" y="80" text-anchor="middle">29</text></g>
+<g class="cell a1"><rect x="242" y="48" width="64" height="48" rx="8"/><text x="274" y="80" text-anchor="middle">10</text></g>
+<g class="cell a1"><rect x="314" y="48" width="64" height="48" rx="8"/><text x="346" y="80" text-anchor="middle">14</text></g>
+<g class="cell a1"><rect x="386" y="48" width="64" height="48" rx="8"/><text x="418" y="80" text-anchor="middle">37</text></g>
+<g class="cell a1"><rect x="458" y="48" width="64" height="48" rx="8"/><text x="490" y="80" text-anchor="middle">13</text></g>
+<text class="crcrow a2" x="24" y="148">pass1: min 10</text>
+<g class="cell cand a2"><rect x="170" y="116" width="64" height="48" rx="8"/><text x="202" y="148" text-anchor="middle">10</text></g>
+<g class="cell a2"><rect x="242" y="116" width="64" height="48" rx="8"/><text x="274" y="148" text-anchor="middle">29</text></g>
+<g class="cell a2"><rect x="314" y="116" width="64" height="48" rx="8"/><text x="346" y="148" text-anchor="middle">14</text></g>
+<g class="cell a2"><rect x="386" y="116" width="64" height="48" rx="8"/><text x="418" y="148" text-anchor="middle">37</text></g>
+<g class="cell a2"><rect x="458" y="116" width="64" height="48" rx="8"/><text x="490" y="148" text-anchor="middle">13</text></g>
+<text class="crcrow a3" x="24" y="216">pass2: min 13</text>
+<g class="cell a3"><rect x="170" y="184" width="64" height="48" rx="8"/><text x="202" y="216" text-anchor="middle">10</text></g>
+<g class="cell cand a3"><rect x="242" y="184" width="64" height="48" rx="8"/><text x="274" y="216" text-anchor="middle">13</text></g>
+<g class="cell a3"><rect x="314" y="184" width="64" height="48" rx="8"/><text x="346" y="216" text-anchor="middle">14</text></g>
+<g class="cell a3"><rect x="386" y="184" width="64" height="48" rx="8"/><text x="418" y="216" text-anchor="middle">37</text></g>
+<g class="cell a3"><rect x="458" y="184" width="64" height="48" rx="8"/><text x="490" y="216" text-anchor="middle">29</text></g>
+<text class="crcrow a4" x="24" y="276">pass3 holds, pass4: min 29</text>
+<g class="cell a4"><rect x="170" y="244" width="64" height="48" rx="8"/><text x="202" y="276" text-anchor="middle">10</text></g>
+<g class="cell a4"><rect x="242" y="244" width="64" height="48" rx="8"/><text x="274" y="276" text-anchor="middle">13</text></g>
+<g class="cell a4"><rect x="314" y="244" width="64" height="48" rx="8"/><text x="346" y="276" text-anchor="middle">14</text></g>
+<g class="cell cand a4"><rect x="386" y="244" width="64" height="48" rx="8"/><text x="418" y="276" text-anchor="middle">29</text></g>
+<g class="cell a4"><rect x="458" y="244" width="64" height="48" rx="8"/><text x="490" y="276" text-anchor="middle">37</text></g>
+</svg>`
+  },
+
+  'radix-buckets': {
+    title: 'Radix Pigeonholes, Ones to Hundreds',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated radix sort passes: ones buckets gather, tens gather, hundreds finish sorted">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">radix LSD on [170,45,75,90,802,24,2,66]</text>
+<text class="crcrow a2" x="320" y="80" text-anchor="middle">ones → 0:{170,90} 2:{802,2} 4:{24} 5:{45,75} 6:{66}</text>
+<text class="crcrow a3" x="320" y="122" text-anchor="middle">gather → [170,90,802,2,24,45,75,66]</text>
+<text class="crcrow a3" x="320" y="164" text-anchor="middle">tens → 0:{802,2} 2:{24} 4:{45} 6:{66} 7:{170,75} 9:{90}</text>
+<text class="crcrow a4" x="320" y="206" text-anchor="middle">gather → [802,2,24,45,66,170,75,90]</text>
+<text class="crcres a5" x="320" y="248" text-anchor="middle">hundreds → [2,24,45,66,75,90,170,802] ✓ stable throughout</text>
+</svg>`
+  },
+
+  'mle-map-tug': {
+    title: 'Data Pulls to 5, Prior Anchors 0',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated precision tug of war: data pulls to 5.0, prior anchors 0, MAP splits at 2.5, then n equals 400 drags MAP to 4.95">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">sensor: x̄ = 5.0 (n = 4, σ² = 4) · prior μ₀ = 0 (τ² = 1)</text>
+<line class="axis" x1="60" y1="130" x2="580" y2="130"/>
+<text class="animcap a1" x="80" y="160" text-anchor="middle">prior 0</text>
+<text class="animcap a1" x="560" y="160" text-anchor="middle">MLE 5.0</text>
+<circle class="a1" cx="80" cy="130" r="7" fill="var(--accent)"/>
+<circle class="a1" cx="560" cy="130" r="7" fill="var(--accent)"/>
+${msg(300, 200, 120, 200, 'prior w = 1/τ² = 1', 190, 'a2')}
+${msg(340, 200, 520, 200, 'data w = n/σ² = 1', 190, 'a2')}
+<text class="crcrow a2" x="320" y="248" text-anchor="middle">dead tie → MAP = (5.0 + 0)/2 = 2.5</text>
+<circle class="a2" cx="320" cy="130" r="9" fill="var(--accent-warm)"/>
+<text class="crcres a3" x="320" y="278" text-anchor="middle">n = 400: data w = 100 → MAP ≈ 4.95 ≈ MLE ✓</text>
+</svg>`
+  },
+
+  'ruler-fit': {
+    title: 'Three Points, One Ruler',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated least squares fit through points 1 1, 2 2 and 3 2 with ruler y equals two thirds plus x over two">
+${defs}
+<line class="axis" x1="80" y1="40" x2="80" y2="270"/>
+<line class="axis" x1="80" y1="270" x2="580" y2="270"/>
+<g class="a1"><circle cx="160" cy="205" r="7" fill="var(--accent)"/><circle cx="320" cy="95" r="7" fill="var(--accent)"/><circle cx="480" cy="40" r="7" fill="var(--accent)"/></g>
+<line class="eg a2" x1="100" y1="207" x2="540" y2="56" stroke-width="3"/>
+<text class="crcrow a2" x="320" y="30" text-anchor="middle">ŷ = 2/3 + x/2 · pts (1,1) (2,2) (3,2)</text>
+<line class="eg a3" x1="160" y1="205" x2="160" y2="187" stroke-dasharray="5 4"/>
+<line class="eg a3" x1="320" y1="95" x2="320" y2="132" stroke-dasharray="5 4"/>
+<line class="eg a3" x1="480" y1="40" x2="480" y2="77" stroke-dasharray="5 4"/>
+<text class="ordbadge a3" x="160" y="228" text-anchor="middle">+1/6</text>
+<text class="ordbadge a3" x="320" y="152" text-anchor="middle">−1/3</text>
+<text class="ordbadge a3" x="480" y="97" text-anchor="middle">+1/6</text>
+<text class="animnote a4" x="320" y="292" text-anchor="middle">residuals sum to zero, ⊥ both columns — projection on real numbers</text>
+</svg>`
+  },
+
+  'ucurve-overfit': {
+    title: 'Train Falls, Test U-Turns',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated bias variance tradeoff: train error falls with complexity while test error U-turns at the sweet spot">
+${defs}
+<line class="axis" x1="80" y1="30" x2="80" y2="260"/>
+<line class="axis" x1="80" y1="260" x2="580" y2="260"/>
+<text class="animcap a1" x="545" y="250" text-anchor="middle">complexity →</text>
+<text class="animcap a1" x="40" y="150" text-anchor="middle">err</text>
+<path class="eg a2" d="M100,220 L200,180 L300,150 L400,130 L500,118" fill="none" stroke-width="3"/>
+<text class="crcrow a2" x="520" y="110">train: falls</text>
+<path class="eg a3" d="M100,210 L200,170 L300,150 L400,165 L500,200" fill="none" stroke-width="3" stroke-dasharray="8 5"/>
+<text class="crcrow a3" x="520" y="210">test: U-turns</text>
+<circle class="a4" cx="300" cy="150" r="8" fill="none" stroke="var(--correct)" stroke-width="3"/>
+<text class="crcres a4" x="300" y="130" text-anchor="middle">sweet spot</text>
+<text class="animnote a4" x="320" y="286" text-anchor="middle">R² 0.997 + LOO ≈ 0 agree → genuine; divergence = overfitting</text>
+</svg>`
+  },
+
+  'harden-ladder': {
+    title: 'Five Rungs, Each Defeats a Vector',
+    svg: `<svg viewBox="0 0 640 260" role="img" aria-label="Animated Windows hardening ladder: vetted media, least privilege accounts, patch rings, guards on, tested backups">
+${defs}
+<g class="stagebox a1"><rect x="10" y="100" width="112" height="64" rx="10"/><text x="66" y="126">1 · MEDIA</text><text x="66" y="146" class="sub">hash-check</text></g>
+<g class="stagebox a2"><rect x="134" y="100" width="112" height="64" rx="10"/><text x="190" y="126">2 · ACCOUNTS</text><text x="190" y="146" class="sub">std + UAC max</text></g>
+<g class="stagebox a3"><rect x="258" y="100" width="112" height="64" rx="10"/><text x="314" y="126">3 · PATCHES</text><text x="314" y="146" class="sub">test → broad</text></g>
+<g class="stagebox a4"><rect x="382" y="100" width="112" height="64" rx="10"/><text x="438" y="126">4 · GUARDS</text><text x="438" y="146" class="sub">AV + deny-in</text></g>
+<g class="stagebox a5"><rect x="506" y="100" width="112" height="64" rx="10"/><text x="562" y="126">5 · BACKUPS</text><text x="562" y="146" class="sub">3-2-1 + drill</text></g>
+<text class="flowarrow a2" x="128" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a3" x="252" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a4" x="376" y="140" text-anchor="middle">→</text>
+<text class="flowarrow a5" x="500" y="140" text-anchor="middle">→</text>
+<text class="animcap a1" x="320" y="50" text-anchor="middle">sequence is the methodology — vector mapped per rung</text>
+</svg>`
+  },
+
+  'fw-profiles': {
+    title: 'Profiles Are Threat Models of the Wire',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated firewall profiles: domain most open, private moderate, public fortress">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">set by network, not wish</text>
+<g class="stagebox a1"><rect x="60" y="80" width="150" height="80" rx="10"/><text x="135" y="110">DOMAIN</text><text x="135" y="132" class="sub">managed · most open</text></g>
+<g class="stagebox a2"><rect x="245" y="80" width="150" height="80" rx="10"/><text x="320" y="110">PRIVATE</text><text x="320" y="132" class="sub">home · moderate</text></g>
+<g class="stagebox a3"><rect x="430" y="80" width="150" height="80" rx="10"/><text x="505" y="110">PUBLIC</text><text x="505" y="132" class="sub">hostile · fortress</text></g>
+<text class="bigarrow a2" x="227" y="128" text-anchor="middle">→</text>
+<text class="bigarrow a3" x="412" y="128" text-anchor="middle">→</text>
+<text class="crcrow a3" x="320" y="200" text-anchor="middle">public: discovery off · inbound denied hardest</text>
+<text class="animnote a4" x="320" y="246" text-anchor="middle">café air marked private silently opens gates — profile hygiene is step zero</text>
+</svg>`
+  },
+
+  'maid-ladder': {
+    title: 'Each Rung Answers the Last Bypass',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated evil maid ladder: boot USB answered by LUKS, bootkit by Secure Boot and TPM">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">physical access = skeleton key — answer in rungs</text>
+<text class="crcrow a1" x="320" y="90" text-anchor="middle">boot-USB resets passwords → LUKS brick</text>
+<text class="crcrow a2" x="320" y="140" text-anchor="middle">bootkit reinstalls loader → Secure Boot + TPM-sealed keys</text>
+<text class="crcrow a3" x="320" y="190" text-anchor="middle">CMOS reset kills BIOS PINs → tamper-evidence + custody</text>
+<text class="animnote a4" x="320" y="244" text-anchor="middle">ladder, not wall — never one-wall claims; BIOS PINs alone are single-pin lies</text>
+</svg>`
+  },
+
+  'mac-vs-dac': {
+    title: 'Policy Beats Ownership, Even Roots',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated DAC versus MAC: root identity reads shadow under DAC but httpd type is denied under SELinux">
+${defs}
+<text class="animcap a1" x="160" y="36" text-anchor="middle">DAC: who-are-you</text>
+<text class="animcap a3" x="480" y="36" text-anchor="middle">MAC: what-type-are-you</text>
+<g class="stagebox a1"><rect x="40" y="70" width="240" height="90" rx="10"/><text x="160" y="102">root → /etc/shadow</text><text x="160" y="130" class="sub">owner powers: ALLOWED ✗</text></g>
+<text class="bigarrow a2" x="320" y="122" text-anchor="middle">→</text>
+<g class="stagebox a3"><rect x="360" y="70" width="240" height="90" rx="10"/><text x="480" y="102">httpd_t → shadow</text><text x="480" y="130" class="sub">type policy: DENIED ✓</text></g>
+<text class="crcrow a3" x="320" y="205" text-anchor="middle">compromised user ≠ compromised domain</text>
+<text class="animnote a4" x="320" y="248" text-anchor="middle">setenforce 0 forever trades the vest for quiet logs — permissive, then policy</text>
+</svg>`
+  },
+
+  'knn-vote': {
+    title: 'Three Neighbors Vote 2 to 1 for Plus',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated k nearest neighbors vote: query Q at 2 2 with neighbors B and C at distance 1.0 and A at 1.414 voting plus">
+${defs}
+<line class="axis" x1="60" y1="40" x2="60" y2="260"/>
+<line class="axis" x1="60" y1="260" x2="500" y2="260"/>
+${msg(180, 160, 180, 100, '1.0', 122, 'a2')}
+${msg(180, 160, 240, 160, '1.0', 150, 'a2')}
+${msg(180, 160, 120, 220, '1.414', 200, 'a2')}
+${node(120, 220, 'A+', 'a1')}${node(180, 100, 'B+', 'a1')}${node(240, 160, 'C-', 'a1')}${node(360, 40, 'D-', 'a1')}
+${node(180, 160, 'Q?', 'a1')}
+<text class="ordbadge a2" x="360" y="82" text-anchor="middle">D: 3.606 — too far</text>
+<text class="crcrow a3" x="320" y="286" text-anchor="middle">k = 3: B+, C−, A+ → plus wins 2–1</text>
+<text class="animnote a4" x="500" y="240" text-anchor="middle">k = 2 ties 1–1 · k = 1 hair-triggers</text>
+</svg>`
+  },
+
+  'nb-scores': {
+    title: 'Ham Wins 5 to 1 on Free Lunch',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Naive Bayes scores: spam 0.020 versus ham 0.098 for free lunch">
+${defs}
+<text class="animcap a1" x="320" y="40" text-anchor="middle">classify "free lunch" · Laplace α = 1, |V| = 3</text>
+<text class="crcrow a2" x="40" y="120">S: 0.4 × 0.5 × 0.1 = 0.020</text>
+<rect class="a2" x="430" y="102" width="40" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="180">H: 0.6 × 0.286 × 0.571 ≈ 0.098</text>
+<rect class="a3" x="430" y="162" width="196" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="crcres a4" x="320" y="240" text-anchor="middle">ham wins ~5:1 — unseen "lunch" rescued from zero-veto by +1</text>
+</svg>`
+  },
+
+  'gain-bars': {
+    title: 'Outlook Outbids Wind Five to One',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated information gain ranking: Outlook 0.247 beats humidity, wind and temperature for the root split">
+${defs}
+<text class="animcap a1" x="320" y="34" text-anchor="middle">H(S) = 0.940 bits · 9 Play-Yes / 5 No</text>
+<text class="crcrow a2" x="40" y="90">Outlook 0.247</text>
+<rect class="a2" x="230" y="72" width="321" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="ordbadge a2" x="570" y="90">ROOT</text>
+<text class="crcrow a3" x="40" y="140">Humidity 0.151</text>
+<rect class="a3" x="230" y="122" width="196" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="190">Wind 0.048</text>
+<rect class="a3" x="230" y="172" width="62" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a4" x="40" y="240">Temp 0.029</text>
+<rect class="a4" x="230" y="222" width="38" height="20" rx="4" fill="var(--accent)"/>
+<text class="animnote a4" x="420" y="268" text-anchor="middle">Overcast 4+/0 → instant Yes-leaf</text>
+</svg>`
+  },
+
+  'perceptron-trace': {
+    title: 'Four Mistakes, Then Silence at x1 = 2',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated perceptron trace converging to boundary x1 equals 2 after four mistakes">
+${defs}
+<line class="axis" x1="60" y1="30" x2="60" y2="270"/>
+<line class="axis" x1="60" y1="270" x2="420" y2="270"/>
+${node(200, 140, 'A+', 'a1')}${node(255, 85, 'B+', 'a1')}${node(90, 195, 'C-', 'a1')}${node(145, 250, 'D-', 'a1')}
+<line class="eg a2" x1="200" y1="30" x2="200" y2="270" stroke-width="3"/>
+<text class="crcrow a2" x="330" y="90">w = [1,0], b = −2</text>
+<text class="crcrow a2" x="330" y="120">boundary: x1 = 2</text>
+<text class="crcres a3" x="330" y="170">4 mistakes → clean pass ✓</text>
+<text class="animnote a4" x="330" y="215" text-anchor="middle">XOR points through this loop cycle forever — the wall</text>
+</svg>`
+  },
+
+  'kernel-lift': {
+    title: 'Squaring Turns Impossible Into Trivial',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated kernel lift: alternating 1D points become separable clusters under phi of x equals x squared">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">1D: − at ±2 · + at ±0.5 — every threshold mislabels ≥ 1</text>
+${node(120, 90, '−', 'a1')}${node(255, 90, '+', 'a1')}${node(385, 90, '+', 'a1')}${node(520, 90, '−', 'a1')}
+<text class="animcap a1" x="120" y="132" text-anchor="middle">−2</text>
+<text class="animcap a1" x="255" y="132" text-anchor="middle">−0.5</text>
+<text class="animcap a1" x="385" y="132" text-anchor="middle">+0.5</text>
+<text class="animcap a1" x="520" y="132" text-anchor="middle">+2</text>
+${edge(120, 112, 200, 178, 'a2')}${edge(255, 112, 200, 178, 'a2')}${edge(385, 112, 440, 178, 'a2')}${edge(520, 112, 440, 178, 'a2')}
+${node(200, 200, '++', 'a2')}${node(440, 200, '−−', 'a2')}
+<text class="animcap a2" x="200" y="242" text-anchor="middle">φ = 0.25</text>
+<text class="animcap a2" x="440" y="242" text-anchor="middle">φ = 4</text>
+<line class="eg a3" x1="320" y1="160" x2="320" y2="250" stroke-width="3" stroke-dasharray="8 5"/>
+<text class="crcres a3" x="320" y="152" text-anchor="middle">t = 1 separates ✓</text>
+<text class="animnote a4" x="320" y="278" text-anchor="middle">RBF lifts every finite set — γ, not existence, is the decision</text>
+</svg>`
+  },
+
+  'dendro-merge': {
+    title: 'Merge at 1, Then Everything at 4',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated single linkage dendrogram on points 1 2 6 7 merging pairs at height 1 then all at height 4">
+${defs}
+<line class="axis" x1="60" y1="230" x2="580" y2="230"/>
+${node(125, 230, '1', 'a1')}${node(190, 230, '2', 'a1')}${node(450, 230, '6', 'a1')}${node(515, 230, '7', 'a1')}
+<line class="eg a2" x1="125" y1="208" x2="125" y2="150"/>
+<line class="eg a2" x1="190" y1="208" x2="190" y2="150"/>
+<line class="eg a2" x1="125" y1="150" x2="190" y2="150"/>
+<line class="eg a2" x1="450" y1="208" x2="450" y2="150"/>
+<line class="eg a2" x1="515" y1="208" x2="515" y2="150"/>
+<line class="eg a2" x1="450" y1="150" x2="515" y2="150"/>
+<text class="ordbadge a2" x="157" y="140" text-anchor="middle">h = 1</text>
+<text class="ordbadge a2" x="482" y="140" text-anchor="middle">h = 1</text>
+<line class="eg a3" x1="157" y1="150" x2="157" y2="90"/>
+<line class="eg a3" x1="483" y1="150" x2="483" y2="90"/>
+<line class="eg a3" x1="157" y1="90" x2="483" y2="90"/>
+<text class="crcres a3" x="320" y="76" text-anchor="middle">merge all at h = 4 ✓</text>
+<text class="animnote a4" x="320" y="278" text-anchor="middle">complete linkage: final merge at 6 · k = 2 cut between heights 1 and 4</text>
+</svg>`
+  },
+
+  'variance-floor': {
+    title: 'Bagging Hits the Correlated Floor',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated variance bars: single tree 4.0, bagged ensemble 1.214, correlated floor 1.2">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">σ² = 4 · ρ = 0.3 · B = 200</text>
+<text class="crcrow a1" x="40" y="110">single tree: 4.0</text>
+<rect class="a1" x="300" y="92" width="270" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a2" x="40" y="170">bagged: 1.214</text>
+<rect class="a2" x="300" y="152" width="82" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="crcrow a3" x="40" y="230">floor ρσ² = 1.2</text>
+<rect class="a3" x="300" y="212" width="81" height="20" rx="4" fill="var(--accent)"/>
+<text class="animnote a4" x="320" y="272" text-anchor="middle">3.3× cut — and no B breaches 1.2: only decorrelation (forests) lowers ρ</text>
+</svg>`
+  },
+
+  'adaboost-d2': {
+    title: 'Half the Mass Moves to One Point',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated AdaBoost reweighting: three correct points shrink to one sixth each, the miss grows to one half">
+${defs}
+<text class="animcap a1" x="320" y="32" text-anchor="middle">D₁: four × 0.25 · ε₁ = 0.25 · α₁ ≈ 0.549</text>
+<g class="cell a1"><rect x="100" y="52" width="90" height="48" rx="8"/><text x="145" y="84" text-anchor="middle">0.25 ✓</text></g>
+<g class="cell a1"><rect x="210" y="52" width="90" height="48" rx="8"/><text x="255" y="84" text-anchor="middle">0.25 ✓</text></g>
+<g class="cell a1"><rect x="320" y="52" width="90" height="48" rx="8"/><text x="365" y="84" text-anchor="middle">0.25 ✓</text></g>
+<g class="cell a1"><rect x="430" y="52" width="90" height="48" rx="8"/><text x="475" y="84" text-anchor="middle">0.25 ✗</text></g>
+<text class="ordbadge a2" x="145" y="132" text-anchor="middle">×0.577</text>
+<text class="ordbadge a2" x="255" y="132" text-anchor="middle">×0.577</text>
+<text class="ordbadge a2" x="365" y="132" text-anchor="middle">×0.577</text>
+<text class="ordbadge a2" x="475" y="132" text-anchor="middle">×1.732</text>
+<g class="cell a3"><rect x="100" y="148" width="90" height="48" rx="8"/><text x="145" y="180" text-anchor="middle">1/6</text></g>
+<g class="cell a3"><rect x="210" y="148" width="90" height="48" rx="8"/><text x="255" y="180" text-anchor="middle">1/6</text></g>
+<g class="cell a3"><rect x="320" y="148" width="90" height="48" rx="8"/><text x="365" y="180" text-anchor="middle">1/6</text></g>
+<g class="cell cand a3"><rect x="430" y="148" width="90" height="48" rx="8"/><text x="475" y="180" text-anchor="middle">1/2</text></g>
+<text class="crcres a3" x="320" y="232" text-anchor="middle">÷ Z = 0.866 → D₂ ✓</text>
+<text class="animnote a4" x="320" y="268" text-anchor="middle">missed point = half the mass — round 2 fixes it or perishes</text>
+</svg>`
+  },
+
+  'mds-ledger': {
+    title: 'Eigenvalues Ledger the Triangle',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated eigenvalue ledger: 12.965 plus 3.702 plus 0 sums to trace 16.667">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">3-4-5 triangle · B rows sum to 0 · trace 16.667</text>
+<text class="crcrow a1" x="40" y="110">λ₁ ≈ 12.965</text>
+<rect class="a1" x="250" y="92" width="311" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="crcrow a2" x="40" y="170">λ₂ ≈ 3.702</text>
+<rect class="a2" x="250" y="152" width="89" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="230">λ₃ = 0</text>
+<rect class="a3" x="250" y="212" width="2" height="20" rx="4" fill="var(--accent)"/>
+<text class="ordbadge a3" x="280" y="230">centering's signature</text>
+<text class="animnote a4" x="320" y="272" text-anchor="middle">dim-1 keeps 77.8% · dim-2 exact (rank 2) — ledger balances</text>
+</svg>`
+  },
+
+  'nb-posterior': {
+    title: 'Prior Plus Two Clues Outvote One Scream',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated Naive Bayes posterior: spam score 0.012 versus ham 0.0175 normalizing to 0.4068 versus 0.5932">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">P(spam) = 0.3 · mail has "offer" + "meeting"</text>
+<text class="crcrow a2" x="40" y="110">S: 0.3×0.4×0.1 = 0.012</text>
+<rect class="a2" x="400" y="92" width="96" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a2" x="40" y="150">H: 0.7×0.05×0.5 = 0.0175</text>
+<rect class="a2" x="400" y="132" width="140" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="210">posterior: 0.4068 vs 0.5932</text>
+<rect class="a3" x="400" y="192" width="163" height="20" rx="4" fill="var(--accent)" stroke="var(--accent-warm)" stroke-width="2"/>
+<text class="animnote a4" x="320" y="262" text-anchor="middle">"offer" screams spam — prior plus "meeting" outvote it</text>
+</svg>`
+  },
+
+  'knn-tiebreak': {
+    title: 'A and C Tie, B Breaks It',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated kNN tie: query equidistant 2.828 to A and C with B nearest at 1.414 voting plus">
+${defs}
+<line class="axis" x1="60" y1="40" x2="60" y2="260"/>
+<line class="axis" x1="60" y1="260" x2="500" y2="260"/>
+${msg(255, 144, 200, 182, '1.414', 190, 'a2')}
+${msg(255, 144, 145, 220, '2.828', 215, 'a2')}
+${msg(255, 144, 365, 68, '2.828', 100, 'a2')}
+${msg(255, 144, 420, 30, '4.243', 75, 'a2')}
+${node(145, 220, 'A+', 'a1')}${node(200, 182, 'B+', 'a1')}${node(255, 144, 'Q?', 'a1')}${node(365, 68, 'C-', 'a1')}${node(420, 30, 'D-', 'a1')}
+<text class="crcrow a3" x="320" y="286" text-anchor="middle">k = 3: B+, A+, C− → + wins 2–1</text>
+<text class="ordbadge a4" x="515" y="95" text-anchor="middle">A–C tie: sort fully</text>
+</svg>`
+  },
+
+  'penalty-price': {
+    title: 'Squaring Punishes 3.0 Ninefold',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated penalty comparison: LASSO 5.1 versus RIDGE 13.01 on weights 3.0, minus 2.0, 0.1">
+${defs}
+<text class="animcap a1" x="320" y="36" text-anchor="middle">w = [3.0, −2.0, 0.1] · λ = 1</text>
+<text class="crcrow a2" x="40" y="120">LASSO |·|: 5.1</text>
+<rect class="a2" x="330" y="102" width="153" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="180">RIDGE (·)²: 13.01</text>
+<rect class="a3" x="330" y="162" width="390" height="20" rx="4" fill="var(--accent-warm}"/>
+<text class="animnote a4" x="320" y="240" text-anchor="middle">squaring charges 3.0 ninefold, barely sees 0.1 — temper, not just total</text>
+</svg>`
+  },
+
+  'split-buckets': {
+    title: 'Stratify or the Minority Vanishes',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated stratified split: train 700 with 70 faulty, validation and test 150 each with 15 faulty">
+${defs}
+<text class="animcap a1" x="320" y="40" text-anchor="middle">1000 motors · 10% faulty · split 70/15/15</text>
+<g class="stagebox a1"><rect x="75" y="90" width="150" height="80" rx="10"/><text x="150" y="120">TRAIN 700</text><text x="150" y="142" class="sub">70 faulty</text></g>
+<g class="stagebox a2"><rect x="245" y="90" width="150" height="80" rx="10"/><text x="320" y="120">VAL 150</text><text x="320" y="142" class="sub">15 faulty</text></g>
+<g class="stagebox a3"><rect x="415" y="90" width="150" height="80" rx="10"/><text x="490" y="120">TEST 150</text><text x="490" y="142" class="sub">15 faulty</text></g>
+<text class="animnote a4" x="320" y="220" text-anchor="middle">reuse test for tuning = leak · unstratified rare classes vanish by chance</text>
+</svg>`
+  },
+
   'sine-phasor': {
     title: 'Phasor Rotation Generates the Sine Wave',
     svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Animated phasor rotating on a circle projecting a sine wave point by point">

@@ -51,6 +51,10 @@ Tree: root $1$, left $2$ (children $4,5$), right $3$. Give all four traversals. 
 Traversal traces are mechanical; rebuilding recurses "root-first, split, repeat". Show the split lines — they're the graded steps.
 :::
 
+::: anim traversal-orders In, Pre, Post on the Worked Tree
+Watch all three orders light on the same tree — then the level row and the rebuild rule that needs inorder plus one more.
+:::
+
 ---
 
 <a id="self-check"></a>

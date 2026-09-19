@@ -48,6 +48,10 @@ Click-through admins (Always-Notify-Off!) auto-consent malware's elevation promp
 Media→accounts→patches→guards→backups: ordered rungs, vector mapped per rung. Ordered-and-mapped beats hardening salad — sequence *is* the methodology.
 :::
 
+::: anim harden-ladder Five Rungs, Each Defeats a Vector
+Watch the rungs light in build order — media, accounts, patches, guards, backups — each with the vector it buries, since sequence is the methodology.
+:::
+
 ---
 
 <a id="self-check"></a>

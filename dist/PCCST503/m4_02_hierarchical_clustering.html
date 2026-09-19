@@ -282,7 +282,35 @@
 <strong>Single:</strong> merge ${1,2}$ (gap 1), merge ${6,7}$ (gap 1); cluster distance $= \min$ cross $= d(2,6) = 4$; merge all at height 4. $k=2$ cut (between heights 1 and 4): ${1,2}$, ${6,7}$.
 <strong>Complete:</strong> same first merges (only pairs at gap 1); cluster distance $= \max$ cross $= d(1,7) = 6$; merge all at height 6. Same $k=2$ cut here — linkages diverge on noisier geometry (add a bridge point at $4$: single-linkage chains everything progressively; complete holds the ${1,2}$/${6,7}$ split far longer).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Clean data: all linkages agree (${1,2}$, ${6,7}$). The methods differ exactly where data gets dirty — bridges, outliers, cigars — which is why exams always ask linkage behavior on <em>noisy</em> sketches, never clean ones. Read the noise, pick the linkage.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Merge at 1, Then Everything at 4</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated single linkage dendrogram on points 1 2 6 7 merging pairs at height 1 then all at height 4">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="axis" x1="60" y1="230" x2="580" y2="230"/>
+<g class="nd a1"><circle cx="125" cy="230" r="22"/><text x="125" y="236">1</text></g><g class="nd a1"><circle cx="190" cy="230" r="22"/><text x="190" y="236">2</text></g><g class="nd a1"><circle cx="450" cy="230" r="22"/><text x="450" y="236">6</text></g><g class="nd a1"><circle cx="515" cy="230" r="22"/><text x="515" y="236">7</text></g>
+<line class="eg a2" x1="125" y1="208" x2="125" y2="150"/>
+<line class="eg a2" x1="190" y1="208" x2="190" y2="150"/>
+<line class="eg a2" x1="125" y1="150" x2="190" y2="150"/>
+<line class="eg a2" x1="450" y1="208" x2="450" y2="150"/>
+<line class="eg a2" x1="515" y1="208" x2="515" y2="150"/>
+<line class="eg a2" x1="450" y1="150" x2="515" y2="150"/>
+<text class="ordbadge a2" x="157" y="140" text-anchor="middle">h = 1</text>
+<text class="ordbadge a2" x="482" y="140" text-anchor="middle">h = 1</text>
+<line class="eg a3" x1="157" y1="150" x2="157" y2="90"/>
+<line class="eg a3" x1="483" y1="150" x2="483" y2="90"/>
+<line class="eg a3" x1="157" y1="90" x2="483" y2="90"/>
+<text class="crcres a3" x="320" y="76" text-anchor="middle">merge all at h = 4 ✓</text>
+<text class="animnote a4" x="320" y="278" text-anchor="middle">complete linkage: final merge at 6 · k = 2 cut between heights 1 and 4</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Merge at 1, Then Everything at 4</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch pairs marry at height 1, then the clusters join at 4 — with complete linkage&#39;s 6 and the k = 2 cut riding along as the comparison.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

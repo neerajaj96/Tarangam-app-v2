@@ -46,6 +46,10 @@ Exclusion-sprawl (whole drives!) and disabled tamper protection for game FPS tra
 Profile→tunnel→media→account→backup: five routine lines, mechanisms attached. Routine checklists beat incident heroics — habits are the control.
 :::
 
+::: anim fw-profiles Profiles Are Threat Models of the Wire
+Watch trust drain across the three profiles — domain open, private moderate, public fortress — since the wire you're on sets the rules, not wishes.
+:::
+
 ---
 
 <a id="self-check"></a>

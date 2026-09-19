@@ -53,6 +53,10 @@ Pairwise: $d(1,2)=1$, $d(6,7)=1$, cross-gaps $\ge 4$ ($d(2,6)=4$ smallest cross)
 Clean data: all linkages agree ($\{1,2\}$, $\{6,7\}$). The methods differ exactly where data gets dirty — bridges, outliers, cigars — which is why exams always ask linkage behavior on *noisy* sketches, never clean ones. Read the noise, pick the linkage.
 :::
 
+::: anim dendro-merge Merge at 1, Then Everything at 4
+Watch pairs marry at height 1, then the clusters join at 4 — with complete linkage's 6 and the k = 2 cut riding along as the comparison.
+:::
+
 ---
 
 <a id="self-check"></a>

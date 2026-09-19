@@ -53,6 +53,10 @@ $X = [[1,1],[1,2],[1,3]]$, $y = [1,2,2]$. $X^TX = \begin{pmatrix}3 & 6 \\\\ 6 & 
 One $2\times2$ inverse solved the whole problem — no iteration, no guessing. And geometrically: the residual vector is orthogonal to both the all-ones column and the $x$-column (dot products vanish — check it), confirming the projection picture from §2.3 on real numbers.
 :::
 
+::: anim ruler-fit Three Points, One Ruler
+Watch the ruler settle through (1,1), (2,2), (3,2) — residuals +1/6, −1/3, +1/6 summing to zero, perpendicular to both columns.
+:::
+
 ---
 
 <a id="self-check"></a>

@@ -46,7 +46,7 @@ Points $(1,1)$, $(1,2)$, $(4,4)$, $(5,4)$ with $k = 2$, seeded $c_1 = (1,1)$, $c
 :::
 
 ::: step [Step 2: Execution] One Loop to Stillness
-Distances: $(1,1)$ → $0$ vs $5.657$ → $c_1$; $(1,2)$ → $1$ vs $4.472$ → $c_1$; $(4,4)$ → $4.243$ vs $1$ → $c_2$; $(5,4)$ → $5$ vs $0$ → $c_2$. New means: $c_1 = (1, 1.5)$, $c_2 = (4.5, 4)$. Re-assigning changes nothing — frozen. SSE: $c_1$ members deviate $(0,-0.5)$, $(0,+0.5)$ → $0.25 + 0.25 = 0.5$; $c_2$ members deviate $(-0.5,0)$, $(+0.5,0)$ → $0.25 + 0.25 = 0.5$. Total $1.0$.
+Distances: $(1,1)$ → $0$ vs $5$ → $c_1$; $(1,2)$ → $1$ vs $4.472$ → $c_1$; $(4,4)$ → $4.243$ vs $1$ → $c_2$; $(5,4)$ → $5$ vs $0$ → $c_2$. New means: $c_1 = (1, 1.5)$, $c_2 = (4.5, 4)$. Re-assigning changes nothing — frozen. SSE: $c_1$ members deviate $(0,-0.5)$, $(0,+0.5)$ → $0.25 + 0.25 = 0.5$; $c_2$ members deviate $(-0.5,0)$, $(+0.5,0)$ → $0.25 + 0.25 = 0.5$. Total $1.0$.
 :::
 
 ::: step [Step 3: Conclusion] Final Result

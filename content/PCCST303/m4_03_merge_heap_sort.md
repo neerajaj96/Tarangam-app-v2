@@ -45,6 +45,10 @@ Merge-sort $[38, 27, 43, 3]$: show splits and merges. Then one heapsort extracti
 Merge traces show pile pairs per level; heap traces show array + placed suffix. Both traces are level/state sequences — never just input→output.
 :::
 
+::: anim merge-zip Merge-Sort 38, 27, 43, 3 Level by Level
+Watch the deck split to singletons then zip back pairwise — even halves every level is why the guarantee holds regardless of input order.
+:::
+
 ---
 
 <a id="self-check"></a>

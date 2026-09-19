@@ -265,7 +265,7 @@
 <h3>2.1 Entropy and Information Gain</h3>
 <p>For a set with class proportions $p_i$: $H(S) = -\sum_i p_i \log_2 p_i$ (bits). Gain of attribute $A$ with values $v$: $\text{Gain}(S,A) = H(S) - \sum_v \frac{|S_v|}{|S|} H(S_v)$ — parent mess minus weighted child mess. Greedy top-down induction (ID3/C4.5/CART family): at each node, split on max gain (CART uses Gini $1-\sum p_i^2$ instead — same instinct, cheaper arithmetic).</p>
 <h3>2.2 The PlayTennis Computation (Verified Values)</h3>
-<p>14 days, 9 Play-Yes / 5 No: $H(S) = -(9/14\log_2 9/14 + 5/14\log_2 5/14) \approx \mathbf{0.940}$ bits. Gains: <strong>Outlook 0.247</strong>, Humidity 0.151, Wind 0.048, Temperature 0.029 — so Outlook splits the root (Sunny→? Overcast→Yes-leaf immediately, Rain→?); recurse within Sunny/Rain subsets. (All values machine-verified.)</p>
+<p>14 days, 9 Play-Yes / 5 No: $H(S) = -(9/14\log_2 9/14 + 5/14\log_2 5/14) \approx \mathbf{0.940}$ bits. Gains: <strong>Outlook 0.247</strong>, Humidity 0.151, Wind 0.048, Temperature 0.029 — so Outlook splits the root (Sunny→? Overcast→Yes-leaf immediately, Rain→?); recurse within Sunny/Rain subsets.</p>
 <h3>2.3 Taming Overfit: Pruning and Honest Cousins</h3>
 <ul>
 <li><strong>Pre-pruning:</strong> stop early (max depth, min samples/leaf, gain threshold) — fast, risks stopping before useful structure.</li>
@@ -281,7 +281,31 @@
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Using the PlayTennis counts, verify $H(S) = 0.940$ and Gain(Wind) $= 0.048$, and decide the root split among Outlook (0.247), Humidity (0.151), Wind (0.048), Temperature (0.029).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Mess Removed</div><div class="step-content"><p>$H(S) = -(0.6429 \times \log_2 0.6429 + 0.3571 \times \log_2 0.3571) = -(-0.4098 - 0.5305) = 0.940$ bits. Wind splits 8 weak ($6{+},2{-}$) / 6 strong ($3{+},3{-}$): $H_{weak} = 0.811$, $H_{strong} = 1.0$; weighted $(8/14)(0.811) + (6/14)(1.0) = 0.892$; gain $= 0.940 - 0.892 = \mathbf{0.048}$. Root = max gain = <strong>Outlook (0.247)</strong> — Sunny and Rain branches recurse; Overcast ($4{+},0$) is an instant Yes-leaf.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One number per attribute ranks the questions; the ranking <em>is</em> the tree&#39;s skeleton. Outlook first because nothing else removes nearly as much mess (0.247 vs runner-up Humidity 0.151) — greedy gain-chasing builds the whole tree one best-question-at-a-time, with pruning (not shown) as the adult supervision.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Outlook Outbids Wind Five to One</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated information gain ranking: Outlook 0.247 beats humidity, wind and temperature for the root split">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="34" text-anchor="middle">H(S) = 0.940 bits · 9 Play-Yes / 5 No</text>
+<text class="crcrow a2" x="40" y="90">Outlook 0.247</text>
+<rect class="a2" x="230" y="72" width="321" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="ordbadge a2" x="570" y="90">ROOT</text>
+<text class="crcrow a3" x="40" y="140">Humidity 0.151</text>
+<rect class="a3" x="230" y="122" width="196" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="190">Wind 0.048</text>
+<rect class="a3" x="230" y="172" width="62" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a4" x="40" y="240">Temp 0.029</text>
+<rect class="a4" x="230" y="222" width="38" height="20" rx="4" fill="var(--accent)"/>
+<text class="animnote a4" x="420" y="268" text-anchor="middle">Overcast 4+/0 → instant Yes-leaf</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Outlook Outbids Wind Five to One</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the gain bars rank the questions — Outlook crowned root, Wind a later conditional — with the instant Overcast Yes-leaf as the payoff for asking best-first.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

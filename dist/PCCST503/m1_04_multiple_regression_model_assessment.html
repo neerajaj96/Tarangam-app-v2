@@ -300,7 +300,31 @@
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Six house sales: sizes (1000 sqft units) $x = [1, 2, 3, 4, 5, 6]$, prices (lakh) $y = [12, 20, 25, 34, 41, 48]$. Fit a line, compute train $R^2$, then leave-one-out test the last point (fit on first five, predict $x=6$).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Fitting and Splitting</div><div class="step-content"><p>Means $\bar{x} = 3.5$, $\bar{y} = 30$. Slope $= \sum(x-\bar{x})(y-\bar{y})/\sum(x-\bar{x})^2 = 126/17.5 = 7.2$; intercept $= 30 - 7.2\times3.5 = 4.8$. Model $\hat{y} = 4.8 + 7.2x$; residuals $(0, +0.8, -1.4, +0.4, +0.2, 0)$ give $SS_{res} = 2.8$ against $SS_{tot} = 910$ → train $R^2 = 1 - 2.8/910 \approx 0.997$. Leave-one-out: fitting the first five points gives the same line $\hat{y} = 4.8 + 7.2x$ (slope $72/10 = 7.2$, intercept $26.4 - 21.6 = 4.8$), predicting $x=6 \to 48.0$ vs truth $48$ — error $\approx 0$ on unseen data.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Train $R^2 \approx 0.997$ <em>and</em> held-out error $\approx 0$ — both grades agree, so the fit is genuine, not memorized. Had the left-out error been $15$ with $R^2$ still $0.997$, that divergence <em>would be</em> the overfitting diagnosis — agreement between the two grades is the certificate.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Train Falls, Test U-Turns</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated bias variance tradeoff: train error falls with complexity while test error U-turns at the sweet spot">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="axis" x1="80" y1="30" x2="80" y2="260"/>
+<line class="axis" x1="80" y1="260" x2="580" y2="260"/>
+<text class="animcap a1" x="545" y="250" text-anchor="middle">complexity →</text>
+<text class="animcap a1" x="40" y="150" text-anchor="middle">err</text>
+<path class="eg a2" d="M100,220 L200,180 L300,150 L400,130 L500,118" fill="none" stroke-width="3"/>
+<text class="crcrow a2" x="520" y="110">train: falls</text>
+<path class="eg a3" d="M100,210 L200,170 L300,150 L400,165 L500,200" fill="none" stroke-width="3" stroke-dasharray="8 5"/>
+<text class="crcrow a3" x="520" y="210">test: U-turns</text>
+<circle class="a4" cx="300" cy="150" r="8" fill="none" stroke="var(--correct)" stroke-width="3"/>
+<text class="crcres a4" x="300" y="130" text-anchor="middle">sweet spot</text>
+<text class="animnote a4" x="320" y="286" text-anchor="middle">R² 0.997 + LOO ≈ 0 agree → genuine; divergence = overfitting</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Train Falls, Test U-Turns</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch train error fall while test error bottoms and rises — the file&#39;s own verdict (R² 0.997 with LOO ≈ 0) sits at the sweet spot, not the right wall.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

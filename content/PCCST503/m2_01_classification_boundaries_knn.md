@@ -51,6 +51,10 @@ $d(Q,A) = \sqrt{2} \approx 1.414{+}$; $d(Q,B) = 1.0{+}$; $d(Q,C) = 1.0{-}$; $d(Q
 $k=3$ says **+** by 2–1. The trace also exhibits k-NN's twin fragilities in miniature: distance ties demanding tie-breaks, and $k=1$'s hair-trigger instability — the bias–variance knob from Module 1, now with a concrete dial.
 :::
 
+::: anim knn-vote Three Neighbors Vote 2 to 1 for Plus
+Watch the three arrows land — 1.0, 1.0, 1.414 — with D stranded at 3.606, then the 2–1 verdict with the k = 2 tie and k = 1 hair-trigger riding along.
+:::
+
 ---
 
 <a id="self-check"></a>

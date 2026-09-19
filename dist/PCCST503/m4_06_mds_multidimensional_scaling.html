@@ -279,7 +279,29 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Three depots with mileages $d_{12} = 3$, $d_{13} = 4$, $d_{23} = 5$ (a 3-4-5 triangle). Double-center to $B$, verify both certificates (row sums, trace), and state the eigenvalue ledger.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Centering the Triangle</div><div class="step-content"><p>$D^2 = [[0,9,16],[9,0,25],[16,25,0]]$. Row means: $25/3 \approx 8.333$, $34/3 \approx 11.333$, $41/3 \approx 13.667$; grand mean $100/9 \approx 11.111$. $B_{11} = -\tfrac{1}{2}(0 - 8.333 - 8.333 + 11.111) = 2.778$; $B_{22} = 5.778$; $B_{33} = 8.111$; $B_{12} = -0.222$; $B_{13} = -2.556$; $B_{23} = -5.556$. Certificates: row $1$ sums $2.778 - 0.222 - 2.556 = 0$ ✓ (centering holds); trace $= 2.778 + 5.778 + 8.111 = 16.667$. Eigenvalues: $\lambda_1 \approx 12.965$, $\lambda_2 \approx 3.702$, $\lambda_3 = 0$ (sums $16.667$ ✓, forced zero by centering). Dim-$1$ keeps $12.965/16.667 \approx 77.8%$; dim-$2$ keeps $100%$ (rank $2$ — the triangle is flat, so two axes suffice exactly).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$B$ built, both certificates green, ledger $12.965 + 3.702 + 0$. A 1-D line keeps $77.8%$ (flattened triangle, stress $&gt; 0$); 2-D recovers the exact right triangle ($3$-$4$-$5$ verifies: legs $3,4$, hypotenuse $5$). Mileages in, map out — no coordinates were harmed (none were given).</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Eigenvalues Ledger the Triangle</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated eigenvalue ledger: 12.965 plus 3.702 plus 0 sums to trace 16.667">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="36" text-anchor="middle">3-4-5 triangle · B rows sum to 0 · trace 16.667</text>
+<text class="crcrow a1" x="40" y="110">λ₁ ≈ 12.965</text>
+<rect class="a1" x="250" y="92" width="311" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="crcrow a2" x="40" y="170">λ₂ ≈ 3.702</text>
+<rect class="a2" x="250" y="152" width="89" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="230">λ₃ = 0</text>
+<rect class="a3" x="250" y="212" width="2" height="20" rx="4" fill="var(--accent)"/>
+<text class="ordbadge a3" x="280" y="230">centering's signature</text>
+<text class="animnote a4" x="320" y="272" text-anchor="middle">dim-1 keeps 77.8% · dim-2 exact (rank 2) — ledger balances</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Eigenvalues Ledger the Triangle</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the ledger balance — 12.965 plus 3.702 plus centering&#39;s zero equals the trace — with dim-1 keeping 77.8% and dim-2 the exact triangle.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

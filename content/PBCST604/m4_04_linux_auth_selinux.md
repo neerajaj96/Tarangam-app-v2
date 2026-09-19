@@ -47,6 +47,10 @@ First-denial reflex (disable SELinux!) trades the MAC vest for quiet logs — pe
 Command-scoped passes, context-correct files, log-backed patch proof. Paperwork-precision (enumerated commands, typed files, dated logs) is the Linux-admin answer texture.
 :::
 
+::: anim mac-vs-dac Policy Beats Ownership, Even Roots
+Watch root sail through DAC, then httpd_t bounce off shadow under MAC — the one-file moral that compromise of user never equals compromise of domain.
+:::
+
 ---
 
 <a id="self-check"></a>

@@ -51,6 +51,10 @@ Degree-1: both errors high → underfit. Degree-9: train collapsed while val nea
 Degree-9 overfits (val $15.7$ vs train $0.4$); penalties $5.1$ (LASSO) and $13.01$ (RIDGE). Notice RIDGE's quadratic temper: big weights pay disproportionately, which is exactly the smoothing pressure training feels.
 :::
 
+::: anim penalty-price Squaring Punishes 3.0 Ninefold
+Watch the two penalties price the same weights — 5.1 linear against 13.01 squared — since temper, not just total, is what training feels.
+:::
+
 ---
 
 <a id="self-check"></a>

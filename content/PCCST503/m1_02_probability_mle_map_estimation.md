@@ -58,6 +58,10 @@ Sensor readings average $\bar{x} = 5.0$ over $n = 4$ samples, known noise $\sigm
 MLE $5.0$ vs MAP $2.5$ on identical data — the gap *is* the prior speaking. With $n = 400$ instead, data precision $100$ would swamp the prior ($100/101 \approx 0.99$ weight) and MAP $\approx 4.95 \approx$ MLE: beliefs matter most exactly when data is scarcest — the exam-ready moral.
 :::
 
+::: anim mle-map-tug Data Pulls to 5, Prior Anchors 0
+Watch the dead-tie precisions split the difference at 2.5 — then n = 400 drag the marker to 4.95, almost home to MLE.
+:::
+
 ---
 
 <a id="self-check"></a>

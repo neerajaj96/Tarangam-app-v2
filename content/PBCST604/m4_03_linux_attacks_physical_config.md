@@ -47,6 +47,10 @@ Permission-denied → world-writable "fixes" the symptom by deleting the control
 Auth-kill (keys), noise-cut (fail2ban, obscurity labelled), at-rest brick (LUKS), boot-chain locks. Each control names its defeated vector — vector-mapped hardening, no salad.
 :::
 
+::: anim maid-ladder Each Rung Answers the Last Bypass
+Watch each bypass meet its rung — USB meets LUKS, bootkit meets Secure Boot plus TPM — the ladder reasoning the file demands, never one wall.
+:::
+
 ---
 
 <a id="self-check"></a>

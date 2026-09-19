@@ -241,7 +241,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -286,7 +286,26 @@
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Scoring Both Classes</div><div class="step-content"><p>Likelihoods — spam: $P(\text{free}|S)=(4+1)/(7+3)=0.5$, $P(\text{lunch}|S)=(0+1)/10=0.1$. Ham: $P(\text{free}|H)=(1+1)/(4+3)=2/7\approx0.286$, $P(\text{lunch}|H)=(3+1)/7=4/7\approx0.571$.
 Scores: $S: 0.4 \times 0.5 \times 0.1 = 0.020$; $H: 0.6 \times 0.286 \times 0.571 \approx 0.098$. <strong>Ham wins ~5:1</strong> — &quot;lunch&quot; (unseen in spam training, rescued by smoothing from a zero-veto) plus the ham prior carry the verdict.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Without smoothing, $P(\text{lunch}|S)=0$ would zero spam&#39;s score <em>regardless</em> of &quot;free&quot; — one unseen word holding the whole class hostage. Laplace&#39;s $+1$ prices ignorance gracefully instead: unseen ≠ impossible, merely rare. That single $+1$ is doing more classification work than the entire independence assumption.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Ham Wins 5 to 1 on Free Lunch</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated Naive Bayes scores: spam 0.020 versus ham 0.098 for free lunch">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="40" text-anchor="middle">classify "free lunch" · Laplace α = 1, |V| = 3</text>
+<text class="crcrow a2" x="40" y="120">S: 0.4 × 0.5 × 0.1 = 0.020</text>
+<rect class="a2" x="430" y="102" width="40" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="180">H: 0.6 × 0.286 × 0.571 ≈ 0.098</text>
+<rect class="a3" x="430" y="162" width="196" height="20" rx="4" fill="var(--accent-warm)"/>
+<text class="crcres a4" x="320" y="240" text-anchor="middle">ham wins ~5:1 — unseen "lunch" rescued from zero-veto by +1</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Ham Wins 5 to 1 on Free Lunch</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the two products build factor by factor — 0.020 against 0.098 — with the +1-rescued lunch likelihood doing the heaviest lifting in the smaller bar.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

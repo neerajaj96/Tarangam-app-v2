@@ -278,9 +278,37 @@
 <h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
 <p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Four points, uniform $D_1 = 1/4$ each. Round-1 stump misclassifies exactly one point ($\epsilon_1 = 0.25$). Compute $\alpha_1$, the renormalized $D_2$, and state round 2&#39;s incentive. (Arithmetic verified.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Weighting the Round</div><div class="step-content"><p>$\alpha_1 = \tfrac12\ln(0.75/0.25) = \tfrac12\ln 3 \approx 0.549$. Updates: correct points $\times e^{-0.549} \approx 0.577$ → $0.25 \times 0.577 \approx 0.144$; wrong point $\times e^{+0.549} \approx 1.732$ → $0.25 \times 1.732 \approx 0.433$. Normalizer $Z = 3(0.144) + 0.433 = 0.866$. $D_2$: correct points $0.144/0.866 = 1/6 \approx 0.167$ each, wrong point $0.433/0.866 = 0.5$. Round 2&#39;s stump faces a world where the missed point outweighs all three solved ones combined — fix <em>it</em> or perish.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Weighting the Round</div><div class="step-content"><p>$\alpha_1 = \tfrac12\ln(0.75/0.25) = \tfrac12\ln 3 \approx 0.549$. Updates: correct points $\times e^{-0.549} \approx 0.577$ → $0.25 \times 0.577 \approx 0.144$; wrong point $\times e^{+0.549} \approx 1.732$ → $0.25 \times 1.732 \approx 0.433$. Normalizer $Z = 3(0.144) + 0.433 = 0.866$. $D_2$: correct points $0.144/0.866 = 1/6 \approx 0.167$ each, wrong point $0.433/0.866 = 0.5$. Round 2&#39;s stump faces a world where the missed point matches all three solved ones combined — fix <em>it</em> or perish.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One round moved half the probability mass onto a single point ($0.25 \to 0.5$) — attention reallocation, quantified. Final committee vote weights round 1 at $\alpha_1 = 0.549$; later rounds earn their own $\alpha$ by the same formula. Iterate, and training error decays exponentially while margins fatten — boosting&#39;s whole contract in four points.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Half the Mass Moves to One Point</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated AdaBoost reweighting: three correct points shrink to one sixth each, the miss grows to one half">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="32" text-anchor="middle">D₁: four × 0.25 · ε₁ = 0.25 · α₁ ≈ 0.549</text>
+<g class="cell a1"><rect x="100" y="52" width="90" height="48" rx="8"/><text x="145" y="84" text-anchor="middle">0.25 ✓</text></g>
+<g class="cell a1"><rect x="210" y="52" width="90" height="48" rx="8"/><text x="255" y="84" text-anchor="middle">0.25 ✓</text></g>
+<g class="cell a1"><rect x="320" y="52" width="90" height="48" rx="8"/><text x="365" y="84" text-anchor="middle">0.25 ✓</text></g>
+<g class="cell a1"><rect x="430" y="52" width="90" height="48" rx="8"/><text x="475" y="84" text-anchor="middle">0.25 ✗</text></g>
+<text class="ordbadge a2" x="145" y="132" text-anchor="middle">×0.577</text>
+<text class="ordbadge a2" x="255" y="132" text-anchor="middle">×0.577</text>
+<text class="ordbadge a2" x="365" y="132" text-anchor="middle">×0.577</text>
+<text class="ordbadge a2" x="475" y="132" text-anchor="middle">×1.732</text>
+<g class="cell a3"><rect x="100" y="148" width="90" height="48" rx="8"/><text x="145" y="180" text-anchor="middle">1/6</text></g>
+<g class="cell a3"><rect x="210" y="148" width="90" height="48" rx="8"/><text x="255" y="180" text-anchor="middle">1/6</text></g>
+<g class="cell a3"><rect x="320" y="148" width="90" height="48" rx="8"/><text x="365" y="180" text-anchor="middle">1/6</text></g>
+<g class="cell cand a3"><rect x="430" y="148" width="90" height="48" rx="8"/><text x="475" y="180" text-anchor="middle">1/2</text></g>
+<text class="crcres a3" x="320" y="232" text-anchor="middle">÷ Z = 0.866 → D₂ ✓</text>
+<text class="animnote a4" x="320" y="268" text-anchor="middle">missed point = half the mass — round 2 fixes it or perishes</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Half the Mass Moves to One Point</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch three weights shrink by 0.577 while the miss grows by 1.732, then divide by Z — half the mass on one point, round 2&#39;s orders cut.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
@@ -292,7 +320,7 @@
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Random resampling noise that happened to land here</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Exponential reweighting e^(∓α) with α = ½ln3 ≈ 0.549 (wrong ×1.732, correct ×0.577), renormalized by Z = 0.866 — the missed point now outweighs all solved ones combined, forcing round 2 to prioritize it</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Exponential reweighting e^(∓α) with α = ½ln3 ≈ 0.549 (wrong ×1.732, correct ×0.577), renormalized by Z = 0.866 — the missed point now matches all solved ones combined, forcing round 2 to prioritize it</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>The weights were manually assigned by the instructor for drama</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Normalization always produces 1/6 and 1/2 regardless of error</span></button>  </div>
   <details class="quiz-explanation-dropdown">

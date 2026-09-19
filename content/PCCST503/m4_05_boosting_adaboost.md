@@ -45,11 +45,15 @@ Four points, uniform $D_1 = 1/4$ each. Round-1 stump misclassifies exactly one p
 :::
 
 ::: step [Step 2: Execution] Weighting the Round
-$\alpha_1 = \tfrac12\ln(0.75/0.25) = \tfrac12\ln 3 \approx 0.549$. Updates: correct points $\times e^{-0.549} \approx 0.577$ → $0.25 \times 0.577 \approx 0.144$; wrong point $\times e^{+0.549} \approx 1.732$ → $0.25 \times 1.732 \approx 0.433$. Normalizer $Z = 3(0.144) + 0.433 = 0.866$. $D_2$: correct points $0.144/0.866 = 1/6 \approx 0.167$ each, wrong point $0.433/0.866 = 0.5$. Round 2's stump faces a world where the missed point outweighs all three solved ones combined — fix *it* or perish.
+$\alpha_1 = \tfrac12\ln(0.75/0.25) = \tfrac12\ln 3 \approx 0.549$. Updates: correct points $\times e^{-0.549} \approx 0.577$ → $0.25 \times 0.577 \approx 0.144$; wrong point $\times e^{+0.549} \approx 1.732$ → $0.25 \times 1.732 \approx 0.433$. Normalizer $Z = 3(0.144) + 0.433 = 0.866$. $D_2$: correct points $0.144/0.866 = 1/6 \approx 0.167$ each, wrong point $0.433/0.866 = 0.5$. Round 2's stump faces a world where the missed point matches all three solved ones combined — fix *it* or perish.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
 One round moved half the probability mass onto a single point ($0.25 \to 0.5$) — attention reallocation, quantified. Final committee vote weights round 1 at $\alpha_1 = 0.549$; later rounds earn their own $\alpha$ by the same formula. Iterate, and training error decays exponentially while margins fatten — boosting's whole contract in four points.
+:::
+
+::: anim adaboost-d2 Half the Mass Moves to One Point
+Watch three weights shrink by 0.577 while the miss grows by 1.732, then divide by Z — half the mass on one point, round 2's orders cut.
 :::
 
 ---
@@ -59,7 +63,7 @@ One round moved half the probability mass onto a single point ($0.25 \to 0.5$) �
 
 ::: quiz In the worked trace, the single misclassified point jumps from weight 0.25 to 0.5 while each correct point falls to 1/6. What mechanism produced exactly these numbers?
 () Random resampling noise that happened to land here
-(*) Exponential reweighting e^(∓α) with α = ½ln3 ≈ 0.549 (wrong ×1.732, correct ×0.577), renormalized by Z = 0.866 — the missed point now outweighs all solved ones combined, forcing round 2 to prioritize it
+(*) Exponential reweighting e^(∓α) with α = ½ln3 ≈ 0.549 (wrong ×1.732, correct ×0.577), renormalized by Z = 0.866 — the missed point now matches all solved ones combined, forcing round 2 to prioritize it
 () The weights were manually assigned by the instructor for drama
 () Normalization always produces 1/6 and 1/2 regardless of error
 ::: explanation

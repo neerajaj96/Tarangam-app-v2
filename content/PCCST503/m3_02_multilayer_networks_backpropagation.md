@@ -49,7 +49,7 @@ Micro-network: input $x = [0.5, -0.3]$, one hidden sigmoid unit ($W_1 = [0.4, -0
 :::
 
 ::: step [Step 2: Execution] Forward Then Backward
-Forward: $z_1 = 0.4(0.5) + (-0.2)(-0.3) = 0.26$, $h = \sigma(0.26) \approx 0.5646$; $z_2 = 0.7(0.5646) + 0.1 = 0.4952$, $o = \sigma(0.4952) \approx 0.6213$; loss $\approx 0.0717$. Backward: $\delta_o = (0.6213-1)(0.6213)(0.3787) \approx -0.0891$; $\partial L/\partial w_2 = \delta_o h \approx -0.0503$; $\delta_h = \delta_o(0.7)(0.5646)(0.4354) \approx -0.0153$; $\partial L/\partial W_1 = \delta_h x \approx [-0.0077, +0.0046]$. Finite-difference agreement to 5 decimals on all six gradients.
+Forward: $z_1 = 0.4(0.5) + (-0.2)(-0.3) = 0.26$, $h = \sigma(0.26) \approx 0.5646$; $z_2 = 0.7(0.5646) + 0.1 = 0.4952$, $o = \sigma(0.4952) \approx 0.6213$; loss $\approx 0.0717$. Backward: $\delta_o = (0.6213-1)(0.6213)(0.3787) \approx -0.0891$; $\partial L/\partial w_2 = \delta_o h \approx -0.0503$; $\delta_h = \delta_o(0.7)(0.5646)(0.4354) \approx -0.0153$; $\partial L/\partial W_1 = \delta_h x \approx [-0.0077, +0.0046]$. Finite-difference agreement to 5 decimals on every gradient.
 :::
 
 ::: step [Step 3: Conclusion] Final Result

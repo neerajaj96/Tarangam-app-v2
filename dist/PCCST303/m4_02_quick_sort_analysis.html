@@ -294,7 +294,34 @@
 <li>Recurse left $[10,15]$ (pivot $10$: already home, right $[15]$) and right $[36,28]$ (pivot $36$ → $[28,36]$). Final $[10,15,24,28,36]$.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Each partition <em>places</em> its pivot permanently — track placed pivots to verify progress. Recursion depth mirrors split quality; balanced here, $2$ deep.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Pivot 24 Goes Home to Slot 2</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated Lomuto partition of 24 10 36 15 28 placing pivot 24 at index 2">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="30" text-anchor="middle">partition [24,10,36,15,28] — pivot 24</text>
+<g class="cell a1"><rect x="150" y="52" width="66" height="52" rx="8"/><text x="183" y="86" text-anchor="middle">24</text></g>
+<g class="cell a1"><rect x="228" y="52" width="66" height="52" rx="8"/><text x="261" y="86" text-anchor="middle">10</text></g>
+<g class="cell a1"><rect x="306" y="52" width="66" height="52" rx="8"/><text x="339" y="86" text-anchor="middle">36</text></g>
+<g class="cell a1"><rect x="384" y="52" width="66" height="52" rx="8"/><text x="417" y="86" text-anchor="middle">15</text></g>
+<g class="cell a1"><rect x="462" y="52" width="66" height="52" rx="8"/><text x="495" y="86" text-anchor="middle">28</text></g>
+<text class="crcrow a2" x="24" y="170">scan: {10,15} left</text>
+<g class="cell a2"><rect x="150" y="136" width="66" height="52" rx="8"/><text x="183" y="170" text-anchor="middle">10</text></g>
+<g class="cell a2"><rect x="228" y="136" width="66" height="52" rx="8"/><text x="261" y="170" text-anchor="middle">15</text></g>
+<g class="cell cand a2"><rect x="306" y="136" width="66" height="52" rx="8"/><text x="339" y="170" text-anchor="middle">24</text></g>
+<g class="cell a2"><rect x="384" y="136" width="66" height="52" rx="8"/><text x="417" y="170" text-anchor="middle">36</text></g>
+<g class="cell a2"><rect x="462" y="136" width="66" height="52" rx="8"/><text x="495" y="170" text-anchor="middle">28</text></g>
+<text class="crcrow a3" x="320" y="226" text-anchor="middle">24 home @ slot 2 → recurse [10,15] · [36,28]</text>
+<text class="animnote a4" x="320" y="264" text-anchor="middle">each partition places its pivot — depth mirrors split quality</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Pivot 24 Goes Home to Slot 2</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the scan compact 10 and 15 left, then the pivot swap into slot 2 — placed pivots are the progress certificates, subproblems the remainder.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

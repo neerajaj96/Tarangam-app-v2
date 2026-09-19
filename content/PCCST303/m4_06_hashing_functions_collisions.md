@@ -55,6 +55,10 @@ $m = 7$, division hashing. Insert $50, 700, 76$ by (a) chaining, (b) linear prob
 Hash traces show slot states *per insert* with collision notes. Chaining appends; probing walks — the walk sequence is the graded content.
 :::
 
+::: anim probe-walk 14 Walks 0 to 1 to 2
+Watch 14 hash to occupied 0, step past occupied 1, and land in 2 — the walk arrows are the probe chain that narrates clustering's birth.
+:::
+
 ---
 
 <a id="self-check"></a>

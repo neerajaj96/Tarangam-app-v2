@@ -51,6 +51,10 @@ Undirected graph: degrees $3, 2, 2, 1$. How many edges? Tree? Give adjacency lis
 Handshaking first (edge count + parity sanity: sum must be even), tree test second, representation third. Odd degree-sum flags bad data instantly.
 :::
 
+::: anim adjlist-vs-matrix Path 1-2-3-4 in Three Formats
+Watch the same path drawn as a graph, listed per vertex, then gridded — then the density verdict that picks lists for sparse giants.
+:::
+
 ---
 
 <a id="self-check"></a>

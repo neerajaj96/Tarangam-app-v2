@@ -281,7 +281,25 @@
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A fault dataset has $1{,}000$ motors with $10$ percent faulty. Apply a stratified $70/15/15$ split and state each bucket&#39;s size and expected faulty count.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Splitting Fairly</div><div class="step-content"><p>Train: $700$ motors, faulty $\approx 70$. Validation: $150$ motors, faulty $\approx 15$. Test: $150$ motors, faulty $\approx 15$. Stratification guarantees the faulty minority appears in every bucket at its $10$ percent rate instead of vanishing from some by chance.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$700/70$, $150/15$, $150/15$ (size/faulty). Fifteen faulty test motors is a thin but usable verdict — with only $30$ faulty motors total, abandon fixed splits for cross-validation (M4.5).</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Stratify or the Minority Vanishes</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated stratified split: train 700 with 70 faulty, validation and test 150 each with 15 faulty">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="40" text-anchor="middle">1000 motors · 10% faulty · split 70/15/15</text>
+<g class="stagebox a1"><rect x="75" y="90" width="150" height="80" rx="10"/><text x="150" y="120">TRAIN 700</text><text x="150" y="142" class="sub">70 faulty</text></g>
+<g class="stagebox a2"><rect x="245" y="90" width="150" height="80" rx="10"/><text x="320" y="120">VAL 150</text><text x="320" y="142" class="sub">15 faulty</text></g>
+<g class="stagebox a3"><rect x="415" y="90" width="150" height="80" rx="10"/><text x="490" y="120">TEST 150</text><text x="490" y="142" class="sub">15 faulty</text></g>
+<text class="animnote a4" x="320" y="220" text-anchor="middle">reuse test for tuning = leak · unstratified rare classes vanish by chance</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Stratify or the Minority Vanishes</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the three buckets fill at the 10 percent rate — 700/70, 150/15, 150/15 — since unstratified rare classes vanish by chance, not by verdict.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

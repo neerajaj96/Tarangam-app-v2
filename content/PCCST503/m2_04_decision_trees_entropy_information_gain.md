@@ -20,7 +20,7 @@ For a set with class proportions $p_i$: $H(S) = -\sum_i p_i \log_2 p_i$ (bits). 
 
 ### 2.2 The PlayTennis Computation (Verified Values)
 
-14 days, 9 Play-Yes / 5 No: $H(S) = -(9/14\log_2 9/14 + 5/14\log_2 5/14) \approx \mathbf{0.940}$ bits. Gains: **Outlook 0.247**, Humidity 0.151, Wind 0.048, Temperature 0.029 — so Outlook splits the root (Sunny→? Overcast→Yes-leaf immediately, Rain→?); recurse within Sunny/Rain subsets. (All values machine-verified.)
+14 days, 9 Play-Yes / 5 No: $H(S) = -(9/14\log_2 9/14 + 5/14\log_2 5/14) \approx \mathbf{0.940}$ bits. Gains: **Outlook 0.247**, Humidity 0.151, Wind 0.048, Temperature 0.029 — so Outlook splits the root (Sunny→? Overcast→Yes-leaf immediately, Rain→?); recurse within Sunny/Rain subsets.
 
 ### 2.3 Taming Overfit: Pruning and Honest Cousins
 
@@ -51,6 +51,10 @@ $H(S) = -(0.6429 \times \log_2 0.6429 + 0.3571 \times \log_2 0.3571) = -(-0.4098
 
 ::: step [Step 3: Conclusion] Final Result
 One number per attribute ranks the questions; the ranking *is* the tree's skeleton. Outlook first because nothing else removes nearly as much mess (0.247 vs runner-up Humidity 0.151) — greedy gain-chasing builds the whole tree one best-question-at-a-time, with pruning (not shown) as the adult supervision.
+:::
+
+::: anim gain-bars Outlook Outbids Wind Five to One
+Watch the gain bars rank the questions — Outlook crowned root, Wind a later conditional — with the instant Overcast Yes-leaf as the payoff for asking best-first.
 :::
 
 ---

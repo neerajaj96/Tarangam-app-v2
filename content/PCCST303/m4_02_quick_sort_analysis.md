@@ -48,6 +48,10 @@ Quicksort $[24, 10, 36, 15, 28]$ with first-element pivot (Lomuto). Show partiti
 Each partition *places* its pivot permanently — track placed pivots to verify progress. Recursion depth mirrors split quality; balanced here, $2$ deep.
 :::
 
+::: anim lomuto-partition Pivot 24 Goes Home to Slot 2
+Watch the scan compact 10 and 15 left, then the pivot swap into slot 2 — placed pivots are the progress certificates, subproblems the remainder.
+:::
+
 ---
 
 <a id="self-check"></a>

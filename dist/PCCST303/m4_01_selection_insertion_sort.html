@@ -295,7 +295,45 @@
 <li>Insertion: $10$ shifts past $29$ (1); $14$ past $29$ (1); $37$ none; $13$ past $37,29,14$ (3). Total $5$ shifts.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Selection traces show the growing sorted prefix + shrinking scan zone; insertion traces count shifts per card. Prefix/zone discipline is what graders check per pass.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Selection Drafts 10, 13, Then 29</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated selection sort passes on 29 10 14 37 13 placing 10 then 13 then 29">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="26" text-anchor="middle">selection on [29,10,14,37,13]</text>
+<text class="crcrow a1" x="24" y="80">start</text>
+<g class="cell a1"><rect x="170" y="48" width="64" height="48" rx="8"/><text x="202" y="80" text-anchor="middle">29</text></g>
+<g class="cell a1"><rect x="242" y="48" width="64" height="48" rx="8"/><text x="274" y="80" text-anchor="middle">10</text></g>
+<g class="cell a1"><rect x="314" y="48" width="64" height="48" rx="8"/><text x="346" y="80" text-anchor="middle">14</text></g>
+<g class="cell a1"><rect x="386" y="48" width="64" height="48" rx="8"/><text x="418" y="80" text-anchor="middle">37</text></g>
+<g class="cell a1"><rect x="458" y="48" width="64" height="48" rx="8"/><text x="490" y="80" text-anchor="middle">13</text></g>
+<text class="crcrow a2" x="24" y="148">pass1: min 10</text>
+<g class="cell cand a2"><rect x="170" y="116" width="64" height="48" rx="8"/><text x="202" y="148" text-anchor="middle">10</text></g>
+<g class="cell a2"><rect x="242" y="116" width="64" height="48" rx="8"/><text x="274" y="148" text-anchor="middle">29</text></g>
+<g class="cell a2"><rect x="314" y="116" width="64" height="48" rx="8"/><text x="346" y="148" text-anchor="middle">14</text></g>
+<g class="cell a2"><rect x="386" y="116" width="64" height="48" rx="8"/><text x="418" y="148" text-anchor="middle">37</text></g>
+<g class="cell a2"><rect x="458" y="116" width="64" height="48" rx="8"/><text x="490" y="148" text-anchor="middle">13</text></g>
+<text class="crcrow a3" x="24" y="216">pass2: min 13</text>
+<g class="cell a3"><rect x="170" y="184" width="64" height="48" rx="8"/><text x="202" y="216" text-anchor="middle">10</text></g>
+<g class="cell cand a3"><rect x="242" y="184" width="64" height="48" rx="8"/><text x="274" y="216" text-anchor="middle">13</text></g>
+<g class="cell a3"><rect x="314" y="184" width="64" height="48" rx="8"/><text x="346" y="216" text-anchor="middle">14</text></g>
+<g class="cell a3"><rect x="386" y="184" width="64" height="48" rx="8"/><text x="418" y="216" text-anchor="middle">37</text></g>
+<g class="cell a3"><rect x="458" y="184" width="64" height="48" rx="8"/><text x="490" y="216" text-anchor="middle">29</text></g>
+<text class="crcrow a4" x="24" y="276">pass3 holds, pass4: min 29</text>
+<g class="cell a4"><rect x="170" y="244" width="64" height="48" rx="8"/><text x="202" y="276" text-anchor="middle">10</text></g>
+<g class="cell a4"><rect x="242" y="244" width="64" height="48" rx="8"/><text x="274" y="276" text-anchor="middle">13</text></g>
+<g class="cell a4"><rect x="314" y="244" width="64" height="48" rx="8"/><text x="346" y="276" text-anchor="middle">14</text></g>
+<g class="cell cand a4"><rect x="386" y="244" width="64" height="48" rx="8"/><text x="418" y="276" text-anchor="middle">29</text></g>
+<g class="cell a4"><rect x="458" y="244" width="64" height="48" rx="8"/><text x="490" y="276" text-anchor="middle">37</text></g>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Selection Drafts 10, 13, Then 29</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch each pass draft its minimum to the boundary — pass 3 holds 14, pass 4 swaps 29 home, ten comparisons total and never fewer.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

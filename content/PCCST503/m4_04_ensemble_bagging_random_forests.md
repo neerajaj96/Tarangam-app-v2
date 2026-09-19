@@ -51,6 +51,10 @@ $n = 100$ training points, $B = 200$ bagged trees. (a) How many points does one 
 Bagging turned variance $4 \to 1.21$ while bias sat untouched — and the 37% OOB mechanism graded everything without spending a single held-out point. The residual $1.2$ floor is exactly why forests exist: only *decorrelation* (random features) lowers $\rho$ itself, the one knob bagging cannot turn.
 :::
 
+::: anim variance-floor Bagging Hits the Correlated Floor
+Watch variance collapse 4 to 1.214 and stop dead at the 1.2 floor — the bar that no B breaches, and the reason forests exist.
+:::
+
 ---
 
 <a id="self-check"></a>

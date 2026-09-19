@@ -52,7 +52,7 @@ $\|w\| = \sqrt{2} \approx 1.414$. $A$: score $4-3 = 1$; functional $\hat{\gamma}
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-$A$ sits exactly *on* the corridor wall (functional $= 1$ — a support vector if this $w$ were optimal); $B$ lounges deep in safe territory (functional $3$). Halve all coordinates' scale... precisely, rescale to $(2w, 2b)$: functionals double ($2$, $6$) while geometry, predictions, and hinge-zero statuses freeze — the scale illusion made numeric.
+$A$ sits exactly *on* the corridor wall (functional $= 1$ — a support vector if this $w$ were optimal); $B$ lounges deep in safe territory (functional $3$). Rescale to $(2w, 2b)$: functionals double ($2$, $6$) while geometry, predictions, and hinge-zero statuses freeze — the scale illusion made numeric.
 :::
 
 ---

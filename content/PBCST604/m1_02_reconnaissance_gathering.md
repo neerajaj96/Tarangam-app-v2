@@ -66,7 +66,7 @@ Job ads as recon source — what leaks and why care?
 (A) Salaries only
 (*B) Stack disclosures ("5 yrs Struts2, WebLogic 12c") hand version intel for CVE shopping — HR markdown bypasses technical opsec entirely
 (C) Nothing useful
-(D) Employee names for phishing (also true — second-order use: org-chart + roles enable spear-phish pretexts)
+(D) Employee names for phishing (second-order use: org-chart + roles enable spear-phish pretexts)
 ::: explanation
 Human layers leak what firewalls hide: tech stacks (vuln mapping) and org charts (social-engineering pretexts). OSINT spans people-posts, not just packets — scope answers across both.
 :::

@@ -241,7 +241,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -277,7 +277,30 @@
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Training points: $A(1,1){+}$, $B(2,3){+}$, $C(3,2){-}$, $D(5,4){-}$. Classify query $Q(2,2)$ with $k=3$ (Euclidean), and show what $k=1$ and $k=2$ would do. (Distances verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Voting</div><div class="step-content"><p>$d(Q,A) = \sqrt{2} \approx 1.414{+}$; $d(Q,B) = 1.0{+}$; $d(Q,C) = 1.0{-}$; $d(Q,D) \approx 3.606{-}$. Three nearest: $B{+}, C{-}, A{+}$ → vote 2–1 ⇒ <strong>class +</strong>. Note the exact tie $d_B = d_C = 1.0$: with $k=2$ the vote splits 1–1 (tie-break rule needed — distance-weighting would favor neither here; conventional fallback: the nearer... they&#39;re equal — reduce $k$ to 1 or grow to 3). With $k=1$: nearest is $B$ (tie with $C$ broken arbitrarily — instability on display).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$k=3$ says <strong>+</strong> by 2–1. The trace also exhibits k-NN&#39;s twin fragilities in miniature: distance ties demanding tie-breaks, and $k=1$&#39;s hair-trigger instability — the bias–variance knob from Module 1, now with a concrete dial.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Three Neighbors Vote 2 to 1 for Plus</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated k nearest neighbors vote: query Q at 2 2 with neighbors B and C at distance 1.0 and A at 1.414 voting plus">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="axis" x1="60" y1="40" x2="60" y2="260"/>
+<line class="axis" x1="60" y1="260" x2="500" y2="260"/>
+<g class="msg a2"><line x1="180" y1="160" x2="180" y2="100" marker-end="url(#ah)"/><text x="180" y="122" text-anchor="middle">1.0</text></g>
+<g class="msg a2"><line x1="180" y1="160" x2="240" y2="160" marker-end="url(#ah)"/><text x="210" y="150" text-anchor="middle">1.0</text></g>
+<g class="msg a2"><line x1="180" y1="160" x2="120" y2="220" marker-end="url(#ah)"/><text x="150" y="200" text-anchor="middle">1.414</text></g>
+<g class="nd a1"><circle cx="120" cy="220" r="22"/><text x="120" y="226">A+</text></g><g class="nd a1"><circle cx="180" cy="100" r="22"/><text x="180" y="106">B+</text></g><g class="nd a1"><circle cx="240" cy="160" r="22"/><text x="240" y="166">C-</text></g><g class="nd a1"><circle cx="360" cy="40" r="22"/><text x="360" y="46">D-</text></g>
+<g class="nd a1"><circle cx="180" cy="160" r="22"/><text x="180" y="166">Q?</text></g>
+<text class="ordbadge a2" x="360" y="82" text-anchor="middle">D: 3.606 — too far</text>
+<text class="crcrow a3" x="320" y="286" text-anchor="middle">k = 3: B+, C−, A+ → plus wins 2–1</text>
+<text class="animnote a4" x="500" y="240" text-anchor="middle">k = 2 ties 1–1 · k = 1 hair-triggers</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Three Neighbors Vote 2 to 1 for Plus</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the three arrows land — 1.0, 1.0, 1.414 — with D stranded at 3.606, then the 2–1 verdict with the k = 2 tie and k = 1 hair-trigger riding along.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

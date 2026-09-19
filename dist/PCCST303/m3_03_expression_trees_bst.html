@@ -294,7 +294,31 @@
 <li>$50$ root; $30$ left; $70$ right; $20$ left of $30$; $40$ right of $30$. Delete $30$ (two children): successor $40$ replaces it; $40$&#39;s old slot (leaf) removed. Tree: $50$ with left $40$ (left $20$), right $70$.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Expression traces show stack states; BST deletion names the case (0/1/2 children) before acting. Case-first is the grading trigger.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Deleting 30 via Successor 40</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated BST deletion: node 30 with children 20 and 40 is replaced by inorder successor 40">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="160" y="24" text-anchor="middle">before: delete 30?</text>
+<text class="animcap a4" x="480" y="24" text-anchor="middle">after</text>
+<line class="eg a1" x1="160" y1="62" x2="100" y2="142"/><line class="eg a1" x1="160" y1="62" x2="220" y2="142"/><line class="eg a1" x1="100" y1="142" x2="66" y2="224"/><line class="eg a1" x1="100" y1="142" x2="134" y2="224"/>
+<g class="nd a1"><circle cx="160" cy="62" r="22"/><text x="160" y="68">50</text></g><g class="nd a1"><circle cx="100" cy="142" r="22"/><text x="100" y="148">30</text></g><g class="nd a1"><circle cx="220" cy="142" r="22"/><text x="220" y="148">70</text></g><g class="nd a1"><circle cx="66" cy="224" r="22"/><text x="66" y="230">20</text></g><g class="nd a1"><circle cx="134" cy="224" r="22"/><text x="134" y="230">40</text></g>
+<text class="ordbadge a2" x="100" y="108" text-anchor="middle">✕ delete (2 children)</text>
+<text class="ordbadge a2" x="134" y="272" text-anchor="middle">successor 40 ↑</text>
+<text class="bigarrow a3" x="320" y="150" text-anchor="middle">⟶</text>
+<line class="eg a4" x1="480" y1="62" x2="420" y2="142"/><line class="eg a4" x1="480" y1="62" x2="540" y2="142"/><line class="eg a4" x1="420" y1="142" x2="386" y2="224"/>
+<g class="nd a4"><circle cx="480" cy="62" r="22"/><text x="480" y="68">50</text></g><g class="nd a4"><circle cx="420" cy="142" r="22"/><text x="420" y="148">40</text></g><g class="nd a4"><circle cx="540" cy="142" r="22"/><text x="540" y="148">70</text></g><g class="nd a4"><circle cx="386" cy="224" r="22"/><text x="386" y="230">20</text></g>
+<text class="ordbadge a4" x="480" y="272" text-anchor="middle">40 copied up, origin removed</text>
+<text class="animnote a5" x="320" y="292" text-anchor="middle">successor fits the vacated bounds exactly — invariant holds</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Deleting 30 via Successor 40</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch 30 flagged, successor 40 rise into its slot, and the after-tree hold the invariant — copy up, remove the origin.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

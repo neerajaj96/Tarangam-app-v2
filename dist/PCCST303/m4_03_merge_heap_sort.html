@@ -295,7 +295,26 @@
 <li>Swap root/last: $[3,38,27],|,43$; sift-down $3$ past $38$: $[38,3,27],|,43$. $43$ placed; $n-1$ to go.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Merge traces show pile pairs per level; heap traces show array + placed suffix. Both traces are level/state sequences — never just input→output.</p>
-</div></div><hr>
+</div></div><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Merge-Sort 38, 27, 43, 3 Level by Level</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated merge sort splits and zips of 38 27 43 3 ending 3 27 38 43">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="40" text-anchor="middle">merge-sort [38, 27, 43, 3]</text>
+<text class="crcrow a1" x="320" y="85" text-anchor="middle">[38, 27, 43, 3]</text>
+<text class="crcrow a2" x="320" y="130" text-anchor="middle">[38, 27] · [43, 3] → [38][27] · [43][3]</text>
+<text class="crcrow a3" x="320" y="175" text-anchor="middle">zip → [27, 38] · [3, 43]</text>
+<text class="crcres a4" x="320" y="220" text-anchor="middle">zip → [3, 27, 38, 43] ✓</text>
+<text class="animnote a5" x="320" y="264" text-anchor="middle">log n levels × linear zips — halves, not pivots: the guarantee</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Merge-Sort 38, 27, 43, 3 Level by Level</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the deck split to singletons then zip back pairwise — even halves every level is why the guarantee holds regardless of input order.</div>
+  </div>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
