@@ -1,3 +1,29 @@
+---
+id: m1_06_expectation_functions_m1_drill
+courseCode: GAMAT301
+module: 1
+sequence: 6
+title: Expectation of Functions & M1 Drill
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Apply the law of the unconscious statistician for E[g(X)] and E[h(X,Y)]
+  - Compute covariance with Cov(X,Y) = E[XY] - E[X]E[Y]
+  - Decompose the variance of sums with the covariance term
+  - Run the mixed Module 1 drill across all five distributions
+concepts:
+  - law of the unconscious statistician
+  - covariance
+  - variance of sums
+prerequisites:
+  - m1_02_expectation_mean_variance
+  - m1_05_joint_pmf_marginals_independence
+examRelevance: high
+tags:
+  - probability
+  - covariance
+  - m1-drill
+---
 # Expectation of Functions & M1 Drill
 
 **$E[g(X)]$, $E[h(X,Y)]$, covariance shortcut — then a mixed Module 1 drill over every distribution.**

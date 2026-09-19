@@ -1,3 +1,29 @@
+---
+id: m1_04_poisson_distribution_binomial_limit
+courseCode: GAMAT301
+module: 1
+sequence: 4
+title: Poisson Distribution & Binomial Limit
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - State the Poisson pmf and its mean-equals-variance moments
+  - Apply the binomial-to-Poisson limit rule for large n and small p
+  - Triage binomial versus Poisson models from question symptoms
+  - Rescale the rate lambda over different time intervals
+concepts:
+  - Poisson distribution
+  - rate parameter
+  - binomial limit
+  - interval counts
+prerequisites:
+  - m1_02_expectation_mean_variance
+  - m1_03_binomial_distribution_problems
+examRelevance: high
+tags:
+  - probability
+  - poisson-distribution
+---
 # Poisson Distribution & Binomial Limit
 
 **Rare events over time/space — pmf, the $np \to \lambda$ bridge, and when to switch models.**

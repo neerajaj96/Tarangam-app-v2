@@ -1,3 +1,29 @@
+---
+id: m1_05_joint_pmf_marginals_independence
+courseCode: GAMAT301
+module: 1
+sequence: 5
+title: Joint pmf, Marginals & Independence
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read a joint pmf table for two discrete variables
+  - Compute marginal pmfs as row and column sums
+  - Test independence with the every-cell factorisation check
+  - Apply E[XY] = E[X]E[Y] under independence only
+concepts:
+  - joint pmf
+  - marginal pmf
+  - independence
+  - factorisation test
+prerequisites:
+  - m1_01_random_variables_pmf_cdf
+examRelevance: high
+tags:
+  - probability
+  - joint-pmf
+  - independence
+---
 # Joint pmf, Marginals & Independence
 
 **Two discrete variables at once — joint tables, row/column sums, and the factorisation test.**
