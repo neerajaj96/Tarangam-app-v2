@@ -1,7 +1,8 @@
 /**
  * Tarangam content QA gate — zero dependencies, runs in CI before build.
  * Fails (exit 1) on broken dashboard links, malformed quizzes, duplicate
- * slugs/anchors. Orphan videos are warnings only.
+ * slugs/anchors, and curriculum/content mismatches against
+ * data/curriculum.json. Orphan videos are warnings only.
  */
 import fs from 'fs';
 import path from 'path';
@@ -13,6 +14,143 @@ const errors = [];
 const warnings = [];
 const fail = (m) => errors.push(m);
 const warn = (m) => warnings.push(m);
+
+// 0. Curriculum/content consistency against data/curriculum.json
+// (canonical source — no hardcoded fallback). Every failure names the
+// course code, the affected file/directory, and expected vs actual.
+const CURRICULUM_PATH = path.join('data', 'curriculum.json');
+let curriculumDoc = null;
+{
+  let raw = null;
+  try {
+    raw = fs.readFileSync(CURRICULUM_PATH, 'utf-8');
+  } catch (err) {
+    fail(`curriculum: cannot read ${CURRICULUM_PATH} (${err.message}) — expected the canonical curriculum file to exist`);
+  }
+  if (raw !== null) {
+    try {
+      curriculumDoc = JSON.parse(raw);
+    } catch (err) {
+      fail(`curriculum: cannot parse ${CURRICULUM_PATH} (${err.message}) — expected valid JSON`);
+    }
+  }
+  if (curriculumDoc !== null && (typeof curriculumDoc !== 'object' ||
+      !curriculumDoc.curriculum || typeof curriculumDoc.curriculum !== 'object' ||
+      !Array.isArray(curriculumDoc.dashboardOrder))) {
+    fail(`curriculum: ${CURRICULUM_PATH} must contain a top-level "curriculum" object and a "dashboardOrder" array — actual: missing or wrong type`);
+    curriculumDoc = null;
+  }
+}
+
+if (curriculumDoc !== null) {
+  const curriculum = curriculumDoc.curriculum;
+  const contentDirs = fs.readdirSync('content').filter((d) => fs.statSync(path.join('content', d)).isDirectory());
+
+  // 0a. Course consistency.
+  const seenCodes = new Map(); // lowercased code -> first-seen key
+  for (const code of Object.keys(curriculum)) {
+    const entry = curriculum[code];
+    if (!entry || typeof entry !== 'object') {
+      fail(`curriculum: course "${code}" entry is malformed in ${CURRICULUM_PATH} — expected an object with code/name/modules`);
+      continue;
+    }
+    if (entry.code !== code) {
+      fail(`curriculum: course key "${code}" does not match entry.code "${entry.code}" in ${CURRICULUM_PATH} — expected identical codes (possible duplicate/misplaced entry)`);
+    }
+    const folded = code.toLowerCase();
+    if (seenCodes.has(folded)) {
+      fail(`curriculum: duplicate course code "${code}" collides with "${seenCodes.get(folded)}" in ${CURRICULUM_PATH} (case-insensitive match) — expected unique codes`);
+    } else {
+      seenCodes.set(folded, code);
+    }
+    // Every curriculum course expected to have content must have its directory.
+    const expectedDir = entry.contentDir || path.join('content', code);
+    if (!fs.existsSync(expectedDir) || !fs.statSync(expectedDir).isDirectory()) {
+      fail(`curriculum: course "${code}" expects content directory ${expectedDir} (from ${CURRICULUM_PATH}) — actual: directory missing`);
+    }
+  }
+  // Duplicate `order` values across courses.
+  const seenOrders = new Map();
+  for (const code of Object.keys(curriculum)) {
+    const order = curriculum[code] && curriculum[code].order;
+    if (order === undefined) continue;
+    if (seenOrders.has(order)) {
+      fail(`curriculum: courses "${seenOrders.get(order)}" and "${code}" share order ${order} in ${CURRICULUM_PATH} — expected unique ordering`);
+    } else {
+      seenOrders.set(order, code);
+    }
+  }
+  // Every content directory must be listed in the curriculum.
+  for (const dir of contentDirs) {
+    if (!Object.prototype.hasOwnProperty.call(curriculum, dir)) {
+      fail(`curriculum: content/${dir}/ has no entry in ${CURRICULUM_PATH} — expected every content course to be listed (actual: unlisted)`);
+    }
+  }
+
+  // 0b. Module consistency + topic counts.
+  for (const code of Object.keys(curriculum)) {
+    const entry = curriculum[code];
+    if (!entry || typeof entry !== 'object' || !Array.isArray(entry.modules)) {
+      fail(`curriculum: course "${code}" has no "modules" array in ${CURRICULUM_PATH} — expected a module list`);
+      continue;
+    }
+    const seenNums = new Map();
+    const seenNames = new Map();
+    for (const m of entry.modules) {
+      if (!m || typeof m !== 'object' || typeof m.number !== 'number' || !m.name || typeof m.name !== 'string') {
+        fail(`curriculum: course "${code}" has a malformed module entry ${JSON.stringify(m)} in ${CURRICULUM_PATH} — expected {number: <int>, name: <string>}`);
+        continue;
+      }
+      if (seenNums.has(m.number)) {
+        fail(`curriculum: course "${code}" has duplicate module number ${m.number} ("${seenNums.get(m.number)}" vs "${m.name}") in ${CURRICULUM_PATH} — expected unique module numbers`);
+      } else {
+        seenNums.set(m.number, m.name);
+      }
+      const foldedName = m.name.toLowerCase();
+      if (seenNames.has(foldedName)) {
+        fail(`curriculum: course "${code}" has duplicate module name "${m.name}" (modules ${seenNames.get(foldedName)} and ${m.number}) in ${CURRICULUM_PATH} — expected unique module names`);
+      } else {
+        seenNames.set(foldedName, m.number);
+      }
+    }
+    // Module-number set the build resolves names from (mirrors build.js).
+    const resolvable = new Set(entry.modules
+      .filter((m) => m && typeof m.number === 'number')
+      .map((m) => m.number));
+    const dir = path.join('content', code);
+    if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) continue;
+    const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'));
+    for (const f of files) {
+      const mm = f.match(/^m(\d+)_/);
+      if (!mm) continue; // naming-convention check (2a) owns this case
+      const modNum = parseInt(mm[1], 10);
+      if (!resolvable.has(modNum)) {
+        fail(`curriculum: ${dir}/${f} references module ${modNum} — expected one of [${[...resolvable].sort((a, b) => a - b).join(', ')}] for course "${code}" in ${CURRICULUM_PATH} (actual: unresolvable module number)`);
+      }
+    }
+    // Topic counts: actual .md files vs canonical topicCount (never auto-fixed).
+    if (typeof entry.topicCount !== 'number') {
+      fail(`curriculum: course "${code}" has no numeric "topicCount" in ${CURRICULUM_PATH} — expected a number matching content/${code}/*.md`);
+    } else if (files.length !== entry.topicCount) {
+      fail(`curriculum: course "${code}" topicCount is ${entry.topicCount} in ${CURRICULUM_PATH} but content/${code}/ holds ${files.length} .md files — expected equal counts (update the JSON by hand, it is never auto-modified)`);
+    }
+  }
+
+  // 0c. Dashboard order: each curriculum course exactly once, no unknown codes.
+  const orderCounts = new Map();
+  for (const c of curriculumDoc.dashboardOrder) orderCounts.set(c, (orderCounts.get(c) || 0) + 1);
+  for (const [c, n] of orderCounts) {
+    if (n > 1) fail(`curriculum: dashboardOrder lists "${c}" ${n} times in ${CURRICULUM_PATH} — expected exactly once`);
+    if (!Object.prototype.hasOwnProperty.call(curriculum, c)) {
+      fail(`curriculum: dashboardOrder lists unknown course "${c}" in ${CURRICULUM_PATH} — expected a code present in "curriculum"`);
+    }
+  }
+  for (const code of Object.keys(curriculum)) {
+    if (!orderCounts.has(code)) {
+      fail(`curriculum: course "${code}" is missing from dashboardOrder in ${CURRICULUM_PATH} — expected every curriculum course to appear exactly once`);
+    }
+  }
+}
 
 // 1. Dashboard links must resolve to content/*.md (locked cards carry no href).
 {
