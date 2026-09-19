@@ -1,3 +1,26 @@
+---
+id: m1_02_complexity_asymptotic_notations
+courseCode: PCCST303
+module: 1
+sequence: 2
+title: Time/Space Complexity & Asymptotic Notations
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Count time and space costs across best, worst and average cases
+  - Apply Big-O, Omega and Theta with their upper, lower and tight meanings
+  - Rank growth orders from constant to factorial for analysis questions
+concepts:
+  - asymptotic notation
+  - growth ranking
+  - worst-case analysis
+prerequisites:
+  - m1_01_data_structures_adt_abstraction
+examRelevance: high
+tags:
+  - complexity
+  - big-o
+---
 # Time/Space Complexity & Asymptotic Notations
 
 **Counting operations, Big-O/Omega/Theta, and the ranking every analysis question assumes.**

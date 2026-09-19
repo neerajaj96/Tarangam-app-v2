@@ -1,3 +1,26 @@
+---
+id: m4_03_merge_heap_sort
+courseCode: PCCST303
+module: 4
+sequence: 3
+title: Merge Sort & Heap Sort with Analysis
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Guarantee n log n two ways with stable merging and heap power
+  - Trade linear extra space against in-place instability
+  - Power heap sort with sift mechanics from heap order
+concepts:
+  - merge sort
+  - heap sort
+prerequisites:
+  - m1_02_complexity_asymptotic_notations
+  - m3_04_binary_heaps_priority_queue
+examRelevance: high
+tags:
+  - sorting
+  - nlogn-sorts
+---
 # Merge Sort & Heap Sort with Analysis
 
 **Guaranteed $n\log n$ two ways — stable merging at $O(n)$ space vs heap-powered in-place instability.**

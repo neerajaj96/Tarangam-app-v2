@@ -1,3 +1,27 @@
+---
+id: m3_07_m3_mixed_drill
+courseCode: PCCST303
+module: 3
+sequence: 7
+title: 'M3 Drill: Traversals, Heaps & Graph Traces'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Write traversal orders and simulate heap and graph traces
+  - Quote height, logarithmic and vertex-plus-edge costs on demand
+  - Count BFS hops as shortest-path answers under time pressure
+concepts:
+  - trace simulation
+  - cost recall
+prerequisites:
+  - m3_02_traversals_operations
+  - m3_04_binary_heaps_priority_queue
+  - m3_06_bfs_dfs_shortest_paths
+examRelevance: high
+tags:
+  - trees
+  - m3-drill
+---
 # M3 Drill: Traversals, Heaps & Graph Traces
 
 **Mixed workout — write the order, simulate the structure, quote the cost.**

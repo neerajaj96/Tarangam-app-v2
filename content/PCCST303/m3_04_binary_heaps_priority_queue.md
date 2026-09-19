@@ -1,3 +1,26 @@
+---
+id: m3_04_binary_heaps_priority_queue
+courseCode: PCCST303
+module: 3
+sequence: 4
+title: Binary Heaps & Priority Queues
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Maintain complete-tree shape with heap order through sifts
+  - Serve extremal access in logarithmic time with constant peek
+  - Build heaps bottom-up in linear time for priority queues
+concepts:
+  - binary heap
+  - sift operations
+  - priority queue
+prerequisites:
+  - m3_01_trees_binary_foundations
+examRelevance: medium
+tags:
+  - heaps
+  - priority-queue
+---
 # Binary Heaps & Priority Queues
 
 **Complete-tree + heap-order = $O(\log n)$ extremal access — sift mechanics and heapify cost.**

@@ -1,3 +1,26 @@
+---
+id: m2_04_circular_linked_list_variations
+courseCode: PCCST303
+module: 2
+sequence: 4
+title: Circular Linked Lists & Variations Drill
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Run ring structures with tail-to-head links and self-loop singles
+  - Trace Josephus-style elimination without losing the ring
+  - Pick the right list family for each exam scenario
+concepts:
+  - circular linked list
+  - list-family selection
+prerequisites:
+  - m2_01_singly_linked_list_operations
+  - m2_03_doubly_linked_list
+examRelevance: medium
+tags:
+  - linked-lists
+  - circular-list
+---
 # Circular Linked Lists & Variations Drill
 
 **No NULL ends — round-robin structures, Josephus-style elimination, and the list-family decision drill.**

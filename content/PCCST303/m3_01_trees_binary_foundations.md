@@ -1,3 +1,25 @@
+---
+id: m3_01_trees_binary_foundations
+courseCode: PCCST303
+module: 3
+sequence: 1
+title: Trees & Binary Tree Foundations
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Use tree terminology with binary types and representation choices
+  - Prove level, total-node and leaf properties for exam answers
+  - Index array-embedded trees with the children doubling rule
+concepts:
+  - binary trees
+  - tree properties
+  - array representation
+prerequisites: []
+examRelevance: medium
+tags:
+  - trees
+  - foundations
+---
 # Trees & Binary Tree Foundations
 
 **Terminology, binary types, key properties, and array vs linked representation.**

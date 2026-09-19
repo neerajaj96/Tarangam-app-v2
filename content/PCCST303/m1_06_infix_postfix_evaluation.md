@@ -1,3 +1,25 @@
+---
+id: m1_06_infix_postfix_evaluation
+courseCode: PCCST303
+module: 1
+sequence: 6
+title: Infix to Postfix & Postfix Evaluation
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Convert infix to postfix with precedence climbing and parenthesis flushes
+  - Evaluate postfix in one pass with the correct operand order
+  - Trace both algorithms at linear cost for exam traces
+concepts:
+  - precedence climbing
+  - postfix evaluation
+prerequisites:
+  - m1_04_stacks_multistacks_applications
+examRelevance: high
+tags:
+  - stacks
+  - expressions
+---
 # Infix to Postfix & Postfix Evaluation
 
 **Precedence-climbing with a stack, then single-pass evaluation — the two algorithms asked as traces.**

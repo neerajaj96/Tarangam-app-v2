@@ -1,3 +1,26 @@
+---
+id: m4_06_hashing_functions_collisions
+courseCode: PCCST303
+module: 4
+sequence: 6
+title: 'Hashing: Functions & Collision Resolution'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Hash with the four syllabus functions and the load-factor gauge
+  - Resolve collisions with probing, doubling and chaining
+  - Rehash past the occupancy threshold for exam answers
+concepts:
+  - hash functions
+  - collision resolution
+  - load factor
+prerequisites:
+  - m4_05_linear_binary_search
+examRelevance: high
+tags:
+  - searching
+  - hashing
+---
 # Hashing: Functions & Collision Resolution
 
 **$O(1)$ average lookup — the four KTU hash functions and the probing/double/chaining fixes.**

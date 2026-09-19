@@ -1,3 +1,26 @@
+---
+id: m1_04_stacks_multistacks_applications
+courseCode: PCCST303
+module: 1
+sequence: 4
+title: Stacks, Multi-Stacks & Applications
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Implement array stacks with exact overflow and underflow guards
+  - Share one array between two stacks with the meeting-tops condition
+  - Point at the hidden stacks behind calls, undo and parsing
+concepts:
+  - LIFO discipline
+  - multi-stack sharing
+  - stack applications
+prerequisites:
+  - m1_01_data_structures_adt_abstraction
+examRelevance: medium
+tags:
+  - stacks
+  - adt-implementation
+---
 # Stacks, Multi-Stacks & Applications
 
 **LIFO discipline — array implementation, overflow/underflow, two stacks in one array, and where stacks secretly run the machine.**

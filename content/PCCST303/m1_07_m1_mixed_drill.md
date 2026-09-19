@@ -1,3 +1,28 @@
+---
+id: m1_07_m1_mixed_drill
+courseCode: PCCST303
+module: 1
+sequence: 7
+title: 'M1 Drill: Complexity, Stack/Queue & Expression Traces'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Rank growth orders against the ladder under time pressure
+  - Simulate stack and queue pointer states without off-by-one slips
+  - Produce full expression traces with exact operator-operand order
+concepts:
+  - growth ranking
+  - pointer simulation
+prerequisites:
+  - m1_02_complexity_asymptotic_notations
+  - m1_04_stacks_multistacks_applications
+  - m1_05_queues_circular_deque
+  - m1_06_infix_postfix_evaluation
+examRelevance: high
+tags:
+  - foundations
+  - m1-drill
+---
 # M1 Drill: Complexity, Stack/Queue & Expression Traces
 
 **Timed mixed practice — growth ranking, pointer simulations, and full expression traces.**

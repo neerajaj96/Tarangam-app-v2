@@ -1,3 +1,25 @@
+---
+id: m2_01_singly_linked_list_operations
+courseCode: PCCST303
+module: 2
+sequence: 1
+title: Singly Linked Lists & Core Operations
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Build nodes and chase heads with exact operation costs
+  - Perform insert-after and delete-after pointer surgery in order
+  - Quote head versus positional costs for exam answers
+concepts:
+  - singly linked list
+  - pointer surgery
+  - operation costs
+prerequisites: []
+examRelevance: high
+tags:
+  - linked-lists
+  - pointers
+---
 # Singly Linked Lists & Core Operations
 
 **Nodes, head chasing, and insert/delete at every position — with exact pointer surgery.**

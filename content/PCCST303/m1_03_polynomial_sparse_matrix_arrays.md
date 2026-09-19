@@ -1,3 +1,27 @@
+---
+id: m1_03_polynomial_sparse_matrix_arrays
+courseCode: PCCST303
+module: 1
+sequence: 3
+title: Polynomials & Sparse Matrices with Arrays
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Represent polynomials as exponent-ordered arrays for linear merge addition
+  - Compress near-empty matrices with the triplet header trick
+  - Run fast transpose within its column-plus-count cost bound
+concepts:
+  - polynomial representation
+  - sparse triplet
+  - fast transpose
+prerequisites:
+  - m1_01_data_structures_adt_abstraction
+  - m1_02_complexity_asymptotic_notations
+examRelevance: medium
+tags:
+  - arrays
+  - sparse-matrix
+---
 # Polynomials & Sparse Matrices with Arrays
 
 **Sequential representation: term structs ordered by exponent, and the triplet trick that compresses near-empty matrices.**

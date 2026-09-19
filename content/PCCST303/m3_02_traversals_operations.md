@@ -1,3 +1,25 @@
+---
+id: m3_02_traversals_operations
+courseCode: PCCST303
+module: 3
+sequence: 2
+title: Traversals & Tree Operations
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Write inorder, preorder, postorder and level-order traversals
+  - Simulate recursion with explicit stacks and queues
+  - Reconstruct trees from inorder plus one more traversal
+concepts:
+  - tree traversals
+  - tree reconstruction
+prerequisites:
+  - m3_01_trees_binary_foundations
+examRelevance: high
+tags:
+  - trees
+  - traversals
+---
 # Traversals & Tree Operations
 
 **Inorder/preorder/postorder/level-order — recursive definitions, stack simulation, and reconstruction.**

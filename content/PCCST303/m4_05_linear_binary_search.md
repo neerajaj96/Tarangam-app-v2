@@ -1,3 +1,25 @@
+---
+id: m4_05_linear_binary_search
+courseCode: PCCST303
+module: 4
+sequence: 5
+title: Linear & Binary Search with Analysis
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Scan unsorted data linearly with exact linear cost
+  - Halve sorted ranges with the binary iteration count
+  - Price logarithms with mandatory sortedness
+concepts:
+  - linear search
+  - binary search
+prerequisites:
+  - m1_02_complexity_asymptotic_notations
+examRelevance: medium
+tags:
+  - searching
+  - binary-search
+---
 # Linear & Binary Search with Analysis
 
 **Scan everything vs halve everything — sortedness as the price of logarithms.**

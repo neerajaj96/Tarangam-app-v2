@@ -1,3 +1,25 @@
+---
+id: m1_01_data_structures_adt_abstraction
+courseCode: PCCST303
+module: 1
+sequence: 1
+title: Data Structures, ADTs & Data Abstraction
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Separate an ADT interface from its implementation structure
+  - Classify structures as linear or non-linear by successor count
+  - Explain why abstraction walls make programs survivable
+concepts:
+  - abstract data type
+  - data abstraction
+  - linear structures
+prerequisites: []
+examRelevance: medium
+tags:
+  - adt
+  - foundations
+---
 # Data Structures, ADTs & Data Abstraction
 
 **What a data structure is, what an ADT promises, and why abstraction walls make programs survivable.**

@@ -1,3 +1,25 @@
+---
+id: m3_05_graphs_definitions_representation
+courseCode: PCCST303
+module: 3
+sequence: 5
+title: 'Graphs: Definitions & Representation'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Define vertices, edges, degrees and paths with exam-exact vocabulary
+  - Apply the handshaking lemma and the tree edge count
+  - Choose matrix or list representation by graph density
+concepts:
+  - graph vocabulary
+  - adjacency representation
+  - density rule
+prerequisites: []
+examRelevance: medium
+tags:
+  - graphs
+  - representation
+---
 # Graphs: Definitions & Representation
 
 **Vertices, edges, degrees, paths — and adjacency matrix vs list with the density rule.**

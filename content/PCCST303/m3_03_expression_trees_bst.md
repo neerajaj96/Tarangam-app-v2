@@ -1,3 +1,27 @@
+---
+id: m3_03_expression_trees_bst
+courseCode: PCCST303
+module: 3
+sequence: 3
+title: Expression Trees & BST Operations
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Build expression trees from postfix with operand and operator rules
+  - Run BST insert, search and all three deletion cases
+  - Quote BST costs in terms of height for exam answers
+concepts:
+  - expression trees
+  - binary search trees
+  - successor deletion
+prerequisites:
+  - m1_06_infix_postfix_evaluation
+  - m3_02_traversals_operations
+examRelevance: high
+tags:
+  - trees
+  - bst
+---
 # Expression Trees & BST Operations
 
 **Trees that compute, trees that search — postfix-to-tree building and BST insert/delete/search.**

@@ -1,3 +1,27 @@
+---
+id: m4_07_m4_mixed_drill
+courseCode: PCCST303
+module: 4
+sequence: 7
+title: 'M4 Drill: Sort Traces, Search Counts & Hash Tables'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Trace one sort per family with exact intermediate states
+  - Count search probes and iterations across both searches
+  - Fill hash tables slot by slot with the load factor quoted
+concepts:
+  - sort traces
+  - probe counting
+prerequisites:
+  - m4_04_radix_sort_comparison_drill
+  - m4_05_linear_binary_search
+  - m4_06_hashing_functions_collisions
+examRelevance: high
+tags:
+  - sorting
+  - m4-drill
+---
 # M4 Drill: Sort Traces, Search Counts & Hash Tables
 
 **Full-module workout — one trace per family, one count per search, one table per hash.**

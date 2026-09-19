@@ -1,3 +1,28 @@
+---
+id: m2_02_stacks_queues_polynomial_linked
+courseCode: PCCST303
+module: 2
+sequence: 2
+title: Stacks, Queues & Polynomials via Linked Lists
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Rebuild stacks on head operations with unbounded capacity
+  - Run queues with rear-insert and front-delete pointers
+  - Merge exponent-ordered polynomial lists term by term
+concepts:
+  - linked stack
+  - linked queue
+  - polynomial lists
+prerequisites:
+  - m1_04_stacks_multistacks_applications
+  - m1_05_queues_circular_deque
+  - m2_01_singly_linked_list_operations
+examRelevance: medium
+tags:
+  - linked-lists
+  - adt-implementation
+---
 # Stacks, Queues & Polynomials via Linked Lists
 
 **Rebuilding M1's ADTs on nodes — unbounded stacks, two-pointer queues, and exponent-ordered polynomial lists.**

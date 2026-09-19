@@ -1,3 +1,27 @@
+---
+id: m4_02_quick_sort_analysis
+courseCode: PCCST303
+module: 4
+sequence: 2
+title: Quick Sort & Analysis
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Partition around a pivot that lands in its final place
+  - Derive average and worst cases with the recurrence argument
+  - Defend pivots with randomisation against sorted-input collapse
+concepts:
+  - quicksort partition
+  - pivot selection
+  - average-case analysis
+prerequisites:
+  - m1_02_complexity_asymptotic_notations
+  - m4_01_selection_insertion_sort
+examRelevance: high
+tags:
+  - sorting
+  - quicksort
+---
 # Quick Sort & Analysis
 
 **Partition around a pivot, conquer the sides — average $n\log n$, worst $n^2$, and why pivots decide.**

@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **114**
-- Pending: **318**
-- Coverage: **26.39%** (tracked by `npm run check`)
+- Migrated: **141**
+- Pending: **291**
+- Coverage: **32.64%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,16 +19,17 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PCCST303 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GZPHT121 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GXEST104 — Module 1 in progress (33 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   2. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   3. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   4. PCCST501 — Computer Networks (started — see step 1)
-   5. PCCST303 — Data Structures and Algorithms
+   1. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   2. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   3. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   4. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   5. PCCST501 — Computer Networks (started — see step 1)
    6. PCCST503 — Machine Learning
    7. PCCST502 — Design and Analysis of Algorithms
    8. PECST522 — Artificial Intelligence
@@ -41,6 +42,38 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PCCST303 — Data Structures and Algorithms (27/27 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Basic Concepts, Stacks & Queues | 01 | `m1_01_data_structures_adt_abstraction.md` | `m1_01_data_structures_adt_abstraction` | migrated |
+| M1 Basic Concepts, Stacks & Queues | 02 | `m1_02_complexity_asymptotic_notations.md` | `m1_02_complexity_asymptotic_notations` | migrated |
+| M1 Basic Concepts, Stacks & Queues | 03 | `m1_03_polynomial_sparse_matrix_arrays.md` | `m1_03_polynomial_sparse_matrix_arrays` | migrated |
+| M1 Basic Concepts, Stacks & Queues | 04 | `m1_04_stacks_multistacks_applications.md` | `m1_04_stacks_multistacks_applications` | migrated |
+| M1 Basic Concepts, Stacks & Queues | 05 | `m1_05_queues_circular_deque.md` | `m1_05_queues_circular_deque` | migrated |
+| M1 Basic Concepts, Stacks & Queues | 06 | `m1_06_infix_postfix_evaluation.md` | `m1_06_infix_postfix_evaluation` | migrated |
+| M1 Basic Concepts, Stacks & Queues | 07 | `m1_07_m1_mixed_drill.md` | `m1_07_m1_mixed_drill` | migrated |
+| M2 Linked Lists & Memory Management | 01 | `m2_01_singly_linked_list_operations.md` | `m2_01_singly_linked_list_operations` | migrated |
+| M2 Linked Lists & Memory Management | 02 | `m2_02_stacks_queues_polynomial_linked.md` | `m2_02_stacks_queues_polynomial_linked` | migrated |
+| M2 Linked Lists & Memory Management | 03 | `m2_03_doubly_linked_list.md` | `m2_03_doubly_linked_list` | migrated |
+| M2 Linked Lists & Memory Management | 04 | `m2_04_circular_linked_list_variations.md` | `m2_04_circular_linked_list_variations` | migrated |
+| M2 Linked Lists & Memory Management | 05 | `m2_05_memory_allocation_fits.md` | `m2_05_memory_allocation_fits` | migrated |
+| M2 Linked Lists & Memory Management | 06 | `m2_06_garbage_compaction_m2_drill.md` | `m2_06_garbage_compaction_m2_drill` | migrated |
+| M3 Trees, Heaps & Graphs | 01 | `m3_01_trees_binary_foundations.md` | `m3_01_trees_binary_foundations` | migrated |
+| M3 Trees, Heaps & Graphs | 02 | `m3_02_traversals_operations.md` | `m3_02_traversals_operations` | migrated |
+| M3 Trees, Heaps & Graphs | 03 | `m3_03_expression_trees_bst.md` | `m3_03_expression_trees_bst` | migrated |
+| M3 Trees, Heaps & Graphs | 04 | `m3_04_binary_heaps_priority_queue.md` | `m3_04_binary_heaps_priority_queue` | migrated |
+| M3 Trees, Heaps & Graphs | 05 | `m3_05_graphs_definitions_representation.md` | `m3_05_graphs_definitions_representation` | migrated |
+| M3 Trees, Heaps & Graphs | 06 | `m3_06_bfs_dfs_shortest_paths.md` | `m3_06_bfs_dfs_shortest_paths` | migrated |
+| M3 Trees, Heaps & Graphs | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | migrated |
+| M4 Sorting, Searching & Hashing | 01 | `m4_01_selection_insertion_sort.md` | `m4_01_selection_insertion_sort` | migrated |
+| M4 Sorting, Searching & Hashing | 02 | `m4_02_quick_sort_analysis.md` | `m4_02_quick_sort_analysis` | migrated |
+| M4 Sorting, Searching & Hashing | 03 | `m4_03_merge_heap_sort.md` | `m4_03_merge_heap_sort` | migrated |
+| M4 Sorting, Searching & Hashing | 04 | `m4_04_radix_sort_comparison_drill.md` | `m4_04_radix_sort_comparison_drill` | migrated |
+| M4 Sorting, Searching & Hashing | 05 | `m4_05_linear_binary_search.md` | `m4_05_linear_binary_search` | migrated |
+| M4 Sorting, Searching & Hashing | 06 | `m4_06_hashing_functions_collisions.md` | `m4_06_hashing_functions_collisions` | migrated |
+| M4 Sorting, Searching & Hashing | 07 | `m4_07_m4_mixed_drill.md` | `m4_07_m4_mixed_drill` | migrated |
 
 ## GZPHT121 — Physics for Physical Science and Life Science (26/26 migrated)
 
@@ -180,38 +213,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PCCST303 — Data Structures and Algorithms (0/27 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Basic Concepts, Stacks & Queues | 01 | `m1_01_data_structures_adt_abstraction.md` | `m1_01_data_structures_adt_abstraction` | pending |
-| M1 Basic Concepts, Stacks & Queues | 02 | `m1_02_complexity_asymptotic_notations.md` | `m1_02_complexity_asymptotic_notations` | pending |
-| M1 Basic Concepts, Stacks & Queues | 03 | `m1_03_polynomial_sparse_matrix_arrays.md` | `m1_03_polynomial_sparse_matrix_arrays` | pending |
-| M1 Basic Concepts, Stacks & Queues | 04 | `m1_04_stacks_multistacks_applications.md` | `m1_04_stacks_multistacks_applications` | pending |
-| M1 Basic Concepts, Stacks & Queues | 05 | `m1_05_queues_circular_deque.md` | `m1_05_queues_circular_deque` | pending |
-| M1 Basic Concepts, Stacks & Queues | 06 | `m1_06_infix_postfix_evaluation.md` | `m1_06_infix_postfix_evaluation` | pending |
-| M1 Basic Concepts, Stacks & Queues | 07 | `m1_07_m1_mixed_drill.md` | `m1_07_m1_mixed_drill` | pending |
-| M2 Linked Lists & Memory Management | 01 | `m2_01_singly_linked_list_operations.md` | `m2_01_singly_linked_list_operations` | pending |
-| M2 Linked Lists & Memory Management | 02 | `m2_02_stacks_queues_polynomial_linked.md` | `m2_02_stacks_queues_polynomial_linked` | pending |
-| M2 Linked Lists & Memory Management | 03 | `m2_03_doubly_linked_list.md` | `m2_03_doubly_linked_list` | pending |
-| M2 Linked Lists & Memory Management | 04 | `m2_04_circular_linked_list_variations.md` | `m2_04_circular_linked_list_variations` | pending |
-| M2 Linked Lists & Memory Management | 05 | `m2_05_memory_allocation_fits.md` | `m2_05_memory_allocation_fits` | pending |
-| M2 Linked Lists & Memory Management | 06 | `m2_06_garbage_compaction_m2_drill.md` | `m2_06_garbage_compaction_m2_drill` | pending |
-| M3 Trees, Heaps & Graphs | 01 | `m3_01_trees_binary_foundations.md` | `m3_01_trees_binary_foundations` | pending |
-| M3 Trees, Heaps & Graphs | 02 | `m3_02_traversals_operations.md` | `m3_02_traversals_operations` | pending |
-| M3 Trees, Heaps & Graphs | 03 | `m3_03_expression_trees_bst.md` | `m3_03_expression_trees_bst` | pending |
-| M3 Trees, Heaps & Graphs | 04 | `m3_04_binary_heaps_priority_queue.md` | `m3_04_binary_heaps_priority_queue` | pending |
-| M3 Trees, Heaps & Graphs | 05 | `m3_05_graphs_definitions_representation.md` | `m3_05_graphs_definitions_representation` | pending |
-| M3 Trees, Heaps & Graphs | 06 | `m3_06_bfs_dfs_shortest_paths.md` | `m3_06_bfs_dfs_shortest_paths` | pending |
-| M3 Trees, Heaps & Graphs | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | pending |
-| M4 Sorting, Searching & Hashing | 01 | `m4_01_selection_insertion_sort.md` | `m4_01_selection_insertion_sort` | pending |
-| M4 Sorting, Searching & Hashing | 02 | `m4_02_quick_sort_analysis.md` | `m4_02_quick_sort_analysis` | pending |
-| M4 Sorting, Searching & Hashing | 03 | `m4_03_merge_heap_sort.md` | `m4_03_merge_heap_sort` | pending |
-| M4 Sorting, Searching & Hashing | 04 | `m4_04_radix_sort_comparison_drill.md` | `m4_04_radix_sort_comparison_drill` | pending |
-| M4 Sorting, Searching & Hashing | 05 | `m4_05_linear_binary_search.md` | `m4_05_linear_binary_search` | pending |
-| M4 Sorting, Searching & Hashing | 06 | `m4_06_hashing_functions_collisions.md` | `m4_06_hashing_functions_collisions` | pending |
-| M4 Sorting, Searching & Hashing | 07 | `m4_07_m4_mixed_drill.md` | `m4_07_m4_mixed_drill` | pending |
 
 ## PCCST503 — Machine Learning (0/23 migrated)
 

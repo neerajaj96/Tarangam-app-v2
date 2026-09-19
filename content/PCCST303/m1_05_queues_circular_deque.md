@@ -1,3 +1,26 @@
+---
+id: m1_05_queues_circular_deque
+courseCode: PCCST303
+module: 1
+sequence: 5
+title: Queues, Circular Queues & Deques
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Diagnose false overflow in linear queues and fix it circularly
+  - Apply modulo wraparound with exact full and empty conditions
+  - Distinguish deque variants by their permitted end operations
+concepts:
+  - FIFO discipline
+  - circular queue
+  - deque
+prerequisites:
+  - m1_04_stacks_multistacks_applications
+examRelevance: medium
+tags:
+  - queues
+  - circular-queue
+---
 # Queues, Circular Queues & Deques
 
 **FIFO discipline — the false-overflow fix, modulo arithmetic, and double-ended variants.**

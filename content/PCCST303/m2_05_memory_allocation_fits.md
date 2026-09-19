@@ -1,3 +1,24 @@
+---
+id: m2_05_memory_allocation_fits
+courseCode: PCCST303
+module: 2
+sequence: 5
+title: 'Memory Allocation: First, Best & Worst Fit'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Place requests with first, best and worst fit strategies
+  - Split blocks on allocation and coalesce holes on free
+  - Compute fragmentation outcomes for exam arithmetic
+concepts:
+  - fit strategies
+  - fragmentation
+prerequisites: []
+examRelevance: medium
+tags:
+  - memory-management
+  - allocation
+---
 # Memory Allocation: First, Best & Worst Fit
 
 **Placing requests into free holes — the three fit strategies, splitting, and fragmentation arithmetic.**

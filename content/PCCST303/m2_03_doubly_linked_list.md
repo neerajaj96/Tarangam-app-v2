@@ -1,3 +1,25 @@
+---
+id: m2_03_doubly_linked_list
+courseCode: PCCST303
+module: 2
+sequence: 3
+title: Doubly Linked Lists
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Delete a given node in constant time with two-way links
+  - Maintain all four links with NULL guards at both ends
+  - Trade doubly against singly lists for exam comparisons
+concepts:
+  - doubly linked list
+  - constant-time deletion
+prerequisites:
+  - m2_01_singly_linked_list_operations
+examRelevance: medium
+tags:
+  - linked-lists
+  - pointers
+---
 # Doubly Linked Lists
 
 **Two-way arrows — $O(1)$ deletion with the node itself, at the price of double pointer upkeep.**

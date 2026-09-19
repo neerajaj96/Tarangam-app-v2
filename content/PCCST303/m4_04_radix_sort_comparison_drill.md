@@ -1,3 +1,27 @@
+---
+id: m4_04_radix_sort_comparison_drill
+courseCode: PCCST303
+module: 4
+sequence: 4
+title: Radix Sort & Sorting Comparison Drill
+difficulty: intermediate
+estimatedMinutes: 4
+learningObjectives:
+  - Sort by digits with stable counting passes from least to most significant
+  - Explain why the comparison lower bound does not apply to radix
+  - Run the six-sort showdown across cost, space and stability
+concepts:
+  - radix sort
+  - comparison lower bound
+prerequisites:
+  - m4_01_selection_insertion_sort
+  - m4_02_quick_sort_analysis
+  - m4_03_merge_heap_sort
+examRelevance: high
+tags:
+  - sorting
+  - m4-drill
+---
 # Radix Sort & Sorting Comparison Drill
 
 **Non-comparative sorting by digits — counting-sort passes, place-value order, and the full six-sort showdown.**

@@ -1,3 +1,28 @@
+---
+id: m3_06_bfs_dfs_shortest_paths
+courseCode: PCCST303
+module: 3
+sequence: 6
+title: BFS, DFS & Single-Source Shortest Paths
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Explore with queue-driven BFS layers and stack-driven DFS dives
+  - Read unweighted shortest paths directly off BFS layers
+  - Quote both searches at vertex-plus-edge cost
+concepts:
+  - breadth-first search
+  - depth-first search
+  - unweighted shortest paths
+prerequisites:
+  - m1_04_stacks_multistacks_applications
+  - m1_05_queues_circular_deque
+  - m3_05_graphs_definitions_representation
+examRelevance: high
+tags:
+  - graphs
+  - graph-search
+---
 # BFS, DFS & Single-Source Shortest Paths
 
 **Queue vs stack exploration — orders, trees, and unweighted shortest paths as BFS layers.**

@@ -1,3 +1,26 @@
+---
+id: m2_06_garbage_compaction_m2_drill
+courseCode: PCCST303
+module: 2
+sequence: 6
+title: Garbage Collection, Compaction & M2 Drill
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Reclaim unreachable nodes with mark-sweep and reference counting
+  - Compact with sliding moves plus pointer fixes
+  - Run the M2 drill across list variants and memory schemes
+concepts:
+  - mark-sweep collection
+  - compaction
+prerequisites:
+  - m2_01_singly_linked_list_operations
+  - m2_05_memory_allocation_fits
+examRelevance: high
+tags:
+  - memory-management
+  - m2-drill
+---
 # Garbage Collection, Compaction & M2 Drill
 
 **Reclaiming the unreachable — mark-sweep, reference counting, sliding compaction, and the module drill.**

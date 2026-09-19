@@ -1,3 +1,26 @@
+---
+id: m4_01_selection_insertion_sort
+courseCode: PCCST303
+module: 4
+sequence: 1
+title: Selection & Insertion Sort with Analysis
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Trace extremal picking and card-hand insertion step by step
+  - Cost both sorts with swap counts, stability and adaptivity
+  - Tell the two quadratics apart for exam comparisons
+concepts:
+  - selection sort
+  - insertion sort
+  - stability
+prerequisites:
+  - m1_02_complexity_asymptotic_notations
+examRelevance: medium
+tags:
+  - sorting
+  - quadratic-sorts
+---
 # Selection & Insertion Sort with Analysis
 
 **The two quadratic incumbents — extremal picking vs card-hand insertion, traced and costed.**
