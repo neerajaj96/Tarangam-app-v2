@@ -3,6 +3,13 @@ import path from 'path';
 import { marked } from 'marked';
 import { SCENES } from './scenes.js';
 import { CURRICULUM_PATH, loadCurriculum } from './curriculum.js';
+import {
+  listContentCourses,
+  resolveCoursePath,
+  listTopicFiles,
+  parseTopicFile,
+  findTopicFilenameIssues,
+} from './content.js';
 
 const CONTENT_DIR = 'content';
 const OUTPUT_DIR = 'dist';
@@ -440,11 +447,13 @@ export function buildSite() {
   }
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
-  const courseDirs = fs.readdirSync(CONTENT_DIR);
+  // Course/topic discovery comes from the shared scripts/content.js
+  // module (course dirs, sorted .md files, file-path resolution); topic
+  // counts and lists always derive from content/ — never from the JSON.
+  const courseCodes = listContentCourses(CONTENT_DIR);
 
-  for (const courseCode of courseDirs) {
-    const coursePath = path.join(CONTENT_DIR, courseCode);
-    if (!fs.statSync(coursePath).isDirectory()) continue;
+  for (const courseCode of courseCodes) {
+    const coursePath = resolveCoursePath(CONTENT_DIR, courseCode);
 
     const courseOutDir = path.join(OUTPUT_DIR, courseCode);
     if (!fs.existsSync(courseOutDir)) {
@@ -464,23 +473,16 @@ export function buildSite() {
     const modules = {};
     const pages = [];
 
-    const files = fs.readdirSync(coursePath).filter(f => f.endsWith('.md')).sort();
+    const files = listTopicFiles(coursePath);
 
     // Validate naming convention m{mod}_{seq}_{slug}.md: flag duplicate seq + gaps.
-    const seenSeq = new Map();
-    for (const f of files) {
-      const m = f.match(/^m(\d+)_(\d+)_/);
-      if (!m) { warnings.push(`${courseCode}/${f}: filename breaks m{mod}_{seq}_{slug}.md convention`); continue; }
-      const key = `${m[1]}_${m[2]}`;
-      if (seenSeq.has(key)) warnings.push(`${courseCode}: duplicate seq ${key} in ${seenSeq.get(key)} and ${f}`);
-      else seenSeq.set(key, f);
-    }
+    for (const issue of findTopicFilenameIssues(courseCode, files)) warnings.push(issue);
 
     for (const filename of files) {
-      const modMatch = filename.match(/^m(\d+)_/);
-      const modNum = modMatch ? parseInt(modMatch[1], 10) : 0;
+      const parsed = parseTopicFile(coursePath, filename);
+      const modNum = parsed.modNum;
       const title = formatTopicTitle(filename);
-      const htmlFilename = filename.replace(/\.md$/, '.html');
+      const htmlFilename = parsed.htmlFilename;
 
       if (!modules[modNum]) {
         const modTitle = MODULE_NAMES[courseCode]?.[modNum] || `Module ${modNum}`;
@@ -488,10 +490,10 @@ export function buildSite() {
       }
 
       const pageData = {
-        id: filename.replace(/\.md$/, ''),
+        id: parsed.id,
         title: title,
         filename: htmlFilename,
-        source_path: path.join(coursePath, filename)
+        source_path: parsed.sourcePath
       };
 
       modules[modNum].topics.push(pageData);
