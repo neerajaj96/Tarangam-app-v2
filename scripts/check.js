@@ -16,6 +16,13 @@ import {
   CURRICULUM_PARSE_ERROR,
   CURRICULUM_SHAPE_ERROR,
 } from './curriculum.js';
+import {
+  TOPIC_SCHEMA_PATH,
+  TOPIC_METADATA_EXAMPLE_PATH,
+  loadTopicSchema,
+  loadTopicMetadata,
+  validateTopicMetadata,
+} from './topic-metadata.js';
 
 const errors = [];
 const warnings = [];
@@ -281,96 +288,32 @@ if (fs.existsSync('dist')) {
 }
 
 // 6. Topic metadata fixture validation (schema foundation only — no
-// migration of the 432 Markdown topics yet). Validates
-// data/topic-metadata.example.json against data/topic-schema.json with a
-// dependency-free walker: required fields, types, enums, patterns,
-// ranges, array structure, plus obvious invalid values (empty/whitespace
-// strings) and cross-checks (course/module exist, id follows the
-// m{module}_{sequence}_ filename convention and names a real content file).
+// migration of the 432 Markdown topics yet). Loading and validation live
+// in scripts/topic-metadata.js; the checker only maps loader failures
+// and collects the returned error strings as QA failures.
 {
-  const SCHEMA_PATH = path.join('data', 'topic-schema.json');
-  const FIXTURE_PATH = path.join('data', 'topic-metadata.example.json');
   let schema = null;
   let fixture = null;
-  let fixtureParsed = false;
+  let schemaOk = false;
+  let fixtureOk = false;
   try {
-    schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, 'utf-8'));
+    schema = loadTopicSchema();
+    schemaOk = true;
   } catch (e) {
-    fail(`topic-schema: cannot read/parse ${SCHEMA_PATH} (${e.message}) — expected the canonical topic metadata schema`);
+    fail(`topic-schema: cannot read/parse ${TOPIC_SCHEMA_PATH} (${(e.cause && e.cause.message) || e.message}) — expected the canonical topic metadata schema`);
   }
   try {
-    fixture = JSON.parse(fs.readFileSync(FIXTURE_PATH, 'utf-8'));
-    fixtureParsed = true;
+    fixture = loadTopicMetadata();
+    fixtureOk = true;
   } catch (e) {
-    fail(`topic-metadata: cannot read/parse ${FIXTURE_PATH} (${e.message}) — expected a valid example topic object`);
+    fail(`topic-metadata: cannot read/parse ${TOPIC_METADATA_EXAMPLE_PATH} (${(e.cause && e.cause.message) || e.message}) — expected a valid example topic object`);
   }
-  if (schema && fixtureParsed) {
-    const where = `topic-metadata: ${FIXTURE_PATH}`;
-    const props = (schema.properties && typeof schema.properties === 'object') ? schema.properties : {};
-    if (!fixture || typeof fixture !== 'object' || Array.isArray(fixture)) {
-      fail(`${where} must be a JSON object — actual: ${Array.isArray(fixture) ? 'array' : typeof fixture}`);
-    } else {
-      for (const key of (schema.required || [])) {
-        if (!Object.prototype.hasOwnProperty.call(fixture, key)) fail(`${where} is missing required field "${key}"`);
-      }
-      if (schema.additionalProperties === false) {
-        for (const key of Object.keys(fixture)) {
-          if (!Object.prototype.hasOwnProperty.call(props, key)) fail(`${where} has unexpected field "${key}" (schema allows no additional properties)`);
-        }
-      }
-      const typeOk = (v, t) => {
-        if (t === 'integer') return typeof v === 'number' && Number.isInteger(v);
-        if (t === 'number') return typeof v === 'number' && Number.isFinite(v);
-        if (t === 'array') return Array.isArray(v);
-        return typeof v === t;
-      };
-      const checkValue = (v, def, label) => {
-        if (!def || typeof def !== 'object') return;
-        if (def.type && !typeOk(v, def.type)) {
-          fail(`${where} field "${label}" must be ${def.type} — actual: ${Array.isArray(v) ? 'array' : typeof v}`);
-          return;
-        }
-        if (def.enum && !def.enum.includes(v)) {
-          fail(`${where} field "${label}" must be one of [${def.enum.join(', ')}] — actual: ${JSON.stringify(v)}`);
-        }
-        if (typeof v === 'string') {
-          if (def.minLength !== undefined && v.length < def.minLength) fail(`${where} field "${label}" must be at least ${def.minLength} character(s) — actual: empty`);
-          if (def.maxLength !== undefined && v.length > def.maxLength) fail(`${where} field "${label}" must be at most ${def.maxLength} characters — actual: ${v.length}`);
-          if (def.pattern && !(new RegExp(def.pattern).test(v))) fail(`${where} field "${label}" must match ${def.pattern} — actual: ${JSON.stringify(v)}`);
-          if (def.minLength && !v.trim()) fail(`${where} field "${label}" must not be blank/whitespace-only`);
-        }
-        if (typeof v === 'number') {
-          if (def.minimum !== undefined && v < def.minimum) fail(`${where} field "${label}" must be >= ${def.minimum} — actual: ${v}`);
-          if (def.maximum !== undefined && v > def.maximum) fail(`${where} field "${label}" must be <= ${def.maximum} — actual: ${v}`);
-        }
-        if (Array.isArray(v)) {
-          if (def.minItems !== undefined && v.length < def.minItems) fail(`${where} field "${label}" must have at least ${def.minItems} item(s) — actual: ${v.length}`);
-          if (def.items) v.forEach((item, i) => checkValue(item, def.items, `${label}[${i}]`));
-        }
-      };
-      for (const [key, def] of Object.entries(props)) {
-        if (Object.prototype.hasOwnProperty.call(fixture, key)) checkValue(fixture[key], def, key);
-      }
-      // Cross-checks against the repo (only when values are well-formed).
-      const modNum = fixture.module;
-      const seqNum = fixture.sequence;
-      if (typeof fixture.courseCode === 'string' && curriculumDoc) {
-        if (!Object.prototype.hasOwnProperty.call(curriculumDoc.curriculum, fixture.courseCode)) {
-          fail(`${where} courseCode "${fixture.courseCode}" is not a course in ${CURRICULUM_PATH} — expected an existing course`);
-        } else if (Number.isInteger(modNum)) {
-          const nums = curriculumDoc.curriculum[fixture.courseCode].modules.map((m) => m.number);
-          if (!nums.includes(modNum)) fail(`${where} module ${modNum} is not a module of "${fixture.courseCode}" in ${CURRICULUM_PATH} — expected one of [${nums.join(', ')}]`);
-        }
-      }
-      if (typeof fixture.id === 'string' && Number.isInteger(modNum) && Number.isInteger(seqNum)) {
-        const prefix = `m${modNum}_${String(seqNum).padStart(2, '0')}_`;
-        if (!fixture.id.startsWith(prefix)) fail(`${where} id "${fixture.id}" does not match the m{module}_{sequence}_ filename convention — expected prefix "${prefix}"`);
-      }
-      if (typeof fixture.id === 'string' && typeof fixture.courseCode === 'string') {
-        const md = path.join('content', fixture.courseCode, `${fixture.id}.md`);
-        if (!fs.existsSync(md)) fail(`${where} id "${fixture.id}" has no content file ${md} — expected the fixture to describe a real topic`);
-      }
-    }
+  if (schemaOk && fixtureOk) {
+    for (const e of validateTopicMetadata(fixture, {
+      schema,
+      curriculumDoc,
+      label: `topic-metadata: ${TOPIC_METADATA_EXAMPLE_PATH}`,
+    })) fail(e);
   }
 }
 
