@@ -122,6 +122,14 @@ export function writeStandaloneIndex(outputDir) {
   }
 }
 
+// Copy the curriculum explorer page (its topic links resolve client-side
+// against the manifest base URL, so no path rewrite is needed here).
+export function copyExplorerPage(outputDir) {
+  if (fs.existsSync('explorer.html')) {
+    fs.copyFileSync('explorer.html', path.join(outputDir, 'explorer.html'));
+  }
+}
+
 // Copy assets and media if they exist
 export function copyAssetDirs(outputDir) {
   if (fs.existsSync('assets')) {

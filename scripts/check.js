@@ -362,7 +362,7 @@ if (fs.existsSync('dist')) {
     // no rebuild. Fails on structural problems, edge disagreement, and
     // drift from the known migration baseline (432 topics, 14 metadata).
     if (analysis.errors.length === 0) {
-      const manifest = buildTopicManifestFromGraph(graph, analysis);
+      const manifest = buildTopicManifestFromGraph(graph, analysis, { curriculumDoc });
       for (const e of validateTopicManifest(manifest, { graph })) fail(`topic-manifest: ${e}`);
       if (manifest.aggregates.totalTopics !== 432) {
         fail(`topic-manifest: expected 432 topics (migration baseline) — actual: ${manifest.aggregates.totalTopics}`);
@@ -371,6 +371,30 @@ if (fs.existsSync('dist')) {
         fail(`topic-manifest: expected 14 metadata topics (migration baseline) — actual: ${manifest.aggregates.metadataTopics}`);
       }
       console.log(formatManifestSummary(manifest));
+    }
+  }
+}
+
+// 9. Curriculum explorer wiring: the page, its JS modules, and the
+// published manifest must all exist and reference each other, in source
+// and (when present) in dist/.
+{
+  for (const f of ['explorer.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'style.css']) {
+    if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
+  }
+  if (fs.existsSync('explorer.html')) {
+    const html = fs.readFileSync('explorer.html', 'utf-8');
+    for (const ref of ['assets/explorer.js', 'style.css']) {
+      if (!html.includes(ref)) fail(`explorer: explorer.html does not reference ${ref}`);
+    }
+  }
+  if (fs.existsSync('assets/explorer.js')) {
+    const js = fs.readFileSync('assets/explorer.js', 'utf-8');
+    if (!js.includes('curriculum-data.js')) fail('explorer: assets/explorer.js does not import the curriculum data module');
+  }
+  if (fs.existsSync('dist')) {
+    for (const f of ['dist/explorer.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/data/topic-manifest.json']) {
+      if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
   }
 }

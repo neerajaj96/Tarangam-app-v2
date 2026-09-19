@@ -31,6 +31,7 @@ import {
   writeStaticRootFiles,
   injectDashboardSubjectDetails,
   writeStandaloneIndex,
+  copyExplorerPage,
   copyAssetDirs,
 } from './output.js';
 import { buildTopicManifest } from './topic-manifest.js';
@@ -226,6 +227,8 @@ export function buildSite() {
   injectDashboardSubjectDetails(coursesData, CURRICULUM_DOC.dashboardOrder);
 
   writeStandaloneIndex(OUTPUT_DIR);
+
+  copyExplorerPage(OUTPUT_DIR);
 
   copyAssetDirs(OUTPUT_DIR);
 

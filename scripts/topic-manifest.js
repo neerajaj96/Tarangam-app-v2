@@ -28,15 +28,24 @@ function sortedCountMap(obj) {
 // Convert a validated { graph, analysis } pair into a JSON-safe manifest
 // with deterministic ordering (topics sorted by course/module/sequence/id,
 // aggregates keyed alphabetically, no timestamps). Legacy topics keep
-// fallback values (nulls/empties), never invented metadata. Throws when
-// the graph has integrity errors — the build must fail then; warnings
-// stay warnings.
-export function buildTopicManifestFromGraph(graph, analysis) {
+// fallback values (nulls/empties), never invented metadata. Display names
+// come from the curriculum document when provided (falling back to codes).
+// Throws when the graph has integrity errors — the build must fail then;
+// warnings stay warnings.
+export function buildTopicManifestFromGraph(graph, analysis, { curriculumDoc = null } = {}) {
   if (analysis.errors.length) {
     throw new Error(
       `Cannot build topic manifest with ${analysis.errors.length} graph error(s):\n- ${analysis.errors.join('\n- ')}`
     );
   }
+  const namesFor = (courseCode, module) => {
+    const entry = curriculumDoc?.curriculum?.[courseCode];
+    const mod = entry?.modules?.find((m) => m.number === module);
+    return {
+      courseName: entry?.name ?? courseCode,
+      moduleName: mod?.name ?? `Module ${module}`,
+    };
+  };
   const topics = [...graph.nodes.values()]
     .sort((a, b) =>
       a.courseCode.localeCompare(b.courseCode) ||
@@ -47,6 +56,7 @@ export function buildTopicManifestFromGraph(graph, analysis) {
     .map((n) => ({
       id: n.id,
       courseCode: n.courseCode,
+      ...namesFor(n.courseCode, n.module),
       module: n.module,
       sequence: n.sequence,
       title: n.title,
@@ -94,7 +104,7 @@ export function buildTopicManifestFromGraph(graph, analysis) {
 export function buildTopicManifest({ contentDir = 'content', curriculumDoc = null, schema = null } = {}) {
   const graph = buildTopicGraph({ contentDir, curriculumDoc, schema });
   const analysis = analyzeTopicGraph(graph);
-  return buildTopicManifestFromGraph(graph, analysis);
+  return buildTopicManifestFromGraph(graph, analysis, { curriculumDoc });
 }
 
 // Validate a manifest's structure without touching the filesystem.
@@ -110,7 +120,7 @@ export function validateTopicManifest(manifest, { graph = null } = {}) {
   const seen = new Set();
   const keys = new Set();
   for (const t of manifest.topics) {
-    for (const f of ['id', 'courseCode', 'module', 'sequence', 'title', 'filename', 'hasMetadata']) {
+    for (const f of ['id', 'courseCode', 'courseName', 'module', 'moduleName', 'sequence', 'title', 'filename', 'hasMetadata']) {
       if (t[f] === undefined) errors.push(`topic manifest entry is missing required field "${f}" (id: ${t.id || '?'})`);
     }
     const key = `${t.courseCode}/${t.id}`;

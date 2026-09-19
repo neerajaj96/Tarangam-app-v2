@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarangam — Curriculum Explorer</title>
+<meta name="description" content="Browse the Tarangam KTU curriculum by course, module, and topic. Search, filter, and follow prerequisite paths between topics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body[data-theme="dark"] { color-scheme: dark; }
+  .xp-shell { max-width: 1120px; margin: 0 auto; padding: 28px 20px 80px; font-family: var(--font-display); }
+  .xp-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  .xp-top h1 { font-size: 24px; margin: 0; letter-spacing: -0.3px; }
+  .xp-back { margin-left: auto; font-size: 13px; color: var(--accent); text-decoration: none; font-family: var(--font-mono); }
+  .xp-status { font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); margin: 0 0 18px; }
+  .xp-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .xp-controls label { display: flex; flex-direction: column; gap: 6px; font-size: 11px; font-family: var(--font-mono); color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .xp-controls select, .xp-controls input { background: var(--surface); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-md); padding: 10px 12px; font-size: 14px; font-family: var(--font-display); }
+  .xp-main { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .xp-main { grid-template-columns: 1fr; } }
+  .xp-count { font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; }
+  .xp-list { display: flex; flex-direction: column; gap: 8px; }
+  .xp-card { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; text-align: left; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; cursor: pointer; color: var(--ink); font-family: var(--font-display); }
+  .xp-card:hover { border-color: var(--accent); }
+  .xp-card.xp-active { border-color: var(--accent); background: var(--accent-glow); }
+  .xp-card-seq { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); grid-row: span 2; padding-top: 3px; white-space: nowrap; }
+  .xp-card-title { font-weight: 600; font-size: 15px; }
+  .xp-card-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; grid-column: 2; }
+  .xp-legacy { border-style: dashed; color: var(--ink-dim); }
+  .xp-empty { border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 24px; color: var(--ink-dim); font-size: 14px; }
+  .xp-detail { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; position: sticky; top: 16px; }
+  @media (max-width: 900px) { .xp-detail { position: static; } }
+  .xp-detail-seq { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); }
+  .xp-detail-title { margin: 6px 0 10px; font-size: 21px; letter-spacing: -0.2px; }
+  .xp-detail-sec { margin-top: 16px; }
+  .xp-detail-sec h3 { font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-dim); margin: 0 0 8px; }
+  .xp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .xp-rels { display: flex; flex-direction: column; gap: 6px; }
+  .xp-rel { display: flex; align-items: center; gap: 8px; }
+  .xp-rel-btn { flex: 1; text-align: left; background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 13px; cursor: pointer; font-family: var(--font-display); }
+  .xp-rel-btn:hover { border-color: var(--accent); }
+  .xp-rel-tag { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); }
+  .xp-open { color: var(--accent); text-decoration: none; font-size: 14px; }
+  .xp-none { color: var(--ink-faint); font-size: 13px; }
+  .xp-open-page { display: inline-block; margin-top: 18px; color: var(--accent); font-weight: 600; text-decoration: none; }
+  .xp-note { font-size: 12.5px; color: var(--ink-dim); margin: 12px 0 0; }
+  .xp-error { border: 1px solid var(--wrong); background: var(--wrong-bg); border-radius: var(--radius-md); padding: 18px; margin-bottom: 18px; }
+  .xp-error button { margin-top: 10px; background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-sm); padding: 8px 14px; cursor: pointer; }
+  .xp-legend { margin-top: 22px; font-size: 12px; color: var(--ink-dim); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+</style>
+</head>
+<body data-theme="dark" data-size="md">
+<div class="xp-shell">
+  <div class="xp-top">
+    <a href="./index.html" class="brand" style="text-decoration:none;">
+      <span class="brand-mark">त</span>
+      <span class="brand-text"><span class="brand-name">Tarangam</span></span>
+    </a>
+    <h1>Curriculum Explorer</h1>
+    <a class="xp-back" href="./index.html">← Dashboard</a>
+  </div>
+  <p class="xp-status" id="xp-status">Loading curriculum…</p>
+
+  <div class="xp-error" id="xp-error" hidden>
+    <strong>Could not load the curriculum data.</strong>
+    <div id="xp-error-msg" style="margin-top:6px;font-size:13px;"></div>
+    <button id="xp-retry" type="button">Retry</button>
+  </div>
+
+  <div id="xp-app" hidden>
+    <div class="xp-controls">
+      <label>Course
+        <select id="xp-course"></select>
+      </label>
+      <label>Module
+        <select id="xp-module"></select>
+      </label>
+      <label>Search
+        <input id="xp-search" type="search" placeholder="Title, concept, tag, or ID…" autocomplete="off">
+      </label>
+      <label>Difficulty
+        <select id="xp-difficulty"></select>
+      </label>
+      <label>Exam relevance
+        <select id="xp-exam"></select>
+      </label>
+    </div>
+    <div class="xp-main">
+      <section aria-label="Topics">
+        <p class="xp-count" id="xp-count"></p>
+        <div class="xp-list" id="xp-topics"></div>
+      </section>
+      <aside class="xp-detail" id="xp-detail" aria-label="Topic details"></aside>
+    </div>
+    <div class="xp-legend">
+      <span class="badge badge-accent">Metadata</span><span>enriched topic</span>
+      <span class="badge xp-legacy">Legacy</span><span>catalog topic — fully readable, details arrive with migration</span>
+    </div>
+  </div>
+</div>
+<script type="module" src="assets/explorer.js"></script>
+</body>
+</html>
