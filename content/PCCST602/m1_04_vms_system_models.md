@@ -1,3 +1,25 @@
+---
+id: m1_04_vms_system_models
+courseCode: PCCST602
+module: 1
+sequence: 4
+title: 'VMs & System Models: Clusters, Grids, P2P, Clouds'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Gang machines four ways across ownership and trust lines
+  - Contrast cluster secretaries, grid treaties, P2P gossip and metered hotels
+  - Isolate tenants with the VM trick under every model
+concepts:
+  - system models
+  - virtual machines
+  - trust boundaries
+prerequisites: []
+examRelevance: medium
+tags:
+  - distributed-models
+  - virtual-machines
+---
 # VMs & System Models: Clusters, Grids, P2P, Clouds
 
 **The four ways to gang machines — ownership, coupling, and trust — plus the VM trick under all of them.**

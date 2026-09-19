@@ -1,3 +1,27 @@
+---
+id: m2_06_m2_mixed_drill
+courseCode: PCCST602
+module: 2
+sequence: 6
+title: 'M2 Drill: Availability, Scheduling & Survival'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Compute redundancy both ways without complement slips
+  - Fit timelines into gaps while guarding reservations
+  - Fence failed nodes before promoting understudies
+concepts:
+  - operations workout
+  - failure triage
+prerequisites:
+  - m2_01_cluster_objectives_issues
+  - m2_03_ha_fault_checkpoint
+  - m2_04_job_scheduling
+examRelevance: high
+tags:
+  - clusters
+  - m2-drill
+---
 # M2 Drill: Availability, Scheduling & Survival
 
 **Redundancy math, fit-timelines, and failure triage — the operations workout.**

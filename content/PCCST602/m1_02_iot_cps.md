@@ -1,3 +1,25 @@
+---
+id: m1_02_iot_cps
+courseCode: PCCST602
+module: 1
+sequence: 2
+title: IoT & Cyber-Physical Systems
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Separate sensing at scale from closed-loop control with physics
+  - Name the deadlines and safety proofs CPS adds over IoT
+  - Predict which old assumptions device swarms break
+concepts:
+  - Internet of Things
+  - cyber-physical systems
+  - feedback control
+prerequisites: []
+examRelevance: medium
+tags:
+  - iot
+  - cps
+---
 # IoT & Cyber-Physical Systems
 
 **When computers grow sensors and muscles — device swarms, feedback loops with physics, and the scale that breaks old assumptions.**

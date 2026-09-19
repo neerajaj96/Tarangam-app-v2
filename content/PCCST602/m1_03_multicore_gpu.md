@@ -1,3 +1,25 @@
+---
+id: m1_03_multicore_gpu
+courseCode: PCCST602
+module: 1
+sequence: 3
+title: Multicore, Multithreading & GPU Computing
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Separate cores from threads with parallelism ceilings
+  - Cap fixed-size speedups with Amdahl arithmetic
+  - Explain matrix appetites with the SIMT throughput model
+concepts:
+  - multicore parallelism
+  - Amdahl's law
+  - GPU computing
+prerequisites: []
+examRelevance: high
+tags:
+  - parallelism
+  - gpu
+---
 # Multicore, Multithreading & GPU Computing
 
 **One chip, many hands — cores vs threads, parallelism's ceilings, and why graphics cards eat matrices.**

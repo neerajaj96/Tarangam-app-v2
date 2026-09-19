@@ -1,3 +1,27 @@
+---
+id: m1_05_m1_mixed_drill
+courseCode: PCCST602
+module: 1
+sequence: 5
+title: 'M1 Drill: Paradigm Triage & Ceilings'
+difficulty: intermediate
+estimatedMinutes: 2
+learningObjectives:
+  - Deliver speed-versus-throughput verdicts at exam pace
+  - Compute Amdahl ceilings without arithmetic slips
+  - Label housing models from workload symptoms
+concepts:
+  - paradigm triage
+  - ceiling arithmetic
+prerequisites:
+  - m1_01_hpc_htc_paradigms
+  - m1_03_multicore_gpu
+  - m1_04_vms_system_models
+examRelevance: high
+tags:
+  - paradigms
+  - m1-drill
+---
 # M1 Drill: Paradigm Triage & Ceilings
 
 **Speed-vs-throughput verdicts, Amdahl arithmetic, and model labelling at exam pace.**

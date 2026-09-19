@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **242**
-- Pending: **190**
-- Coverage: **56.02%** (tracked by `npm run check`)
+- Migrated: **265**
+- Pending: **167**
+- Coverage: **61.34%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PCCST602 — Module 1 in progress (23 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST601 — Module 1 in progress (29 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST522 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST502 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -29,16 +30,16 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PCCST601 — Compiler Design (started — see step 1)
-   2. PECST522 — Artificial Intelligence (started — see step 1)
-   3. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   4. PCCST503 — Machine Learning (started — see step 1)
-   5. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   6. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   7. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   8. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   9. PCCST501 — Computer Networks (started — see step 1)
-   10. PCCST602 — Advanced Computing Systems
+   1. PCCST602 — Advanced Computing Systems (started — see step 1)
+   2. PCCST601 — Compiler Design (started — see step 1)
+   3. PECST522 — Artificial Intelligence (started — see step 1)
+   4. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   5. PCCST503 — Machine Learning (started — see step 1)
+   6. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   7. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   8. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   9. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   10. PCCST501 — Computer Networks (started — see step 1)
    11. PBCST604 — Fundamentals of Cyber Security
    12. PECST632 — Deep Learning
    13. PECST637 — Fundamentals of Cryptography
@@ -46,6 +47,34 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PCCST602 — Advanced Computing Systems (23/23 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Distributed Models & Enablers | 01 | `m1_01_hpc_htc_paradigms.md` | `m1_01_hpc_htc_paradigms` | migrated |
+| M1 Distributed Models & Enablers | 02 | `m1_02_iot_cps.md` | `m1_02_iot_cps` | migrated |
+| M1 Distributed Models & Enablers | 03 | `m1_03_multicore_gpu.md` | `m1_03_multicore_gpu` | migrated |
+| M1 Distributed Models & Enablers | 04 | `m1_04_vms_system_models.md` | `m1_04_vms_system_models` | migrated |
+| M1 Distributed Models & Enablers | 05 | `m1_05_m1_mixed_drill.md` | `m1_05_m1_mixed_drill` | migrated |
+| M2 Clusters & Job Management | 01 | `m2_01_cluster_objectives_issues.md` | `m2_01_cluster_objectives_issues` | migrated |
+| M2 Clusters & Job Management | 02 | `m2_02_cluster_arch_gpu_ssi.md` | `m2_02_cluster_arch_gpu_ssi` | migrated |
+| M2 Clusters & Job Management | 03 | `m2_03_ha_fault_checkpoint.md` | `m2_03_ha_fault_checkpoint` | migrated |
+| M2 Clusters & Job Management | 04 | `m2_04_job_scheduling.md` | `m2_04_job_scheduling` | migrated |
+| M2 Clusters & Job Management | 05 | `m2_05_job_management_migration.md` | `m2_05_job_management_migration` | migrated |
+| M2 Clusters & Job Management | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | migrated |
+| M3 Virtualization | 01 | `m3_01_virtualization_levels_comparison.md` | `m3_01_virtualization_levels_comparison` | migrated |
+| M3 Virtualization | 02 | `m3_02_vmm_requirements_os_level.md` | `m3_02_vmm_requirements_os_level` | migrated |
+| M3 Virtualization | 03 | `m3_03_structures_cpu_virtualization.md` | `m3_03_structures_cpu_virtualization` | migrated |
+| M3 Virtualization | 04 | `m3_04_memory_io_virtualization.md` | `m3_04_memory_io_virtualization` | migrated |
+| M3 Virtualization | 05 | `m3_05_virtual_clusters_live_migration.md` | `m3_05_virtual_clusters_live_migration` | migrated |
+| M3 Virtualization | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | migrated |
+| M4 Cloud, Microservices & Containers | 01 | `m4_01_cloud_models_cost.md` | `m4_01_cloud_models_cost` | migrated |
+| M4 Cloud, Microservices & Containers | 02 | `m4_02_iaas_paas_saas.md` | `m4_02_iaas_paas_saas` | migrated |
+| M4 Cloud, Microservices & Containers | 03 | `m4_03_microservices_pros_cons.md` | `m4_03_microservices_pros_cons` | migrated |
+| M4 Cloud, Microservices & Containers | 04 | `m4_04_ipc_discovery_gateway.md` | `m4_04_ipc_discovery_gateway` | migrated |
+| M4 Cloud, Microservices & Containers | 05 | `m4_05_containers_docker.md` | `m4_05_containers_docker` | migrated |
+| M4 Cloud, Microservices & Containers | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | migrated |
 
 ## PCCST601 — Compiler Design (29/29 migrated)
 
@@ -350,34 +379,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PCCST602 — Advanced Computing Systems (0/23 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Distributed Models & Enablers | 01 | `m1_01_hpc_htc_paradigms.md` | `m1_01_hpc_htc_paradigms` | pending |
-| M1 Distributed Models & Enablers | 02 | `m1_02_iot_cps.md` | `m1_02_iot_cps` | pending |
-| M1 Distributed Models & Enablers | 03 | `m1_03_multicore_gpu.md` | `m1_03_multicore_gpu` | pending |
-| M1 Distributed Models & Enablers | 04 | `m1_04_vms_system_models.md` | `m1_04_vms_system_models` | pending |
-| M1 Distributed Models & Enablers | 05 | `m1_05_m1_mixed_drill.md` | `m1_05_m1_mixed_drill` | pending |
-| M2 Clusters & Job Management | 01 | `m2_01_cluster_objectives_issues.md` | `m2_01_cluster_objectives_issues` | pending |
-| M2 Clusters & Job Management | 02 | `m2_02_cluster_arch_gpu_ssi.md` | `m2_02_cluster_arch_gpu_ssi` | pending |
-| M2 Clusters & Job Management | 03 | `m2_03_ha_fault_checkpoint.md` | `m2_03_ha_fault_checkpoint` | pending |
-| M2 Clusters & Job Management | 04 | `m2_04_job_scheduling.md` | `m2_04_job_scheduling` | pending |
-| M2 Clusters & Job Management | 05 | `m2_05_job_management_migration.md` | `m2_05_job_management_migration` | pending |
-| M2 Clusters & Job Management | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | pending |
-| M3 Virtualization | 01 | `m3_01_virtualization_levels_comparison.md` | `m3_01_virtualization_levels_comparison` | pending |
-| M3 Virtualization | 02 | `m3_02_vmm_requirements_os_level.md` | `m3_02_vmm_requirements_os_level` | pending |
-| M3 Virtualization | 03 | `m3_03_structures_cpu_virtualization.md` | `m3_03_structures_cpu_virtualization` | pending |
-| M3 Virtualization | 04 | `m3_04_memory_io_virtualization.md` | `m3_04_memory_io_virtualization` | pending |
-| M3 Virtualization | 05 | `m3_05_virtual_clusters_live_migration.md` | `m3_05_virtual_clusters_live_migration` | pending |
-| M3 Virtualization | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | pending |
-| M4 Cloud, Microservices & Containers | 01 | `m4_01_cloud_models_cost.md` | `m4_01_cloud_models_cost` | pending |
-| M4 Cloud, Microservices & Containers | 02 | `m4_02_iaas_paas_saas.md` | `m4_02_iaas_paas_saas` | pending |
-| M4 Cloud, Microservices & Containers | 03 | `m4_03_microservices_pros_cons.md` | `m4_03_microservices_pros_cons` | pending |
-| M4 Cloud, Microservices & Containers | 04 | `m4_04_ipc_discovery_gateway.md` | `m4_04_ipc_discovery_gateway` | pending |
-| M4 Cloud, Microservices & Containers | 05 | `m4_05_containers_docker.md` | `m4_05_containers_docker` | pending |
-| M4 Cloud, Microservices & Containers | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
 
 ## PBCST604 — Fundamentals of Cyber Security (0/26 migrated)
 

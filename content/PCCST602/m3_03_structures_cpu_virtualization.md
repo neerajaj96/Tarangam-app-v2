@@ -1,3 +1,26 @@
+---
+id: m3_03_structures_cpu_virtualization
+courseCode: PCCST602
+module: 3
+sequence: 3
+title: Virtualization Structures & CPU Virtualization
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Seat hypervisors hosted, bare-metal or hybrid with trade-offs
+  - Intercept privileged lies by trap, translate, hypercall or assist
+  - Keep the hot path native for exam justifications
+concepts:
+  - hypervisor structures
+  - CPU virtualization
+  - privileged interception
+prerequisites:
+  - m3_02_vmm_requirements_os_level
+examRelevance: medium
+tags:
+  - virtualization
+  - cpu-virtualization
+---
 # Virtualization Structures & CPU Virtualization
 
 **How VMMs sit (hosted/bare-metal/hybrid) and how privileged lies get intercepted — trap, translate, assist.**

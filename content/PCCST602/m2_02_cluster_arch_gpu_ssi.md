@@ -1,3 +1,27 @@
+---
+id: m2_02_cluster_arch_gpu_ssi
+courseCode: PCCST602
+module: 2
+sequence: 2
+title: 'Cluster Architecture, GPU Clusters & SSI'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Split head scheduling from worker computing across fabric limits
+  - Grade the single-system-image illusion feature by feature
+  - Price GPU device-memory splits on fattened nodes
+concepts:
+  - cluster anatomy
+  - single-system image
+  - GPU clusters
+prerequisites:
+  - m1_03_multicore_gpu
+  - m2_01_cluster_objectives_issues
+examRelevance: medium
+tags:
+  - clusters
+  - architecture
+---
 # Cluster Architecture, GPU Clusters & SSI
 
 **Head/worker anatomy, fattened GPU nodes, and the single-system-image illusion done right.**

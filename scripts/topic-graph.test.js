@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 242 metadata-bearing', () => {
+  it('discovers all 432 topics with 265 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 242);
+    assert.equal(analysis.coverage.metadata, 265);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -181,7 +181,8 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('PCCST502/m2_04_divide_and_conquer_merge_sort_and_strassen -> PCCST502/m1_08_master_theorem_and_cases'), 'internal');
     assert.equal(kinds.get('PECST522/m2_05_a_star_optimal_search -> PECST522/m2_04_greedy_best_first_search'), 'internal');
     assert.equal(kinds.get('PCCST601/m4_03_codegen_control_calls -> PCCST601/m4_02_codegen_boolean_relational'), 'internal');
-    assert.equal(analysis.edgeCount, 286);
+    assert.equal(kinds.get('PCCST602/m3_05_virtual_clusters_live_migration -> PCCST602/m2_01_cluster_objectives_issues'), 'internal');
+    assert.equal(analysis.edgeCount, 313);
   });
 
   it('computes chain depths', () => {
@@ -195,6 +196,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('PCCST502/m2_04_divide_and_conquer_merge_sort_and_strassen').depth, 5);
     assert.equal(built.nodes.get('PECST522/m2_05_a_star_optimal_search').depth, 8);
     assert.equal(built.nodes.get('PCCST601/m2_07_m2_mixed_drill').depth, 5);
+    assert.equal(built.nodes.get('PCCST602/m3_06_m3_mixed_drill').depth, 5);
     assert.equal(analysis.maxDepth, 8);
   });
 
@@ -211,6 +213,7 @@ describe('live repo graph', () => {
       'metadata topic "PCCST501/m4_05_transmission_media_guided_unguided" has no prerequisite relationships',
       'metadata topic "PCCST502/m1_00_module_overview" has no prerequisite relationships',
       'metadata topic "PCCST502/m4_05_randomized_algorithms_las_vegas_monte_carlo" has no prerequisite relationships',
+      'metadata topic "PCCST602/m1_02_iot_cps" has no prerequisite relationships',
     ]);
   });
 

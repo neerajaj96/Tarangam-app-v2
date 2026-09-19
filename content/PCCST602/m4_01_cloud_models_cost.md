@@ -1,3 +1,25 @@
+---
+id: m4_01_cloud_models_cost
+courseCode: PCCST602
+module: 4
+sequence: 1
+title: 'Cloud Models, Objectives & Cost Thinking'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Place workloads private, public or hybrid with tissue-tax honesty
+  - Design against cloud objectives beyond raw renting
+  - Treat idle capacity as a meter-priced bug
+concepts:
+  - cloud deployment models
+  - cloud objectives
+  - metered cost
+prerequisites: []
+examRelevance: medium
+tags:
+  - cloud
+  - deployment-models
+---
 # Cloud Models, Objectives & Cost Thinking
 
 **Private/public/hybrid placement, design objectives, and the meter that reshapes architecture.**

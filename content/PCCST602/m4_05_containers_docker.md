@@ -1,3 +1,27 @@
+---
+id: m4_05_containers_docker
+courseCode: PCCST602
+module: 4
+sequence: 5
+title: 'Containers vs VMs & Docker Deep-Dive'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Place houses and apartments on the density-isolation frontier
+  - Ship blueprints as layered images through the engine
+  - Close with the orchestrated-estate case study verdict
+concepts:
+  - containers versus VMs
+  - Docker images
+  - orchestration
+prerequisites:
+  - m3_01_virtualization_levels_comparison
+  - m3_02_vmm_requirements_os_level
+examRelevance: high
+tags:
+  - cloud
+  - containers
+---
 # Containers vs VMs & Docker Deep-Dive
 
 **Shared kernel vs separate kernels — the density/isolation frontier — then engine, images, and the case-study close.**

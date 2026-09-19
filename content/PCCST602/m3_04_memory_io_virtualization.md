@@ -1,3 +1,26 @@
+---
+id: m3_04_memory_io_virtualization
+courseCode: PCCST602
+module: 3
+sequence: 4
+title: Memory & I/O Virtualization
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Page fictions from shadow tables to extended page tables
+  - Reclaim with ballooning while gambling overcommit honestly
+  - Climb emulate, paravirt and passthrough device models by speed
+concepts:
+  - shadow paging
+  - device models
+  - memory overcommit
+prerequisites:
+  - m3_03_structures_cpu_virtualization
+examRelevance: high
+tags:
+  - virtualization
+  - memory-io
+---
 # Memory & I/O Virtualization
 
 **Two address fictions plus device lies — shadow/EPT paging, device models, and the passthrough escape hatch.**

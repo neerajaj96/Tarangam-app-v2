@@ -1,3 +1,26 @@
+---
+id: m4_02_iaas_paas_saas
+courseCode: PCCST602
+module: 4
+sequence: 2
+title: 'IaaS, PaaS, SaaS: The Service Stack'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Draw layer lines for who manages what up the stack
+  - Trade control against velocity per layer honestly
+  - Outsource the undifferentiated and retain the differentiating
+concepts:
+  - service models
+  - responsibility layers
+  - control-velocity trade
+prerequisites:
+  - m4_01_cloud_models_cost
+examRelevance: high
+tags:
+  - cloud
+  - service-models
+---
 # IaaS, PaaS, SaaS: The Service Stack
 
 **Who manages what — the layered responsibility cake from bare iron to finished apps.**

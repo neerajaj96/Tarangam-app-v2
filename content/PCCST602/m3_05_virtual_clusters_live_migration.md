@@ -1,3 +1,27 @@
+---
+id: m3_05_virtual_clusters_live_migration
+courseCode: PCCST602
+module: 3
+sequence: 5
+title: Virtual Clusters & Live Migration
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Choreograph virtual clusters with overlays and shared services
+  - Move running machines pre-copy, freeze-milliseconds, resume
+  - Switch mirrored storage and re-point networks without drops
+concepts:
+  - virtual clusters
+  - live migration
+  - pre-copy stages
+prerequisites:
+  - m2_01_cluster_objectives_issues
+  - m3_04_memory_io_virtualization
+examRelevance: high
+tags:
+  - virtualization
+  - live-migration
+---
 # Virtual Clusters & Live Migration
 
 **Clusters made of clouds — overlay networks, resource choreography, and moving running machines (memory, files, nets).**

@@ -1,3 +1,25 @@
+---
+id: m4_03_microservices_pros_cons
+courseCode: PCCST602
+module: 4
+sequence: 3
+title: 'Microservices: Pros, Cons & Decomposition'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Carve monoliths by business capability with data per service
+  - Itemise the autonomy bill of distribution honestly
+  - Design failure in with per-hop observability
+concepts:
+  - microservices
+  - bounded decomposition
+  - autonomy costs
+prerequisites: []
+examRelevance: medium
+tags:
+  - cloud
+  - microservices
+---
 # Microservices: Pros, Cons & Decomposition
 
 **Monolith surgery — when to carve, what it costs, and the autonomy bill itemised.**

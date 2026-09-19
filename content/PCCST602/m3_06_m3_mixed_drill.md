@@ -1,3 +1,27 @@
+---
+id: m3_06_m3_mixed_drill
+courseCode: PCCST602
+module: 3
+sequence: 6
+title: 'M3 Drill: Floor Picks & Bargain Arithmetic'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Floor workloads by trust gaps at exam pace
+  - Ledger exits and walks across CPU techniques
+  - Call migration go or no-go on convergence inequalities
+concepts:
+  - floor decisions
+  - convergence arithmetic
+prerequisites:
+  - m3_01_virtualization_levels_comparison
+  - m3_03_structures_cpu_virtualization
+  - m3_05_virtual_clusters_live_migration
+examRelevance: high
+tags:
+  - virtualization
+  - m3-drill
+---
 # M3 Drill: Floor Picks & Bargain Arithmetic
 
 **Trust-gap flooring, exit/walk ledgers, and convergence inequalities — virtualization decisions at pace.**

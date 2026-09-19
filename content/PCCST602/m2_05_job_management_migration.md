@@ -1,3 +1,26 @@
+---
+id: m2_05_job_management_migration
+courseCode: PCCST602
+module: 2
+sequence: 5
+title: 'Job Management: Admin, Types & Migration'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Administer partitions, quality of service and accounts
+  - Sort jobs by placement needs through their lifecycles
+  - Migrate live work freeze-carry-resume with pre-copy
+concepts:
+  - job lifecycle
+  - machine-room administration
+  - job migration
+prerequisites:
+  - m2_04_job_scheduling
+examRelevance: medium
+tags:
+  - clusters
+  - job-management
+---
 # Job Management: Admin, Types & Migration
 
 **Running the machine room — queues/partitions, job lifecycles, and moving live work without dropping it.**

@@ -1,3 +1,25 @@
+---
+id: m1_01_hpc_htc_paradigms
+courseCode: PCCST602
+module: 1
+sequence: 1
+title: 'Internet Computing Age: HPC, HTC & Paradigms'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Separate speed jobs from throughput jobs with HPC and HTC
+  - Climb the centralized to cloud ladder by coupling strength
+  - Price why one computer stopped sufficing
+concepts:
+  - high-performance computing
+  - high-throughput computing
+  - computing paradigms
+prerequisites: []
+examRelevance: medium
+tags:
+  - paradigms
+  - hpc-htc
+---
 # Internet Computing Age: HPC, HTC & Paradigms
 
 **Why one computer stopped sufficing — speed vs throughput, and the centralized→parallel→distributed→cloud ladder.**

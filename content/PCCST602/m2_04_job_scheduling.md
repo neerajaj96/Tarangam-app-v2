@@ -1,3 +1,25 @@
+---
+id: m2_04_job_scheduling
+courseCode: PCCST602
+module: 2
+sequence: 4
+title: Job Scheduling Methods
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Queue with FCFS, backfill gaps, march gangs and ticket fair-shares
+  - Watch slowdown as the metric schedulers actually optimise
+  - Match methods to workload symptoms for exam picks
+concepts:
+  - job scheduling
+  - backfilling
+  - slowdown metric
+prerequisites: []
+examRelevance: high
+tags:
+  - clusters
+  - scheduling
+---
 # Job Scheduling Methods
 
 **Who runs where, when — queues, backfilling, gang, fair-share, and the metrics schedulers actually optimise.**

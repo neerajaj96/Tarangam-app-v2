@@ -1,3 +1,26 @@
+---
+id: m4_04_ipc_discovery_gateway
+courseCode: PCCST602
+module: 4
+sequence: 4
+title: 'IPC, Discovery, Gateway & Registry'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Couple synchronously or decouple eventually across stalls
+  - Find services with registry plus health discipline
+  - Enforce door policy at the gateway edge
+concepts:
+  - inter-service communication
+  - service discovery
+  - API gateway
+prerequisites:
+  - m4_03_microservices_pros_cons
+examRelevance: medium
+tags:
+  - cloud
+  - service-mesh
+---
 # IPC, Discovery, Gateway & Registry
 
 **How stalls talk — sync/async, protocols/formats, finding each other, and the door policy.**

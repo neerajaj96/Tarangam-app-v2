@@ -1,3 +1,26 @@
+---
+id: m2_03_ha_fault_checkpoint
+courseCode: PCCST602
+module: 2
+sequence: 3
+title: 'HA, Fault Tolerance, Checkpoint & Recovery'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Staff high availability with understudies and heartbeats
+  - Vote triple-redundant replicas against single faults
+  - Trade checkpoint cost against redo work without dominoes
+concepts:
+  - high availability
+  - triple modular redundancy
+  - checkpoint recovery
+prerequisites:
+  - m2_01_cluster_objectives_issues
+examRelevance: medium
+tags:
+  - clusters
+  - fault-tolerance
+---
 # HA, Fault Tolerance, Checkpoint & Recovery
 
 **Surviving the inevitable — redundancy shapes, replica discipline, and time-travel via checkpoints.**

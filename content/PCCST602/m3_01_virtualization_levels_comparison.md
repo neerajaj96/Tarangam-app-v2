@@ -1,3 +1,25 @@
+---
+id: m3_01_virtualization_levels_comparison
+courseCode: PCCST602
+module: 3
+sequence: 1
+title: Virtualization Levels & Comparison
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Stack five virtualization floors from ISA to application
+  - Price isolation against overhead on every floor
+  - Let the trust gap pick the floor for exam scenarios
+concepts:
+  - virtualization levels
+  - isolation-overhead bargain
+  - trust gap
+prerequisites: []
+examRelevance: medium
+tags:
+  - virtualization
+  - levels
+---
 # Virtualization Levels & Comparison
 
 **Five floors of fakery — ISA to application — and the isolation-vs-overhead bargain per floor.**

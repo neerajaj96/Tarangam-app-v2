@@ -1,3 +1,26 @@
+---
+id: m3_02_vmm_requirements_os_level
+courseCode: PCCST602
+module: 3
+sequence: 2
+title: VMM Requirements & OS-Level Virtualization
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Enforce trap, fidelity and native-mostly hypervisor discipline
+  - Bridge the x86 gap with translate, paravirt or hardware assist
+  - Isolate with namespaces, cgroups and layered filesystems
+concepts:
+  - Popek-Goldberg requirements
+  - OS-level virtualization
+  - hardware assist
+prerequisites:
+  - m3_01_virtualization_levels_comparison
+examRelevance: high
+tags:
+  - virtualization
+  - hypervisors
+---
 # VMM Requirements & OS-Level Virtualization
 
 **Popek–Goldberg discipline for hypervisors, and the container shortcut (namespaces + cgroups) done properly.**

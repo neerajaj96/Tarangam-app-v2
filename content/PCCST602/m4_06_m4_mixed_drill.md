@@ -1,3 +1,29 @@
+---
+id: m4_06_m4_mixed_drill
+courseCode: PCCST602
+module: 4
+sequence: 6
+title: 'M4 Drill: Tenure, Layers & Housing Decisions'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Bill tenure, stack layers and carve services in one pass
+  - Talk stalls through discovery and gateway verdicts
+  - House workloads with stated sacrifices every time
+concepts:
+  - cloud decisions
+  - housing verdicts
+prerequisites:
+  - m4_01_cloud_models_cost
+  - m4_02_iaas_paas_saas
+  - m4_03_microservices_pros_cons
+  - m4_04_ipc_discovery_gateway
+  - m4_05_containers_docker
+examRelevance: high
+tags:
+  - cloud
+  - m4-drill
+---
 # M4 Drill: Tenure, Layers & Housing Decisions
 
 **Cloud bills, service layers, carving calls, and container verdicts — decision drills at exam pace.**

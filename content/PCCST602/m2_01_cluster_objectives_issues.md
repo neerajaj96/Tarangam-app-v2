@@ -1,3 +1,25 @@
+---
+id: m2_01_cluster_objectives_issues
+courseCode: PCCST602
+module: 2
+sequence: 1
+title: 'Clusters for Massive Parallelism: Goals & Issues'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Justify bolting boxes together with design objectives
+  - Multiply series weakness and complement redundant strength
+  - Scale with ants-not-elephants against the issue list
+concepts:
+  - cluster objectives
+  - availability arithmetic
+  - scalability issues
+prerequisites: []
+examRelevance: high
+tags:
+  - clusters
+  - availability
+---
 # Clusters for Massive Parallelism: Goals & Issues
 
 **Why bolt boxes together — design objectives, availability math, and the issue list that shapes everything after.**
