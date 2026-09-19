@@ -21,6 +21,7 @@ import {
   TOPIC_METADATA_EXAMPLE_PATH,
   loadTopicSchema,
   loadTopicMetadata,
+  parseTopicFrontMatter,
   validateTopicMetadata,
 } from './topic-metadata.js';
 
@@ -314,6 +315,30 @@ if (fs.existsSync('dist')) {
       curriculumDoc,
       label: `topic-metadata: ${TOPIC_METADATA_EXAMPLE_PATH}`,
     })) fail(e);
+  }
+  // Front-matter pilot validation: topics carrying a front-matter block
+  // are validated against the same schema; metadata-less topics remain
+  // valid during the migration phase.
+  if (schemaOk) {
+    for (const course of courses) {
+      const dir = path.join('content', course);
+      for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.md'))) {
+        const raw = fs.readFileSync(path.join(dir, f), 'utf-8');
+        let parsed;
+        try {
+          parsed = parseTopicFrontMatter(raw);
+        } catch (e) {
+          fail(`topic-metadata: ${course}/${f} has malformed front-matter (${(e.cause && e.cause.message) || e.message}) — expected valid YAML matching data/topic-schema.json`);
+          continue;
+        }
+        if (parsed.metadata === null) continue;
+        for (const e of validateTopicMetadata(parsed.metadata, {
+          schema,
+          curriculumDoc,
+          label: `topic-metadata: ${course}/${f}#front-matter`,
+        })) fail(e);
+      }
+    }
   }
 }
 

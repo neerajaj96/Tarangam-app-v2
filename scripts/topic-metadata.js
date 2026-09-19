@@ -5,12 +5,13 @@
  * Zero dependencies; ES module style like the rest of scripts/.
  *
  * Only schema/metadata loading + schema-driven checks (required fields,
- * types, enums, patterns, ranges, array structure, blank values) and
- * curriculum/content cross-checks (courseCode, module, sequence, id)
- * live here. Detailed curriculum/content consistency checks stay in
- * scripts/check.js, which converts loader failures and returned error
- * strings into collected QA failures. Markdown migration, HTML
- * generation, learner state, and UI logic live elsewhere.
+ * types, enums, patterns, ranges, array structure, blank values),
+ * Markdown front-matter parsing, and curriculum/content cross-checks
+ * (courseCode, module, sequence, id) live here. Detailed
+ * curriculum/content consistency checks stay in scripts/check.js, which
+ * converts loader failures and returned error strings into collected QA
+ * failures. Markdown migration, HTML generation, learner state, and UI
+ * logic live elsewhere.
  *
  * Throws a TopicMetadataError (Error with .code and .cause) on load
  * problems so callers can map failures to their own reporting;
@@ -70,6 +71,85 @@ export function loadTopicSchema(schemaPath = TOPIC_SCHEMA_PATH) {
 // validateTopicMetadata, not here.
 export function loadTopicMetadata(metadataPath = TOPIC_METADATA_EXAMPLE_PATH) {
   return loadJsonFile(metadataPath, TOPIC_METADATA_READ_ERROR, TOPIC_METADATA_PARSE_ERROR, 'topic metadata');
+}
+
+// Minimal YAML-subset parser for topic front-matter blocks (dependency-
+// free by design — no JSON-schema/YAML package). Supports exactly the
+// shapes data/topic-schema.json needs: `key: scalar` pairs (integers or
+// plain strings, optional surrounding quotes), `key: []` empty arrays,
+// `key:` followed by `- item` block-list lines, `#` comments, and blank
+// lines. Anything else throws a TopicMetadataError.
+function parseYamlSubset(source) {
+  const result = {};
+  const lines = source.split(/\r?\n/);
+  let listKey = null;
+  const parseScalar = (text) => {
+    const t = text.trim();
+    if (/^-?\d+$/.test(t)) return parseInt(t, 10);
+    const quoted = t.match(/^(['"])(.*)\1$/);
+    return quoted ? quoted[2] : t;
+  };
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line.trim() || line.trim().startsWith('#')) continue;
+    const item = line.match(/^\s*-\s+(.*)$/);
+    if (item) {
+      if (listKey === null) {
+        throw topicMetadataError(
+          TOPIC_METADATA_PARSE_ERROR,
+          `Invalid front-matter YAML at line ${i + 1}: list item without a preceding "key:".`
+        );
+      }
+      result[listKey].push(parseScalar(item[1]));
+      continue;
+    }
+    const pair = line.match(/^([A-Za-z0-9_]+):(?:\s+(.*))?\s*$/);
+    if (!pair) {
+      throw topicMetadataError(
+        TOPIC_METADATA_PARSE_ERROR,
+        `Invalid front-matter YAML at line ${i + 1}: expected "key: value" — actual: ${JSON.stringify(line.trim().slice(0, 60))}.`
+      );
+    }
+    const key = pair[1];
+    if (Object.prototype.hasOwnProperty.call(result, key)) {
+      throw topicMetadataError(
+        TOPIC_METADATA_PARSE_ERROR,
+        `Invalid front-matter YAML at line ${i + 1}: duplicate key "${key}".`
+      );
+    }
+    const value = (pair[2] ?? '').trim();
+    if (value === '') {
+      result[key] = [];
+      listKey = key;
+    } else if (value === '[]') {
+      result[key] = [];
+      listKey = null;
+    } else {
+      result[key] = parseScalar(value);
+      listKey = null;
+    }
+  }
+  return result;
+}
+
+// Split one Markdown topic into front-matter metadata + renderable body.
+// Only a `---` block at the very beginning of the file counts; every
+// other topic passes through with metadata null and body unchanged, so
+// metadata stays optional during the migration phase. Malformed blocks
+// throw a TopicMetadataError (callers fail loudly, like the rest of the
+// pipeline).
+export function parseTopicFrontMatter(markdownText) {
+  const match = markdownText.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  if (!match) {
+    if (markdownText.startsWith('---')) {
+      throw topicMetadataError(
+        TOPIC_METADATA_PARSE_ERROR,
+        'Invalid topic front-matter: file starts with `---` but has no closing `---` delimiter.'
+      );
+    }
+    return { metadata: null, body: markdownText };
+  }
+  return { metadata: parseYamlSubset(match[1]), body: markdownText.slice(match[0].length) };
 }
 
 function typeMatches(value, type) {

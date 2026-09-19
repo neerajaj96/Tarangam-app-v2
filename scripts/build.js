@@ -15,6 +15,7 @@ import {
   buildJumpPills,
 } from './markdown.js';
 import { transformCustomWidgets } from './widgets.js';
+import { parseTopicFrontMatter } from './topic-metadata.js';
 import {
   formatTopicTitle,
   renderTopicDocument,
@@ -59,7 +60,9 @@ const MODULE_NAMES = Object.fromEntries(
 // topic-page HTML assembly live in the shared scripts/pages.js module;
 // dist/ creation/cleaning, generated-file writes, sitemap, dashboard
 // injection, and asset copying live in the shared scripts/output.js
-// module; this file orchestrates data preparation and the build.
+// module; topic front-matter parsing lives in the shared
+// scripts/topic-metadata.js module; this file orchestrates data
+// preparation and the build.
 
 export function buildSite() {
   const templateStr = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
@@ -124,10 +127,15 @@ export function buildSite() {
       const { modNum, pageData: page } = pages[idx];
       const rawMarkdown = readTopicMarkdown(page.source_path);
 
-      const wordCount = rawMarkdown.split(/\s+/).length;
+      // Structured topic metadata (front-matter) is parsed and excluded
+      // from rendering; topics without it pass through unchanged, so
+      // metadata stays optional during the migration phase.
+      const { body: topicMarkdown } = parseTopicFrontMatter(rawMarkdown);
+
+      const wordCount = topicMarkdown.split(/\s+/).length;
       const readTime = Math.max(2, Math.round(wordCount / 180));
 
-      const preprocessedMarkdown = transformCustomWidgets(rawMarkdown);
+      const preprocessedMarkdown = transformCustomWidgets(topicMarkdown);
 
       // Warn on manim refs pointing at missing files (all 8 mp4s currently orphaned).
       for (const m of preprocessedMarkdown.matchAll(/<source src="\.\.\/(.*?)" type="video\/mp4">/g)) {
@@ -140,7 +148,7 @@ export function buildSite() {
       const prevPage = idx > 0 ? pages[idx - 1].pageData : null;
       const nextPage = idx < pages.length - 1 ? pages[idx + 1].pageData : null;
 
-      const jumpBar = buildJumpPills(rawMarkdown);
+      const jumpBar = buildJumpPills(topicMarkdown);
 
       // Topic-page HTML assembly (header + body through the base
       // template) lives in the shared scripts/pages.js module.

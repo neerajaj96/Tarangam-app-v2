@@ -1,3 +1,25 @@
+---
+id: m1_01_random_variables_pmf_cdf
+courseCode: GAMAT301
+module: 1
+sequence: 1
+title: Random Variables, pmf & cdf
+difficulty: beginner
+estimatedMinutes: 12
+learningObjectives:
+  - Define a discrete random variable and its probability mass function (pmf)
+  - Compute cumulative probabilities with the cumulative distribution function (cdf)
+  - Distinguish 'exactly x' (pmf) from 'at most x' (cdf) in exam questions
+concepts:
+  - random variable
+  - probability mass function
+  - cumulative distribution function
+prerequisites: []
+examRelevance: high
+tags:
+  - probability
+  - m1-foundations
+---
 # Random Variables, pmf & cdf
 
 **What a random variable is, how a pmf assigns probabilities, and how the cdf accumulates them — the vocabulary for everything in M1–M2.**
