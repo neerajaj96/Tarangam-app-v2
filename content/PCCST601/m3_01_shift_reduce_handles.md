@@ -1,3 +1,25 @@
+---
+id: m3_01_shift_reduce_handles
+courseCode: PCCST601
+module: 3
+sequence: 1
+title: Shift-Reduce Parsing: Handles & Conflicts
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Drive shift, reduce, accept and error actions in order
+  - Hold the viable-prefix invariant on the parsing stack
+  - Name handles with shift-reduce and reduce-reduce conflicts
+concepts:
+  - shift-reduce parsing
+  - handles
+  - parsing conflicts
+prerequisites: []
+examRelevance: high
+tags:
+  - parsing
+  - bottom-up-parsing
+---
 # Shift-Reduce Parsing: Handles & Conflicts
 
 **Bottom-up in one mechanism — shift, reduce, accept, error — plus what handles and conflicts really mean.**

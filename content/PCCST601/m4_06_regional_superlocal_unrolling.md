@@ -1,3 +1,26 @@
+---
+id: m4_06_regional_superlocal_unrolling
+courseCode: PCCST601
+module: 4
+sequence: 6
+title: 'Regional Optimization: Superlocal VN & Loop Unrolling'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Number down extended-block paths with join intersections
+  - Join laps with unrolling against branch, room and bloat brakes
+  - Brake every regional transform on profitability evidence
+concepts:
+  - superlocal value numbering
+  - loop unrolling
+  - profitability brakes
+prerequisites:
+  - m4_05_local_lvn_balancing
+examRelevance: medium
+tags:
+  - optimization
+  - regional-optimization
+---
 # Regional Optimization: Superlocal VN & Loop Unrolling
 
 **Beyond one block — extended-block numbering and lap-joining for loops, with profitability brakes.**

@@ -1,3 +1,26 @@
+---
+id: m1_04_lex_hands_on
+courseCode: PCCST601
+module: 1
+sequence: 4
+title: 'Hands-On Lex: Rules, Patterns & Actions'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Lay out Lex files across definitions, rules and code drawers
+  - Pair patterns with actions using order-as-priority idioms
+  - Trace examiner patterns with yytext and yylval carriers
+concepts:
+  - Lex specification
+  - pattern-action pairs
+  - scanner idioms
+prerequisites:
+  - m1_03_re_to_scanner_construction
+examRelevance: high
+tags:
+  - lexical-analysis
+  - lex-tool
+---
 # Hands-On Lex: Rules, Patterns & Actions
 
 **Writing a real scanner — file anatomy, pattern-action pairs, and the idioms examiners trace.**

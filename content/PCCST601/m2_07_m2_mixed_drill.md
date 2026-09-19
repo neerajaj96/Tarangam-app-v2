@@ -1,3 +1,27 @@
+---
+id: m2_07_m2_mixed_drill
+courseCode: PCCST601
+module: 2
+sequence: 7
+title: 'M2 Mixed Drill: FIRST to Accept in One Sitting'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Run surgery, sets, cells and traces on one grammar end to end
+  - Stop and repair at conflicts instead of tracing past them
+  - Deliver accept verdicts with the belt checklist
+concepts:
+  - top-down pipeline
+  - conflict repair
+prerequisites:
+  - m2_02_left_recursion_factoring
+  - m2_04_ll1_first_follow_tables
+  - m2_05_ll1_traces_errors
+examRelevance: high
+tags:
+  - parsing
+  - m2-drill
+---
 # M2 Mixed Drill: FIRST to Accept in One Sitting
 
 **Full top-down workout — sets, table, trace, verdict — on one grammar end to end.**

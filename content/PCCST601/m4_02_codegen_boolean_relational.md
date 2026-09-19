@@ -1,3 +1,26 @@
+---
+id: m4_02_codegen_boolean_relational
+courseCode: PCCST601
+module: 4
+sequence: 2
+title: 'Code Shape: Boolean, Relational & Jumps'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Chain short-circuit truth with conditional jumps
+  - Swap exits for negation and compare-then-jump chains
+  - Lay out fall-through paths for branch economy
+concepts:
+  - short-circuit evaluation
+  - comparison chains
+  - fall-through layout
+prerequisites:
+  - m3_08_sdt_expressions_control
+examRelevance: medium
+tags:
+  - code-generation
+  - control-flow
+---
 # Code Shape: Boolean, Relational & Jumps
 
 **Short-circuit truth — branchy booleans, comparison chains, and fall-through layout.**

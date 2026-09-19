@@ -1,3 +1,25 @@
+---
+id: m1_02_regex_fsa_brushup
+courseCode: PCCST601
+module: 1
+sequence: 2
+title: Regular Expressions & FSA Brush-Up for Scanners
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Write word patterns with operators in precedence order
+  - Read every pattern as the automaton it denotes
+  - State the RE, NFA, DFA and minimal-DFA equivalence
+concepts:
+  - regular expressions
+  - finite automata
+  - RE-automata equivalence
+prerequisites: []
+examRelevance: medium
+tags:
+  - lexical-analysis
+  - regular-languages
+---
 # Regular Expressions & FSA Brush-Up for Scanners
 
 **Word patterns as algebra — RE operators, precedence, and the automata they denote (ToC revision, scanner-flavoured).**

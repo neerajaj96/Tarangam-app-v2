@@ -1,3 +1,25 @@
+---
+id: m4_04_optimization_opportunities_scope
+courseCode: PCCST601
+module: 4
+sequence: 4
+title: 'Optimization: Opportunities & Scope'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Permit transforms with safety before budgeting profitability
+  - Site every opportunity before choosing its scope rung
+  - Climb the local, regional and global jurisdiction ladder
+concepts:
+  - safety versus profitability
+  - optimization scope
+  - opportunity siting
+prerequisites: []
+examRelevance: medium
+tags:
+  - optimization
+  - scope-ladder
+---
 # Optimization: Opportunities & Scope
 
 **What "better" means — safety vs profitability, and the local/regional/global jurisdiction map.**

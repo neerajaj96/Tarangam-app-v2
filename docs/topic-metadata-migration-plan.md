@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **213**
-- Pending: **219**
-- Coverage: **49.31%** (tracked by `npm run check`)
+- Migrated: **242**
+- Pending: **190**
+- Coverage: **56.02%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PCCST601 — Module 1 in progress (29 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST522 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST502 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST503 — Module 1 in progress (19 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -28,15 +29,15 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PECST522 — Artificial Intelligence (started — see step 1)
-   2. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   3. PCCST503 — Machine Learning (started — see step 1)
-   4. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   5. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   6. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   7. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   8. PCCST501 — Computer Networks (started — see step 1)
-   9. PCCST601 — Compiler Design
+   1. PCCST601 — Compiler Design (started — see step 1)
+   2. PECST522 — Artificial Intelligence (started — see step 1)
+   3. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   4. PCCST503 — Machine Learning (started — see step 1)
+   5. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   6. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   7. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   8. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   9. PCCST501 — Computer Networks (started — see step 1)
    10. PCCST602 — Advanced Computing Systems
    11. PBCST604 — Fundamentals of Cyber Security
    12. PECST632 — Deep Learning
@@ -45,6 +46,40 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PCCST601 — Compiler Design (29/29 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Front End & Scanners | 01 | `m1_01_compiler_structure_phases.md` | `m1_01_compiler_structure_phases` | migrated |
+| M1 Front End & Scanners | 02 | `m1_02_regex_fsa_brushup.md` | `m1_02_regex_fsa_brushup` | migrated |
+| M1 Front End & Scanners | 03 | `m1_03_re_to_scanner_construction.md` | `m1_03_re_to_scanner_construction` | migrated |
+| M1 Front End & Scanners | 04 | `m1_04_lex_hands_on.md` | `m1_04_lex_hands_on` | migrated |
+| M1 Front End & Scanners | 05 | `m1_05_m1_mixed_drill.md` | `m1_05_m1_mixed_drill` | migrated |
+| M2 Top-Down Parsing | 01 | `m2_01_parsing_grammars_ambiguity.md` | `m2_01_parsing_grammars_ambiguity` | migrated |
+| M2 Top-Down Parsing | 02 | `m2_02_left_recursion_factoring.md` | `m2_02_left_recursion_factoring` | migrated |
+| M2 Top-Down Parsing | 03 | `m2_03_recursive_descent_predictive.md` | `m2_03_recursive_descent_predictive` | migrated |
+| M2 Top-Down Parsing | 04 | `m2_04_ll1_first_follow_tables.md` | `m2_04_ll1_first_follow_tables` | migrated |
+| M2 Top-Down Parsing | 05 | `m2_05_ll1_traces_errors.md` | `m2_05_ll1_traces_errors` | migrated |
+| M2 Top-Down Parsing | 06 | `m2_06_grammar_transform_drill.md` | `m2_06_grammar_transform_drill` | migrated |
+| M2 Top-Down Parsing | 07 | `m2_07_m2_mixed_drill.md` | `m2_07_m2_mixed_drill` | migrated |
+| M3 Bottom-Up Parsing & IR | 01 | `m3_01_shift_reduce_handles.md` | `m3_01_shift_reduce_handles` | migrated |
+| M3 Bottom-Up Parsing & IR | 02 | `m3_02_lr1_algorithm_items.md` | `m3_02_lr1_algorithm_items` | migrated |
+| M3 Bottom-Up Parsing & IR | 03 | `m3_03_lr_tables_lalr_shrinking.md` | `m3_03_lr_tables_lalr_shrinking` | migrated |
+| M3 Bottom-Up Parsing & IR | 04 | `m3_04_yacc_calculator_conflicts.md` | `m3_04_yacc_calculator_conflicts` | migrated |
+| M3 Bottom-Up Parsing & IR | 05 | `m3_05_lr_drill.md` | `m3_05_lr_drill` | migrated |
+| M3 Bottom-Up Parsing & IR | 06 | `m3_06_ir_taxonomy_graphical.md` | `m3_06_ir_taxonomy_graphical` | migrated |
+| M3 Bottom-Up Parsing & IR | 07 | `m3_07_linear_ir_tac.md` | `m3_07_linear_ir_tac` | migrated |
+| M3 Bottom-Up Parsing & IR | 08 | `m3_08_sdt_expressions_control.md` | `m3_08_sdt_expressions_control` | migrated |
+| M3 Bottom-Up Parsing & IR | 09 | `m3_09_m3_mixed_drill.md` | `m3_09_m3_mixed_drill` | migrated |
+| M4 Code Generation & Optimization | 01 | `m4_01_codegen_arithmetic.md` | `m4_01_codegen_arithmetic` | migrated |
+| M4 Code Generation & Optimization | 02 | `m4_02_codegen_boolean_relational.md` | `m4_02_codegen_boolean_relational` | migrated |
+| M4 Code Generation & Optimization | 03 | `m4_03_codegen_control_calls.md` | `m4_03_codegen_control_calls` | migrated |
+| M4 Code Generation & Optimization | 04 | `m4_04_optimization_opportunities_scope.md` | `m4_04_optimization_opportunities_scope` | migrated |
+| M4 Code Generation & Optimization | 05 | `m4_05_local_lvn_balancing.md` | `m4_05_local_lvn_balancing` | migrated |
+| M4 Code Generation & Optimization | 06 | `m4_06_regional_superlocal_unrolling.md` | `m4_06_regional_superlocal_unrolling` | migrated |
+| M4 Code Generation & Optimization | 07 | `m4_07_global_live_placement.md` | `m4_07_global_live_placement` | migrated |
+| M4 Code Generation & Optimization | 08 | `m4_08_m4_mixed_drill.md` | `m4_08_m4_mixed_drill` | migrated |
 
 ## PECST522 — Artificial Intelligence (26/30 migrated)
 
@@ -315,40 +350,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PCCST601 — Compiler Design (0/29 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Front End & Scanners | 01 | `m1_01_compiler_structure_phases.md` | `m1_01_compiler_structure_phases` | pending |
-| M1 Front End & Scanners | 02 | `m1_02_regex_fsa_brushup.md` | `m1_02_regex_fsa_brushup` | pending |
-| M1 Front End & Scanners | 03 | `m1_03_re_to_scanner_construction.md` | `m1_03_re_to_scanner_construction` | pending |
-| M1 Front End & Scanners | 04 | `m1_04_lex_hands_on.md` | `m1_04_lex_hands_on` | pending |
-| M1 Front End & Scanners | 05 | `m1_05_m1_mixed_drill.md` | `m1_05_m1_mixed_drill` | pending |
-| M2 Top-Down Parsing | 01 | `m2_01_parsing_grammars_ambiguity.md` | `m2_01_parsing_grammars_ambiguity` | pending |
-| M2 Top-Down Parsing | 02 | `m2_02_left_recursion_factoring.md` | `m2_02_left_recursion_factoring` | pending |
-| M2 Top-Down Parsing | 03 | `m2_03_recursive_descent_predictive.md` | `m2_03_recursive_descent_predictive` | pending |
-| M2 Top-Down Parsing | 04 | `m2_04_ll1_first_follow_tables.md` | `m2_04_ll1_first_follow_tables` | pending |
-| M2 Top-Down Parsing | 05 | `m2_05_ll1_traces_errors.md` | `m2_05_ll1_traces_errors` | pending |
-| M2 Top-Down Parsing | 06 | `m2_06_grammar_transform_drill.md` | `m2_06_grammar_transform_drill` | pending |
-| M2 Top-Down Parsing | 07 | `m2_07_m2_mixed_drill.md` | `m2_07_m2_mixed_drill` | pending |
-| M3 Bottom-Up Parsing & IR | 01 | `m3_01_shift_reduce_handles.md` | `m3_01_shift_reduce_handles` | pending |
-| M3 Bottom-Up Parsing & IR | 02 | `m3_02_lr1_algorithm_items.md` | `m3_02_lr1_algorithm_items` | pending |
-| M3 Bottom-Up Parsing & IR | 03 | `m3_03_lr_tables_lalr_shrinking.md` | `m3_03_lr_tables_lalr_shrinking` | pending |
-| M3 Bottom-Up Parsing & IR | 04 | `m3_04_yacc_calculator_conflicts.md` | `m3_04_yacc_calculator_conflicts` | pending |
-| M3 Bottom-Up Parsing & IR | 05 | `m3_05_lr_drill.md` | `m3_05_lr_drill` | pending |
-| M3 Bottom-Up Parsing & IR | 06 | `m3_06_ir_taxonomy_graphical.md` | `m3_06_ir_taxonomy_graphical` | pending |
-| M3 Bottom-Up Parsing & IR | 07 | `m3_07_linear_ir_tac.md` | `m3_07_linear_ir_tac` | pending |
-| M3 Bottom-Up Parsing & IR | 08 | `m3_08_sdt_expressions_control.md` | `m3_08_sdt_expressions_control` | pending |
-| M3 Bottom-Up Parsing & IR | 09 | `m3_09_m3_mixed_drill.md` | `m3_09_m3_mixed_drill` | pending |
-| M4 Code Generation & Optimization | 01 | `m4_01_codegen_arithmetic.md` | `m4_01_codegen_arithmetic` | pending |
-| M4 Code Generation & Optimization | 02 | `m4_02_codegen_boolean_relational.md` | `m4_02_codegen_boolean_relational` | pending |
-| M4 Code Generation & Optimization | 03 | `m4_03_codegen_control_calls.md` | `m4_03_codegen_control_calls` | pending |
-| M4 Code Generation & Optimization | 04 | `m4_04_optimization_opportunities_scope.md` | `m4_04_optimization_opportunities_scope` | pending |
-| M4 Code Generation & Optimization | 05 | `m4_05_local_lvn_balancing.md` | `m4_05_local_lvn_balancing` | pending |
-| M4 Code Generation & Optimization | 06 | `m4_06_regional_superlocal_unrolling.md` | `m4_06_regional_superlocal_unrolling` | pending |
-| M4 Code Generation & Optimization | 07 | `m4_07_global_live_placement.md` | `m4_07_global_live_placement` | pending |
-| M4 Code Generation & Optimization | 08 | `m4_08_m4_mixed_drill.md` | `m4_08_m4_mixed_drill` | pending |
 
 ## PCCST602 — Advanced Computing Systems (0/23 migrated)
 

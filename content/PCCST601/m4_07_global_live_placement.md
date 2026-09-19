@@ -1,3 +1,25 @@
+---
+id: m4_07_global_live_placement
+courseCode: PCCST601
+module: 4
+sequence: 7
+title: 'Global Optimization: Live Sets & Code Placement'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Solve liveness equations backward to fixpoint convergence
+  - Alarm uninitialized uses from live-at-entry sets
+  - Place each instruction once where needed across functions
+concepts:
+  - liveness analysis
+  - data-flow fixpoint
+  - code placement
+prerequisites: []
+examRelevance: high
+tags:
+  - optimization
+  - data-flow-analysis
+---
 # Global Optimization: Live Sets & Code Placement
 
 **Whole-function reasoning — liveness equations spotting uninitialized uses, and motion planning for instructions.**

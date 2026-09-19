@@ -1,3 +1,27 @@
+---
+id: m3_08_sdt_expressions_control
+courseCode: PCCST601
+module: 3
+sequence: 8
+title: 'Syntax-Directed Translation: Expressions & Control Flow'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Flow synthesized attributes up and inherited ones down and sideways
+  - Translate expressions with LR-ready S-attributed schemes
+  - Backpatch jumps placeholder-first for control flow later
+concepts:
+  - syntax-directed translation
+  - attribute grammars
+  - backpatching
+prerequisites:
+  - m3_06_ir_taxonomy_graphical
+  - m3_07_linear_ir_tac
+examRelevance: high
+tags:
+  - semantics
+  - sdt
+---
 # Syntax-Directed Translation: Expressions & Control Flow
 
 **Meaning during parsing — synthesized vs inherited attributes, expression SDT, and backpatching control flow.**

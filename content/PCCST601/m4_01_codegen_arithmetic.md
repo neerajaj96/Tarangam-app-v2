@@ -1,3 +1,26 @@
+---
+id: m4_01_codegen_arithmetic
+courseCode: PCCST601
+module: 4
+sequence: 1
+title: 'Code Shape: Arithmetic Operators'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Tile TAC tickets with machine instruction patterns
+  - Number Sethi-Ullman needs with tie-plus-one rules
+  - Order hungry subtrees first against spill overflow
+concepts:
+  - instruction selection
+  - Sethi-Ullman numbering
+  - register spills
+prerequisites:
+  - m3_07_linear_ir_tac
+examRelevance: high
+tags:
+  - code-generation
+  - instruction-selection
+---
 # Code Shape: Arithmetic Operators
 
 **From TAC tickets to machine sips — instruction selection, Sethi-Ullman numbering, and evaluation-order pressure.**

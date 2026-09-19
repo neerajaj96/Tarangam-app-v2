@@ -1,3 +1,26 @@
+---
+id: m3_06_ir_taxonomy_graphical
+courseCode: PCCST601
+module: 3
+sequence: 6
+title: IR Taxonomy & Graphical IRs
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Split the handshake zoo into graphical and linear families
+  - Contrast parse trees, ASTs, DAGs and control-flow graphs
+  - Match each phase to its preferred representation
+concepts:
+  - IR taxonomy
+  - abstract syntax trees
+  - control-flow graphs
+prerequisites:
+  - m1_01_compiler_structure_phases
+examRelevance: medium
+tags:
+  - intermediate-representation
+  - graphical-ir
+---
 # IR Taxonomy & Graphical IRs
 
 **The handshake zoo — why two IR families exist, trees vs DAGs vs graphs, and which phase prefers what.**

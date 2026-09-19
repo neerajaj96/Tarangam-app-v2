@@ -1,3 +1,27 @@
+---
+id: m2_04_ll1_first_follow_tables
+courseCode: PCCST601
+module: 2
+sequence: 4
+title: 'LL(1): FIRST, FOLLOW & Table Construction'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Compute FIRST and FOLLOW sets to fixpoint with nullability
+  - Fill parsing tables with exactly one production per cell
+  - Read two-per-cell conflicts as grammar verdicts
+concepts:
+  - FIRST sets
+  - FOLLOW sets
+  - LL(1) tables
+prerequisites:
+  - m2_02_left_recursion_factoring
+  - m2_03_recursive_descent_predictive
+examRelevance: high
+tags:
+  - parsing
+  - ll-parsing
+---
 # LL(1): FIRST, FOLLOW & Table Construction
 
 **The prediction sets behind table-driven parsing — fixpoint computation, table filling, and conflict reading.**

@@ -1,3 +1,27 @@
+---
+id: m1_05_m1_mixed_drill
+courseCode: PCCST601
+module: 1
+sequence: 5
+title: 'M1 Drill: REs, Automata & Lex Traces'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Write exact patterns against poster specifications
+  - Sketch constructions from fragments to tables
+  - Deliver tokenisation verdicts with longest, then earliest
+concepts:
+  - pattern writing
+  - construction sketches
+prerequisites:
+  - m1_02_regex_fsa_brushup
+  - m1_03_re_to_scanner_construction
+  - m1_04_lex_hands_on
+examRelevance: high
+tags:
+  - lexical-analysis
+  - m1-drill
+---
 # M1 Drill: REs, Automata & Lex Traces
 
 **Pattern-writing, construction sketches, and tokenisation verdicts — the module's exam shapes in one sitting.**

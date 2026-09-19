@@ -1,3 +1,27 @@
+---
+id: m3_09_m3_mixed_drill
+courseCode: PCCST601
+module: 3
+sequence: 9
+title: 'M3 Drill: LR + IR + SDT in One Sitting'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Carry one expression from handles through trees to tickets
+  - Patch control flow after translating expressions exactly
+  - Check handoffs between the three worlds without drops
+concepts:
+  - LR-to-IR handoff
+  - translation pipeline
+prerequisites:
+  - m3_02_lr1_algorithm_items
+  - m3_07_linear_ir_tac
+  - m3_08_sdt_expressions_control
+examRelevance: high
+tags:
+  - parsing
+  - m3-drill
+---
 # M3 Drill: LR + IR + SDT in One Sitting
 
 **Handles to tickets — the module's three worlds connected by one expression's journey.**

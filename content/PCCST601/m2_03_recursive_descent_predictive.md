@@ -1,3 +1,26 @@
+---
+id: m2_03_recursive_descent_predictive
+courseCode: PCCST601
+module: 2
+sequence: 3
+title: Recursive Descent & Backtrack-Free Parsing
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Write one predictive procedure per nonterminal with tail loops
+  - Decide with lookahead instead of guessing with backtracking
+  - State the disjoint-FIRST freedom guarantee precisely
+concepts:
+  - recursive descent
+  - predictive parsing
+  - backtrack freedom
+prerequisites:
+  - m2_02_left_recursion_factoring
+examRelevance: medium
+tags:
+  - parsing
+  - top-down-parsing
+---
 # Recursive Descent & Backtrack-Free Parsing
 
 **Predictive procedures per nonterminal — when peeking decides, when guessing backtracks, and what guarantees freedom.**

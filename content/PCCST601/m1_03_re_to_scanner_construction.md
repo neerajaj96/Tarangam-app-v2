@@ -1,3 +1,26 @@
+---
+id: m1_03_re_to_scanner_construction
+courseCode: PCCST601
+module: 1
+sequence: 3
+title: 'From RE to Scanner: Construction & Implementation'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Build epsilon-fragments with Thompson construction
+  - Determinize with subset construction on state sets
+  - Scan table-driven with longest-match, earliest-rule discipline
+concepts:
+  - Thompson construction
+  - subset construction
+  - longest-match rule
+prerequisites:
+  - m1_02_regex_fsa_brushup
+examRelevance: high
+tags:
+  - lexical-analysis
+  - scanner-construction
+---
 # From RE to Scanner: Construction & Implementation
 
 **Thompson → subset → minimise → table-drive — the pipeline turning posters into a bouncer, plus longest-match discipline.**

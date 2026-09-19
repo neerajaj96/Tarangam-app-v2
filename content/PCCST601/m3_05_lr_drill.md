@@ -1,3 +1,26 @@
+---
+id: m3_05_lr_drill
+courseCode: PCCST601
+module: 3
+sequence: 5
+title: 'LR Drill: Tables, Traces & Conflict Verdicts'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Inventory states with ACTION and GOTO reads
+  - Trace stacks through swing, unhook and park moves
+  - Triage conflicts to red-light verdicts without guessing
+concepts:
+  - LR traces
+  - conflict triage
+prerequisites:
+  - m3_02_lr1_algorithm_items
+  - m3_03_lr_tables_lalr_shrinking
+examRelevance: medium
+tags:
+  - parsing
+  - m3-drill
+---
 # LR Drill: Tables, Traces & Conflict Verdicts
 
 **State inventories, ACTION/GOTO reads, stack traces, and conflict triage — bottom-up workout.**

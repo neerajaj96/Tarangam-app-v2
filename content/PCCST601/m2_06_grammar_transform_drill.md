@@ -1,3 +1,25 @@
+---
+id: m2_06_grammar_transform_drill
+courseCode: PCCST601
+module: 2
+sequence: 6
+title: 'Grammar Transformations Drill: All Variations'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Clear direct and indirect recursion with earlier-first substitution
+  - Hoist maximal common prefixes through nested factoring
+  - Verify both transform properties on combined pipelines
+concepts:
+  - recursion elimination
+  - maximal factoring
+prerequisites:
+  - m2_02_left_recursion_factoring
+examRelevance: medium
+tags:
+  - parsing
+  - grammar-transforms
+---
 # Grammar Transformations Drill: All Variations
 
 **Left recursion (direct + indirect), factoring (nested + maximal), and combined pipelines — pure workout.**

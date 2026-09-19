@@ -1,3 +1,26 @@
+---
+id: m3_04_yacc_calculator_conflicts
+courseCode: PCCST601
+module: 3
+sequence: 4
+title: 'YACC Hands-On: Calculator & Table Errors'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Lay out grammar files across declarations, rules and code
+  - Thread stack values through actions with precedence directives
+  - Confess table errors through the y.output report
+concepts:
+  - YACC specification
+  - precedence directives
+  - conflict reports
+prerequisites:
+  - m3_03_lr_tables_lalr_shrinking
+examRelevance: high
+tags:
+  - parsing
+  - yacc-tool
+---
 # YACC Hands-On: Calculator & Table Errors
 
 **From grammar file to running calculator — declarations, rules with actions, precedence directives, and conflict reports.**

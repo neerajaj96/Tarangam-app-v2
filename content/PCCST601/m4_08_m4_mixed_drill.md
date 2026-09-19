@@ -1,3 +1,28 @@
+---
+id: m4_08_m4_mixed_drill
+courseCode: PCCST601
+module: 4
+sequence: 8
+title: 'M4 Drill: Shapes & Optimizations End to End'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Thread tickets through numbering, shapes and placements
+  - Audit every transform with permit, site and scope verdicts
+  - Lay out code after selecting and ordering exactly
+concepts:
+  - end-to-end pipeline
+  - transform audits
+prerequisites:
+  - m4_01_codegen_arithmetic
+  - m4_04_optimization_opportunities_scope
+  - m4_05_local_lvn_balancing
+  - m4_07_global_live_placement
+examRelevance: high
+tags:
+  - code-generation
+  - m4-drill
+---
 # M4 Drill: Shapes & Optimizations End to End
 
 **Tickets to placements — number, thread, lay out, then permit-site-scope every transform.**

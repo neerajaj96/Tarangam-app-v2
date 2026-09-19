@@ -1,3 +1,25 @@
+---
+id: m1_01_compiler_structure_phases
+courseCode: PCCST601
+module: 1
+sequence: 1
+title: 'Compiler Structure: Front End, Optimizer, Back End'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Name every phase with its input-output contract
+  - Explain why IR sits between analysis and synthesis
+  - Price N front ends times M back ends at N plus M
+concepts:
+  - compiler phases
+  - intermediate representation
+  - phase contracts
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - compiler-structure
+---
 # Compiler Structure: Front End, Optimizer, Back End
 
 **What a compiler is made of — analysis up front, improvement in the middle, synthesis at the back, all shaking hands over IR.**

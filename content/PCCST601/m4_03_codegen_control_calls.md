@@ -1,3 +1,27 @@
+---
+id: m4_03_codegen_control_calls
+courseCode: PCCST601
+module: 4
+sequence: 3
+title: 'Code Shape: Control Flow & Procedure Calls'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Plumb fork and merge labels for ifs, loops and cases
+  - Build jump tables for dense case dispatch
+  - Run the args, call, frame and return protocol exactly
+concepts:
+  - label plumbing
+  - jump tables
+  - calling conventions
+prerequisites:
+  - m3_08_sdt_expressions_control
+  - m4_02_codegen_boolean_relational
+examRelevance: high
+tags:
+  - code-generation
+  - procedure-calls
+---
 # Code Shape: Control Flow & Procedure Calls
 
 **Ifs, loops, cases, and calls — label plumbing, loop anatomy, jump tables, and calling conventions.**

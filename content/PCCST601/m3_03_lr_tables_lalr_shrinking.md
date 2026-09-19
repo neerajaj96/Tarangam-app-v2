@@ -1,3 +1,26 @@
+---
+id: m3_03_lr_tables_lalr_shrinking
+courseCode: PCCST601
+module: 3
+sequence: 3
+title: Building & Shrinking LR Tables
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Grow the canonical collection with goto-closure steps
+  - Merge cores into LALR at SLR size with open eyes
+  - Read conflicts and ghost FOLLOW issues as verdicts
+concepts:
+  - canonical collection
+  - LALR merging
+  - SLR trade-offs
+prerequisites:
+  - m3_02_lr1_algorithm_items
+examRelevance: high
+tags:
+  - parsing
+  - lr-parsing
+---
 # Building & Shrinking LR Tables
 
 **Canonical collection via goto-closure, LALR merging, and table errors — size vs power bargains.**

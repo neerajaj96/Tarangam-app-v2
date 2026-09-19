@@ -1,3 +1,26 @@
+---
+id: m2_05_ll1_traces_errors
+courseCode: PCCST601
+module: 2
+sequence: 5
+title: 'LL(1) Parsing Traces & Error Handling'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Run stack-input-action traces to accept or error verdicts
+  - Match terminals and expand nonterminals from table cells
+  - Recover with panic mode on synchronizing tokens
+concepts:
+  - parse traces
+  - table errors
+  - panic-mode recovery
+prerequisites:
+  - m2_04_ll1_first_follow_tables
+examRelevance: high
+tags:
+  - parsing
+  - ll-parsing
+---
 # LL(1) Parsing Traces & Error Handling
 
 **Running the table: stack–input–action traces, accept vs error, and panic-mode recovery.**

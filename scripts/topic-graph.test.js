@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 213 metadata-bearing', () => {
+  it('discovers all 432 topics with 242 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 213);
+    assert.equal(analysis.coverage.metadata, 242);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -180,7 +180,8 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('PCCST503/m4_05_boosting_adaboost -> PCCST503/m4_04_ensemble_bagging_random_forests'), 'internal');
     assert.equal(kinds.get('PCCST502/m2_04_divide_and_conquer_merge_sort_and_strassen -> PCCST502/m1_08_master_theorem_and_cases'), 'internal');
     assert.equal(kinds.get('PECST522/m2_05_a_star_optimal_search -> PECST522/m2_04_greedy_best_first_search'), 'internal');
-    assert.equal(analysis.edgeCount, 251);
+    assert.equal(kinds.get('PCCST601/m4_03_codegen_control_calls -> PCCST601/m4_02_codegen_boolean_relational'), 'internal');
+    assert.equal(analysis.edgeCount, 286);
   });
 
   it('computes chain depths', () => {
@@ -193,6 +194,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('PCCST503/m3_02_multilayer_networks_backpropagation').depth, 4);
     assert.equal(built.nodes.get('PCCST502/m2_04_divide_and_conquer_merge_sort_and_strassen').depth, 5);
     assert.equal(built.nodes.get('PECST522/m2_05_a_star_optimal_search').depth, 8);
+    assert.equal(built.nodes.get('PCCST601/m2_07_m2_mixed_drill').depth, 5);
     assert.equal(analysis.maxDepth, 8);
   });
 

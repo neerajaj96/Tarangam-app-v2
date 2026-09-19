@@ -1,3 +1,24 @@
+---
+id: m4_05_local_lvn_balancing
+courseCode: PCCST601
+module: 4
+sequence: 5
+title: 'Local Optimization: LVN & Tree-Height Balancing'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Stamp value numbers and reuse on hits inside one block
+  - Kill numbers exactly on redefinition without mercy
+  - Rehang expression trees for height with associativity power
+concepts:
+  - local value numbering
+  - tree-height balancing
+prerequisites: []
+examRelevance: medium
+tags:
+  - optimization
+  - local-optimization
+---
 # Local Optimization: LVN & Tree-Height Balancing
 
 **One block, two tricks — numbering values to kill repeats, and reshaping expression trees for parallelism.**

@@ -1,3 +1,26 @@
+---
+id: m2_02_left_recursion_factoring
+courseCode: PCCST601
+module: 2
+sequence: 2
+title: Left Recursion & Left Factoring
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Eliminate direct and indirect left recursion in order
+  - Factor common prefixes to delay decisions honestly
+  - Explain why loops choke top-down predictors
+concepts:
+  - left recursion
+  - left factoring
+  - grammar surgery
+prerequisites:
+  - m2_01_parsing_grammars_ambiguity
+examRelevance: high
+tags:
+  - parsing
+  - grammar-transforms
+---
 # Left Recursion & Left Factoring
 
 **Two grammar surgeries for top-down parsing — why loops choke predictors and how common prefixes delay decisions.**

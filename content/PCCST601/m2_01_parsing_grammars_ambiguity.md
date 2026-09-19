@@ -1,3 +1,25 @@
+---
+id: m2_01_parsing_grammars_ambiguity
+courseCode: PCCST601
+module: 2
+sequence: 1
+title: 'Parsing Intro: Grammars, Derivations & Ambiguity'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read grammars as contracts with productions and start symbols
+  - Grow parse trees from leftmost and rightmost derivations
+  - Kill ambiguity with precedence layering for one-tree programs
+concepts:
+  - context-free grammars
+  - derivations
+  - ambiguity
+prerequisites: []
+examRelevance: medium
+tags:
+  - parsing
+  - grammars
+---
 # Parsing Intro: Grammars, Derivations & Ambiguity
 
 **Syntax as contract — productions, leftmost/rightmost derivations, parse trees, and why ambiguity must die.**

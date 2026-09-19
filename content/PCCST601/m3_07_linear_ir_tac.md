@@ -1,3 +1,26 @@
+---
+id: m3_07_linear_ir_tac
+courseCode: PCCST601
+module: 3
+sequence: 7
+title: 'Linear IRs: Stack Code, TAC & Representation'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Run nameless postfix machines against addressed TAC
+  - Store linear code as quadruples, triples or SSA names
+  - Count the one-operation, three-address contract exactly
+concepts:
+  - three-address code
+  - quadruples
+  - static single assignment
+prerequisites:
+  - m3_06_ir_taxonomy_graphical
+examRelevance: medium
+tags:
+  - intermediate-representation
+  - linear-ir
+---
 # Linear IRs: Stack Code, TAC & Representation
 
 **Flat instruction streams — postfix machines, quadruples, and how linear code is actually stored.**

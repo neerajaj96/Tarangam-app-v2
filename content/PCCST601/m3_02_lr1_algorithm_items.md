@@ -1,3 +1,26 @@
+---
+id: m3_02_lr1_algorithm_items
+courseCode: PCCST601
+module: 3
+sequence: 2
+title: 'LR(1) Parsing Algorithm & Items'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Carry lookaheads inside LR items through closures and gotos
+  - Build ACTION and GOTO tables from the canonical collection
+  - Drive terminals through ACTION and nonterminals through GOTO
+concepts:
+  - LR items
+  - closure and goto
+  - ACTION-GOTO tables
+prerequisites:
+  - m3_01_shift_reduce_handles
+examRelevance: high
+tags:
+  - parsing
+  - lr-parsing
+---
 # LR(1) Parsing Algorithm & Items
 
 **Canonical LR power — lookahead-carrying items, closures, gotos, and the ACTION/GOTO tables.**
