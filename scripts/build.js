@@ -2,47 +2,17 @@ import fs from 'fs';
 import path from 'path';
 import { marked } from 'marked';
 import { SCENES } from './scenes.js';
+import { CURRICULUM_PATH, loadCurriculum } from './curriculum.js';
 
 const CONTENT_DIR = 'content';
 const OUTPUT_DIR = 'dist';
 const TEMPLATE_PATH = path.join('templates', 'base.html');
 
-const CURRICULUM_PATH = path.join('data', 'curriculum.json');
-
 // Single source of truth: all curriculum metadata (course names, module
-// names, dashboard ordering) comes from data/curriculum.json. Topic counts
-// and topic lists always come from content/ — never from the JSON.
-function loadCurriculum() {
-  let raw;
-  try {
-    raw = fs.readFileSync(CURRICULUM_PATH, 'utf-8');
-  } catch (err) {
-    throw new Error(
-      `Cannot load curriculum metadata from ${CURRICULUM_PATH}: ${err.message}. ` +
-      `The build requires data/curriculum.json as its single source of truth; ` +
-      `there is no hardcoded fallback.`
-    );
-  }
-  let parsed;
-  try {
-    parsed = JSON.parse(raw);
-  } catch (err) {
-    throw new Error(
-      `Cannot parse ${CURRICULUM_PATH}: ${err.message}. ` +
-      `Fix the JSON — the build has no hardcoded fallback.`
-    );
-  }
-  if (!parsed || typeof parsed !== 'object' ||
-      !parsed.curriculum || typeof parsed.curriculum !== 'object' ||
-      !Array.isArray(parsed.dashboardOrder)) {
-    throw new Error(
-      `${CURRICULUM_PATH} must contain a top-level "curriculum" object and a ` +
-      `"dashboardOrder" array. Fix the JSON — the build has no hardcoded fallback.`
-    );
-  }
-  return parsed;
-}
-
+// names, dashboard ordering) comes from data/curriculum.json, loaded via
+// the shared scripts/curriculum.js loader (fails loudly when the file is
+// missing, malformed, or structurally invalid). Topic counts and topic
+// lists always come from content/ — never from the JSON.
 const CURRICULUM_DOC = loadCurriculum();
 
 // Derived view over the canonical document (same shape the build

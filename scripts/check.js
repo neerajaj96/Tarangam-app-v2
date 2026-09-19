@@ -9,6 +9,13 @@ import path from 'path';
 import os from 'os';
 import { execFileSync } from 'child_process';
 import { SCENE_IDS } from './scenes.js';
+import {
+  CURRICULUM_PATH,
+  loadCurriculum,
+  CURRICULUM_READ_ERROR,
+  CURRICULUM_PARSE_ERROR,
+  CURRICULUM_SHAPE_ERROR,
+} from './curriculum.js';
 
 const errors = [];
 const warnings = [];
@@ -16,30 +23,24 @@ const fail = (m) => errors.push(m);
 const warn = (m) => warnings.push(m);
 
 // 0. Curriculum/content consistency against data/curriculum.json
-// (canonical source — no hardcoded fallback). Every failure names the
-// course code, the affected file/directory, and expected vs actual.
-const CURRICULUM_PATH = path.join('data', 'curriculum.json');
+// (canonical source — no hardcoded fallback), loaded via the shared
+// scripts/curriculum.js loader. Loader failures are collected as QA
+// failures through the mechanism below, never thrown. Every failure names
+// the course code, the affected file/directory, and expected vs actual.
 let curriculumDoc = null;
-{
-  let raw = null;
-  try {
-    raw = fs.readFileSync(CURRICULUM_PATH, 'utf-8');
-  } catch (err) {
-    fail(`curriculum: cannot read ${CURRICULUM_PATH} (${err.message}) — expected the canonical curriculum file to exist`);
-  }
-  if (raw !== null) {
-    try {
-      curriculumDoc = JSON.parse(raw);
-    } catch (err) {
-      fail(`curriculum: cannot parse ${CURRICULUM_PATH} (${err.message}) — expected valid JSON`);
-    }
-  }
-  if (curriculumDoc !== null && (typeof curriculumDoc !== 'object' ||
-      !curriculumDoc.curriculum || typeof curriculumDoc.curriculum !== 'object' ||
-      !Array.isArray(curriculumDoc.dashboardOrder))) {
+try {
+  curriculumDoc = loadCurriculum();
+} catch (err) {
+  if (err && err.code === CURRICULUM_READ_ERROR) {
+    fail(`curriculum: cannot read ${CURRICULUM_PATH} (${err.cause && err.cause.message}) — expected the canonical curriculum file to exist`);
+  } else if (err && err.code === CURRICULUM_PARSE_ERROR) {
+    fail(`curriculum: cannot parse ${CURRICULUM_PATH} (${err.cause && err.cause.message}) — expected valid JSON`);
+  } else if (err && err.code === CURRICULUM_SHAPE_ERROR) {
     fail(`curriculum: ${CURRICULUM_PATH} must contain a top-level "curriculum" object and a "dashboardOrder" array — actual: missing or wrong type`);
-    curriculumDoc = null;
+  } else {
+    fail(`curriculum: unexpected error loading ${CURRICULUM_PATH} (${err && err.message})`);
   }
+  curriculumDoc = null;
 }
 
 if (curriculumDoc !== null) {
