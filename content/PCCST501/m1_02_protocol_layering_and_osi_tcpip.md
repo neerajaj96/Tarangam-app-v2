@@ -1,3 +1,32 @@
+---
+id: m1_02_protocol_layering_and_osi_tcpip
+courseCode: PCCST501
+module: 1
+sequence: 2
+title: Protocol Layering & OSI/TCP-IP Models
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Explain what a network protocol defines and why layering gives modularity
+  - Name the 7 OSI layers and the role of each layer
+  - Map the 5 TCP/IP layers to OSI layers and name each layer's PDU
+  - Trace encapsulation and decapsulation of a message across the stack
+concepts:
+  - protocol
+  - layered architecture
+  - OSI model
+  - TCP/IP model
+  - protocol data unit
+  - encapsulation
+  - decapsulation
+prerequisites:
+  - m1_01_internet_overview_and_network_edge
+examRelevance: high
+tags:
+  - osi-model
+  - tcp-ip
+  - encapsulation
+---
 # Protocol Layering & OSI/TCP-IP Models
 
 **Protocols, the rationale for layered architecture, the 7-layer OSI model, the 5-layer TCP/IP model, and encapsulation/decapsulation.**
