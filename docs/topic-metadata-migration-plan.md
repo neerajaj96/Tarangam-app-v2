@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **265**
-- Pending: **167**
-- Coverage: **61.34%** (tracked by `npm run check`)
+- Migrated: **291**
+- Pending: **141**
+- Coverage: **67.36%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PBCST604 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST602 — Module 1 in progress (23 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST601 — Module 1 in progress (29 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST522 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -30,23 +31,54 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PCCST602 — Advanced Computing Systems (started — see step 1)
-   2. PCCST601 — Compiler Design (started — see step 1)
-   3. PECST522 — Artificial Intelligence (started — see step 1)
-   4. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   5. PCCST503 — Machine Learning (started — see step 1)
-   6. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   7. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   8. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   9. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   10. PCCST501 — Computer Networks (started — see step 1)
-   11. PBCST604 — Fundamentals of Cyber Security
+   1. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
+   2. PCCST602 — Advanced Computing Systems (started — see step 1)
+   3. PCCST601 — Compiler Design (started — see step 1)
+   4. PECST522 — Artificial Intelligence (started — see step 1)
+   5. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   6. PCCST503 — Machine Learning (started — see step 1)
+   7. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   8. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   9. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   10. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   11. PCCST501 — Computer Networks (started — see step 1)
    12. PECST632 — Deep Learning
    13. PECST637 — Fundamentals of Cryptography
    14. PECST631 — Software Testing
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PBCST604 — Fundamentals of Cyber Security (26/26 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 InfoSec, Recon & VAPT | 01 | `m1_01_infosec_threats_risk.md` | `m1_01_infosec_threats_risk` | migrated |
+| M1 InfoSec, Recon & VAPT | 02 | `m1_02_reconnaissance_gathering.md` | `m1_02_reconnaissance_gathering` | migrated |
+| M1 InfoSec, Recon & VAPT | 03 | `m1_03_buffer_stack_overflow.md` | `m1_03_buffer_stack_overflow` | migrated |
+| M1 InfoSec, Recon & VAPT | 04 | `m1_04_format_string_vuln_drill.md` | `m1_04_format_string_vuln_drill` | migrated |
+| M1 InfoSec, Recon & VAPT | 05 | `m1_05_vapt_burp_metasploit.md` | `m1_05_vapt_burp_metasploit` | migrated |
+| M1 InfoSec, Recon & VAPT | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | migrated |
+| M2 Web & DNS Security | 01 | `m2_01_sql_injection.md` | `m2_01_sql_injection` | migrated |
+| M2 Web & DNS Security | 02 | `m2_02_xss_types_fixes.md` | `m2_02_xss_types_fixes` | migrated |
+| M2 Web & DNS Security | 03 | `m2_03_csrf_defenses.md` | `m2_03_csrf_defenses` | migrated |
+| M2 Web & DNS Security | 04 | `m2_04_dns_security_dnssec.md` | `m2_04_dns_security_dnssec` | migrated |
+| M2 Web & DNS Security | 05 | `m2_05_zap_webgoat_dvwa_mirror.md` | `m2_05_zap_webgoat_dvwa_mirror` | migrated |
+| M2 Web & DNS Security | 06 | `m2_06_email_security.md` | `m2_06_email_security` | migrated |
+| M2 Web & DNS Security | 07 | `m2_07_m2_mixed_drill.md` | `m2_07_m2_mixed_drill` | migrated |
+| M3 Network Security | 01 | `m3_01_netsec_terms_devices.md` | `m3_01_netsec_terms_devices` | migrated |
+| M3 Network Security | 02 | `m3_02_dos_ddos.md` | `m3_02_dos_ddos` | migrated |
+| M3 Network Security | 03 | `m3_03_arp_spoofing_hijacking.md` | `m3_03_arp_spoofing_hijacking` | migrated |
+| M3 Network Security | 04 | `m3_04_traffic_capture_tricks.md` | `m3_04_traffic_capture_tricks` | migrated |
+| M3 Network Security | 05 | `m3_05_port_scanning_nmap.md` | `m3_05_port_scanning_nmap` | migrated |
+| M3 Network Security | 06 | `m3_06_wireshark_analysis.md` | `m3_06_wireshark_analysis` | migrated |
+| M3 Network Security | 07 | `m3_07_m3_attack_chain_drill.md` | `m3_07_m3_attack_chain_drill` | migrated |
+| M4 System Security & Projects | 01 | `m4_01_windows_attacks_hardening.md` | `m4_01_windows_attacks_hardening` | migrated |
+| M4 System Security & Projects | 02 | `m4_02_windows_safe_defender.md` | `m4_02_windows_safe_defender` | migrated |
+| M4 System Security & Projects | 03 | `m4_03_linux_attacks_physical_config.md` | `m4_03_linux_attacks_physical_config` | migrated |
+| M4 System Security & Projects | 04 | `m4_04_linux_auth_selinux.md` | `m4_04_linux_auth_selinux` | migrated |
+| M4 System Security & Projects | 05 | `m4_05_pbl_project_guide.md` | `m4_05_pbl_project_guide` | migrated |
+| M4 System Security & Projects | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | migrated |
 
 ## PCCST602 — Advanced Computing Systems (23/23 migrated)
 
@@ -379,37 +411,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PBCST604 — Fundamentals of Cyber Security (0/26 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 InfoSec, Recon & VAPT | 01 | `m1_01_infosec_threats_risk.md` | `m1_01_infosec_threats_risk` | pending |
-| M1 InfoSec, Recon & VAPT | 02 | `m1_02_reconnaissance_gathering.md` | `m1_02_reconnaissance_gathering` | pending |
-| M1 InfoSec, Recon & VAPT | 03 | `m1_03_buffer_stack_overflow.md` | `m1_03_buffer_stack_overflow` | pending |
-| M1 InfoSec, Recon & VAPT | 04 | `m1_04_format_string_vuln_drill.md` | `m1_04_format_string_vuln_drill` | pending |
-| M1 InfoSec, Recon & VAPT | 05 | `m1_05_vapt_burp_metasploit.md` | `m1_05_vapt_burp_metasploit` | pending |
-| M1 InfoSec, Recon & VAPT | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | pending |
-| M2 Web & DNS Security | 01 | `m2_01_sql_injection.md` | `m2_01_sql_injection` | pending |
-| M2 Web & DNS Security | 02 | `m2_02_xss_types_fixes.md` | `m2_02_xss_types_fixes` | pending |
-| M2 Web & DNS Security | 03 | `m2_03_csrf_defenses.md` | `m2_03_csrf_defenses` | pending |
-| M2 Web & DNS Security | 04 | `m2_04_dns_security_dnssec.md` | `m2_04_dns_security_dnssec` | pending |
-| M2 Web & DNS Security | 05 | `m2_05_zap_webgoat_dvwa_mirror.md` | `m2_05_zap_webgoat_dvwa_mirror` | pending |
-| M2 Web & DNS Security | 06 | `m2_06_email_security.md` | `m2_06_email_security` | pending |
-| M2 Web & DNS Security | 07 | `m2_07_m2_mixed_drill.md` | `m2_07_m2_mixed_drill` | pending |
-| M3 Network Security | 01 | `m3_01_netsec_terms_devices.md` | `m3_01_netsec_terms_devices` | pending |
-| M3 Network Security | 02 | `m3_02_dos_ddos.md` | `m3_02_dos_ddos` | pending |
-| M3 Network Security | 03 | `m3_03_arp_spoofing_hijacking.md` | `m3_03_arp_spoofing_hijacking` | pending |
-| M3 Network Security | 04 | `m3_04_traffic_capture_tricks.md` | `m3_04_traffic_capture_tricks` | pending |
-| M3 Network Security | 05 | `m3_05_port_scanning_nmap.md` | `m3_05_port_scanning_nmap` | pending |
-| M3 Network Security | 06 | `m3_06_wireshark_analysis.md` | `m3_06_wireshark_analysis` | pending |
-| M3 Network Security | 07 | `m3_07_m3_attack_chain_drill.md` | `m3_07_m3_attack_chain_drill` | pending |
-| M4 System Security & Projects | 01 | `m4_01_windows_attacks_hardening.md` | `m4_01_windows_attacks_hardening` | pending |
-| M4 System Security & Projects | 02 | `m4_02_windows_safe_defender.md` | `m4_02_windows_safe_defender` | pending |
-| M4 System Security & Projects | 03 | `m4_03_linux_attacks_physical_config.md` | `m4_03_linux_attacks_physical_config` | pending |
-| M4 System Security & Projects | 04 | `m4_04_linux_auth_selinux.md` | `m4_04_linux_auth_selinux` | pending |
-| M4 System Security & Projects | 05 | `m4_05_pbl_project_guide.md` | `m4_05_pbl_project_guide` | pending |
-| M4 System Security & Projects | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
 
 ## PECST632 — Deep Learning (0/25 migrated)
 

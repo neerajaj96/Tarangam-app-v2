@@ -1,3 +1,29 @@
+---
+id: m3_07_m3_attack_chain_drill
+courseCode: PBCST604
+module: 3
+sequence: 7
+title: 'M3 Drill: Full Network Attack Chain (Lab)'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Chain knock, position, listen, prove and chart in order
+  - Lock every link the chain crossed
+  - Run one consented lab network end to end safely
+concepts:
+  - attack chains
+  - chain stations
+prerequisites:
+  - m3_02_dos_ddos
+  - m3_03_arp_spoofing_hijacking
+  - m3_04_traffic_capture_tricks
+  - m3_05_port_scanning_nmap
+  - m3_06_wireshark_analysis
+examRelevance: high
+tags:
+  - network-security
+  - m3-drill
+---
 # M3 Drill: Full Network Attack Chain (Lab)
 
 **One consented lab network, end to end — scan, spoof, capture, hijack, flood-shape, defend.**

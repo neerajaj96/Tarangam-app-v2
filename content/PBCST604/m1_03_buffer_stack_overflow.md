@@ -1,3 +1,25 @@
+---
+id: m1_03_buffer_stack_overflow
+courseCode: PBCST604
+module: 1
+sequence: 3
+title: Buffer & Stack Overflows
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Spill buffers through saved frames into return addresses
+  - Shape pad, return, sled and shell payloads in order
+  - Stack checks, canaries, ASLR and NX against smashing
+concepts:
+  - stack smashing
+  - exploit payloads
+  - overflow mitigations
+prerequisites: []
+examRelevance: high
+tags:
+  - vulnerabilities
+  - buffer-overflow
+---
 # Buffer & Stack Overflows
 
 **Writing past the end — stack anatomy, smashing the return address, and the mitigations that bite back.**

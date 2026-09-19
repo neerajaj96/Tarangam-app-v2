@@ -1,3 +1,26 @@
+---
+id: m3_02_dos_ddos
+courseCode: PBCST604
+module: 3
+sequence: 2
+title: 'DoS & DDoS: Exhaustion Economics'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Flood volumetric, protocol and application layers by the numbers
+  - Price amplification as answer-over-query ratios
+  - Defend by absorb, scrub and disperse mapping
+concepts:
+  - denial of service
+  - botnets
+  - flood defenses
+prerequisites:
+  - m3_01_netsec_terms_devices
+examRelevance: high
+tags:
+  - network-security
+  - dos-ddos
+---
 # DoS & DDoS: Exhaustion Economics
 
 **Killing availability by the numbers — volumetric/protocol/app-layer floods, botnets, and absorb/scrub/disperse defenses.**

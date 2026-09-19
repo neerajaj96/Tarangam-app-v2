@@ -1,3 +1,25 @@
+---
+id: m2_03_csrf_defenses
+courseCode: PBCST604
+module: 2
+sequence: 3
+title: 'CSRF: Riding Sessions & Defenses'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Forge state-changing requests wearing victim cookies
+  - Separate riding from stealing for exam precision
+  - Shield with unreadable tokens, SameSite and write-method rules
+concepts:
+  - cross-site request forgery
+  - synchronizer tokens
+  - SameSite cookies
+prerequisites: []
+examRelevance: medium
+tags:
+  - web-security
+  - csrf
+---
 # CSRF: Riding Sessions & Defenses
 
 **Forged requests wearing your cookies — state-changing GETs, token synchronisation, and SameSite shields.**

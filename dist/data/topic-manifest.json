@@ -3093,16 +3093,23 @@
       "moduleName": "InfoSec, Recon & VAPT",
       "module": 1,
       "sequence": 1,
-      "title": "1.1 Infosec Threats Risk",
+      "title": "InfoSec Intro: Threats & Risk Analysis",
       "filename": "m1_01_infosec_threats_risk.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "CIA triad",
+        "risk analysis",
+        "annualized loss expectancy"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "infosec",
+        "risk-analysis"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m1_02_reconnaissance_gathering",
@@ -3111,16 +3118,23 @@
       "moduleName": "InfoSec, Recon & VAPT",
       "module": 1,
       "sequence": 2,
-      "title": "1.2 Reconnaissance Gathering",
+      "title": "Reconnaissance & Information Gathering",
       "filename": "m1_02_reconnaissance_gathering.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "passive reconnaissance",
+        "active reconnaissance",
+        "engagement scoping"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "reconnaissance",
+        "osint"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m1_03_buffer_stack_overflow",
@@ -3129,16 +3143,23 @@
       "moduleName": "InfoSec, Recon & VAPT",
       "module": 1,
       "sequence": 3,
-      "title": "1.3 Buffer Stack Overflow",
+      "title": "Buffer & Stack Overflows",
       "filename": "m1_03_buffer_stack_overflow.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "stack smashing",
+        "exploit payloads",
+        "overflow mitigations"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "vulnerabilities",
+        "buffer-overflow"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m1_04_format_string_vuln_drill",
@@ -3147,16 +3168,24 @@
       "moduleName": "InfoSec, Recon & VAPT",
       "module": 1,
       "sequence": 4,
-      "title": "1.4 Format String Vuln Drill",
+      "title": "Format Strings & Vuln-Class Drill",
       "filename": "m1_04_format_string_vuln_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "format-string primitives",
+        "vulnerability classes"
+      ],
+      "prerequisites": [
+        "m1_03_buffer_stack_overflow"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "vulnerabilities",
+        "format-strings"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m1_05_vapt_burp_metasploit",
@@ -3165,16 +3194,26 @@
       "moduleName": "InfoSec, Recon & VAPT",
       "module": 1,
       "sequence": 5,
-      "title": "1.5 VAPT Burp Metasploit",
+      "title": "VAPT: Burp Suite & Metasploit",
       "filename": "m1_05_vapt_burp_metasploit.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "Burp Suite proxy",
+        "Metasploit framework",
+        "retest verification"
+      ],
+      "prerequisites": [
+        "m1_02_reconnaissance_gathering",
+        "m1_03_buffer_stack_overflow"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "vapt",
+        "penetration-testing"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m1_06_m1_mixed_drill",
@@ -3183,16 +3222,28 @@
       "moduleName": "InfoSec, Recon & VAPT",
       "module": 1,
       "sequence": 6,
-      "title": "1.6 M1 Mixed Drill",
+      "title": "M1 Drill: Threat-to-Shell in One Sitting",
       "filename": "m1_06_m1_mixed_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "offensive arc",
+        "threat-to-shell chain"
+      ],
+      "prerequisites": [
+        "m1_01_infosec_threats_risk",
+        "m1_02_reconnaissance_gathering",
+        "m1_03_buffer_stack_overflow",
+        "m1_04_format_string_vuln_drill",
+        "m1_05_vapt_burp_metasploit"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "vapt",
+        "m1-drill"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m2_01_sql_injection",
@@ -3201,16 +3252,23 @@
       "moduleName": "Web & DNS Security",
       "module": 2,
       "sequence": 1,
-      "title": "2.1 SQL Injection",
+      "title": "SQL Injection: Queries Gone Rogue",
       "filename": "m2_01_sql_injection.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "SQL injection",
+        "blind inference",
+        "parameterized queries"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "web-security",
+        "sql-injection"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_02_xss_types_fixes",
@@ -3219,16 +3277,23 @@
       "moduleName": "Web & DNS Security",
       "module": 2,
       "sequence": 2,
-      "title": "2.2 XSS Types Fixes",
+      "title": "XSS: Stored, Reflected & DOM",
       "filename": "m2_02_xss_types_fixes.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "cross-site scripting",
+        "output encoding",
+        "content security policy"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "web-security",
+        "xss"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_03_csrf_defenses",
@@ -3237,16 +3302,23 @@
       "moduleName": "Web & DNS Security",
       "module": 2,
       "sequence": 3,
-      "title": "2.3 CSRF Defenses",
+      "title": "CSRF: Riding Sessions & Defenses",
       "filename": "m2_03_csrf_defenses.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "cross-site request forgery",
+        "synchronizer tokens",
+        "SameSite cookies"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "web-security",
+        "csrf"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_04_dns_security_dnssec",
@@ -3255,16 +3327,23 @@
       "moduleName": "Web & DNS Security",
       "module": 2,
       "sequence": 4,
-      "title": "2.4 DNS Security DNSSEC",
+      "title": "DNS Security: Issues, Attacks & DNSSEC",
       "filename": "m2_04_dns_security_dnssec.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "DNS spoofing",
+        "cache poisoning",
+        "DNSSEC"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "web-security",
+        "dns-security"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_05_zap_webgoat_dvwa_mirror",
@@ -3273,16 +3352,26 @@
       "moduleName": "Web & DNS Security",
       "module": 2,
       "sequence": 5,
-      "title": "2.5 ZAP Webgoat DVWA Mirror",
+      "title": "ZAP, WebGoat, DVWA, Mirroring & HTTrack",
       "filename": "m2_05_zap_webgoat_dvwa_mirror.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "OWASP ZAP",
+        "vulnerable applications",
+        "offline mirroring"
+      ],
+      "prerequisites": [
+        "m2_01_sql_injection",
+        "m2_02_xss_types_fixes"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "web-security",
+        "security-tools"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m2_06_email_security",
@@ -3291,16 +3380,23 @@
       "moduleName": "Web & DNS Security",
       "module": 2,
       "sequence": 6,
-      "title": "2.6 Email Security",
+      "title": "Email Security: Risks, Protocols & Safe Use",
       "filename": "m2_06_email_security.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "email spoofing",
+        "sender authentication",
+        "phishing defense"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "web-security",
+        "email-security"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_07_m2_mixed_drill",
@@ -3309,16 +3405,28 @@
       "moduleName": "Web & DNS Security",
       "module": 2,
       "sequence": 7,
-      "title": "2.7 M2 Mixed Drill",
+      "title": "M2 Drill: Web Attack Triage at Pace",
       "filename": "m2_07_m2_mixed_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "attack triage",
+        "layered defense"
+      ],
+      "prerequisites": [
+        "m2_01_sql_injection",
+        "m2_02_xss_types_fixes",
+        "m2_03_csrf_defenses",
+        "m2_04_dns_security_dnssec",
+        "m2_06_email_security"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "web-security",
+        "m2-drill"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m3_01_netsec_terms_devices",
@@ -3327,16 +3435,23 @@
       "moduleName": "Network Security",
       "module": 3,
       "sequence": 1,
-      "title": "3.1 Netsec Terms Devices",
+      "title": "Network Security Terms & Threat Map",
       "filename": "m3_01_netsec_terms_devices.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "threat vocabulary",
+        "intrusion detection",
+        "network zones"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "network-security",
+        "foundations"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m3_02_dos_ddos",
@@ -3345,16 +3460,25 @@
       "moduleName": "Network Security",
       "module": 3,
       "sequence": 2,
-      "title": "3.2 DOS DDOS",
+      "title": "DoS & DDoS: Exhaustion Economics",
       "filename": "m3_02_dos_ddos.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "denial of service",
+        "botnets",
+        "flood defenses"
+      ],
+      "prerequisites": [
+        "m3_01_netsec_terms_devices"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "network-security",
+        "dos-ddos"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m3_03_arp_spoofing_hijacking",
@@ -3363,16 +3487,25 @@
       "moduleName": "Network Security",
       "module": 3,
       "sequence": 3,
-      "title": "3.3 ARP Spoofing Hijacking",
+      "title": "ARP Spoofing & Session Hijacking",
       "filename": "m3_03_arp_spoofing_hijacking.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "ARP poisoning",
+        "session hijacking",
+        "dynamic ARP inspection"
+      ],
+      "prerequisites": [
+        "m3_01_netsec_terms_devices"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "network-security",
+        "spoofing"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m3_04_traffic_capture_tricks",
@@ -3381,16 +3514,25 @@
       "moduleName": "Network Security",
       "module": 3,
       "sequence": 4,
-      "title": "3.4 Traffic Capture Tricks",
+      "title": "Capturing Traffic: Sniffing Tricks & Redirection",
       "filename": "m3_04_traffic_capture_tricks.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "packet sniffing",
+        "traffic redirection",
+        "defensive locks"
+      ],
+      "prerequisites": [
+        "m3_01_netsec_terms_devices"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "network-security",
+        "sniffing"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m3_05_port_scanning_nmap",
@@ -3399,16 +3541,23 @@
       "moduleName": "Network Security",
       "module": 3,
       "sequence": 5,
-      "title": "3.5 Port Scanning NMAP",
+      "title": "Port Scanning: TCP/UDP Techniques & Nmap",
       "filename": "m3_05_port_scanning_nmap.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "port scanning",
+        "Nmap grammar",
+        "scan interpretation"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "network-security",
+        "nmap"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m3_06_wireshark_analysis",
@@ -3417,16 +3566,23 @@
       "moduleName": "Network Security",
       "module": 3,
       "sequence": 6,
-      "title": "3.6 Wireshark Analysis",
+      "title": "Wireshark: Capture, Display Filters & Analysis",
       "filename": "m3_06_wireshark_analysis.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "packet capture",
+        "display filters",
+        "stream analysis"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "network-security",
+        "wireshark"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m3_07_m3_attack_chain_drill",
@@ -3435,16 +3591,28 @@
       "moduleName": "Network Security",
       "module": 3,
       "sequence": 7,
-      "title": "3.7 M3 Attack Chain Drill",
+      "title": "M3 Drill: Full Network Attack Chain (Lab)",
       "filename": "m3_07_m3_attack_chain_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "attack chains",
+        "chain stations"
+      ],
+      "prerequisites": [
+        "m3_02_dos_ddos",
+        "m3_03_arp_spoofing_hijacking",
+        "m3_04_traffic_capture_tricks",
+        "m3_05_port_scanning_nmap",
+        "m3_06_wireshark_analysis"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "network-security",
+        "m3-drill"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m4_01_windows_attacks_hardening",
@@ -3453,16 +3621,23 @@
       "moduleName": "System Security & Projects",
       "module": 4,
       "sequence": 1,
-      "title": "4.1 Windows Attacks Hardening",
+      "title": "Windows Attacks & Hardening",
       "filename": "m4_01_windows_attacks_hardening.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "Windows attack paths",
+        "hardening ladder",
+        "patch rings"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "system-security",
+        "windows-hardening"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m4_02_windows_safe_defender",
@@ -3471,16 +3646,25 @@
       "moduleName": "System Security & Projects",
       "module": 4,
       "sequence": 2,
-      "title": "4.2 Windows Safe Defender",
+      "title": "Operating Windows Safely & Defender Firewall",
       "filename": "m4_02_windows_safe_defender.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "operational hygiene",
+        "Defender firewall",
+        "deny-by-default"
+      ],
+      "prerequisites": [
+        "m4_01_windows_attacks_hardening"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "system-security",
+        "windows-defender"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m4_03_linux_attacks_physical_config",
@@ -3489,16 +3673,23 @@
       "moduleName": "System Security & Projects",
       "module": 4,
       "sequence": 3,
-      "title": "4.3 Linux Attacks Physical Config",
+      "title": "Linux Attacks, Physical & Config Security",
       "filename": "m4_03_linux_attacks_physical_config.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "Linux privilege paths",
+        "physical security",
+        "configuration management"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "system-security",
+        "linux-hardening"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m4_04_linux_auth_selinux",
@@ -3507,16 +3698,25 @@
       "moduleName": "System Security & Projects",
       "module": 4,
       "sequence": 4,
-      "title": "4.4 Linux Auth Selinux",
+      "title": "Linux Auth, Patches & SELinux",
       "filename": "m4_04_linux_auth_selinux.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "Linux authentication",
+        "patch doctrine",
+        "SELinux confinement"
+      ],
+      "prerequisites": [
+        "m4_03_linux_attacks_physical_config"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "system-security",
+        "selinux"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m4_05_pbl_project_guide",
@@ -3525,16 +3725,27 @@
       "moduleName": "System Security & Projects",
       "module": 4,
       "sequence": 5,
-      "title": "4.5 PBL Project Guide",
+      "title": "PBL Project Guide: 4 Builds, End to End",
       "filename": "m4_05_pbl_project_guide.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 4,
+      "concepts": [
+        "PBL builds",
+        "evaluation rubric",
+        "project ethics"
+      ],
+      "prerequisites": [
+        "m1_05_vapt_burp_metasploit",
+        "m2_05_zap_webgoat_dvwa_mirror",
+        "m3_06_wireshark_analysis"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "system-security",
+        "pbl-project"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m4_06_m4_mixed_drill",
@@ -3543,16 +3754,27 @@
       "moduleName": "System Security & Projects",
       "module": 4,
       "sequence": 6,
-      "title": "4.6 M4 Mixed Drill",
+      "title": "M4 Drill: Harden Both, Prove It, Present It",
       "filename": "m4_06_m4_mixed_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "lockdown race",
+        "verification commands"
+      ],
+      "prerequisites": [
+        "m4_01_windows_attacks_hardening",
+        "m4_02_windows_safe_defender",
+        "m4_03_linux_attacks_physical_config",
+        "m4_04_linux_auth_selinux"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "system-security",
+        "m4-drill"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m1_01_data_structures_adt_abstraction",
@@ -10124,7 +10346,7 @@
   ],
   "aggregates": {
     "totalTopics": 432,
-    "metadataTopics": 265,
+    "metadataTopics": 291,
     "byCourse": {
       "GAMAT301": {
         "total": 24,
@@ -10148,7 +10370,7 @@
       },
       "PBCST604": {
         "total": 26,
-        "metadata": 0
+        "metadata": 26
       },
       "PCCST303": {
         "total": 27,
@@ -10274,19 +10496,19 @@
       },
       "PBCST604:M1": {
         "total": 6,
-        "metadata": 0
+        "metadata": 6
       },
       "PBCST604:M2": {
         "total": 7,
-        "metadata": 0
+        "metadata": 7
       },
       "PBCST604:M3": {
         "total": 7,
-        "metadata": 0
+        "metadata": 7
       },
       "PBCST604:M4": {
         "total": 6,
-        "metadata": 0
+        "metadata": 6
       },
       "PCCST303:M1": {
         "total": 7,
@@ -10450,14 +10672,14 @@
       }
     },
     "byDifficulty": {
-      "beginner": 237,
-      "intermediate": 28
+      "beginner": 259,
+      "intermediate": 32
     },
     "byExamRelevance": {
-      "high": 149,
-      "medium": 116
+      "high": 165,
+      "medium": 126
     },
-    "prerequisiteEdges": 313,
+    "prerequisiteEdges": 345,
     "maxDepth": 8
   }
 }

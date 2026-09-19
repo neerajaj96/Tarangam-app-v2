@@ -1,3 +1,25 @@
+---
+id: m1_01_infosec_threats_risk
+courseCode: PBCST604
+module: 1
+sequence: 1
+title: 'InfoSec Intro: Threats & Risk Analysis'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Guard confidentiality, integrity and availability against actors
+  - Price risk as likelihood times impact with ALE arithmetic
+  - Treat findings by avoid, mitigate, transfer or accept
+concepts:
+  - CIA triad
+  - risk analysis
+  - annualized loss expectancy
+prerequisites: []
+examRelevance: high
+tags:
+  - infosec
+  - risk-analysis
+---
 # InfoSec Intro: Threats & Risk Analysis
 
 **What we protect, from whom, and how much protection is worth — CIA, threat actors, and risk math.**

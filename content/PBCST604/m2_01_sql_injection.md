@@ -1,3 +1,25 @@
+---
+id: m2_01_sql_injection
+courseCode: PBCST604
+module: 2
+sequence: 1
+title: 'SQL Injection: Queries Gone Rogue'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Break queries with tautologies, unions and blind oracles
+  - Binary-search blind extractions through true-false oracles
+  - Quarantine structure from ink with parameterization
+concepts:
+  - SQL injection
+  - blind inference
+  - parameterized queries
+prerequisites: []
+examRelevance: high
+tags:
+  - web-security
+  - sql-injection
+---
 # SQL Injection: Queries Gone Rogue
 
 **Untrusted ink inside SQL — tautologies, unions, blind inference, and the parameterized cure.**

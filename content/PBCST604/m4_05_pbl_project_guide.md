@@ -1,3 +1,28 @@
+---
+id: m4_05_pbl_project_guide
+courseCode: PBCST604
+module: 4
+sequence: 5
+title: 'PBL Project Guide: 4 Builds, End to End'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Map four builds onto modules with rubric-targeted milestones
+  - Open with ethics and scope on the very first page
+  - Close every finding with retest deltas for defense day
+concepts:
+  - PBL builds
+  - evaluation rubric
+  - project ethics
+prerequisites:
+  - m1_05_vapt_burp_metasploit
+  - m2_05_zap_webgoat_dvwa_mirror
+  - m3_06_wireshark_analysis
+examRelevance: high
+tags:
+  - system-security
+  - pbl-project
+---
 # PBL Project Guide: 4 Builds, End to End
 
 **The 30-mark project third of CIE — Wireshark, ZAP, Burp, Metasploit builds with milestones that map to the evaluation rubric.**

@@ -1,3 +1,25 @@
+---
+id: m4_01_windows_attacks_hardening
+courseCode: PBCST604
+module: 4
+sequence: 1
+title: Windows Attacks & Hardening
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Trace malware, phishing and privilege-escalation paths in
+  - Climb vetted installs through least privilege to tested backups
+  - Ring patches with guards switched on
+concepts:
+  - Windows attack paths
+  - hardening ladder
+  - patch rings
+prerequisites: []
+examRelevance: high
+tags:
+  - system-security
+  - windows-hardening
+---
 # Windows Attacks & Hardening
 
 **How Windows boxes fall — malware/phishing/privesc vectors — and the install-to-patch hardening ladder.**

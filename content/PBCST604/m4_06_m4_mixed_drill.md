@@ -1,3 +1,28 @@
+---
+id: m4_06_m4_mixed_drill
+courseCode: PBCST604
+module: 4
+sequence: 6
+title: 'M4 Drill: Harden Both, Prove It, Present It'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Race Windows and Linux lockdowns in parallel checklists
+  - Verify every lock with commands that prove state
+  - Present threat, proof and residual on defense arcs
+concepts:
+  - lockdown race
+  - verification commands
+prerequisites:
+  - m4_01_windows_attacks_hardening
+  - m4_02_windows_safe_defender
+  - m4_03_linux_attacks_physical_config
+  - m4_04_linux_auth_selinux
+examRelevance: high
+tags:
+  - system-security
+  - m4-drill
+---
 # M4 Drill: Harden Both, Prove It, Present It
 
 **Windows + Linux lockdown race, verification commands, and the defense-day arc — closing drill.**

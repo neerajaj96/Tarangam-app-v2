@@ -1,3 +1,25 @@
+---
+id: m1_02_reconnaissance_gathering
+courseCode: PBCST604
+module: 1
+sequence: 2
+title: Reconnaissance & Information Gathering
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Case targets with passive footprints before active touches
+  - Chain sources into entities with the toolkit
+  - Scope every engagement in writing first
+concepts:
+  - passive reconnaissance
+  - active reconnaissance
+  - engagement scoping
+prerequisites: []
+examRelevance: medium
+tags:
+  - reconnaissance
+  - osint
+---
 # Reconnaissance & Information Gathering
 
 **Casing the target legally-grey-first — passive footprints, active touches, and the Reco-ng toolkit.**

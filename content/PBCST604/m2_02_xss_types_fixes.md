@@ -1,3 +1,25 @@
+---
+id: m2_02_xss_types_fixes
+courseCode: PBCST604
+module: 2
+sequence: 2
+title: 'XSS: Stored, Reflected & DOM'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Deliver scripts through stored, reflected and DOM flavours
+  - Steal sessions through smuggled trust exactly once
+  - Encode per context with HttpOnly blunts and CSP moats
+concepts:
+  - cross-site scripting
+  - output encoding
+  - content security policy
+prerequisites: []
+examRelevance: high
+tags:
+  - web-security
+  - xss
+---
 # XSS: Stored, Reflected & DOM
 
 **Scripts smuggled through trust — three delivery flavours, session theft, and output-encoding discipline.**

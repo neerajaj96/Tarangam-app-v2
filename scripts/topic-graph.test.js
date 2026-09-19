@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 265 metadata-bearing', () => {
+  it('discovers all 432 topics with 291 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 265);
+    assert.equal(analysis.coverage.metadata, 291);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -182,7 +182,8 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('PECST522/m2_05_a_star_optimal_search -> PECST522/m2_04_greedy_best_first_search'), 'internal');
     assert.equal(kinds.get('PCCST601/m4_03_codegen_control_calls -> PCCST601/m4_02_codegen_boolean_relational'), 'internal');
     assert.equal(kinds.get('PCCST602/m3_05_virtual_clusters_live_migration -> PCCST602/m2_01_cluster_objectives_issues'), 'internal');
-    assert.equal(analysis.edgeCount, 313);
+    assert.equal(kinds.get('PBCST604/m4_05_pbl_project_guide -> PBCST604/m1_05_vapt_burp_metasploit'), 'internal');
+    assert.equal(analysis.edgeCount, 345);
   });
 
   it('computes chain depths', () => {
@@ -197,6 +198,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('PECST522/m2_05_a_star_optimal_search').depth, 8);
     assert.equal(built.nodes.get('PCCST601/m2_07_m2_mixed_drill').depth, 5);
     assert.equal(built.nodes.get('PCCST602/m3_06_m3_mixed_drill').depth, 5);
+    assert.equal(built.nodes.get('PBCST604/m1_06_m1_mixed_drill').depth, 2);
     assert.equal(analysis.maxDepth, 8);
   });
 

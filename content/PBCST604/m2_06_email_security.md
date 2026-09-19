@@ -1,3 +1,25 @@
+---
+id: m2_06_email_security
+courseCode: PBCST604
+module: 2
+sequence: 6
+title: 'Email Security: Risks, Protocols & Safe Use'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Spot spoofed stamps and malicious payloads on phishing turf
+  - Align and enforce sender identity with the SPF, DKIM and DMARC trio
+  - Raise human firewalls alongside protocol fixes
+concepts:
+  - email spoofing
+  - sender authentication
+  - phishing defense
+prerequisites: []
+examRelevance: medium
+tags:
+  - web-security
+  - email-security
+---
 # Email Security: Risks, Protocols & Safe Use
 
 **Phishing's home turf — spoofing, malicious payloads, and the authentication trio (SPF/DKIM/DMARC) plus human firewalls.**

@@ -1,3 +1,26 @@
+---
+id: m4_02_windows_safe_defender
+courseCode: PBCST604
+module: 4
+sequence: 2
+title: Operating Windows Safely & Defender Firewall
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Practice browser, mail and removable-media hygiene daily
+  - Harden profiles public-strictest with deny-default inbound
+  - Lock tamper protection on against silent disables
+concepts:
+  - operational hygiene
+  - Defender firewall
+  - deny-by-default
+prerequisites:
+  - m4_01_windows_attacks_hardening
+examRelevance: medium
+tags:
+  - system-security
+  - windows-defender
+---
 # Operating Windows Safely & Defender Firewall
 
 **Daily-driver discipline — browser/mail hygiene, removable media, and host-firewall rules that actually filter.**

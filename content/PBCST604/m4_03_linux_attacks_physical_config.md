@@ -1,3 +1,25 @@
+---
+id: m4_03_linux_attacks_physical_config
+courseCode: PBCST604
+module: 4
+sequence: 3
+title: 'Linux Attacks, Physical & Config Security'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Walk privilege paths on penguin threat surfaces
+  - Defeat evil-maid physicals with at-rest encryption
+  - Declare and converge configuration against drift
+concepts:
+  - Linux privilege paths
+  - physical security
+  - configuration management
+prerequisites: []
+examRelevance: medium
+tags:
+  - system-security
+  - linux-hardening
+---
 # Linux Attacks, Physical & Config Security
 
 **Penguin threat surface — privilege paths, evil-maid physicals, and configuration as code hogs.**

@@ -1,3 +1,26 @@
+---
+id: m3_04_traffic_capture_tricks
+courseCode: PBCST604
+module: 3
+sequence: 4
+title: 'Capturing Traffic: Sniffing Tricks & Redirection'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Mirror administratively and flood fail-open defensively aware
+  - Detour targets with rogue DHCP and forged ICMP advice
+  - Name one lock per trick for exam mappings
+concepts:
+  - packet sniffing
+  - traffic redirection
+  - defensive locks
+prerequisites:
+  - m3_01_netsec_terms_devices
+examRelevance: medium
+tags:
+  - network-security
+  - sniffing
+---
 # Capturing Traffic: Sniffing Tricks & Redirection
 
 **Seeing others' packets — promiscuous mode, flooding, DHCP games, and ICMP detours (defensive awareness, lab-scoped).**

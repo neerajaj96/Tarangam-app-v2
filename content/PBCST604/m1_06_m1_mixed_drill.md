@@ -1,3 +1,29 @@
+---
+id: m1_06_m1_mixed_drill
+courseCode: PBCST604
+module: 1
+sequence: 6
+title: 'M1 Drill: Threat-to-Shell in One Sitting'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Run rank, dossier, spill, probe, proof and session in order
+  - Verify every fix instead of claiming shells
+  - Keep the offensive arc straight under time pressure
+concepts:
+  - offensive arc
+  - threat-to-shell chain
+prerequisites:
+  - m1_01_infosec_threats_risk
+  - m1_02_reconnaissance_gathering
+  - m1_03_buffer_stack_overflow
+  - m1_04_format_string_vuln_drill
+  - m1_05_vapt_burp_metasploit
+examRelevance: high
+tags:
+  - vapt
+  - m1-drill
+---
 # M1 Drill: Threat-to-Shell in One Sitting
 
 **Ledger, dossier, spill, probe, proxy, payload — the full offensive arc as exam reflexes.**

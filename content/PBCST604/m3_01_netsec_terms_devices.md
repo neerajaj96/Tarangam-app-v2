@@ -1,3 +1,25 @@
+---
+id: m3_01_netsec_terms_devices
+courseCode: PBCST604
+module: 3
+sequence: 1
+title: Network Security Terms & Threat Map
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Speak threat, vulnerability, exploit and payload precisely
+  - Separate shouting IDS from blocking IPS across generations
+  - Zone networks inside, DMZ and outside for exam maps
+concepts:
+  - threat vocabulary
+  - intrusion detection
+  - network zones
+prerequisites: []
+examRelevance: medium
+tags:
+  - network-security
+  - foundations
+---
 # Network Security Terms & Threat Map
 
 **Speaking network defense — the vocabulary (threat/vuln/exploit/payload, IDS/IPS, firewall generations) that every later topic assumes.**

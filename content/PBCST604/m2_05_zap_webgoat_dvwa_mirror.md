@@ -1,3 +1,27 @@
+---
+id: m2_05_zap_webgoat_dvwa_mirror
+courseCode: PBCST604
+module: 2
+sequence: 5
+title: 'ZAP, WebGoat, DVWA, Mirroring & HTTrack'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Break coached apps safely across the maturity dials
+  - Test proxy-driven with scans that mirror Burp discipline
+  - Photocopy targets offline for repeatable study
+concepts:
+  - OWASP ZAP
+  - vulnerable applications
+  - offline mirroring
+prerequisites:
+  - m2_01_sql_injection
+  - m2_02_xss_types_fixes
+examRelevance: medium
+tags:
+  - web-security
+  - security-tools
+---
 # ZAP, WebGoat, DVWA, Mirroring & HTTrack
 
 **The practice range — coached vulnerable apps, proxy-driven testing, and offline copies for safe study.**

@@ -1,3 +1,25 @@
+---
+id: m1_04_format_string_vuln_drill
+courseCode: PBCST604
+module: 1
+sequence: 4
+title: Format Strings & Vuln-Class Drill
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read with percent-x and write with percent-n primitives
+  - Freeze format strings constant against untrusted text
+  - Round up the module's vulnerability classes by shape
+concepts:
+  - format-string primitives
+  - vulnerability classes
+prerequisites:
+  - m1_03_buffer_stack_overflow
+examRelevance: medium
+tags:
+  - vulnerabilities
+  - format-strings
+---
 # Format Strings & Vuln-Class Drill
 
 **When your text becomes their code — `%x/%n` primitives, plus the module's vulnerability roundup.**

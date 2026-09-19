@@ -1,3 +1,26 @@
+---
+id: m4_04_linux_auth_selinux
+courseCode: PBCST604
+module: 4
+sequence: 4
+title: 'Linux Auth, Patches & SELinux'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Plumb passwd, shadow and sudoers with least-command passes
+  - Ring patches with automatic doctrine honestly stated
+  - Confine even root with SELinux type enforcement
+concepts:
+  - Linux authentication
+  - patch doctrine
+  - SELinux confinement
+prerequisites:
+  - m4_03_linux_attacks_physical_config
+examRelevance: high
+tags:
+  - system-security
+  - selinux
+---
 # Linux Auth, Patches & SELinux
 
 **Who-are-you plumbing — passwd/shadow, sudoers precision, update doctrine — plus MAC confinement with SELinux.**

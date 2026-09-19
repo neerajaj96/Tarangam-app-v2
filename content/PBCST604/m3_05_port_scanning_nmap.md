@@ -1,3 +1,25 @@
+---
+id: m3_05_port_scanning_nmap
+courseCode: PBCST604
+module: 3
+sequence: 5
+title: 'Port Scanning: TCP/UDP Techniques & Nmap'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Knock with connect, SYN, FIN-family and UDP scan grammars
+  - Read silence, resets and ICMP as open, closed or filtered
+  - Drive Nmap flags with the Windows GUI counterpart named
+concepts:
+  - port scanning
+  - Nmap grammar
+  - scan interpretation
+prerequisites: []
+examRelevance: high
+tags:
+  - network-security
+  - nmap
+---
 # Port Scanning: TCP/UDP Techniques & Nmap
 
 **Knocking politely and otherwise — connect/SYN/FIN/Xmas/NULL/UDP scans, what each reveals, and reading Nmap output.**

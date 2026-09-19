@@ -1,3 +1,25 @@
+---
+id: m2_04_dns_security_dnssec
+courseCode: PBCST604
+module: 2
+sequence: 4
+title: 'DNS Security: Issues, Attacks & DNSSEC'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Win races on transaction IDs and ports for spoofs
+  - Persist poisons through TTL windows and tunnels
+  - Authenticate answers with DNSSEC signatures honestly scoped
+concepts:
+  - DNS spoofing
+  - cache poisoning
+  - DNSSEC
+prerequisites: []
+examRelevance: medium
+tags:
+  - web-security
+  - dns-security
+---
 # DNS Security: Issues, Attacks & DNSSEC
 
 **The phonebook everyone trusts unsigned — spoofing, cache poison, tunnels, and signatures that authenticate answers.**

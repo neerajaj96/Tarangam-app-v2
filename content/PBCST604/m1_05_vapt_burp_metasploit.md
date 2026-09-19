@@ -1,3 +1,27 @@
+---
+id: m1_05_vapt_burp_metasploit
+courseCode: PBCST604
+module: 1
+sequence: 5
+title: 'VAPT: Burp Suite & Metasploit'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Intercept, modify and replay traffic through the proxy
+  - Weaponise findings with exploits and post modules
+  - Close with fixes plus retest verification under consent
+concepts:
+  - Burp Suite proxy
+  - Metasploit framework
+  - retest verification
+prerequisites:
+  - m1_02_reconnaissance_gathering
+  - m1_03_buffer_stack_overflow
+examRelevance: high
+tags:
+  - vapt
+  - penetration-testing
+---
 # VAPT: Burp Suite & Metasploit
 
 **Proxy the traffic, weaponise the findings — intercept/modify/replay with Burp, exploit/post with Metasploit (lab-authorized).**

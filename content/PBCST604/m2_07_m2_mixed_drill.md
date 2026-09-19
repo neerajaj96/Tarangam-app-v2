@@ -1,3 +1,29 @@
+---
+id: m2_07_m2_mixed_drill
+courseCode: PBCST604
+module: 2
+sequence: 7
+title: 'M2 Drill: Web Attack Triage at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Classify SQLi, XSS, CSRF, DNS and phish symptoms in seconds
+  - Prescribe structural fixes before layered remainders
+  - Keep families straight under triage-table pressure
+concepts:
+  - attack triage
+  - layered defense
+prerequisites:
+  - m2_01_sql_injection
+  - m2_02_xss_types_fixes
+  - m2_03_csrf_defenses
+  - m2_04_dns_security_dnssec
+  - m2_06_email_security
+examRelevance: high
+tags:
+  - web-security
+  - m2-drill
+---
 # M2 Drill: Web Attack Triage at Pace
 
 **SQLi vs XSS vs CSRF vs DNS vs phish — classify in seconds, prescribe in layers.**

@@ -1,3 +1,26 @@
+---
+id: m3_03_arp_spoofing_hijacking
+courseCode: PBCST604
+module: 3
+sequence: 3
+title: ARP Spoofing & Session Hijacking
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Poison bindings both directions on identity-free ARP
+  - Detour LAN traffic into listening positions
+  - Ride live sessions with tokens, then lock with DAI and encryption
+concepts:
+  - ARP poisoning
+  - session hijacking
+  - dynamic ARP inspection
+prerequisites:
+  - m3_01_netsec_terms_devices
+examRelevance: high
+tags:
+  - network-security
+  - spoofing
+---
 # ARP Spoofing & Session Hijacking
 
 **Lying on the LAN — poisoned bindings, traffic detours, and riding live sessions.**

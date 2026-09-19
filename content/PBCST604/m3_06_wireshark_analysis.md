@@ -1,3 +1,25 @@
+---
+id: m3_06_wireshark_analysis
+courseCode: PBCST604
+module: 3
+sequence: 6
+title: 'Wireshark: Capture, Display Filters & Analysis'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Commit captures with BPF then re-slice with display filters
+  - Follow streams into plaintext-password autopsies
+  - Graph volumes for anomaly verdicts
+concepts:
+  - packet capture
+  - display filters
+  - stream analysis
+prerequisites: []
+examRelevance: high
+tags:
+  - network-security
+  - wireshark
+---
 # Wireshark: Capture, Display Filters & Analysis
 
 **Reading the wire — capture setup, BPF vs display filters, follow-streams, and plaintext-password autopsies.**
