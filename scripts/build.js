@@ -15,7 +15,7 @@ import {
   buildJumpPills,
 } from './markdown.js';
 import { transformCustomWidgets } from './widgets.js';
-import { parseTopicFrontMatter } from './topic-metadata.js';
+import { loadTopicSchema, parseAndValidateTopicFrontMatter } from './topic-metadata.js';
 import {
   formatTopicTitle,
   renderTopicDocument,
@@ -43,6 +43,11 @@ const TEMPLATE_PATH = path.join('templates', 'base.html');
 // lists always come from content/ — never from the JSON.
 const CURRICULUM_DOC = loadCurriculum();
 
+// Canonical topic metadata schema (data/topic-schema.json), loaded via
+// the shared scripts/topic-metadata.js loader; fails loudly when the
+// file is missing or malformed, like the curriculum.
+const TOPIC_SCHEMA = loadTopicSchema();
+
 // Derived view over the canonical document (same shape the build
 // previously hardcoded inline, so the rest of the pipeline is untouched).
 const MODULE_NAMES = Object.fromEntries(
@@ -63,6 +68,21 @@ const MODULE_NAMES = Object.fromEntries(
 // module; topic front-matter parsing lives in the shared
 // scripts/topic-metadata.js module; this file orchestrates data
 // preparation and the build.
+
+// Attach validated front-matter metadata to the topic's internal build
+// representation. Stored as non-enumerable properties so JSON output
+// (navigation_index.json) stays byte-identical during migration.
+// canonicalTitle/estimatedMinutes resolve metadata-first with the
+// filename/content-derived values as fallback; rendering still uses the
+// derived title/read-time until a later UI task consumes the canonical
+// values, so visible output is unchanged.
+function attachTopicMetadata(pageData, metadata, fallback) {
+  Object.defineProperties(pageData, {
+    metadata: { value: metadata ?? null, enumerable: false },
+    canonicalTitle: { value: metadata?.title ?? fallback.title, enumerable: false },
+    estimatedMinutes: { value: metadata?.estimatedMinutes ?? fallback.readTime, enumerable: false },
+  });
+}
 
 export function buildSite() {
   const templateStr = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
@@ -127,13 +147,23 @@ export function buildSite() {
       const { modNum, pageData: page } = pages[idx];
       const rawMarkdown = readTopicMarkdown(page.source_path);
 
-      // Structured topic metadata (front-matter) is parsed and excluded
-      // from rendering; topics without it pass through unchanged, so
-      // metadata stays optional during the migration phase.
-      const { body: topicMarkdown } = parseTopicFrontMatter(rawMarkdown);
+      // Structured topic metadata (front-matter) is parsed, validated via
+      // scripts/topic-metadata.js, and attached to the topic's internal
+      // representation; topics without it pass through unchanged with
+      // derived values as the fallback, so metadata stays optional during
+      // the migration phase.
+      const { metadata: topicMetadata, body: topicMarkdown } = parseAndValidateTopicFrontMatter(
+        rawMarkdown,
+        {
+          schema: TOPIC_SCHEMA,
+          curriculumDoc: CURRICULUM_DOC,
+          label: `topic-metadata: ${page.source_path}#front-matter`,
+        }
+      );
 
       const wordCount = topicMarkdown.split(/\s+/).length;
       const readTime = Math.max(2, Math.round(wordCount / 180));
+      attachTopicMetadata(page, topicMetadata, { title: page.title, readTime });
 
       const preprocessedMarkdown = transformCustomWidgets(topicMarkdown);
 

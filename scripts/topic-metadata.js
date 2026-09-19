@@ -10,8 +10,10 @@
  * (courseCode, module, sequence, id) live here. Detailed
  * curriculum/content consistency checks stay in scripts/check.js, which
  * converts loader failures and returned error strings into collected QA
- * failures. Markdown migration, HTML generation, learner state, and UI
- * logic live elsewhere.
+ * failures, while scripts/build.js attaches validated metadata to its
+ * internal topic representation via parseAndValidateTopicFrontMatter.
+ * Markdown migration, HTML generation, learner state, and UI logic live
+ * elsewhere.
  *
  * Throws a TopicMetadataError (Error with .code and .cause) on load
  * problems so callers can map failures to their own reporting;
@@ -28,6 +30,7 @@ export const TOPIC_SCHEMA_READ_ERROR = 'TOPIC_SCHEMA_READ_ERROR';
 export const TOPIC_SCHEMA_PARSE_ERROR = 'TOPIC_SCHEMA_PARSE_ERROR';
 export const TOPIC_METADATA_READ_ERROR = 'TOPIC_METADATA_READ_ERROR';
 export const TOPIC_METADATA_PARSE_ERROR = 'TOPIC_METADATA_PARSE_ERROR';
+export const TOPIC_METADATA_VALIDATION_ERROR = 'TOPIC_METADATA_VALIDATION_ERROR';
 
 function topicMetadataError(code, message, cause) {
   const err = new Error(message);
@@ -150,6 +153,27 @@ export function parseTopicFrontMatter(markdownText) {
     return { metadata: null, body: markdownText };
   }
   return { metadata: parseYamlSubset(match[1]), body: markdownText.slice(match[0].length) };
+}
+
+// Parse front-matter and validate it in one step for build-pipeline use.
+// Returns { metadata, body }; metadata is null for topics without front
+// matter, so metadata stays optional. Throws a TopicMetadataError when
+// present metadata fails validation (fails loudly, like the rest of the
+// build) — validation itself is never duplicated by callers.
+export function parseAndValidateTopicFrontMatter(
+  markdownText,
+  { schema, curriculumDoc = null, contentDir = 'content', label = 'topic-metadata' } = {}
+) {
+  const { metadata, body } = parseTopicFrontMatter(markdownText);
+  if (metadata === null) return { metadata: null, body };
+  const errors = validateTopicMetadata(metadata, { schema, curriculumDoc, contentDir, label });
+  if (errors.length) {
+    throw topicMetadataError(
+      TOPIC_METADATA_VALIDATION_ERROR,
+      `${label} has invalid topic metadata:\n- ${errors.join('\n- ')}`
+    );
+  }
+  return { metadata, body };
 }
 
 function typeMatches(value, type) {
