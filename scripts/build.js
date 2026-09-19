@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { marked } from 'marked';
 import { SCENES } from './scenes.js';
 import { CURRICULUM_PATH, loadCurriculum } from './curriculum.js';
 import {
@@ -10,6 +9,13 @@ import {
   parseTopicFile,
   findTopicFilenameIssues,
 } from './content.js';
+import {
+  readTopicMarkdown,
+  renderMarkdown,
+  escapeHtml,
+  linkSections,
+  buildJumpPills,
+} from './markdown.js';
 
 const CONTENT_DIR = 'content';
 const OUTPUT_DIR = 'dist';
@@ -31,22 +37,10 @@ const MODULE_NAMES = Object.fromEntries(
   ])
 );
 
-// Configure marked
-marked.setOptions({
-  gfm: true,
-  breaks: false
-});
-
-// Escape raw author text before injecting into HTML templates.
-// Preserves `$` math delimiters for MathJax; neutralises <>&"'.
-function escapeHtml(s) {
-  return String(s ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+// Markdown file reading, Markdown → HTML conversion (marked
+// configuration), HTML escaping, and heading/section helpers live in the
+// shared scripts/markdown.js module; the widget preprocessing below
+// consumes them (stays here — widget/scene behavior, not pure Markdown).
 
 const ACRONYMS = new Set(['AI', 'PEAS', 'OSI', 'TCP', 'IP', 'HTTP', 'FTP', 'DNS', 'SMTP', 'P2P', 'AVL', 'BFS', 'DFS', 'UCS', 'DLS', 'IDDFS', 'CSP', 'AC-3', 'RL', 'RAM', 'SNMP', 'VLAN', 'ARP', 'CRC', 'CSMA', 'CD', 'PCM', 'KTU', 'CSE', 'SCC', 'DP', 'TSP', 'NP', 'MLE', 'MAP', 'KNN', 'PCA', 'SVM', 'NA', 'SONAR', 'NDT', 'LED', 'CW', 'PIN', 'PMF', 'CDF', 'PDF', 'CLT', 'SLLN', 'RV', 'ADT', 'FIFO', 'LIFO', 'BST', 'AC', 'DC', 'RMS', 'EMF', 'MMF', 'BJT', 'FET', 'MOSFET', 'CE', 'CB', 'CC', 'AM', 'FM', 'GSM', 'CRO', 'DMM', 'KCL', 'KVL', 'RL', 'RC', 'RLC', 'TAC', 'IR', 'LR', 'LL', 'LVN', 'YACC', 'AST', 'HPC', 'HTC', 'VM', 'VMM', 'GPU', 'P2P', 'SSI', 'HA', 'IPC', 'API', 'IaaS', 'PaaS', 'SaaS', 'IoT', 'CPS', 'SQL', 'XSS', 'CSRF', 'DNS', 'DNSSEC', 'DOS', 'DDOS', 'ARP', 'NMAP', 'DVWA', 'ZAP', 'OWASP', 'PBL', 'VAPT', 'MLP', 'SGD', 'CNN', 'RNN', 'LSTM', 'GAN', 'RELU', 'RBM', 'BPTT', 'DES', 'AES', 'RSA', 'SHA', 'MD5', 'MAC', 'PKI', 'CRT', 'JUNIT', 'ECP', 'BVA', 'CFG', 'PEX', 'GENAI', 'QA', 'HCD', 'TRL', 'USP', 'SRD', 'SRS', 'DFM', 'DFMEA', 'POC', 'BMC', 'ML', 'MLE', 'MAP', 'MAE', 'RMSE', 'ROC', 'AUC', 'ID3', 'MDS', 'LASSO', 'RIDGE', 'SSE', 'AC3', 'FOL', 'POP3', 'IMAP', 'MX', 'TTL', 'DHT', 'QOS', 'RPF', 'IGMP', 'RSVP', 'DSCP', 'WFQ', 'PIM', 'DVMRP', 'FDM', 'TDM', 'WDM', 'BER', 'SMI', 'MIB', 'ASN1', 'DAG', 'IPV4', 'IPV6', 'CIDR', 'NAT', 'ICMP', 'OSPF', 'RIP', 'BGP']);
 
@@ -58,79 +52,8 @@ function titleCaseSlug(slug) {
   }).join(' ');
 }
 
-// Build quick-jump pills from the page's actual <a id="..."> anchors,
-// so pills never point at non-existent sections (was hardcoded).
-const JUMP_LABELS = {
-  'the-intuition': '💡 Intuition',
-  'the-math': '📐 Framework',
-  'worked-example': '🧪 Worked Example',
-  'self-check': '⚡ Self Check',
-  'the-dimensions': '📐 Dimensions',
-  'terminology': '📖 Terms',
-  'foundations': '🏛️ Foundations',
-  'history': '📜 History',
-  'modern-engineering': '⚙️ Modern View',
-  'exam-focus': '🎯 Exam Focus',
-  'the-matrix': '🧮 Matrix'
-};
-
-function plainText(html) {
-  return html.replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-}
-
-function slugifyHeading(inner) {
-  const slug = plainText(inner).toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
-  return slug || 'section';
-}
-
-function shortTitle(inner) {
-  const clean = plainText(inner).trim();
-  return clean.length > 34 ? clean.slice(0, 34) + '…' : clean;
-}
-
-// Bidirectional theory<->practice section chaining: every H2 gets a stable
-// id and a prev/next section nav row, so framework, worked examples, and
-// quizzes link to each other on every page with zero author effort.
-function linkSections(renderedHtml) {
-  const existing = new Set([...renderedHtml.matchAll(/<a id="([^"]+)">/g)].map(m => m[1]));
-  const heads = [...renderedHtml.matchAll(/<h2>(.*?)<\/h2>/gs)];
-  if (heads.length < 2) return renderedHtml;
-  const used = new Set(existing);
-  const secs = heads.map(m => {
-    let slug = slugifyHeading(m[1]);
-    let n = 2;
-    while (used.has(slug)) slug = `${slugifyHeading(m[1])}-${n++}`;
-    used.add(slug);
-    return { slug, title: shortTitle(m[1]) };
-  });
-  let i = 0;
-  return renderedHtml.replace(/<h2>(.*?)<\/h2>/gs, (match, inner) => {
-    const s = secs[i];
-    const prev = i > 0
-      ? `<a href="#${secs[i - 1].slug}">← ${escapeHtml(secs[i - 1].title)}</a>`
-      : `<a href="#content">↑ Top</a>`;
-    const next = i < secs.length - 1
-      ? `<a href="#${secs[i + 1].slug}">${escapeHtml(secs[i + 1].title)} →</a>`
-      : `<a href="#pagefoot">↓ Next topic</a>`;
-    i++;
-    return `<h2 id="${s.slug}">${inner}</h2>\n<p class="secnav">${prev}<span class="secnav-sep">·</span>${next}</p>`;
-  });
-}
-function buildJumpPills(rawMarkdown) {
-  const ids = [];
-  const seen = new Set();
-  for (const m of rawMarkdown.matchAll(/<a id="([^"]+)">/g)) {
-    if (!seen.has(m[1])) { seen.add(m[1]); ids.push(m[1]); }
-  }
-  const pills = ids.slice(0, 6).map(id =>
-    `<a href="#${escapeHtml(id)}" class="jump-pill">${JUMP_LABELS[id] || escapeHtml(id)}</a>`
-  ).join('\n    ');
-  if (!pills) return '';
-  return `<div class="quick-jump-bar">\n    ${pills}\n  </div>`;
-}
+// Topic-title helpers stay here: they derive display titles from file
+// names (discovery-adjacent), not from Markdown rendering.
 
 function transformCustomWidgets(markdownText) {
   // 1. Admonition Callouts (Clickable Dropdowns with open default)
@@ -145,7 +68,7 @@ function transformCustomWidgets(markdownText) {
     const pattern = new RegExp(`::: callout-${type} (.*?)\\n([\\s\\S]*?)\\n:::`, 'g');
     markdownText = markdownText.replace(pattern, (match, title, rawBody) => {
       const trimmedTitle = title.trim();
-      const renderedBody = marked.parse(rawBody.trim());
+      const renderedBody = renderMarkdown(rawBody.trim());
       const header = trimmedTitle ? `${icon}: ${escapeHtml(trimmedTitle)}` : icon;
       return `<details class="callout callout-${type}" open><summary class="callout-header"><span class="callout-title">${header}</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body">${renderedBody}</div></details>`;
     });
@@ -183,7 +106,7 @@ function transformCustomWidgets(markdownText) {
     <span class="quiz-category">${escapeHtml(qHeader.trim())}</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt">${marked.parse(prompt.trim())}</div>
+  <div class="quiz-prompt">${renderMarkdown(prompt.trim())}</div>
   <div class="quiz-options">
     ${optionsHtml}
   </div>
@@ -198,7 +121,7 @@ function transformCustomWidgets(markdownText) {
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      ${marked.parse(explanation.trim())}
+      ${renderMarkdown(explanation.trim())}
     </div>
   </details>
 </div>`;
@@ -207,14 +130,14 @@ function transformCustomWidgets(markdownText) {
   // 3. Stepped Numerical Solution Cards
   const stepPattern = /::: step \[(.*?)\] (.*?)\n([\s\S]*?)\n:::/g;
   markdownText = markdownText.replace(stepPattern, (match, badge, title, rawContent) => {
-    const renderedContent = marked.parse(rawContent.trim());
+    const renderedContent = renderMarkdown(rawContent.trim());
     return `<div class="step-card"><div class="step-badge">${escapeHtml(badge.trim())}</div><div class="step-title">${escapeHtml(title.trim())}</div><div class="step-content">${renderedContent}</div></div>`;
   });
 
   // 4. Interactive Toggles
   const togglePattern = /::: toggle (.*?)\n([\s\S]*?)\n:::/g;
   markdownText = markdownText.replace(togglePattern, (match, summary, rawContent) => {
-    const renderedContent = marked.parse(rawContent.trim());
+    const renderedContent = renderMarkdown(rawContent.trim());
     return `<details class="interactive-toggle"><summary>${escapeHtml(summary.trim())}</summary><div class="toggle-content">${renderedContent}</div></details>`;
   });
 
@@ -503,7 +426,7 @@ export function buildSite() {
     // Render pages
     for (let idx = 0; idx < pages.length; idx++) {
       const { modNum, pageData: page } = pages[idx];
-      const rawMarkdown = fs.readFileSync(page.source_path, 'utf-8');
+      const rawMarkdown = readTopicMarkdown(page.source_path);
 
       const wordCount = rawMarkdown.split(/\s+/).length;
       const readTime = Math.max(2, Math.round(wordCount / 180));
@@ -516,7 +439,7 @@ export function buildSite() {
         if (!fs.existsSync(rel)) warnings.push(`${courseCode}/${page.filename}: video missing ${rel}`);
       }
 
-      const renderedHtmlBody = linkSections(marked.parse(preprocessedMarkdown));
+      const renderedHtmlBody = linkSections(renderMarkdown(preprocessedMarkdown));
 
       const prevPage = idx > 0 ? pages[idx - 1].pageData : null;
       const nextPage = idx < pages.length - 1 ? pages[idx + 1].pageData : null;
