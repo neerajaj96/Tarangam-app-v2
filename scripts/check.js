@@ -379,7 +379,7 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/learner-state.js', 'assets/learner-path.js', 'scripts/learner-path.js', 'style.css']) {
+  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'scripts/learner-path.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
   }
   if (fs.existsSync('explorer.html')) {
@@ -397,8 +397,17 @@ if (fs.existsSync('dist')) {
     const tpl = fs.readFileSync('templates/base.html', 'utf-8');
     if (!tpl.includes('assets/learner-state.js')) fail('explorer: templates/base.html does not connect topic pages to the learner-state module');
   }
+  if (fs.existsSync('assets/dashboard.js')) {
+    const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
+    if (!js.includes('learner-state.js')) fail('explorer: assets/dashboard.js does not import the learner-state module');
+    if (!js.includes('curriculum-data.js')) fail('explorer: assets/dashboard.js does not import the curriculum data module');
+  }
+  if (fs.existsSync('index.html')) {
+    const home = fs.readFileSync('index.html', 'utf-8');
+    if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
+  }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/data/topic-manifest.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
   }

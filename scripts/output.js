@@ -122,6 +122,14 @@ export function writeStandaloneIndex(outputDir) {
   }
 }
 
+// Copy the learner dashboard page (links resolve the same way as the
+// explorer page, so no path rewrite is needed here).
+export function copyDashboardPage(outputDir) {
+  if (fs.existsSync('dashboard.html')) {
+    fs.copyFileSync('dashboard.html', path.join(outputDir, 'dashboard.html'));
+  }
+}
+
 // Copy the curriculum explorer page (its topic links resolve client-side
 // against the manifest base URL, so no path rewrite is needed here).
 export function copyExplorerPage(outputDir) {

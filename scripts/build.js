@@ -32,6 +32,7 @@ import {
   injectDashboardSubjectDetails,
   writeStandaloneIndex,
   copyExplorerPage,
+  copyDashboardPage,
   copyAssetDirs,
 } from './output.js';
 import { buildTopicManifest } from './topic-manifest.js';
@@ -229,6 +230,8 @@ export function buildSite() {
   writeStandaloneIndex(OUTPUT_DIR);
 
   copyExplorerPage(OUTPUT_DIR);
+
+  copyDashboardPage(OUTPUT_DIR);
 
   copyAssetDirs(OUTPUT_DIR);
 

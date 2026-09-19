@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarangam — Learner Dashboard</title>
+<meta name="description" content="Your Tarangam learning progress: overall completion, per-course and per-module breakdowns, and continue-learning suggestions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .xp-shell { max-width: 1120px; margin: 0 auto; padding: 28px 20px 80px; font-family: var(--font-display); }
+  .xp-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  .xp-top h1 { font-size: 24px; margin: 0; letter-spacing: -0.3px; }
+  .xp-back { margin-left: auto; font-size: 13px; color: var(--accent); text-decoration: none; font-family: var(--font-mono); }
+  .xp-status { font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); margin: 0 0 18px; }
+  .xp-legacy { border-style: dashed; color: var(--ink-dim); }
+  .xp-st-todo { border-style: dashed; color: var(--ink-dim); }
+  .xp-st-done { border-color: var(--correct); color: var(--correct); font-weight: 600; }
+  .xp-empty { border: 1px dashed var(--border); border-radius: var(--radius-md); padding: 24px; color: var(--ink-dim); font-size: 14px; }
+  .xp-rel { display: flex; align-items: center; gap: 8px; }
+  .xp-rel-btn { flex: 1; text-align: left; background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 13px; cursor: pointer; font-family: var(--font-display); }
+  .xp-rel-btn:hover { border-color: var(--accent); }
+  .xp-open { color: var(--accent); text-decoration: none; font-size: 14px; }
+  .xp-none { color: var(--ink-faint); font-size: 13px; }
+  .xp-path { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 18px; }
+  .xp-path h2 { font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-dim); margin: 0 0 10px; }
+  .xp-path-next { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .xp-path-title { font-weight: 700; font-size: 16px; }
+  .xp-path-meta { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); }
+  .xp-path-btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-sm); padding: 7px 12px; font-size: 13px; cursor: pointer; font-family: var(--font-display); }
+  .xp-path-btn:hover { border-color: var(--accent); }
+  .xp-path-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+  .xp-path-label { font-size: 12px; color: var(--ink-dim); }
+  .xp-error { border: 1px solid var(--wrong); background: var(--wrong-bg); border-radius: var(--radius-md); padding: 18px; margin-bottom: 18px; }
+  .db-hero { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 18px; text-align: center; }
+  .db-hero-pct { font-size: 44px; font-weight: 700; letter-spacing: -1px; }
+  .db-hero-counts { font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); margin: 6px 0 14px; }
+  .db-sec-title { font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-dim); margin: 26px 0 10px; }
+  .db-course { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 8px; }
+  .db-course-head { display: flex; align-items: baseline; gap: 10px; width: 100%; background: none; border: none; color: var(--ink); cursor: pointer; font-family: var(--font-display); padding: 0; text-align: left; }
+  .db-course-name { font-weight: 700; font-size: 15px; }
+  .db-course-nums { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); white-space: nowrap; }
+  .db-course-bar { margin-top: 8px; }
+  .db-modules { margin-top: 10px; border-top: 1px solid var(--border-soft); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .db-module { display: flex; align-items: baseline; gap: 10px; font-size: 13.5px; }
+  .db-reset { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; }
+  .db-reset label { display: flex; flex-direction: column; gap: 6px; font-size: 11px; font-family: var(--font-mono); color: var(--ink-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .db-reset select { background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-md); padding: 10px 12px; font-size: 14px; font-family: var(--font-display); }
+  .db-reset button { background: transparent; border: 1px solid var(--wrong); color: var(--wrong); border-radius: var(--radius-md); padding: 10px 14px; font-size: 13px; cursor: pointer; }
+</style>
+</head>
+<body data-theme="dark" data-size="md">
+<div class="xp-shell">
+  <div class="xp-top">
+    <a href="./index.html" class="brand" style="text-decoration:none;">
+      <span class="brand-mark">त</span>
+      <span class="brand-text"><span class="brand-name">Tarangam</span></span>
+    </a>
+    <h1>Learner Dashboard</h1>
+    <a class="xp-back" href="./index.html">← Dashboard</a>
+    <a class="xp-back" href="./explorer.html">Explorer →</a>
+  </div>
+  <p class="xp-status" id="db-status">Loading your progress…</p>
+
+  <div class="xp-error" id="db-error" hidden>
+    <strong>Could not load the curriculum data.</strong>
+    <div id="db-error-msg" style="margin-top:6px;font-size:13px;"></div>
+  </div>
+
+  <div id="db-app" hidden>
+    <section class="db-hero" aria-label="Overall progress">
+      <div class="db-hero-pct" id="db-hero-pct">0%</div>
+      <div class="db-hero-counts" id="db-hero-counts"></div>
+      <div id="db-hero-bar"></div>
+    </section>
+
+    <section class="xp-path" id="db-continue" aria-label="Continue learning"></section>
+
+    <h2 class="db-sec-title">In progress</h2>
+    <div class="xp-path" id="db-progress-list"></div>
+
+    <h2 class="db-sec-title">Courses (16)</h2>
+    <div id="db-courses"></div>
+
+    <h2 class="db-sec-title">Reset course progress</h2>
+    <div class="db-reset">
+      <label>Course
+        <select id="db-reset-course"></select>
+      </label>
+      <button id="db-reset-btn" type="button">Reset selected course</button>
+    </div>
+  </div>
+</div>
+<script type="module" src="assets/dashboard.js"></script>
+</body>
+</html>
