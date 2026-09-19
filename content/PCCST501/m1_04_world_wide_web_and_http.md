@@ -1,3 +1,29 @@
+---
+id: m1_04_world_wide_web_and_http
+courseCode: PCCST501
+module: 1
+sequence: 4
+title: The World Wide Web and HTTP
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Define HTTP statelessness and its consequences for sessions
+  - Compare non-persistent and persistent connections with counts
+  - Read HTTP request and response message structure
+  - Explain how cookies restore state on a stateless protocol
+concepts:
+  - HTTP
+  - statelessness
+  - persistent connections
+  - cookies
+prerequisites:
+  - m1_03_application_layer_paradigms
+examRelevance: medium
+tags:
+  - http
+  - world-wide-web
+  - cookies
+---
 # The World Wide Web and HTTP
 
 **HTTP request/response structure, non-persistent vs. persistent connections, statelessness, and cookies.**

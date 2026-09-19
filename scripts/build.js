@@ -158,6 +158,8 @@ export function buildSite() {
           schema: TOPIC_SCHEMA,
           curriculumDoc: CURRICULUM_DOC,
           label: `topic-metadata: ${page.source_path}#front-matter`,
+          expectedCourseCode: courseCode,
+          expectedId: page.id,
         }
       );
 

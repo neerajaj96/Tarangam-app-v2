@@ -1,3 +1,29 @@
+---
+id: m1_03_application_layer_paradigms
+courseCode: PCCST501
+module: 1
+sequence: 3
+title: Application Layer Paradigms
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Contrast client-server and peer-to-peer architectures
+  - Explain how processes address each other with sockets and ports
+  - Choose the fitting paradigm for centralized versus sharing workloads
+concepts:
+  - client-server architecture
+  - peer-to-peer architecture
+  - sockets
+  - port numbers
+prerequisites:
+  - m1_01_internet_overview_and_network_edge
+examRelevance: high
+tags:
+  - application-layer
+  - client-server
+  - p2p
+  - sockets
+---
 # Application Layer Paradigms
 
 **Client-Server vs. Peer-to-Peer architectures, and how processes communicate across the network via sockets.**

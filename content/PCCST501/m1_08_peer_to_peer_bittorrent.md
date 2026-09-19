@@ -1,3 +1,31 @@
+---
+id: m1_08_peer_to_peer_bittorrent
+courseCode: PCCST501
+module: 1
+sequence: 8
+title: 'P2P & BitTorrent: Distribution That Scales Itself'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Name swarm roles from overlay and tracker to seeds
+  - Match rarest-first and tit-for-tat to the failures they fix
+  - Evaluate the client-server versus P2P distribution-time bounds
+  - Explain why P2P distribution time flattens as crowds grow
+concepts:
+  - swarms
+  - trackers
+  - rarest-first
+  - tit-for-tat
+  - distribution-time bound
+prerequisites:
+  - m1_04_world_wide_web_and_http
+  - m1_05_file_transfer_protocol_ftp
+examRelevance: high
+tags:
+  - p2p
+  - bittorrent
+  - scalability
+---
 # P2P & BitTorrent: Distribution That Scales Itself
 
 **Uploaders who multiply — overlays, trackers, rarest-first, tit-for-tat, and the distribution-time math where client-server collapses and P2P holds.**

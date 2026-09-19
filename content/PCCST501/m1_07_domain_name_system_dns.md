@@ -1,3 +1,28 @@
+---
+id: m1_07_domain_name_system_dns
+courseCode: PCCST501
+module: 1
+sequence: 7
+title: "DNS: The Internet's Phone Book"
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Resolve names through the root, TLD, and authoritative hierarchy
+  - Count worst-case DNS messages and explain cache collapse
+  - Assign A, AAAA, NS, CNAME, and MX records to their jobs
+  - Justify UDP transport for ordinary queries
+concepts:
+  - DNS hierarchy
+  - resolvers
+  - resource records
+  - caching and TTL
+prerequisites:
+  - m1_06_electronic_mail_smtp_pop3_imap
+examRelevance: medium
+tags:
+  - dns
+  - naming
+---
 # DNS: The Internet's Phone Book
 
 **Names to numbers through a hierarchy — root, TLD, authoritative servers, the 8-message worst case, caching that deletes round trips, and the four record types.**

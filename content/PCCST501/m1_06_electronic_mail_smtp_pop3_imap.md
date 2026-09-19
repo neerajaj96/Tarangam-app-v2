@@ -1,3 +1,32 @@
+---
+id: m1_06_electronic_mail_smtp_pop3_imap
+courseCode: PCCST501
+module: 1
+sequence: 6
+title: 'Electronic Mail: SMTP, Message Format & Access Protocols'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Trace the SMTP push dialogue and its port-25 command sequence
+  - Separate envelope, header, and body in a mail message
+  - Choose between POP3 and IMAP for single versus multi-device reading
+  - Explain why spoofing follows from the header-envelope split
+concepts:
+  - SMTP
+  - POP3
+  - IMAP
+  - message envelope
+  - spoofing
+prerequisites:
+  - m1_03_application_layer_paradigms
+  - m1_04_world_wide_web_and_http
+  - m1_05_file_transfer_protocol_ftp
+examRelevance: high
+tags:
+  - email
+  - smtp
+  - imap
+---
 # Electronic Mail: SMTP, Message Format & Access Protocols
 
 **Pushing mail across the Internet — SMTP handshakes on port 25, header anatomy, and why reading mail needs different protocols than sending it.**

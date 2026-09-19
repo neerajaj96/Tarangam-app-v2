@@ -169,11 +169,25 @@ export function parseTopicFrontMatter(markdownText) {
 // build) — validation itself is never duplicated by callers.
 export function parseAndValidateTopicFrontMatter(
   markdownText,
-  { schema, curriculumDoc = null, contentDir = 'content', label = 'topic-metadata' } = {}
+  {
+    schema,
+    curriculumDoc = null,
+    contentDir = 'content',
+    label = 'topic-metadata',
+    expectedCourseCode = null,
+    expectedId = null,
+  } = {}
 ) {
   const { metadata, body } = parseTopicFrontMatter(markdownText);
   if (metadata === null) return { metadata: null, body };
-  const errors = validateTopicMetadata(metadata, { schema, curriculumDoc, contentDir, label });
+  const errors = validateTopicMetadata(metadata, {
+    schema,
+    curriculumDoc,
+    contentDir,
+    label,
+    expectedCourseCode,
+    expectedId,
+  });
   if (errors.length) {
     throw topicMetadataError(
       TOPIC_METADATA_VALIDATION_ERROR,
@@ -227,6 +241,8 @@ export function collectTopicMetadataCoverage({ contentDir = CONTENT_DIR, schema 
           curriculumDoc,
           contentDir,
           label: `topic-metadata: ${courseCode}/${filename}#front-matter`,
+          expectedCourseCode: courseCode,
+          expectedId: parsed.id,
         })
         : [];
       if (validationErrors.length) {
@@ -276,9 +292,18 @@ function typeMatches(value, type) {
 // - contentDir: content root for the id→.md existence check
 // - label: prefix for every error string (callers pass the file path so
 //   messages name the offending file)
+// - expectedCourseCode/expectedId: when the caller knows the metadata's
+//   source file, identity + prerequisite-existence checks apply
 export function validateTopicMetadata(
   metadata,
-  { schema, curriculumDoc = null, contentDir = 'content', label = 'topic-metadata' } = {}
+  {
+    schema,
+    curriculumDoc = null,
+    contentDir = 'content',
+    label = 'topic-metadata',
+    expectedCourseCode = null,
+    expectedId = null,
+  } = {}
 ) {
   const errors = [];
   const where = label;
@@ -344,6 +369,23 @@ export function validateTopicMetadata(
   if (typeof metadata.id === 'string' && typeof metadata.courseCode === 'string') {
     const md = path.join(contentDir, metadata.courseCode, `${metadata.id}.md`);
     if (!fs.existsSync(md)) errors.push(`${where} id "${metadata.id}" has no content file ${md} — expected the fixture to describe a real topic`);
+  }
+  // Location-identity checks (only when the caller knows where the
+  // metadata came from): courseCode must match the content directory and
+  // id must match the filename, so copy-paste across topics cannot pass
+  // silently. Prerequisites must name real topics in the same course.
+  if (expectedCourseCode !== null && typeof metadata.courseCode === 'string' && metadata.courseCode !== expectedCourseCode) {
+    errors.push(`${where} courseCode "${metadata.courseCode}" does not match its content location — expected "${expectedCourseCode}"`);
+  }
+  if (expectedId !== null && typeof metadata.id === 'string' && metadata.id !== expectedId) {
+    errors.push(`${where} id "${metadata.id}" does not match its filename — expected "${expectedId}"`);
+  }
+  if (Array.isArray(metadata.prerequisites) && typeof metadata.courseCode === 'string') {
+    for (const prereq of metadata.prerequisites) {
+      if (typeof prereq !== 'string') continue; // the type walker owns this case
+      const target = path.join(contentDir, metadata.courseCode, `${prereq}.md`);
+      if (!fs.existsSync(target)) errors.push(`${where} prerequisite "${prereq}" has no content file ${target} — expected an existing topic`);
+    }
   }
   return errors;
 }

@@ -1,3 +1,29 @@
+---
+id: m1_05_file_transfer_protocol_ftp
+courseCode: PCCST501
+module: 1
+sequence: 5
+title: File Transfer Protocol (FTP)
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Separate out-of-band control from in-band data connections
+  - Trace an FTP session lifecycle across control and data channels
+  - Contrast active and passive modes under firewalls
+  - Explain why stateful FTP scales worse than stateless HTTP
+concepts:
+  - FTP
+  - out-of-band control
+  - active mode
+  - passive mode
+  - stateful sessions
+prerequisites:
+  - m1_04_world_wide_web_and_http
+examRelevance: medium
+tags:
+  - ftp
+  - file-transfer
+---
 # File Transfer Protocol (FTP)
 
 **Out-of-band control vs. data connections, the FTP session lifecycle, Active vs. Passive mode, and stateful session tracking.**

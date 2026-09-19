@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **8**
-- Pending: **424**
-- Coverage: **1.85%** (tracked by `npm run check`)
+- Migrated: **14**
+- Pending: **418**
+- Coverage: **3.24%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -20,7 +20,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 
 1. Finish the started modules first (both pilots sit in Module 1):
    - GAMAT301 — Module 1 in progress (6 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST501 — Module 1 in progress (2 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
+   - PCCST501 — Module 1 in progress (8 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
    1. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
    2. PCCST501 — Computer Networks (started — see step 1)
@@ -69,18 +69,18 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Markov Chains | 05 | `m4_05_long_run_stationary_distribution.md` | `m4_05_long_run_stationary_distribution` | pending |
 | M4 Markov Chains | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
 
-## PCCST501 — Computer Networks (2/36 migrated)
+## PCCST501 — Computer Networks (8/36 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
 | M1 Application Layer | 01 | `m1_01_internet_overview_and_network_edge.md` | `m1_01_internet_overview_and_network_edge` | migrated |
 | M1 Application Layer | 02 | `m1_02_protocol_layering_and_osi_tcpip.md` | `m1_02_protocol_layering_and_osi_tcpip` | migrated |
-| M1 Application Layer | 03 | `m1_03_application_layer_paradigms.md` | `m1_03_application_layer_paradigms` | pending |
-| M1 Application Layer | 04 | `m1_04_world_wide_web_and_http.md` | `m1_04_world_wide_web_and_http` | pending |
-| M1 Application Layer | 05 | `m1_05_file_transfer_protocol_ftp.md` | `m1_05_file_transfer_protocol_ftp` | pending |
-| M1 Application Layer | 06 | `m1_06_electronic_mail_smtp_pop3_imap.md` | `m1_06_electronic_mail_smtp_pop3_imap` | pending |
-| M1 Application Layer | 07 | `m1_07_domain_name_system_dns.md` | `m1_07_domain_name_system_dns` | pending |
-| M1 Application Layer | 08 | `m1_08_peer_to_peer_bittorrent.md` | `m1_08_peer_to_peer_bittorrent` | pending |
+| M1 Application Layer | 03 | `m1_03_application_layer_paradigms.md` | `m1_03_application_layer_paradigms` | migrated |
+| M1 Application Layer | 04 | `m1_04_world_wide_web_and_http.md` | `m1_04_world_wide_web_and_http` | migrated |
+| M1 Application Layer | 05 | `m1_05_file_transfer_protocol_ftp.md` | `m1_05_file_transfer_protocol_ftp` | migrated |
+| M1 Application Layer | 06 | `m1_06_electronic_mail_smtp_pop3_imap.md` | `m1_06_electronic_mail_smtp_pop3_imap` | migrated |
+| M1 Application Layer | 07 | `m1_07_domain_name_system_dns.md` | `m1_07_domain_name_system_dns` | migrated |
+| M1 Application Layer | 08 | `m1_08_peer_to_peer_bittorrent.md` | `m1_08_peer_to_peer_bittorrent` | migrated |
 | M1 Application Layer | 99 | `m1_99_practice_lab_application_layer_drills.md` | `m1_99_practice_lab_application_layer_drills` | pending |
 | M2 Transport & Network Layer | 01 | `m2_01_transport_layer_services_and_multiplexing.md` | `m2_01_transport_layer_services_and_multiplexing` | pending |
 | M2 Transport & Network Layer | 02 | `m2_02_udp_segment_structure_and_checksum.md` | `m2_02_udp_segment_structure_and_checksum` | pending |
