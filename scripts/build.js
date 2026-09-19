@@ -27,11 +27,13 @@ import {
   writeTopicHtml,
   writeNavigationIndex,
   writeSitemap,
+  writeTopicManifest,
   writeStaticRootFiles,
   injectDashboardSubjectDetails,
   writeStandaloneIndex,
   copyAssetDirs,
 } from './output.js';
+import { buildTopicManifest } from './topic-manifest.js';
 
 const CONTENT_DIR = 'content';
 const TEMPLATE_PATH = path.join('templates', 'base.html');
@@ -66,8 +68,9 @@ const MODULE_NAMES = Object.fromEntries(
 // dist/ creation/cleaning, generated-file writes, sitemap, dashboard
 // injection, and asset copying live in the shared scripts/output.js
 // module; topic front-matter parsing lives in the shared
-// scripts/topic-metadata.js module; this file orchestrates data
-// preparation and the build.
+// scripts/topic-metadata.js module; the validated topic manifest lives
+// in the shared scripts/topic-manifest.js module; this file orchestrates
+// data preparation and the build.
 
 // Attach validated front-matter metadata to the topic's internal build
 // representation. Stored as non-enumerable properties so JSON output
@@ -213,6 +216,10 @@ export function buildSite() {
   writeNavigationIndex(OUTPUT_DIR, coursesData);
 
   writeSitemap(OUTPUT_DIR, coursesData);
+
+  // Static topic manifest from the validated graph (fails loudly on
+  // graph integrity errors); HTML output is untouched by this step.
+  writeTopicManifest(OUTPUT_DIR, buildTopicManifest({ curriculumDoc: CURRICULUM_DOC, schema: TOPIC_SCHEMA }));
 
   writeStaticRootFiles(OUTPUT_DIR);
 

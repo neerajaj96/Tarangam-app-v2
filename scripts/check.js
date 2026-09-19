@@ -30,6 +30,11 @@ import {
   analyzeTopicGraph,
   formatGraphReport,
 } from './topic-graph.js';
+import {
+  buildTopicManifestFromGraph,
+  validateTopicManifest,
+  formatManifestSummary,
+} from './topic-manifest.js';
 
 const errors = [];
 const warnings = [];
@@ -353,6 +358,20 @@ if (fs.existsSync('dist')) {
     for (const e of analysis.errors) fail(`topic-graph: ${e}`);
     for (const w of analysis.warnings) warn(`topic-graph: ${w}`);
     for (const line of formatGraphReport(analysis)) console.log(line);
+    // 8. Topic manifest integrity (scripts/topic-manifest.js): same graph,
+    // no rebuild. Fails on structural problems, edge disagreement, and
+    // drift from the known migration baseline (432 topics, 14 metadata).
+    if (analysis.errors.length === 0) {
+      const manifest = buildTopicManifestFromGraph(graph, analysis);
+      for (const e of validateTopicManifest(manifest, { graph })) fail(`topic-manifest: ${e}`);
+      if (manifest.aggregates.totalTopics !== 432) {
+        fail(`topic-manifest: expected 432 topics (migration baseline) — actual: ${manifest.aggregates.totalTopics}`);
+      }
+      if (manifest.aggregates.metadataTopics !== 14) {
+        fail(`topic-manifest: expected 14 metadata topics (migration baseline) — actual: ${manifest.aggregates.metadataTopics}`);
+      }
+      console.log(formatManifestSummary(manifest));
+    }
   }
 }
 

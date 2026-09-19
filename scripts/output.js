@@ -56,6 +56,17 @@ export function writeSitemap(outputDir, coursesData) {
   fs.writeFileSync(path.join(outputDir, 'sitemap.xml'), sitemap, 'utf-8');
 }
 
+// Topic manifest for future browser-side consumption (static JSON, no
+// Markdown parsing needed). Stable formatting: sorted content from the
+// manifest builder plus a trailing newline; no timestamps.
+export function writeTopicManifest(outputDir, manifest) {
+  const dir = path.join(outputDir, 'data');
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  fs.writeFileSync(path.join(dir, 'topic-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf-8');
+}
+
 export function writeStaticRootFiles(outputDir) {
   // Copy style.css to dist
   if (fs.existsSync('style.css')) {
