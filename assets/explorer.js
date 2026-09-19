@@ -9,12 +9,14 @@
  * whatever the manifest carries (never as broken).
  */
 import * as Data from './curriculum-data.js';
+import { createLearnerState } from './learner-state.js';
 
 const $ = (id) => document.getElementById(id);
 
 const state = {
   manifest: null,
   baseUrl: '',
+  progress: null,
   course: null,
   module: 'all',
   q: '',
@@ -34,6 +36,18 @@ function esc(value) {
 
 function fmtSeq(topic) {
   return `M${topic.module} · ${String(topic.sequence).padStart(2, '0')}`;
+}
+
+function topicStatus(topic) {
+  if (!state.progress) return 'not_started';
+  return state.progress.getTopicState(topic.courseCode, topic.id).status;
+}
+
+function statusChip(topic) {
+  const s = topicStatus(topic);
+  if (s === 'completed') return '<span class="badge xp-st-done">✓ Completed</span>';
+  if (s === 'in_progress') return '<span class="badge badge-accent">… In progress</span>';
+  return '<span class="badge xp-st-todo">○ Not started</span>';
 }
 
 function metaChips(topic) {
@@ -138,7 +152,7 @@ function renderList() {
     return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${metaChips(t)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
@@ -146,9 +160,16 @@ function renderList() {
   }
 }
 
+function relState(topic) {
+  const s = topicStatus(topic);
+  if (s === 'completed') return '✓';
+  if (s === 'in_progress') return '…';
+  return '○';
+}
+
 function chipLink(topic, rel) {
   return `<span class="xp-rel">
-    <button class="xp-rel-btn" data-go="${esc(topic.courseCode)}" data-topic="${esc(topic.id)}">${esc(topic.title)}</button>
+    <button class="xp-rel-btn" data-go="${esc(topic.courseCode)}" data-topic="${esc(topic.id)}"><span class="xp-rel-dot">${relState(topic)}</span> ${esc(topic.title)}</button>
     <a class="xp-open" href="${esc(topicPageHref(topic))}" title="Open topic page">↗</a>
     <span class="xp-rel-tag">${rel}</span>
   </span>`;
@@ -165,6 +186,16 @@ function renderDetail() {
   }
   const prereqs = Data.getPrerequisites(state.manifest, topic.courseCode, topic.id);
   const dependents = Data.getDependents(state.manifest, topic.courseCode, topic.id);
+  const myStatus = topicStatus(topic);
+  const isDone = myStatus === 'completed';
+  let prereqBlock = '<span class="xp-none">None</span>';
+  if (topic.hasMetadata) {
+    const pc = state.progress.getPrerequisiteCompletion(topic.courseCode, topic.id);
+    const head = `<div class="xp-pre-head">${pc.completed}/${pc.total} complete — continuing is always allowed</div>`;
+    prereqBlock = head + (prereqs.length
+      ? prereqs.map((t) => chipLink(t, 'prereq')).join('')
+      : '<span class="xp-none">None</span>');
+  }
   const listOrNone = (items, kind) => items.length
     ? items.map((t) => chipLink(t, kind)).join('')
     : '<span class="xp-none">None</span>';
@@ -172,7 +203,8 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${metaChips(topic)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}</div>
+      <button class="xp-toggle" data-toggle="${esc(topic.id)}" type="button">${isDone ? '✓ Completed — mark not started' : 'Mark completed'}</button>
     </div>
     <div class="xp-detail-sec"><h3>Concepts</h3>
       ${topic.concepts && topic.concepts.length
@@ -180,7 +212,7 @@ function renderDetail() {
         : '<span class="xp-none">Not recorded for this topic.</span>'}
     </div>
     <div class="xp-detail-sec"><h3>Prerequisites (${prereqs.length})</h3>
-      <div class="xp-rels">${listOrNone(prereqs, 'prereq')}</div>
+      <div class="xp-rels">${prereqBlock}</div>
     </div>
     <div class="xp-detail-sec"><h3>Dependent topics (${dependents.length})</h3>
       <div class="xp-rels">${listOrNone(dependents, 'next')}</div>
@@ -196,12 +228,36 @@ function renderDetail() {
   for (const btn of panel.querySelectorAll('[data-go]')) {
     btn.addEventListener('click', () => selectTopic(btn.getAttribute('data-go'), btn.getAttribute('data-topic'), true));
   }
+  const toggle = panel.querySelector('[data-toggle]');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      state.progress.toggleTopicCompleted(topic.courseCode, topic.id);
+      renderAll();
+    });
+  }
+}
+
+function renderProgress() {
+  const el = $('xp-progress');
+  if (!state.progress) { el.textContent = ''; return; }
+  const overall = state.progress.getOverallProgress();
+  const parts = [`Overall ${overall.completed} / ${overall.total} (${overall.percent}%)`];
+  if (state.course) {
+    const c = state.progress.getCourseProgress(state.course);
+    parts.push(`${state.course}: ${c.completed} / ${c.total}`);
+    if (state.module !== 'all') {
+      const m = state.progress.getModuleProgress(state.course, Number(state.module));
+      parts.push(`M${state.module}: ${m.completed} / ${m.total}`);
+    }
+  }
+  el.textContent = parts.join(' · ');
 }
 
 function renderAll() {
   renderCourses();
   renderModules();
   renderFilterOptions();
+  renderProgress();
   // Keep selection only if still visible; otherwise select first visible.
   const topics = visibleTopics();
   if (!topics.some((t) => `${t.courseCode}/${t.id}` === state.selectedKey)) {
@@ -259,6 +315,7 @@ async function init() {
     const { manifest, baseUrl } = await Data.loadManifest();
     state.manifest = manifest;
     state.baseUrl = baseUrl || '';
+    state.progress = createLearnerState({ manifest });
     state.loadError = null;
     $('xp-status').textContent = `${manifest.topics.length} topics · ${manifest.aggregates?.metadataTopics ?? '?'} with metadata`;
     const deep = readHash();

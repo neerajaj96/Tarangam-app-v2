@@ -470,110 +470,142 @@
     update();
   })();
 
-  // 3. Client-Side Topic Completion & Checkmark Tracking
-  (function trackTopicProgress() {
-    var totalTopics = Number(25) || 0;
-    const currentId = "m2_02_activations_relu_family";
-    const courseCode = "PECST632";
-    if (totalTopics === 0 || !currentId) return;
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(25) || 0;
+      var currentId = "m2_02_activations_relu_family";
+      var courseCode = "PECST632";
+      if (!totalTopics || !currentId || !courseCode) return;
 
-    const storageKey = `tarangam_visited_${courseCode}`;
-    let visited = [];
-    try {
-      visited = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      if (!Array.isArray(visited)) visited = [];
-    } catch (e) { visited = []; }
+      var store = createLearnerState({});
+      var COURSE = courseCode;
 
-    // Every page counts, including practice labs (denominator includes them).
-    if (!visited.includes(currentId)) {
-      visited.push(currentId);
-      try { localStorage.setItem(storageKey, JSON.stringify(visited)); } catch (e) { /* quota/private mode */ }
-    }
-    // Timestamp map for future spaced-repetition scheduling (additive; the
-    // visited array above stays the source of truth for progress).
-    try {
-      const tsKey = `tarangam_visited_ts_${courseCode}`;
-      const stamps = JSON.parse(localStorage.getItem(tsKey) || '{}') || {};
-      stamps[currentId] = Date.now();
-      localStorage.setItem(tsKey, JSON.stringify(stamps));
-    } catch (e) { /* quota/private mode */ }
-    
-    const progressFill = document.getElementById('progressFill');
-    const progressLabel = document.getElementById('progressLabel');
-    
-    if (progressFill && progressLabel) {
-      const pct = Math.min(100, Math.round((visited.length / totalTopics) * 100));
-      progressFill.style.width = pct + '%';
-      progressLabel.innerText = `${visited.length} of ${totalTopics} completed`;
-    }
-    
-    document.querySelectorAll('.topic-link').forEach(link => {
-      const href = link.getAttribute('href');
-      if (href) {
-        const topicId = href.replace('.html', '').split('/').pop();
-        if (visited.includes(topicId)) {
-          link.classList.add('visited');
-          if (!link.querySelector('.check-mark')) {
-            const check = document.createElement('span');
-            check.className = 'check-mark';
-            check.style.marginLeft = 'auto';
-            check.style.color = 'var(--correct)';
-            check.style.fontSize = '12px';
-            check.innerText = '✓';
-            link.appendChild(check);
-          }
-        }
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
       }
-    });
 
-    // Spaced review (v1 schedule): visited topics untouched for 7+ days are
-    // flagged in the nav; opening one refreshes its timestamp (written above).
-    try {
-      const REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
-      const stamps = JSON.parse(localStorage.getItem(`tarangam_visited_ts_${courseCode}`) || '{}') || {};
-      const now = Date.now();
-      const due = visited.filter(id => {
-        const ts = stamps[id];
-        return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
-      });
-      const idOf = (link) => {
-        const href = link.getAttribute('href') || '';
-        return href.replace('.html', '').split('/').pop();
-      };
-      document.querySelectorAll('.topic-link').forEach(link => {
-        if (due.includes(idOf(link))) {
-          link.classList.add('due');
-          // Review pending supersedes the completion check: swap ✓ for ↻.
-          const old = link.querySelector('.check-mark');
-          if (old) old.remove();
-          if (!link.querySelector('.due-mark')) {
-            const mark = document.createElement('span');
-            mark.className = 'due-mark';
-            mark.style.marginLeft = 'auto';
-            mark.style.color = 'var(--accent-warm)';
-            mark.style.fontSize = '12px';
-            mark.title = 'Due for spaced review (unvisited 7+ days)';
-            mark.innerText = '↻';
-            link.appendChild(mark);
-          }
-        }
-      });
-      const reviewLabel = document.getElementById('reviewLabel');
-      if (reviewLabel) {
-        reviewLabel.innerText = due.length
-          ? `${due.length} due for review ↻`
-          : (visited.length ? 'all fresh ✓' : '');
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
       }
-    } catch (e) { /* private mode: review silently disabled */ }
 
-    const resetBtn = document.getElementById('resetProgress');
-    if (resetBtn) {
-      resetBtn.onclick = () => {
-        localStorage.removeItem(storageKey);
-        location.reload();
-      };
-    }
-  })();
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script>
 
   // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
   document.addEventListener('DOMContentLoaded', () => {

@@ -50,6 +50,13 @@
   .xp-error { border: 1px solid var(--wrong); background: var(--wrong-bg); border-radius: var(--radius-md); padding: 18px; margin-bottom: 18px; }
   .xp-error button { margin-top: 10px; background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-sm); padding: 8px 14px; cursor: pointer; }
   .xp-legend { margin-top: 22px; font-size: 12px; color: var(--ink-dim); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .xp-progress { font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); margin: 0 0 14px; }
+  .xp-st-todo { border-style: dashed; color: var(--ink-dim); }
+  .xp-st-done { border-color: var(--correct); color: var(--correct); font-weight: 600; }
+  .xp-toggle { margin-top: 12px; background: var(--surface-2); border: 1px solid var(--accent); color: var(--ink); border-radius: var(--radius-md); padding: 9px 14px; font-size: 13.5px; font-weight: 600; cursor: pointer; font-family: var(--font-display); }
+  .xp-toggle:hover { background: var(--accent-glow); }
+  .xp-pre-head { font-size: 12px; color: var(--ink-dim); margin-bottom: 8px; }
+  .xp-rel-dot { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); margin-right: 6px; }
 </style>
 </head>
 <body data-theme="dark" data-size="md">
@@ -63,6 +70,7 @@
     <a class="xp-back" href="./index.html">← Dashboard</a>
   </div>
   <p class="xp-status" id="xp-status">Loading curriculum…</p>
+  <p class="xp-progress" id="xp-progress"></p>
 
   <div class="xp-error" id="xp-error" hidden>
     <strong>Could not load the curriculum data.</strong>
