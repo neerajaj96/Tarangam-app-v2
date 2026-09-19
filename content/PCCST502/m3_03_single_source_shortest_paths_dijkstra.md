@@ -1,3 +1,26 @@
+---
+id: m3_03_single_source_shortest_paths_dijkstra
+courseCode: PCCST502
+module: 3
+sequence: 3
+title: 'Single-Source Shortest Paths: Dijkstra'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Settle vertices greedily with extract-min and relaxation
+  - Enforce the non-negative-weight contract against voiding edges
+  - Separate Dijkstra from BFS and Prim in the confusion trio
+concepts:
+  - Dijkstra's algorithm
+  - relaxation
+  - greedy settling
+prerequisites:
+  - m3_01_greedy_strategy_control_abstraction
+examRelevance: high
+tags:
+  - greedy
+  - shortest-paths
+---
 # Single-Source Shortest Paths: Dijkstra
 
 **Greedy settling order, relaxation, the non-negative-weight contract, a hand-settled trace, and why one negative edge voids everything.**

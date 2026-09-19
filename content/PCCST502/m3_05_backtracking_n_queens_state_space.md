@@ -1,3 +1,25 @@
+---
+id: m3_05_backtracking_n_queens_state_space
+courseCode: PCCST502
+module: 3
+sequence: 5
+title: 'Backtracking: N-Queens & State-Space Search'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Search state-space trees DFS-style with intelligent retreat
+  - Prune with explicit domain and implicit relational constraints
+  - Trace 4-Queens to both solutions with minimal attack checks
+concepts:
+  - backtracking
+  - state-space tree
+  - bounding functions
+prerequisites: []
+examRelevance: high
+tags:
+  - backtracking
+  - state-space
+---
 # Backtracking: N-Queens & State-Space Search
 
 **Systematic trial with intelligent retreat: state-space trees, bounding functions, explicit vs. implicit constraints, and 4-Queens traced to both solutions.**

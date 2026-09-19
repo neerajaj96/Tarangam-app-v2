@@ -1,3 +1,24 @@
+---
+id: m1_00_module_overview
+courseCode: PCCST502
+module: 1
+sequence: 0
+title: Algorithm Analysis — Module 1 Overview
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Map every Module 1 topic onto the analysis-to-recurrence journey
+  - Explain why abstract notation beats stopwatch timing
+  - Preview how Module 1 founds the entire course
+concepts:
+  - analysis roadmap
+  - abstract notation
+prerequisites: []
+examRelevance: medium
+tags:
+  - overview
+  - m1-foundations
+---
 # Algorithm Analysis — Module 1 Overview
 
 **A beginner's map of everything Module 1 covers, and why it's the foundation for the entire course.**

@@ -1,3 +1,25 @@
+---
+id: m1_09_balanced_search_trees_avl_foundations
+courseCode: PCCST502
+module: 1
+sequence: 9
+title: 'Balanced Search Trees: AVL Trees & Balance Factor'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Diagnose plain BST collapse to linear search time
+  - Enforce the unit balance-factor invariant at every node
+  - Prove the logarithmic height bound for exam answers
+concepts:
+  - AVL invariant
+  - balance factor
+  - height bound
+prerequisites: []
+examRelevance: medium
+tags:
+  - balanced-trees
+  - avl-trees
+---
 # Balanced Search Trees: AVL Trees & Balance Factor
 
 **Binary Search Tree properties, AVL invariant (|BF| <= 1), and height bound proof (h < 1.44 log2 n).**

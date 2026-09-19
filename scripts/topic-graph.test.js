@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 160 metadata-bearing', () => {
+  it('discovers all 432 topics with 187 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 160);
+    assert.equal(analysis.coverage.metadata, 187);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -178,7 +178,8 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('GZPHT121/m2_04_newtons_rings_liquid_air_wedge_thickness -> GZPHT121/m2_03_newtons_rings_wavelength'), 'internal');
     assert.equal(kinds.get('PCCST303/m3_06_bfs_dfs_shortest_paths -> PCCST303/m1_05_queues_circular_deque'), 'internal');
     assert.equal(kinds.get('PCCST503/m4_05_boosting_adaboost -> PCCST503/m4_04_ensemble_bagging_random_forests'), 'internal');
-    assert.equal(analysis.edgeCount, 199);
+    assert.equal(kinds.get('PCCST502/m2_04_divide_and_conquer_merge_sort_and_strassen -> PCCST502/m1_08_master_theorem_and_cases'), 'internal');
+    assert.equal(analysis.edgeCount, 219);
   });
 
   it('computes chain depths', () => {
@@ -189,6 +190,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('GZPHT121/m2_07_module2_mixed_numerical_drill').depth, 4);
     assert.equal(built.nodes.get('PCCST303/m4_07_m4_mixed_drill').depth, 5);
     assert.equal(built.nodes.get('PCCST503/m3_02_multilayer_networks_backpropagation').depth, 4);
+    assert.equal(built.nodes.get('PCCST502/m2_04_divide_and_conquer_merge_sort_and_strassen').depth, 5);
     assert.equal(analysis.maxDepth, 8);
   });
 
@@ -203,6 +205,8 @@ describe('live repo graph', () => {
       'metadata topic "PCCST501/m3_04_lan_addressing_arp_switches_and_vlans" has no prerequisite relationships',
       'metadata topic "PCCST501/m4_01_network_management_snmp_architecture" has no prerequisite relationships',
       'metadata topic "PCCST501/m4_05_transmission_media_guided_unguided" has no prerequisite relationships',
+      'metadata topic "PCCST502/m1_00_module_overview" has no prerequisite relationships',
+      'metadata topic "PCCST502/m4_05_randomized_algorithms_las_vegas_monte_carlo" has no prerequisite relationships',
     ]);
   });
 

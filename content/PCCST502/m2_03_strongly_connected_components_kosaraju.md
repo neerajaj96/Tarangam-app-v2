@@ -1,3 +1,26 @@
+---
+id: m2_03_strongly_connected_components_kosaraju
+courseCode: PCCST502
+module: 2
+sequence: 3
+title: Strongly Connected Components: Kosaraju's Algorithm
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Define components through mutual reachability classes
+  - Order pass one by DFS finishing times on the original graph
+  - Harvest one component per tree on the transpose in order
+concepts:
+  - strongly connected components
+  - Kosaraju's algorithm
+  - condensation DAG
+prerequisites:
+  - m2_02_graph_traversals_bfs_and_dfs
+examRelevance: high
+tags:
+  - graphs
+  - connectivity
+---
 # Strongly Connected Components: Kosaraju's Algorithm
 
 **Mutual reachability, the condensation DAG, finishing-time order, the two-pass method on G and transpose, and why the order is load-bearing.**

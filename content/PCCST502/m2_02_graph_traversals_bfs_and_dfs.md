@@ -1,3 +1,25 @@
+---
+id: m2_02_graph_traversals_bfs_and_dfs
+courseCode: PCCST502
+module: 2
+sequence: 2
+title: Graph Traversals: BFS & DFS
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Layer unweighted shortest paths with queue-driven BFS
+  - Classify directed edges with DFS timestamps and colors
+  - Run both traversals on the shared vertex-plus-edge skeleton
+concepts:
+  - breadth-first search
+  - depth-first search
+  - edge classification
+prerequisites: []
+examRelevance: medium
+tags:
+  - graphs
+  - traversals
+---
 # Graph Traversals: BFS & DFS
 
 **Queues vs. stacks, shortest paths in unweighted graphs, edge classification, timestamps, and the shared O(V+E) skeleton.**

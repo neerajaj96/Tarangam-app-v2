@@ -1,3 +1,26 @@
+---
+id: m1_06_recurrence_iteration_method
+courseCode: PCCST502
+module: 1
+sequence: 6
+title: 'Solution of Recurrences: Iteration / Expansion Method'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Expand recurrences level by level to a generalized kth step
+  - Read the stopping depth off the shrinking argument
+  - Close arithmetic and geometric sums into exact totals
+concepts:
+  - iteration method
+  - expansion levels
+  - series summation
+prerequisites:
+  - m1_05_recurrence_equations_and_substitution_method
+examRelevance: medium
+tags:
+  - recurrences
+  - iteration-method
+---
 # Solution of Recurrences: Iteration / Expansion Method
 
 **Repeated substitution, identifying generalized patterns at step k, arithmetic and geometric series summation.**

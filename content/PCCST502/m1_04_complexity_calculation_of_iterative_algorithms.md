@@ -1,3 +1,27 @@
+---
+id: m1_04_complexity_calculation_of_iterative_algorithms
+courseCode: PCCST502
+module: 1
+sequence: 4
+title: Complexity Analysis of Iterative Loops
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Cost single, nested and logarithmic-increment loops exactly
+  - Sum dependent inner loops with arithmetic series
+  - Bound doubling loops with geometric series and amortization
+concepts:
+  - loop analysis
+  - arithmetic series
+  - geometric series
+prerequisites:
+  - m1_02_time_space_complexity_best_worst_average
+  - m1_03_asymptotic_notations_and_properties
+examRelevance: high
+tags:
+  - complexity
+  - loop-analysis
+---
 # Complexity Analysis of Iterative Loops
 
 **Single loops, nested loops, logarithmic increment loops, dependent inner loops, and amortized loop bounds.**

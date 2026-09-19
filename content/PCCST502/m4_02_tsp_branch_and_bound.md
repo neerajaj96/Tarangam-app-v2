@@ -1,3 +1,26 @@
+---
+id: m4_02_tsp_branch_and_bound
+courseCode: PCCST502
+module: 4
+sequence: 2
+title: 'TSP Branch & Bound: Reduced Matrices'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Lower-bound tours with row-plus-column reduction totals
+  - Branch include-versus-exclude with used-row and diagonal infinities
+  - Prune against the incumbent through a fully traced optimum
+concepts:
+  - TSP lower bounds
+  - matrix reduction
+  - incumbent pruning
+prerequisites:
+  - m4_01_branch_and_bound_control_abstraction
+examRelevance: high
+tags:
+  - branch-and-bound
+  - tsp
+---
 # TSP Branch & Bound: Reduced Matrices
 
 **Tour cost, assignment-style lower bounds by row/column reduction, include/exclude branching, incumbent pruning, and a fully traced 4-city optimum.**

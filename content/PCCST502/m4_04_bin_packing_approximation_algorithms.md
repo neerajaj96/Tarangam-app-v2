@@ -1,3 +1,26 @@
+---
+id: m4_04_bin_packing_approximation_algorithms
+courseCode: PCCST502
+module: 4
+sequence: 4
+title: 'Bin Packing: Approximation Algorithms'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Certify packings with total-size and oversized-item lower bounds
+  - Price online Next, First and Best-Fit rules against optimal
+  - Convert mediocrity with sort-descending-first guarantees
+concepts:
+  - approximation ratios
+  - lower-bound certificates
+  - fit heuristics
+prerequisites:
+  - m4_03_np_completeness_p_np_reductions
+examRelevance: high
+tags:
+  - approximation
+  - bin-packing
+---
 # Bin Packing: Approximation Algorithms
 
 **NP-hard packing, Next/First/Best-Fit online rules, First-Fit Decreasing, approximation ratios, and lower-bound certificates.**

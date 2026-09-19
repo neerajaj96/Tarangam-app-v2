@@ -1,3 +1,26 @@
+---
+id: m1_10_avl_tree_rotations_insertion_and_deletion
+courseCode: PCCST502
+module: 1
+sequence: 10
+title: 'AVL Tree Rotations: LL, RR, LR, RL Operations'
+difficulty: beginner
+estimatedMinutes: 9
+learningObjectives:
+  - Match straight-line imbalances to single rotations with direction
+  - Match zig-zag imbalances to double rotations in child-first order
+  - Rebalance insertions and deletions without changing the key set
+concepts:
+  - tree rotations
+  - insertion rebalancing
+  - deletion rebalancing
+prerequisites:
+  - m1_09_balanced_search_trees_avl_foundations
+examRelevance: high
+tags:
+  - balanced-trees
+  - avl-rotations
+---
 # AVL Tree Rotations: LL, RR, LR, RL Operations
 
 **Single rotations (LL, RR), double rotations (LR, RL), step-by-step insertion rebalancing, and deletion rebalancing.**

@@ -1,3 +1,26 @@
+---
+id: m1_03_asymptotic_notations_and_properties
+courseCode: PCCST502
+module: 1
+sequence: 3
+title: 'Asymptotic Notations: Big-O, Omega, Theta, Little-o, Little-omega'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Define all five notations with limits, constants and thresholds
+  - Pick the tightest true statement among competing bounds
+  - Apply transitivity, reflexivity and symmetry of growth relations
+concepts:
+  - asymptotic notation
+  - tight bounds
+  - notation properties
+prerequisites:
+  - m1_02_time_space_complexity_best_worst_average
+examRelevance: high
+tags:
+  - complexity
+  - asymptotics
+---
 # Asymptotic Notations: Big-O, Omega, Theta, Little-o, Little-omega
 
 **Formal mathematical definitions via limits and constants (c, n0), transitivity, reflexivity, and symmetry.**

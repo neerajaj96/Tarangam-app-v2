@@ -1,3 +1,26 @@
+---
+id: m3_06_floyd_warshall_all_pairs_shortest
+courseCode: PCCST502
+module: 3
+sequence: 6
+title: 'Floyd-Warshall: All Pairs, One Recurrence'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Relax every pair through every midpoint with one recurrence
+  - Hand-trace the distance table on three vertices honestly
+  - Catch negative cycles on the diagonal and rebuild paths
+concepts:
+  - Floyd-Warshall algorithm
+  - all-pairs shortest paths
+  - path reconstruction
+prerequisites:
+  - m3_04_dynamic_programming_matrix_chain_knapsack
+examRelevance: high
+tags:
+  - dynamic-programming
+  - shortest-paths
+---
 # Floyd-Warshall: All Pairs, One Recurrence
 
 **Every pair, every midpoint — the $D^k$ table hand-traced on three vertices, the single relaxation that pays, and $O(V^3)$ honesty.**

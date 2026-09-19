@@ -1,3 +1,25 @@
+---
+id: m4_03_np_completeness_p_np_reductions
+courseCode: PCCST502
+module: 4
+sequence: 3
+title: 'NP-Completeness: P, NP & Reductions'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Separate poly-time solvable from poly-time verifiable classes
+  - Prove hardness with known-hard-to-target polynomial reductions
+  - Replay the 3-SAT to Clique proof pattern with Cook's theorem
+concepts:
+  - complexity classes
+  - polynomial reductions
+  - NP-completeness
+prerequisites: []
+examRelevance: high
+tags:
+  - complexity-theory
+  - np-completeness
+---
 # NP-Completeness: P, NP & Reductions
 
 **Decision problems, certificates vs. solutions, polynomial reductions, Cook's theorem, the 3-SAT→Clique proof pattern, and coping when completeness bites.**

@@ -1,3 +1,26 @@
+---
+id: m1_08_master_theorem_and_cases
+courseCode: PCCST502
+module: 1
+sequence: 8
+title: The Master Theorem for Divide-and-Conquer Recurrences
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Compute the watershed exponent before touching the cases
+  - Sort recurrences into slower, equal and faster regularity cases
+  - Solve canonical recurrences with exact case arithmetic
+concepts:
+  - master theorem
+  - watershed exponent
+  - regularity condition
+prerequisites:
+  - m1_05_recurrence_equations_and_substitution_method
+examRelevance: high
+tags:
+  - recurrences
+  - master-theorem
+---
 # The Master Theorem for Divide-and-Conquer Recurrences
 
 **Master Theorem formula T(n) = aT(n/b) + f(n), Case 1, Case 2, and Case 3.**

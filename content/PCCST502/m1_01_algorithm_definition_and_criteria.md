@@ -1,3 +1,25 @@
+---
+id: m1_01_algorithm_definition_and_criteria
+courseCode: PCCST502
+module: 1
+sequence: 1
+title: 'Algorithms: Characteristics & Analysis Criteria'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Test instructions against finiteness, definiteness and effectiveness
+  - Separate space from time efficiency with input and output contracts
+  - Count in the RAM model of computation
+concepts:
+  - algorithm criteria
+  - RAM model
+  - efficiency measures
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - algorithms
+---
 # Algorithms: Characteristics & Analysis Criteria
 
 **Finiteness, definiteness, input, output, effectiveness, space vs time efficiency, and RAM model of computation.**

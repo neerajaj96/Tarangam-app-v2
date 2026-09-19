@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **160**
-- Pending: **272**
-- Coverage: **37.04%** (tracked by `npm run check`)
+- Migrated: **187**
+- Pending: **245**
+- Coverage: **43.29%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PCCST502 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST503 — Module 1 in progress (19 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST303 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GZPHT121 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -26,13 +27,13 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PCCST503 — Machine Learning (started — see step 1)
-   2. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   3. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   4. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   5. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   6. PCCST501 — Computer Networks (started — see step 1)
-   7. PCCST502 — Design and Analysis of Algorithms
+   1. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   2. PCCST503 — Machine Learning (started — see step 1)
+   3. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   4. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   5. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   6. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   7. PCCST501 — Computer Networks (started — see step 1)
    8. PECST522 — Artificial Intelligence
    9. PCCST601 — Compiler Design
    10. PCCST602 — Advanced Computing Systems
@@ -43,6 +44,42 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PCCST502 — Design and Analysis of Algorithms (27/31 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Analysis & Recurrences | 00 | `m1_00_module_overview.md` | `m1_00_module_overview` | migrated |
+| M1 Analysis & Recurrences | 01 | `m1_01_algorithm_definition_and_criteria.md` | `m1_01_algorithm_definition_and_criteria` | migrated |
+| M1 Analysis & Recurrences | 02 | `m1_02_time_space_complexity_best_worst_average.md` | `m1_02_time_space_complexity_best_worst_average` | migrated |
+| M1 Analysis & Recurrences | 03 | `m1_03_asymptotic_notations_and_properties.md` | `m1_03_asymptotic_notations_and_properties` | migrated |
+| M1 Analysis & Recurrences | 04 | `m1_04_complexity_calculation_of_iterative_algorithms.md` | `m1_04_complexity_calculation_of_iterative_algorithms` | migrated |
+| M1 Analysis & Recurrences | 05 | `m1_05_recurrence_equations_and_substitution_method.md` | `m1_05_recurrence_equations_and_substitution_method` | migrated |
+| M1 Analysis & Recurrences | 06 | `m1_06_recurrence_iteration_method.md` | `m1_06_recurrence_iteration_method` | migrated |
+| M1 Analysis & Recurrences | 07 | `m1_07_recursion_tree_method.md` | `m1_07_recursion_tree_method` | migrated |
+| M1 Analysis & Recurrences | 08 | `m1_08_master_theorem_and_cases.md` | `m1_08_master_theorem_and_cases` | migrated |
+| M1 Analysis & Recurrences | 09 | `m1_09_balanced_search_trees_avl_foundations.md` | `m1_09_balanced_search_trees_avl_foundations` | migrated |
+| M1 Analysis & Recurrences | 10 | `m1_10_avl_tree_rotations_insertion_and_deletion.md` | `m1_10_avl_tree_rotations_insertion_and_deletion` | migrated |
+| M1 Analysis & Recurrences | 99 | `m1_99_practice_lab_asymptotics_and_recurrences.md` | `m1_99_practice_lab_asymptotics_and_recurrences` | pending |
+| M2 Graphs & Divide/Conquer | 01 | `m2_01_disjoint_sets_and_union_find.md` | `m2_01_disjoint_sets_and_union_find` | migrated |
+| M2 Graphs & Divide/Conquer | 02 | `m2_02_graph_traversals_bfs_and_dfs.md` | `m2_02_graph_traversals_bfs_and_dfs` | migrated |
+| M2 Graphs & Divide/Conquer | 03 | `m2_03_strongly_connected_components_kosaraju.md` | `m2_03_strongly_connected_components_kosaraju` | migrated |
+| M2 Graphs & Divide/Conquer | 04 | `m2_04_divide_and_conquer_merge_sort_and_strassen.md` | `m2_04_divide_and_conquer_merge_sort_and_strassen` | migrated |
+| M2 Graphs & Divide/Conquer | 05 | `m2_05_topological_sorting_dag_linearization.md` | `m2_05_topological_sorting_dag_linearization` | migrated |
+| M2 Graphs & Divide/Conquer | 99 | `m2_99_practice_lab_graphs_divide_drills.md` | `m2_99_practice_lab_graphs_divide_drills` | pending |
+| M3 Greedy, DP & Backtracking | 01 | `m3_01_greedy_strategy_control_abstraction.md` | `m3_01_greedy_strategy_control_abstraction` | migrated |
+| M3 Greedy, DP & Backtracking | 02 | `m3_02_minimum_spanning_trees_kruskal_prim.md` | `m3_02_minimum_spanning_trees_kruskal_prim` | migrated |
+| M3 Greedy, DP & Backtracking | 03 | `m3_03_single_source_shortest_paths_dijkstra.md` | `m3_03_single_source_shortest_paths_dijkstra` | migrated |
+| M3 Greedy, DP & Backtracking | 04 | `m3_04_dynamic_programming_matrix_chain_knapsack.md` | `m3_04_dynamic_programming_matrix_chain_knapsack` | migrated |
+| M3 Greedy, DP & Backtracking | 05 | `m3_05_backtracking_n_queens_state_space.md` | `m3_05_backtracking_n_queens_state_space` | migrated |
+| M3 Greedy, DP & Backtracking | 06 | `m3_06_floyd_warshall_all_pairs_shortest.md` | `m3_06_floyd_warshall_all_pairs_shortest` | migrated |
+| M3 Greedy, DP & Backtracking | 99 | `m3_99_practice_lab_greedy_dp_backtracking_drills.md` | `m3_99_practice_lab_greedy_dp_backtracking_drills` | pending |
+| M4 Branch/Bound & Complexity | 01 | `m4_01_branch_and_bound_control_abstraction.md` | `m4_01_branch_and_bound_control_abstraction` | migrated |
+| M4 Branch/Bound & Complexity | 02 | `m4_02_tsp_branch_and_bound.md` | `m4_02_tsp_branch_and_bound` | migrated |
+| M4 Branch/Bound & Complexity | 03 | `m4_03_np_completeness_p_np_reductions.md` | `m4_03_np_completeness_p_np_reductions` | migrated |
+| M4 Branch/Bound & Complexity | 04 | `m4_04_bin_packing_approximation_algorithms.md` | `m4_04_bin_packing_approximation_algorithms` | migrated |
+| M4 Branch/Bound & Complexity | 05 | `m4_05_randomized_algorithms_las_vegas_monte_carlo.md` | `m4_05_randomized_algorithms_las_vegas_monte_carlo` | migrated |
+| M4 Branch/Bound & Complexity | 99 | `m4_99_practice_lab_branchbound_complexity_drills.md` | `m4_99_practice_lab_branchbound_complexity_drills` | pending |
 
 ## PCCST503 — Machine Learning (19/23 migrated)
 
@@ -242,42 +279,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PCCST502 — Design and Analysis of Algorithms (0/31 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Analysis & Recurrences | 00 | `m1_00_module_overview.md` | `m1_00_module_overview` | pending |
-| M1 Analysis & Recurrences | 01 | `m1_01_algorithm_definition_and_criteria.md` | `m1_01_algorithm_definition_and_criteria` | pending |
-| M1 Analysis & Recurrences | 02 | `m1_02_time_space_complexity_best_worst_average.md` | `m1_02_time_space_complexity_best_worst_average` | pending |
-| M1 Analysis & Recurrences | 03 | `m1_03_asymptotic_notations_and_properties.md` | `m1_03_asymptotic_notations_and_properties` | pending |
-| M1 Analysis & Recurrences | 04 | `m1_04_complexity_calculation_of_iterative_algorithms.md` | `m1_04_complexity_calculation_of_iterative_algorithms` | pending |
-| M1 Analysis & Recurrences | 05 | `m1_05_recurrence_equations_and_substitution_method.md` | `m1_05_recurrence_equations_and_substitution_method` | pending |
-| M1 Analysis & Recurrences | 06 | `m1_06_recurrence_iteration_method.md` | `m1_06_recurrence_iteration_method` | pending |
-| M1 Analysis & Recurrences | 07 | `m1_07_recursion_tree_method.md` | `m1_07_recursion_tree_method` | pending |
-| M1 Analysis & Recurrences | 08 | `m1_08_master_theorem_and_cases.md` | `m1_08_master_theorem_and_cases` | pending |
-| M1 Analysis & Recurrences | 09 | `m1_09_balanced_search_trees_avl_foundations.md` | `m1_09_balanced_search_trees_avl_foundations` | pending |
-| M1 Analysis & Recurrences | 10 | `m1_10_avl_tree_rotations_insertion_and_deletion.md` | `m1_10_avl_tree_rotations_insertion_and_deletion` | pending |
-| M1 Analysis & Recurrences | 99 | `m1_99_practice_lab_asymptotics_and_recurrences.md` | `m1_99_practice_lab_asymptotics_and_recurrences` | pending |
-| M2 Graphs & Divide/Conquer | 01 | `m2_01_disjoint_sets_and_union_find.md` | `m2_01_disjoint_sets_and_union_find` | pending |
-| M2 Graphs & Divide/Conquer | 02 | `m2_02_graph_traversals_bfs_and_dfs.md` | `m2_02_graph_traversals_bfs_and_dfs` | pending |
-| M2 Graphs & Divide/Conquer | 03 | `m2_03_strongly_connected_components_kosaraju.md` | `m2_03_strongly_connected_components_kosaraju` | pending |
-| M2 Graphs & Divide/Conquer | 04 | `m2_04_divide_and_conquer_merge_sort_and_strassen.md` | `m2_04_divide_and_conquer_merge_sort_and_strassen` | pending |
-| M2 Graphs & Divide/Conquer | 05 | `m2_05_topological_sorting_dag_linearization.md` | `m2_05_topological_sorting_dag_linearization` | pending |
-| M2 Graphs & Divide/Conquer | 99 | `m2_99_practice_lab_graphs_divide_drills.md` | `m2_99_practice_lab_graphs_divide_drills` | pending |
-| M3 Greedy, DP & Backtracking | 01 | `m3_01_greedy_strategy_control_abstraction.md` | `m3_01_greedy_strategy_control_abstraction` | pending |
-| M3 Greedy, DP & Backtracking | 02 | `m3_02_minimum_spanning_trees_kruskal_prim.md` | `m3_02_minimum_spanning_trees_kruskal_prim` | pending |
-| M3 Greedy, DP & Backtracking | 03 | `m3_03_single_source_shortest_paths_dijkstra.md` | `m3_03_single_source_shortest_paths_dijkstra` | pending |
-| M3 Greedy, DP & Backtracking | 04 | `m3_04_dynamic_programming_matrix_chain_knapsack.md` | `m3_04_dynamic_programming_matrix_chain_knapsack` | pending |
-| M3 Greedy, DP & Backtracking | 05 | `m3_05_backtracking_n_queens_state_space.md` | `m3_05_backtracking_n_queens_state_space` | pending |
-| M3 Greedy, DP & Backtracking | 06 | `m3_06_floyd_warshall_all_pairs_shortest.md` | `m3_06_floyd_warshall_all_pairs_shortest` | pending |
-| M3 Greedy, DP & Backtracking | 99 | `m3_99_practice_lab_greedy_dp_backtracking_drills.md` | `m3_99_practice_lab_greedy_dp_backtracking_drills` | pending |
-| M4 Branch/Bound & Complexity | 01 | `m4_01_branch_and_bound_control_abstraction.md` | `m4_01_branch_and_bound_control_abstraction` | pending |
-| M4 Branch/Bound & Complexity | 02 | `m4_02_tsp_branch_and_bound.md` | `m4_02_tsp_branch_and_bound` | pending |
-| M4 Branch/Bound & Complexity | 03 | `m4_03_np_completeness_p_np_reductions.md` | `m4_03_np_completeness_p_np_reductions` | pending |
-| M4 Branch/Bound & Complexity | 04 | `m4_04_bin_packing_approximation_algorithms.md` | `m4_04_bin_packing_approximation_algorithms` | pending |
-| M4 Branch/Bound & Complexity | 05 | `m4_05_randomized_algorithms_las_vegas_monte_carlo.md` | `m4_05_randomized_algorithms_las_vegas_monte_carlo` | pending |
-| M4 Branch/Bound & Complexity | 99 | `m4_99_practice_lab_branchbound_complexity_drills.md` | `m4_99_practice_lab_branchbound_complexity_drills` | pending |
 
 ## PECST522 — Artificial Intelligence (0/30 migrated)
 

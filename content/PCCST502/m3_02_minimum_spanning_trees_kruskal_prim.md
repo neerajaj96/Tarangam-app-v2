@@ -1,3 +1,27 @@
+---
+id: m3_02_minimum_spanning_trees_kruskal_prim
+courseCode: PCCST502
+module: 3
+sequence: 2
+title: Minimum Spanning Trees: Kruskal & Prim
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Bless MST edges with the cut property and skip with the cycle property
+  - Trace Kruskal with sorting plus Union-Find cycle checks
+  - Grow Prim's frontier with heap-priced attachments
+concepts:
+  - cut property
+  - Kruskal's algorithm
+  - Prim's algorithm
+prerequisites:
+  - m2_01_disjoint_sets_and_union_find
+  - m3_01_greedy_strategy_control_abstraction
+examRelevance: high
+tags:
+  - greedy
+  - spanning-trees
+---
 # Minimum Spanning Trees: Kruskal & Prim
 
 **Cut property, cycle property, Kruskal with Union-Find, Prim's frontier growth, and a hand-traced MST both ways.**

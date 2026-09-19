@@ -1,3 +1,25 @@
+---
+id: m3_01_greedy_strategy_control_abstraction
+courseCode: PCCST502
+module: 3
+sequence: 1
+title: Greedy Strategy & Control Abstraction
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Run the generic greedy loop of select, commit and never revisit
+  - License greed with greedy-choice and optimal-substructure proofs
+  - Prove activity selection and spot where greed fails
+concepts:
+  - greedy-choice property
+  - optimal substructure
+  - activity selection
+prerequisites: []
+examRelevance: high
+tags:
+  - greedy
+  - design-paradigms
+---
 # Greedy Strategy & Control Abstraction
 
 **Greedy-choice property, optimal substructure, the generic greedy loop, activity selection as the canonical proof, and when greed fails.**

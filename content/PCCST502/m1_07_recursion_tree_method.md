@@ -1,3 +1,26 @@
+---
+id: m1_07_recursion_tree_method
+courseCode: PCCST502
+module: 1
+sequence: 7
+title: 'Solution of Recurrences: Recursion Tree Method'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Draw per-level node counts with shrinking sub-problem sizes
+  - Price each level including the leaf floor separately
+  - Sum geometric level progressions into closed totals
+concepts:
+  - recursion trees
+  - per-level work
+  - leaf cost
+prerequisites:
+  - m1_05_recurrence_equations_and_substitution_method
+examRelevance: medium
+tags:
+  - recurrences
+  - recursion-tree
+---
 # Solution of Recurrences: Recursion Tree Method
 
 **Visualizing recursion depth, per-level work computation, leaf level cost, and summing geometric progressions.**

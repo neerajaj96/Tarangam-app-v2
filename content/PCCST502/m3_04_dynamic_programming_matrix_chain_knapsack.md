@@ -1,3 +1,26 @@
+---
+id: m3_04_dynamic_programming_matrix_chain_knapsack
+courseCode: PCCST502
+module: 3
+sequence: 4
+title: 'Dynamic Programming: Matrix Chain & Knapsack'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Diagnose greed failure into overlapping subproblems plus substructure
+  - Fill matrix-chain tables in increasing length order
+  - Redeem knapsack with take-or-skip tabulation
+concepts:
+  - dynamic programming
+  - matrix-chain order
+  - knapsack recurrence
+prerequisites:
+  - m3_01_greedy_strategy_control_abstraction
+examRelevance: high
+tags:
+  - dynamic-programming
+  - optimization
+---
 # Dynamic Programming: Matrix Chain & Knapsack
 
 **When greed fails, remember: optimal substructure plus overlapping subproblems, memoization vs. tabulation, matrix-chain parenthesization, and 0/1 knapsack.**

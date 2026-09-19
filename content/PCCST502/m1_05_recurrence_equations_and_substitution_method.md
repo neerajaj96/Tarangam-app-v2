@@ -1,3 +1,26 @@
+---
+id: m1_05_recurrence_equations_and_substitution_method
+courseCode: PCCST502
+module: 1
+sequence: 5
+title: 'Analysis of Recursive Algorithms: Substitution Method'
+difficulty: beginner
+estimatedMinutes: 7
+learningObjectives:
+  - Formulate recurrence relations with load-bearing base cases
+  - Guess and prove upper and lower bounds by induction in order
+  - Solve linear first-order recurrences like time-plus-n
+concepts:
+  - recurrence relations
+  - substitution method
+  - induction proofs
+prerequisites:
+  - m1_03_asymptotic_notations_and_properties
+examRelevance: high
+tags:
+  - recurrences
+  - substitution-method
+---
 # Analysis of Recursive Algorithms: Substitution Method
 
 **Formulating recurrence relations and mathematical induction proofs for upper/lower bounds.**

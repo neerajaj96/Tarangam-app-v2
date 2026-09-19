@@ -1,3 +1,26 @@
+---
+id: m2_04_divide_and_conquer_merge_sort_and_strassen
+courseCode: PCCST502
+module: 2
+sequence: 4
+title: Divide & Conquer: Merge Sort & Strassen
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Run the divide-conquer-combine skeleton on every instance
+  - Price merge sort through its recursion tree to n log n
+  - Cut matrix multiplication to seven products with Strassen
+concepts:
+  - divide and conquer
+  - merge sort
+  - Strassen multiplication
+prerequisites:
+  - m1_08_master_theorem_and_cases
+examRelevance: high
+tags:
+  - divide-and-conquer
+  - sorting
+---
 # Divide & Conquer: Merge Sort & Strassen
 
 **The divide-conquer-combine skeleton, merge sort's Θ(n log n) via the recursion tree, and how Strassen multiplies matrices with 7 products instead of 8.**

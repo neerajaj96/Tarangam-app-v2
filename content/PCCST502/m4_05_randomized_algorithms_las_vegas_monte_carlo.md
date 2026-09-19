@@ -1,3 +1,25 @@
+---
+id: m4_05_randomized_algorithms_las_vegas_monte_carlo
+courseCode: PCCST502
+module: 4
+sequence: 5
+title: 'Randomized Algorithms: Las Vegas & Monte Carlo'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Sign opposite contracts of random time versus probable correctness
+  - Analyze randomized quicksort to expected n log n with indicators
+  - Amplify Karger-style confidence by repetition and voting
+concepts:
+  - Las Vegas algorithms
+  - Monte Carlo algorithms
+  - amplification
+prerequisites: []
+examRelevance: medium
+tags:
+  - randomized-algorithms
+  - probabilistic-analysis
+---
 # Randomized Algorithms: Las Vegas & Monte Carlo
 
 **Trading certainty for speed two opposite ways, randomized quicksort's expected analysis, Karger's min-cut, and amplification by repetition.**

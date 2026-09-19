@@ -1,3 +1,26 @@
+---
+id: m1_02_time_space_complexity_best_worst_average
+courseCode: PCCST502
+module: 1
+sequence: 2
+title: 'Time & Space Complexity: Best, Worst, and Average Cases'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Count primitive operations with memory allocation overhead
+  - Separate best, worst and average cases for a given algorithm
+  - Defend worst-case priority for critical systems
+concepts:
+  - operation counting
+  - case analysis
+  - worst-case priority
+prerequisites:
+  - m1_01_algorithm_definition_and_criteria
+examRelevance: medium
+tags:
+  - complexity
+  - case-analysis
+---
 # Time & Space Complexity: Best, Worst, and Average Cases
 
 **Primitive operations count, memory allocation overhead, and case sensitivity analysis.**

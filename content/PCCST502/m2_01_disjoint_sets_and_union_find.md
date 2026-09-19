@@ -1,3 +1,25 @@
+---
+id: m2_01_disjoint_sets_and_union_find
+courseCode: PCCST502
+module: 2
+sequence: 1
+title: Disjoint Sets & Union-Find
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Serve dynamic connectivity with make-set, find and union
+  - Attach by rank with path compression on every climb
+  - Claim the near-constant amortized bound with both tricks on
+concepts:
+  - disjoint sets
+  - union by rank
+  - path compression
+prerequisites: []
+examRelevance: high
+tags:
+  - disjoint-sets
+  - union-find
+---
 # Disjoint Sets & Union-Find
 
 **Dynamic connectivity, MAKE-SET/FIND/UNION, union by rank, path compression, and the near-constant inverse-Ackermann bound.**

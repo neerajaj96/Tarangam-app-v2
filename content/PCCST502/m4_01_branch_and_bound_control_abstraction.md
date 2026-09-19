@@ -1,3 +1,26 @@
+---
+id: m4_01_branch_and_bound_control_abstraction
+courseCode: PCCST502
+module: 4
+sequence: 1
+title: 'Branch & Bound: Control Abstraction'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Sort live, E-node and dead states across FIFO, LIFO and LC search
+  - Prune with optimistic bounds against the incumbent cost
+  - Generalize backtracking feasibility into cost-bound pruning
+concepts:
+  - branch and bound
+  - bounding functions
+  - LC-search
+prerequisites:
+  - m3_05_backtracking_n_queens_state_space
+examRelevance: high
+tags:
+  - branch-and-bound
+  - design-paradigms
+---
 # Branch & Bound: Control Abstraction
 
 **Live/E/dead nodes, LC-search vs. FIFO/LIFO, bounding functions, and how cost-bounds generalize backtracking's feasibility pruning.**

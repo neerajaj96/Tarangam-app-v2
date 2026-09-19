@@ -1,3 +1,26 @@
+---
+id: m2_05_topological_sorting_dag_linearization
+courseCode: PCCST502
+module: 2
+sequence: 5
+title: 'Topological Sorting: Linearizing a DAG'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Order prerequisites before courses with Kahn's queue trace
+  - Linearize with descending DFS finish times as backup
+  - Veto everything on a single back edge with leftover certificates
+concepts:
+  - topological sorting
+  - Kahn's algorithm
+  - DAG validation
+prerequisites:
+  - m2_02_graph_traversals_bfs_and_dfs
+examRelevance: medium
+tags:
+  - graphs
+  - topological-sort
+---
 # Topological Sorting: Linearizing a DAG
 
 **Prerequisites before courses — Kahn's queue trace on six vertices, DFS-finish-time method, and why one back edge vetoes everything.**
