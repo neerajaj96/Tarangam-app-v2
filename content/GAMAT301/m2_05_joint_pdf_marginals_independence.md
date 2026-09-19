@@ -1,3 +1,27 @@
+---
+id: m2_05_joint_pdf_marginals_independence
+courseCode: GAMAT301
+module: 2
+sequence: 5
+title: Joint pdf, Marginals & Independence (Continuous)
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Compute marginal densities by integrating out variables
+  - Test independence with the product-on-rectangle rule
+  - Evaluate region probabilities as iterated integrals
+concepts:
+  - joint pdf
+  - marginal densities
+  - independence
+prerequisites:
+  - m1_05_joint_pmf_marginals_independence
+  - m2_01_continuous_rv_pdf_cdf_expectation
+examRelevance: medium
+tags:
+  - probability
+  - joint-pdf
+---
 # Joint pdf, Marginals & Independence (Continuous)
 
 **Joint density surfaces, volume-under-surface probabilities, and the product test — the continuous twin of M1's table.**

@@ -1,3 +1,27 @@
+---
+id: m2_04_reliable_transfer_gbn_and_sr
+courseCode: PCCST501
+module: 2
+sequence: 4
+title: 'Reliable Transfer: Go-Back-N vs Selective Repeat'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Explain pipelining with the utilization argument
+  - Contrast Go-Back-N and Selective Repeat on windows, ACKs, and timers
+  - Size sequence spaces with the N+1 and 2N rules
+concepts:
+  - pipelining
+  - Go-Back-N
+  - Selective Repeat
+  - sliding windows
+prerequisites:
+  - m2_03_tcp_segment_structure_and_rtt
+examRelevance: high
+tags:
+  - reliability
+  - sliding-windows
+---
 # Reliable Transfer: Go-Back-N vs Selective Repeat
 
 **How pipelining fixes stop-and-wait, sliding windows, cumulative vs. selective ACKs, single vs. per-packet timers — the GBN/SR comparison examiners love.**

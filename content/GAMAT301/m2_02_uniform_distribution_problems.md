@@ -1,3 +1,25 @@
+---
+id: m2_02_uniform_distribution_problems
+courseCode: GAMAT301
+module: 2
+sequence: 2
+title: Uniform Distribution & Problems
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - State the uniform pdf, cdf, mean, and variance
+  - Compute interval probabilities as length ratios
+  - Recall the variance divisor 12 without guessing
+concepts:
+  - uniform distribution
+  - length ratios
+prerequisites:
+  - m2_01_continuous_rv_pdf_cdf_expectation
+examRelevance: high
+tags:
+  - probability
+  - uniform-distribution
+---
 # Uniform Distribution & Problems
 
 **Total ignorance on $[a,b]$ — flat density, midpoint mean, and $(b-a)^2/12$ variance.**

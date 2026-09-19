@@ -367,8 +367,8 @@ if (fs.existsSync('dist')) {
       if (manifest.aggregates.totalTopics !== 432) {
         fail(`topic-manifest: expected 432 topics (migration baseline) — actual: ${manifest.aggregates.totalTopics}`);
       }
-      if (manifest.aggregates.metadataTopics !== 14) {
-        fail(`topic-manifest: expected 14 metadata topics (migration baseline) — actual: ${manifest.aggregates.metadataTopics}`);
+      if (manifest.aggregates.metadataTopics !== 31) {
+        fail(`topic-manifest: expected 31 metadata topics (migration baseline) — actual: ${manifest.aggregates.metadataTopics}`);
       }
       console.log(formatManifestSummary(manifest));
     }

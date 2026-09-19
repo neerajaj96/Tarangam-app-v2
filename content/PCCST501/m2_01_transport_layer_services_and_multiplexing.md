@@ -1,3 +1,27 @@
+---
+id: m2_01_transport_layer_services_and_multiplexing
+courseCode: PCCST501
+module: 2
+sequence: 1
+title: Transport-Layer Services & Multiplexing
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Extend host-to-host delivery into process-to-process delivery
+  - Contrast UDP 2-tuple and TCP 4-tuple demultiplexing
+  - Locate transport intelligence in end systems, not routers
+concepts:
+  - transport layer
+  - multiplexing
+  - demultiplexing
+  - sockets
+prerequisites:
+  - m1_03_application_layer_paradigms
+examRelevance: high
+tags:
+  - transport-layer
+  - multiplexing
+---
 # Transport-Layer Services & Multiplexing
 
 **Process-to-process delivery, connectionless vs. connection-oriented service, ports, sockets, and how one host sorts arriving segments to the right app.**

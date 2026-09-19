@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 14 metadata-bearing', () => {
+  it('discovers all 432 topics with 31 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 14);
+    assert.equal(analysis.coverage.metadata, 31);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -175,7 +175,7 @@ describe('live repo graph', () => {
     const kinds = new Map(built.edges.map((e) => [`${e.from} -> ${e.to}`, e.kind]));
     assert.equal(kinds.get('GAMAT301/m1_06_expectation_functions_m1_drill -> GAMAT301/m1_05_joint_pmf_marginals_independence'), 'internal');
     assert.equal(kinds.get('PCCST501/m1_08_peer_to_peer_bittorrent -> PCCST501/m1_04_world_wide_web_and_http'), 'internal');
-    assert.equal(analysis.edgeCount, 18);
+    assert.equal(analysis.edgeCount, 40);
   });
 
   it('computes chain depths', () => {

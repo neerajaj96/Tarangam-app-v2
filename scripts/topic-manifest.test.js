@@ -35,9 +35,9 @@ describe('manifest contents', () => {
     assert.equal(manifest.aggregates.totalTopics, 432);
   });
 
-  it('contains exactly 14 metadata topics', () => {
-    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 14);
-    assert.equal(manifest.aggregates.metadataTopics, 14);
+  it('contains exactly 31 metadata topics', () => {
+    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 31);
+    assert.equal(manifest.aggregates.metadataTopics, 31);
   });
 
   it('represents the GAMAT301 prerequisite chain correctly', () => {
@@ -64,6 +64,7 @@ describe('manifest contents', () => {
       'm1_02_expectation_mean_variance',
       'm1_03_binomial_distribution_problems',
       'm1_05_joint_pmf_marginals_independence',
+      'm2_01_continuous_rv_pdf_cdf_expectation',
     ]);
   });
 
@@ -82,7 +83,7 @@ describe('manifest contents', () => {
   });
 
   it('keeps legacy topics present with hasMetadata: false', () => {
-    const legacy = getTopic(manifest, 'GAMAT301', 'm2_01_continuous_rv_pdf_cdf_expectation');
+    const legacy = getTopic(manifest, 'GAMAT301', 'm3_01_markov_chebyshev_inequalities');
     assert.ok(legacy && legacy.hasMetadata === false);
     assert.equal(legacy.difficulty, null);
     assert.equal(legacy.prerequisiteDepth, null);

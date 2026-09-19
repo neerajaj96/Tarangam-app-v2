@@ -1,3 +1,26 @@
+---
+id: m2_07_multicast_routing_trees_rpf
+courseCode: PCCST501
+module: 2
+sequence: 7
+title: 'Multicast Routing: One Send, Many Receivers'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Separate unicast, broadcast, and multicast delivery economics
+  - Apply the RPF check to forward, replicate, and drop decisions
+  - Place IGMP, tree, and inter-domain protocols in order
+concepts:
+  - multicast
+  - RPF check
+  - IGMP
+  - delivery trees
+prerequisites: []
+examRelevance: medium
+tags:
+  - multicast
+  - routing
+---
 # Multicast Routing: One Send, Many Receivers
 
 **Class-D groups, IGMP membership, RPF flood-and-prune, source vs shared trees — and the copy-count trace that proves loops die silently.**

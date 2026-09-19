@@ -1,3 +1,26 @@
+---
+id: m2_02_udp_segment_structure_and_checksum
+courseCode: PCCST501
+module: 2
+sequence: 2
+title: 'UDP: Segment Structure & Checksum'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Name the four 2-byte UDP header fields and their roles
+  - Compute the 1s-complement checksum with end-around carry
+  - Decide UDP versus TCP with the fit-and-retry rule
+concepts:
+  - UDP
+  - checksum
+  - pseudoheader
+prerequisites:
+  - m2_01_transport_layer_services_and_multiplexing
+examRelevance: high
+tags:
+  - udp
+  - checksum
+---
 # UDP: Segment Structure & Checksum
 
 **The 8-byte header, port/length/checksum fields, 1s-complement checksum with pseudoheader, and when unreliable delivery is the right choice.**

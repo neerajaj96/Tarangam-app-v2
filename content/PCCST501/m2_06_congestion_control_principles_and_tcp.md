@@ -1,3 +1,28 @@
+---
+id: m2_06_congestion_control_principles_and_tcp
+courseCode: PCCST501
+module: 2
+sequence: 6
+title: 'Congestion Control: Principles & TCP Dynamics'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Name the three costs of congestion
+  - Run AIMD, slow start, and ssthresh updates
+  - Separate Tahoe resets from Reno halving on loss signals
+concepts:
+  - congestion control
+  - AIMD
+  - slow start
+  - Tahoe and Reno
+prerequisites:
+  - m2_03_tcp_segment_structure_and_rtt
+  - m2_05_tcp_flow_control_and_connection_management
+examRelevance: medium
+tags:
+  - tcp
+  - congestion-control
+---
 # Congestion Control: Principles & TCP Dynamics
 
 **Why the network chokes, the three costs of congestion, AIMD sawtooth fairness, slow start, and Tahoe vs. Reno on loss.**

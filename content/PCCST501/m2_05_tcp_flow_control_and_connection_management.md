@@ -1,3 +1,27 @@
+---
+id: m2_05_tcp_flow_control_and_connection_management
+courseCode: PCCST501
+module: 2
+sequence: 5
+title: TCP Flow Control & Connection Management
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Bound the sender with min(cwnd, rwnd) against receiver overflow
+  - Justify the three-message handshake against stale SYNs
+  - Explain the four-step teardown and the 2MSL wait
+concepts:
+  - flow control
+  - receive window
+  - three-way handshake
+  - connection teardown
+prerequisites:
+  - m2_03_tcp_segment_structure_and_rtt
+examRelevance: high
+tags:
+  - tcp
+  - flow-control
+---
 # TCP Flow Control & Connection Management
 
 **Receive window (rwnd) overflow protection, the 3-way handshake with sequence synchronization, and why teardown needs four steps.**

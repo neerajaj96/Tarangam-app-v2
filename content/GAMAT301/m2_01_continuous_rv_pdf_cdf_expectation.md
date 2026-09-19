@@ -1,3 +1,27 @@
+---
+id: m2_01_continuous_rv_pdf_cdf_expectation
+courseCode: GAMAT301
+module: 2
+sequence: 1
+title: 'Continuous RVs: pdf, cdf & Expectation'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Contrast pdf area probabilities with pmf point probabilities
+  - Derive cdf by integration and density by differentiation
+  - Compute continuous expectation and variance as integrals
+concepts:
+  - probability density function
+  - cumulative distribution function
+  - expectation
+prerequisites:
+  - m1_01_random_variables_pmf_cdf
+  - m1_02_expectation_mean_variance
+examRelevance: medium
+tags:
+  - probability
+  - continuous-distributions
+---
 # Continuous RVs: pdf, cdf & Expectation
 
 **Density instead of mass — area under the curve, cdf by integration, and why $P(X = x) = 0$.**

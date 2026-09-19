@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **14**
-- Pending: **418**
-- Coverage: **3.24%** (tracked by `npm run check`)
+- Migrated: **31**
+- Pending: **401**
+- Coverage: **7.18%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,8 +19,8 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
-   - GAMAT301 — Module 1 in progress (6 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST501 — Module 1 in progress (8 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
+   - GAMAT301 — Module 1 in progress (12 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
+   - PCCST501 — Module 1 in progress (19 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
    1. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
    2. PCCST501 — Computer Networks (started — see step 1)
@@ -40,7 +40,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
 
-## GAMAT301 — Mathematics for Computer and Information Science-3 (6/24 migrated)
+## GAMAT301 — Mathematics for Computer and Information Science-3 (12/24 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -50,12 +50,12 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M1 Discrete Random Variables | 04 | `m1_04_poisson_distribution_binomial_limit.md` | `m1_04_poisson_distribution_binomial_limit` | migrated |
 | M1 Discrete Random Variables | 05 | `m1_05_joint_pmf_marginals_independence.md` | `m1_05_joint_pmf_marginals_independence` | migrated |
 | M1 Discrete Random Variables | 06 | `m1_06_expectation_functions_m1_drill.md` | `m1_06_expectation_functions_m1_drill` | migrated |
-| M2 Continuous Random Variables | 01 | `m2_01_continuous_rv_pdf_cdf_expectation.md` | `m2_01_continuous_rv_pdf_cdf_expectation` | pending |
-| M2 Continuous Random Variables | 02 | `m2_02_uniform_distribution_problems.md` | `m2_02_uniform_distribution_problems` | pending |
-| M2 Continuous Random Variables | 03 | `m2_03_normal_distribution_standardisation.md` | `m2_03_normal_distribution_standardisation` | pending |
-| M2 Continuous Random Variables | 04 | `m2_04_exponential_distribution_memoryless.md` | `m2_04_exponential_distribution_memoryless` | pending |
-| M2 Continuous Random Variables | 05 | `m2_05_joint_pdf_marginals_independence.md` | `m2_05_joint_pdf_marginals_independence` | pending |
-| M2 Continuous Random Variables | 06 | `m2_06_m2_mixed_drill_model_selection.md` | `m2_06_m2_mixed_drill_model_selection` | pending |
+| M2 Continuous Random Variables | 01 | `m2_01_continuous_rv_pdf_cdf_expectation.md` | `m2_01_continuous_rv_pdf_cdf_expectation` | migrated |
+| M2 Continuous Random Variables | 02 | `m2_02_uniform_distribution_problems.md` | `m2_02_uniform_distribution_problems` | migrated |
+| M2 Continuous Random Variables | 03 | `m2_03_normal_distribution_standardisation.md` | `m2_03_normal_distribution_standardisation` | migrated |
+| M2 Continuous Random Variables | 04 | `m2_04_exponential_distribution_memoryless.md` | `m2_04_exponential_distribution_memoryless` | migrated |
+| M2 Continuous Random Variables | 05 | `m2_05_joint_pdf_marginals_independence.md` | `m2_05_joint_pdf_marginals_independence` | migrated |
+| M2 Continuous Random Variables | 06 | `m2_06_m2_mixed_drill_model_selection.md` | `m2_06_m2_mixed_drill_model_selection` | migrated |
 | M3 Limit Theorems & Stochastic Processes | 01 | `m3_01_markov_chebyshev_inequalities.md` | `m3_01_markov_chebyshev_inequalities` | pending |
 | M3 Limit Theorems & Stochastic Processes | 02 | `m3_02_slln_clt_approximations.md` | `m3_02_slln_clt_approximations` | pending |
 | M3 Limit Theorems & Stochastic Processes | 03 | `m3_03_stochastic_counting_processes.md` | `m3_03_stochastic_counting_processes` | pending |
@@ -69,7 +69,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Markov Chains | 05 | `m4_05_long_run_stationary_distribution.md` | `m4_05_long_run_stationary_distribution` | pending |
 | M4 Markov Chains | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
 
-## PCCST501 — Computer Networks (8/36 migrated)
+## PCCST501 — Computer Networks (19/36 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -82,17 +82,17 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M1 Application Layer | 07 | `m1_07_domain_name_system_dns.md` | `m1_07_domain_name_system_dns` | migrated |
 | M1 Application Layer | 08 | `m1_08_peer_to_peer_bittorrent.md` | `m1_08_peer_to_peer_bittorrent` | migrated |
 | M1 Application Layer | 99 | `m1_99_practice_lab_application_layer_drills.md` | `m1_99_practice_lab_application_layer_drills` | pending |
-| M2 Transport & Network Layer | 01 | `m2_01_transport_layer_services_and_multiplexing.md` | `m2_01_transport_layer_services_and_multiplexing` | pending |
-| M2 Transport & Network Layer | 02 | `m2_02_udp_segment_structure_and_checksum.md` | `m2_02_udp_segment_structure_and_checksum` | pending |
-| M2 Transport & Network Layer | 03 | `m2_03_tcp_segment_structure_and_rtt.md` | `m2_03_tcp_segment_structure_and_rtt` | pending |
-| M2 Transport & Network Layer | 04 | `m2_04_reliable_transfer_gbn_and_sr.md` | `m2_04_reliable_transfer_gbn_and_sr` | pending |
-| M2 Transport & Network Layer | 05 | `m2_05_tcp_flow_control_and_connection_management.md` | `m2_05_tcp_flow_control_and_connection_management` | pending |
-| M2 Transport & Network Layer | 06 | `m2_06_congestion_control_principles_and_tcp.md` | `m2_06_congestion_control_principles_and_tcp` | pending |
-| M2 Transport & Network Layer | 07 | `m2_07_multicast_routing_trees_rpf.md` | `m2_07_multicast_routing_trees_rpf` | pending |
-| M2 Transport & Network Layer | 08 | `m2_08_quality_of_service_qos_mechanisms.md` | `m2_08_quality_of_service_qos_mechanisms` | pending |
-| M2 Transport & Network Layer | 09 | `m2_09_ipv4_addressing_forwarding_nat_icmp.md` | `m2_09_ipv4_addressing_forwarding_nat_icmp` | pending |
-| M2 Transport & Network Layer | 10 | `m2_10_unicast_routing_link_state_distance_vector.md` | `m2_10_unicast_routing_link_state_distance_vector` | pending |
-| M2 Transport & Network Layer | 11 | `m2_11_ipv6_next_generation_transition.md` | `m2_11_ipv6_next_generation_transition` | pending |
+| M2 Transport & Network Layer | 01 | `m2_01_transport_layer_services_and_multiplexing.md` | `m2_01_transport_layer_services_and_multiplexing` | migrated |
+| M2 Transport & Network Layer | 02 | `m2_02_udp_segment_structure_and_checksum.md` | `m2_02_udp_segment_structure_and_checksum` | migrated |
+| M2 Transport & Network Layer | 03 | `m2_03_tcp_segment_structure_and_rtt.md` | `m2_03_tcp_segment_structure_and_rtt` | migrated |
+| M2 Transport & Network Layer | 04 | `m2_04_reliable_transfer_gbn_and_sr.md` | `m2_04_reliable_transfer_gbn_and_sr` | migrated |
+| M2 Transport & Network Layer | 05 | `m2_05_tcp_flow_control_and_connection_management.md` | `m2_05_tcp_flow_control_and_connection_management` | migrated |
+| M2 Transport & Network Layer | 06 | `m2_06_congestion_control_principles_and_tcp.md` | `m2_06_congestion_control_principles_and_tcp` | migrated |
+| M2 Transport & Network Layer | 07 | `m2_07_multicast_routing_trees_rpf.md` | `m2_07_multicast_routing_trees_rpf` | migrated |
+| M2 Transport & Network Layer | 08 | `m2_08_quality_of_service_qos_mechanisms.md` | `m2_08_quality_of_service_qos_mechanisms` | migrated |
+| M2 Transport & Network Layer | 09 | `m2_09_ipv4_addressing_forwarding_nat_icmp.md` | `m2_09_ipv4_addressing_forwarding_nat_icmp` | migrated |
+| M2 Transport & Network Layer | 10 | `m2_10_unicast_routing_link_state_distance_vector.md` | `m2_10_unicast_routing_link_state_distance_vector` | migrated |
+| M2 Transport & Network Layer | 11 | `m2_11_ipv6_next_generation_transition.md` | `m2_11_ipv6_next_generation_transition` | migrated |
 | M2 Transport & Network Layer | 99 | `m2_99_practice_lab_transport_drills.md` | `m2_99_practice_lab_transport_drills` | pending |
 | M3 Data Link Layer | 01 | `m3_01_datalink_layer_services_and_framing.md` | `m3_01_datalink_layer_services_and_framing` | pending |
 | M3 Data Link Layer | 02 | `m3_02_error_detection_crc_checksums_parity.md` | `m3_02_error_detection_crc_checksums_parity` | pending |

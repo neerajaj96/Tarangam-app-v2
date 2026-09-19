@@ -1,3 +1,28 @@
+---
+id: m2_11_ipv6_next_generation_transition
+courseCode: PCCST501
+module: 2
+sequence: 11
+title: 'IPv6: Bigger Space, Simpler Wires'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Contrast the fixed IPv6 header with IPv4 plumbing
+  - Compress addresses canonically with the single double-colon rule
+  - Choose dual-stack, tunneling, or translation for each overlap case
+concepts:
+  - IPv6
+  - address compression
+  - migration mechanisms
+prerequisites:
+  - m2_07_multicast_routing_trees_rpf
+  - m2_08_quality_of_service_qos_mechanisms
+  - m2_09_ipv4_addressing_forwarding_nat_icmp
+examRelevance: medium
+tags:
+  - ipv6
+  - migration
+---
 # IPv6: Bigger Space, Simpler Wires
 
 **$128$-bit room for every grain of sand — fixed headers, flow labels, compression rules traced by hand, and three bridges off the IPv4 island.**

@@ -1,3 +1,27 @@
+---
+id: m2_03_normal_distribution_standardisation
+courseCode: GAMAT301
+module: 2
+sequence: 3
+title: Normal Distribution & Standardisation
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Standardise any normal variable to Z scores
+  - Read tail, interval, and inverse probabilities from the table
+  - Apply the 68-95-99.7 rule and symmetry shortcuts
+concepts:
+  - normal distribution
+  - z-scores
+  - standard normal table
+  - empirical rule
+prerequisites:
+  - m2_01_continuous_rv_pdf_cdf_expectation
+examRelevance: high
+tags:
+  - probability
+  - normal-distribution
+---
 # Normal Distribution & Standardisation
 
 **The bell curve, $Z$-scores, table lookups, and the 68-95-99.7 rule — the heaviest numerical topic in M2.**

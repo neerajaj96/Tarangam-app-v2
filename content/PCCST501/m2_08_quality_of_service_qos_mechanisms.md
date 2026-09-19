@@ -1,3 +1,28 @@
+---
+id: m2_08_quality_of_service_qos_mechanisms
+courseCode: PCCST501
+module: 2
+sequence: 8
+title: 'QoS: Guarantees Beyond Best Effort'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Name the four QoS knobs for a flow
+  - Contrast IntServ reservations with DiffServ markings
+  - Bound conformant traffic with token-bucket math
+  - Divide links fairly with WFQ shares
+concepts:
+  - quality of service
+  - IntServ
+  - DiffServ
+  - token bucket
+  - fair queueing
+prerequisites: []
+examRelevance: medium
+tags:
+  - qos
+  - scheduling
+---
 # QoS: Guarantees Beyond Best Effort
 
 **Bandwidth, delay, jitter, loss — IntServ reservations vs DiffServ markings, token-bucket math, and the scheduler that divides the link fairly.**

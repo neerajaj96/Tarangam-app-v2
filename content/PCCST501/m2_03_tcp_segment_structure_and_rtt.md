@@ -1,3 +1,28 @@
+---
+id: m2_03_tcp_segment_structure_and_rtt
+courseCode: PCCST501
+module: 2
+sequence: 3
+title: TCP Segment Structure, Sequence Numbers & RTT Estimation
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Number byte streams with sequence and cumulative ACKs
+  - Read the 20-byte TCP header fields that earn marks
+  - Estimate timeouts with the SRTT, DevRTT, and timeout triple
+  - Trigger fast retransmit on triple duplicate ACKs
+concepts:
+  - TCP segments
+  - sequence numbers
+  - cumulative ACKs
+  - RTT estimation
+prerequisites:
+  - m2_01_transport_layer_services_and_multiplexing
+examRelevance: high
+tags:
+  - tcp
+  - reliability
+---
 # TCP Segment Structure, Sequence Numbers & RTT Estimation
 
 **Byte-stream numbering, the 20-byte header that matters, cumulative ACKs, and how TCP learns the network's round-trip time to set its timer.**

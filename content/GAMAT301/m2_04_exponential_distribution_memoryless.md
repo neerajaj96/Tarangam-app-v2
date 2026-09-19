@@ -1,3 +1,26 @@
+---
+id: m2_04_exponential_distribution_memoryless
+courseCode: GAMAT301
+module: 2
+sequence: 4
+title: Exponential Distribution & Memoryless Property
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - State the exponential pdf, cdf, mean, and variance
+  - Apply the memoryless property to survival questions
+  - Convert fluently between rate and mean
+concepts:
+  - exponential distribution
+  - memoryless property
+  - rate parameter
+prerequisites:
+  - m2_01_continuous_rv_pdf_cdf_expectation
+examRelevance: medium
+tags:
+  - probability
+  - exponential-distribution
+---
 # Exponential Distribution & Memoryless Property
 
 **Waiting times with no memory — pdf, $1/\lambda$ mean, and the property that defines it.**

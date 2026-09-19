@@ -1,3 +1,28 @@
+---
+id: m2_06_m2_mixed_drill_model_selection
+courseCode: GAMAT301
+module: 2
+sequence: 6
+title: 'M2 Mixed Drill: Model Selection & Table Tactics'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Triage any M2 question to its distribution in seconds
+  - Run normal table lookups in all three directions
+  - Apply exponential and uniform one-liners under exam phrasing
+concepts:
+  - distribution triage
+  - normal table tactics
+prerequisites:
+  - m2_02_uniform_distribution_problems
+  - m2_03_normal_distribution_standardisation
+  - m2_04_exponential_distribution_memoryless
+  - m2_05_joint_pdf_marginals_independence
+examRelevance: high
+tags:
+  - probability
+  - m2-drill
+---
 # M2 Mixed Drill: Model Selection & Table Tactics
 
 **"Which distribution?" in 10 seconds, normal-table speed runs, and the exponential/uniform one-liners.**

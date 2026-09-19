@@ -1,3 +1,29 @@
+---
+id: m2_10_unicast_routing_link_state_distance_vector
+courseCode: PCCST501
+module: 2
+sequence: 10
+title: 'Unicast Routing: Link-State & Distance-Vector'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Contrast flooding surveyors with gossiping neighbours
+  - Trace Dijkstra settle order on a small topology
+  - Explain count-to-infinity and its poison cures
+  - Place OSPF inside and BGP between administrations
+concepts:
+  - link-state routing
+  - distance-vector routing
+  - Dijkstra
+  - count-to-infinity
+prerequisites:
+  - m2_09_ipv4_addressing_forwarding_nat_icmp
+examRelevance: high
+tags:
+  - routing
+  - ospf
+  - bgp
+---
 # Unicast Routing: Link-State & Distance-Vector
 
 **How routers learn the map — Dijkstra flooding (OSPF) vs neighbour gossip (RIP), one settled order traced, one rumour looped, poison as the cure.**

@@ -1,3 +1,28 @@
+---
+id: m2_09_ipv4_addressing_forwarding_nat_icmp
+courseCode: PCCST501
+module: 2
+sequence: 9
+title: 'IPv4 Addressing, Forwarding, NAT & ICMP'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Subnet with CIDR masks and count usable hosts
+  - Forward with longest-prefix match
+  - Trace NAT translation both directions
+  - Read ping and traceroute from ICMP types
+concepts:
+  - IPv4 addressing
+  - longest-prefix match
+  - NAT
+  - ICMP
+prerequisites: []
+examRelevance: high
+tags:
+  - ipv4
+  - forwarding
+  - nat
+---
 # IPv4 Addressing, Forwarding, NAT & ICMP
 
 **Prefixes, masks, longest-match forwarding, private realms behind NAT, and the control messages that ping the path — the network layer's datagram core.**
