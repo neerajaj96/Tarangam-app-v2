@@ -57,6 +57,15 @@
   .xp-toggle:hover { background: var(--accent-glow); }
   .xp-pre-head { font-size: 12px; color: var(--ink-dim); margin-bottom: 8px; }
   .xp-rel-dot { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); margin-right: 6px; }
+  .xp-path { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 18px; margin-bottom: 18px; }
+  .xp-path h2 { font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-dim); margin: 0 0 10px; }
+  .xp-path-next { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .xp-path-title { font-weight: 700; font-size: 16px; }
+  .xp-path-meta { font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); }
+  .xp-path-btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--ink); border-radius: var(--radius-sm); padding: 7px 12px; font-size: 13px; cursor: pointer; font-family: var(--font-display); }
+  .xp-path-btn:hover { border-color: var(--accent); }
+  .xp-path-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+  .xp-path-label { font-size: 12px; color: var(--ink-dim); }
 </style>
 </head>
 <body data-theme="dark" data-size="md">
@@ -71,6 +80,7 @@
   </div>
   <p class="xp-status" id="xp-status">Loading curriculum…</p>
   <p class="xp-progress" id="xp-progress"></p>
+  <section class="xp-path" id="xp-path" aria-label="Learning path"></section>
 
   <div class="xp-error" id="xp-error" hidden>
     <strong>Could not load the curriculum data.</strong>

@@ -18,8 +18,12 @@
  * completed); completion is always an explicit action. Unknown topic ids
  * never crash: they resolve to not_started and are excluded from
  * manifest-based progress math. All 432 manifest topics count equally;
- * metadata availability is never counted as progress.
  */
+import {
+  getNextTopic as engineGetNextTopic,
+  getReadyTopics as engineGetReadyTopics,
+  getInProgressTopics as engineGetInProgressTopics,
+} from './learner-path.js';
 
 export const STATUS_NOT_STARTED = 'not_started';
 export const STATUS_IN_PROGRESS = 'in_progress';
@@ -281,6 +285,23 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
     if (changed) writeJson(store, V1_STATE_KEY, v1);
   }
 
+  // Path-engine bindings (pure calculations in ./learner-path.js over
+  // this store's statuses; getIncompletePrerequisites above covers the
+  // remaining requested helper).
+  const statusReader = (courseCode, topicId) => getTopicState(courseCode, topicId).status;
+
+  function getNextTopic() {
+    return engineGetNextTopic(manifest, statusReader);
+  }
+
+  function getReadyTopics() {
+    return engineGetReadyTopics(manifest, statusReader);
+  }
+
+  function getInProgressTopics() {
+    return engineGetInProgressTopics(manifest, statusReader);
+  }
+
   return {
     manifest,
     getTopicState,
@@ -297,6 +318,9 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
     getCompletedPrerequisites,
     getIncompletePrerequisites,
     getPrerequisiteCompletion,
+    getNextTopic,
+    getReadyTopics,
+    getInProgressTopics,
     clearCourseState,
   };
 }

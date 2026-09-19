@@ -379,7 +379,7 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/learner-state.js', 'style.css']) {
+  for (const f of ['explorer.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/learner-state.js', 'assets/learner-path.js', 'scripts/learner-path.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
   }
   if (fs.existsSync('explorer.html')) {
@@ -398,7 +398,7 @@ if (fs.existsSync('dist')) {
     if (!tpl.includes('assets/learner-state.js')) fail('explorer: templates/base.html does not connect topic pages to the learner-state module');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/learner-state.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/data/topic-manifest.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
   }

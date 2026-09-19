@@ -253,11 +253,49 @@ function renderProgress() {
   el.textContent = parts.join(' · ');
 }
 
+function renderPath() {
+  const panel = $('xp-path');
+  if (!state.progress || !state.manifest) { panel.innerHTML = ''; return; }
+  const overall = state.progress.getOverallProgress();
+  const remaining = overall.total - overall.completed;
+  const inProgress = state.progress.getInProgressTopics().slice(0, 4);
+  const next = state.progress.getNextTopic();
+  let nextBlock;
+  if (!next) {
+    nextBlock = '<span class="xp-path-title">🎉 Curriculum complete — all 432 topics done.</span>';
+  } else {
+    const pc = state.progress.getPrerequisiteCompletion(next.courseCode, next.id);
+    const pre = next.prerequisites && next.prerequisites.length
+      ? `<span class="xp-path-meta">prerequisites ${pc.completed}/${pc.total} complete</span>`
+      : '<span class="xp-path-meta">no prerequisites</span>';
+    nextBlock = `<span class="xp-path-title">${esc(next.title)}</span>
+      <span class="xp-path-meta">${esc(next.courseCode)} · ${esc(fmtSeq(next))}</span>
+      ${pre}
+      <button class="xp-path-btn" data-view-topic="${esc(next.courseCode)}/${esc(next.id)}" type="button">View in explorer</button>
+      <a class="xp-open" href="${esc(Data.topicPageUrl(state.baseUrl, next.courseCode, next))}">Open topic page →</a>`;
+  }
+  panel.innerHTML = `<h2>Continue learning</h2>
+    <div class="xp-path-next">${nextBlock}</div>
+    <div class="xp-path-row"><span class="xp-path-label">In progress (${state.progress.getInProgressTopics().length}):</span>
+      ${inProgress.length
+        ? inProgress.map((t) => `<button class="xp-path-btn" data-view-topic="${esc(t.courseCode)}/${esc(t.id)}" type="button">${esc(t.title)}</button>`).join('')
+        : '<span class="xp-path-label">none yet</span>'}
+    </div>
+    <div class="xp-path-row"><span class="xp-path-label">Completed ${overall.completed} · Remaining ${remaining}</span></div>`;
+  for (const btn of panel.querySelectorAll('[data-view-topic]')) {
+    btn.addEventListener('click', () => {
+      const [course, ...rest] = btn.getAttribute('data-view-topic').split('/');
+      selectTopic(course, rest.join('/'), true);
+    });
+  }
+}
+
 function renderAll() {
   renderCourses();
   renderModules();
   renderFilterOptions();
   renderProgress();
+  renderPath();
   // Keep selection only if still visible; otherwise select first visible.
   const topics = visibleTopics();
   if (!topics.some((t) => `${t.courseCode}/${t.id}` === state.selectedKey)) {
