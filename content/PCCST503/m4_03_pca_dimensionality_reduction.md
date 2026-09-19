@@ -1,3 +1,26 @@
+---
+id: m4_03_pca_dimensionality_reduction
+courseCode: PCCST503
+module: 4
+sequence: 3
+title: 'PCA: Principal Component Analysis'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Build covariance eigen-structure from centered data
+  - Keep top components with variance-explained arithmetic
+  - Standardize first so units cannot hijack the directions
+concepts:
+  - principal components
+  - covariance eigen-structure
+  - variance explained
+prerequisites:
+  - m1_02_probability_mle_map_estimation
+examRelevance: high
+tags:
+  - dimensionality-reduction
+  - pca
+---
 # PCA: Principal Component Analysis
 
 **Variance as information, covariance eigen-structure, the projection theorem, variance-explained arithmetic, and scaling discipline.**

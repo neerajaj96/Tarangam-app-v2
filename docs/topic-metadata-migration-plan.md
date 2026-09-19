@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **141**
-- Pending: **291**
-- Coverage: **32.64%** (tracked by `npm run check`)
+- Migrated: **160**
+- Pending: **272**
+- Coverage: **37.04%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,18 +19,19 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PCCST503 — Module 1 in progress (19 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST303 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GZPHT121 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GXEST104 — Module 1 in progress (33 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   2. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   3. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   4. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   5. PCCST501 — Computer Networks (started — see step 1)
-   6. PCCST503 — Machine Learning
+   1. PCCST503 — Machine Learning (started — see step 1)
+   2. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   3. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   4. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   5. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   6. PCCST501 — Computer Networks (started — see step 1)
    7. PCCST502 — Design and Analysis of Algorithms
    8. PECST522 — Artificial Intelligence
    9. PCCST601 — Compiler Design
@@ -42,6 +43,34 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PCCST503 — Machine Learning (19/23 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Foundations & Regression | 01 | `m1_01_ml_definition_paradigms_and_types.md` | `m1_01_ml_definition_paradigms_and_types` | migrated |
+| M1 Foundations & Regression | 02 | `m1_02_probability_mle_map_estimation.md` | `m1_02_probability_mle_map_estimation` | migrated |
+| M1 Foundations & Regression | 03 | `m1_03_linear_regression_least_squares.md` | `m1_03_linear_regression_least_squares` | migrated |
+| M1 Foundations & Regression | 04 | `m1_04_multiple_regression_model_assessment.md` | `m1_04_multiple_regression_model_assessment` | migrated |
+| M1 Foundations & Regression | 99 | `m1_99_practice_lab_foundations_drills.md` | `m1_99_practice_lab_foundations_drills` | pending |
+| M2 Classification & Trees | 01 | `m2_01_classification_boundaries_knn.md` | `m2_01_classification_boundaries_knn` | migrated |
+| M2 Classification & Trees | 02 | `m2_02_logistic_regression_sigmoid_loss.md` | `m2_02_logistic_regression_sigmoid_loss` | migrated |
+| M2 Classification & Trees | 03 | `m2_03_naive_bayes_generative_models.md` | `m2_03_naive_bayes_generative_models` | migrated |
+| M2 Classification & Trees | 04 | `m2_04_decision_trees_entropy_information_gain.md` | `m2_04_decision_trees_entropy_information_gain` | migrated |
+| M2 Classification & Trees | 05 | `m2_05_gradient_descent_training_engine.md` | `m2_05_gradient_descent_training_engine` | migrated |
+| M2 Classification & Trees | 99 | `m2_99_practice_lab_classification_drills.md` | `m2_99_practice_lab_classification_drills` | pending |
+| M3 Neural Nets & SVMs | 01 | `m3_01_perceptron_learning_rule.md` | `m3_01_perceptron_learning_rule` | migrated |
+| M3 Neural Nets & SVMs | 02 | `m3_02_multilayer_networks_backpropagation.md` | `m3_02_multilayer_networks_backpropagation` | migrated |
+| M3 Neural Nets & SVMs | 03 | `m3_03_maximum_margin_svm.md` | `m3_03_maximum_margin_svm` | migrated |
+| M3 Neural Nets & SVMs | 04 | `m3_04_kernels_soft_margins.md` | `m3_04_kernels_soft_margins` | migrated |
+| M3 Neural Nets & SVMs | 99 | `m3_99_practice_lab_networks_svm_drills.md` | `m3_99_practice_lab_networks_svm_drills` | pending |
+| M4 PCA & Ensembles | 01 | `m4_01_clustering_kmeans.md` | `m4_01_clustering_kmeans` | migrated |
+| M4 PCA & Ensembles | 02 | `m4_02_hierarchical_clustering.md` | `m4_02_hierarchical_clustering` | migrated |
+| M4 PCA & Ensembles | 03 | `m4_03_pca_dimensionality_reduction.md` | `m4_03_pca_dimensionality_reduction` | migrated |
+| M4 PCA & Ensembles | 04 | `m4_04_ensemble_bagging_random_forests.md` | `m4_04_ensemble_bagging_random_forests` | migrated |
+| M4 PCA & Ensembles | 05 | `m4_05_boosting_adaboost.md` | `m4_05_boosting_adaboost` | migrated |
+| M4 PCA & Ensembles | 06 | `m4_06_mds_multidimensional_scaling.md` | `m4_06_mds_multidimensional_scaling` | migrated |
+| M4 PCA & Ensembles | 99 | `m4_99_practice_lab_unsupervised_ensemble_drills.md` | `m4_99_practice_lab_unsupervised_ensemble_drills` | pending |
 
 ## PCCST303 — Data Structures and Algorithms (27/27 migrated)
 
@@ -213,34 +242,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PCCST503 — Machine Learning (0/23 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Foundations & Regression | 01 | `m1_01_ml_definition_paradigms_and_types.md` | `m1_01_ml_definition_paradigms_and_types` | pending |
-| M1 Foundations & Regression | 02 | `m1_02_probability_mle_map_estimation.md` | `m1_02_probability_mle_map_estimation` | pending |
-| M1 Foundations & Regression | 03 | `m1_03_linear_regression_least_squares.md` | `m1_03_linear_regression_least_squares` | pending |
-| M1 Foundations & Regression | 04 | `m1_04_multiple_regression_model_assessment.md` | `m1_04_multiple_regression_model_assessment` | pending |
-| M1 Foundations & Regression | 99 | `m1_99_practice_lab_foundations_drills.md` | `m1_99_practice_lab_foundations_drills` | pending |
-| M2 Classification & Trees | 01 | `m2_01_classification_boundaries_knn.md` | `m2_01_classification_boundaries_knn` | pending |
-| M2 Classification & Trees | 02 | `m2_02_logistic_regression_sigmoid_loss.md` | `m2_02_logistic_regression_sigmoid_loss` | pending |
-| M2 Classification & Trees | 03 | `m2_03_naive_bayes_generative_models.md` | `m2_03_naive_bayes_generative_models` | pending |
-| M2 Classification & Trees | 04 | `m2_04_decision_trees_entropy_information_gain.md` | `m2_04_decision_trees_entropy_information_gain` | pending |
-| M2 Classification & Trees | 05 | `m2_05_gradient_descent_training_engine.md` | `m2_05_gradient_descent_training_engine` | pending |
-| M2 Classification & Trees | 99 | `m2_99_practice_lab_classification_drills.md` | `m2_99_practice_lab_classification_drills` | pending |
-| M3 Neural Nets & SVMs | 01 | `m3_01_perceptron_learning_rule.md` | `m3_01_perceptron_learning_rule` | pending |
-| M3 Neural Nets & SVMs | 02 | `m3_02_multilayer_networks_backpropagation.md` | `m3_02_multilayer_networks_backpropagation` | pending |
-| M3 Neural Nets & SVMs | 03 | `m3_03_maximum_margin_svm.md` | `m3_03_maximum_margin_svm` | pending |
-| M3 Neural Nets & SVMs | 04 | `m3_04_kernels_soft_margins.md` | `m3_04_kernels_soft_margins` | pending |
-| M3 Neural Nets & SVMs | 99 | `m3_99_practice_lab_networks_svm_drills.md` | `m3_99_practice_lab_networks_svm_drills` | pending |
-| M4 PCA & Ensembles | 01 | `m4_01_clustering_kmeans.md` | `m4_01_clustering_kmeans` | pending |
-| M4 PCA & Ensembles | 02 | `m4_02_hierarchical_clustering.md` | `m4_02_hierarchical_clustering` | pending |
-| M4 PCA & Ensembles | 03 | `m4_03_pca_dimensionality_reduction.md` | `m4_03_pca_dimensionality_reduction` | pending |
-| M4 PCA & Ensembles | 04 | `m4_04_ensemble_bagging_random_forests.md` | `m4_04_ensemble_bagging_random_forests` | pending |
-| M4 PCA & Ensembles | 05 | `m4_05_boosting_adaboost.md` | `m4_05_boosting_adaboost` | pending |
-| M4 PCA & Ensembles | 06 | `m4_06_mds_multidimensional_scaling.md` | `m4_06_mds_multidimensional_scaling` | pending |
-| M4 PCA & Ensembles | 99 | `m4_99_practice_lab_unsupervised_ensemble_drills.md` | `m4_99_practice_lab_unsupervised_ensemble_drills` | pending |
 
 ## PCCST502 — Design and Analysis of Algorithms (0/31 migrated)
 

@@ -1,3 +1,27 @@
+---
+id: m2_01_classification_boundaries_knn
+courseCode: PCCST503
+module: 2
+sequence: 1
+title: 'Classification: Boundaries, Linear Flaws & k-NN'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Judge classifiers with decision boundaries and 0/1 loss
+  - Explain why least squares breaks on labels via leverage
+  - Classify queries with k-nearest-neighbor voting by hand
+concepts:
+  - decision boundaries
+  - 0/1 loss
+  - k-nearest neighbors
+prerequisites:
+  - m1_01_ml_definition_paradigms_and_types
+  - m1_03_linear_regression_least_squares
+examRelevance: high
+tags:
+  - classification
+  - knn
+---
 # Classification: Boundaries, Linear Flaws & k-NN
 
 **Decision boundaries, why regression misfires on labels, 0/1 loss, and nearest-neighbor voting with a hand-computed query.**

@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 141 metadata-bearing', () => {
+  it('discovers all 432 topics with 160 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 141);
+    assert.equal(analysis.coverage.metadata, 160);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -177,7 +177,8 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('PCCST501/m1_08_peer_to_peer_bittorrent -> PCCST501/m1_04_world_wide_web_and_http'), 'internal');
     assert.equal(kinds.get('GZPHT121/m2_04_newtons_rings_liquid_air_wedge_thickness -> GZPHT121/m2_03_newtons_rings_wavelength'), 'internal');
     assert.equal(kinds.get('PCCST303/m3_06_bfs_dfs_shortest_paths -> PCCST303/m1_05_queues_circular_deque'), 'internal');
-    assert.equal(analysis.edgeCount, 180);
+    assert.equal(kinds.get('PCCST503/m4_05_boosting_adaboost -> PCCST503/m4_04_ensemble_bagging_random_forests'), 'internal');
+    assert.equal(analysis.edgeCount, 199);
   });
 
   it('computes chain depths', () => {
@@ -187,6 +188,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('GXEST104/m2_09_m2_mixed_drill').depth, 8);
     assert.equal(built.nodes.get('GZPHT121/m2_07_module2_mixed_numerical_drill').depth, 4);
     assert.equal(built.nodes.get('PCCST303/m4_07_m4_mixed_drill').depth, 5);
+    assert.equal(built.nodes.get('PCCST503/m3_02_multilayer_networks_backpropagation').depth, 4);
     assert.equal(analysis.maxDepth, 8);
   });
 

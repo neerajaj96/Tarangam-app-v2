@@ -1,3 +1,27 @@
+---
+id: m2_02_logistic_regression_sigmoid_loss
+courseCode: PCCST503
+module: 2
+sequence: 2
+title: 'Logistic Regression: Sigmoid & Cross-Entropy'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Squash linear scores into probabilities with the logit link
+  - Train with convex cross-entropy and its error-times-input gradient
+  - Read coefficients as log-odds shifts despite the misnomer
+concepts:
+  - sigmoid function
+  - cross-entropy loss
+  - log-odds
+prerequisites:
+  - m1_03_linear_regression_least_squares
+  - m2_01_classification_boundaries_knn
+examRelevance: high
+tags:
+  - classification
+  - logistic-regression
+---
 # Logistic Regression: Sigmoid & Cross-Entropy
 
 **Squashing linear scores into probabilities, the logit link, cross-entropy loss, its gradient, and why "regression" is a historical misnomer.**

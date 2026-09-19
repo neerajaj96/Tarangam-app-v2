@@ -1,3 +1,26 @@
+---
+id: m2_03_naive_bayes_generative_models
+courseCode: PCCST503
+module: 2
+sequence: 3
+title: 'Naive Bayes: Generative Classification'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Classify with Bayes rule under the conditional-independence bet
+  - Smooth counts with Laplace correction against zero vetoes
+  - Contrast generative and discriminative training stories
+concepts:
+  - naive Bayes
+  - Laplace smoothing
+  - generative models
+prerequisites:
+  - m1_02_probability_mle_map_estimation
+examRelevance: medium
+tags:
+  - classification
+  - naive-bayes
+---
 # Naive Bayes: Generative Classification
 
 **Bayes' rule as classifier, the conditional-independence bet, Gaussian vs. multinomial flavors, Laplace smoothing, and discriminative vs. generative framing.**

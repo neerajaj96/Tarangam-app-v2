@@ -1,3 +1,25 @@
+---
+id: m1_03_linear_regression_least_squares
+courseCode: PCCST503
+module: 1
+sequence: 3
+title: Linear Regression & Least Squares
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Solve the linear model with the normal equations two ways
+  - Read residuals as orthogonal to the column space
+  - Hand-fit three points and name what breaks the closed form
+concepts:
+  - normal equations
+  - residual geometry
+  - least squares
+prerequisites: []
+examRelevance: high
+tags:
+  - regression
+  - least-squares
+---
 # Linear Regression & Least Squares
 
 **The linear model, residual geometry, normal equations derived two ways, and a hand-solved 3-point fit.**

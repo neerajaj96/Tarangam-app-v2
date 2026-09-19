@@ -1,3 +1,26 @@
+---
+id: m4_02_hierarchical_clustering
+courseCode: PCCST503
+module: 4
+sequence: 2
+title: 'Clustering II: Hierarchical Methods'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Merge agglomeratively with single, complete and average linkage
+  - Read k off dendrogram cuts after structure is visible
+  - Contrast deferred cuts against k-Means blind upfront commitment
+concepts:
+  - agglomerative clustering
+  - linkage criteria
+  - dendrograms
+prerequisites:
+  - m4_01_clustering_kmeans
+examRelevance: medium
+tags:
+  - clustering
+  - hierarchical
+---
 # Clustering II: Hierarchical Methods
 
 **Agglomerative merging, single/complete/average linkage, dendrograms, divisive splitting, and choosing cuts vs. choosing k.**

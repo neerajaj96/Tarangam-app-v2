@@ -1,3 +1,25 @@
+---
+id: m2_04_decision_trees_entropy_information_gain
+courseCode: PCCST503
+module: 2
+sequence: 4
+title: 'Decision Trees: Entropy & Information Gain'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Split recursively on maximum information gain from Shannon entropy
+  - Verify gains on the PlayTennis computation
+  - Control overfitting with pre- and post-pruning
+concepts:
+  - Shannon entropy
+  - information gain
+  - pruning
+prerequisites: []
+examRelevance: high
+tags:
+  - classification
+  - decision-trees
+---
 # Decision Trees: Entropy & Information Gain
 
 **Recursive splitting, Shannon entropy, information gain on the PlayTennis data, overfitting control via pruning, and why trees beg to be ensembled.**

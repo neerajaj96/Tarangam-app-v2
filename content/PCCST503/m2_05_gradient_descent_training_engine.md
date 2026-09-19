@@ -1,3 +1,27 @@
+---
+id: m2_05_gradient_descent_training_engine
+courseCode: PCCST503
+module: 2
+sequence: 5
+title: 'Gradient Descent: The Training Engine'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Descend with the slope update across batch, stochastic and mini-batch flavors
+  - Diagnose learning rates that crawl, cooperate or explode to NaN
+  - Claim convexity guarantees only where they hold
+concepts:
+  - gradient descent
+  - learning rate
+  - convexity
+prerequisites:
+  - m1_03_linear_regression_least_squares
+  - m2_02_logistic_regression_sigmoid_loss
+examRelevance: high
+tags:
+  - optimization
+  - gradient-descent
+---
 # Gradient Descent: The Training Engine
 
 **Following the slope downhill, learning rates that cooperate vs. explode, batch vs. stochastic vs. mini-batch, and convexity's guarantee.**

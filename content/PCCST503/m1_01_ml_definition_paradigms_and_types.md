@@ -1,3 +1,25 @@
+---
+id: m1_01_ml_definition_paradigms_and_types
+courseCode: PCCST503
+module: 1
+sequence: 1
+title: 'Machine Learning: Definition, Paradigms & Problem Types'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - State Mitchell's definition with task, experience and performance
+  - Distinguish supervised, unsupervised and reinforcement paradigms in the wild
+  - Separate regression from classification with the universal workflow
+concepts:
+  - Mitchell's definition
+  - learning paradigms
+  - universal workflow
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - paradigms
+---
 # Machine Learning: Definition, Paradigms & Problem Types
 
 **Mitchell's definition, supervised vs. unsupervised vs. reinforcement learning, regression vs. classification, and how to recognize each in the wild.**

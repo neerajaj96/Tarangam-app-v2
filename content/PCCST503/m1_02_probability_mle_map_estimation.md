@@ -1,3 +1,25 @@
+---
+id: m1_02_probability_mle_map_estimation
+courseCode: PCCST503
+module: 1
+sequence: 2
+title: 'Probability for ML: MLE & MAP Estimation'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Separate likelihood from probability with the log-likelihood swap
+  - Derive Gaussian mean and variance by maximum likelihood
+  - Read regularization as a prior through MAP estimation
+concepts:
+  - maximum likelihood
+  - MAP estimation
+  - regularization as prior
+prerequisites: []
+examRelevance: high
+tags:
+  - probability
+  - estimation
+---
 # Probability for ML: MLE & MAP Estimation
 
 **Likelihood vs. probability, maximum likelihood (sample mean/variance derivations), priors and MAP, and regularization as a prior in disguise.**

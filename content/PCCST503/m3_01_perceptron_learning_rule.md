@@ -1,3 +1,26 @@
+---
+id: m3_01_perceptron_learning_rule
+courseCode: PCCST503
+module: 3
+sequence: 1
+title: 'The Perceptron: Learning Rule & Limits'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Update mistake-driven weights with the perceptron rule
+  - Bound mistakes on separable data with the convergence theorem
+  - Hit the XOR wall that demands hidden layers or kernels
+concepts:
+  - perceptron update
+  - Novikoff convergence
+  - XOR limitation
+prerequisites:
+  - m2_01_classification_boundaries_knn
+examRelevance: high
+tags:
+  - neural-networks
+  - perceptron
+---
 # The Perceptron: Learning Rule & Limits
 
 **The original neuron, mistake-driven updates, convergence on separable data with a traced run, and the XOR wall that froze the field.**

@@ -1,3 +1,26 @@
+---
+id: m4_05_boosting_adaboost
+courseCode: PCCST503
+module: 4
+sequence: 5
+title: 'Ensembles II: Boosting & AdaBoost'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Reweight errors sequentially with the alpha vote formula
+  - Trace two AdaBoost rounds with exact mass moves
+  - Explain test gains through voting margins beyond zero error
+concepts:
+  - AdaBoost
+  - voting margins
+  - sequential ensembles
+prerequisites:
+  - m4_04_ensemble_bagging_random_forests
+examRelevance: high
+tags:
+  - ensembles
+  - boosting
+---
 # Ensembles II: Boosting & AdaBoost
 
 **Sequential error-fixing, exponential weight updates, the α vote formula, margins theory, and a two-round hand trace.**

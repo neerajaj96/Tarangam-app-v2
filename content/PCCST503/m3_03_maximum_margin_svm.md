@@ -1,3 +1,26 @@
+---
+id: m3_03_maximum_margin_svm
+courseCode: PCCST503
+module: 3
+sequence: 3
+title: 'Maximum-Margin Classifiers: SVMs'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Separate geometric from scale-fakeable functional margins
+  - Solve the minimum-norm objective with support vectors only
+  - Price violations with hinge loss on boundary points
+concepts:
+  - geometric margin
+  - support vectors
+  - hinge loss
+prerequisites:
+  - m2_01_classification_boundaries_knn
+examRelevance: high
+tags:
+  - svm
+  - max-margin
+---
 # Maximum-Margin Classifiers: SVMs
 
 **Geometric vs. functional margins, support vectors, the minimum-norm objective, hinge loss, and why only boundary points matter.**

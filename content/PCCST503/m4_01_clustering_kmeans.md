@@ -1,3 +1,25 @@
+---
+id: m4_01_clustering_kmeans
+courseCode: PCCST503
+module: 4
+sequence: 1
+title: 'Clustering I: k-Means'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Alternate assignment and update steps down the WCSS objective
+  - Seed with k-means++ and pick k with the elbow method
+  - Hand-trace convergence to its local optimum
+concepts:
+  - k-means
+  - Lloyd's algorithm
+  - elbow method
+prerequisites: []
+examRelevance: medium
+tags:
+  - clustering
+  - kmeans
+---
 # Clustering I: k-Means
 
 **The Lloyd loop, assignment–update alternation, k-means++ seeding, the elbow method, and a hand-traced convergence.**

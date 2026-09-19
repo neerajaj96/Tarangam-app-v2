@@ -1,3 +1,27 @@
+---
+id: m4_04_ensemble_bagging_random_forests
+courseCode: PCCST503
+module: 4
+sequence: 4
+title: 'Ensembles I: Bagging & Random Forests'
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Average away variance with bootstrap resampling
+  - Validate for free with out-of-bag estimates
+  - Decorrelate judges with random-forest feature subsampling
+concepts:
+  - bagging
+  - out-of-bag validation
+  - random forests
+prerequisites:
+  - m1_04_multiple_regression_model_assessment
+  - m2_04_decision_trees_entropy_information_gain
+examRelevance: high
+tags:
+  - ensembles
+  - random-forests
+---
 # Ensembles I: Bagging & Random Forests
 
 **Averaging away variance, bootstrap resampling, out-of-bag validation for free, feature subsampling, and why forests tame trees.**

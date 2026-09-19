@@ -1,3 +1,26 @@
+---
+id: m4_06_mds_multidimensional_scaling
+courseCode: PCCST503
+module: 4
+sequence: 6
+title: 'MDS: Maps From Mileage Tables'
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Recover coordinates with double-centering on distance tables
+  - Audit dimensions with the eigenvalue ledger and stress
+  - Claim the Euclidean MDS and PCA identity correctly
+concepts:
+  - multidimensional scaling
+  - double-centering
+  - stress
+prerequisites:
+  - m4_03_pca_dimensionality_reduction
+examRelevance: medium
+tags:
+  - dimensionality-reduction
+  - mds
+---
 # MDS: Maps From Mileage Tables
 
 **Coordinates from distances alone — double-centering traced on a 3-4-5 triangle, eigenvalues as the dimension ledger, and why Euclidean MDS is PCA in disguise.**

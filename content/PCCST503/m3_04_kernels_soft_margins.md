@@ -1,3 +1,26 @@
+---
+id: m3_04_kernels_soft_margins
+courseCode: PCCST503
+module: 3
+sequence: 4
+title: Kernels & Soft Margins
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Lift inseparable data with the kernel trick minus the lifting
+  - Tune RBF reach with the influence-radius gamma
+  - Price violations with slack variables and the C dial
+concepts:
+  - kernel trick
+  - RBF kernel
+  - soft margins
+prerequisites:
+  - m3_03_maximum_margin_svm
+examRelevance: high
+tags:
+  - svm
+  - kernels
+---
 # Kernels & Soft Margins
 
 **Lifting inseparable data into separable space, the kernel trick that skips the lifting, slack variables with C, and the RBF universe.**

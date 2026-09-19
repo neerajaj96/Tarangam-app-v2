@@ -1,3 +1,27 @@
+---
+id: m3_02_multilayer_networks_backpropagation
+courseCode: PCCST503
+module: 3
+sequence: 2
+title: Multilayer Networks & Backpropagation
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Push forward through hidden layers that learn bends
+  - Assign credit backward with the recursed chain rule
+  - Hand-compute one full gradient step at two-forward cost
+concepts:
+  - backpropagation
+  - chain rule
+  - hidden layers
+prerequisites:
+  - m2_05_gradient_descent_training_engine
+  - m3_01_perceptron_learning_rule
+examRelevance: high
+tags:
+  - neural-networks
+  - backpropagation
+---
 # Multilayer Networks & Backpropagation
 
 **Hidden layers that learn bends, the chain rule as credit assignment, one fully hand-computed gradient step, and why depth trains at all.**

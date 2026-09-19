@@ -1,3 +1,26 @@
+---
+id: m1_04_multiple_regression_model_assessment
+courseCode: PCCST503
+module: 1
+sequence: 4
+title: Multiple Regression & Model Assessment
+difficulty: beginner
+estimatedMinutes: 6
+learningObjectives:
+  - Extend regression to many predictors with polynomial expansion
+  - Assess with R-squared on held-out data only
+  - Diagnose fits through the bias-variance lens
+concepts:
+  - multiple regression
+  - held-out testing
+  - bias-variance trade-off
+prerequisites:
+  - m1_03_linear_regression_least_squares
+examRelevance: high
+tags:
+  - regression
+  - model-assessment
+---
 # Multiple Regression & Model Assessment
 
 **Many predictors, polynomial expansion, train/test discipline, R², and the bias–variance lens that previews all of Module 3.**
