@@ -1,3 +1,25 @@
+---
+id: m3_03_dc_supply_rectifiers
+courseCode: GXEST104
+module: 3
+sequence: 3
+title: DC Power Supplies & Rectifier Circuits
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Walk the transformer-to-regulator block chain
+  - Trace conducting pairs through bridge halves
+  - Compute peak, average, and PIV per topology
+concepts:
+  - rectifiers
+  - bridge rectifier
+prerequisites:
+  - m3_01_passive_active_pn_diode
+examRelevance: medium
+tags:
+  - rectifiers
+  - power-supplies
+---
 # DC Power Supplies & Rectifier Circuits
 
 **Mains to smooth DC — block chain, half/full/bridge working, and diode-direction tracing.**

@@ -1,3 +1,25 @@
+---
+id: m1_01_ohms_kcl_kvl
+courseCode: GXEST104
+module: 1
+sequence: 1
+title: Ohm's Law, KCL & KVL
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Apply Ohm's law to single elements
+  - Balance junctions with KCL including signs
+  - Write loop equations with traversal sign discipline
+concepts:
+  - Ohm's law
+  - KCL
+  - KVL
+prerequisites: []
+examRelevance: medium
+tags:
+  - dc-circuits
+  - circuit-laws
+---
 # Ohm's Law, KCL & KVL
 
 **The three laws everything else is built on — pressure-flow-narrowness, junction balance, and loop balance, with sign discipline.**

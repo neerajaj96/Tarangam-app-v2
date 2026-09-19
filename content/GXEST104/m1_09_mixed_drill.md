@@ -1,3 +1,28 @@
+---
+id: m1_09_mixed_drill
+courseCode: GXEST104
+module: 1
+sequence: 9
+title: 'M1 Mixed Drill: Every Variation'
+difficulty: intermediate
+estimatedMinutes: 4
+learningObjectives:
+  - Pick mesh or nodal by equation count in seconds
+  - Handle shared, floating, and dependent sources
+  - Certify answers with power audits and gap checks
+concepts:
+  - method triage
+  - power audit
+prerequisites:
+  - m1_05_mesh_analysis_matrices
+  - m1_06_nodal_analysis_matrices
+  - m1_07_magnetic_circuits_basics
+  - m1_08_composite_parallel_magnetic
+examRelevance: high
+tags:
+  - dc-circuits
+  - m1-drill
+---
 # M1 Mixed Drill: Every Variation
 
 **Method selection in 10 seconds, supermesh/supernode, power audits, and magnetic-path triage — the whole module in one sitting.**

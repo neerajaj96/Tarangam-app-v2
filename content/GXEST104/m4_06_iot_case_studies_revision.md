@@ -1,3 +1,27 @@
+---
+id: m4_06_iot_case_studies_revision
+courseCode: GXEST104
+module: 4
+sequence: 6
+title: IoT Case Studies & M4 Revision Drill
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Map any case study onto sense-connect-cloud-actuate
+  - Justify stage choices with wins and honest caveats
+  - Pair revision facts across modules correctly
+concepts:
+  - IoT loop
+  - case-study method
+prerequisites:
+  - m4_02_am_fm_superhet
+  - m4_03_wired_wireless_gsm_generations
+  - m2_02_ac_fundamentals_rms_average
+examRelevance: high
+tags:
+  - iot
+  - revision
+---
 # IoT Case Studies & M4 Revision Drill
 
 **Homes, hospitals, farms on the same sense–send–decide loop — plus the module's block-diagram speed round.**

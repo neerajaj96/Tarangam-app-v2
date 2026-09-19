@@ -1,3 +1,27 @@
+---
+id: m3_09_m3_mixed_drill
+courseCode: GXEST104
+module: 3
+sequence: 9
+title: 'M3 Drill: Diodes, Transistors & Amplifiers'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Verify diode states and transistor regions first
+  - Answer gain questions with resistance ratios
+  - Chain shared numbers across sub-questions
+concepts:
+  - assumption verification
+  - gain ratios
+prerequisites:
+  - m3_02_zener_avalanche_regulator
+  - m3_03_dc_supply_rectifiers
+  - m3_07_switch_amplifier
+examRelevance: high
+tags:
+  - devices
+  - m3-drill
+---
 # M3 Drill: Diodes, Transistors & Amplifiers
 
 **Assume-verify, region-check, and ratio-thinking — the complete device workout.**

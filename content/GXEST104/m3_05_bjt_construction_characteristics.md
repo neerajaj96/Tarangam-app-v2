@@ -1,3 +1,26 @@
+---
+id: m3_05_bjt_construction_characteristics
+courseCode: GXEST104
+module: 3
+sequence: 5
+title: 'BJT Construction, Working & V-I Characteristics'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Explain thin-base gain from construction choices
+  - Read CE input and output characteristic regions
+  - Verify assumed regions before trusting beta math
+concepts:
+  - BJT construction
+  - CE characteristics
+  - beta
+prerequisites:
+  - m3_01_passive_active_pn_diode
+examRelevance: medium
+tags:
+  - bjt
+  - transistors
+---
 # BJT Construction, Working & V-I Characteristics
 
 **Two junctions, one thin base — emitter fires, base steers, collector catches — plus CE input/output curves.**

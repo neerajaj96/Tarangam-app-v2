@@ -1,3 +1,24 @@
+---
+id: m4_03_wired_wireless_gsm_generations
+courseCode: GXEST104
+module: 4
+sequence: 3
+title: 'Wired vs Wireless, GSM & Generations 3G–6G'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Contrast guided and unguided trade-offs in a table
+  - Trace calls through GSM blocks with register roles
+  - Place use cases on the generation triangle, not the speed axis
+concepts:
+  - GSM
+  - mobile generations
+prerequisites: []
+examRelevance: medium
+tags:
+  - gsm
+  - wireless-generations
+---
 # Wired vs Wireless, GSM & Generations 3G–6G
 
 **Guided vs unguided, the GSM call path, and the generation ladder from voices to everything.**

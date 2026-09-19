@@ -1,3 +1,26 @@
+---
+id: m2_04_pure_r_l_c_circuits
+courseCode: GXEST104
+module: 2
+sequence: 4
+title: 'Pure R, L, C Circuits: Reactance and Phase'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Assign in-phase, lagging, and leading responses by element
+  - Compute reactances with frequency scaling
+  - Explain zero average power with nonzero RMS current
+concepts:
+  - reactance
+  - phase shift
+prerequisites:
+  - m1_03_capacitors_inductors_energy
+  - m2_02_ac_fundamentals_rms_average
+examRelevance: medium
+tags:
+  - reactance
+  - ac-circuits
+---
 # Pure R, L, C Circuits: Reactance and Phase
 
 **One element at a time — who shifts what, reactance formulas, and power (or its absence).**

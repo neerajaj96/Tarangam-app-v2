@@ -1,3 +1,26 @@
+---
+id: m3_02_zener_avalanche_regulator
+courseCode: GXEST104
+module: 3
+sequence: 2
+title: 'Zener, Avalanche & Voltage Regulation'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Distinguish tunnelling from avalanche breakdown
+  - Split series current between load and Zener
+  - Keep regulation alive across load extremes
+concepts:
+  - Zener breakdown
+  - avalanche breakdown
+  - voltage regulation
+prerequisites:
+  - m3_01_passive_active_pn_diode
+examRelevance: medium
+tags:
+  - zener
+  - regulators
+---
 # Zener, Avalanche & Voltage Regulation
 
 **Designed breakdown — tunnelling vs avalanche, the regulator circuit, and current-limit arithmetic.**

@@ -1,3 +1,26 @@
+---
+id: m1_05_mesh_analysis_matrices
+courseCode: GXEST104
+module: 1
+sequence: 5
+title: Mesh Current Analysis with Matrices
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Assemble mesh matrices with self and mutual terms
+  - Solve two-mesh systems with determinants
+  - Merge shared sources into supermesh constraints
+concepts:
+  - mesh analysis
+  - supermesh
+  - Cramer's rule
+prerequisites:
+  - m1_01_ohms_kcl_kvl
+examRelevance: high
+tags:
+  - mesh-analysis
+  - circuit-analysis
+---
 # Mesh Current Analysis with Matrices
 
 **Loop currents as unknowns — self vs mutual resistance, matrix assembly, and Cramer's-rule solutions.**

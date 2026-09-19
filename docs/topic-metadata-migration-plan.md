@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **55**
-- Pending: **377**
-- Coverage: **12.73%** (tracked by `npm run check`)
+- Migrated: **88**
+- Pending: **344**
+- Coverage: **20.37%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,12 +19,13 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - GXEST104 — Module 1 in progress (33 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   2. PCCST501 — Computer Networks (started — see step 1)
-   3. GXEST104 — Introduction to Electrical and Electronics Engineering
+   1. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   2. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   3. PCCST501 — Computer Networks (started — see step 1)
    4. GZPHT121 — Physics for Physical Science and Life Science
    5. PCCST303 — Data Structures and Algorithms
    6. PCCST503 — Machine Learning
@@ -39,6 +40,44 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## GXEST104 — Introduction to Electrical and Electronics Engineering (33/33 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 DC Circuits & Magnetic Circuits | 01 | `m1_01_ohms_kcl_kvl.md` | `m1_01_ohms_kcl_kvl` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 02 | `m1_02_voltage_current_division_relative_potential.md` | `m1_02_voltage_current_division_relative_potential` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 03 | `m1_03_capacitors_inductors_energy.md` | `m1_03_capacitors_inductors_energy` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 04 | `m1_04_star_delta_conversion.md` | `m1_04_star_delta_conversion` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 05 | `m1_05_mesh_analysis_matrices.md` | `m1_05_mesh_analysis_matrices` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 06 | `m1_06_nodal_analysis_matrices.md` | `m1_06_nodal_analysis_matrices` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 07 | `m1_07_magnetic_circuits_basics.md` | `m1_07_magnetic_circuits_basics` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 08 | `m1_08_composite_parallel_magnetic.md` | `m1_08_composite_parallel_magnetic` | migrated |
+| M1 DC Circuits & Magnetic Circuits | 09 | `m1_09_mixed_drill.md` | `m1_09_mixed_drill` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 01 | `m2_01_emi_faraday_lenz_inductance.md` | `m2_01_emi_faraday_lenz_inductance` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 02 | `m2_02_ac_fundamentals_rms_average.md` | `m2_02_ac_fundamentals_rms_average` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 03 | `m2_03_phasors_forms_operations.md` | `m2_03_phasors_forms_operations` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 04 | `m2_04_pure_r_l_c_circuits.md` | `m2_04_pure_r_l_c_circuits` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 05 | `m2_05_rl_rc_rlc_series.md` | `m2_05_rl_rc_rlc_series` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 06 | `m2_06_series_resonance_q_factor_bandwidth.md` | `m2_06_series_resonance_q_factor_bandwidth` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 07 | `m2_07_ac_power_pf_correction.md` | `m2_07_ac_power_pf_correction` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 08 | `m2_08_three_phase_star_delta.md` | `m2_08_three_phase_star_delta` | migrated |
+| M2 EMI, AC & Three-Phase Systems | 09 | `m2_09_m2_mixed_drill.md` | `m2_09_m2_mixed_drill` | migrated |
+| M3 Electronic Devices & Circuits | 01 | `m3_01_passive_active_pn_diode.md` | `m3_01_passive_active_pn_diode` | migrated |
+| M3 Electronic Devices & Circuits | 02 | `m3_02_zener_avalanche_regulator.md` | `m3_02_zener_avalanche_regulator` | migrated |
+| M3 Electronic Devices & Circuits | 03 | `m3_03_dc_supply_rectifiers.md` | `m3_03_dc_supply_rectifiers` | migrated |
+| M3 Electronic Devices & Circuits | 04 | `m3_04_ripple_factor_filters.md` | `m3_04_ripple_factor_filters` | migrated |
+| M3 Electronic Devices & Circuits | 05 | `m3_05_bjt_construction_characteristics.md` | `m3_05_bjt_construction_characteristics` | migrated |
+| M3 Electronic Devices & Circuits | 06 | `m3_06_configs_biasing_loadline.md` | `m3_06_configs_biasing_loadline` | migrated |
+| M3 Electronic Devices & Circuits | 07 | `m3_07_switch_amplifier.md` | `m3_07_switch_amplifier` | migrated |
+| M3 Electronic Devices & Circuits | 08 | `m3_08_rc_coupled_fet_mosfet.md` | `m3_08_rc_coupled_fet_mosfet` | migrated |
+| M3 Electronic Devices & Circuits | 09 | `m3_09_m3_mixed_drill.md` | `m3_09_m3_mixed_drill` | migrated |
+| M4 Modern Electronics & Applications | 01 | `m4_01_comm_fibre_block_diagrams.md` | `m4_01_comm_fibre_block_diagrams` | migrated |
+| M4 Modern Electronics & Applications | 02 | `m4_02_am_fm_superhet.md` | `m4_02_am_fm_superhet` | migrated |
+| M4 Modern Electronics & Applications | 03 | `m4_03_wired_wireless_gsm_generations.md` | `m4_03_wired_wireless_gsm_generations` | migrated |
+| M4 Modern Electronics & Applications | 04 | `m4_04_instrumentation_dmm_generator.md` | `m4_04_instrumentation_dmm_generator` | migrated |
+| M4 Modern Electronics & Applications | 05 | `m4_05_cro_lissajous.md` | `m4_05_cro_lissajous` | migrated |
+| M4 Modern Electronics & Applications | 06 | `m4_06_iot_case_studies_revision.md` | `m4_06_iot_case_studies_revision` | migrated |
 
 ## GAMAT301 — Mathematics for Computer and Information Science-3 (24/24 migrated)
 
@@ -109,44 +148,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## GXEST104 — Introduction to Electrical and Electronics Engineering (0/33 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 DC Circuits & Magnetic Circuits | 01 | `m1_01_ohms_kcl_kvl.md` | `m1_01_ohms_kcl_kvl` | pending |
-| M1 DC Circuits & Magnetic Circuits | 02 | `m1_02_voltage_current_division_relative_potential.md` | `m1_02_voltage_current_division_relative_potential` | pending |
-| M1 DC Circuits & Magnetic Circuits | 03 | `m1_03_capacitors_inductors_energy.md` | `m1_03_capacitors_inductors_energy` | pending |
-| M1 DC Circuits & Magnetic Circuits | 04 | `m1_04_star_delta_conversion.md` | `m1_04_star_delta_conversion` | pending |
-| M1 DC Circuits & Magnetic Circuits | 05 | `m1_05_mesh_analysis_matrices.md` | `m1_05_mesh_analysis_matrices` | pending |
-| M1 DC Circuits & Magnetic Circuits | 06 | `m1_06_nodal_analysis_matrices.md` | `m1_06_nodal_analysis_matrices` | pending |
-| M1 DC Circuits & Magnetic Circuits | 07 | `m1_07_magnetic_circuits_basics.md` | `m1_07_magnetic_circuits_basics` | pending |
-| M1 DC Circuits & Magnetic Circuits | 08 | `m1_08_composite_parallel_magnetic.md` | `m1_08_composite_parallel_magnetic` | pending |
-| M1 DC Circuits & Magnetic Circuits | 09 | `m1_09_mixed_drill.md` | `m1_09_mixed_drill` | pending |
-| M2 EMI, AC & Three-Phase Systems | 01 | `m2_01_emi_faraday_lenz_inductance.md` | `m2_01_emi_faraday_lenz_inductance` | pending |
-| M2 EMI, AC & Three-Phase Systems | 02 | `m2_02_ac_fundamentals_rms_average.md` | `m2_02_ac_fundamentals_rms_average` | pending |
-| M2 EMI, AC & Three-Phase Systems | 03 | `m2_03_phasors_forms_operations.md` | `m2_03_phasors_forms_operations` | pending |
-| M2 EMI, AC & Three-Phase Systems | 04 | `m2_04_pure_r_l_c_circuits.md` | `m2_04_pure_r_l_c_circuits` | pending |
-| M2 EMI, AC & Three-Phase Systems | 05 | `m2_05_rl_rc_rlc_series.md` | `m2_05_rl_rc_rlc_series` | pending |
-| M2 EMI, AC & Three-Phase Systems | 06 | `m2_06_series_resonance_q_factor_bandwidth.md` | `m2_06_series_resonance_q_factor_bandwidth` | pending |
-| M2 EMI, AC & Three-Phase Systems | 07 | `m2_07_ac_power_pf_correction.md` | `m2_07_ac_power_pf_correction` | pending |
-| M2 EMI, AC & Three-Phase Systems | 08 | `m2_08_three_phase_star_delta.md` | `m2_08_three_phase_star_delta` | pending |
-| M2 EMI, AC & Three-Phase Systems | 09 | `m2_09_m2_mixed_drill.md` | `m2_09_m2_mixed_drill` | pending |
-| M3 Electronic Devices & Circuits | 01 | `m3_01_passive_active_pn_diode.md` | `m3_01_passive_active_pn_diode` | pending |
-| M3 Electronic Devices & Circuits | 02 | `m3_02_zener_avalanche_regulator.md` | `m3_02_zener_avalanche_regulator` | pending |
-| M3 Electronic Devices & Circuits | 03 | `m3_03_dc_supply_rectifiers.md` | `m3_03_dc_supply_rectifiers` | pending |
-| M3 Electronic Devices & Circuits | 04 | `m3_04_ripple_factor_filters.md` | `m3_04_ripple_factor_filters` | pending |
-| M3 Electronic Devices & Circuits | 05 | `m3_05_bjt_construction_characteristics.md` | `m3_05_bjt_construction_characteristics` | pending |
-| M3 Electronic Devices & Circuits | 06 | `m3_06_configs_biasing_loadline.md` | `m3_06_configs_biasing_loadline` | pending |
-| M3 Electronic Devices & Circuits | 07 | `m3_07_switch_amplifier.md` | `m3_07_switch_amplifier` | pending |
-| M3 Electronic Devices & Circuits | 08 | `m3_08_rc_coupled_fet_mosfet.md` | `m3_08_rc_coupled_fet_mosfet` | pending |
-| M3 Electronic Devices & Circuits | 09 | `m3_09_m3_mixed_drill.md` | `m3_09_m3_mixed_drill` | pending |
-| M4 Modern Electronics & Applications | 01 | `m4_01_comm_fibre_block_diagrams.md` | `m4_01_comm_fibre_block_diagrams` | pending |
-| M4 Modern Electronics & Applications | 02 | `m4_02_am_fm_superhet.md` | `m4_02_am_fm_superhet` | pending |
-| M4 Modern Electronics & Applications | 03 | `m4_03_wired_wireless_gsm_generations.md` | `m4_03_wired_wireless_gsm_generations` | pending |
-| M4 Modern Electronics & Applications | 04 | `m4_04_instrumentation_dmm_generator.md` | `m4_04_instrumentation_dmm_generator` | pending |
-| M4 Modern Electronics & Applications | 05 | `m4_05_cro_lissajous.md` | `m4_05_cro_lissajous` | pending |
-| M4 Modern Electronics & Applications | 06 | `m4_06_iot_case_studies_revision.md` | `m4_06_iot_case_studies_revision` | pending |
 
 ## GZPHT121 — Physics for Physical Science and Life Science (0/26 migrated)
 

@@ -1,3 +1,26 @@
+---
+id: m2_05_rl_rc_rlc_series
+courseCode: GXEST104
+module: 2
+sequence: 5
+title: 'RL, RC & RLC Series Circuits'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Build series impedance triangles with phase
+  - Add element voltages as phasors, never scalars
+  - Locate resonance with magnification awareness
+concepts:
+  - impedance
+  - resonance
+prerequisites:
+  - m2_03_phasors_forms_operations
+  - m2_04_pure_r_l_c_circuits
+examRelevance: medium
+tags:
+  - impedance
+  - resonance
+---
 # RL, RC & RLC Series Circuits
 
 **Impedance triangles, the resonance peak, and current through complex division — with the animated triangle.**

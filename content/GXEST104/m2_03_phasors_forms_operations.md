@@ -1,3 +1,25 @@
+---
+id: m2_03_phasors_forms_operations
+courseCode: GXEST104
+module: 2
+sequence: 3
+title: 'Phasors: Trig, Rectangular, Polar & Complex Forms'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Convert phasors across all four notations
+  - Add in rectangular and scale in polar form
+  - Correct arctan angles by quadrant
+concepts:
+  - phasors
+  - complex forms
+prerequisites:
+  - m2_02_ac_fundamentals_rms_average
+examRelevance: high
+tags:
+  - phasors
+  - ac-analysis
+---
 # Phasors: Trig, Rectangular, Polar & Complex Forms
 
 **Frozen sine waves as vectors — four interchangeable notations and arithmetic without differentiation.**

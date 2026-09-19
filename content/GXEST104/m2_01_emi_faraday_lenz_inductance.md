@@ -1,3 +1,26 @@
+---
+id: m2_01_emi_faraday_lenz_inductance
+courseCode: GXEST104
+module: 2
+sequence: 1
+title: 'Electromagnetic Induction: Faraday, Lenz & Inductance'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - State Faraday's laws with the Lenz direction rule
+  - Separate static from dynamic induction cases
+  - Read coupling quality from the k factor
+concepts:
+  - Faraday's law
+  - Lenz's law
+  - inductance
+prerequisites:
+  - m1_03_capacitors_inductors_energy
+examRelevance: high
+tags:
+  - emi
+  - inductance
+---
 # Electromagnetic Induction: Faraday, Lenz & Inductance
 
 **Flux change breeds EMF — direction by Lenz, static vs dynamic births, and self/mutual inductance with coupling (theory, no numericals).**

@@ -1,3 +1,26 @@
+---
+id: m1_03_capacitors_inductors_energy
+courseCode: GXEST104
+module: 1
+sequence: 3
+title: 'Capacitors & Inductors: V-I Relations and Energy'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - State capacitor and inductor V-I relations with duals
+  - Compute stored energy from voltage or current
+  - Reduce DC-steady circuits to resistive equivalents
+concepts:
+  - capacitors
+  - inductors
+  - energy storage
+prerequisites:
+  - m1_01_ohms_kcl_kvl
+examRelevance: medium
+tags:
+  - capacitors
+  - inductors
+---
 # Capacitors & Inductors: V-I Relations and Energy
 
 **The two dynamic elements — one blocks DC after charging, one fights current change — with energy formulas and transients-free problems.**

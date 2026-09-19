@@ -1,3 +1,27 @@
+---
+id: m3_08_rc_coupled_fet_mosfet
+courseCode: GXEST104
+module: 3
+sequence: 8
+title: 'RC-Coupled Amplifier, Frequency Response & FET/MOSFET'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Isolate stage Q-points with coupling capacitors
+  - Blame bass and treble roll-off on the right capacitors
+  - Drive enhancement MOSFETs past threshold voltage
+concepts:
+  - RC coupling
+  - frequency response
+  - MOSFET
+prerequisites:
+  - m3_06_configs_biasing_loadline
+  - m3_07_switch_amplifier
+examRelevance: medium
+tags:
+  - amplifiers
+  - mosfet
+---
 # RC-Coupled Amplifier, Frequency Response & FET/MOSFET
 
 **Two stages holding hands through capacitors — midband gain, bass/treble roll-off — plus the field-effect family (N/P MOSFET).**

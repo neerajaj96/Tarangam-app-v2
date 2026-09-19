@@ -1,3 +1,26 @@
+---
+id: m3_06_configs_biasing_loadline
+courseCode: GXEST104
+module: 3
+sequence: 6
+title: 'CE, CB, CC Comparison, Biasing & Load Line'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Compare CE, CB, and CC on gains and impedances
+  - Park Q-points with divider bias and load lines
+  - Judge centred swing against clipping sides
+concepts:
+  - amplifier configurations
+  - biasing
+  - load line
+prerequisites:
+  - m3_05_bjt_construction_characteristics
+examRelevance: high
+tags:
+  - biasing
+  - load-line
+---
 # CE, CB, CC Comparison, Biasing & Load Line
 
 **Three ways to ground the transistor, why CE wins for amplification, and how biasing parks the Q-point.**

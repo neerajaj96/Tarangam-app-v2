@@ -1,3 +1,24 @@
+---
+id: m1_08_composite_parallel_magnetic
+courseCode: GXEST104
+module: 1
+sequence: 8
+title: 'Series, Parallel & Composite Magnetic Circuits'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Add series reluctances with gap dominance
+  - Split flux across parallel limbs inversely to reluctance
+  - Answer pure-theory comparison questions structurally
+concepts:
+  - air gaps
+  - parallel magnetic limbs
+prerequisites:
+  - m1_07_magnetic_circuits_basics
+examRelevance: high
+tags:
+  - magnetic-circuits
+---
 # Series, Parallel & Composite Magnetic Circuits
 
 **Rings with air gaps, mixed materials, and parallel limbs — solved exactly like resistive networks (theory only, no numericals per syllabus).**

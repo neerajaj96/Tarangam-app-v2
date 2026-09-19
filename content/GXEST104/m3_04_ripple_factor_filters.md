@@ -1,3 +1,25 @@
+---
+id: m3_04_ripple_factor_filters
+courseCode: GXEST104
+module: 3
+sequence: 4
+title: Ripple Factor with and without Filters
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Rank ripple ladders across rectifier types
+  - Size capacitor dents from current and gulp rate
+  - Use gulp frequency instead of mains frequency
+concepts:
+  - ripple factor
+  - capacitor filters
+prerequisites:
+  - m3_03_dc_supply_rectifiers
+examRelevance: high
+tags:
+  - ripple
+  - filters
+---
 # Ripple Factor with and without Filters
 
 **How lumpy is the DC — ripple definitions, capacitor smoothing math, and filter-comparison problems.**

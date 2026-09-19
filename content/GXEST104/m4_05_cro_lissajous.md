@@ -1,3 +1,25 @@
+---
+id: m4_05_cro_lissajous
+courseCode: GXEST104
+module: 4
+sequence: 5
+title: CRO & Lissajous Patterns
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read volts, period, and frequency off divisions
+  - Resolve frequency ratios from touch counts
+  - Extract phase from ellipse intercepts
+concepts:
+  - CRO
+  - Lissajous patterns
+prerequisites:
+  - m2_02_ac_fundamentals_rms_average
+examRelevance: medium
+tags:
+  - cro
+  - measurements
+---
 # CRO & Lissajous Patterns
 
 **The electron painter — deflection physics, front-panel fluency, and frequency/phase from looping figures.**

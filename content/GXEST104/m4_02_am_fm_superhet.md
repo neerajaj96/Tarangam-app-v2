@@ -1,3 +1,24 @@
+---
+id: m4_02_am_fm_superhet
+courseCode: GXEST104
+module: 4
+sequence: 2
+title: 'AM, FM & Superheterodyne Receivers'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Contrast height-stamped AM with pace-stamped FM
+  - Justify the mixer with single-IF economics
+  - Pair IF values with their bands every time
+concepts:
+  - AM/FM
+  - superheterodyne receiver
+prerequisites: []
+examRelevance: medium
+tags:
+  - modulation
+  - radio
+---
 # AM, FM & Superheterodyne Receivers
 
 **Stamping audio onto carriers — amplitude vs frequency fingerprints, and the mixer that tames any station to one IF.**

@@ -1,3 +1,26 @@
+---
+id: m3_07_switch_amplifier
+courseCode: GXEST104
+module: 3
+sequence: 7
+title: Transistor as Switch & Amplifier
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Overdrive base current for hard saturation
+  - Estimate stage gain from resistance ratios
+  - Split DC stability from AC gain with bypassing
+concepts:
+  - transistor switch
+  - small-signal gain
+prerequisites:
+  - m3_05_bjt_construction_characteristics
+  - m3_06_configs_biasing_loadline
+examRelevance: medium
+tags:
+  - switching
+  - amplifiers
+---
 # Transistor as Switch & Amplifier
 
 **Cutoff/saturation slamming vs active-region finesse — inverter operation, LED driving, and small-signal voltage gain.**

@@ -1,3 +1,25 @@
+---
+id: m1_04_star_delta_conversion
+courseCode: GXEST104
+module: 1
+sequence: 4
+title: Star–Delta Conversion of Resistive Networks
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Convert delta to star with opposite-arm mapping
+  - Convert star to delta including the balanced shortcut
+  - Reduce bridge tangles by converting the blocker first
+concepts:
+  - star-delta transformation
+  - network reduction
+prerequisites:
+  - m1_02_voltage_current_division_relative_potential
+examRelevance: medium
+tags:
+  - dc-circuits
+  - star-delta
+---
 # Star–Delta Conversion of Resistive Networks
 
 **Collapsing 3-terminal tangles — both conversion formulas, when to convert, and full reduction traces.**

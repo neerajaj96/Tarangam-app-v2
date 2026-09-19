@@ -1,3 +1,26 @@
+---
+id: m2_06_series_resonance_q_factor_bandwidth
+courseCode: GXEST104
+module: 2
+sequence: 6
+title: 'Series Resonance, Q-Factor & Bandwidth'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Find resonant frequency from cancellation conditions
+  - Price selectivity and magnification with Q
+  - Bound current by the surviving resistance floor
+concepts:
+  - resonant frequency
+  - Q-factor
+  - bandwidth
+prerequisites:
+  - m2_05_rl_rc_rlc_series
+examRelevance: medium
+tags:
+  - resonance
+  - q-factor
+---
 # Series Resonance, Q-Factor & Bandwidth
 
 **When reactances cancel — resonant frequency, magnification, selectivity, and the Q that prices them all.**

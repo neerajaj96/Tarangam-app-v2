@@ -1,3 +1,25 @@
+---
+id: m4_04_instrumentation_dmm_generator
+courseCode: GXEST104
+module: 4
+sequence: 4
+title: 'Instrumentation: System Blocks, DMM & Function Generator'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Sketch the sense-condition-show skeleton with roles
+  - Measure volts, amps, and ohms with correct connections
+  - Bake waveforms with offset arithmetic
+concepts:
+  - instrumentation blocks
+  - DMM
+  - function generator
+prerequisites: []
+examRelevance: high
+tags:
+  - instrumentation
+  - dmm
+---
 # Instrumentation: System Blocks, DMM & Function Generator
 
 **Measure and make signals — generalised instrument skeleton, bench DMM anatomy, and waveform bakery.**

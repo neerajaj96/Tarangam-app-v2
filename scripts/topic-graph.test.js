@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 55 metadata-bearing', () => {
+  it('discovers all 432 topics with 88 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 55);
+    assert.equal(analysis.coverage.metadata, 88);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -175,14 +175,15 @@ describe('live repo graph', () => {
     const kinds = new Map(built.edges.map((e) => [`${e.from} -> ${e.to}`, e.kind]));
     assert.equal(kinds.get('GAMAT301/m1_06_expectation_functions_m1_drill -> GAMAT301/m1_05_joint_pmf_marginals_independence'), 'internal');
     assert.equal(kinds.get('PCCST501/m1_08_peer_to_peer_bittorrent -> PCCST501/m1_04_world_wide_web_and_http'), 'internal');
-    assert.equal(analysis.edgeCount, 66);
+    assert.equal(analysis.edgeCount, 108);
   });
 
   it('computes chain depths', () => {
     assert.equal(built.nodes.get('GAMAT301/m1_01_random_variables_pmf_cdf').depth, 0);
     assert.equal(built.nodes.get('GAMAT301/m1_06_expectation_functions_m1_drill').depth, 2);
     assert.equal(built.nodes.get('PCCST501/m1_07_domain_name_system_dns').depth, 5);
-    assert.equal(analysis.maxDepth, 5);
+    assert.equal(built.nodes.get('GXEST104/m2_09_m2_mixed_drill').depth, 8);
+    assert.equal(analysis.maxDepth, 8);
   });
 
   it('has zero errors and only the known intro-topic warnings', () => {
@@ -190,6 +191,8 @@ describe('live repo graph', () => {
     // Self-contained intro topics with no relationships yet warn (never
     // fail); the set is pinned so new orphans get noticed.
     assert.deepEqual(analysis.warnings, [
+      'metadata topic "GXEST104/m4_01_comm_fibre_block_diagrams" has no prerequisite relationships',
+      'metadata topic "GXEST104/m4_04_instrumentation_dmm_generator" has no prerequisite relationships',
       'metadata topic "PCCST501/m3_01_datalink_layer_services_and_framing" has no prerequisite relationships',
       'metadata topic "PCCST501/m3_04_lan_addressing_arp_switches_and_vlans" has no prerequisite relationships',
       'metadata topic "PCCST501/m4_01_network_management_snmp_architecture" has no prerequisite relationships',

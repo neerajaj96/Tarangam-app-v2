@@ -1,3 +1,29 @@
+---
+id: m2_09_m2_mixed_drill
+courseCode: GXEST104
+module: 2
+sequence: 9
+title: 'M2 Mixed Drill: AC & Three-Phase Variations'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Fire all five M2 reflexes under time pressure
+  - Spot rigged triples and engineered numbers
+  - Translate worded scenarios into tails and conversions
+concepts:
+  - measurement reflexes
+  - triangle spotting
+prerequisites:
+  - m2_02_ac_fundamentals_rms_average
+  - m2_03_phasors_forms_operations
+  - m2_05_rl_rc_rlc_series
+  - m2_07_ac_power_pf_correction
+  - m2_08_three_phase_star_delta
+examRelevance: high
+tags:
+  - ac-circuits
+  - m2-drill
+---
 # M2 Mixed Drill: AC & Three-Phase Variations
 
 **Waveform measures, phasor sums, RLC answers, power bills, and $\sqrt3$ calls — speed round.**

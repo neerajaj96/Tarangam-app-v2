@@ -1,3 +1,26 @@
+---
+id: m2_02_ac_fundamentals_rms_average
+courseCode: GXEST104
+module: 2
+sequence: 2
+title: 'AC Fundamentals: Generation, RMS, Average & Form Factor'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Generate sine waves from rotating coils
+  - Convert between peak, average, and RMS measures
+  - Read mains ratings as RMS with peak consequences
+concepts:
+  - RMS
+  - average value
+  - form factor
+prerequisites:
+  - m2_01_emi_faraday_lenz_inductance
+examRelevance: high
+tags:
+  - ac-fundamentals
+  - rms
+---
 # AC Fundamentals: Generation, RMS, Average & Form Factor
 
 **Coil in a magnetic field makes sine waves — frequency/period, average vs RMS, and form-factor problems.**

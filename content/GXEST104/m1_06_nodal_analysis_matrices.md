@@ -1,3 +1,27 @@
+---
+id: m1_06_nodal_analysis_matrices
+courseCode: GXEST104
+module: 1
+sequence: 6
+title: Nodal Analysis with Matrices
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Assemble nodal matrices in conductance units
+  - Merge floating sources into supernode constraints
+  - Choose mesh or nodal by equation count
+concepts:
+  - nodal analysis
+  - supernode
+  - conductance
+prerequisites:
+  - m1_01_ohms_kcl_kvl
+  - m1_05_mesh_analysis_matrices
+examRelevance: medium
+tags:
+  - nodal-analysis
+  - circuit-analysis
+---
 # Nodal Analysis with Matrices
 
 **Node voltages as unknowns — self vs mutual conductance, supernodes, and current-source-friendly solutions.**

@@ -1,3 +1,26 @@
+---
+id: m1_02_voltage_current_division_relative_potential
+courseCode: GXEST104
+module: 1
+sequence: 2
+title: Voltage/Current Division & Relative Potential
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Split voltage across series resistors by share
+  - Split current across parallel branches with the other-resistor rule
+  - Read node voltages against any stated reference
+concepts:
+  - voltage division
+  - current division
+  - relative potential
+prerequisites:
+  - m1_01_ohms_kcl_kvl
+examRelevance: medium
+tags:
+  - dc-circuits
+  - voltage-division
+---
 # Voltage/Current Division & Relative Potential
 
 **The two shortcuts plus the reference game — series shares, parallel shares, and node voltages from any ground.**

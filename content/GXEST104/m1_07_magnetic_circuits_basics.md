@@ -1,3 +1,25 @@
+---
+id: m1_07_magnetic_circuits_basics
+courseCode: GXEST104
+module: 1
+sequence: 7
+title: 'Magnetic Circuits: MMF, Reluctance & Electric Twins'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Name MMF, flux, and reluctance with units
+  - Translate electric circuits into magnetic twins
+  - Respect saturation limits on linear reluctance
+concepts:
+  - MMF
+  - reluctance
+  - magnetic dictionary
+prerequisites: []
+examRelevance: medium
+tags:
+  - magnetic-circuits
+  - electromagnetism
+---
 # Magnetic Circuits: MMF, Reluctance & Electric Twins
 
 **Coils as batteries, cores as wires — flux, MMF, reluctance, and the full electric↔magnetic dictionary.**

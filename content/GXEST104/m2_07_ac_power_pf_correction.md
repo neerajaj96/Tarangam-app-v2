@@ -1,3 +1,25 @@
+---
+id: m2_07_ac_power_pf_correction
+courseCode: GXEST104
+module: 2
+sequence: 7
+title: 'Power in AC: PF, Active, Reactive & Apparent'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Split apparent power into billed and oscillating parts
+  - Pair power-factor adjectives with load types
+  - Size correction capacitors from reactive differences
+concepts:
+  - apparent/active/reactive power
+  - power factor correction
+prerequisites:
+  - m2_05_rl_rc_rlc_series
+examRelevance: medium
+tags:
+  - power-factor
+  - ac-power
+---
 # Power in AC: PF, Active, Reactive & Apparent
 
 **The power triangle — what you pay for, what oscillates, and what sizes the wires — with correction problems.**

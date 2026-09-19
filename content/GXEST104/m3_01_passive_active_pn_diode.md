@@ -1,3 +1,25 @@
+---
+id: m3_01_passive_active_pn_diode
+courseCode: GXEST104
+module: 3
+sequence: 1
+title: Passive/Active Components & the PN Diode
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Separate passive parts from active parts by gain
+  - Explain depletion formation and knee behavior
+  - Verify diode states by assumption checking
+concepts:
+  - PN diode
+  - depletion region
+  - knee voltage
+prerequisites: []
+examRelevance: high
+tags:
+  - diodes
+  - semiconductors
+---
 # Passive/Active Components & the PN Diode
 
 **Resistors to transistors in one map — then depletion, diffusion vs drift, and the knee that starts electronics.**

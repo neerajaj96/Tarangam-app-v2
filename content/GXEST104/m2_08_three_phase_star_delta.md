@@ -1,3 +1,25 @@
+---
+id: m2_08_three_phase_star_delta
+courseCode: GXEST104
+module: 2
+sequence: 8
+title: 'Three-Phase Systems: Star, Delta & Line Values'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Generate three-phase voltages with sequence awareness
+  - Convert line and phase values with star-V and delta-I rules
+  - Compute balanced power with one formula
+concepts:
+  - three-phase systems
+  - star-delta connections
+prerequisites:
+  - m2_07_ac_power_pf_correction
+examRelevance: medium
+tags:
+  - three-phase
+  - star-delta
+---
 # Three-Phase Systems: Star, Delta & Line Values
 
 **Why three wires beat one — generation, advantages, and the $\sqrt3$ relations (balanced only).**

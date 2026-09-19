@@ -1,3 +1,24 @@
+---
+id: m4_01_comm_fibre_block_diagrams
+courseCode: GXEST104
+module: 4
+sequence: 1
+title: Communication System & Fibre-Optic Link Blocks
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Draw generic chains with one role-line per block
+  - Place noise arrows at the channel only
+  - Explain fibre EMI immunity from photon physics
+concepts:
+  - communication chain
+  - fibre-optic link
+prerequisites: []
+examRelevance: high
+tags:
+  - communication
+  - fibre-optics
+---
 # Communication System & Fibre-Optic Link Blocks
 
 **Source-to-sink in boxes — the generic chain and its light-speed cousin, with each block's one-line job.**
