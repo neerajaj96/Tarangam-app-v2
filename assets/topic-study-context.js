@@ -47,6 +47,7 @@ import {
 } from './learning-journey.js';
 import { buildTopicExamModel } from './exam-readiness.js';
 import { buildTopicAnalyticsContribution } from './learning-analytics.js';
+import { buildStudyPlan, getTopicPlanDay, explainTopicPlanMembership, loadPlanConfig } from './study-planner.js';
 import {
   getReviewStateForTopic,
   explainReviewReason,
@@ -94,11 +95,11 @@ function linkEntry(currentCourseCode, topic, extraState) {
 
 // Full study-context model for one topic. Null when the topic is unknown.
 // getStatus is `(courseCode, topicId) => status` (unknown safely unfinished).
-// options is an optional `{ getTimestamp, now }`: getTimestamp feeds the
-// deterministic review state (completed topics only — unfinished topics are
-// never marked due), now injects the clock for tests. Completing a topic
-// resets its review clock through the existing learner-state timestamp
-// mechanism (setTopicState touches the timestamp); no separate reset path.
+// options is an optional `{ getTimestamp, now, planConfig }`: getTimestamp
+// feeds the deterministic review state (completed topics only — unfinished
+// topics are never marked due), now injects the clock for tests, planConfig
+// is the explicit saved study-plan configuration (without one, the topic
+// carries no planning information — never fabricated).
 export function buildStudyContextModel(manifest, getStatus, courseCode, topicId, options = {}) {
   const topic = getTopic(manifest, courseCode, topicId);
   if (!topic) return null;
@@ -121,6 +122,17 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
   const exam = buildTopicExamModel(manifest, getStatus, courseCode, topicId);
   const getTimestamp = typeof options.getTimestamp === 'function' ? options.getTimestamp : null;
   const analytics = buildTopicAnalyticsContribution(manifest, getStatus, getTimestamp, courseCode, topicId, options.now);
+  // Plan membership is derived from the explicit saved config plus canonical
+  // state — no per-topic planning state exists. Without a config the topic
+  // is unplanned and renders no planning block.
+  const plan = buildStudyPlan(manifest, getStatus, getTimestamp, options.planConfig, options.now);
+  const planDay = getTopicPlanDay(plan, courseCode, topicId);
+  const planned = {
+    planned: planDay !== null,
+    day: planDay,
+    estimatedMinutes: topic.estimatedMinutes ?? null,
+    reason: explainTopicPlanMembership(plan, courseCode, topicId),
+  };
   const reviewState = getReviewStateForTopic(manifest, getStatus, getTimestamp, courseCode, topicId, options.now);
   const review = {
     state: reviewState.state,
@@ -182,6 +194,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     exam,
     review,
     analytics,
+    planned,
   };
 }
 
@@ -316,6 +329,20 @@ export function renderStudyContext(model) {
       + `</div>`;
   })();
 
+  const planBlock = (() => {
+    // Only planned topics render planning information; unplanned topics
+    // show nothing here (never misleading).
+    const p = model.planned;
+    if (!p || !p.planned) return '';
+    const mins = p.estimatedMinutes !== null && p.estimatedMinutes !== undefined
+      ? `${p.estimatedMinutes} min`
+      : 'unknown minutes';
+    return `<div class="ts-block ts-plan"><h3>Study plan</h3>`
+      + `<p class="xp-note">Planned for day ${esc(p.day)} (${esc(mins)}).</p>`
+      + (p.reason ? `<p class="xp-note">${esc(p.reason)}</p>` : '')
+      + `</div>`;
+  })();
+
   return `<div class="ts-context-head"><h2>Study context</h2>
     <div class="topic-badges">${chips.join('')}</div></div>
   <div class="ts-actions">
@@ -330,6 +357,7 @@ export function renderStudyContext(model) {
   ${examBlock}
   ${reviewBlock}
   ${analyticsBlock}
+  ${planBlock}
   <details class="ts-details"><summary>Dependency chain (${model.chain.length} topics · ancestors ${model.ancestorCompletion.completed}/${model.ancestorCompletion.total} complete)</summary>
     <ol class="ts-list">${chainItems}</ol></details>
   <details class="ts-details"><summary>Dependents (${model.dependents.length})</summary>
@@ -356,8 +384,10 @@ export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode,
   const timestampReader = (c, id) => store.lastAccessed(c, id);
 
   function renderWith(manifest) {
+    // Plan membership re-derives from the saved config on every render, so
+    // completion changes (via the shared event below) recalculate the plan.
     const model = manifest
-      ? buildStudyContextModel(manifest, statusReader, courseCode, topicId, { getTimestamp: timestampReader, now: Date.now() })
+      ? buildStudyContextModel(manifest, statusReader, courseCode, topicId, { getTimestamp: timestampReader, now: Date.now(), planConfig: loadPlanConfig() })
       : null;
     if (!model) {
       const done = store.isTopicCompleted(courseCode, topicId);

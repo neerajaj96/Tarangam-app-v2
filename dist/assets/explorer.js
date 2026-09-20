@@ -40,6 +40,33 @@ import {
   getReviewStateForTopic,
 } from './revision.js';
 import { getCourseAnalytics, getModuleAnalytics } from './learning-analytics.js';
+import {
+  buildStudyPlan,
+  loadPlanConfig,
+  savePlanConfig,
+  getTopicPlanDay,
+  explainTopicPlanMembership,
+} from './study-planner.js';
+
+// Plan membership derived from the single saved plan configuration plus
+// canonical learner state — no per-topic planning state is ever stored.
+// Unknown topics yield { planned: false } (never throw).
+export function getExplorerPlanInfo(manifest, getStatus, getTimestamp, planConfig, courseCode, topicId, now) {
+  try {
+    const plan = buildStudyPlan(manifest, getStatus, getTimestamp, planConfig, now);
+    const day = getTopicPlanDay(plan, courseCode, topicId);
+    if (day === null) return { planned: false, day: null, estimatedMinutes: null, reason: null };
+    const entry = plan.dailyPlan[day - 1].topics.find((t) => t.courseCode === courseCode && t.id === topicId);
+    return {
+      planned: true,
+      day,
+      estimatedMinutes: entry ? entry.estimatedMinutes ?? null : null,
+      reason: explainTopicPlanMembership(plan, courseCode, topicId),
+    };
+  } catch {
+    return { planned: false, day: null, estimatedMinutes: null, reason: null };
+  }
+}
 
 // Pure analytics indicators for course/module views, reusing the canonical
 // analytics module (no duplicated calculations). Unknown courses/modules
@@ -176,6 +203,18 @@ function timestampReader() {
   return (courseCode, topicId) => state.progress.lastAccessed(courseCode, topicId);
 }
 
+// The active study plan, derived fresh from the single saved configuration
+// plus canonical learner state on every render (progress changes re-render
+// via the shared event, so the plan never goes stale).
+function activePlan() {
+  if (!state.manifest || !state.progress) return null;
+  try {
+    return buildStudyPlan(state.manifest, statusReader(), timestampReader(), loadPlanConfig(), Date.now());
+  } catch {
+    return null;
+  }
+}
+
 function currentRecommendedKey() {
   if (!state.manifest || !state.progress) return null;
   const next = getNextRecommendedTopic(state.manifest, statusReader());
@@ -207,6 +246,14 @@ function reviewChips(topic) {
   if (rs.state === REVIEW_STATE_OVERDUE) return '<span class="badge badge-gold">↻ Overdue</span>';
   if (rs.state === REVIEW_STATE_DUE) return '<span class="badge badge-accent">↻ Review due</span>';
   return '';
+}
+
+function planChips(topic, plan) {
+  // Per-card plan signal derived from the active plan (no per-topic state).
+  if (!plan) return '';
+  const day = getTopicPlanDay(plan, topic.courseCode, topic.id);
+  if (day === null) return '';
+  return `<span class="badge badge-gold">★ Planned · Day ${esc(day)}</span>`;
 }
 
 function currentFilters() {
@@ -339,13 +386,14 @@ function renderList() {
     list.innerHTML = '<div class="xp-empty">No topics match the current filters.</div>';
     return;
   }
+  const plan = activePlan();
   list.innerHTML = topics.map((t) => {
     const key = `${t.courseCode}/${t.id}`;
     const active = key === state.selectedKey ? ' xp-active' : '';
     return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
@@ -401,6 +449,11 @@ function renderDetail() {
   const reviewBlock = (reviewRs.state === REVIEW_STATE_DUE || reviewRs.state === REVIEW_STATE_OVERDUE)
     ? `<div class="xp-pre-head">↻ ${reviewRs.state === REVIEW_STATE_OVERDUE ? 'Overdue' : 'Review due'} — ${reviewRs.daysSince} ${reviewRs.daysSince === 1 ? 'day' : 'days'} since last access (threshold ${reviewRs.threshold}). Revisiting refreshes its timestamp.</div>`
     : '';
+  const plan = activePlan();
+  const planDay = plan ? getTopicPlanDay(plan, topic.courseCode, topic.id) : null;
+  const planBlock = planDay !== null
+    ? `<div class="xp-pre-head">★ In study plan — Day ${esc(planDay)}.${explainTopicPlanMembership(plan, topic.courseCode, topic.id) ? ` ${esc(explainTopicPlanMembership(plan, topic.courseCode, topic.id))}` : ''}</div>`
+    : '';
   const listOrNone = (items, kind) => items.length
     ? items.map((t) => chipLink(t, kind)).join('')
     : '<span class="xp-none">None</span>';
@@ -408,10 +461,12 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}</div>
       ${journeyBlock}
       ${reviewBlock}
+      ${planBlock}
       <button class="xp-toggle" data-toggle="${esc(topic.id)}" type="button">${isDone ? '✓ Completed — mark not started' : 'Mark completed'}</button>
+      ${planDay === null ? `<button class="xp-toggle" data-plan-add="${esc(topic.courseCode)}/${esc(topic.id)}" type="button">Add course to study plan</button>` : ''}
     </div>
     <div class="xp-detail-sec"><h3>Concepts</h3>
       ${topic.concepts && topic.concepts.length
@@ -440,6 +495,17 @@ function renderDetail() {
     toggle.addEventListener('click', () => {
       state.progress.toggleTopicCompleted(topic.courseCode, topic.id);
       emitJourneyProgressChanged({ courseCode: topic.courseCode, topicId: topic.id, source: 'explorer' });
+      renderAll();
+    });
+  }
+  const planAdd = panel.querySelector('[data-plan-add]');
+  if (planAdd) {
+    planAdd.addEventListener('click', () => {
+      // No per-topic planning state: narrow the single saved plan
+      // configuration to this topic's course, preserving other settings.
+      const previous = loadPlanConfig() || {};
+      savePlanConfig({ ...previous, targetType: previous.targetType || 'completion', courseScope: topic.courseCode });
+      emitJourneyProgressChanged({ courseCode: topic.courseCode, topicId: topic.id, source: 'explorer-plan' });
       renderAll();
     });
   }

@@ -24,6 +24,13 @@ import {
 } from './exam-readiness.js';
 import { buildRevisionModel, REVIEW_DUE_DAYS } from './revision.js';
 import { buildLearningAnalytics, getModuleAnalyticsList } from './learning-analytics.js';
+import {
+  buildStudyPlan,
+  loadPlanConfig,
+  savePlanConfig,
+  clearPlanConfig,
+  PLAN_TARGET_TYPES,
+} from './study-planner.js';
 
 export { PROGRESS_CHANGED_EVENT };
 
@@ -46,6 +53,13 @@ export function buildDashboardReviewModel(manifest, getStatus, getTimestamp = nu
 // Observational only: no recommendations, predictions, or scores.
 export function buildDashboardAnalyticsModel(manifest, getStatus, getTimestamp = null, now) {
   return buildLearningAnalytics(manifest, getStatus, getTimestamp, now);
+}
+
+// Pure plan derivation for tests and UI: manifest + status reader +
+// timestamp reader + explicit config + injected now -> deterministic plan.
+// Without an explicit config there is no plan (never fabricated).
+export function buildDashboardPlanModel(manifest, getStatus, getTimestamp = null, config = null, now) {
+  return buildStudyPlan(manifest, getStatus, getTimestamp, config, now);
 }
 
 // Pure journey derivation for tests and UI: manifest + status reader +
@@ -162,6 +176,7 @@ async function init() {
     renderContinue();
     renderExam();
     renderReview();
+    renderPlan();
     renderLists();
     renderCourses();
   };
@@ -378,6 +393,81 @@ async function init() {
     }
   }
 
+  function planCourseOptions(selected) {
+    const codes = [...new Set(manifest.topics.map((t) => t.courseCode))].sort();
+    return `<option value="">All courses</option>` + codes.map((c) =>
+      `<option value="${esc(c)}"${selected === c ? ' selected' : ''}>${esc(c)}</option>`).join('');
+  }
+
+  function renderPlan() {
+    const box = $('db-plan');
+    if (!box) return;
+    const saved = loadPlanConfig();
+    const plan = buildStudyPlan(manifest, statusReader, timestampReader, saved, Date.now());
+    const targetOptions = PLAN_TARGET_TYPES.map((t) =>
+      `<option value="${t}"${saved && saved.targetType === t ? ' selected' : ''}>${t}</option>`).join('');
+    const form = `<div class="xp-path-row">
+      <label class="xp-path-label">Target <select id="db-plan-target">${targetOptions}</select></label>
+      <label class="xp-path-label">Min/day <input id="db-plan-minutes" type="number" min="1" step="1" style="width:7em" value="${esc(saved && saved.minutesPerDay !== undefined ? saved.minutesPerDay : 30)}"></label>
+      <label class="xp-path-label">Target date <input id="db-plan-date" type="date" value="${esc(saved && saved.targetDate ? String(saved.targetDate).slice(0, 10) : '')}"></label>
+      <label class="xp-path-label">Course <select id="db-plan-course">${planCourseOptions(saved && saved.courseScope)}</select></label>
+      <button class="xp-path-btn" id="db-plan-save" type="button">Save plan</button>
+      <button class="xp-path-btn" id="db-plan-clear" type="button">Clear</button>
+    </div>`;
+    let body;
+    if (plan.status === 'no_plan') {
+      body = `<div class="xp-path-next"><span class="xp-path-label">No study plan yet — choose a target and save it. Nothing is planned until you configure one.</span></div>`;
+    } else if (plan.status === 'target_reached') {
+      body = `<div class="xp-path-next"><span class="xp-path-title">Target reached — nothing remaining.</span>
+        <span class="xp-path-meta">${esc(plan.explanation)}</span></div>`;
+    } else if (plan.status === 'insufficient_data') {
+      body = `<div class="xp-path-next"><span class="xp-path-label">Plan needs a usable daily budget${plan.config && plan.config.targetDate ? ' and target date' : ''}.</span>
+        <span class="xp-path-meta">${esc(plan.explanation)}</span></div>`;
+    } else {
+      const today = plan.todayTopics.map((t) =>
+        `<button class="xp-path-btn" data-plan-open="${esc(t.courseCode)}/${esc(t.id)}" type="button">${esc(t.title)}${t.estimatedMinutes !== null && t.estimatedMinutes !== undefined ? ` · ${t.estimatedMinutes} min` : ''}</button>`
+      ).join('') || '<span class="xp-path-label">none</span>';
+      const upcoming = plan.upcomingDays.slice(0, 4).map((d) =>
+        `<span class="xp-path-label">Day ${d.day}: ${d.topics.length} ${d.topics.length === 1 ? 'topic' : 'topics'} · about ${d.minutes} min</span>`
+      ).join('') || '<span class="xp-path-label">none</span>';
+      const required = plan.requiredMinutesPerDay !== null && plan.requiredMinutesPerDay !== undefined
+        ? `${plan.requiredMinutesPerDay} min/day required`
+        : 'required pace unknown';
+      body = `<div class="xp-path-next"><span class="xp-path-title">${plan.remainingTopics.length} topics · about ${plan.remainingMinutes} min left</span>
+        <span class="xp-path-meta">status ${esc(plan.status)} · ${esc(required)}${plan.dateFeasibility ? ` · date ${esc(plan.dateFeasibility)}` : ''}</span></div>
+        <div class="xp-path-row"><span class="xp-path-label">Today (day 1):</span> ${today}</div>
+        <div class="xp-path-row"><span class="xp-path-label">Upcoming:</span> ${upcoming}</div>
+        <div class="xp-path-row"><span class="xp-path-label">${esc(plan.explanation)}</span></div>`;
+    }
+    box.innerHTML = `<h2>Study plan</h2>${form}${body}`;
+    const save = box.querySelector('#db-plan-save');
+    if (save) {
+      save.addEventListener('click', () => {
+        const target = box.querySelector('#db-plan-target').value;
+        const minutes = Number(box.querySelector('#db-plan-minutes').value);
+        const date = box.querySelector('#db-plan-date').value || undefined;
+        const course = box.querySelector('#db-plan-course').value || undefined;
+        savePlanConfig({ targetType: target, minutesPerDay: minutes, targetDate: date, courseScope: course });
+        emitJourneyProgressChanged({ courseCode: null, topicId: null, source: 'dashboard-plan' });
+        renderAll();
+      });
+    }
+    const clear = box.querySelector('#db-plan-clear');
+    if (clear) {
+      clear.addEventListener('click', () => {
+        clearPlanConfig();
+        emitJourneyProgressChanged({ courseCode: null, topicId: null, source: 'dashboard-plan-clear' });
+        renderAll();
+      });
+    }
+    for (const btn of box.querySelectorAll('[data-plan-open]')) {
+      btn.addEventListener('click', () => {
+        const [course, ...rest] = btn.getAttribute('data-plan-open').split('/');
+        window.location.href = explorerHref({ courseCode: course, id: rest.join('/') });
+      });
+    }
+  }
+
   function renderLists() {
     const model = buildDashboardModel(manifest, statusReader, { getTimestamp: timestampReader });
     const progressBox = $('db-progress-list');
@@ -491,6 +581,7 @@ async function init() {
       renderContinue();
       renderExam();
       renderReview();
+      renderPlan();
       renderLists();
       renderCourses();
     }
@@ -502,6 +593,7 @@ async function init() {
   renderContinue();
   renderExam();
   renderReview();
+  renderPlan();
   renderLists();
   renderCourses();
 }

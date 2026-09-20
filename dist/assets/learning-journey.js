@@ -84,6 +84,14 @@ import { buildLearningAnalytics } from './learning-analytics.js';
 // without duplicating logic.
 export { buildLearningAnalytics };
 
+import { buildStudyPlan } from './study-planner.js';
+
+// Planning is a derived view over an explicit target plus recorded facts
+// (see assets/study-planner.js): it never replaces the normal, exam, or
+// review recommendations above. Re-exported so surfaces read plans through
+// the journey without duplicating logic.
+export { buildStudyPlan };
+
 // --- Recommendation reasons (stable contract) -------------------------------
 
 export const REASON_CONTINUE_IN_PROGRESS = 'continue_in_progress';
@@ -383,6 +391,11 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
   // exam, and review recommendations above are untouched.
   const analytics = buildLearningAnalytics(manifest, safeStatus, getTimestamp, reviewNow);
 
+  // Study planning rides along as a derived view over an explicit target:
+  // recommendations above are untouched. Without an explicit plan config
+  // there is no plan (never fabricated).
+  const studyPlan = buildStudyPlan(manifest, safeStatus, getTimestamp, options.planConfig, reviewNow);
+
   return {
     inProgress,
     ready,
@@ -409,6 +422,11 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     reviewCounts: revision.counts,
     revision,
     analytics,
+    studyPlan,
+    planStatus: studyPlan.status,
+    planNextTopics: studyPlan.planNextTopics,
+    planRemainingMinutes: studyPlan.remainingMinutes,
+    planRequiredMinutesPerDay: studyPlan.requiredMinutesPerDay,
   };
 }
 

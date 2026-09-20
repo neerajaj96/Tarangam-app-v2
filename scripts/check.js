@@ -379,7 +379,7 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'assets/revision.js', 'assets/learning-analytics.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'scripts/revision.js', 'scripts/learning-analytics.js', 'style.css']) {
+  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'assets/revision.js', 'assets/learning-analytics.js', 'assets/study-planner.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'scripts/revision.js', 'scripts/learning-analytics.js', 'scripts/study-planner.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
   }
   if (fs.existsSync('explorer.html')) {
@@ -390,7 +390,7 @@ if (fs.existsSync('dist')) {
   }
   if (fs.existsSync('dashboard.html')) {
     const html = fs.readFileSync('dashboard.html', 'utf-8');
-    for (const ref of ['id="db-analytics"', 'id="db-continue"', 'id="db-exam"', 'id="db-review"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
+    for (const ref of ['id="db-analytics"', 'id="db-continue"', 'id="db-exam"', 'id="db-review"', 'id="db-plan"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
       if (!html.includes(ref)) fail(`journey: dashboard.html is missing unified journey section ${ref}`);
     }
   }
@@ -430,9 +430,26 @@ if (fs.existsSync('dist')) {
     if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/assets/learning-analytics.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/assets/learning-analytics.js', 'dist/assets/study-planner.js', 'dist/data/topic-manifest.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
+  }
+  if (fs.existsSync('assets/dashboard.js')) {
+    const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
+    if (!js.includes('buildStudyPlan') && !js.includes('study-planner.js')) fail('planner: assets/dashboard.js does not use the canonical study planner');
+    if (!js.includes('db-plan') && !js.includes('renderPlan')) fail('planner: assets/dashboard.js does not render the study plan section');
+  }
+  if (fs.existsSync('assets/explorer.js')) {
+    const js = fs.readFileSync('assets/explorer.js', 'utf-8');
+    if (!js.includes('In study plan') && !js.includes('study-planner.js')) fail('planner: assets/explorer.js does not surface the study plan');
+  }
+  if (fs.existsSync('assets/topic-study-context.js')) {
+    const js = fs.readFileSync('assets/topic-study-context.js', 'utf-8');
+    if (!js.includes('ts-plan') && !js.includes('study-planner.js')) fail('planner: assets/topic-study-context.js does not surface plan membership');
+  }
+  if (fs.existsSync('assets/learning-journey.js')) {
+    const js = fs.readFileSync('assets/learning-journey.js', 'utf-8');
+    if (!js.includes('buildStudyPlan')) fail('planner: assets/learning-journey.js does not expose the study plan');
   }
   if (fs.existsSync('assets/dashboard.js')) {
     const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
@@ -551,6 +568,27 @@ if (fs.existsSync('dist')) {
     if (/\bmastery[A-Z_]|["']mastery["']\s*:|mastery\s*=\s*\d/i.test(js)) fail('analytics: assets/learning-analytics.js must not add artificial mastery scores');
     if (/predict\w*\s+(score|retention|grade|exam\s+score|model)/i.test(js)) fail('analytics: assets/learning-analytics.js must not add predictions');
     if (/\bxp\b|\blevels\b.*streak|experience points/i.test(js)) fail('analytics: assets/learning-analytics.js must not add gamification');
+  }
+}
+
+// 13. Canonical deterministic study planning layer: arithmetic over an
+// explicit target plus recorded facts — no AI/ML, no behavioural or
+// retention prediction, no gamification, no backend, no second
+// recommendation engine.
+{
+  if (!fs.existsSync('assets/study-planner.js')) {
+    fail('planner: expected source file assets/study-planner.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/study-planner.js', 'utf-8');
+    for (const token of ['buildStudyPlan', 'normalizePlanConfig', 'savePlanConfig', 'loadPlanConfig', 'getTopicPlanDay', 'PLAN_CONFIG_KEY']) {
+      if (!js.includes(token)) fail(`planner: assets/study-planner.js is missing "${token}"`);
+    }
+    if (!js.includes("from './topic-intelligence.js'")) fail('planner: assets/study-planner.js must build on the canonical Topic Intelligence Layer');
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+      if (js.toLowerCase().includes(banned)) fail(`planner: assets/study-planner.js must stay deterministic and static-first (found "${banned}")`);
+    }
+    if (/predict\w*\s+(behaviour|behavior|retention|recall|success|score)/i.test(js)) fail('planner: assets/study-planner.js must not predict learner behaviour');
+    if (/\bxp\b|experience points|\blevels\b.*streak/i.test(js)) fail('planner: assets/study-planner.js must not add gamification');
   }
 }
     if (/xps\b|experience points/i.test(js)) fail('exam: assets/exam-readiness.js must not add gamification');
