@@ -576,10 +576,10 @@ describe('full 432-topic live repository', () => {
     }
     assert.equal(edges, 605);
     assert.equal(maxDepth, 11);
-    assert.equal(liveBank.questions.length, 140);
+    assert.equal(liveBank.questions.length, 296);
     const covered = new Set(liveBank.questions.map((q) => `${q.courseCode}/${q.topicId}`));
-    assert.equal(covered.size, 70);
-    assert.equal(432 - covered.size, 362);
+    assert.equal(covered.size, 226);
+    assert.equal(432 - covered.size, 206);
   });
 
   it('runs assessment-aware review deterministically on the live graph', () => {
