@@ -35,9 +35,9 @@ describe('manifest contents', () => {
     assert.equal(manifest.aggregates.totalTopics, 432);
   });
 
-  it('contains exactly 415 metadata topics', () => {
-    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 415);
-    assert.equal(manifest.aggregates.metadataTopics, 415);
+  it('contains exactly 432 metadata topics', () => {
+    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 432);
+    assert.equal(manifest.aggregates.metadataTopics, 432);
   });
 
   it('represents the GAMAT301 prerequisite chain correctly', () => {
@@ -58,7 +58,7 @@ describe('manifest contents', () => {
 
   it('getDependents() reverses prerequisite edges', () => {
     const ids = getDependents(manifest, 'PCCST501', 'm1_01_internet_overview_and_network_edge').map((t) => t.id).sort();
-    assert.deepEqual(ids, ['m1_02_protocol_layering_and_osi_tcpip', 'm1_03_application_layer_paradigms']);
+    assert.deepEqual(ids, ['m1_02_protocol_layering_and_osi_tcpip', 'm1_03_application_layer_paradigms', 'm1_99_practice_lab_application_layer_drills']);
     const gamat = getDependents(manifest, 'GAMAT301', 'm1_01_random_variables_pmf_cdf').map((t) => t.id).sort();
     assert.deepEqual(gamat, [
       'm1_02_expectation_mean_variance',
@@ -78,17 +78,40 @@ describe('manifest contents', () => {
   it('searches case-insensitively across title, concepts, tags, and id', () => {
     assert.ok(searchTopics(manifest, 'POISSON').some((t) => t.id === 'm1_04_poisson_distribution_binomial_limit'));
     assert.ok(searchTopics(manifest, 'BitTorrent').some((t) => t.id === 'm1_08_peer_to_peer_bittorrent'));
-    assert.ok(searchTopics(manifest, 'markov').length > 0); // legacy titles included
+    assert.ok(searchTopics(manifest, 'markov').length > 0);
     assert.deepEqual(searchTopics(manifest, '   '), []);
   });
 
-  it('keeps legacy topics present with hasMetadata: false', () => {
-    const legacy = getTopic(manifest, 'PCCST501', 'm4_07_asn1_smi_mib_language');
+  it('keeps legacy topics readable with hasMetadata: false', () => {
+    // No legacy topics remain in the repo (432/432 migrated), so exercise
+    // the still-supported legacy shape with a synthetic manifest instead.
+    const legacyManifest = {
+      topics: [{
+        id: 'm9_99_example_lab',
+        courseCode: 'C',
+        courseName: 'C',
+        module: 9,
+        moduleName: 'Module 9',
+        sequence: 99,
+        title: 'Practice Lab: Example',
+        filename: 'm9_99_example_lab.md',
+        hasMetadata: false,
+        difficulty: null,
+        estimatedMinutes: null,
+        concepts: [],
+        prerequisites: [],
+        examRelevance: null,
+        tags: [],
+        prerequisiteDepth: null,
+      }],
+    };
+    const legacy = getTopic(legacyManifest, 'C', 'm9_99_example_lab');
     assert.ok(legacy && legacy.hasMetadata === false);
     assert.equal(legacy.difficulty, null);
     assert.equal(legacy.prerequisiteDepth, null);
     assert.deepEqual(legacy.prerequisites, []);
     assert.ok(legacy.title.length > 0 && legacy.filename.endsWith('.md'));
+    assert.deepEqual(validateTopicManifest(legacyManifest), []);
   });
 
   it('is deterministic across builds', () => {

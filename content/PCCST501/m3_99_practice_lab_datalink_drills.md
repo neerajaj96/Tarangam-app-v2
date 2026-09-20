@@ -1,3 +1,29 @@
+---
+id: m3_99_practice_lab_datalink_drills
+courseCode: PCCST501
+module: 3
+sequence: 99
+title: 'Module 3 Practice Lab: Data-Link Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Stuff, check and convict frames in sprint verdicts
+  - Triage shared media with Aloha math and carrier discipline
+  - Map silent-printer symptoms to ARP and switch behavior
+concepts:
+  - data-link scenarios
+  - error-control sprint
+  - medium-access triage
+prerequisites:
+  - m3_01_datalink_layer_services_and_framing
+  - m3_02_error_detection_crc_checksums_parity
+  - m3_03_multiple_access_protocols
+  - m3_04_lan_addressing_arp_switches_and_vlans
+examRelevance: high
+tags:
+  - datalink-layer
+  - m3-lab
+---
 # Module 3 Practice Lab: Data-Link Drills
 
 **Stuffing and CRC by hand, access-method selection, ARP traces, wireless scenarios, and exam essay models.**

@@ -1,3 +1,30 @@
+---
+id: m1_99_practice_lab_application_layer_drills
+courseCode: PCCST501
+module: 1
+sequence: 99
+title: 'Module 1 Practice Lab: Application-Layer Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Trace full web fetches across DNS, TCP, HTTP and sockets
+  - Contrast FTP per-file channels against persistent HTTP reuse
+  - Decide client-server against peer-to-peer by workload shape
+concepts:
+  - application-layer scenarios
+  - connection economy
+  - architecture selection
+prerequisites:
+  - m1_01_internet_overview_and_network_edge
+  - m1_04_world_wide_web_and_http
+  - m1_05_file_transfer_protocol_ftp
+  - m1_07_domain_name_system_dns
+  - m1_08_peer_to_peer_bittorrent
+examRelevance: high
+tags:
+  - application-layer
+  - m1-lab
+---
 # Module 1 Practice Lab: Application-Layer Drills
 
 **Scenario dissections combining every M1 tool, do-not-confuse cheat tables, mixed active recall, and KTU 7-mark model solutions.**

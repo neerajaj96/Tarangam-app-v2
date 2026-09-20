@@ -1,3 +1,29 @@
+---
+id: m3_99_practice_lab_logic_drills
+courseCode: PECST522
+module: 3
+sequence: 99
+title: 'Module 3 Practice Lab: Logic Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Prove safety under time pressure with Wumpus rules
+  - Race model counting to one verdict on three atoms
+  - Refute in three steps with survivors never allowed
+concepts:
+  - safety proofs
+  - model-counting race
+  - refutation drills
+prerequisites:
+  - m3_01_knowledge_based_agents_and_wumpus_world
+  - m3_02_propositional_logic_syntax_semantics
+  - m3_03_inference_resolution_and_horn_clauses
+  - m3_04_first_order_logic_unification_and_lifting
+examRelevance: high
+tags:
+  - logic
+  - m3-lab
+---
 # Module 3 Practice Lab: Logic Drills
 
 **Wumpus safety proofs, model-counting races, three-step refutations, unification trials, and exam essay models.**

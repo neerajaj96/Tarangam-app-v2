@@ -1,3 +1,30 @@
+---
+id: m4_99_practice_lab_unsupervised_ensemble_drills
+courseCode: PCCST503
+module: 4
+sequence: 99
+title: 'Module 4 Practice Lab: Unsupervised & Ensemble Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Fight one dataset into three answers across k choices
+  - Dodge scaling traps that bite raw numbers
+  - Continue AdaBoost round two with normalized weights
+concepts:
+  - k wars
+  - scaling traps
+  - ensemble prescription
+prerequisites:
+  - m4_01_clustering_kmeans
+  - m4_02_hierarchical_clustering
+  - m4_03_pca_dimensionality_reduction
+  - m4_04_ensemble_bagging_random_forests
+  - m4_05_boosting_adaboost
+examRelevance: high
+tags:
+  - unsupervised-ensembles
+  - m4-lab
+---
 # Module 4 Practice Lab: Unsupervised & Ensemble Drills
 
 **k-selection showdowns, scaling traps, ensemble prescriptions, second-round AdaBoost arithmetic, and exam essay models.**

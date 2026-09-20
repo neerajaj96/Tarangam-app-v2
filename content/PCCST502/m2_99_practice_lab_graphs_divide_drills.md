@@ -1,3 +1,29 @@
+---
+id: m2_99_practice_lab_graphs_divide_drills
+courseCode: PCCST502
+module: 2
+sequence: 99
+title: 'Module 2 Practice Lab: Graphs & Divide-and-Conquer Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Operate union-find with ranks on the table exactly
+  - Autopsy DFS into four edge species without confusion
+  - Price Strassen against naive at sixty-four honestly
+concepts:
+  - union-find surgery
+  - DFS autopsy
+  - Strassen verdicts
+prerequisites:
+  - m2_01_disjoint_sets_and_union_find
+  - m2_02_graph_traversals_bfs_and_dfs
+  - m2_03_strongly_connected_components_kosaraju
+  - m2_04_divide_and_conquer_merge_sort_and_strassen
+examRelevance: high
+tags:
+  - graphs-divide
+  - m2-lab
+---
 # Module 2 Practice Lab: Graphs & Divide-and-Conquer Drills
 
 **Union-Find pointer traces, DFS edge autopsies, Kosaraju order drills, Strassen-vs-naive decisions, and exam essay models.**

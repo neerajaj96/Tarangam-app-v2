@@ -1,3 +1,30 @@
+---
+id: m2_99_practice_lab_classification_drills
+courseCode: PCCST503
+module: 2
+sequence: 99
+title: 'Module 2 Practice Lab: Classification Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Pick classifiers for startups with defended reasoning
+  - Feel cross-entropy curves against zero-one judging
+  - Autopsy vetoes and divergences inside thirty seconds
+concepts:
+  - classifier selection
+  - cross-entropy race
+  - veto autopsy
+prerequisites:
+  - m2_01_classification_boundaries_knn
+  - m2_02_logistic_regression_sigmoid_loss
+  - m2_03_naive_bayes_generative_models
+  - m2_04_decision_trees_entropy_information_gain
+  - m2_05_gradient_descent_training_engine
+examRelevance: high
+tags:
+  - classification
+  - m2-lab
+---
 # Module 2 Practice Lab: Classification Drills
 
 **Classifier selection under constraints, loss arithmetic races, veto autopsies, split decisions, and divergence triage.**

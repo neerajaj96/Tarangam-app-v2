@@ -1,3 +1,29 @@
+---
+id: m3_99_practice_lab_greedy_dp_backtracking_drills
+courseCode: PCCST502
+module: 3
+sequence: 99
+title: 'Module 3 Practice Lab: Greedy, DP & Backtracking Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Settle knapsack showdowns with three different verdicts
+  - Race chain splits with all parenthesizations shown
+  - Certificate activity races with exchange arguments
+concepts:
+  - knapsack verdicts
+  - chain-split race
+  - greedy certificates
+prerequisites:
+  - m3_01_greedy_strategy_control_abstraction
+  - m3_02_minimum_spanning_trees_kruskal_prim
+  - m3_03_single_source_shortest_paths_dijkstra
+  - m3_04_dynamic_programming_matrix_chain_knapsack
+examRelevance: high
+tags:
+  - greedy-dp
+  - m3-lab
+---
 # Module 3 Practice Lab: Greedy, DP & Backtracking Drills
 
 **Knapsack showdowns, chain-split races, activity traces, pruning autopsies, and exam essay models.**

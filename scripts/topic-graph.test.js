@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 415 metadata-bearing', () => {
+  it('discovers all 432 topics with 432 metadata-bearing', () => {
     assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 415);
+    assert.equal(analysis.coverage.metadata, 432);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -188,7 +188,9 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('PECST631/m4_05_pex_symbolic_put -> PECST631/m2_04_junit_automation'), 'internal');
     assert.equal(kinds.get('GXEST605/m4_04_pilot_scaling -> GXEST605/m4_03_prototyping_alpha_beta'), 'internal');
     assert.equal(kinds.get('OECST614/m4_05_resampling_bias_variance_tradeoff -> OECST614/m2_03_overfitting_lasso_ridge'), 'internal');
-    assert.equal(analysis.edgeCount, 537);
+    assert.equal(kinds.get('PCCST501/m4_99_practice_lab_management_physical_drills -> PCCST501/m4_01_network_management_snmp_architecture'), 'internal');
+    assert.equal(kinds.get('PCCST502/m1_99_practice_lab_asymptotics_and_recurrences -> PCCST502/m1_08_master_theorem_and_cases'), 'internal');
+    assert.equal(analysis.edgeCount, 605);
   });
 
   it('computes chain depths', () => {
@@ -209,6 +211,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('PECST631/m3_07_m3_mixed_drill').depth, 5);
     assert.equal(built.nodes.get('GXEST605/m4_07_drill_journal_guide').depth, 11);
     assert.equal(built.nodes.get('OECST614/m4_06_m4_mixed_drill').depth, 6);
+    assert.equal(built.nodes.get('PCCST502/m1_99_practice_lab_asymptotics_and_recurrences').depth, 5);
     assert.equal(analysis.maxDepth, 11);
   });
 
@@ -219,12 +222,8 @@ describe('live repo graph', () => {
     assert.deepEqual(analysis.warnings, [
       'metadata topic "GXEST104/m4_01_comm_fibre_block_diagrams" has no prerequisite relationships',
       'metadata topic "GXEST104/m4_04_instrumentation_dmm_generator" has no prerequisite relationships',
-      'metadata topic "PCCST501/m3_01_datalink_layer_services_and_framing" has no prerequisite relationships',
-      'metadata topic "PCCST501/m3_04_lan_addressing_arp_switches_and_vlans" has no prerequisite relationships',
-      'metadata topic "PCCST501/m4_01_network_management_snmp_architecture" has no prerequisite relationships',
       'metadata topic "PCCST501/m4_05_transmission_media_guided_unguided" has no prerequisite relationships',
       'metadata topic "PCCST502/m1_00_module_overview" has no prerequisite relationships',
-      'metadata topic "PCCST502/m4_05_randomized_algorithms_las_vegas_monte_carlo" has no prerequisite relationships',
       'metadata topic "PCCST602/m1_02_iot_cps" has no prerequisite relationships',
     ]);
   });

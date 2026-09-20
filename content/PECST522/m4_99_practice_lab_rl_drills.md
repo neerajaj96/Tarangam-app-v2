@@ -1,3 +1,29 @@
+---
+id: m4_99_practice_lab_rl_drills
+courseCode: PECST522
+module: 4
+sequence: 99
+title: 'Module 4 Practice Lab: RL Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Race backups across direct, TD and ADP updates
+  - Sprint Q-traces with error arithmetic exact
+  - Prescribe exploration against noise honestly
+concepts:
+  - backup race
+  - Q-trace sprint
+  - exploration prescription
+prerequisites:
+  - m4_01_reinforcement_learning_learning_from_rewards
+  - m4_02_passive_rl_utility_adp_and_td
+  - m4_03_active_rl_q_learning_and_exploration
+  - m4_04_policy_search_and_inverse_rl
+examRelevance: high
+tags:
+  - reinforcement-learning
+  - m4-lab
+---
 # Module 4 Practice Lab: RL Drills
 
 **Backup races, estimator showdowns, exploration schedules, paradigm prescriptions, and exam essay models.**

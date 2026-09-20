@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **415**
-- Pending: **17**
-- Coverage: **96.06%** (tracked by `npm run check`)
+- Migrated: **432**
+- Pending: **0**
+- Coverage: **100.00%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -16,43 +16,36 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 - Invalid front matter must fail QA: `npm run check` validates every front-matter block against `data/topic-schema.json` and fails the gate on any violation.
 - Metadata coverage is tracked by `npm run check`, which prints `metadata coverage: X/432 topics (Y%)` with per-course and per-module breakdowns on every run.
 
-## Recommended migration order
+## Migration status: complete
 
-1. Finish the started modules first (both pilots sit in Module 1):
-   - OECST614 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - GXEST605 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PECST631 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PECST637 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PECST632 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PBCST604 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST602 — Module 1 in progress (23 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST601 — Module 1 in progress (29 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PECST522 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST502 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST503 — Module 1 in progress (19 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST303 — Module 1 in progress (27 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - GZPHT121 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - GXEST104 — Module 1 in progress (33 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-   - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
-2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. OECST614 — Machine Learning for Engineers (started — see step 1)
-   2. GXEST605 — Design Thinking and Product Development (started — see step 1)
-   3. PECST631 — Software Testing (started — see step 1)
-   4. PECST637 — Fundamentals of Cryptography (started — see step 1)
-   5. PECST632 — Deep Learning (started — see step 1)
-   6. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
-   7. PCCST602 — Advanced Computing Systems (started — see step 1)
-   8. PCCST601 — Compiler Design (started — see step 1)
-   9. PECST522 — Artificial Intelligence (started — see step 1)
-   10. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   11. PCCST503 — Machine Learning (started — see step 1)
-   12. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   13. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   14. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   15. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   16. PCCST501 — Computer Networks (started — see step 1)
-3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+Migration is complete: all 16 courses and all 432 topics carry validated
+front-matter metadata (100% coverage, tracked by `npm run check`). No topics
+remain pending — including the former `99` practice labs, which were migrated
+last per the long-standing convention, and the final theory remainder
+(PCCST501 `m4_07`). Per-course totals:
+
+- OECST614 — Machine Learning for Engineers (24/24 migrated)
+- GXEST605 — Design Thinking and Product Development (24/24 migrated)
+- PECST631 — Software Testing (26/26 migrated)
+- PECST637 — Fundamentals of Cryptography (25/25 migrated)
+- PECST632 — Deep Learning (25/25 migrated)
+- PBCST604 — Fundamentals of Cyber Security (26/26 migrated)
+- PCCST602 — Advanced Computing Systems (23/23 migrated)
+- PCCST601 — Compiler Design (29/29 migrated)
+- PECST522 — Artificial Intelligence (30/30 migrated)
+- PCCST502 — Design and Analysis of Algorithms (31/31 migrated)
+- PCCST503 — Machine Learning (23/23 migrated)
+- PCCST303 — Data Structures and Algorithms (27/27 migrated)
+- GZPHT121 — Physics for Physical Science and Life Science (26/26 migrated)
+- GXEST104 — Introduction to Electrical and Electronics Engineering (33/33 migrated)
+- GAMAT301 — Mathematics for Computer and Information Science-3 (24/24 migrated)
+- PCCST501 — Computer Networks (36/36 migrated)
+
+For any future topic added to `content/`, preserve prerequisite ordering:
+add front matter in increasing `(module, sequence)` order so any
+`prerequisites` reference points at an already-migrated (or concurrently
+reviewed) topic; module `00` overviews before their numbered topics, `99`
+practice labs last.
 
 ## OECST614 — Machine Learning for Engineers (24/24 migrated)
 
@@ -296,7 +289,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Code Generation & Optimization | 07 | `m4_07_global_live_placement.md` | `m4_07_global_live_placement` | migrated |
 | M4 Code Generation & Optimization | 08 | `m4_08_m4_mixed_drill.md` | `m4_08_m4_mixed_drill` | migrated |
 
-## PECST522 — Artificial Intelligence (26/30 migrated)
+## PECST522 — Artificial Intelligence (30/30 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -307,7 +300,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M1 Agents & Problem Solving | 05 | `m1_05_agent_architectures_reflex_to_learning.md` | `m1_05_agent_architectures_reflex_to_learning` | migrated |
 | M1 Agents & Problem Solving | 06 | `m1_06_problem_solving_agents_and_search_trees.md` | `m1_06_problem_solving_agents_and_search_trees` | migrated |
 | M1 Agents & Problem Solving | 07 | `m1_07_classic_ai_toy_problems.md` | `m1_07_classic_ai_toy_problems` | migrated |
-| M1 Agents & Problem Solving | 99 | `m1_99_practice_lab_agents_and_problem_formulation.md` | `m1_99_practice_lab_agents_and_problem_formulation` | pending |
+| M1 Agents & Problem Solving | 99 | `m1_99_practice_lab_agents_and_problem_formulation.md` | `m1_99_practice_lab_agents_and_problem_formulation` | migrated |
 | M2 Search & Game Playing | 01 | `m2_01_uninformed_search_dfs_bfs_ucs.md` | `m2_01_uninformed_search_dfs_bfs_ucs` | migrated |
 | M2 Search & Game Playing | 02 | `m2_02_iterative_deepening_and_depth_limited.md` | `m2_02_iterative_deepening_and_depth_limited` | migrated |
 | M2 Search & Game Playing | 03 | `m2_03_informed_heuristic_search_and_functions.md` | `m2_03_informed_heuristic_search_and_functions` | migrated |
@@ -317,21 +310,21 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M2 Search & Game Playing | 07 | `m2_07_csp_arc_consistency_ac3.md` | `m2_07_csp_arc_consistency_ac3` | migrated |
 | M2 Search & Game Playing | 08 | `m2_08_games_minimax_optimal_play.md` | `m2_08_games_minimax_optimal_play` | migrated |
 | M2 Search & Game Playing | 09 | `m2_09_alpha_beta_pruning.md` | `m2_09_alpha_beta_pruning` | migrated |
-| M2 Search & Game Playing | 99 | `m2_99_practice_lab_search_strategies_drills.md` | `m2_99_practice_lab_search_strategies_drills` | pending |
+| M2 Search & Game Playing | 99 | `m2_99_practice_lab_search_strategies_drills.md` | `m2_99_practice_lab_search_strategies_drills` | migrated |
 | M3 Knowledge & Logic | 01 | `m3_01_knowledge_based_agents_and_wumpus_world.md` | `m3_01_knowledge_based_agents_and_wumpus_world` | migrated |
 | M3 Knowledge & Logic | 02 | `m3_02_propositional_logic_syntax_semantics.md` | `m3_02_propositional_logic_syntax_semantics` | migrated |
 | M3 Knowledge & Logic | 03 | `m3_03_inference_resolution_and_horn_clauses.md` | `m3_03_inference_resolution_and_horn_clauses` | migrated |
 | M3 Knowledge & Logic | 04 | `m3_04_first_order_logic_unification_and_lifting.md` | `m3_04_first_order_logic_unification_and_lifting` | migrated |
 | M3 Knowledge & Logic | 05 | `m3_05_propositional_vs_fol_inference.md` | `m3_05_propositional_vs_fol_inference` | migrated |
-| M3 Knowledge & Logic | 99 | `m3_99_practice_lab_logic_drills.md` | `m3_99_practice_lab_logic_drills` | pending |
+| M3 Knowledge & Logic | 99 | `m3_99_practice_lab_logic_drills.md` | `m3_99_practice_lab_logic_drills` | migrated |
 | M4 Reinforcement Learning | 01 | `m4_01_reinforcement_learning_learning_from_rewards.md` | `m4_01_reinforcement_learning_learning_from_rewards` | migrated |
 | M4 Reinforcement Learning | 02 | `m4_02_passive_rl_utility_adp_and_td.md` | `m4_02_passive_rl_utility_adp_and_td` | migrated |
 | M4 Reinforcement Learning | 03 | `m4_03_active_rl_q_learning_and_exploration.md` | `m4_03_active_rl_q_learning_and_exploration` | migrated |
 | M4 Reinforcement Learning | 04 | `m4_04_policy_search_and_inverse_rl.md` | `m4_04_policy_search_and_inverse_rl` | migrated |
 | M4 Reinforcement Learning | 05 | `m4_05_generalization_applications_rl.md` | `m4_05_generalization_applications_rl` | migrated |
-| M4 Reinforcement Learning | 99 | `m4_99_practice_lab_rl_drills.md` | `m4_99_practice_lab_rl_drills` | pending |
+| M4 Reinforcement Learning | 99 | `m4_99_practice_lab_rl_drills.md` | `m4_99_practice_lab_rl_drills` | migrated |
 
-## PCCST502 — Design and Analysis of Algorithms (27/31 migrated)
+## PCCST502 — Design and Analysis of Algorithms (31/31 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -346,28 +339,28 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M1 Analysis & Recurrences | 08 | `m1_08_master_theorem_and_cases.md` | `m1_08_master_theorem_and_cases` | migrated |
 | M1 Analysis & Recurrences | 09 | `m1_09_balanced_search_trees_avl_foundations.md` | `m1_09_balanced_search_trees_avl_foundations` | migrated |
 | M1 Analysis & Recurrences | 10 | `m1_10_avl_tree_rotations_insertion_and_deletion.md` | `m1_10_avl_tree_rotations_insertion_and_deletion` | migrated |
-| M1 Analysis & Recurrences | 99 | `m1_99_practice_lab_asymptotics_and_recurrences.md` | `m1_99_practice_lab_asymptotics_and_recurrences` | pending |
+| M1 Analysis & Recurrences | 99 | `m1_99_practice_lab_asymptotics_and_recurrences.md` | `m1_99_practice_lab_asymptotics_and_recurrences` | migrated |
 | M2 Graphs & Divide/Conquer | 01 | `m2_01_disjoint_sets_and_union_find.md` | `m2_01_disjoint_sets_and_union_find` | migrated |
 | M2 Graphs & Divide/Conquer | 02 | `m2_02_graph_traversals_bfs_and_dfs.md` | `m2_02_graph_traversals_bfs_and_dfs` | migrated |
 | M2 Graphs & Divide/Conquer | 03 | `m2_03_strongly_connected_components_kosaraju.md` | `m2_03_strongly_connected_components_kosaraju` | migrated |
 | M2 Graphs & Divide/Conquer | 04 | `m2_04_divide_and_conquer_merge_sort_and_strassen.md` | `m2_04_divide_and_conquer_merge_sort_and_strassen` | migrated |
 | M2 Graphs & Divide/Conquer | 05 | `m2_05_topological_sorting_dag_linearization.md` | `m2_05_topological_sorting_dag_linearization` | migrated |
-| M2 Graphs & Divide/Conquer | 99 | `m2_99_practice_lab_graphs_divide_drills.md` | `m2_99_practice_lab_graphs_divide_drills` | pending |
+| M2 Graphs & Divide/Conquer | 99 | `m2_99_practice_lab_graphs_divide_drills.md` | `m2_99_practice_lab_graphs_divide_drills` | migrated |
 | M3 Greedy, DP & Backtracking | 01 | `m3_01_greedy_strategy_control_abstraction.md` | `m3_01_greedy_strategy_control_abstraction` | migrated |
 | M3 Greedy, DP & Backtracking | 02 | `m3_02_minimum_spanning_trees_kruskal_prim.md` | `m3_02_minimum_spanning_trees_kruskal_prim` | migrated |
 | M3 Greedy, DP & Backtracking | 03 | `m3_03_single_source_shortest_paths_dijkstra.md` | `m3_03_single_source_shortest_paths_dijkstra` | migrated |
 | M3 Greedy, DP & Backtracking | 04 | `m3_04_dynamic_programming_matrix_chain_knapsack.md` | `m3_04_dynamic_programming_matrix_chain_knapsack` | migrated |
 | M3 Greedy, DP & Backtracking | 05 | `m3_05_backtracking_n_queens_state_space.md` | `m3_05_backtracking_n_queens_state_space` | migrated |
 | M3 Greedy, DP & Backtracking | 06 | `m3_06_floyd_warshall_all_pairs_shortest.md` | `m3_06_floyd_warshall_all_pairs_shortest` | migrated |
-| M3 Greedy, DP & Backtracking | 99 | `m3_99_practice_lab_greedy_dp_backtracking_drills.md` | `m3_99_practice_lab_greedy_dp_backtracking_drills` | pending |
+| M3 Greedy, DP & Backtracking | 99 | `m3_99_practice_lab_greedy_dp_backtracking_drills.md` | `m3_99_practice_lab_greedy_dp_backtracking_drills` | migrated |
 | M4 Branch/Bound & Complexity | 01 | `m4_01_branch_and_bound_control_abstraction.md` | `m4_01_branch_and_bound_control_abstraction` | migrated |
 | M4 Branch/Bound & Complexity | 02 | `m4_02_tsp_branch_and_bound.md` | `m4_02_tsp_branch_and_bound` | migrated |
 | M4 Branch/Bound & Complexity | 03 | `m4_03_np_completeness_p_np_reductions.md` | `m4_03_np_completeness_p_np_reductions` | migrated |
 | M4 Branch/Bound & Complexity | 04 | `m4_04_bin_packing_approximation_algorithms.md` | `m4_04_bin_packing_approximation_algorithms` | migrated |
 | M4 Branch/Bound & Complexity | 05 | `m4_05_randomized_algorithms_las_vegas_monte_carlo.md` | `m4_05_randomized_algorithms_las_vegas_monte_carlo` | migrated |
-| M4 Branch/Bound & Complexity | 99 | `m4_99_practice_lab_branchbound_complexity_drills.md` | `m4_99_practice_lab_branchbound_complexity_drills` | pending |
+| M4 Branch/Bound & Complexity | 99 | `m4_99_practice_lab_branchbound_complexity_drills.md` | `m4_99_practice_lab_branchbound_complexity_drills` | migrated |
 
-## PCCST503 — Machine Learning (19/23 migrated)
+## PCCST503 — Machine Learning (23/23 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -375,25 +368,25 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M1 Foundations & Regression | 02 | `m1_02_probability_mle_map_estimation.md` | `m1_02_probability_mle_map_estimation` | migrated |
 | M1 Foundations & Regression | 03 | `m1_03_linear_regression_least_squares.md` | `m1_03_linear_regression_least_squares` | migrated |
 | M1 Foundations & Regression | 04 | `m1_04_multiple_regression_model_assessment.md` | `m1_04_multiple_regression_model_assessment` | migrated |
-| M1 Foundations & Regression | 99 | `m1_99_practice_lab_foundations_drills.md` | `m1_99_practice_lab_foundations_drills` | pending |
+| M1 Foundations & Regression | 99 | `m1_99_practice_lab_foundations_drills.md` | `m1_99_practice_lab_foundations_drills` | migrated |
 | M2 Classification & Trees | 01 | `m2_01_classification_boundaries_knn.md` | `m2_01_classification_boundaries_knn` | migrated |
 | M2 Classification & Trees | 02 | `m2_02_logistic_regression_sigmoid_loss.md` | `m2_02_logistic_regression_sigmoid_loss` | migrated |
 | M2 Classification & Trees | 03 | `m2_03_naive_bayes_generative_models.md` | `m2_03_naive_bayes_generative_models` | migrated |
 | M2 Classification & Trees | 04 | `m2_04_decision_trees_entropy_information_gain.md` | `m2_04_decision_trees_entropy_information_gain` | migrated |
 | M2 Classification & Trees | 05 | `m2_05_gradient_descent_training_engine.md` | `m2_05_gradient_descent_training_engine` | migrated |
-| M2 Classification & Trees | 99 | `m2_99_practice_lab_classification_drills.md` | `m2_99_practice_lab_classification_drills` | pending |
+| M2 Classification & Trees | 99 | `m2_99_practice_lab_classification_drills.md` | `m2_99_practice_lab_classification_drills` | migrated |
 | M3 Neural Nets & SVMs | 01 | `m3_01_perceptron_learning_rule.md` | `m3_01_perceptron_learning_rule` | migrated |
 | M3 Neural Nets & SVMs | 02 | `m3_02_multilayer_networks_backpropagation.md` | `m3_02_multilayer_networks_backpropagation` | migrated |
 | M3 Neural Nets & SVMs | 03 | `m3_03_maximum_margin_svm.md` | `m3_03_maximum_margin_svm` | migrated |
 | M3 Neural Nets & SVMs | 04 | `m3_04_kernels_soft_margins.md` | `m3_04_kernels_soft_margins` | migrated |
-| M3 Neural Nets & SVMs | 99 | `m3_99_practice_lab_networks_svm_drills.md` | `m3_99_practice_lab_networks_svm_drills` | pending |
+| M3 Neural Nets & SVMs | 99 | `m3_99_practice_lab_networks_svm_drills.md` | `m3_99_practice_lab_networks_svm_drills` | migrated |
 | M4 PCA & Ensembles | 01 | `m4_01_clustering_kmeans.md` | `m4_01_clustering_kmeans` | migrated |
 | M4 PCA & Ensembles | 02 | `m4_02_hierarchical_clustering.md` | `m4_02_hierarchical_clustering` | migrated |
 | M4 PCA & Ensembles | 03 | `m4_03_pca_dimensionality_reduction.md` | `m4_03_pca_dimensionality_reduction` | migrated |
 | M4 PCA & Ensembles | 04 | `m4_04_ensemble_bagging_random_forests.md` | `m4_04_ensemble_bagging_random_forests` | migrated |
 | M4 PCA & Ensembles | 05 | `m4_05_boosting_adaboost.md` | `m4_05_boosting_adaboost` | migrated |
 | M4 PCA & Ensembles | 06 | `m4_06_mds_multidimensional_scaling.md` | `m4_06_mds_multidimensional_scaling` | migrated |
-| M4 PCA & Ensembles | 99 | `m4_99_practice_lab_unsupervised_ensemble_drills.md` | `m4_99_practice_lab_unsupervised_ensemble_drills` | pending |
+| M4 PCA & Ensembles | 99 | `m4_99_practice_lab_unsupervised_ensemble_drills.md` | `m4_99_practice_lab_unsupervised_ensemble_drills` | migrated |
 
 ## PCCST303 — Data Structures and Algorithms (27/27 migrated)
 
@@ -525,7 +518,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Markov Chains | 05 | `m4_05_long_run_stationary_distribution.md` | `m4_05_long_run_stationary_distribution` | migrated |
 | M4 Markov Chains | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | migrated |
 
-## PCCST501 — Computer Networks (31/36 migrated)
+## PCCST501 — Computer Networks (36/36 migrated)
 
 | Module | Sequence | Filename | Topic ID | Status |
 | --- | --- | --- | --- | --- |
@@ -537,7 +530,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M1 Application Layer | 06 | `m1_06_electronic_mail_smtp_pop3_imap.md` | `m1_06_electronic_mail_smtp_pop3_imap` | migrated |
 | M1 Application Layer | 07 | `m1_07_domain_name_system_dns.md` | `m1_07_domain_name_system_dns` | migrated |
 | M1 Application Layer | 08 | `m1_08_peer_to_peer_bittorrent.md` | `m1_08_peer_to_peer_bittorrent` | migrated |
-| M1 Application Layer | 99 | `m1_99_practice_lab_application_layer_drills.md` | `m1_99_practice_lab_application_layer_drills` | pending |
+| M1 Application Layer | 99 | `m1_99_practice_lab_application_layer_drills.md` | `m1_99_practice_lab_application_layer_drills` | migrated |
 | M2 Transport & Network Layer | 01 | `m2_01_transport_layer_services_and_multiplexing.md` | `m2_01_transport_layer_services_and_multiplexing` | migrated |
 | M2 Transport & Network Layer | 02 | `m2_02_udp_segment_structure_and_checksum.md` | `m2_02_udp_segment_structure_and_checksum` | migrated |
 | M2 Transport & Network Layer | 03 | `m2_03_tcp_segment_structure_and_rtt.md` | `m2_03_tcp_segment_structure_and_rtt` | migrated |
@@ -549,19 +542,19 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M2 Transport & Network Layer | 09 | `m2_09_ipv4_addressing_forwarding_nat_icmp.md` | `m2_09_ipv4_addressing_forwarding_nat_icmp` | migrated |
 | M2 Transport & Network Layer | 10 | `m2_10_unicast_routing_link_state_distance_vector.md` | `m2_10_unicast_routing_link_state_distance_vector` | migrated |
 | M2 Transport & Network Layer | 11 | `m2_11_ipv6_next_generation_transition.md` | `m2_11_ipv6_next_generation_transition` | migrated |
-| M2 Transport & Network Layer | 99 | `m2_99_practice_lab_transport_drills.md` | `m2_99_practice_lab_transport_drills` | pending |
+| M2 Transport & Network Layer | 99 | `m2_99_practice_lab_transport_drills.md` | `m2_99_practice_lab_transport_drills` | migrated |
 | M3 Data Link Layer | 01 | `m3_01_datalink_layer_services_and_framing.md` | `m3_01_datalink_layer_services_and_framing` | migrated |
 | M3 Data Link Layer | 02 | `m3_02_error_detection_crc_checksums_parity.md` | `m3_02_error_detection_crc_checksums_parity` | migrated |
 | M3 Data Link Layer | 03 | `m3_03_multiple_access_protocols.md` | `m3_03_multiple_access_protocols` | migrated |
 | M3 Data Link Layer | 04 | `m3_04_lan_addressing_arp_switches_and_vlans.md` | `m3_04_lan_addressing_arp_switches_and_vlans` | migrated |
 | M3 Data Link Layer | 05 | `m3_05_wireless_lan_802_11.md` | `m3_05_wireless_lan_802_11` | migrated |
 | M3 Data Link Layer | 06 | `m3_06_mobile_ip_agents_tunneling.md` | `m3_06_mobile_ip_agents_tunneling` | migrated |
-| M3 Data Link Layer | 99 | `m3_99_practice_lab_datalink_drills.md` | `m3_99_practice_lab_datalink_drills` | pending |
+| M3 Data Link Layer | 99 | `m3_99_practice_lab_datalink_drills.md` | `m3_99_practice_lab_datalink_drills` | migrated |
 | M4 Physical Layer & SNMP | 01 | `m4_01_network_management_snmp_architecture.md` | `m4_01_network_management_snmp_architecture` | migrated |
 | M4 Physical Layer & SNMP | 02 | `m4_02_nyquist_shannon_channel_capacity.md` | `m4_02_nyquist_shannon_channel_capacity` | migrated |
 | M4 Physical Layer & SNMP | 03 | `m4_03_pcm_digitization_sampling_quantization.md` | `m4_03_pcm_digitization_sampling_quantization` | migrated |
 | M4 Physical Layer & SNMP | 04 | `m4_04_modulation_ask_fsk_psk_qam.md` | `m4_04_modulation_ask_fsk_psk_qam` | migrated |
 | M4 Physical Layer & SNMP | 05 | `m4_05_transmission_media_guided_unguided.md` | `m4_05_transmission_media_guided_unguided` | migrated |
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
-| M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
-| M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
+| M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | migrated |
+| M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | migrated |

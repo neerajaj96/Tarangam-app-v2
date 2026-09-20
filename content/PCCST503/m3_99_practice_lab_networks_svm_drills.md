@@ -1,3 +1,29 @@
+---
+id: m3_99_practice_lab_networks_svm_drills
+courseCode: PCCST503
+module: 3
+sequence: 99
+title: 'Module 3 Practice Lab: Networks & SVM Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Audit perceptron mistakes against separability bounds
+  - Verify gradients ritualistically against finite differences
+  - Shop margins and prescribe kernels with C honestly
+concepts:
+  - mistake audit
+  - gradient ritual
+  - margin shopping
+prerequisites:
+  - m3_01_perceptron_learning_rule
+  - m3_02_multilayer_networks_backpropagation
+  - m3_03_maximum_margin_svm
+  - m3_04_kernels_soft_margins
+examRelevance: high
+tags:
+  - networks-svm
+  - m3-lab
+---
 # Module 3 Practice Lab: Networks & SVM Drills
 
 **Mistake-counting races, gradient verification, margin comparisons, kernel/C decisions, and exam essay models.**

@@ -1,3 +1,29 @@
+---
+id: m1_99_practice_lab_foundations_drills
+courseCode: PCCST503
+module: 1
+sequence: 99
+title: 'Module 1 Practice Lab: Foundations Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Triage cases to paradigms inside sixty seconds each
+  - Track shifting estimates from MLE through MAP exactly
+  - Reject too-good fits with held-out discipline
+concepts:
+  - triage sprint
+  - shifting estimates
+  - overfit rejection
+prerequisites:
+  - m1_01_ml_definition_paradigms_and_types
+  - m1_02_probability_mle_map_estimation
+  - m1_03_linear_regression_least_squares
+  - m1_04_multiple_regression_model_assessment
+examRelevance: high
+tags:
+  - foundations
+  - m1-lab
+---
 # Module 1 Practice Lab: Foundations Drills
 
 **Paradigm triage under time pressure, estimator selection, regression debugging scenarios, and exam essay models.**

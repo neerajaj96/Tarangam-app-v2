@@ -1,3 +1,30 @@
+---
+id: m1_99_practice_lab_asymptotics_and_recurrences
+courseCode: PCCST502
+module: 1
+sequence: 99
+title: 'Module 1 Practice Lab: Asymptotic Proofs & Recurrence Solvers'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Prove bounds with loop sums and substitution discipline
+  - Solve recurrences three ways with Master-case shortcuts
+  - Catch AVL rotations insertion by insertion without misses
+concepts:
+  - asymptotic proofs
+  - recurrence solvers
+  - AVL rotation traces
+prerequisites:
+  - m1_04_complexity_calculation_of_iterative_algorithms
+  - m1_05_recurrence_equations_and_substitution_method
+  - m1_07_recursion_tree_method
+  - m1_08_master_theorem_and_cases
+  - m1_10_avl_tree_rotations_insertion_and_deletion
+examRelevance: high
+tags:
+  - asymptotics
+  - m1-lab
+---
 # Module 1 Practice Lab: Asymptotic Proofs & Recurrence Solvers
 
 **Stepped calculations for Master Theorem cases, recursion tree summations, and AVL insertion rotation sequences.**

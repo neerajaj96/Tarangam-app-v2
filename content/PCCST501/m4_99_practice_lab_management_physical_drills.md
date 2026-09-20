@@ -1,3 +1,28 @@
+---
+id: m4_99_practice_lab_management_physical_drills
+courseCode: PCCST501
+module: 4
+sequence: 99
+title: 'Module 4 Practice Lab: Management & Physical-Layer Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Run SNMP against midnight link failures end to end
+  - Deliver capacity verdicts with both Nyquist and Shannon laws
+  - Digitize signals from sampling through quantization exactly
+concepts:
+  - SNMP operations
+  - capacity verdicts
+  - digitization chain
+prerequisites:
+  - m4_01_network_management_snmp_architecture
+  - m4_02_nyquist_shannon_channel_capacity
+  - m4_03_pcm_digitization_sampling_quantization
+examRelevance: high
+tags:
+  - management-physical
+  - m4-lab
+---
 # Module 4 Practice Lab: Management & Physical-Layer Drills
 
 **SNMP operation traces, capacity numericals, digitization chains, modulation arithmetic, and exam essay models.**

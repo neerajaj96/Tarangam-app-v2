@@ -1,3 +1,28 @@
+---
+id: m2_99_practice_lab_search_strategies_drills
+courseCode: PECST522
+module: 2
+sequence: 99
+title: 'Module 2 Practice Lab: Search Strategy Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Count the eleven-percent IDS miracle against BFS exactly
+  - Spring the hundred-cost shortcut trap for UCS verdicts
+  - Admit or expel heuristics in admissibility court
+concepts:
+  - IDS-BFS accounting
+  - UCS shortcut trap
+  - heuristic court
+prerequisites:
+  - m2_01_uninformed_search_dfs_bfs_ucs
+  - m2_02_iterative_deepening_and_depth_limited
+  - m2_03_informed_heuristic_search_and_functions
+examRelevance: high
+tags:
+  - search
+  - m2-lab
+---
 # Module 2 Practice Lab: Search Strategy Drills
 
 **Strategy selection under constraints, cost-trap autopsies, IDS arithmetic, heuristic admissibility trials, and exam essay models.**

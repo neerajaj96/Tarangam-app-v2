@@ -1,3 +1,28 @@
+---
+id: m1_99_practice_lab_agents_and_problem_formulation
+courseCode: PECST522
+module: 1
+sequence: 99
+title: 'Module 1 Practice Lab: AI Foundations, PEAS & Environment Matrix'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Specify spam filters, chatbots and farm bots with PEAS
+  - Classify medical and Pac-Man environments on the matrix
+  - Separate rational agents from omniscient ones exactly
+concepts:
+  - PEAS specification drills
+  - environment matrix
+  - rationality verdicts
+prerequisites:
+  - m1_02_agents_and_environments_peas
+  - m1_03_concept_of_rationality
+  - m1_04_nature_of_task_environments
+examRelevance: high
+tags:
+  - agents
+  - m1-lab
+---
 # Module 1 Practice Lab: AI Foundations, PEAS & Environment Matrix
 
 **Hands-on scenario classification, active recall drills, cheat-sheet comparisons, and university exam outlines.**

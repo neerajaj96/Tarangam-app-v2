@@ -1,3 +1,26 @@
+---
+id: m4_07_asn1_smi_mib_language
+courseCode: PCCST501
+module: 4
+sequence: 7
+title: ASN.1, SMI & MIB: SNMP's Language
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Read ASN.1 types with tag-length-value BER stamps
+  - Walk OID arcs from root to scalar instances
+  - Justify SMI subtraction as compatibility strategy
+concepts:
+  - ASN.1 encoding
+  - object identifiers
+  - SMI subset
+prerequisites:
+  - m4_01_network_management_snmp_architecture
+examRelevance: medium
+tags:
+  - snmp
+  - asn1-smi-mib
+---
 # ASN.1, SMI & MIB: SNMP's Language
 
 **The grammar behind management — ASN.1 types, BER tag-length-value bytes you will encode by hand, and the OID tree that names every managed object.**

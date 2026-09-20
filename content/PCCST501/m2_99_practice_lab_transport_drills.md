@@ -1,3 +1,30 @@
+---
+id: m2_99_practice_lab_transport_drills
+courseCode: PCCST501
+module: 2
+sequence: 99
+title: 'Module 2 Practice Lab: Transport-Layer Drills'
+difficulty: intermediate
+estimatedMinutes: 7
+learningObjectives:
+  - Census sockets with demultiplexing keys exactly
+  - Compute timeouts with Karn-corrected RTT smoothing
+  - Settle GBN against selective-repeat under identical loss
+concepts:
+  - transport scenarios
+  - timeout arithmetic
+  - loss recovery showdown
+prerequisites:
+  - m2_01_transport_layer_services_and_multiplexing
+  - m2_03_tcp_segment_structure_and_rtt
+  - m2_04_reliable_transfer_gbn_and_sr
+  - m2_05_tcp_flow_control_and_connection_management
+  - m2_06_congestion_control_principles_and_tcp
+examRelevance: high
+tags:
+  - transport-layer
+  - m2-lab
+---
 # Module 2 Practice Lab: Transport-Layer Drills
 
 **Connection arithmetic, RTT/timeout numericals, loss-trace showdowns, congestion-event walks, and exam essay models.**

@@ -1,3 +1,30 @@
+---
+id: m4_99_practice_lab_branchbound_complexity_drills
+courseCode: PCCST502
+module: 4
+sequence: 99
+title: 'Module 4 Practice Lab: Branch & Bound and Complexity Drills'
+difficulty: intermediate
+estimatedMinutes: 8
+learningObjectives:
+  - Race bounds on one TSP matrix with three timings
+  - Autopsy reductions with one verdict each exactly
+  - Trace first-fit-decreasing packs at capacity ten
+concepts:
+  - bound race
+  - reduction autopsy
+  - packing traces
+prerequisites:
+  - m4_01_branch_and_bound_control_abstraction
+  - m4_02_tsp_branch_and_bound
+  - m4_03_np_completeness_p_np_reductions
+  - m4_04_bin_packing_approximation_algorithms
+  - m4_05_randomized_algorithms_las_vegas_monte_carlo
+examRelevance: high
+tags:
+  - branchbound-complexity
+  - m4-lab
+---
 # Module 4 Practice Lab: Branch & Bound and Complexity Drills
 
 **Bound races, reduction-direction autopsies, FFD packing traces, amplification arithmetic, and exam essay models.**
