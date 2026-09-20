@@ -1,0 +1,258 @@
+/**
+ * Tarangam Topic Study Context (browser ES module, no dependencies).
+ *
+ * Reusable intelligence-powered study panel for generated topic pages. Pure
+ * model builder + pure HTML renderer (both importable in Node for tests);
+ * one thin DOM initializer wires a mount point. Data comes from the shared
+ * static manifest fetched once at runtime (never inlined per page, never
+ * reparsed from Markdown); learner state reuses assets/learner-state.js, so
+ * localStorage stays fully compatible. Nothing here blocks access: every
+ * control only informs, suggests, or records explicit learner actions.
+ *
+ * Mount contract (see templates/base.html): a static
+ * `<section id="tsStudyContext" hidden>` after the article, plus identity
+ * constants rendered by the template. Without JS (or without network for
+ * the manifest fetch) the section stays hidden or degrades to a compact
+ * status fallback — the article itself is untouched.
+ */
+import {
+  topicKey,
+  getTopic,
+  getPrerequisites,
+  getDependents,
+  getAncestors,
+  getDependencyChain,
+  getPrerequisiteDepth,
+  isRootTopic,
+  isLeafTopic,
+  getPreviousInCourse,
+  getNextInCourse,
+  getPreviousInModule,
+  getNextInModule,
+  getModuleBoundaries,
+  getCourseBoundaries,
+  getDirectPrerequisiteCompletion,
+  getAncestorCompletion,
+  getRemainingDependencyCount,
+  getNextRecommendedTopic,
+} from './topic-intelligence.js';
+import { loadManifest } from './curriculum-data.js';
+import { createLearnerState } from './learner-state.js';
+
+export const STUDY_CONTEXT_MOUNT_ID = 'tsStudyContext';
+export const PROGRESS_CHANGED_EVENT = 'tarangam:progress-changed';
+
+// Topic pages live one level below the artifact root in every hosting mode
+// (Pages artifact and branch-root dev alike), so one relative candidate
+// resolves the shared manifest without inlining it per page.
+export const TOPIC_MANIFEST_CANDIDATES = ['../data/topic-manifest.json'];
+
+function esc(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// Same-course siblings link relatively; cross-course recommendations climb
+// one level first. Pure and unit-tested.
+export function topicHrefFrom(currentCourseCode, topic) {
+  if (!topic || !topic.id) return '#';
+  if (!topic.courseCode || topic.courseCode === currentCourseCode) {
+    return `./${topic.id}.html`;
+  }
+  return `../${topic.courseCode}/${topic.id}.html`;
+}
+
+function linkEntry(currentCourseCode, topic, extraState) {
+  return {
+    courseCode: topic.courseCode,
+    id: topic.id,
+    title: topic.title,
+    href: topicHrefFrom(currentCourseCode, topic),
+    ...(extraState || {}),
+  };
+}
+
+// Full study-context model for one topic. Null when the topic is unknown.
+// getStatus is `(courseCode, topicId) => status` (unknown safely unfinished).
+export function buildStudyContextModel(manifest, getStatus, courseCode, topicId) {
+  const topic = getTopic(manifest, courseCode, topicId);
+  if (!topic) return null;
+  const statusOf = (c, id) => {
+    const s = getStatus(c, id);
+    return s === 'completed' || s === 'in_progress' ? s : 'not_started';
+  };
+  const prereqs = getPrerequisites(manifest, courseCode, topicId)
+    .map((t) => linkEntry(courseCode, t, { state: statusOf(t.courseCode, t.id) }));
+  const chain = getDependencyChain(manifest, courseCode, topicId)
+    .map((t) => linkEntry(courseCode, t, { state: statusOf(t.courseCode, t.id), current: t.id === topicId }));
+  const dependents = getDependents(manifest, courseCode, topicId)
+    .map((t) => linkEntry(courseCode, t, { state: statusOf(t.courseCode, t.id) }));
+  const nav = (t) => (t ? linkEntry(courseCode, t) : null);
+  const next = getNextRecommendedTopic(manifest, getStatus);
+  return {
+    courseCode: topic.courseCode,
+    courseName: topic.courseName || topic.courseCode,
+    module: topic.module,
+    moduleName: topic.moduleName || `Module ${topic.module}`,
+    id: topic.id,
+    title: topic.title,
+    difficulty: topic.difficulty ?? null,
+    examRelevance: topic.examRelevance ?? null,
+    estimatedMinutes: topic.estimatedMinutes ?? null,
+    concepts: Array.isArray(topic.concepts) ? [...topic.concepts] : [],
+    tags: Array.isArray(topic.tags) ? [...topic.tags] : [],
+    learningObjectives: Array.isArray(topic.learningObjectives) ? [...topic.learningObjectives] : [],
+    status: statusOf(courseCode, topicId),
+    isRoot: isRootTopic(manifest, courseCode, topicId),
+    isLeaf: isLeafTopic(manifest, courseCode, topicId),
+    depth: getPrerequisiteDepth(manifest, courseCode, topicId),
+    prereqs,
+    prereqCompletion: getDirectPrerequisiteCompletion(manifest, getStatus, courseCode, topicId),
+    chain,
+    ancestorCompletion: getAncestorCompletion(manifest, getStatus, courseCode, topicId),
+    remainingDependencies: getRemainingDependencyCount(manifest, getStatus, courseCode, topicId),
+    dependents,
+    navigation: {
+      prev: nav(getPreviousInCourse(manifest, courseCode, topicId)),
+      next: nav(getNextInCourse(manifest, courseCode, topicId)),
+      prevInCourse: nav(getPreviousInCourse(manifest, courseCode, topicId)),
+      nextInCourse: nav(getNextInCourse(manifest, courseCode, topicId)),
+      prevInModule: nav(getPreviousInModule(manifest, courseCode, topicId)),
+      nextInModule: nav(getNextInModule(manifest, courseCode, topicId)),
+      moduleFirst: nav(getModuleBoundaries(manifest, courseCode, topic.module).first),
+      moduleLast: nav(getModuleBoundaries(manifest, courseCode, topic.module).last),
+      courseFirst: nav(getCourseBoundaries(manifest, courseCode).first),
+      courseLast: nav(getCourseBoundaries(manifest, courseCode).last),
+    },
+    recommended: next ? {
+      ...linkEntry(courseCode, next),
+      current: topicKey(next.courseCode, next.id) === topicKey(courseCode, topicId),
+    } : null,
+  };
+}
+
+// Pure HTML renderer for a model (null model renders nothing). Uses the
+// site's badge language; interactive bits are data-action buttons the
+// initializer wires. Deterministic output for tests.
+export function renderStudyContext(model) {
+  if (!model) return '';
+  const chips = [];
+  chips.push(`<span class="badge">${esc(model.courseCode)} · ${esc(model.moduleName)}</span>`);
+  if (model.difficulty) chips.push(`<span class="badge">🟢 ${esc(model.difficulty)}</span>`);
+  if (model.examRelevance) chips.push(`<span class="badge badge-gold">🎯 ${esc(model.examRelevance)}</span>`);
+  if (model.estimatedMinutes != null) chips.push(`<span class="badge">⏱️ ${esc(model.estimatedMinutes)} min</span>`);
+  chips.push(`<span class="badge">${esc(model.status.replace(/_/g, ' '))}</span>`);
+  if (model.isRoot) chips.push('<span class="badge badge-accent">🌱 start here — no prerequisites</span>');
+  if (model.isLeaf) chips.push('<span class="badge">🍂 capstone — nothing builds on this yet</span>');
+
+  const prereqItems = model.prereqs.length
+    ? model.prereqs.map((p) =>
+      `<li><a href="${esc(p.href)}">${esc(p.title)}</a> <span class="badge">${esc(p.state.replace(/_/g, ' '))}</span></li>`
+    ).join('')
+    : '<li><span class="xp-none">None — this topic stands alone.</span></li>';
+  const chainItems = model.chain.map((t) =>
+    `<li>${t.current ? `<strong>${esc(t.title)} (you are here)</strong>` : `<a href="${esc(t.href)}">${esc(t.title)}</a>`} <span class="badge">${esc(t.state.replace(/_/g, ' '))}</span></li>`
+  ).join('');
+  const depItems = model.dependents.length
+    ? model.dependents.map((t) => `<li><a href="${esc(t.href)}">${esc(t.title)}</a></li>`).join('')
+    : '<li><span class="xp-none">None yet.</span></li>';
+
+  const navLink = (entry, label) => entry
+    ? `<a class="xp-open" href="${esc(entry.href)}">${label}: ${esc(entry.title)}</a>`
+    : `<span class="xp-none">${label}: —</span>`;
+  const nav = model.navigation;
+  const navBlock = [
+    navLink(nav.prev, '← Prev'),
+    navLink(nav.next, 'Next →'),
+    navLink(nav.prevInModule, '← Module prev'),
+    navLink(nav.nextInModule, 'Module next →'),
+    navLink(nav.moduleFirst, 'Module first'),
+    navLink(nav.moduleLast, 'Module last'),
+    navLink(nav.courseFirst, 'Course first'),
+    navLink(nav.courseLast, 'Course last'),
+  ].map((h) => `<div class="ts-nav-row">${h}</div>`).join('');
+
+  const objectives = model.learningObjectives.length
+    ? `<ul>${model.learningObjectives.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>`
+    : '<span class="xp-none">Not recorded.</span>';
+  const concepts = model.concepts.length
+    ? `<div class="xp-tags">${model.concepts.map((c) => `<span class="badge">${esc(c)}</span>`).join('')}</div>`
+    : '<span class="xp-none">Not recorded.</span>';
+
+  const done = model.status === 'completed';
+  const rec = model.recommended
+    ? (model.recommended.current
+      ? '<span class="xp-path-title">Up next: continue with this topic.</span>'
+      : `<span class="xp-path-title">Up next: ${esc(model.recommended.title)}</span>
+         <span class="xp-path-meta">${esc(model.recommended.courseCode)}</span>
+         <a class="xp-open" href="${esc(model.recommended.href)}">Open →</a>`)
+    : '<span class="xp-path-title">🎉 Curriculum complete.</span>';
+
+  return `<div class="ts-context-head"><h2>Study context</h2>
+    <div class="topic-badges">${chips.join('')}</div></div>
+  <div class="ts-actions">
+    <button type="button" class="ts-complete" data-ts-action="toggle" aria-pressed="${done ? 'true' : 'false'}">${done ? '✓ Completed — mark not started' : 'Mark completed'}</button>
+  </div>
+  <div class="ts-grid">
+    <div class="ts-block"><h3>Prerequisites (${model.prereqCompletion.completed}/${model.prereqCompletion.total} complete · ${model.remainingDependencies} remaining)</h3>
+      <ul class="ts-list">${prereqItems}</ul></div>
+    <div class="ts-block"><h3>Objectives</h3>${objectives}</div>
+    <div class="ts-block"><h3>Concepts</h3>${concepts}</div>
+  </div>
+  <details class="ts-details"><summary>Dependency chain (${model.chain.length} topics · ancestors ${model.ancestorCompletion.completed}/${model.ancestorCompletion.total} complete)</summary>
+    <ol class="ts-list">${chainItems}</ol></details>
+  <details class="ts-details"><summary>Dependents (${model.dependents.length})</summary>
+    <ul class="ts-list">${depItems}</ul></details>
+  <details class="ts-details" open><summary>Study navigation</summary>
+    <div class="ts-nav">${navBlock}</div></details>
+  <div class="ts-next"><h3>Continue learning</h3>${rec}</div>`;
+}
+
+// Thin DOM wiring: mount point + template identity + shared store. Renders
+// the full panel once the manifest loads; degrades to a compact
+// status-and-actions fallback when the fetch fails (e.g. file:// without a
+// server); re-renders on progress changes from anywhere on the page.
+export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode, topicId } = {}) {
+  if (typeof document === 'undefined') return null;
+  const mount = document.getElementById(mountId);
+  if (!mount || !courseCode || !topicId) return null;
+  const store = createLearnerState({});
+  const statusReader = (c, id) => store.getTopicState(c, id).status;
+
+  function renderWith(manifest) {
+    const model = manifest ? buildStudyContextModel(manifest, statusReader, courseCode, topicId) : null;
+    if (!model) {
+      const done = store.isTopicCompleted(courseCode, topicId);
+      mount.innerHTML = `<div class="ts-context-head"><h2>Study context</h2></div>
+        <p class="xp-note">Full study context needs the topic catalog (unavailable offline).</p>
+        <div class="ts-actions"><button type="button" class="ts-complete" data-ts-action="toggle" aria-pressed="${done ? 'true' : 'false'}">${done ? '✓ Completed — mark not started' : 'Mark completed'}</button></div>`;
+    } else {
+      mount.innerHTML = renderStudyContext(model);
+    }
+    mount.hidden = false;
+    const toggle = mount.querySelector('[data-ts-action="toggle"]');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        store.toggleTopicCompleted(courseCode, topicId);
+        document.dispatchEvent(new CustomEvent(PROGRESS_CHANGED_EVENT));
+        renderWith(manifest);
+      });
+    }
+  }
+
+  const rerender = () => {
+    loadManifest({ candidates: TOPIC_MANIFEST_CANDIDATES })
+      .then(({ manifest }) => renderWith(manifest))
+      .catch(() => renderWith(null));
+  };
+  document.addEventListener(PROGRESS_CHANGED_EVENT, () => {
+    loadManifest({ candidates: TOPIC_MANIFEST_CANDIDATES })
+      .then(({ manifest }) => renderWith(manifest))
+      .catch(() => {});
+  });
+  rerender();
+  return { rerender };
+}

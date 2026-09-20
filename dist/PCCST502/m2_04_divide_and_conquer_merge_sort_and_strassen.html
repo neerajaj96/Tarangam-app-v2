@@ -412,6 +412,8 @@ $C_{11} = 65+8-24-30 = 19$. $C_{12} = -2+24 = 22$. $C_{21} = 35+8 = 43$. $C_{22}
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m2_03_strongly_connected_components_kosaraju.html" class="nav-card prev" id="prevTopicLink">
@@ -550,7 +552,11 @@ $C_{11} = 65+8-24-30 = 19$. $C_{12} = -2+24 = 22$. $C_{21} = 35+8 = 43$. $C_{22}
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -641,6 +647,10 @@ $C_{11} = 65+8-24-30 = 19$. $C_{12} = -2+24 = 22$. $C_{21} = 35+8 = 43$. $C_{22}
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST502", topicId: "m2_04_divide_and_conquer_merge_sort_and_strassen" });
   </script>
   <script>
 

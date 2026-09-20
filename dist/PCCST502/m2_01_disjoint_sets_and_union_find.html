@@ -424,6 +424,8 @@ b   c        e          ==&gt;       b   c    ==&gt;        b c d
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m1_99_practice_lab_asymptotics_and_recurrences.html" class="nav-card prev" id="prevTopicLink">
@@ -562,7 +564,11 @@ b   c        e          ==&gt;       b   c    ==&gt;        b c d
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -653,6 +659,10 @@ b   c        e          ==&gt;       b   c    ==&gt;        b c d
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST502", topicId: "m2_01_disjoint_sets_and_union_find" });
   </script>
   <script>
 

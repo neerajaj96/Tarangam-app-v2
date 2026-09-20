@@ -410,6 +410,8 @@ In plain words: even in the <em>sparsest, most reluctantly-balanced</em> AVL tre
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m1_08_master_theorem_and_cases.html" class="nav-card prev" id="prevTopicLink">
@@ -548,7 +550,11 @@ In plain words: even in the <em>sparsest, most reluctantly-balanced</em> AVL tre
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -639,6 +645,10 @@ In plain words: even in the <em>sparsest, most reluctantly-balanced</em> AVL tre
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST502", topicId: "m1_09_balanced_search_trees_avl_foundations" });
   </script>
   <script>
 

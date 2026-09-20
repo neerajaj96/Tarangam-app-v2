@@ -427,6 +427,8 @@ D &lt;-- E   F                      D --&gt; E   F
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m2_02_graph_traversals_bfs_and_dfs.html" class="nav-card prev" id="prevTopicLink">
@@ -565,7 +567,11 @@ D &lt;-- E   F                      D --&gt; E   F
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -656,6 +662,10 @@ D &lt;-- E   F                      D --&gt; E   F
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST502", topicId: "m2_03_strongly_connected_components_kosaraju" });
   </script>
   <script>
 

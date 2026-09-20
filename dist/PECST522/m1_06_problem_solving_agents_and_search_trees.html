@@ -440,6 +440,8 @@ SEARCH TREE (the trace — repeats allowed):
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m1_05_agent_architectures_reflex_to_learning.html" class="nav-card prev" id="prevTopicLink">
@@ -578,7 +580,11 @@ SEARCH TREE (the trace — repeats allowed):
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -669,6 +675,10 @@ SEARCH TREE (the trace — repeats allowed):
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PECST522", topicId: "m1_06_problem_solving_agents_and_search_trees" });
   </script>
   <script>
 

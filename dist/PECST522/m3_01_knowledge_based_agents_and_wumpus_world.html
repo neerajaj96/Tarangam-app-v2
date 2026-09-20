@@ -421,6 +421,8 @@ y=1  [START,OK] [Breeze]   [PIT]      [Breeze]
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m2_99_practice_lab_search_strategies_drills.html" class="nav-card prev" id="prevTopicLink">
@@ -559,7 +561,11 @@ y=1  [START,OK] [Breeze]   [PIT]      [Breeze]
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -650,6 +656,10 @@ y=1  [START,OK] [Breeze]   [PIT]      [Breeze]
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PECST522", topicId: "m3_01_knowledge_based_agents_and_wumpus_world" });
   </script>
   <script>
 

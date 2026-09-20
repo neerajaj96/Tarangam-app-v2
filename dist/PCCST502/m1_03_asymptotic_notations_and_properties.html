@@ -404,6 +404,8 @@ Equivalently, $\exists\ c_1, c_2 &gt; 0,\ n_0$ such that $c_1 g(n) \le f(n) \le 
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m1_02_time_space_complexity_best_worst_average.html" class="nav-card prev" id="prevTopicLink">
@@ -542,7 +544,11 @@ Equivalently, $\exists\ c_1, c_2 &gt; 0,\ n_0$ such that $c_1 g(n) \le f(n) \le 
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -633,6 +639,10 @@ Equivalently, $\exists\ c_1, c_2 &gt; 0,\ n_0$ such that $c_1 g(n) \le f(n) \le 
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST502", topicId: "m1_03_asymptotic_notations_and_properties" });
   </script>
   <script>
 

@@ -410,6 +410,8 @@ The bracketed <strong>TD error</strong> is the surprise: positive when reality b
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m4_01_reinforcement_learning_learning_from_rewards.html" class="nav-card prev" id="prevTopicLink">
@@ -548,7 +550,11 @@ The bracketed <strong>TD error</strong> is the surprise: positive when reality b
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -639,6 +645,10 @@ The bracketed <strong>TD error</strong> is the surprise: positive when reality b
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PECST522", topicId: "m4_02_passive_rl_utility_adp_and_td" });
   </script>
   <script>
 

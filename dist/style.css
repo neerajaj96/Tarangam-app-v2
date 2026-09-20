@@ -332,6 +332,24 @@ a:hover { text-decoration: underline; }
 .ts-complete { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: var(--radius-full); padding: 5px 12px; cursor: pointer; }
 .ts-complete[aria-pressed="true"] { background: var(--accent-glow); }
 
+/* ---------- Topic Study Context panel (progressively enhanced) ---------- */
+.ts-context {
+  max-width: var(--content-w); margin: 0 auto; padding: 0 32px 64px; width: 100%;
+  border-top: 1px solid var(--border-soft); padding-top: 28px;
+}
+.ts-context h2 { font-family: var(--font-display); font-size: 22px; margin: 0 0 12px; }
+.ts-context h3 { font-family: var(--font-display); font-size: 15px; margin: 18px 0 8px; }
+.ts-context .topic-badges { margin-bottom: 4px; }
+.ts-actions { margin: 12px 0 4px; }
+.ts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; }
+.ts-list { margin: 6px 0 10px 18px; padding: 0; font-size: 14px; line-height: 1.7; }
+.ts-list li { margin-bottom: 2px; }
+.ts-details { margin-top: 10px; border: 1px solid var(--border-soft); border-radius: var(--radius, 10px); padding: 8px 14px; }
+.ts-details > summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.ts-nav-row { font-size: 14px; line-height: 2; }
+.ts-next { margin-top: 14px; }
+@media (max-width: 700px) { .ts-grid { grid-template-columns: 1fr; } .ts-context { padding-left: 20px; padding-right: 20px; } }
+
 .topic-title {
   font-family: var(--font-display); font-size: clamp(28px, 4.5vw, 40px);
   font-weight: 700; margin: 0 0 12px; letter-spacing: -0.8px; line-height: 1.2;

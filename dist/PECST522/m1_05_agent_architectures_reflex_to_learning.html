@@ -613,6 +613,8 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m1_04_nature_of_task_environments.html" class="nav-card prev" id="prevTopicLink">
@@ -751,7 +753,11 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -842,6 +848,10 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PECST522", topicId: "m1_05_agent_architectures_reflex_to_learning" });
   </script>
   <script>
 

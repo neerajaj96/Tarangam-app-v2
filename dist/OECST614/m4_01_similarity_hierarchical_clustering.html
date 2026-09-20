@@ -373,6 +373,8 @@ height 1.0 ── A ═══ B (first merger)
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m3_06_m3_mixed_drill.html" class="nav-card prev" id="prevTopicLink">
@@ -511,7 +513,11 @@ height 1.0 ── A ═══ B (first merger)
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -602,6 +608,10 @@ height 1.0 ── A ═══ B (first merger)
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "OECST614", topicId: "m4_01_similarity_hierarchical_clustering" });
   </script>
   <script>
 

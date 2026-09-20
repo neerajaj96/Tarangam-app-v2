@@ -387,6 +387,8 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m4_05_boosting_adaboost.html" class="nav-card prev" id="prevTopicLink">
@@ -525,7 +527,11 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -616,6 +622,10 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST503", topicId: "m4_06_mds_multidimensional_scaling" });
   </script>
   <script>
 

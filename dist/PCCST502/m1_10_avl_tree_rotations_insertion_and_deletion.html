@@ -423,6 +423,8 @@ Insert $10$: as a BST, $10 &lt; 30$ so go left to $20$; $10 &lt; 20$ so $10$ bec
 
     </main>
 
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
     <footer class="pagefoot" id="pagefoot">
       
       <a href="./m1_09_balanced_search_trees_avl_foundations.html" class="nav-card prev" id="prevTopicLink">
@@ -561,7 +563,11 @@ Insert $10$: as a BST, $10 &lt; 30$ so go left to $20$; $10 &lt; 20$ so $10$ bec
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            renderProgress();
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
+      renderProgress();
+
+      // Re-render when study-context actions (or any peer) change progress.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
           };
           host.appendChild(btn);
         }
@@ -652,6 +658,10 @@ Insert $10$: as a BST, $10 &lt; 30$ so go left to $20$; $10 &lt; 20$ so $10$ bec
         };
       }
     })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST502", topicId: "m1_10_avl_tree_rotations_insertion_and_deletion" });
   </script>
   <script>
 
