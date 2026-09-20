@@ -32,6 +32,8 @@ import {
   injectDashboardSubjectDetails,
   writeStandaloneIndex,
   copyExplorerPage,
+  copyAssessmentPage,
+  copyAssessmentData,
   copyDashboardPage,
   copyAssetDirs,
 } from './output.js';
@@ -230,6 +232,10 @@ export function buildSite() {
   writeStandaloneIndex(OUTPUT_DIR);
 
   copyExplorerPage(OUTPUT_DIR);
+
+  copyAssessmentPage(OUTPUT_DIR);
+
+  copyAssessmentData(OUTPUT_DIR);
 
   copyDashboardPage(OUTPUT_DIR);
 

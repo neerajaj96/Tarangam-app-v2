@@ -47,6 +47,15 @@ import {
   getTopicPlanDay,
   explainTopicPlanMembership,
 } from './study-planner.js';
+import {
+  ASSESSMENT_FILTERS,
+  normalizeAssessmentFilter,
+  filterTopicsByAssessment,
+  getTopicAssessmentState,
+  loadAssessmentBank,
+  parseAttemptStore,
+  ASSESSMENT_STORAGE_KEY,
+} from './assessment.js';
 
 // Plan membership derived from the single saved plan configuration plus
 // canonical learner state — no per-topic planning state is ever stored.
@@ -65,6 +74,26 @@ export function getExplorerPlanInfo(manifest, getStatus, getTimestamp, planConfi
     };
   } catch {
     return { planned: false, day: null, estimatedMinutes: null, reason: null };
+  }
+}
+
+// Pure assessment state for one topic, reusing the canonical assessment
+// module (no duplicated calculations). Unknown topics yield a
+// not-attempted state (never throw).
+export function getExplorerAssessmentInfo(bank, attempts, courseCode, topicId) {
+  try {
+    const s = getTopicAssessmentState(bank, attempts, courseCode, topicId);
+    return {
+      available: s.available,
+      questionCount: s.questionCount,
+      attempted: s.attempted,
+      passed: s.passed,
+      needsReview: s.needsReview,
+      latestScore: s.latestScore,
+      state: s.state,
+    };
+  } catch {
+    return { available: false, questionCount: 0, attempted: false, passed: false, needsReview: false, latestScore: null, state: 'not_attempted' };
   }
 }
 
@@ -89,19 +118,21 @@ export function getExplorerModuleAnalytics(manifest, getStatus, getTimestamp, co
   }
 }
 
-export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter, REVIEW_FILTERS, normalizeReviewFilter };
+export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter, REVIEW_FILTERS, normalizeReviewFilter, ASSESSMENT_FILTERS, normalizeAssessmentFilter };
 
 const $ = (id) => (typeof document !== 'undefined' ? document.getElementById(id) : null);
 
 // Pure Explorer filtering for tests and UI: canonical combined filter
 // (course/module/search/difficulty/exam) then the deterministic journey
 // filter (all/not_started/in_progress/completed/ready), the exam-readiness
-// view (all/exam_relevant/exam_completed/exam_remaining), and the revision
-// view (all/review_due/review_overdue/exam_review_due) via the shared
-// modules — no duplicated intelligence logic.
+// view (all/exam_relevant/exam_completed/exam_remaining), the revision view
+// (all/review_due/review_overdue/exam_review_due), and the assessment view
+// (all/available/attempted/passed/needs_review) via the shared modules —
+// no duplicated intelligence logic.
 // Preserves manifest order; unknown filters fall back to 'all'. The review
 // view needs a timestamp reader and injected now; without timestamps it
-// yields no review matches (never fabricated).
+// yields no review matches (never fabricated). The assessment view needs
+// { bank, attempts }; without a bank it matches nothing but 'all'.
 export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
   const {
     courseCode = null,
@@ -112,6 +143,8 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
     journey = 'all',
     examView = 'all',
     reviewFilter = 'all',
+    assessmentFilter = 'all',
+    assessment = null,
     getTimestamp = null,
     now,
   } = options;
@@ -125,7 +158,10 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
   });
   const byJourney = filterTopicsByJourney(manifest, getStatus, scoped, journey);
   const byExam = filterTopicsByExam(manifest, getStatus, byJourney, examView);
-  return filterTopicsByReview(manifest, getStatus, getTimestamp, byExam, reviewFilter, now);
+  const byReview = filterTopicsByReview(manifest, getStatus, getTimestamp, byExam, reviewFilter, now);
+  const bank = assessment && typeof assessment === 'object' ? assessment.bank ?? null : null;
+  const attempts = assessment && typeof assessment === 'object' ? assessment.attempts : undefined;
+  return filterTopicsByAssessment(bank, attempts, byReview, assessmentFilter);
 }
 
 export function getExplorerTopicJourney(manifest, getStatus, courseCode, topicId) {
@@ -136,6 +172,7 @@ const state = {
   manifest: null,
   baseUrl: '',
   progress: null,
+  assessmentBank: null,
   course: null,
   module: 'all',
   q: '',
@@ -144,6 +181,7 @@ const state = {
   journey: 'all',
   examView: 'all',
   reviewFilter: 'all',
+  assessmentFilter: 'all',
   selectedKey: null,
   loadError: null,
 };
@@ -193,6 +231,12 @@ function topicPageHref(topic) {
   return Data.topicPageUrl(state.baseUrl, topic.courseCode, topic);
 }
 
+// Assessment page lives beside the explorer at the site root. Pure.
+export function assessmentPageHref(courseCode, topicId) {
+  if (!courseCode || !topicId) return './assessment.html';
+  return `./assessment.html#scope=topic&course=${encodeURIComponent(courseCode)}&topic=${encodeURIComponent(topicId)}`;
+}
+
 function statusReader() {
   if (!state.progress) return () => 'not_started';
   return (courseCode, topicId) => state.progress.getTopicState(courseCode, topicId).status;
@@ -201,6 +245,17 @@ function statusReader() {
 function timestampReader() {
   if (!state.progress) return null;
   return (courseCode, topicId) => state.progress.lastAccessed(courseCode, topicId);
+}
+
+// Attempts re-read from storage on every render so assessment completions
+// (via the shared event) refresh without reload. Never throws.
+function readAttempts() {
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(ASSESSMENT_STORAGE_KEY) : null;
+    return parseAttemptStore(raw);
+  } catch {
+    return parseAttemptStore(null);
+  }
 }
 
 // The active study plan, derived fresh from the single saved configuration
@@ -256,6 +311,18 @@ function planChips(topic, plan) {
   return `<span class="badge badge-gold">★ Planned · Day ${esc(day)}</span>`;
 }
 
+function assessmentChips(topic) {
+  // Per-card assessment signal from the canonical assessment module.
+  // Topics without bank questions show an explicit "No quiz" marker.
+  if (!state.manifest) return '';
+  const info = getExplorerAssessmentInfo(state.assessmentBank, readAttempts(), topic.courseCode, topic.id);
+  if (!info.available) return '<span class="badge xp-st-todo">○ No quiz</span>';
+  if (info.needsReview) return '<span class="badge badge-gold">Needs review</span>';
+  if (info.passed) return '<span class="badge xp-st-done">✓ Passed</span>';
+  if (info.attempted) return '<span class="badge badge-accent">… Attempted</span>';
+  return '<span class="badge badge-accent">Quiz available</span>';
+}
+
 function currentFilters() {
   return {
     q: state.q,
@@ -264,6 +331,7 @@ function currentFilters() {
     journey: state.journey,
     examView: state.examView,
     reviewFilter: state.reviewFilter,
+    assessmentFilter: state.assessmentFilter,
   };
 }
 
@@ -273,8 +341,9 @@ function visibleTopics() {
   const f = currentFilters();
   // One canonical combined filter (see assets/topic-intelligence.js):
   // course + module scope, whole-manifest search, difficulty/exam facets,
-  // then the deterministic journey, exam-readiness, and revision views.
-  // Manifest order within a course already sorts module/sequence/id.
+  // then the deterministic journey, exam-readiness, revision, and
+  // assessment views. Manifest order within a course already sorts
+  // module/sequence/id.
   return getExplorerVisibleTopics(manifest, statusReader(), {
     courseCode: course,
     module,
@@ -284,6 +353,8 @@ function visibleTopics() {
     journey: f.journey || 'all',
     examView: f.examView || 'all',
     reviewFilter: f.reviewFilter || 'all',
+    assessmentFilter: f.assessmentFilter || 'all',
+    assessment: { bank: state.assessmentBank, attempts: readAttempts() },
     getTimestamp: timestampReader(),
     now: Date.now(),
   });
@@ -376,6 +447,20 @@ function renderFilterOptions() {
     state.reviewFilter = normalizeReviewFilter(state.reviewFilter);
     reviewSelect.value = state.reviewFilter;
   }
+  const assessmentSelect = $('xp-assessment');
+  if (assessmentSelect) {
+    const assessmentLabels = {
+      all: 'All assessment states',
+      available: 'Assessment available',
+      attempted: 'Assessment attempted',
+      passed: 'Assessment passed',
+      needs_review: 'Assessment needs review',
+    };
+    assessmentSelect.innerHTML = ASSESSMENT_FILTERS.map((f) =>
+      `<option value="${f}">${esc(assessmentLabels[f] || f)}</option>`).join('');
+    state.assessmentFilter = normalizeAssessmentFilter(state.assessmentFilter);
+    assessmentSelect.value = state.assessmentFilter;
+  }
 }
 
 function renderList() {
@@ -393,7 +478,7 @@ function renderList() {
     return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
@@ -449,6 +534,10 @@ function renderDetail() {
   const reviewBlock = (reviewRs.state === REVIEW_STATE_DUE || reviewRs.state === REVIEW_STATE_OVERDUE)
     ? `<div class="xp-pre-head">↻ ${reviewRs.state === REVIEW_STATE_OVERDUE ? 'Overdue' : 'Review due'} — ${reviewRs.daysSince} ${reviewRs.daysSince === 1 ? 'day' : 'days'} since last access (threshold ${reviewRs.threshold}). Revisiting refreshes its timestamp.</div>`
     : '';
+  const assessInfo = getExplorerAssessmentInfo(state.assessmentBank, readAttempts(), topic.courseCode, topic.id);
+  const assessmentBlock = !assessInfo.available
+    ? ''
+    : `<div class="xp-pre-head">Self-assessment: ${assessInfo.attempted ? (assessInfo.passed ? `passed (latest ${assessInfo.latestScore}%)` : `needs review (latest ${assessInfo.latestScore}%)`) : `${assessInfo.questionCount} ${assessInfo.questionCount === 1 ? 'question' : 'questions'} available — not attempted yet`} · <a class="xp-open" href="${esc(assessmentPageHref(topic.courseCode, topic.id))}">Start assessment →</a></div>`;
   const plan = activePlan();
   const planDay = plan ? getTopicPlanDay(plan, topic.courseCode, topic.id) : null;
   const planBlock = planDay !== null
@@ -461,10 +550,11 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}${assessmentChips(topic)}</div>
       ${journeyBlock}
       ${reviewBlock}
       ${planBlock}
+      ${assessmentBlock}
       <button class="xp-toggle" data-toggle="${esc(topic.id)}" type="button">${isDone ? '✓ Completed — mark not started' : 'Mark completed'}</button>
       ${planDay === null ? `<button class="xp-toggle" data-plan-add="${esc(topic.courseCode)}/${esc(topic.id)}" type="button">Add course to study plan</button>` : ''}
     </div>
@@ -624,6 +714,7 @@ async function init() {
     if ($('xp-journey')) $('xp-journey').addEventListener('change', (e) => { state.journey = normalizeJourneyFilter(e.target.value); renderAll(); });
     if ($('xp-examview')) $('xp-examview').addEventListener('change', (e) => { state.examView = normalizeExamFilter(e.target.value); renderAll(); });
     if ($('xp-review')) $('xp-review').addEventListener('change', (e) => { state.reviewFilter = normalizeReviewFilter(e.target.value); renderAll(); });
+    if ($('xp-assessment')) $('xp-assessment').addEventListener('change', (e) => { state.assessmentFilter = normalizeAssessmentFilter(e.target.value); renderAll(); });
     if ($('xp-retry')) $('xp-retry').addEventListener('click', () => {
       Data.clearManifestCache();
       const errBox = $('xp-error');
@@ -640,7 +731,7 @@ async function init() {
     if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
       window.addEventListener('storage', (event) => {
         if (!event.key) return;
-        if (event.key === 'tarangam_topic_state_v1' || event.key.startsWith('tarangam_visited_')) {
+        if (event.key === 'tarangam_topic_state_v1' || event.key.startsWith('tarangam_visited_') || event.key === ASSESSMENT_STORAGE_KEY) {
           renderProgress();
           renderPath();
           renderList();
@@ -655,6 +746,12 @@ async function init() {
     state.manifest = manifest;
     state.baseUrl = baseUrl || '';
     state.progress = createLearnerState({ manifest });
+    try {
+      const loaded = await loadAssessmentBank();
+      state.assessmentBank = loaded.bank;
+    } catch {
+      state.assessmentBank = null;
+    }
     state.loadError = null;
     $('xp-status').textContent = `${manifest.topics.length} topics · ${manifest.aggregates?.metadataTopics ?? '?'} with metadata`;
     const deep = readHash();

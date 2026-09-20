@@ -92,6 +92,25 @@ import { buildStudyPlan } from './study-planner.js';
 // the journey without duplicating logic.
 export { buildStudyPlan };
 
+import {
+  buildAssessmentSummary,
+  getTopicAssessmentState,
+  getAssessmentReviewTopics,
+  getExamAssessmentStats,
+} from './assessment.js';
+
+// Assessment is an observational layer over recorded attempts (see
+// assets/assessment.js): it describes verification only and never replaces
+// the normal, exam, review, or plan recommendations above. Re-exported so
+// surfaces read assessment state through the journey without duplicating
+// logic.
+export {
+  buildAssessmentSummary,
+  getTopicAssessmentState,
+  getAssessmentReviewTopics,
+  getExamAssessmentStats,
+};
+
 // --- Recommendation reasons (stable contract) -------------------------------
 
 export const REASON_CONTINUE_IN_PROGRESS = 'continue_in_progress';
@@ -396,6 +415,14 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
   // there is no plan (never fabricated).
   const studyPlan = buildStudyPlan(manifest, safeStatus, getTimestamp, options.planConfig, reviewNow);
 
+  // Assessment rides along as an observational layer over recorded
+  // attempts: recommendations above are untouched. Without a bank there is
+  // no assessment state (never fabricated).
+  const assessmentInput = options.assessment && typeof options.assessment === 'object' ? options.assessment : null;
+  const assessment = assessmentInput && assessmentInput.bank
+    ? buildAssessmentSummary(assessmentInput.bank, manifest, assessmentInput.attempts)
+    : null;
+
   return {
     inProgress,
     ready,
@@ -427,6 +454,7 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     planNextTopics: studyPlan.planNextTopics,
     planRemainingMinutes: studyPlan.remainingMinutes,
     planRequiredMinutesPerDay: studyPlan.requiredMinutesPerDay,
+    assessment,
   };
 }
 

@@ -31,8 +31,23 @@ import {
   clearPlanConfig,
   PLAN_TARGET_TYPES,
 } from './study-planner.js';
+import {
+  loadAssessmentBank,
+  clearAssessmentBankCache,
+  parseAttemptStore,
+  serializeAttemptStore,
+  buildAssessmentSummary,
+  getExamAssessmentStats,
+  ASSESSMENT_STORAGE_KEY,
+} from './assessment.js';
 
 export { PROGRESS_CHANGED_EVENT };
+
+// Pure assessment derivation for tests and UI: bank + manifest + attempts
+// store -> deterministic assessment summary (no DOM, no storage of its own).
+export function buildDashboardAssessmentModel(bank, manifest, attempts) {
+  return buildAssessmentSummary(bank, manifest, attempts);
+}
 
 // Pure exam derivation for tests and UI: manifest + status reader ->
 // deterministic exam-readiness snapshot (no DOM, no storage of its own).
@@ -170,6 +185,23 @@ async function init() {
   const statusReader = (courseCode, topicId) => store.getTopicState(courseCode, topicId).status;
   const timestampReader = (courseCode, topicId) => store.lastAccessed(courseCode, topicId);
 
+  // Assessment bank + attempts ride along for the assessment section only.
+  // Both load non-fatally: a missing bank/unreadable store renders an
+  // explicit empty state, never fabricated numbers.
+  let assessmentBank = null;
+  const readAttempts = () => {
+    try {
+      const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(ASSESSMENT_STORAGE_KEY) : null;
+      return parseAttemptStore(raw);
+    } catch {
+      return parseAttemptStore(null);
+    }
+  };
+  loadAssessmentBank().then(
+    ({ bank }) => { assessmentBank = bank; renderAssessment(); },
+    () => { assessmentBank = null; renderAssessment(); }
+  );
+
   const renderAll = () => {
     renderHero();
     renderAnalytics();
@@ -177,6 +209,7 @@ async function init() {
     renderExam();
     renderReview();
     renderPlan();
+    renderAssessment();
     renderLists();
     renderCourses();
   };
@@ -468,6 +501,28 @@ async function init() {
     }
   }
 
+  function renderAssessment() {
+    const box = $('db-assessment');
+    if (!box) return;
+    if (!assessmentBank) {
+      box.innerHTML = `<h2>Self-assessment</h2>
+        <div class="xp-path-next"><span class="xp-path-label">Question bank unavailable — self-assessment will appear here once it loads.</span></div>`;
+      return;
+    }
+    const attempts = readAttempts();
+    const summary = buildAssessmentSummary(assessmentBank, manifest, attempts);
+    const exam = getExamAssessmentStats(assessmentBank, manifest, attempts);
+    const recent = summary.recentAttempt
+      ? `<span class="xp-path-meta">Recent: ${summary.recentAttempt.percentage}% (${esc(summary.recentAttempt.state.replace(/_/g, ' '))})</span>`
+      : '<span class="xp-path-meta">No attempts yet.</span>';
+    box.innerHTML = `<h2>Self-assessment</h2>
+      <div class="xp-path-next"><span class="xp-path-title">${summary.coveredCount} of ${summary.totalTopics} topics have questions (${summary.totalQuestions} questions)</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">${summary.attempted} attempted · ${summary.passed} passed · ${summary.needsReview} needs review</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Exam topics with questions: ${exam.coveredExamTopics} · attempted ${exam.attempted} · passed ${exam.passed} · needs review ${exam.needsReview}</span></div>
+      <div class="xp-path-row">${recent}
+        <a class="xp-open" href="./assessment.html">Start assessment →</a></div>`;
+  }
+
   function renderLists() {
     const model = buildDashboardModel(manifest, statusReader, { getTimestamp: timestampReader });
     const progressBox = $('db-progress-list');
@@ -582,6 +637,7 @@ async function init() {
       renderExam();
       renderReview();
       renderPlan();
+      renderAssessment();
       renderLists();
       renderCourses();
     }
@@ -594,6 +650,7 @@ async function init() {
   renderExam();
   renderReview();
   renderPlan();
+  renderAssessment();
   renderLists();
   renderCourses();
 }

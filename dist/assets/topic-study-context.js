@@ -49,6 +49,12 @@ import { buildTopicExamModel } from './exam-readiness.js';
 import { buildTopicAnalyticsContribution } from './learning-analytics.js';
 import { buildStudyPlan, getTopicPlanDay, explainTopicPlanMembership, loadPlanConfig } from './study-planner.js';
 import {
+  loadAssessmentBank,
+  parseAttemptStore,
+  getTopicAssessmentState,
+  ASSESSMENT_STORAGE_KEY,
+} from './assessment.js';
+import {
   getReviewStateForTopic,
   explainReviewReason,
   REVIEW_STATE_DUE,
@@ -83,6 +89,14 @@ export function topicHrefFrom(currentCourseCode, topic) {
   return `../${topic.courseCode}/${topic.id}.html`;
 }
 
+// Assessment page links: topic pages sit one level below the artifact root,
+// so they climb one level first. Pure and unit-tested.
+export function assessmentHrefFrom(currentCourseCode, courseCode, topicId) {
+  if (!courseCode || !topicId) return '#';
+  const prefix = currentCourseCode ? '../' : './';
+  return `${prefix}assessment.html#scope=topic&course=${courseCode}&topic=${topicId}`;
+}
+
 function linkEntry(currentCourseCode, topic, extraState) {
   return {
     courseCode: topic.courseCode,
@@ -95,11 +109,13 @@ function linkEntry(currentCourseCode, topic, extraState) {
 
 // Full study-context model for one topic. Null when the topic is unknown.
 // getStatus is `(courseCode, topicId) => status` (unknown safely unfinished).
-// options is an optional `{ getTimestamp, now, planConfig }`: getTimestamp
-// feeds the deterministic review state (completed topics only — unfinished
-// topics are never marked due), now injects the clock for tests, planConfig
-// is the explicit saved study-plan configuration (without one, the topic
-// carries no planning information — never fabricated).
+// options is an optional `{ getTimestamp, now, planConfig, bank, attempts }`:
+// getTimestamp feeds the deterministic review state (completed topics only —
+// unfinished topics are never marked due), now injects the clock for tests,
+// planConfig is the explicit saved study-plan configuration (without one,
+// the topic carries no planning information — never fabricated), and
+// bank/attempts feed the assessment state (without a bank, assessment is
+// reported unavailable — never fabricated).
 export function buildStudyContextModel(manifest, getStatus, courseCode, topicId, options = {}) {
   const topic = getTopic(manifest, courseCode, topicId);
   if (!topic) return null;
@@ -126,6 +142,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
   // state — no per-topic planning state exists. Without a config the topic
   // is unplanned and renders no planning block.
   const plan = buildStudyPlan(manifest, getStatus, getTimestamp, options.planConfig, options.now);
+  const assessment = getTopicAssessmentState(options.bank ?? null, options.attempts, courseCode, topicId);
   const planDay = getTopicPlanDay(plan, courseCode, topicId);
   const planned = {
     planned: planDay !== null,
@@ -195,6 +212,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     review,
     analytics,
     planned,
+    assessment,
   };
 }
 
@@ -343,6 +361,26 @@ export function renderStudyContext(model) {
       + `</div>`;
   })();
 
+  const assessmentBlock = (() => {
+    // Assessment availability is explicit: topics without bank questions
+    // say so outright (never fabricated coverage).
+    const a = model.assessment;
+    if (!a || !a.available) {
+      return `<div class="ts-block ts-assessment"><h3>Self-assessment</h3>`
+        + `<p class="xp-note">Assessment not available for this topic yet.</p>`
+        + `</div>`;
+    }
+    const statusLine = !a.attempted
+      ? 'Not attempted yet.'
+      : a.passed
+        ? `Passed — latest ${a.latestScore}% · best ${a.bestScore}% over ${a.attempts} ${a.attempts === 1 ? 'attempt' : 'attempts'}.`
+        : `Needs review — latest ${a.latestScore}% · best ${a.bestScore}% over ${a.attempts} ${a.attempts === 1 ? 'attempt' : 'attempts'}.`;
+    return `<div class="ts-block ts-assessment"><h3>Self-assessment</h3>`
+      + `<p class="xp-note">${a.questionCount} ${a.questionCount === 1 ? 'question' : 'questions'} available. ${esc(statusLine)}</p>`
+      + `<p><a class="xp-open" href="${esc(assessmentHrefFrom(model.courseCode, model.courseCode, model.id))}">Start assessment →</a></p>`
+      + `</div>`;
+  })();
+
   return `<div class="ts-context-head"><h2>Study context</h2>
     <div class="topic-badges">${chips.join('')}</div></div>
   <div class="ts-actions">
@@ -358,6 +396,7 @@ export function renderStudyContext(model) {
   ${reviewBlock}
   ${analyticsBlock}
   ${planBlock}
+  ${assessmentBlock}
   <details class="ts-details"><summary>Dependency chain (${model.chain.length} topics · ancestors ${model.ancestorCompletion.completed}/${model.ancestorCompletion.total} complete)</summary>
     <ol class="ts-list">${chainItems}</ol></details>
   <details class="ts-details"><summary>Dependents (${model.dependents.length})</summary>
@@ -383,11 +422,31 @@ export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode,
   const statusReader = (c, id) => store.getTopicState(c, id).status;
   const timestampReader = (c, id) => store.lastAccessed(c, id);
 
+  // Assessment bank + attempts ride along for the assessment block only.
+  // Both load non-fatally: a missing bank renders an explicit unavailable
+  // state, never fabricated numbers.
+  let assessmentBank = null;
+  const readAttempts = () => {
+    try {
+      const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(ASSESSMENT_STORAGE_KEY) : null;
+      return parseAttemptStore(raw);
+    } catch {
+      return parseAttemptStore(null);
+    }
+  };
+  loadAssessmentBank().then(
+    ({ bank }) => { assessmentBank = bank; if (lastManifest) renderWith(lastManifest); },
+    () => { assessmentBank = null; if (lastManifest) renderWith(lastManifest); }
+  );
+  let lastManifest = null;
+
   function renderWith(manifest) {
+    lastManifest = manifest || lastManifest;
     // Plan membership re-derives from the saved config on every render, so
     // completion changes (via the shared event below) recalculate the plan.
+    // Assessment state re-reads attempts on every render for the same reason.
     const model = manifest
-      ? buildStudyContextModel(manifest, statusReader, courseCode, topicId, { getTimestamp: timestampReader, now: Date.now(), planConfig: loadPlanConfig() })
+      ? buildStudyContextModel(manifest, statusReader, courseCode, topicId, { getTimestamp: timestampReader, now: Date.now(), planConfig: loadPlanConfig(), bank: assessmentBank, attempts: readAttempts() })
       : null;
     if (!model) {
       const done = store.isTopicCompleted(courseCode, topicId);

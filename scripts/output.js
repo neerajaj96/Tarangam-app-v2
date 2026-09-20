@@ -138,6 +138,26 @@ export function copyExplorerPage(outputDir) {
   }
 }
 
+// Copy the self-assessment page (question bank + manifest resolve
+// client-side at runtime, so no path rewrite is needed here).
+export function copyAssessmentPage(outputDir) {
+  if (fs.existsSync('assessment.html')) {
+    fs.copyFileSync('assessment.html', path.join(outputDir, 'assessment.html'));
+  }
+}
+
+// Copy the static assessment question bank for browser-side consumption
+// (deterministic bytes: exact copy of data/assessments.json).
+export function copyAssessmentData(outputDir) {
+  if (fs.existsSync(path.join('data', 'assessments.json'))) {
+    const dir = path.join(outputDir, 'data');
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.copyFileSync(path.join('data', 'assessments.json'), path.join(dir, 'assessments.json'));
+  }
+}
+
 // Copy assets and media if they exist
 export function copyAssetDirs(outputDir) {
   if (fs.existsSync('assets')) {

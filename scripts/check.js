@@ -379,8 +379,14 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'assets/revision.js', 'assets/learning-analytics.js', 'assets/study-planner.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'scripts/revision.js', 'scripts/learning-analytics.js', 'scripts/study-planner.js', 'style.css']) {
+  for (const f of ['explorer.html', 'dashboard.html', 'assessment.html', 'data/assessments.json', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/assessment.js', 'assets/assessment-page.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'assets/revision.js', 'assets/learning-analytics.js', 'assets/study-planner.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'scripts/revision.js', 'scripts/learning-analytics.js', 'scripts/study-planner.js', 'scripts/assessment.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
+  }
+  if (fs.existsSync('assessment.html')) {
+    const html = fs.readFileSync('assessment.html', 'utf-8');
+    for (const ref of ['assets/assessment-page.js', 'style.css', 'id="as-questions"']) {
+      if (!html.includes(ref)) fail(`assessment: assessment.html does not reference ${ref}`);
+    }
   }
   if (fs.existsSync('explorer.html')) {
     const html = fs.readFileSync('explorer.html', 'utf-8');
@@ -390,7 +396,7 @@ if (fs.existsSync('dist')) {
   }
   if (fs.existsSync('dashboard.html')) {
     const html = fs.readFileSync('dashboard.html', 'utf-8');
-    for (const ref of ['id="db-analytics"', 'id="db-continue"', 'id="db-exam"', 'id="db-review"', 'id="db-plan"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
+    for (const ref of ['id="db-analytics"', 'id="db-continue"', 'id="db-exam"', 'id="db-review"', 'id="db-plan"', 'id="db-assessment"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
       if (!html.includes(ref)) fail(`journey: dashboard.html is missing unified journey section ${ref}`);
     }
   }
@@ -398,6 +404,7 @@ if (fs.existsSync('dist')) {
     const html = fs.readFileSync('explorer.html', 'utf-8');
     if (!html.includes('id="xp-examview"')) fail('exam: explorer.html is missing the exam-readiness view filter (xp-examview)');
     if (!html.includes('id="xp-review"')) fail('review: explorer.html is missing the revision view filter (xp-review)');
+    if (!html.includes('id="xp-assessment"')) fail('assessment: explorer.html is missing the assessment view filter (xp-assessment)');
   }
   if (fs.existsSync('assets/explorer.js')) {
     const js = fs.readFileSync('assets/explorer.js', 'utf-8');
@@ -430,9 +437,26 @@ if (fs.existsSync('dist')) {
     if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/assets/learning-analytics.js', 'dist/assets/study-planner.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assessment.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/assessment.js', 'dist/assets/assessment-page.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/assets/learning-analytics.js', 'dist/assets/study-planner.js', 'dist/data/topic-manifest.json', 'dist/data/assessments.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
+  }
+  if (fs.existsSync('assets/dashboard.js')) {
+    const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
+    if (!js.includes('buildDashboardAssessmentModel') && !js.includes('assessment.js')) fail('assessment: assets/dashboard.js does not use the canonical assessment module');
+    if (!js.includes('db-assessment') && !js.includes('renderAssessment')) fail('assessment: assets/dashboard.js does not render the assessment section');
+  }
+  if (fs.existsSync('assets/explorer.js')) {
+    const js = fs.readFileSync('assets/explorer.js', 'utf-8');
+    if (!js.includes('filterTopicsByAssessment') && !js.includes('assessment.js')) fail('assessment: assets/explorer.js does not use the canonical assessment module');
+  }
+  if (fs.existsSync('assets/topic-study-context.js')) {
+    const js = fs.readFileSync('assets/topic-study-context.js', 'utf-8');
+    if (!js.includes('ts-assessment') && !js.includes('Assessment not available')) fail('assessment: assets/topic-study-context.js does not surface assessment state');
+  }
+  if (fs.existsSync('assets/learning-journey.js')) {
+    const js = fs.readFileSync('assets/learning-journey.js', 'utf-8');
+    if (!js.includes('buildAssessmentSummary')) fail('assessment: assets/learning-journey.js does not expose assessment state');
   }
   if (fs.existsSync('assets/dashboard.js')) {
     const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
@@ -589,6 +613,51 @@ if (fs.existsSync('dist')) {
     }
     if (/predict\w*\s+(behaviour|behavior|retention|recall|success|score)/i.test(js)) fail('planner: assets/study-planner.js must not predict learner behaviour');
     if (/\bxp\b|experience points|\blevels\b.*streak/i.test(js)) fail('planner: assets/study-planner.js must not add gamification');
+  }
+}
+
+// 14. Canonical deterministic assessment & knowledge verification layer:
+// static question bank plus exact evaluation — no AI/LLMs, no semantic
+// grading, no generated questions, no backend, no gamification, no mastery
+// scores, no second recommendation engine.
+{
+  let assessmentBank = null;
+  try {
+    assessmentBank = JSON.parse(fs.readFileSync(path.join('data', 'assessments.json'), 'utf-8'));
+  } catch (e) {
+    fail(`assessment: cannot read/parse data/assessments.json (${(e.cause && e.cause.message) || e.message}) — expected the canonical question bank`);
+  }
+  if (assessmentBank !== null) {
+    if (!fs.existsSync('assets/assessment.js')) {
+      fail('assessment: expected source file assets/assessment.js — actual: missing');
+    } else {
+      const js = fs.readFileSync('assets/assessment.js', 'utf-8');
+      for (const token of ['validateAssessmentBank', 'createAssessmentSession', 'evaluateAnswer', 'scoreSession', 'recordAttempt', 'getTopicAssessmentState', 'buildAssessmentSummary', 'PASS_THRESHOLD']) {
+        if (!js.includes(token)) fail(`assessment: assets/assessment.js is missing "${token}"`);
+      }
+      if (!js.includes("from './topic-intelligence.js'")) fail('assessment: assets/assessment.js must build on the canonical Topic Intelligence Layer');
+      // NOTE: fetch is allowed here exactly as in assets/curriculum-data.js:
+      // static-first JSON loading for GitHub Pages, nothing dynamic.
+      for (const banned of ['XMLHttpRequest', 'setInterval', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+        if (js.toLowerCase().includes(banned)) fail(`assessment: assets/assessment.js must stay deterministic and static-first (found "${banned}")`);
+      }
+      if (/semantic[A-Z_(]|new\s+\w*semantic/i.test(js)) fail('assessment: assets/assessment.js must not add semantic grading');
+      if (/\bmastery[A-Z_]|["']mastery["']\s*:|mastery\s*=\s*\d/i.test(js)) fail('assessment: assets/assessment.js must not add artificial mastery scores');
+      if (/\bxp\b|experience points|\blevels\b.*streak/i.test(js)) fail('assessment: assets/assessment.js must not add gamification');
+    }
+    // Bank validation against the live manifest (unique ids, existing
+    // course/topic references, answer integrity). Loader failures elsewhere
+    // are reported by their own sections; skip validation then.
+    try {
+      const { validateAssessmentBank, getAssessmentCoverage } = await import('./assessment.js');
+      const { buildTopicManifest } = await import('./topic-manifest.js');
+      const manifest = buildTopicManifest({ curriculumDoc, schema: loadTopicSchema() });
+      for (const e of validateAssessmentBank(assessmentBank, manifest)) fail(`assessment-bank: ${e}`);
+      const coverage = getAssessmentCoverage(assessmentBank, manifest);
+      console.log(`assessment bank: ${coverage.totalQuestions} questions, ${coverage.coveredCount} covered topics, ${coverage.uncoveredTopics.length} uncovered topics`);
+    } catch (e) {
+      warn(`assessment: bank validation skipped (${(e && e.message) || e})`);
+    }
   }
 }
     if (/xps\b|experience points/i.test(js)) fail('exam: assets/exam-readiness.js must not add gamification');
