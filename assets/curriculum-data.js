@@ -125,72 +125,52 @@ export async function loadManifest(options = {}) {
 }
 
 // --- Pure queries over a manifest object (sync, no I/O). ---
+//
+// Implemented once in the canonical Topic Intelligence Layer
+// (./topic-intelligence.js, shared with Node tooling); re-exported here so
+// browser consumers keep their existing import path with zero duplication.
+// Loading/caching/URL resolution below remain this module's own job.
 
-export function getTopic(manifest, courseCode, id) {
-  if (!manifest || !Array.isArray(manifest.topics)) return null;
-  return manifest.topics.find((t) => t.courseCode === courseCode && t.id === id) ?? null;
-}
-
-export function getCourseTopics(manifest, courseCode) {
-  if (!manifest || !Array.isArray(manifest.topics)) return [];
-  return manifest.topics.filter((t) => t.courseCode === courseCode);
-}
-
-export function moduleNumbers(manifest, courseCode) {
-  const mods = new Set(getCourseTopics(manifest, courseCode).map((t) => t.module));
-  return [...mods].sort((a, b) => a - b);
-}
-
-export function getModuleTopics(manifest, courseCode, module) {
-  return getCourseTopics(manifest, courseCode)
-    .filter((t) => t.module === module)
-    .sort((a, b) => a.sequence - b.sequence || (a.id < b.id ? -1 : 1));
-}
-
-export function courseCodes(manifest) {
-  if (!manifest || !Array.isArray(manifest.topics)) return [];
-  return [...new Set(manifest.topics.map((t) => t.courseCode))].sort();
-}
-
-export function getPrerequisites(manifest, courseCode, id) {
-  const topic = getTopic(manifest, courseCode, id);
-  if (!topic || !Array.isArray(topic.prerequisites)) return [];
-  return topic.prerequisites
-    .map((p) => getTopic(manifest, courseCode, p))
-    .filter((t) => t !== null);
-}
-
-export function getDependents(manifest, courseCode, id) {
-  if (!manifest || !Array.isArray(manifest.topics)) return [];
-  return manifest.topics.filter((t) =>
-    t.courseCode === courseCode && Array.isArray(t.prerequisites) && t.prerequisites.includes(id)
-  );
-}
-
-export function getTopicsByDifficulty(manifest, difficulty) {
-  if (!manifest || !Array.isArray(manifest.topics)) return [];
-  return manifest.topics.filter((t) => t.difficulty === difficulty);
-}
-
-export function getTopicsByExamRelevance(manifest, level) {
-  if (!manifest || !Array.isArray(manifest.topics)) return [];
-  return manifest.topics.filter((t) => t.examRelevance === level);
-}
-
-export function normalizeSearchText(value) {
-  return String(value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
-}
-
-// Case-insensitive, whitespace-tolerant substring search across topic
-// title, ID, concepts, and tags. Legacy topics are fully searchable.
-export function searchTopics(manifest, query) {
-  const q = normalizeSearchText(query);
-  if (!q || !manifest || !Array.isArray(manifest.topics)) return [];
-  return manifest.topics.filter((t) => {
-    const haystacks = [t.title, t.id, ...(t.concepts || []), ...(t.tags || [])];
-    return haystacks.some((h) => normalizeSearchText(h).includes(q));
-  });
-}
+export {
+  topicKey,
+  getTopic,
+  getCourseTopics,
+  getModuleTopics,
+  courseCodes,
+  moduleNumbers,
+  getPrerequisites,
+  getDependents,
+  getTopicsByDifficulty,
+  getTopicsByExamRelevance,
+  normalizeSearchText,
+  searchTopics,
+  getAncestors,
+  getDescendants,
+  getDependencyChain,
+  getPrerequisiteDepth,
+  isRootTopic,
+  isLeafTopic,
+  getPreviousTopic,
+  getNextTopic,
+  getPreviousInCourse,
+  getNextInCourse,
+  getPreviousInModule,
+  getNextInModule,
+  getModuleBoundaries,
+  getCourseBoundaries,
+  getDifficulty,
+  getExamRelevance,
+  getEstimatedMinutes,
+  getConcepts,
+  getTags,
+  getLearningObjectives,
+  searchConcepts,
+  filterByTags,
+  filterByDifficulty,
+  filterByExamRelevance,
+  filterByMaxMinutes,
+  combinedFilter,
+} from './topic-intelligence.js';
 
 // Topic page URL resolved against the manifest's own base URL, so links
 // work in every hosting mode (Pages artifact root, branch-root dev,
@@ -199,8 +179,4 @@ export function topicPageUrl(baseUrl, courseCode, topic) {
   const file = typeof topic === 'string' ? topic : topic.filename || `${topic.id}.html`;
   const root = baseUrl || '';
   return `${root}${courseCode}/${file}`;
-}
-
-export function topicKey(courseCode, id) {
-  return `${courseCode}/${id}`;
 }

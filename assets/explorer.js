@@ -82,16 +82,17 @@ function currentFilters() {
 function visibleTopics() {
   const { manifest, course, module } = state;
   if (!manifest || !course) return [];
-  let topics = Data.getCourseTopics(manifest, course);
-  if (module !== 'all') topics = topics.filter((t) => t.module === Number(module));
   const f = currentFilters();
-  if (f.q) {
-    const found = new Set(Data.searchTopics(manifest, f.q).map((t) => `${t.courseCode}/${t.id}`));
-    topics = topics.filter((t) => found.has(`${t.courseCode}/${t.id}`));
-  }
-  if (f.difficulty) topics = topics.filter((t) => t.difficulty === f.difficulty);
-  if (f.exam) topics = topics.filter((t) => t.examRelevance === f.exam);
-  return topics.sort((a, b) => a.module - b.module || a.sequence - b.sequence);
+  // One canonical combined filter (see assets/topic-intelligence.js):
+  // course + module scope, whole-manifest search, difficulty/exam facets.
+  // Manifest order within a course already sorts module/sequence/id.
+  return Data.combinedFilter(manifest, {
+    courseCode: course,
+    module: module === 'all' ? null : Number(module),
+    query: f.q || null,
+    difficulties: f.difficulty ? [f.difficulty] : null,
+    examRelevances: f.exam ? [f.exam] : null,
+  });
 }
 
 function renderCourses() {

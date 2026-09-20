@@ -6,8 +6,10 @@
  * scripts/output.js (file writer), and scripts/check.js (integrity QA).
  * Zero dependencies; ES module style like the rest of scripts/.
  *
- * Only manifest construction, validation, and queries live here. Graph
- * construction/analysis reuses scripts/topic-graph.js — never duplicated.
+ * Only manifest construction and validation live here, plus re-exports of
+ * the read/query API from the canonical Topic Intelligence Layer
+ * (assets/topic-intelligence.js) — graph construction/analysis reuses
+ * scripts/topic-graph.js, never duplicated.
  * No filesystem writes (output.js owns those), HTML generation,
  * curriculum validation, learner state, or UI logic.
  */
@@ -159,90 +161,17 @@ export function formatManifestSummary(manifest) {
 }
 
 // --- Read/query API (pure: operates on a manifest object, no I/O). ---
-
-const indexCache = new WeakMap();
-
-function indexFor(manifest) {
-  let index = indexCache.get(manifest);
-  if (!index) {
-    index = {
-      byKey: new Map(),
-      byCourse: new Map(),
-      byModule: new Map(),
-      byDifficulty: new Map(),
-      byExam: new Map(),
-      dependents: new Map(), // key -> [dependent entries]
-    };
-    for (const t of manifest.topics) {
-      const key = `${t.courseCode}/${t.id}`;
-      index.byKey.set(key, t);
-      const push = (map, k) => {
-        if (!map.has(k)) map.set(k, []);
-        map.get(k).push(t);
-      };
-      push(index.byCourse, t.courseCode);
-      push(index.byModule, `${t.courseCode}:M${t.module}`);
-      if (t.difficulty) push(index.byDifficulty, t.difficulty);
-      if (t.examRelevance) push(index.byExam, t.examRelevance);
-    }
-    for (const t of manifest.topics) {
-      const from = `${t.courseCode}/${t.id}`;
-      for (const p of t.prerequisites || []) {
-        const to = `${t.courseCode}/${p}`;
-        if (!index.byKey.has(to)) continue;
-        if (!index.dependents.has(to)) index.dependents.set(to, []);
-        index.dependents.get(to).push(t);
-      }
-    }
-    indexCache.set(manifest, index);
-  }
-  return index;
-}
-
-export function getTopic(manifest, courseCode, id) {
-  return indexFor(manifest).byKey.get(`${courseCode}/${id}`) ?? null;
-}
-
-export function getCourseTopics(manifest, courseCode) {
-  return [...(indexFor(manifest).byCourse.get(courseCode) || [])];
-}
-
-export function getModuleTopics(manifest, courseCode, module) {
-  return [...(indexFor(manifest).byModule.get(`${courseCode}:M${module}`) || [])];
-}
-
-export function getPrerequisites(manifest, courseCode, id) {
-  const index = indexFor(manifest);
-  const topic = index.byKey.get(`${courseCode}/${id}`);
-  if (!topic) return [];
-  return (topic.prerequisites || [])
-    .map((p) => index.byKey.get(`${courseCode}/${p}`))
-    .filter((t) => t !== undefined);
-}
-
-export function getDependents(manifest, courseCode, id) {
-  return [...(indexFor(manifest).dependents.get(`${courseCode}/${id}`) || [])];
-}
-
-export function getTopicsByDifficulty(manifest, difficulty) {
-  return [...(indexFor(manifest).byDifficulty.get(difficulty) || [])];
-}
-
-export function getTopicsByExamRelevance(manifest, level) {
-  return [...(indexFor(manifest).byExam.get(level) || [])];
-}
-
-function normalizeQuery(q) {
-  return String(q ?? '').trim().toLowerCase();
-}
-
-// Normalized case-insensitive substring search across topic title,
-// concepts, tags, and topic ID (legacy topics included).
-export function searchTopics(manifest, query) {
-  const q = normalizeQuery(query);
-  if (!q) return [];
-  return manifest.topics.filter((t) => {
-    const haystacks = [t.title, t.id, ...(t.concepts || []), ...(t.tags || [])];
-    return haystacks.some((h) => normalizeQuery(h).includes(q));
-  });
-}
+//
+// Implemented once in the canonical Topic Intelligence Layer
+// (assets/topic-intelligence.js, shared with browsers); re-exported here so
+// repo-side consumers keep their existing import path with zero duplication.
+export {
+  getTopic,
+  getCourseTopics,
+  getModuleTopics,
+  getPrerequisites,
+  getDependents,
+  getTopicsByDifficulty,
+  getTopicsByExamRelevance,
+  searchTopics,
+} from '../assets/topic-intelligence.js';

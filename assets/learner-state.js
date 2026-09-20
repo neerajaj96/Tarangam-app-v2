@@ -24,6 +24,11 @@ import {
   getReadyTopics as engineGetReadyTopics,
   getInProgressTopics as engineGetInProgressTopics,
 } from './learner-path.js';
+import {
+  getCompletedPrerequisites as intelCompletedPrerequisites,
+  getBlockedPrerequisites as intelBlockedPrerequisites,
+  getDirectPrerequisiteCompletion as intelDirectPrerequisiteCompletion,
+} from './topic-intelligence.js';
 
 export const STATUS_NOT_STARTED = 'not_started';
 export const STATUS_IN_PROGRESS = 'in_progress';
@@ -119,8 +124,6 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
   const store = storage || defaultStorage();
 
   const manifestTopics = () => (manifest && Array.isArray(manifest.topics) ? manifest.topics : []);
-  const findManifestTopic = (courseCode, topicId) =>
-    manifestTopics().find((t) => t.courseCode === courseCode && t.id === topicId) ?? null;
 
   function getTopicState(courseCode, topicId) {
     const key = topicKey(courseCode, topicId);
@@ -235,34 +238,19 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
   }
 
   // Prerequisite helpers use manifest data; without a manifest (topic
-  // pages) they safely resolve to empty. Legacy topics carry no
-  // prerequisites, so they report ordinary empty completion state.
-  function prereqEntries(courseCode, topicId) {
-    const topic = findManifestTopic(courseCode, topicId);
-    if (!topic || !Array.isArray(topic.prerequisites)) return [];
-    return topic.prerequisites.map((id) => ({
-      courseCode,
-      id,
-      state: getTopicState(courseCode, id).status,
-    }));
-  }
-
+  // pages) they safely resolve to empty. Implemented once in the canonical
+  // Topic Intelligence Layer over this store's status reader; shapes and
+  // empty-state behavior are unchanged.
   function getCompletedPrerequisites(courseCode, topicId) {
-    return prereqEntries(courseCode, topicId).filter((p) => p.state === STATUS_COMPLETED);
+    return intelCompletedPrerequisites(manifest, statusReader, courseCode, topicId);
   }
 
   function getIncompletePrerequisites(courseCode, topicId) {
-    return prereqEntries(courseCode, topicId).filter((p) => p.state !== STATUS_COMPLETED);
+    return intelBlockedPrerequisites(manifest, statusReader, courseCode, topicId);
   }
 
   function getPrerequisiteCompletion(courseCode, topicId) {
-    const all = prereqEntries(courseCode, topicId);
-    const completed = all.filter((p) => p.state === STATUS_COMPLETED).length;
-    return {
-      completed,
-      total: all.length,
-      percent: all.length ? Math.round((completed / all.length) * 100) : 100,
-    };
+    return intelDirectPrerequisiteCompletion(manifest, statusReader, courseCode, topicId);
   }
 
   // Removes all progress for one course (visited array, v1 records,
