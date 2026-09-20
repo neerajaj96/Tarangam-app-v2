@@ -1,3 +1,25 @@
+---
+id: m4_03_pca_dimensionality_reduction
+courseCode: OECST614
+module: 4
+sequence: 3
+title: 'PCA: Variance-Preserving Compression'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Split eigen-ledgers with trace checksums intact
+  - Elect scaling with sign-convention discipline
+  - Compress onto top variance axes exactly
+concepts:
+  - principal components
+  - eigen-ledger
+  - variance preservation
+prerequisites: []
+examRelevance: high
+tags:
+  - dimensionality-reduction
+  - pca
+---
 # PCA: Variance-Preserving Compression
 
 **Rotate to the spread, keep the fat axes, drop the flat ones — eigenvalues as variance ledger, with a $2 \times 2$ covariance diagonalized by hand.**

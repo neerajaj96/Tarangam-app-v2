@@ -1,3 +1,27 @@
+---
+id: m1_05_multivariate_gradient_matrix_method
+courseCode: OECST614
+module: 1
+sequence: 5
+title: 'Multi-Variable Regression: Gradient Descent & Matrix Method'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Choose normal equations for small problems honestly
+  - Check one gradient step by hand against falling cost
+  - Discipline step sizes against divergence alarms
+concepts:
+  - normal equations
+  - gradient descent
+  - step-size discipline
+prerequisites:
+  - m1_03_features_problem_loss_optimization
+  - m1_04_linear_regression_single_variable
+examRelevance: high
+tags:
+  - regression
+  - solvers
+---
 # Multi-Variable Regression: Gradient Descent & Matrix Method
 
 **From one slope to a weight vector — the normal equation for small problems, one fully hand-checked gradient step for large ones.**

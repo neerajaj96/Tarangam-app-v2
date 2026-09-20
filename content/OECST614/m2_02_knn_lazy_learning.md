@@ -1,3 +1,25 @@
+---
+id: m2_02_knn_lazy_learning
+courseCode: OECST614
+module: 2
+sequence: 2
+title: 'KNN: Lazy Learning by Neighbourhood Vote'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Memorize every point with zero training-phase work
+  - Let k nearest neighbours vote with hand distances
+  - Tune k and scaling against ties and memorization
+concepts:
+  - k-nearest neighbors
+  - lazy learning
+  - distance scaling
+prerequisites: []
+examRelevance: medium
+tags:
+  - classification
+  - knn
+---
 # KNN: Lazy Learning by Neighbourhood Vote
 
 **No training phase at all — memorize every point, and at query time let the $k$ nearest neighbours vote, distances computed by hand.**

@@ -1,3 +1,25 @@
+---
+id: m4_01_similarity_hierarchical_clustering
+courseCode: OECST614
+module: 4
+sequence: 1
+title: 'Similarity Measures & Hierarchical Clustering'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Measure closeness with similarity arithmetic exactly
+  - Merge bottom-up with single, complete and average linkage
+  - Read dendrograms into k decisions with chaining diagnosis
+concepts:
+  - similarity measures
+  - linkage criteria
+  - dendrograms
+prerequisites: []
+examRelevance: medium
+tags:
+  - clustering
+  - hierarchical
+---
 # Similarity Measures & Hierarchical Clustering
 
 **Distances that define closeness, then bottom-up merging into a dendrogram — single, complete and average linkage priced on one line of points.**

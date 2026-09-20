@@ -1,3 +1,25 @@
+---
+id: m2_05_classification_regression_metrics
+courseCode: OECST614
+module: 2
+sequence: 5
+title: 'Evaluation Measures: Classifiers & Regressors'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Read one confusion matrix into four classifier ratios
+  - Rise above the diagonal with ROC and AUC verdicts
+  - Price regressors with MAE, RMSE and R-squared on shared numbers
+concepts:
+  - confusion matrix
+  - ROC curves
+  - regression errors
+prerequisites: []
+examRelevance: high
+tags:
+  - evaluation
+  - metrics
+---
 # Evaluation Measures: Classifiers & Regressors
 
 **One confusion matrix, four classifier ratios, one ROC curve — plus MAE, RMSE and $R^2$ for regressors, all computed on shared numbers.**

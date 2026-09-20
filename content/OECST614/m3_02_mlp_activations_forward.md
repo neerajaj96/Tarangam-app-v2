@@ -1,3 +1,26 @@
+---
+id: m3_02_mlp_activations_forward
+courseCode: OECST614
+module: 3
+sequence: 2
+title: 'MLP Forward Pass & Activation Functions'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Stack perceptrons into committees with ReLU, sigmoid and tanh
+  - Sweep fully hand-computed forward passes exactly
+  - Prove linear stacks collapse without nonlinearity
+concepts:
+  - multilayer perceptron
+  - activation choice
+  - nonlinearity necessity
+prerequisites:
+  - m3_01_perceptron_learning
+examRelevance: high
+tags:
+  - neural-networks
+  - mlp
+---
 # MLP Forward Pass & Activation Functions
 
 **Stacking perceptrons into committees — ReLU, sigmoid, tanh shapes and one fully hand-computed forward sweep.**

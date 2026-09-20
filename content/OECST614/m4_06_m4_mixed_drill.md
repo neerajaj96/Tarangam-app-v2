@@ -1,3 +1,29 @@
+---
+id: m4_06_m4_mixed_drill
+courseCode: OECST614
+module: 4
+sequence: 6
+title: 'M4 Drill: Cluster, Compress & Combine'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint merges, clusters, compressions, combinations and audits
+  - Name linkages and verify freezes without slips
+  - Sum traces with normalized weights and tiled folds
+concepts:
+  - cluster-compress-combine chain
+  - audit sprint
+prerequisites:
+  - m4_01_similarity_hierarchical_clustering
+  - m4_02_kmeans_partitional_clustering
+  - m4_03_pca_dimensionality_reduction
+  - m4_04_mds_ensemble_bagging_boosting
+  - m4_05_resampling_bias_variance_tradeoff
+examRelevance: high
+tags:
+  - clustering
+  - m4-drill
+---
 # M4 Drill: Cluster, Compress & Combine
 
 **Linkages, k-means loops, eigen-ledgers, boost weights, honest errors — M4 as reflexes.**

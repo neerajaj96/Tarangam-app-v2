@@ -1,3 +1,29 @@
+---
+id: m3_06_m3_mixed_drill
+courseCode: OECST614
+module: 3
+sequence: 6
+title: 'M3 Drill: Neurons to Trees in One Sitting'
+difficulty: intermediate
+estimatedMinutes: 4
+learningObjectives:
+  - Sprint updates, sweeps, blame, splits and growth
+  - Check signs, intermediates and ratios at every station
+  - Keep neurons-to-trees chains straight at pace
+concepts:
+  - neurons-to-trees chain
+  - station certificates
+prerequisites:
+  - m3_01_perceptron_learning
+  - m3_02_mlp_activations_forward
+  - m3_03_backpropagation_algorithm
+  - m3_04_decision_trees_info_gain_ratio
+  - m3_05_id3_algorithm_worked
+examRelevance: high
+tags:
+  - neural-networks
+  - m3-drill
+---
 # M3 Drill: Neurons to Trees in One Sitting
 
 **Perceptron corrections, forward sweeps, backward blame, entropy splits, ID3 recursion — M3 as reflexes.**

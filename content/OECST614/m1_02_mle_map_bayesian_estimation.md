@@ -1,3 +1,25 @@
+---
+id: m1_02_mle_map_bayesian_estimation
+courseCode: OECST614
+module: 1
+sequence: 2
+title: 'MLE, MAP & the Bayesian View of Fitting'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Estimate coins with likelihood and log-likelihood discipline
+  - Add Beta priors into MAP with washout arithmetic
+  - Work one fully counted coin example end to end
+concepts:
+  - maximum likelihood
+  - MAP estimation
+  - Beta-Binomial pair
+prerequisites: []
+examRelevance: medium
+tags:
+  - probability
+  - estimation
+---
 # MLE, MAP & the Bayesian View of Fitting
 
 **Counting what the data says versus counting what prior belief adds — likelihood, log-likelihood, MLE, MAP with a Beta prior, and one fully worked coin.**

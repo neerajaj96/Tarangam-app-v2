@@ -1,3 +1,26 @@
+---
+id: m2_03_overfitting_lasso_ridge
+courseCode: OECST614
+module: 2
+sequence: 3
+title: 'Overfitting, LASSO & RIDGE Regularization'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Read train-validation divergence as the overfitting fever
+  - Shrink with ridge and select with LASSO penalties
+  - Point lambda in the disciplining direction exactly
+concepts:
+  - overfitting diagnosis
+  - LASSO penalty
+  - RIDGE penalty
+prerequisites:
+  - m1_05_multivariate_gradient_matrix_method
+examRelevance: high
+tags:
+  - regularization
+  - overfitting
+---
 # Overfitting, LASSO & RIDGE Regularization
 
 **Memorizing the classroom versus learning the subject — train/val divergence as the fever thermometer, and two penalties that discipline wild weights.**

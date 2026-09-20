@@ -1,3 +1,26 @@
+---
+id: m3_03_backpropagation_algorithm
+courseCode: OECST614
+module: 3
+sequence: 3
+title: 'Backpropagation: Blame Travels Backwards'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Assemble deltas from activation derivatives exactly
+  - Blame weights with delta-times-input products
+  - Certificate post-update loss falls before moving on
+concepts:
+  - backpropagation
+  - delta assembly
+  - loss certificates
+prerequisites:
+  - m3_02_mlp_activations_forward
+examRelevance: high
+tags:
+  - neural-networks
+  - backpropagation
+---
 # Backpropagation: Blame Travels Backwards
 
 **Output error becomes weight blame via the chain rule — one neuron's full backward trace with loss falling on cue.**

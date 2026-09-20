@@ -1,3 +1,26 @@
+---
+id: m1_03_features_problem_loss_optimization
+courseCode: OECST614
+module: 1
+sequence: 3
+title: 'Features, Problem Formulation, Loss & Optimization'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Turn complaints into feature-target pairs with formulation kits
+  - Price mistakes with losses matched to the problem kind
+  - Walk downhill on training cost with scaled features
+concepts:
+  - problem formulation
+  - loss functions
+  - gradient optimization
+prerequisites:
+  - m1_01_ml_vs_traditional_paradigms
+examRelevance: high
+tags:
+  - foundations
+  - loss-functions
+---
 # Features, Problem Formulation, Loss & Optimization
 
 **Turning an engineering complaint into $(X, y)$, picking the loss that prices mistakes, and why training is just downhill walking on that price.**

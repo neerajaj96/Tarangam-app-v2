@@ -1,3 +1,26 @@
+---
+id: m3_05_id3_algorithm_worked
+courseCode: OECST614
+module: 3
+sequence: 5
+title: 'ID3 Algorithm: Growing the Tree by Hand'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Recurse greedily on max gain without backtracking
+  - Stop with majority leaves on pure-or-pure-enough subsets
+  - Read grown paths as classification rules
+concepts:
+  - ID3 recursion
+  - stopping discipline
+  - majority leaves
+prerequisites:
+  - m3_04_decision_trees_info_gain_ratio
+examRelevance: medium
+tags:
+  - decision-trees
+  - id3
+---
 # ID3 Algorithm: Growing the Tree by Hand
 
 **Greedy recursion to a full classifier — pick max gain, branch, recurse on pure-or-pure-enough subsets, stop with majority leaves.**

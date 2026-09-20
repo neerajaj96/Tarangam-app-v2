@@ -1,3 +1,27 @@
+---
+id: m4_05_resampling_bias_variance_tradeoff
+courseCode: OECST614
+module: 4
+sequence: 5
+title: 'Bootstrapping, Cross-Validation & Bias–Variance'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Resample honest error bars with bootstrap arithmetic
+  - Tile k folds so all data tests exactly once
+  - Prescribe from the tradeoff equation every model obeys
+concepts:
+  - bootstrapping
+  - cross-validation
+  - bias-variance tradeoff
+prerequisites:
+  - m2_03_overfitting_lasso_ridge
+  - m2_04_train_test_validation_splits
+examRelevance: medium
+tags:
+  - evaluation
+  - resampling
+---
 # Bootstrapping, Cross-Validation & Bias–Variance
 
 **Honest error bars from resampled data — the $63.2$ percent bootstrap, $k$-fold CV arithmetic, and the tradeoff equation every model obeys.**

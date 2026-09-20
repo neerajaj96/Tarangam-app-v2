@@ -1,3 +1,26 @@
+---
+id: m2_01_naive_bayes_classifier
+courseCode: OECST614
+module: 2
+sequence: 1
+title: 'Naive Bayes: Independence That Pays'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Flip conditionals with Bayes rule into class scores
+  - Multiply independent-given-class likelihoods honestly
+  - Smooth unseen words so zeros never veto
+concepts:
+  - naive Bayes rule
+  - conditional independence
+  - smoothing
+prerequisites:
+  - m1_02_mle_map_bayesian_estimation
+examRelevance: high
+tags:
+  - classification
+  - naive-bayes
+---
 # Naive Bayes: Independence That Pays
 
 **Flip the conditional with Bayes' rule, pretend features are independent given the class, multiply — and a spam filter you can compute by hand.**

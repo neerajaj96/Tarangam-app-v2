@@ -1,3 +1,25 @@
+---
+id: m4_02_kmeans_partitional_clustering
+courseCode: OECST614
+module: 4
+sequence: 2
+title: 'K-Means & Partitional Clustering'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Alternate assign-and-move until nobody switches teams
+  - Certificate freezes with falling SSE on cue
+  - Pick k with elbows, scaling and shape-limit honesty
+concepts:
+  - k-means algorithm
+  - Lloyd's loop
+  - elbow method
+prerequisites: []
+examRelevance: high
+tags:
+  - clustering
+  - kmeans
+---
 # K-Means & Partitional Clustering
 
 **Fix $k$, alternate assign-and-move until nobody switches teams — one fully traced convergence with SSE falling on cue.**

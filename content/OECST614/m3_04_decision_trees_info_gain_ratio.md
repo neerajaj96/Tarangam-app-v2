@@ -1,3 +1,25 @@
+---
+id: m3_04_decision_trees_info_gain_ratio
+courseCode: OECST614
+module: 3
+sequence: 4
+title: 'Decision Trees: Entropy, Gain & Gain Ratio'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Measure impurity as surprise with entropy extremes
+  - Split on information gain with log discipline
+  - Dethrone cheat attributes with gain-ratio correction
+concepts:
+  - entropy
+  - information gain
+  - gain ratio
+prerequisites: []
+examRelevance: high
+tags:
+  - decision-trees
+  - entropy
+---
 # Decision Trees: Entropy, Gain & Gain Ratio
 
 **Impurity as surprise, splits as surprise-removal — entropy arithmetic, information gain, and why gain ratio dethrones cheat attributes.**

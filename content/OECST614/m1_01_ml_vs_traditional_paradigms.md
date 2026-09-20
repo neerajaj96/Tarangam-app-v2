@@ -1,3 +1,25 @@
+---
+id: m1_01_ml_vs_traditional_paradigms
+courseCode: OECST614
+module: 1
+sequence: 1
+title: ML vs Traditional Programming & the Four Paradigms
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Contrast hand-written rules against data-learned rules exactly
+  - Test problems with Mitchell's task, experience and performance frame
+  - Sort engineer-style problems into all four paradigms
+concepts:
+  - Mitchell's T/E/P frame
+  - learning paradigms
+  - universal workflow
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - paradigms
+---
 # ML vs Traditional Programming & the Four Paradigms
 
 **Rules written by hand versus rules learned from data — Mitchell's T/E/P test, the four paradigms, and spotting each one in engineer-style problems.**

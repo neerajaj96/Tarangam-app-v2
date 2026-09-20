@@ -1,3 +1,26 @@
+---
+id: m1_04_linear_regression_single_variable
+courseCode: OECST614
+module: 1
+sequence: 4
+title: Linear Regression With One Variable
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Fit least-squares slopes from co-movement over spread
+  - Pin intercepts through mean-point discipline
+  - Certify fits with zero-sum residuals before predicting
+concepts:
+  - least-squares line
+  - slope-intercept formulas
+  - residual checks
+prerequisites:
+  - m1_03_features_problem_loss_optimization
+examRelevance: high
+tags:
+  - regression
+  - least-squares
+---
 # Linear Regression With One Variable
 
 **The least-squares line from scratch — means, slope as co-movement over spread, intercept pinning, and residuals that must sum to zero.**

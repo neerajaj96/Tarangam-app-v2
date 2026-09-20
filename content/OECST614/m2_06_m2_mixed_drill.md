@@ -1,3 +1,29 @@
+---
+id: m2_06_m2_mixed_drill
+courseCode: OECST614
+module: 2
+sequence: 6
+title: 'M2 Drill: Classify, Regularize & Measure'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint Bayes scores, neighbour votes and penalties
+  - Keep bucket discipline with tests touched once
+  - Price full metric sets without imbalance traps
+concepts:
+  - classify-regularize-measure chain
+  - bucket discipline
+prerequisites:
+  - m2_01_naive_bayes_classifier
+  - m2_02_knn_lazy_learning
+  - m2_03_overfitting_lasso_ridge
+  - m2_04_train_test_validation_splits
+  - m2_05_classification_regression_metrics
+examRelevance: high
+tags:
+  - evaluation
+  - m2-drill
+---
 # M2 Drill: Classify, Regularize & Measure
 
 **Bayes scores, neighbour votes, penalty arithmetic, bucket discipline, and full metric sets — M2 as reflexes.**

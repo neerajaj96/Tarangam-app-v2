@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **391**
-- Pending: **41**
-- Coverage: **90.51%** (tracked by `npm run check`)
+- Migrated: **415**
+- Pending: **17**
+- Coverage: **96.06%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - OECST614 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - GXEST605 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST631 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST637 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -35,23 +36,52 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. GXEST605 — Design Thinking and Product Development (started — see step 1)
-   2. PECST631 — Software Testing (started — see step 1)
-   3. PECST637 — Fundamentals of Cryptography (started — see step 1)
-   4. PECST632 — Deep Learning (started — see step 1)
-   5. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
-   6. PCCST602 — Advanced Computing Systems (started — see step 1)
-   7. PCCST601 — Compiler Design (started — see step 1)
-   8. PECST522 — Artificial Intelligence (started — see step 1)
-   9. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   10. PCCST503 — Machine Learning (started — see step 1)
-   11. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   12. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   13. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   14. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   15. PCCST501 — Computer Networks (started — see step 1)
-   16. OECST614 — Machine Learning for Engineers
+   1. OECST614 — Machine Learning for Engineers (started — see step 1)
+   2. GXEST605 — Design Thinking and Product Development (started — see step 1)
+   3. PECST631 — Software Testing (started — see step 1)
+   4. PECST637 — Fundamentals of Cryptography (started — see step 1)
+   5. PECST632 — Deep Learning (started — see step 1)
+   6. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
+   7. PCCST602 — Advanced Computing Systems (started — see step 1)
+   8. PCCST601 — Compiler Design (started — see step 1)
+   9. PECST522 — Artificial Intelligence (started — see step 1)
+   10. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   11. PCCST503 — Machine Learning (started — see step 1)
+   12. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   13. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   14. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   15. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   16. PCCST501 — Computer Networks (started — see step 1)
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## OECST614 — Machine Learning for Engineers (24/24 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 ML Basics & Regression | 01 | `m1_01_ml_vs_traditional_paradigms.md` | `m1_01_ml_vs_traditional_paradigms` | migrated |
+| M1 ML Basics & Regression | 02 | `m1_02_mle_map_bayesian_estimation.md` | `m1_02_mle_map_bayesian_estimation` | migrated |
+| M1 ML Basics & Regression | 03 | `m1_03_features_problem_loss_optimization.md` | `m1_03_features_problem_loss_optimization` | migrated |
+| M1 ML Basics & Regression | 04 | `m1_04_linear_regression_single_variable.md` | `m1_04_linear_regression_single_variable` | migrated |
+| M1 ML Basics & Regression | 05 | `m1_05_multivariate_gradient_matrix_method.md` | `m1_05_multivariate_gradient_matrix_method` | migrated |
+| M1 ML Basics & Regression | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | migrated |
+| M2 Classification & Evaluation | 01 | `m2_01_naive_bayes_classifier.md` | `m2_01_naive_bayes_classifier` | migrated |
+| M2 Classification & Evaluation | 02 | `m2_02_knn_lazy_learning.md` | `m2_02_knn_lazy_learning` | migrated |
+| M2 Classification & Evaluation | 03 | `m2_03_overfitting_lasso_ridge.md` | `m2_03_overfitting_lasso_ridge` | migrated |
+| M2 Classification & Evaluation | 04 | `m2_04_train_test_validation_splits.md` | `m2_04_train_test_validation_splits` | migrated |
+| M2 Classification & Evaluation | 05 | `m2_05_classification_regression_metrics.md` | `m2_05_classification_regression_metrics` | migrated |
+| M2 Classification & Evaluation | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | migrated |
+| M3 Neural Nets & Trees | 01 | `m3_01_perceptron_learning.md` | `m3_01_perceptron_learning` | migrated |
+| M3 Neural Nets & Trees | 02 | `m3_02_mlp_activations_forward.md` | `m3_02_mlp_activations_forward` | migrated |
+| M3 Neural Nets & Trees | 03 | `m3_03_backpropagation_algorithm.md` | `m3_03_backpropagation_algorithm` | migrated |
+| M3 Neural Nets & Trees | 04 | `m3_04_decision_trees_info_gain_ratio.md` | `m3_04_decision_trees_info_gain_ratio` | migrated |
+| M3 Neural Nets & Trees | 05 | `m3_05_id3_algorithm_worked.md` | `m3_05_id3_algorithm_worked` | migrated |
+| M3 Neural Nets & Trees | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | migrated |
+| M4 Clustering & Ensembles | 01 | `m4_01_similarity_hierarchical_clustering.md` | `m4_01_similarity_hierarchical_clustering` | migrated |
+| M4 Clustering & Ensembles | 02 | `m4_02_kmeans_partitional_clustering.md` | `m4_02_kmeans_partitional_clustering` | migrated |
+| M4 Clustering & Ensembles | 03 | `m4_03_pca_dimensionality_reduction.md` | `m4_03_pca_dimensionality_reduction` | migrated |
+| M4 Clustering & Ensembles | 04 | `m4_04_mds_ensemble_bagging_boosting.md` | `m4_04_mds_ensemble_bagging_boosting` | migrated |
+| M4 Clustering & Ensembles | 05 | `m4_05_resampling_bias_variance_tradeoff.md` | `m4_05_resampling_bias_variance_tradeoff` | migrated |
+| M4 Clustering & Ensembles | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | migrated |
 
 ## GXEST605 — Design Thinking and Product Development (24/24 migrated)
 
@@ -535,32 +565,3 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## OECST614 — Machine Learning for Engineers (0/24 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 ML Basics & Regression | 01 | `m1_01_ml_vs_traditional_paradigms.md` | `m1_01_ml_vs_traditional_paradigms` | pending |
-| M1 ML Basics & Regression | 02 | `m1_02_mle_map_bayesian_estimation.md` | `m1_02_mle_map_bayesian_estimation` | pending |
-| M1 ML Basics & Regression | 03 | `m1_03_features_problem_loss_optimization.md` | `m1_03_features_problem_loss_optimization` | pending |
-| M1 ML Basics & Regression | 04 | `m1_04_linear_regression_single_variable.md` | `m1_04_linear_regression_single_variable` | pending |
-| M1 ML Basics & Regression | 05 | `m1_05_multivariate_gradient_matrix_method.md` | `m1_05_multivariate_gradient_matrix_method` | pending |
-| M1 ML Basics & Regression | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | pending |
-| M2 Classification & Evaluation | 01 | `m2_01_naive_bayes_classifier.md` | `m2_01_naive_bayes_classifier` | pending |
-| M2 Classification & Evaluation | 02 | `m2_02_knn_lazy_learning.md` | `m2_02_knn_lazy_learning` | pending |
-| M2 Classification & Evaluation | 03 | `m2_03_overfitting_lasso_ridge.md` | `m2_03_overfitting_lasso_ridge` | pending |
-| M2 Classification & Evaluation | 04 | `m2_04_train_test_validation_splits.md` | `m2_04_train_test_validation_splits` | pending |
-| M2 Classification & Evaluation | 05 | `m2_05_classification_regression_metrics.md` | `m2_05_classification_regression_metrics` | pending |
-| M2 Classification & Evaluation | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | pending |
-| M3 Neural Nets & Trees | 01 | `m3_01_perceptron_learning.md` | `m3_01_perceptron_learning` | pending |
-| M3 Neural Nets & Trees | 02 | `m3_02_mlp_activations_forward.md` | `m3_02_mlp_activations_forward` | pending |
-| M3 Neural Nets & Trees | 03 | `m3_03_backpropagation_algorithm.md` | `m3_03_backpropagation_algorithm` | pending |
-| M3 Neural Nets & Trees | 04 | `m3_04_decision_trees_info_gain_ratio.md` | `m3_04_decision_trees_info_gain_ratio` | pending |
-| M3 Neural Nets & Trees | 05 | `m3_05_id3_algorithm_worked.md` | `m3_05_id3_algorithm_worked` | pending |
-| M3 Neural Nets & Trees | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | pending |
-| M4 Clustering & Ensembles | 01 | `m4_01_similarity_hierarchical_clustering.md` | `m4_01_similarity_hierarchical_clustering` | pending |
-| M4 Clustering & Ensembles | 02 | `m4_02_kmeans_partitional_clustering.md` | `m4_02_kmeans_partitional_clustering` | pending |
-| M4 Clustering & Ensembles | 03 | `m4_03_pca_dimensionality_reduction.md` | `m4_03_pca_dimensionality_reduction` | pending |
-| M4 Clustering & Ensembles | 04 | `m4_04_mds_ensemble_bagging_boosting.md` | `m4_04_mds_ensemble_bagging_boosting` | pending |
-| M4 Clustering & Ensembles | 05 | `m4_05_resampling_bias_variance_tradeoff.md` | `m4_05_resampling_bias_variance_tradeoff` | pending |
-| M4 Clustering & Ensembles | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |

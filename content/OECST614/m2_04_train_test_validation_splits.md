@@ -1,3 +1,25 @@
+---
+id: m2_04_train_test_validation_splits
+courseCode: OECST614
+module: 2
+sequence: 4
+title: 'Train, Test & Validation Splits Done Right'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Fit on train, tune on validation and judge once on test
+  - Stop test-reuse leaks before they flatter scores
+  - Stratify rare classes with seventy-fifteen-fifteen defaults
+concepts:
+  - data splits
+  - test leakage
+  - stratification
+prerequisites: []
+examRelevance: medium
+tags:
+  - evaluation
+  - data-splits
+---
 # Train, Test & Validation Splits Done Right
 
 **Three buckets with three jobs — fit on train, tune on validation, judge once on test — plus stratification so rare classes survive the split.**

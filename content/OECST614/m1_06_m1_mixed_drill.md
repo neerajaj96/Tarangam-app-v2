@@ -1,3 +1,29 @@
+---
+id: m1_06_m1_mixed_drill
+courseCode: OECST614
+module: 1
+sequence: 6
+title: 'M1 Drill: Basics to Regression in One Sitting'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint paradigms, estimates, prices, fits and descents
+  - Certify with bracket checks, zero-sum residuals and falling costs
+  - Keep basics-to-regression chains straight at pace
+concepts:
+  - basics-to-regression chain
+  - fit certificates
+prerequisites:
+  - m1_01_ml_vs_traditional_paradigms
+  - m1_02_mle_map_bayesian_estimation
+  - m1_03_features_problem_loss_optimization
+  - m1_04_linear_regression_single_variable
+  - m1_05_multivariate_gradient_matrix_method
+examRelevance: high
+tags:
+  - foundations
+  - m1-drill
+---
 # M1 Drill: Basics to Regression in One Sitting
 
 **Paradigms, MLE/MAP, losses, single-slope fits, and one gradient step — M1 as reflexes.**

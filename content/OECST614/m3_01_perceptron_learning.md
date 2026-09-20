@@ -1,3 +1,26 @@
+---
+id: m3_01_perceptron_learning
+courseCode: OECST614
+module: 3
+sequence: 1
+title: 'Perceptron: The Learning Neuron'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Vote with one thresholded weighted sum exactly
+  - Correct genuine mistakes with update arithmetic
+  - Admit separable-only limits with XOR honesty
+concepts:
+  - perceptron update
+  - mistake-driven learning
+  - linear separability
+prerequisites:
+  - m1_03_features_problem_loss_optimization
+examRelevance: medium
+tags:
+  - neural-networks
+  - perceptron
+---
 # Perceptron: The Learning Neuron
 
 **One weighted voter, one threshold, one mistake-driven update — the mistake-correction loop that converges on any separable data.**

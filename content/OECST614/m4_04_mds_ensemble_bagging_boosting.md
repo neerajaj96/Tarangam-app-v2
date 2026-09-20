@@ -1,3 +1,26 @@
+---
+id: m4_04_mds_ensemble_bagging_boosting
+courseCode: OECST614
+module: 4
+sequence: 4
+title: 'MDS, Bagging & Boosting Ensembles'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Compress geometry with MDS distance preservation
+  - Vote away variance with bootstrap bagging
+  - Chain away bias with AdaBoost alpha weights
+concepts:
+  - multidimensional scaling
+  - bagging
+  - boosting
+prerequisites:
+  - m4_01_similarity_hierarchical_clustering
+examRelevance: medium
+tags:
+  - ensembles
+  - mds-bagging-boosting
+---
 # MDS, Bagging & Boosting Ensembles
 
 **Keep the distances, multiply the models — MDS compresses by preserving geometry, bagging votes away variance, boosting chains away bias.**
