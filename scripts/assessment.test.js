@@ -479,10 +479,10 @@ describe('live 432-topic repository', () => {
     assert.equal(manifest.topics.length, 432);
     assert.deepEqual(Assessment.validateAssessmentBank(liveBank, manifest), []);
     const coverage = Assessment.getAssessmentCoverage(liveBank, manifest);
-    assert.equal(coverage.totalQuestions, 12);
-    assert.equal(coverage.coveredCount, 6);
+    assert.equal(coverage.totalQuestions, 140);
+    assert.equal(coverage.coveredCount, 70);
     assert.equal(coverage.totalTopics, 432);
-    assert.equal(coverage.uncoveredTopics.length, 426);
+    assert.equal(coverage.uncoveredTopics.length, 362);
     assert.equal(
       JSON.stringify(Assessment.getAssessmentCoverage(liveBank, manifest)),
       JSON.stringify(Assessment.getAssessmentCoverage(liveBank, manifest))
