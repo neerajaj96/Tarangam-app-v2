@@ -46,6 +46,7 @@ import {
   onJourneyProgressChanged,
 } from './learning-journey.js';
 import { buildTopicExamModel } from './exam-readiness.js';
+import { buildTopicAnalyticsContribution } from './learning-analytics.js';
 import {
   getReviewStateForTopic,
   explainReviewReason,
@@ -119,6 +120,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
   const unfinishedUnlockCount = getUnfinishedDescendants(manifest, getStatus, courseCode, topicId).length;
   const exam = buildTopicExamModel(manifest, getStatus, courseCode, topicId);
   const getTimestamp = typeof options.getTimestamp === 'function' ? options.getTimestamp : null;
+  const analytics = buildTopicAnalyticsContribution(manifest, getStatus, getTimestamp, courseCode, topicId, options.now);
   const reviewState = getReviewStateForTopic(manifest, getStatus, getTimestamp, courseCode, topicId, options.now);
   const review = {
     state: reviewState.state,
@@ -179,6 +181,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     unfinishedUnlockCount,
     exam,
     review,
+    analytics,
   };
 }
 
@@ -298,6 +301,21 @@ export function renderStudyContext(model) {
       + when + dueLine + examLine + `</div>`;
   })();
 
+  const analyticsBlock = (() => {
+    const a = model.analytics;
+    if (!a) return '';
+    const examLine = a.contributesToExam
+      ? `Contributes to exam readiness (🎯 ${esc(a.examRelevance)}).`
+      : 'Does not directly contribute to exam readiness.';
+    const reviewLine = `Review state: ${esc(a.reviewState.replace(/_/g, ' '))}.`;
+    return `<div class="ts-block ts-analytics"><h3>Analytics</h3>`
+      + `<p class="xp-note">Course ${esc(a.courseCompletion.completed)}/${esc(a.courseCompletion.total)} complete (${esc(a.courseCompletion.percent)}%) · `
+      + `module ${esc(a.moduleCompletion.completed)}/${esc(a.moduleCompletion.total)} complete (${esc(a.moduleCompletion.percent)}%) · `
+      + `about ${esc(a.moduleRemainingMinutes)} min left in this module.</p>`
+      + `<p class="xp-note">${examLine} ${reviewLine}</p>`
+      + `</div>`;
+  })();
+
   return `<div class="ts-context-head"><h2>Study context</h2>
     <div class="topic-badges">${chips.join('')}</div></div>
   <div class="ts-actions">
@@ -311,6 +329,7 @@ export function renderStudyContext(model) {
   </div>
   ${examBlock}
   ${reviewBlock}
+  ${analyticsBlock}
   <details class="ts-details"><summary>Dependency chain (${model.chain.length} topics · ancestors ${model.ancestorCompletion.completed}/${model.ancestorCompletion.total} complete)</summary>
     <ol class="ts-list">${chainItems}</ol></details>
   <details class="ts-details"><summary>Dependents (${model.dependents.length})</summary>

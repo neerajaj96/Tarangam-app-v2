@@ -10,7 +10,9 @@
  * routing system. Explorer never duplicates the Dashboard: it exposes
  * learner journey information per card/detail (status, ready state,
  * prerequisite completion, remaining dependencies, current recommendation)
- * as informational context only. Nothing locks.
+ * plus descriptive analytics indicators (course/module completion, remaining
+ * minutes, review counts) from the canonical analytics module as
+ * informational context only. Nothing locks.
  */
 import * as Data from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
@@ -37,6 +39,28 @@ import {
   filterTopicsByReview,
   getReviewStateForTopic,
 } from './revision.js';
+import { getCourseAnalytics, getModuleAnalytics } from './learning-analytics.js';
+
+// Pure analytics indicators for course/module views, reusing the canonical
+// analytics module (no duplicated calculations). Unknown courses/modules
+// yield null (never throw).
+export function getExplorerCourseAnalytics(manifest, getStatus, getTimestamp, courseCode, now) {
+  if (!manifest || !courseCode) return null;
+  try {
+    return getCourseAnalytics(manifest, getStatus, getTimestamp, courseCode, now);
+  } catch {
+    return null;
+  }
+}
+
+export function getExplorerModuleAnalytics(manifest, getStatus, getTimestamp, courseCode, module, now) {
+  if (!manifest || !courseCode || module === 'all' || module === undefined || module === null) return null;
+  try {
+    return getModuleAnalytics(manifest, getStatus, getTimestamp, courseCode, Number(module), now);
+  } catch {
+    return null;
+  }
+}
 
 export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter, REVIEW_FILTERS, normalizeReviewFilter };
 
@@ -224,7 +248,9 @@ function renderCourses() {
   const names = new Map(state.manifest.topics.map((t) => [t.courseCode, t.courseName || t.courseCode]));
   select.innerHTML = codes.map((c) => {
     const n = Data.getCourseTopics(state.manifest, c).length;
-    return `<option value="${esc(c)}">${esc(names.get(c) || c)} (${n})</option>`;
+    const a = getExplorerCourseAnalytics(state.manifest, statusReader(), timestampReader(), c, Date.now());
+    const indicator = a ? ` — ${a.percent}% · about ${a.remainingMinutes} min left` : '';
+    return `<option value="${esc(c)}">${esc(names.get(c) || c)} (${n})${esc(indicator)}</option>`;
   }).join('');
   if (!state.course || !codes.includes(state.course)) state.course = codes[0] || null;
   select.value = state.course || '';
@@ -238,9 +264,11 @@ function renderModules() {
     if (!names.has(t.module)) names.set(t.module, t.moduleName || `Module ${t.module}`);
   }
   const countFor = (m) => Data.getModuleTopics(state.manifest, state.course, m).length;
-  select.innerHTML = `<option value="all">All modules</option>` + mods.map((m) =>
-    `<option value="${m}">M${m} · ${esc(names.get(m) || `Module ${m}`)} (${countFor(m)})</option>`
-  ).join('');
+  select.innerHTML = `<option value="all">All modules</option>` + mods.map((m) => {
+    const a = getExplorerModuleAnalytics(state.manifest, statusReader(), timestampReader(), state.course, m, Date.now());
+    const indicator = a ? ` — ${a.percent}% · ${a.reviewDue + a.reviewOverdue} due review` : '';
+    return `<option value="${m}">M${m} · ${esc(names.get(m) || `Module ${m}`)} (${countFor(m)})${esc(indicator)}</option>`;
+  }).join('');
   if (state.module !== 'all' && !mods.includes(Number(state.module))) state.module = 'all';
   select.value = state.module;
 }

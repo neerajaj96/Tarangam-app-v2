@@ -2,10 +2,10 @@
  * Tarangam Learner Dashboard logic (browser ES module, no dependencies).
  *
  * Pure breakdown helpers (importable in Node for tests) plus the
- * browser UI: overall/course/module progress, Continue Learning,
- * Current Work, Ready to Learn, Recently Completed, completion toggles,
- * and explicit per-course reset. The unified Learning Journey model
- * (assets/learning-journey.js) over the canonical Topic Intelligence
+ * browser UI: overall/course/module progress, Learning Analytics, Continue
+ * Learning, Current Work, Ready to Learn, Recently Completed, completion
+ * toggles, and explicit per-course reset. The unified Learning Journey
+ * model (assets/learning-journey.js) over the canonical Topic Intelligence
  * Layer drives every recommendation — no second progress system, no
  * backend, no AI, no gamification.
  */
@@ -23,6 +23,7 @@ import {
   buildCourseExamReadinessList,
 } from './exam-readiness.js';
 import { buildRevisionModel, REVIEW_DUE_DAYS } from './revision.js';
+import { buildLearningAnalytics, getModuleAnalyticsList } from './learning-analytics.js';
 
 export { PROGRESS_CHANGED_EVENT };
 
@@ -38,6 +39,13 @@ export function buildDashboardExamModel(manifest, getStatus) {
 // queue stays empty (never fabricated).
 export function buildDashboardReviewModel(manifest, getStatus, getTimestamp = null, now) {
   return buildRevisionModel(manifest, getStatus, getTimestamp, now);
+}
+
+// Pure analytics derivation for tests and UI: manifest + status reader +
+// timestamp reader + injected now -> descriptive analytics snapshot.
+// Observational only: no recommendations, predictions, or scores.
+export function buildDashboardAnalyticsModel(manifest, getStatus, getTimestamp = null, now) {
+  return buildLearningAnalytics(manifest, getStatus, getTimestamp, now);
 }
 
 // Pure journey derivation for tests and UI: manifest + status reader +
@@ -150,6 +158,7 @@ async function init() {
 
   const renderAll = () => {
     renderHero();
+    renderAnalytics();
     renderContinue();
     renderExam();
     renderReview();
@@ -184,6 +193,22 @@ async function init() {
     $('db-hero-counts').textContent =
       `${o.completed} completed · ${o.inProgress} in progress · ${o.notStarted} not started · ${o.total} total`;
     $('db-hero-bar').innerHTML = bar(o.percent);
+  }
+
+  function renderAnalytics() {
+    const box = $('db-analytics');
+    if (!box) return;
+    const a = buildLearningAnalytics(manifest, statusReader, timestampReader, Date.now());
+    const courseLines = a.courses.map((c) =>
+      `<div class="db-module"><span>${esc(c.courseCode)} · ${esc(c.courseName)}</span>`
+      + `<span class="db-course-nums">${c.completed} / ${c.total} · ${c.percent}% coverage</span></div>`
+    ).join('');
+    box.innerHTML = `<h2>Learning analytics</h2>
+      <div class="xp-path-next"><span class="xp-path-title">${esc(a.summary)}</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">${a.totals.completed} completed · ${a.totals.inProgress} in progress · ${a.totals.notStarted} remaining · about ${a.studyTime.remainingMinutes} min left to cover</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Exam readiness ${a.examReadiness.readinessPercent}% · review due ${a.reviewDue} · overdue ${a.reviewOverdue}</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Where you stand: ${esc(a.activity.message)}</span></div>
+      <div class="xp-path-row" style="flex-direction:column;align-items:stretch;"><span class="xp-path-label">Course coverage:</span>${courseLines}</div>`;
   }
 
   function topicRow(topic, withToggle) {
@@ -428,12 +453,22 @@ async function init() {
     const btn = document.querySelector(`[data-course="${courseCode}"]`);
     if (btn) btn.setAttribute('aria-expanded', 'true');
     host.hidden = false;
-    host.innerHTML = buildModuleBreakdown(manifest, store, courseCode).map((m) => `
+    const analyticsByModule = new Map(
+      getModuleAnalyticsList(manifest, statusReader, timestampReader, courseCode, Date.now())
+        .map((m) => [m.module, m])
+    );
+    host.innerHTML = buildModuleBreakdown(manifest, store, courseCode).map((m) => {
+      const a = analyticsByModule.get(m.module);
+      const meta = a
+        ? ` · about ${a.remainingMinutes} min left · review due ${a.reviewDue} · overdue ${a.reviewOverdue}`
+        : '';
+      return `
       <div class="db-module">
         <span>M${esc(m.module)} · ${esc(m.moduleName)}</span>
-        <span class="db-course-nums">${m.completed} / ${m.total} · ${m.percent}%</span>
+        <span class="db-course-nums">${m.completed} / ${m.total} · ${m.percent}%${esc(meta)}</span>
       </div>
-      <div class="db-course-bar">${bar(m.percent)}</div>`).join('');
+      <div class="db-course-bar">${bar(m.percent)}</div>`;
+    }).join('');
   }
 
   function renderResetOptions(rows) {
@@ -452,6 +487,7 @@ async function init() {
       store.clearCourseState(code);
       emitJourneyProgressChanged({ courseCode: code, topicId: null, source: 'dashboard-reset' });
       renderHero();
+      renderAnalytics();
       renderContinue();
       renderExam();
       renderReview();
@@ -462,6 +498,7 @@ async function init() {
 
   $('db-status').textContent = `${manifest.topics.length} topics · your progress is stored only in this browser`;
   renderHero();
+  renderAnalytics();
   renderContinue();
   renderExam();
   renderReview();

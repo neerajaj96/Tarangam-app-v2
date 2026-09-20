@@ -76,6 +76,14 @@ import {
 // through the journey without duplicating logic.
 export { buildRevisionModel, getReviewDue, getReviewOverdue, getExamReviewDue, getNextReviewTopic, getReviewCounts };
 
+import { buildLearningAnalytics } from './learning-analytics.js';
+
+// Analytics is an observational layer over recorded facts (see
+// assets/learning-analytics.js): it never recommends, predicts, or scores
+// intelligence. Re-exported so surfaces read analytics through the journey
+// without duplicating logic.
+export { buildLearningAnalytics };
+
 // --- Recommendation reasons (stable contract) -------------------------------
 
 export const REASON_CONTINUE_IN_PROGRESS = 'continue_in_progress';
@@ -371,6 +379,10 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
   const reviewNow = options.now;
   const revision = buildRevisionModel(manifest, safeStatus, getTimestamp, reviewNow);
 
+  // Descriptive analytics ride along as an observational layer: the normal,
+  // exam, and review recommendations above are untouched.
+  const analytics = buildLearningAnalytics(manifest, safeStatus, getTimestamp, reviewNow);
+
   return {
     inProgress,
     ready,
@@ -396,6 +408,7 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     examReviewDue: revision.examReviewDue,
     reviewCounts: revision.counts,
     revision,
+    analytics,
   };
 }
 

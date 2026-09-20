@@ -379,7 +379,7 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'assets/revision.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'scripts/revision.js', 'style.css']) {
+  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'assets/revision.js', 'assets/learning-analytics.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'scripts/revision.js', 'scripts/learning-analytics.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
   }
   if (fs.existsSync('explorer.html')) {
@@ -390,7 +390,7 @@ if (fs.existsSync('dist')) {
   }
   if (fs.existsSync('dashboard.html')) {
     const html = fs.readFileSync('dashboard.html', 'utf-8');
-    for (const ref of ['id="db-continue"', 'id="db-exam"', 'id="db-review"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
+    for (const ref of ['id="db-analytics"', 'id="db-continue"', 'id="db-exam"', 'id="db-review"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
       if (!html.includes(ref)) fail(`journey: dashboard.html is missing unified journey section ${ref}`);
     }
   }
@@ -430,9 +430,26 @@ if (fs.existsSync('dist')) {
     if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/assets/learning-analytics.js', 'dist/data/topic-manifest.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
+  }
+  if (fs.existsSync('assets/dashboard.js')) {
+    const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
+    if (!js.includes('buildLearningAnalytics') && !js.includes('learning-analytics.js')) fail('analytics: assets/dashboard.js does not use the canonical analytics module');
+    if (!js.includes('db-analytics') && !js.includes('renderAnalytics')) fail('analytics: assets/dashboard.js does not render the analytics section');
+  }
+  if (fs.existsSync('assets/explorer.js')) {
+    const js = fs.readFileSync('assets/explorer.js', 'utf-8');
+    if (!js.includes('getExplorerCourseAnalytics') && !js.includes('learning-analytics.js')) fail('analytics: assets/explorer.js does not use the canonical analytics module');
+  }
+  if (fs.existsSync('assets/topic-study-context.js')) {
+    const js = fs.readFileSync('assets/topic-study-context.js', 'utf-8');
+    if (!js.includes('buildTopicAnalyticsContribution')) fail('analytics: assets/topic-study-context.js does not surface the analytics contribution');
+  }
+  if (fs.existsSync('assets/learning-journey.js')) {
+    const js = fs.readFileSync('assets/learning-journey.js', 'utf-8');
+    if (!js.includes('buildLearningAnalytics')) fail('analytics: assets/learning-journey.js does not expose the analytics object');
   }
   if (fs.existsSync('assets/dashboard.js')) {
     const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
@@ -513,6 +530,27 @@ if (fs.existsSync('dist')) {
     }
     if (/retention\s+model|forgetting\s+curve\s+fit|predict\w*\s+(retention|recall|memory)/i.test(js)) fail('review: assets/revision.js must not add predictive retention models');
     if (/xps\b|experience points/i.test(js)) fail('review: assets/revision.js must not add gamification');
+  }
+}
+
+// 12. Canonical deterministic learning analytics layer: descriptive math
+// over recorded facts — no AI/ML, no prediction, no mastery scores, no
+// gamification, no backend, no second recommendation engine.
+{
+  if (!fs.existsSync('assets/learning-analytics.js')) {
+    fail('analytics: expected source file assets/learning-analytics.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/learning-analytics.js', 'utf-8');
+    for (const token of ['buildLearningAnalytics', 'getCourseAnalytics', 'getModuleAnalytics', 'getCoverageAreas', 'buildTopicAnalyticsContribution', 'getTopicDescriptiveState']) {
+      if (!js.includes(token)) fail(`analytics: assets/learning-analytics.js is missing "${token}"`);
+    }
+    if (!js.includes("from './topic-intelligence.js'")) fail('analytics: assets/learning-analytics.js must build on the canonical Topic Intelligence Layer');
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+      if (js.toLowerCase().includes(banned)) fail(`analytics: assets/learning-analytics.js must stay descriptive and static-first (found "${banned}")`);
+    }
+    if (/\bmastery[A-Z_]|["']mastery["']\s*:|mastery\s*=\s*\d/i.test(js)) fail('analytics: assets/learning-analytics.js must not add artificial mastery scores');
+    if (/predict\w*\s+(score|retention|grade|exam\s+score|model)/i.test(js)) fail('analytics: assets/learning-analytics.js must not add predictions');
+    if (/\bxp\b|\blevels\b.*streak|experience points/i.test(js)) fail('analytics: assets/learning-analytics.js must not add gamification');
   }
 }
     if (/xps\b|experience points/i.test(js)) fail('exam: assets/exam-readiness.js must not add gamification');

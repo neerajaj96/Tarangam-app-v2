@@ -320,7 +320,11 @@ describe('topic study context integration', () => {
     assert.match(renderStudyContext(done), /due for review/);
     const todo = buildStudyContextModel(fixture, () => 'not_started', 'C1', 'm1_02_b', { getTimestamp: () => NOW - 30 * DAY, now: NOW });
     assert.equal(todo.review.state, 'not_applicable');
-    assert.ok(!renderStudyContext(todo).includes('due for review'));
+    // Unfinished topics render no Review status block (the Analytics block
+    // only names the descriptive state, never a due claim).
+    assert.ok(!renderStudyContext(todo).includes('Review status'));
+    assert.equal(todo.analytics.reviewState, 'not_started');
+    assert.equal(todo.analytics.isDueForReview, false);
   });
 });
 

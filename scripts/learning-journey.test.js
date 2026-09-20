@@ -329,8 +329,11 @@ describe('cross-course boundaries', () => {
 describe('deterministic ordering', () => {
   it('returns identical journey snapshots across runs', () => {
     const reader = readerFrom({ 'C1/m1_01_a': 'completed' });
-    const first = JSON.stringify(Journey.buildJourneyModel(fixture, reader));
-    const second = JSON.stringify(Journey.buildJourneyModel(fixture, reader));
+    // Fixed clock: time-dependent analytics/review fields must not use the
+    // real Date.now() when asserting determinism.
+    const opts = { now: 1700000000000 };
+    const first = JSON.stringify(Journey.buildJourneyModel(fixture, reader, opts));
+    const second = JSON.stringify(Journey.buildJourneyModel(fixture, reader, opts));
     assert.equal(first, second);
     assert.deepEqual(
       ids(Journey.buildJourneyModel(fixture, reader).ready),
