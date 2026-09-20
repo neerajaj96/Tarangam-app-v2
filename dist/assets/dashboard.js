@@ -3,12 +3,35 @@
  *
  * Pure breakdown helpers (importable in Node for tests) plus the
  * browser UI: overall/course/module progress, Continue Learning,
- * in-progress and ready lists, completion toggles, and explicit
- * per-course reset. All progress math delegates to assets/learner-state.js
- * over the static manifest — no second progress system, no backend.
+ * Current Work, Ready to Learn, Recently Completed, completion toggles,
+ * and explicit per-course reset. The unified Learning Journey model
+ * (assets/learning-journey.js) over the canonical Topic Intelligence
+ * Layer drives every recommendation — no second progress system, no
+ * backend, no AI, no gamification.
  */
 import * as Data from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
+import {
+  PROGRESS_CHANGED_EVENT,
+  emitJourneyProgressChanged,
+  onJourneyProgressChanged,
+  buildDashboardModel,
+  buildJourneyModel,
+} from './learning-journey.js';
+
+export { PROGRESS_CHANGED_EVENT };
+
+// Pure journey derivation for tests and UI: manifest + status reader +
+// optional timestamp reader -> full dashboard model (recommended topic,
+// reason, explanation, current work, ready, recently completed, progress).
+// Preserves deterministic curriculum order; never fabricates timestamps.
+export function buildDashboardJourneyModel(manifest, getStatus, getTimestamp = null) {
+  return buildDashboardModel(manifest, getStatus, { getTimestamp });
+}
+
+export function buildJourneySnapshot(manifest, getStatus) {
+  return buildJourneyModel(manifest, getStatus);
+}
 
 // --- Pure derivations (no DOM, no storage of their own). ---
 
@@ -103,6 +126,9 @@ async function init() {
     return;
   }
 
+  const statusReader = (courseCode, topicId) => store.getTopicState(courseCode, topicId).status;
+  const timestampReader = (courseCode, topicId) => store.lastAccessed(courseCode, topicId);
+
   const renderAll = () => {
     renderHero();
     renderContinue();
@@ -112,8 +138,24 @@ async function init() {
 
   const toggleAndRerender = (courseCode, id) => {
     store.toggleTopicCompleted(courseCode, id);
+    emitJourneyProgressChanged({ courseCode, topicId: id, source: 'dashboard' });
     renderAll();
   };
+
+  // Cross-surface sync: progress changes from topic pages, study context,
+  // explorer, or another dashboard tab re-render without reload.
+  // localStorage stays the source of truth; the event only signals re-read.
+  onJourneyProgressChanged(() => {
+    renderAll();
+  });
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('storage', (event) => {
+      if (!event.key) return;
+      if (event.key === 'tarangam_topic_state_v1' || event.key.startsWith('tarangam_visited_')) {
+        renderAll();
+      }
+    });
+  }
 
   function renderHero() {
     const o = store.getOverallProgress();
@@ -152,22 +194,34 @@ async function init() {
 
   function renderContinue() {
     const box = $('db-continue');
-    const next = store.getNextTopic();
-    const inProgress = store.getInProgressTopics();
-    const ready = store.getReadyTopics();
+    if (!box) return;
+    const model = buildDashboardModel(manifest, statusReader, { getTimestamp: timestampReader });
+    const next = model.recommended;
+    const inProgress = model.inProgress;
+    const ready = model.ready;
     let nextBlock;
     if (!next) {
-      nextBlock = '<span class="xp-path-title">🎉 Curriculum complete — all 432 topics done.</span>';
+      nextBlock = `<span class="xp-path-title">🎉 Curriculum complete — all ${esc(model.totalTopics)} topics done.</span>
+        <span class="xp-path-meta">Explorer and all topic pages stay open — nothing is locked, progress is never auto-reset.</span>
+        <a class="xp-open" href="./explorer.html">Browse the curriculum →</a>`;
     } else {
-      const pc = store.getPrerequisiteCompletion(next.courseCode, next.id);
-      const pre = next.prerequisites && next.prerequisites.length
-        ? `<span class="xp-path-meta">prerequisites ${pc.completed}/${pc.total} complete (never blocking)</span>`
+      const detail = model.recommendationDetail;
+      const pre = detail.totalPrereqs > 0
+        ? `<span class="xp-path-meta">prerequisites ${detail.completedPrereqs}/${detail.totalPrereqs} complete · ${detail.remainingDependencies} remaining ${detail.remainingDependencies === 1 ? 'dependency' : 'dependencies'} (never blocking)</span>`
         : '<span class="xp-path-meta">no prerequisites</span>';
+      const time = detail.estimatedMinutes != null
+        ? `<span class="xp-path-meta">⏱️ ${esc(detail.estimatedMinutes)} min</span>`
+        : '';
+      const startHint = model.isEmpty
+        ? '<span class="xp-path-meta">New here? This deterministic starting point is first in curriculum order — no personalization yet.</span>'
+        : '';
       nextBlock = `<span class="xp-path-title">${esc(next.title)}</span>
-        <span class="xp-path-meta">${esc(next.courseCode)} · M${esc(next.module)}</span>
-        ${pre} ${statusChip(store, next)}
+        <span class="xp-path-meta">${esc(next.courseCode)} · ${esc(next.courseName || '')} · M${esc(next.module)}</span>
+        ${pre} ${time} ${statusChip(store, next)}
+        <span class="xp-path-meta" data-journey-reason="${esc(model.recommendationReason || '')}">${esc(model.recommendationExplanation)}</span>
+        ${startHint}
         <button class="xp-path-btn" data-goto-next="1" type="button">View in explorer</button>
-        <a class="xp-open" href="${esc(topicHref(baseUrl, next))}">Open topic page →</a>
+        <a class="xp-open" href="${esc(topicHref(baseUrl, next))}">Open topic →</a>
         <button class="xp-path-btn" data-complete-next="1" type="button">${store.isTopicCompleted(next.courseCode, next.id) ? '✓ Done — undo' : 'Mark completed'}</button>`;
     }
     box.innerHTML = `<h2>Continue learning</h2>
@@ -192,11 +246,43 @@ async function init() {
   }
 
   function renderLists() {
-    const inProgress = store.getInProgressTopics();
-    $('db-progress-list').innerHTML = inProgress.length
-      ? inProgress.map((t) => topicRow(t, true)).join('')
-      : '<span class="xp-none">Nothing in progress — open any topic page or pick a suggestion above.</span>';
-    wireRelButtons($('db-progress-list'));
+    const model = buildDashboardModel(manifest, statusReader, { getTimestamp: timestampReader });
+    const progressBox = $('db-progress-list');
+    if (progressBox) {
+      progressBox.innerHTML = model.inProgress.length
+        ? model.currentWork.map((t) => topicRow(t, true)).join('')
+        : '<span class="xp-none">Nothing in progress — open any topic page or pick a suggestion above.</span>';
+      wireRelButtons(progressBox);
+    }
+    const readyBox = $('db-ready-list');
+    if (readyBox) {
+      readyBox.innerHTML = model.readyToLearn.length
+        ? model.readyToLearn.map((t) => {
+          const pc = store.getPrerequisiteCompletion(t.courseCode, t.id);
+          const pre = t.prerequisites && t.prerequisites.length
+            ? ` <span class="xp-path-meta">${pc.completed}/${pc.total} prereq</span>`
+            : '';
+          return `<div class="xp-rel">
+            <button class="xp-rel-btn" data-open="${esc(t.courseCode)}/${esc(t.id)}" type="button">${esc(t.title)}</button>
+            <span class="xp-path-meta">${esc(t.courseCode)} · M${esc(t.module)}</span>${pre}
+            <button class="xp-path-btn" data-complete="${esc(t.courseCode)}/${esc(t.id)}" type="button">${store.isTopicCompleted(t.courseCode, t.id) ? '✓ Done — undo' : 'Mark completed'}</button>
+            <a class="xp-open" href="${esc(topicHref(baseUrl, t))}">↗</a>
+          </div>`;
+        }).join('')
+        : (model.isComplete
+          ? '<span class="xp-none">Curriculum complete — every topic is done. Explorer stays open.</span>'
+          : '<span class="xp-none">No ready topics right now — continue in-progress work above.</span>');
+      wireRelButtons(readyBox);
+      const readyCount = $('db-ready-count');
+      if (readyCount) readyCount.textContent = `Ready to learn (${model.readyTotal} ready · showing ${model.readyToLearn.length})`;
+    }
+    const recentBox = $('db-recent-list');
+    if (recentBox) {
+      recentBox.innerHTML = model.recentlyCompleted.length
+        ? model.recentlyCompleted.map((t) => topicRow(t, false)).join('')
+        : '<span class="xp-none">Nothing completed yet — your recently finished topics will appear here.</span>';
+      wireRelButtons(recentBox);
+    }
   }
 
   function renderCourses() {
@@ -256,6 +342,7 @@ async function init() {
     const name = ($('db-reset-course').selectedOptions[0] || {}).text || code;
     if (window.confirm(`Reset all progress for ${name}? This clears completed and in-progress state for that course only.`)) {
       store.clearCourseState(code);
+      emitJourneyProgressChanged({ courseCode: code, topicId: null, source: 'dashboard-reset' });
       renderHero();
       renderContinue();
       renderLists();

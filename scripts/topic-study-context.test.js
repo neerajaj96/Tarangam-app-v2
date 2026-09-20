@@ -158,8 +158,8 @@ describe('static template wiring', () => {
   });
 
   it('syncs progress both ways on the shared event name', () => {
-    assert.ok(template.includes(`document.dispatchEvent(new CustomEvent('${PROGRESS_CHANGED_EVENT}'))`));
-    assert.ok(template.includes(`document.addEventListener('${PROGRESS_CHANGED_EVENT}'`));
+    assert.ok(template.includes(`new CustomEvent('${PROGRESS_CHANGED_EVENT}'`), 'topic pages dispatch the unified progress event');
+    assert.ok(template.includes(`document.addEventListener('${PROGRESS_CHANGED_EVENT}'`), 'topic pages listen for peer progress changes');
   });
 });
 

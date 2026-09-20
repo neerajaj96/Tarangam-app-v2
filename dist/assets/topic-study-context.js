@@ -36,11 +36,20 @@ import {
   getRemainingDependencyCount,
   getNextRecommendedTopic,
 } from './topic-intelligence.js';
+import {
+  PROGRESS_CHANGED_EVENT as JOURNEY_EVENT,
+  getRecommendationReason,
+  explainRecommendation,
+  getUnlockedDependents,
+  getUnfinishedDescendants,
+  emitJourneyProgressChanged,
+  onJourneyProgressChanged,
+} from './learning-journey.js';
 import { loadManifest } from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
 
 export const STUDY_CONTEXT_MOUNT_ID = 'tsStudyContext';
-export const PROGRESS_CHANGED_EVENT = 'tarangam:progress-changed';
+export const PROGRESS_CHANGED_EVENT = JOURNEY_EVENT;
 
 // Topic pages live one level below the artifact root in every hosting mode
 // (Pages artifact and branch-root dev alike), so one relative candidate
@@ -92,6 +101,10 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId)
     .map((t) => linkEntry(courseCode, t, { state: statusOf(t.courseCode, t.id) }));
   const nav = (t) => (t ? linkEntry(courseCode, t) : null);
   const next = getNextRecommendedTopic(manifest, getStatus);
+  const explained = explainRecommendation(manifest, getStatus, next);
+  const unlocked = getUnlockedDependents(manifest, getStatus, courseCode, topicId)
+    .map((t) => linkEntry(courseCode, t, { state: statusOf(t.courseCode, t.id) }));
+  const unfinishedUnlockCount = getUnfinishedDescendants(manifest, getStatus, courseCode, topicId).length;
   return {
     courseCode: topic.courseCode,
     courseName: topic.courseName || topic.courseCode,
@@ -131,6 +144,14 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId)
       ...linkEntry(courseCode, next),
       current: topicKey(next.courseCode, next.id) === topicKey(courseCode, topicId),
     } : null,
+    recommendationReason: explained.reason,
+    recommendationExplanation: explained.message,
+    recommendationUnlockCount: explained.unlockCount,
+    isRecommended: next
+      ? topicKey(next.courseCode, next.id) === topicKey(courseCode, topicId)
+      : false,
+    unlockedDependents: unlocked,
+    unfinishedUnlockCount,
   };
 }
 
@@ -183,13 +204,30 @@ export function renderStudyContext(model) {
     : '<span class="xp-none">Not recorded.</span>';
 
   const done = model.status === 'completed';
+  const reasonText = model.recommendationExplanation
+    ? `<div class="xp-path-meta" data-journey-reason="${esc(model.recommendationReason || '')}">${esc(model.recommendationExplanation)}</div>`
+    : '';
   const rec = model.recommended
     ? (model.recommended.current
-      ? '<span class="xp-path-title">Up next: continue with this topic.</span>'
+      ? `<span class="xp-path-title">Up next: continue with this topic.</span>${reasonText}`
       : `<span class="xp-path-title">Up next: ${esc(model.recommended.title)}</span>
          <span class="xp-path-meta">${esc(model.recommended.courseCode)}</span>
-         <a class="xp-open" href="${esc(model.recommended.href)}">Open →</a>`)
+         <a class="xp-open" href="${esc(model.recommended.href)}">Open →</a>${reasonText}`)
     : '<span class="xp-path-title">🎉 Curriculum complete.</span>';
+  const unlockedList = Array.isArray(model.unlockedDependents) ? model.unlockedDependents : [];
+  const unlockedBlock = (() => {
+    if (!unlockedList.length) return '';
+    const items = unlockedList.map((t) => `<li><a href="${esc(t.href)}">${esc(t.title)}</a> <span class="badge">${esc((t.state || 'not_started').replace(/_/g, ' '))}</span></li>`).join('');
+    if (done) {
+      const plural = unlockedList.length === 1 ? 'this unlocked next step' : `these ${unlockedList.length} unlocked next steps`;
+      return `<div class="ts-block ts-unlocked"><h3>Unlocked by completing this topic (pick any — informational only)</h3>`
+        + `<p class="xp-note">Completing “${esc(model.title)}” helped unlock ${esc(plural)}:</p>`
+        + `<ul class="ts-list">${items}</ul></div>`;
+    }
+    return `<div class="ts-block ts-unlocked"><h3>Would help unlock (preview)</h3>`
+      + `<p class="xp-note">Completing “${esc(model.title)}” would help these ready next steps stay available (informational only):</p>`
+      + `<ul class="ts-list">${items}</ul></div>`;
+  })();
 
   return `<div class="ts-context-head"><h2>Study context</h2>
     <div class="topic-badges">${chips.join('')}</div></div>
@@ -206,6 +244,7 @@ export function renderStudyContext(model) {
     <ol class="ts-list">${chainItems}</ol></details>
   <details class="ts-details"><summary>Dependents (${model.dependents.length})</summary>
     <ul class="ts-list">${depItems}</ul></details>
+  ${unlockedBlock}
   <details class="ts-details" open><summary>Study navigation</summary>
     <div class="ts-nav">${navBlock}</div></details>
   <div class="ts-next"><h3>Continue learning</h3>${rec}</div>`;
@@ -214,7 +253,10 @@ export function renderStudyContext(model) {
 // Thin DOM wiring: mount point + template identity + shared store. Renders
 // the full panel once the manifest loads; degrades to a compact
 // status-and-actions fallback when the fetch fails (e.g. file:// without a
-// server); re-renders on progress changes from anywhere on the page.
+// server); re-renders immediately on local completion and on progress
+// changes from anywhere (dashboard, explorer, topic pages) without reload.
+// Shared localStorage stays the source of truth; the unified journey event
+// only signals "re-read".
 export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode, topicId } = {}) {
   if (typeof document === 'undefined') return null;
   const mount = document.getElementById(mountId);
@@ -237,8 +279,9 @@ export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode,
     if (toggle) {
       toggle.addEventListener('click', () => {
         store.toggleTopicCompleted(courseCode, topicId);
-        document.dispatchEvent(new CustomEvent(PROGRESS_CHANGED_EVENT));
+        // Immediate local update first, then notify every other surface.
         renderWith(manifest);
+        emitJourneyProgressChanged({ courseCode, topicId, source: 'study-context' });
       });
     }
   }
@@ -248,7 +291,7 @@ export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode,
       .then(({ manifest }) => renderWith(manifest))
       .catch(() => renderWith(null));
   };
-  document.addEventListener(PROGRESS_CHANGED_EVENT, () => {
+  onJourneyProgressChanged(() => {
     loadManifest({ candidates: TOPIC_MANIFEST_CANDIDATES })
       .then(({ manifest }) => renderWith(manifest))
       .catch(() => {});

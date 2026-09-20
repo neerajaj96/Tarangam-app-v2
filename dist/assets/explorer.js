@@ -1,17 +1,61 @@
 /**
  * Tarangam Curriculum Explorer UI (browser ES module, no dependencies).
  *
- * Renders course → module → topic browsing, search/filtering, and
- * prerequisite-aware topic details from the static topic manifest via
- * ./curriculum-data.js. Topic page links reuse the repository's existing
- * <COURSE>/<file>.html convention resolved against the manifest's own
- * base URL — no second routing system. Legacy topics render with
- * whatever the manifest carries (never as broken).
+ * Renders course → module → topic browsing, search/filtering, journey-aware
+ * filtering, and prerequisite-aware topic details from the static topic
+ * manifest via ./curriculum-data.js plus the unified Learning Journey model
+ * (./learning-journey.js) over the canonical Topic Intelligence Layer.
+ * Topic page links reuse the repository's existing <COURSE>/<file>.html
+ * convention resolved against the manifest's own base URL — no second
+ * routing system. Explorer never duplicates the Dashboard: it exposes
+ * learner journey information per card/detail (status, ready state,
+ * prerequisite completion, remaining dependencies, current recommendation)
+ * as informational context only. Nothing locks.
  */
 import * as Data from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
+import {
+  PROGRESS_CHANGED_EVENT,
+  JOURNEY_FILTERS,
+  normalizeJourneyFilter,
+  buildExplorerTopicModel,
+  filterTopicsByJourney,
+  getNextRecommendedTopic,
+  emitJourneyProgressChanged,
+  onJourneyProgressChanged,
+} from './learning-journey.js';
 
-const $ = (id) => document.getElementById(id);
+export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter };
+
+const $ = (id) => (typeof document !== 'undefined' ? document.getElementById(id) : null);
+
+// Pure Explorer filtering for tests and UI: canonical combined filter
+// (course/module/search/difficulty/exam) then the deterministic
+// journey filter (all/not_started/in_progress/completed/ready).
+// Preserves manifest order; unknown filters fall back to 'all'.
+export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
+  const {
+    courseCode = null,
+    module = 'all',
+    query = null,
+    difficulties = null,
+    examRelevances = null,
+    journey = 'all',
+  } = options;
+  if (!manifest || !courseCode) return [];
+  const scoped = Data.combinedFilter(manifest, {
+    courseCode,
+    module: module === 'all' ? null : Number(module),
+    query: query || null,
+    difficulties: difficulties ? [difficulties] : null,
+    examRelevances: examRelevances ? [examRelevances] : null,
+  });
+  return filterTopicsByJourney(manifest, getStatus, scoped, journey);
+}
+
+export function getExplorerTopicJourney(manifest, getStatus, courseCode, topicId) {
+  return buildExplorerTopicModel(manifest, getStatus, courseCode, topicId);
+}
 
 const state = {
   manifest: null,
@@ -22,6 +66,7 @@ const state = {
   q: '',
   difficulty: 'all',
   exam: 'all',
+  journey: 'all',
   selectedKey: null,
   loadError: null,
 };
@@ -71,11 +116,38 @@ function topicPageHref(topic) {
   return Data.topicPageUrl(state.baseUrl, topic.courseCode, topic);
 }
 
+function statusReader() {
+  if (!state.progress) return () => 'not_started';
+  return (courseCode, topicId) => state.progress.getTopicState(courseCode, topicId).status;
+}
+
+function currentRecommendedKey() {
+  if (!state.manifest || !state.progress) return null;
+  const next = getNextRecommendedTopic(state.manifest, statusReader());
+  return next ? `${next.courseCode}/${next.id}` : null;
+}
+
+function journeyChips(topic) {
+  if (!state.manifest || !state.progress) return '';
+  const model = buildExplorerTopicModel(state.manifest, statusReader(), topic.courseCode, topic.id);
+  if (!model) return '';
+  const chips = [];
+  chips.push(`<span class="badge">${esc(model.prereqCompletion.completed)}/${esc(model.prereqCompletion.total)} prereq</span>`);
+  if (model.status !== 'completed') {
+    chips.push(model.isReady
+      ? '<span class="badge badge-accent">Ready</span>'
+      : `<span class="badge xp-st-todo">${esc(model.remainingDependencies)} remaining</span>`);
+  }
+  if (model.isRecommended) chips.push('<span class="badge badge-gold">★ Recommended next</span>');
+  return chips.join('');
+}
+
 function currentFilters() {
   return {
     q: state.q,
     difficulty: state.difficulty === 'all' ? null : state.difficulty,
     exam: state.exam === 'all' ? null : state.exam,
+    journey: state.journey,
   };
 }
 
@@ -84,14 +156,16 @@ function visibleTopics() {
   if (!manifest || !course) return [];
   const f = currentFilters();
   // One canonical combined filter (see assets/topic-intelligence.js):
-  // course + module scope, whole-manifest search, difficulty/exam facets.
+  // course + module scope, whole-manifest search, difficulty/exam facets,
+  // then the deterministic journey filter from the unified journey model.
   // Manifest order within a course already sorts module/sequence/id.
-  return Data.combinedFilter(manifest, {
+  return getExplorerVisibleTopics(manifest, statusReader(), {
     courseCode: course,
-    module: module === 'all' ? null : Number(module),
+    module,
     query: f.q || null,
-    difficulties: f.difficulty ? [f.difficulty] : null,
-    examRelevances: f.exam ? [f.exam] : null,
+    difficulties: f.difficulty || null,
+    examRelevances: f.exam || null,
+    journey: f.journey || 'all',
   });
 }
 
@@ -128,6 +202,7 @@ function renderFilterOptions() {
   const diffs = uniq(topics.map((t) => t.difficulty));
   const exams = uniq(topics.map((t) => t.examRelevance));
   const fill = (select, values, label) => {
+    if (!select) return;
     select.innerHTML = `<option value="all">${label}</option>` +
       values.map((v) => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
   };
@@ -135,8 +210,22 @@ function renderFilterOptions() {
   fill($('xp-exam'), exams, 'All exam relevance');
   if (!diffs.includes(state.difficulty)) state.difficulty = 'all';
   if (!exams.includes(state.exam)) state.exam = 'all';
-  $('xp-difficulty').value = state.difficulty;
-  $('xp-exam').value = state.exam;
+  if ($('xp-difficulty')) $('xp-difficulty').value = state.difficulty;
+  if ($('xp-exam')) $('xp-exam').value = state.exam;
+  const journeySelect = $('xp-journey');
+  if (journeySelect) {
+    const labels = {
+      all: 'All progress',
+      not_started: 'Not started',
+      in_progress: 'In progress',
+      completed: 'Completed',
+      ready: 'Ready to learn',
+    };
+    journeySelect.innerHTML = JOURNEY_FILTERS.map((f) =>
+      `<option value="${f}">${esc(labels[f] || f)}</option>`).join('');
+    state.journey = normalizeJourneyFilter(state.journey);
+    journeySelect.value = state.journey;
+  }
 }
 
 function renderList() {
@@ -153,7 +242,7 @@ function renderList() {
     return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
@@ -189,6 +278,9 @@ function renderDetail() {
   const dependents = Data.getDependents(state.manifest, topic.courseCode, topic.id);
   const myStatus = topicStatus(topic);
   const isDone = myStatus === 'completed';
+  const journey = buildExplorerTopicModel(state.manifest, statusReader(), topic.courseCode, topic.id);
+  const recommendedKey = currentRecommendedKey();
+  const isRecommended = recommendedKey === `${topic.courseCode}/${topic.id}`;
   let prereqBlock = '<span class="xp-none">None</span>';
   if (topic.hasMetadata) {
     const pc = state.progress.getPrerequisiteCompletion(topic.courseCode, topic.id);
@@ -197,6 +289,9 @@ function renderDetail() {
       ? prereqs.map((t) => chipLink(t, 'prereq')).join('')
       : '<span class="xp-none">None</span>');
   }
+  const journeyBlock = journey
+    ? `<div class="xp-pre-head">${esc(journey.readyLabel)} · ${journey.prereqCompletion.completed}/${journey.prereqCompletion.total} prerequisites complete · ${journey.remainingDependencies} remaining ${journey.remainingDependencies === 1 ? 'dependency' : 'dependencies'}${isRecommended ? ' · ★ current recommendation' : ''}</div>`
+    : '';
   const listOrNone = (items, kind) => items.length
     ? items.map((t) => chipLink(t, kind)).join('')
     : '<span class="xp-none">None</span>';
@@ -204,7 +299,8 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}</div>
+      ${journeyBlock}
       <button class="xp-toggle" data-toggle="${esc(topic.id)}" type="button">${isDone ? '✓ Completed — mark not started' : 'Mark completed'}</button>
     </div>
     <div class="xp-detail-sec"><h3>Concepts</h3>
@@ -233,6 +329,7 @@ function renderDetail() {
   if (toggle) {
     toggle.addEventListener('click', () => {
       state.progress.toggleTopicCompleted(topic.courseCode, topic.id);
+      emitJourneyProgressChanged({ courseCode: topic.courseCode, topicId: topic.id, source: 'explorer' });
       renderAll();
     });
   }
@@ -256,22 +353,26 @@ function renderProgress() {
 
 function renderPath() {
   const panel = $('xp-path');
+  if (!panel) return;
   if (!state.progress || !state.manifest) { panel.innerHTML = ''; return; }
   const overall = state.progress.getOverallProgress();
   const remaining = overall.total - overall.completed;
   const inProgress = state.progress.getInProgressTopics().slice(0, 4);
-  const next = state.progress.getNextTopic();
+  const reader = statusReader();
+  const next = getNextRecommendedTopic(state.manifest, reader);
   let nextBlock;
   if (!next) {
-    nextBlock = '<span class="xp-path-title">🎉 Curriculum complete — all 432 topics done.</span>';
+    nextBlock = `<span class="xp-path-title">🎉 Curriculum complete — all ${overall.total} topics done.</span>
+      <span class="xp-path-meta">Explorer stays fully open — nothing is locked.</span>`;
   } else {
     const pc = state.progress.getPrerequisiteCompletion(next.courseCode, next.id);
     const pre = next.prerequisites && next.prerequisites.length
-      ? `<span class="xp-path-meta">prerequisites ${pc.completed}/${pc.total} complete</span>`
+      ? `<span class="xp-path-meta">prerequisites ${pc.completed}/${pc.total} complete (never blocking)</span>`
       : '<span class="xp-path-meta">no prerequisites</span>';
     nextBlock = `<span class="xp-path-title">${esc(next.title)}</span>
       <span class="xp-path-meta">${esc(next.courseCode)} · ${esc(fmtSeq(next))}</span>
       ${pre}
+      <span class="xp-path-meta">★ current recommendation</span>
       <button class="xp-path-btn" data-view-topic="${esc(next.courseCode)}/${esc(next.id)}" type="button">View in explorer</button>
       <a class="xp-open" href="${esc(Data.topicPageUrl(state.baseUrl, next.courseCode, next))}">Open topic page →</a>`;
   }
@@ -317,8 +418,9 @@ function selectTopic(courseCode, id, fromUser) {
   }
   state.selectedKey = `${courseCode}/${id}`;
   renderAll();
-  if (fromUser && window.matchMedia('(max-width: 900px)').matches) {
-    $('xp-detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (fromUser && typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 900px)').matches) {
+    const detail = $('xp-detail');
+    if (detail && typeof detail.scrollIntoView === 'function') detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
@@ -333,21 +435,41 @@ let wired = false;
 async function init() {
   if (!wired) {
     wired = true;
-    $('xp-course').addEventListener('change', (e) => {
+    if ($('xp-course')) $('xp-course').addEventListener('change', (e) => {
       state.course = e.target.value;
       state.module = 'all';
       state.selectedKey = null;
       renderAll();
     });
-    $('xp-module').addEventListener('change', (e) => { state.module = e.target.value; renderAll(); });
-    $('xp-search').addEventListener('input', (e) => { state.q = e.target.value; renderList(); renderDetail(); });
-    $('xp-difficulty').addEventListener('change', (e) => { state.difficulty = e.target.value; renderAll(); });
-    $('xp-exam').addEventListener('change', (e) => { state.exam = e.target.value; renderAll(); });
-    $('xp-retry').addEventListener('click', () => {
+    if ($('xp-module')) $('xp-module').addEventListener('change', (e) => { state.module = e.target.value; renderAll(); });
+    if ($('xp-search')) $('xp-search').addEventListener('input', (e) => { state.q = e.target.value; renderList(); renderDetail(); });
+    if ($('xp-difficulty')) $('xp-difficulty').addEventListener('change', (e) => { state.difficulty = e.target.value; renderAll(); });
+    if ($('xp-exam')) $('xp-exam').addEventListener('change', (e) => { state.exam = e.target.value; renderAll(); });
+    if ($('xp-journey')) $('xp-journey').addEventListener('change', (e) => { state.journey = normalizeJourneyFilter(e.target.value); renderAll(); });
+    if ($('xp-retry')) $('xp-retry').addEventListener('click', () => {
       Data.clearManifestCache();
-      $('xp-error').hidden = true;
+      const errBox = $('xp-error');
+      if (errBox) errBox.hidden = true;
       init();
     });
+    // Cross-surface sync without polling: re-read shared localStorage state.
+    onJourneyProgressChanged(() => {
+      renderProgress();
+      renderPath();
+      renderList();
+      renderDetail();
+    });
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('storage', (event) => {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.startsWith('tarangam_visited_')) {
+          renderProgress();
+          renderPath();
+          renderList();
+          renderDetail();
+        }
+      });
+    }
   }
 
   try {
@@ -367,9 +489,14 @@ async function init() {
   } catch (e) {
     state.loadError = e;
     const box = $('xp-error');
-    box.hidden = false;
-    $('xp-error-msg').textContent = (e && e.message) || String(e);
+    if (box) {
+      box.hidden = false;
+      const msg = $('xp-error-msg');
+      if (msg) msg.textContent = (e && e.message) || String(e);
+    }
   }
 }
 
-init();
+if (typeof document !== 'undefined') {
+  init();
+}

@@ -379,39 +379,76 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'style.css']) {
+  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
   }
   if (fs.existsSync('explorer.html')) {
     const html = fs.readFileSync('explorer.html', 'utf-8');
-    for (const ref of ['assets/explorer.js', 'style.css']) {
+    for (const ref of ['assets/explorer.js', 'style.css', 'id="xp-journey"']) {
       if (!html.includes(ref)) fail(`explorer: explorer.html does not reference ${ref}`);
+    }
+  }
+  if (fs.existsSync('dashboard.html')) {
+    const html = fs.readFileSync('dashboard.html', 'utf-8');
+    for (const ref of ['id="db-continue"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
+      if (!html.includes(ref)) fail(`journey: dashboard.html is missing unified journey section ${ref}`);
     }
   }
   if (fs.existsSync('assets/explorer.js')) {
     const js = fs.readFileSync('assets/explorer.js', 'utf-8');
     if (!js.includes('curriculum-data.js')) fail('explorer: assets/explorer.js does not import the curriculum data module');
     if (!js.includes('learner-state.js')) fail('explorer: assets/explorer.js does not import the learner-state module');
+    if (!js.includes('learning-journey.js')) fail('journey: assets/explorer.js does not use the unified learning journey model');
+    if (!js.includes('tarangam:progress-changed') && !js.includes('PROGRESS_CHANGED_EVENT') && !js.includes('onJourneyProgressChanged')) fail('journey: assets/explorer.js does not sync on the unified progress event');
   }
   if (fs.existsSync('templates/base.html')) {
     const tpl = fs.readFileSync('templates/base.html', 'utf-8');
     if (!tpl.includes('assets/learner-state.js')) fail('explorer: templates/base.html does not connect topic pages to the learner-state module');
     if (!tpl.includes('id="tsStudyContext"')) fail('study-context: templates/base.html has no study-context mount — topic pages cannot initialize the intelligence panel');
     if (!tpl.includes('assets/topic-study-context.js')) fail('study-context: templates/base.html does not load the topic study-context module');
+    if (!tpl.includes('tarangam:progress-changed')) fail('journey: templates/base.html does not use the unified progress event');
   }
   if (fs.existsSync('assets/dashboard.js')) {
     const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
     if (!js.includes('learner-state.js')) fail('explorer: assets/dashboard.js does not import the learner-state module');
     if (!js.includes('curriculum-data.js')) fail('explorer: assets/dashboard.js does not import the curriculum data module');
+    if (!js.includes('learning-journey.js')) fail('journey: assets/dashboard.js does not use the unified learning journey model');
+    if (!js.includes('tarangam:progress-changed') && !js.includes('PROGRESS_CHANGED_EVENT') && !js.includes('onJourneyProgressChanged')) fail('journey: assets/dashboard.js does not sync on the unified progress event');
+  }
+  if (fs.existsSync('assets/topic-study-context.js')) {
+    const js = fs.readFileSync('assets/topic-study-context.js', 'utf-8');
+    if (!js.includes('learning-journey.js')) fail('journey: assets/topic-study-context.js does not use the unified learning journey model');
+    if (!js.includes('Unlocked by completing')) fail('journey: assets/topic-study-context.js does not surface unlocked dependents');
   }
   if (fs.existsSync('index.html')) {
     const home = fs.readFileSync('index.html', 'utf-8');
     if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/data/topic-manifest.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
+  }
+}
+
+// 10. Unified learning journey integrity: single deterministic engine over
+// the canonical intelligence layer — no AI/ML, no gamification, no second
+// graph, no server. Static/GitHub Pages compatible (no fetch in the model,
+// no polling for sync).
+{
+  if (fs.existsSync('assets/learning-journey.js')) {
+    const js = fs.readFileSync('assets/learning-journey.js', 'utf-8');
+    for (const token of ['continue_in_progress', 'unblocks_future_topic', 'ready_curriculum_order', 'curriculum_fallback']) {
+      if (!js.includes(token)) fail(`journey: assets/learning-journey.js is missing reason "${token}"`);
+    }
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'setTimeout', 'xp', 'streak', 'badge', 'leaderboard', 'openai', 'llm']) {
+      if (banned === 'xp' || banned === 'badge') continue; // substrings of legit identifiers; checked below precisely
+      if (js.toLowerCase().includes(banned)) fail(`journey: assets/learning-journey.js must stay static-first (found "${banned}")`);
+    }
+    if (/[<>=]\s*points|streaks|leaderboards|openai|anthropic/i.test(js)) {
+      fail('journey: assets/learning-journey.js must not add AI/ML or gamification');
+    }
+    if (!js.includes("from './topic-intelligence.js'")) fail('journey: assets/learning-journey.js must build on the canonical Topic Intelligence Layer');
   }
 }
 

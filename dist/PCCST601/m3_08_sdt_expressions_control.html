@@ -528,11 +528,12 @@
           btn.className = 'ts-complete';
           btn.onclick = function () {
             store.toggleTopicCompleted(COURSE, currentId);
-            document.dispatchEvent(new CustomEvent('tarangam:progress-changed'));
-      renderProgress();
-
-      // Re-render when study-context actions (or any peer) change progress.
-      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
           };
           host.appendChild(btn);
         }
@@ -574,6 +575,17 @@
       }
 
       renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
 
       // Spaced review (v1 schedule): completed topics untouched for 7+ days
       // are flagged in the nav; opening one refreshes its timestamp.
@@ -619,6 +631,9 @@
       if (resetBtn) {
         resetBtn.onclick = function () {
           store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
           location.reload();
         };
       }
