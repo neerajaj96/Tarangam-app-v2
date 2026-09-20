@@ -1,3 +1,28 @@
+---
+id: m3_07_m3_mixed_drill
+courseCode: PECST631
+module: 3
+sequence: 7
+title: 'M3 Drill: White-Box Mastery Sprint'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint maps, tours, pairs and sieges as reflexes
+  - Keep structural testing straight under pressure
+  - Verify every white-box verdict before committing
+concepts:
+  - white-box sprint
+  - structural reflexes
+prerequisites:
+  - m3_01_graph_coverage_prime_paths
+  - m3_03_cfg_loops_exceptions
+  - m3_04_design_call_inheritance
+  - m3_05_security_owasp_burp
+examRelevance: high
+tags:
+  - white-box
+  - m3-drill
+---
 # M3 Drill: White-Box Mastery Sprint
 
 **Graphs, flows, designs, sieges — structural testing as reflexes.**

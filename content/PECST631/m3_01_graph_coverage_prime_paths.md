@@ -1,3 +1,26 @@
+---
+id: m3_01_graph_coverage_prime_paths
+courseCode: PECST631
+module: 3
+sequence: 1
+title: 'Graph Coverage: Node, Edge, Path & Prime Paths'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Climb coverage rungs from nodes to prime paths
+  - Tour round-trips for loop coverage with sidetrips allowed
+  - State prime-path and tour requirements exactly
+concepts:
+  - graph coverage
+  - prime paths
+  - test tours
+prerequisites:
+  - m2_01_unit_static_dynamic_control
+examRelevance: high
+tags:
+  - white-box
+  - graph-coverage
+---
 # Graph Coverage: Node, Edge, Path & Prime Paths
 
 **Touring control-flow graphs — coverage rungs, prime-path power, and round-trip sightseeing.**

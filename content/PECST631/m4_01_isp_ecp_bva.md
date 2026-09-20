@@ -1,3 +1,26 @@
+---
+id: m4_01_isp_ecp_bva
+courseCode: PECST631
+module: 4
+sequence: 1
+title: 'Input Space Partitioning, ECP & BVA'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Slice infinity by spec clauses into partitions
+  - Probe one per class with boundary sextuplets on edges
+  - Test invalids for handling, not just rejection
+concepts:
+  - input space partitioning
+  - equivalence classes
+  - boundary-value analysis
+prerequisites:
+  - m1_04_box_methods
+examRelevance: high
+tags:
+  - black-box
+  - partitioning
+---
 # Input Space Partitioning, ECP & BVA
 
 **Slicing infinity testably — partitions, equivalence classes, and boundary-value obsession.**

@@ -1,3 +1,27 @@
+---
+id: m4_06_genai_advanced_case
+courseCode: PECST631
+module: 4
+sequence: 6
+title: 'GenAI Advanced & Case Study: PEX + AI Tools'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Rank suites predictively with telemetry-driven slicing
+  - Document baseline, delta and residual case-study format
+  - Stretch GenAI fully with gates throughout every claim
+concepts:
+  - predictive test suites
+  - case-study format
+  - GenAI gating
+prerequisites:
+  - m1_05_automation_ai_trends
+  - m2_05_ai_testing_tools
+examRelevance: medium
+tags:
+  - genai-testing
+  - case-study
+---
 # GenAI Advanced & Case Study: PEX + AI Tools
 
 **Predictive suites, responsive matrices, and the documented case study — GenAI at full stretch, gated throughout.**

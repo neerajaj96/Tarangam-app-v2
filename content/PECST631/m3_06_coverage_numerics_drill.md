@@ -1,3 +1,27 @@
+---
+id: m3_06_coverage_numerics_drill
+courseCode: PECST631
+module: 3
+sequence: 6
+title: 'Coverage Numerics Drill: Compute Everything'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Floor cyclomatic numbers and basis sets exactly
+  - Tally du-pairs with equivalent exclusions stated
+  - Minimise tours against score math at pace
+concepts:
+  - cyclomatic complexity
+  - coverage arithmetic
+prerequisites:
+  - m2_03_mutation_operators_score
+  - m3_01_graph_coverage_prime_paths
+  - m3_02_dataflow_subsumption
+examRelevance: medium
+tags:
+  - white-box
+  - numerics-drill
+---
 # Coverage Numerics Drill: Compute Everything
 
 **Numbers under the theory — cyclomatic, basis sets, du tallies, and score math at pace.**

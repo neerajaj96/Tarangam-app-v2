@@ -1,3 +1,26 @@
+---
+id: m1_02_processes_terminology
+courseCode: PECST631
+module: 1
+sequence: 2
+title: 'Processes, Levels of Thinking & Terminology'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Chain faults into errors into failures with RIP conditions
+  - Separate verification of specs from validation of needs
+  - Climb Beizer's five maturity levels with test-case anatomy
+concepts:
+  - fault-error-failure chain
+  - verification and validation
+  - Beizer maturity levels
+prerequisites:
+  - m1_01_concepts_quality_failures
+examRelevance: high
+tags:
+  - foundations
+  - terminology
+---
 # Processes, Levels of Thinking & Terminology
 
 **The testing vocabulary exam — V&V, fault→error→failure chain, and Beizer's five maturity levels.**

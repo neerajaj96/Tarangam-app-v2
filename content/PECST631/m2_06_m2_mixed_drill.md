@@ -1,3 +1,29 @@
+---
+id: m2_06_m2_mixed_drill
+courseCode: PECST631
+module: 2
+sequence: 6
+title: 'M2 Drill: Unit Rigor at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint branches, journeys, kills, fixtures and curation
+  - Keep unit rigor straight under sprint-sheet pressure
+  - Curate AI drafts instead of trusting them blindly
+concepts:
+  - unit rigor sprint
+  - AI curation
+prerequisites:
+  - m2_01_unit_static_dynamic_control
+  - m2_02_dataflow_domain
+  - m2_03_mutation_operators_score
+  - m2_04_junit_automation
+  - m2_05_ai_testing_tools
+examRelevance: high
+tags:
+  - unit-testing
+  - m2-drill
+---
 # M2 Drill: Unit Rigor at Pace
 
 **Branches, pairs, mutants, fixtures — unit-level mastery sprint.**

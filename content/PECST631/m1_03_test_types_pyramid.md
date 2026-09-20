@@ -1,3 +1,25 @@
+---
+id: m1_03_test_types_pyramid
+courseCode: PECST631
+module: 1
+sequence: 3
+title: 'Test Types: Unit to Acceptance & Beyond'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Stack unit through acceptance scopes on the pyramid
+  - Place performance, security and regression specialties
+  - Guard every change with regression discipline
+concepts:
+  - test levels
+  - testing pyramid
+  - regression discipline
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - test-levels
+---
 # Test Types: Unit to Acceptance & Beyond
 
 **The testing pyramid of scope — unit/integration/system/acceptance plus performance/security/regression specialties.**

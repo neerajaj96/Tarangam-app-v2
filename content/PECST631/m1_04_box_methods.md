@@ -1,3 +1,25 @@
+---
+id: m1_04_box_methods
+courseCode: PECST631
+module: 1
+sequence: 4
+title: 'Black, White & Grey-Box Methods'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Test specs-only, code-open and arch-informed postures
+  - Stock method arsenals per knowledge posture
+  - Pair postures to cover each other's blind spots
+concepts:
+  - black-box testing
+  - white-box testing
+  - grey-box testing
+prerequisites: []
+examRelevance: high
+tags:
+  - foundations
+  - box-methods
+---
 # Black, White & Grey-Box Methods
 
 **Three knowledge postures — specs-only, code-open, and partial-peek — with method-to-defect mapping.**

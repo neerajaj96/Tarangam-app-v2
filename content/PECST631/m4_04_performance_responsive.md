@@ -1,3 +1,26 @@
+---
+id: m4_04_performance_responsive
+courseCode: PECST631
+module: 4
+sequence: 4
+title: 'Performance & Responsive Testing'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Size capacity with load against break-mode stress
+  - Budget latency with elasticity-lag and leak-slope reads
+  - Cover device matrices risk-weighted, not exhaustive
+concepts:
+  - load testing
+  - stress testing
+  - responsive matrices
+prerequisites:
+  - m1_03_test_types_pyramid
+examRelevance: medium
+tags:
+  - performance-testing
+  - responsive-testing
+---
 # Performance & Responsive Testing
 
 **Speed, scale, and every screen — load/stress/soak, latency budgets, and device-matrix sanity.**

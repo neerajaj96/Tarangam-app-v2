@@ -1,3 +1,27 @@
+---
+id: m2_01_unit_static_dynamic_control
+courseCode: PECST631
+module: 2
+sequence: 1
+title: 'Unit Testing: Static, Dynamic & Control Flow'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read statically with reviews against running dynamically
+  - Harness runs with drivers, stubs and mocks exactly
+  - Drive every branch outcome on control flow honestly
+concepts:
+  - unit testing
+  - static versus dynamic testing
+  - test harnesses
+prerequisites:
+  - m1_03_test_types_pyramid
+  - m1_04_box_methods
+examRelevance: high
+tags:
+  - unit-testing
+  - control-flow
+---
 # Unit Testing: Static, Dynamic & Control Flow
 
 **Testing the smallest parts — reviews vs runs, and branch-testing that actually means it.**

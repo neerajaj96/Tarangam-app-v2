@@ -1,3 +1,27 @@
+---
+id: m3_04_design_call_inheritance
+courseCode: PECST631
+module: 3
+sequence: 4
+title: 'Design Elements: Call Graphs, Inheritance & Coupling'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Tour call graphs above single functions exactly
+  - Check overrides substitutable across inheritance fences
+  - Pair cross-fence du-values with injected-away smells
+concepts:
+  - call-graph testing
+  - Liskov substitution checks
+  - coupling analysis
+prerequisites:
+  - m3_01_graph_coverage_prime_paths
+  - m3_02_dataflow_subsumption
+examRelevance: medium
+tags:
+  - white-box
+  - integration-testing
+---
 # Design Elements: Call Graphs, Inheritance & Coupling
 
 **Above single functions — inter-procedural, OO, and integration-level graph testing.**

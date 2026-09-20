@@ -1,3 +1,29 @@
+---
+id: m4_07_m4_mixed_drill
+courseCode: PECST631
+module: 4
+sequence: 7
+title: 'M4 Drill: Functional Mastery Sprint'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint slices, grids, maps, kinds and symbols in order
+  - Keep black and grey-box fluency straight at pace
+  - Symbolise last after slicing, gridding and mapping first
+concepts:
+  - functional sprint
+  - black-grey fluency
+prerequisites:
+  - m4_01_isp_ecp_bva
+  - m4_02_decision_random_domain
+  - m4_03_grey_matrix_regression_oa
+  - m4_04_performance_responsive
+  - m4_05_pex_symbolic_put
+examRelevance: high
+tags:
+  - black-box
+  - m4-drill
+---
 # M4 Drill: Functional Mastery Sprint
 
 **Partitions, tables, matrices, kinds, symbols — black/grey-box fluency at pace.**

@@ -1,3 +1,26 @@
+---
+id: m1_05_automation_ai_trends
+courseCode: PECST631
+module: 1
+sequence: 5
+title: 'Automation Tools & AI/GenAI Trends'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Assign JUnit, Selenium and Cypress to their test levels
+  - Fund automation on stable, valuable and repetitive ground
+  - Gate GenAI drafts behind human oracles with the JUnit spine
+concepts:
+  - test automation economics
+  - automation tool roles
+  - GenAI test drafting
+prerequisites:
+  - m1_03_test_types_pyramid
+examRelevance: medium
+tags:
+  - automation
+  - ai-trends
+---
 # Automation Tools & AI/GenAI Trends
 
 **Selenium/Cypress/JUnit roles, automation economics, and GenAI's test-writing debut — with the JUnit case-study spine.**

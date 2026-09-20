@@ -1,3 +1,27 @@
+---
+id: m4_03_grey_matrix_regression_oa
+courseCode: PECST631
+module: 4
+sequence: 3
+title: 'Grey-Box Testing: Matrix, Regression & Orthogonal Arrays'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Map coverage gaps with risk matrices arch-informed
+  - Guard every change with regression economics
+  - Compress combinations with pairwise orthogonal thrift
+concepts:
+  - grey-box testing
+  - risk matrices
+  - orthogonal arrays
+prerequisites:
+  - m1_03_test_types_pyramid
+  - m1_04_box_methods
+examRelevance: high
+tags:
+  - grey-box
+  - regression-testing
+---
 # Grey-Box Testing: Matrix, Regression & Orthogonal Arrays
 
 **Informed functional testing — risk matrices, change-guards, and combinatorial thrift.**

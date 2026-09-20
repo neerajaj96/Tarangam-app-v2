@@ -1,3 +1,26 @@
+---
+id: m3_03_cfg_loops_exceptions
+courseCode: PECST631
+module: 3
+sequence: 3
+title: 'CFGs for Code: Loops & Exceptions'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Draw testable maps from straight-run basic blocks
+  - Cover loop flavours with lap-accurate tours
+  - Wire exception edges as extra arcs for coverage
+concepts:
+  - control-flow graphs
+  - loop coverage
+  - exception edges
+prerequisites:
+  - m3_01_graph_coverage_prime_paths
+examRelevance: medium
+tags:
+  - white-box
+  - cfg
+---
 # CFGs for Code: Loops & Exceptions
 
 **Drawing testable maps — basic blocks, loop flavours, exception edges, and coverage on real control flow.**

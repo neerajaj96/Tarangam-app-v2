@@ -1,3 +1,26 @@
+---
+id: m2_03_mutation_operators_score
+courseCode: PECST631
+module: 2
+sequence: 3
+title: 'Mutation Testing: Operators, Score & Muclipse'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Seed small faults under competent-programmer and coupling bets
+  - Score kills over non-equivalent totals with operator craft
+  - Read survivors as missing tests with cost control
+concepts:
+  - mutation operators
+  - mutation score
+  - equivalent mutants
+prerequisites:
+  - m2_01_unit_static_dynamic_control
+examRelevance: high
+tags:
+  - mutation-testing
+  - test-adequacy
+---
 # Mutation Testing: Operators, Score & Muclipse
 
 **Seeding fake bugs to grade your tests — competent-programmer hypothesis, coupling effect, and score math.**

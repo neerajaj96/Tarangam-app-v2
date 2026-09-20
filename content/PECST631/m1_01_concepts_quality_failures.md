@@ -1,3 +1,25 @@
+---
+id: m1_01_concepts_quality_failures
+courseCode: PECST631
+module: 1
+sequence: 1
+title: 'Testing Concepts, Quality & Famous Failures'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Argue testing with presence-not-absence and multi-axis quality
+  - Price slipped defects at ten times per phase
+  - File famous failures against complacency arguments
+concepts:
+  - software quality models
+  - cost-of-defect curve
+  - failure case studies
+prerequisites: []
+examRelevance: high
+tags:
+  - foundations
+  - quality
+---
 # Testing Concepts, Quality & Famous Failures
 
 **Why test at all — quality models, cost-of-defect curve, and the disasters that priced complacency.**

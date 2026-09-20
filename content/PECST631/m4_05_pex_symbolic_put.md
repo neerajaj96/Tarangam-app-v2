@@ -1,3 +1,27 @@
+---
+id: m4_05_pex_symbolic_put
+courseCode: PECST631
+module: 4
+sequence: 5
+title: 'PEX: Symbolic Execution & Parameterized Tests'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Run code on symbols into per-path constraints
+  - Let solvers witness or prune each path exactly
+  - Generate self-asserting parameterized unit tests
+concepts:
+  - symbolic execution
+  - path constraints
+  - parameterized tests
+prerequisites:
+  - m2_01_unit_static_dynamic_control
+  - m2_04_junit_automation
+examRelevance: high
+tags:
+  - symbolic-execution
+  - pex
+---
 # PEX: Symbolic Execution & Parameterized Tests
 
 **Running code on symbols — path constraints, solver verdicts, and unit tests that generate themselves.**

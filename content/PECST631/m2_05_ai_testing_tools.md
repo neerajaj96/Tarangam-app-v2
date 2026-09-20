@@ -1,3 +1,26 @@
+---
+id: m2_05_ai_testing_tools
+courseCode: PECST631
+module: 2
+sequence: 5
+title: 'AI in Testing & Industry Tools'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Draft with GenAI copilots behind oracle gates
+  - Heal approved diffs and rank risks predictively
+  - Audit the toolbelt against supervised-automation limits
+concepts:
+  - GenAI copilots
+  - predictive selection
+  - oracle gates
+prerequisites:
+  - m1_05_automation_ai_trends
+examRelevance: medium
+tags:
+  - ai-testing
+  - test-tools
+---
 # AI in Testing & Industry Tools
 
 **GenAI copilots, predictive selection, and the toolbelt audit — supervised automation with oracle gates.**

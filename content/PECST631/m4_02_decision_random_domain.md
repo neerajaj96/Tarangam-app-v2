@@ -1,3 +1,26 @@
+---
+id: m4_02_decision_random_domain
+courseCode: PECST631
+module: 4
+sequence: 2
+title: 'Decision Tables, Random & Domain Testing'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Grid business rules into decision-table combinations
+  - Harness luck with profiled random testing honestly
+  - Sweep spec domains with oracles solved first
+concepts:
+  - decision tables
+  - random testing
+  - test oracles
+prerequisites:
+  - m4_01_isp_ecp_bva
+examRelevance: medium
+tags:
+  - black-box
+  - decision-tables
+---
 # Decision Tables, Random & Domain Testing
 
 **Business-rule grids, luck-harnessing, and spec-domain sweeps — functional black-box depth.**

@@ -1,3 +1,25 @@
+---
+id: m3_05_security_owasp_burp
+courseCode: PECST631
+module: 3
+sequence: 5
+title: 'Security Testing with OWASP & Burp'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Model threats with STRIDE before aiming at the Top-10
+  - Loop ZAP and Burp runs into fix-verify discipline
+  - Attack your own app first with lab-scoped consent
+concepts:
+  - threat modeling
+  - OWASP Top-10
+  - security tooling
+prerequisites: []
+examRelevance: medium
+tags:
+  - security-testing
+  - owasp
+---
 # Security Testing with OWASP & Burp
 
 **Attacking your own app first — methodology, tool workflow, and the PBCST604 reunion.**

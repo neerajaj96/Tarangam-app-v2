@@ -1,3 +1,29 @@
+---
+id: m1_06_m1_mixed_drill
+courseCode: PECST631
+module: 1
+sequence: 6
+title: 'M1 Drill: Foundations at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint tombstones, chains, levels, postures and robots
+  - State vetoes for every verdict without hedging
+  - Keep foundations straight under sprint-sheet pressure
+concepts:
+  - foundations sprint
+  - veto discipline
+prerequisites:
+  - m1_01_concepts_quality_failures
+  - m1_02_processes_terminology
+  - m1_03_test_types_pyramid
+  - m1_04_box_methods
+  - m1_05_automation_ai_trends
+examRelevance: high
+tags:
+  - foundations
+  - m1-drill
+---
 # M1 Drill: Foundations at Pace
 
 **Concepts-to-tools sprint — tombstones, chains, levels, postures, robots — with veto math.**

@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **341**
-- Pending: **91**
-- Coverage: **78.94%** (tracked by `npm run check`)
+- Migrated: **367**
+- Pending: **65**
+- Coverage: **84.95%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PECST631 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST637 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST632 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PBCST604 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -33,23 +34,54 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PECST637 — Fundamentals of Cryptography (started — see step 1)
-   2. PECST632 — Deep Learning (started — see step 1)
-   3. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
-   4. PCCST602 — Advanced Computing Systems (started — see step 1)
-   5. PCCST601 — Compiler Design (started — see step 1)
-   6. PECST522 — Artificial Intelligence (started — see step 1)
-   7. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   8. PCCST503 — Machine Learning (started — see step 1)
-   9. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   10. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   11. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   12. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   13. PCCST501 — Computer Networks (started — see step 1)
-   14. PECST631 — Software Testing
+   1. PECST631 — Software Testing (started — see step 1)
+   2. PECST637 — Fundamentals of Cryptography (started — see step 1)
+   3. PECST632 — Deep Learning (started — see step 1)
+   4. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
+   5. PCCST602 — Advanced Computing Systems (started — see step 1)
+   6. PCCST601 — Compiler Design (started — see step 1)
+   7. PECST522 — Artificial Intelligence (started — see step 1)
+   8. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   9. PCCST503 — Machine Learning (started — see step 1)
+   10. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   11. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   12. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   13. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   14. PCCST501 — Computer Networks (started — see step 1)
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PECST631 — Software Testing (26/26 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Testing Foundations & Automation | 01 | `m1_01_concepts_quality_failures.md` | `m1_01_concepts_quality_failures` | migrated |
+| M1 Testing Foundations & Automation | 02 | `m1_02_processes_terminology.md` | `m1_02_processes_terminology` | migrated |
+| M1 Testing Foundations & Automation | 03 | `m1_03_test_types_pyramid.md` | `m1_03_test_types_pyramid` | migrated |
+| M1 Testing Foundations & Automation | 04 | `m1_04_box_methods.md` | `m1_04_box_methods` | migrated |
+| M1 Testing Foundations & Automation | 05 | `m1_05_automation_ai_trends.md` | `m1_05_automation_ai_trends` | migrated |
+| M1 Testing Foundations & Automation | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | migrated |
+| M2 Unit & Mutation Testing | 01 | `m2_01_unit_static_dynamic_control.md` | `m2_01_unit_static_dynamic_control` | migrated |
+| M2 Unit & Mutation Testing | 02 | `m2_02_dataflow_domain.md` | `m2_02_dataflow_domain` | migrated |
+| M2 Unit & Mutation Testing | 03 | `m2_03_mutation_operators_score.md` | `m2_03_mutation_operators_score` | migrated |
+| M2 Unit & Mutation Testing | 04 | `m2_04_junit_automation.md` | `m2_04_junit_automation` | migrated |
+| M2 Unit & Mutation Testing | 05 | `m2_05_ai_testing_tools.md` | `m2_05_ai_testing_tools` | migrated |
+| M2 Unit & Mutation Testing | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | migrated |
+| M3 White-Box & Security Testing | 01 | `m3_01_graph_coverage_prime_paths.md` | `m3_01_graph_coverage_prime_paths` | migrated |
+| M3 White-Box & Security Testing | 02 | `m3_02_dataflow_subsumption.md` | `m3_02_dataflow_subsumption` | migrated |
+| M3 White-Box & Security Testing | 03 | `m3_03_cfg_loops_exceptions.md` | `m3_03_cfg_loops_exceptions` | migrated |
+| M3 White-Box & Security Testing | 04 | `m3_04_design_call_inheritance.md` | `m3_04_design_call_inheritance` | migrated |
+| M3 White-Box & Security Testing | 05 | `m3_05_security_owasp_burp.md` | `m3_05_security_owasp_burp` | migrated |
+| M3 White-Box & Security Testing | 06 | `m3_06_coverage_numerics_drill.md` | `m3_06_coverage_numerics_drill` | migrated |
+| M3 White-Box & Security Testing | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | migrated |
+| M4 Black-Box, Grey-Box & PEX | 01 | `m4_01_isp_ecp_bva.md` | `m4_01_isp_ecp_bva` | migrated |
+| M4 Black-Box, Grey-Box & PEX | 02 | `m4_02_decision_random_domain.md` | `m4_02_decision_random_domain` | migrated |
+| M4 Black-Box, Grey-Box & PEX | 03 | `m4_03_grey_matrix_regression_oa.md` | `m4_03_grey_matrix_regression_oa` | migrated |
+| M4 Black-Box, Grey-Box & PEX | 04 | `m4_04_performance_responsive.md` | `m4_04_performance_responsive` | migrated |
+| M4 Black-Box, Grey-Box & PEX | 05 | `m4_05_pex_symbolic_put.md` | `m4_05_pex_symbolic_put` | migrated |
+| M4 Black-Box, Grey-Box & PEX | 06 | `m4_06_genai_advanced_case.md` | `m4_06_genai_advanced_case` | migrated |
+| M4 Black-Box, Grey-Box & PEX | 07 | `m4_07_m4_mixed_drill.md` | `m4_07_m4_mixed_drill` | migrated |
 
 ## PECST637 — Fundamentals of Cryptography (25/25 migrated)
 
@@ -473,37 +505,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PECST631 — Software Testing (0/26 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Testing Foundations & Automation | 01 | `m1_01_concepts_quality_failures.md` | `m1_01_concepts_quality_failures` | pending |
-| M1 Testing Foundations & Automation | 02 | `m1_02_processes_terminology.md` | `m1_02_processes_terminology` | pending |
-| M1 Testing Foundations & Automation | 03 | `m1_03_test_types_pyramid.md` | `m1_03_test_types_pyramid` | pending |
-| M1 Testing Foundations & Automation | 04 | `m1_04_box_methods.md` | `m1_04_box_methods` | pending |
-| M1 Testing Foundations & Automation | 05 | `m1_05_automation_ai_trends.md` | `m1_05_automation_ai_trends` | pending |
-| M1 Testing Foundations & Automation | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | pending |
-| M2 Unit & Mutation Testing | 01 | `m2_01_unit_static_dynamic_control.md` | `m2_01_unit_static_dynamic_control` | pending |
-| M2 Unit & Mutation Testing | 02 | `m2_02_dataflow_domain.md` | `m2_02_dataflow_domain` | pending |
-| M2 Unit & Mutation Testing | 03 | `m2_03_mutation_operators_score.md` | `m2_03_mutation_operators_score` | pending |
-| M2 Unit & Mutation Testing | 04 | `m2_04_junit_automation.md` | `m2_04_junit_automation` | pending |
-| M2 Unit & Mutation Testing | 05 | `m2_05_ai_testing_tools.md` | `m2_05_ai_testing_tools` | pending |
-| M2 Unit & Mutation Testing | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | pending |
-| M3 White-Box & Security Testing | 01 | `m3_01_graph_coverage_prime_paths.md` | `m3_01_graph_coverage_prime_paths` | pending |
-| M3 White-Box & Security Testing | 02 | `m3_02_dataflow_subsumption.md` | `m3_02_dataflow_subsumption` | pending |
-| M3 White-Box & Security Testing | 03 | `m3_03_cfg_loops_exceptions.md` | `m3_03_cfg_loops_exceptions` | pending |
-| M3 White-Box & Security Testing | 04 | `m3_04_design_call_inheritance.md` | `m3_04_design_call_inheritance` | pending |
-| M3 White-Box & Security Testing | 05 | `m3_05_security_owasp_burp.md` | `m3_05_security_owasp_burp` | pending |
-| M3 White-Box & Security Testing | 06 | `m3_06_coverage_numerics_drill.md` | `m3_06_coverage_numerics_drill` | pending |
-| M3 White-Box & Security Testing | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | pending |
-| M4 Black-Box, Grey-Box & PEX | 01 | `m4_01_isp_ecp_bva.md` | `m4_01_isp_ecp_bva` | pending |
-| M4 Black-Box, Grey-Box & PEX | 02 | `m4_02_decision_random_domain.md` | `m4_02_decision_random_domain` | pending |
-| M4 Black-Box, Grey-Box & PEX | 03 | `m4_03_grey_matrix_regression_oa.md` | `m4_03_grey_matrix_regression_oa` | pending |
-| M4 Black-Box, Grey-Box & PEX | 04 | `m4_04_performance_responsive.md` | `m4_04_performance_responsive` | pending |
-| M4 Black-Box, Grey-Box & PEX | 05 | `m4_05_pex_symbolic_put.md` | `m4_05_pex_symbolic_put` | pending |
-| M4 Black-Box, Grey-Box & PEX | 06 | `m4_06_genai_advanced_case.md` | `m4_06_genai_advanced_case` | pending |
-| M4 Black-Box, Grey-Box & PEX | 07 | `m4_07_m4_mixed_drill.md` | `m4_07_m4_mixed_drill` | pending |
 
 ## GXEST605 — Design Thinking and Product Development (0/24 migrated)
 

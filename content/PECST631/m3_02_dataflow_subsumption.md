@@ -1,3 +1,27 @@
+---
+id: m3_02_dataflow_subsumption
+courseCode: PECST631
+module: 3
+sequence: 2
+title: 'Data-Flow Criteria & Subsumption'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Order all-defs, all-uses and all-du-paths by strength
+  - Prove subsumption with touring arguments exactly
+  - Triage infeasible requirements honestly instead of faking
+concepts:
+  - coverage subsumption
+  - du-path criteria
+  - infeasible requirements
+prerequisites:
+  - m2_02_dataflow_domain
+  - m3_01_graph_coverage_prime_paths
+examRelevance: high
+tags:
+  - white-box
+  - subsumption
+---
 # Data-Flow Criteria & Subsumption
 
 **du-path strength ladder — all-defs/uses/paths ordered, subsumption proved, infeasibility triaged.**

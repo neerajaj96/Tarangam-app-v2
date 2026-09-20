@@ -1,3 +1,27 @@
+---
+id: m2_02_dataflow_domain
+courseCode: PECST631
+module: 2
+sequence: 2
+title: 'Data-Flow & Domain Testing'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Test def-use pairs along values' journeys exactly
+  - Probe boundaries on, off and on again for neighbourhoods
+  - Preview subsumption strength against testing costs
+concepts:
+  - def-use pairs
+  - boundary probing
+  - domain testing
+prerequisites:
+  - m1_04_box_methods
+  - m2_01_unit_static_dynamic_control
+examRelevance: medium
+tags:
+  - dataflow-testing
+  - domain-testing
+---
 # Data-Flow & Domain Testing
 
 **Values' journeys and input neighbourhoods — def-use pairs and boundary-hunting.**

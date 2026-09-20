@@ -1,3 +1,27 @@
+---
+id: m2_04_junit_automation
+courseCode: PECST631
+module: 2
+sequence: 4
+title: 'JUnit Framework & Test Automation'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Refresh fixtures per test with expected-first assertions
+  - Gate continuous integration with test runners
+  - Scale with valid-object builders and automation patterns
+concepts:
+  - JUnit lifecycle
+  - assertions craft
+  - automation patterns
+prerequisites:
+  - m1_05_automation_ai_trends
+  - m2_01_unit_static_dynamic_control
+examRelevance: high
+tags:
+  - junit
+  - automation
+---
 # JUnit Framework & Test Automation
 
 **The xUnit workhorse — lifecycle, assertions, runners, and the automation patterns that scale.**
