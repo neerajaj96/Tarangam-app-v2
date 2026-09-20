@@ -6,18 +6,18 @@
 
 ## Totals
 
-- Questions: 296
-- Covered topics: 226 of 432 (52%)
-- Uncovered topics: 206 (without questions — not assessed)
-- Exam-relevant coverage: 226 of 432 (52%)
-- Single-question topics: 156
+- Questions: 502
+- Covered topics: 432 of 432 (100%)
+- Uncovered topics: 0 (without questions — not assessed)
+- Exam-relevant coverage: 432 of 432 (100%)
+- Single-question topics: 362
 - Multi-question topics: 70
 
 ## Question-type distribution
 
 | Type | Count |
 | --- | ---: |
-| multiple_choice | 226 |
+| multiple_choice | 432 |
 | true_false | 65 |
 | short_answer | 5 |
 
@@ -25,102 +25,102 @@
 
 | Course | Questions | Covered topics | Total topics | Uncovered |
 | --- | ---: | ---: | ---: | ---: |
-| GAMAT301 | 20 | 14 | 24 | 10 |
-| GXEST104 | 23 | 17 | 33 | 16 |
-| GXEST605 | 19 | 14 | 24 | 10 |
-| GZPHT121 | 20 | 15 | 26 | 11 |
-| OECST614 | 16 | 12 | 24 | 12 |
-| PBCST604 | 18 | 14 | 26 | 12 |
-| PCCST303 | 19 | 15 | 27 | 12 |
-| PCCST501 | 20 | 16 | 36 | 20 |
-| PCCST502 | 18 | 14 | 31 | 17 |
-| PCCST503 | 17 | 13 | 23 | 10 |
-| PCCST601 | 19 | 15 | 29 | 14 |
-| PCCST602 | 16 | 12 | 23 | 11 |
-| PECST522 | 18 | 14 | 30 | 16 |
-| PECST631 | 18 | 14 | 26 | 12 |
-| PECST632 | 17 | 13 | 25 | 12 |
-| PECST637 | 18 | 14 | 25 | 11 |
+| GAMAT301 | 30 | 24 | 24 | 0 |
+| GXEST104 | 39 | 33 | 33 | 0 |
+| GXEST605 | 29 | 24 | 24 | 0 |
+| GZPHT121 | 31 | 26 | 26 | 0 |
+| OECST614 | 28 | 24 | 24 | 0 |
+| PBCST604 | 30 | 26 | 26 | 0 |
+| PCCST303 | 31 | 27 | 27 | 0 |
+| PCCST501 | 40 | 36 | 36 | 0 |
+| PCCST502 | 35 | 31 | 31 | 0 |
+| PCCST503 | 27 | 23 | 23 | 0 |
+| PCCST601 | 33 | 29 | 29 | 0 |
+| PCCST602 | 27 | 23 | 23 | 0 |
+| PECST522 | 34 | 30 | 30 | 0 |
+| PECST631 | 30 | 26 | 26 | 0 |
+| PECST632 | 29 | 25 | 25 | 0 |
+| PECST637 | 29 | 25 | 25 | 0 |
 
 ## Per-module questions
 
 | Course | Module | Module name | Questions |
 | --- | ---: | --- | ---: |
-| GAMAT301 | 1 | Discrete Random Variables | 8 |
-| GAMAT301 | 2 | Continuous Random Variables | 4 |
-| GAMAT301 | 3 | Limit Theorems & Stochastic Processes | 4 |
-| GAMAT301 | 4 | Markov Chains | 4 |
-| GXEST104 | 1 | DC Circuits & Magnetic Circuits | 9 |
-| GXEST104 | 2 | EMI, AC & Three-Phase Systems | 5 |
-| GXEST104 | 3 | Electronic Devices & Circuits | 5 |
-| GXEST104 | 4 | Modern Electronics & Applications | 4 |
-| GXEST605 | 1 | Fundamentals & Self-Check | 6 |
-| GXEST605 | 2 | Empathize & Define | 4 |
-| GXEST605 | 3 | Ideate & PoC | 4 |
-| GXEST605 | 4 | Design, Prototype & Pilot | 5 |
-| GZPHT121 | 1 | Laser & Fibre Optics | 6 |
-| GZPHT121 | 2 | Interference & Diffraction | 5 |
-| GZPHT121 | 3 | Quantum Mechanics | 4 |
-| GZPHT121 | 4 | Waves & Acoustics | 5 |
-| OECST614 | 1 | ML Basics & Regression | 4 |
-| OECST614 | 2 | Classification & Evaluation | 4 |
-| OECST614 | 3 | Neural Nets & Trees | 4 |
-| OECST614 | 4 | Clustering & Ensembles | 4 |
-| PBCST604 | 1 | InfoSec, Recon & VAPT | 4 |
-| PBCST604 | 2 | Web & DNS Security | 5 |
-| PBCST604 | 3 | Network Security | 5 |
-| PBCST604 | 4 | System Security & Projects | 4 |
-| PCCST303 | 1 | Basic Concepts, Stacks & Queues | 5 |
-| PCCST303 | 2 | Linked Lists & Memory Management | 4 |
-| PCCST303 | 3 | Trees, Heaps & Graphs | 5 |
-| PCCST303 | 4 | Sorting, Searching & Hashing | 5 |
-| PCCST501 | 1 | Application Layer | 5 |
-| PCCST501 | 2 | Transport & Network Layer | 5 |
-| PCCST501 | 3 | Data Link Layer | 5 |
-| PCCST501 | 4 | Physical Layer & SNMP | 5 |
-| PCCST502 | 1 | Analysis & Recurrences | 5 |
-| PCCST502 | 2 | Graphs & Divide/Conquer | 4 |
-| PCCST502 | 3 | Greedy, DP & Backtracking | 5 |
-| PCCST502 | 4 | Branch/Bound & Complexity | 4 |
-| PCCST503 | 1 | Foundations & Regression | 4 |
-| PCCST503 | 2 | Classification & Trees | 4 |
-| PCCST503 | 3 | Neural Nets & SVMs | 4 |
-| PCCST503 | 4 | PCA & Ensembles | 5 |
-| PCCST601 | 1 | Front End & Scanners | 4 |
-| PCCST601 | 2 | Top-Down Parsing | 5 |
-| PCCST601 | 3 | Bottom-Up Parsing & IR | 5 |
-| PCCST601 | 4 | Code Generation & Optimization | 5 |
-| PCCST602 | 1 | Distributed Models & Enablers | 4 |
-| PCCST602 | 2 | Clusters & Job Management | 4 |
-| PCCST602 | 3 | Virtualization | 4 |
-| PCCST602 | 4 | Cloud, Microservices & Containers | 4 |
-| PECST522 | 1 | Agents & Problem Solving | 5 |
-| PECST522 | 2 | Search & Game Playing | 5 |
-| PECST522 | 3 | Knowledge & Logic | 4 |
-| PECST522 | 4 | Reinforcement Learning | 4 |
-| PECST631 | 1 | Testing Foundations & Automation | 4 |
-| PECST631 | 2 | Unit & Mutation Testing | 4 |
-| PECST631 | 3 | White-Box & Security Testing | 5 |
-| PECST631 | 4 | Black-Box, Grey-Box & PEX | 5 |
-| PECST632 | 1 | MLP, Backprop & SGD | 4 |
-| PECST632 | 2 | Depth, Activations & Autoencoders | 4 |
-| PECST632 | 3 | CNNs & RNNs | 5 |
-| PECST632 | 4 | Applications, GANs & Advanced AEs | 4 |
-| PECST637 | 1 | Number Theory | 5 |
-| PECST637 | 2 | Classical Ciphers | 4 |
-| PECST637 | 3 | Modern Ciphers & RSA | 5 |
-| PECST637 | 4 | Hashes, Signatures & PKI | 4 |
+| GAMAT301 | 1 | Discrete Random Variables | 9 |
+| GAMAT301 | 2 | Continuous Random Variables | 7 |
+| GAMAT301 | 3 | Limit Theorems & Stochastic Processes | 7 |
+| GAMAT301 | 4 | Markov Chains | 7 |
+| GXEST104 | 1 | DC Circuits & Magnetic Circuits | 12 |
+| GXEST104 | 2 | EMI, AC & Three-Phase Systems | 10 |
+| GXEST104 | 3 | Electronic Devices & Circuits | 10 |
+| GXEST104 | 4 | Modern Electronics & Applications | 7 |
+| GXEST605 | 1 | Fundamentals & Self-Check | 7 |
+| GXEST605 | 2 | Empathize & Define | 7 |
+| GXEST605 | 3 | Ideate & PoC | 7 |
+| GXEST605 | 4 | Design, Prototype & Pilot | 8 |
+| GZPHT121 | 1 | Laser & Fibre Optics | 8 |
+| GZPHT121 | 2 | Interference & Diffraction | 8 |
+| GZPHT121 | 3 | Quantum Mechanics | 7 |
+| GZPHT121 | 4 | Waves & Acoustics | 8 |
+| OECST614 | 1 | ML Basics & Regression | 7 |
+| OECST614 | 2 | Classification & Evaluation | 7 |
+| OECST614 | 3 | Neural Nets & Trees | 7 |
+| OECST614 | 4 | Clustering & Ensembles | 7 |
+| PBCST604 | 1 | InfoSec, Recon & VAPT | 7 |
+| PBCST604 | 2 | Web & DNS Security | 8 |
+| PBCST604 | 3 | Network Security | 8 |
+| PBCST604 | 4 | System Security & Projects | 7 |
+| PCCST303 | 1 | Basic Concepts, Stacks & Queues | 8 |
+| PCCST303 | 2 | Linked Lists & Memory Management | 7 |
+| PCCST303 | 3 | Trees, Heaps & Graphs | 8 |
+| PCCST303 | 4 | Sorting, Searching & Hashing | 8 |
+| PCCST501 | 1 | Application Layer | 10 |
+| PCCST501 | 2 | Transport & Network Layer | 13 |
+| PCCST501 | 3 | Data Link Layer | 8 |
+| PCCST501 | 4 | Physical Layer & SNMP | 9 |
+| PCCST502 | 1 | Analysis & Recurrences | 13 |
+| PCCST502 | 2 | Graphs & Divide/Conquer | 7 |
+| PCCST502 | 3 | Greedy, DP & Backtracking | 8 |
+| PCCST502 | 4 | Branch/Bound & Complexity | 7 |
+| PCCST503 | 1 | Foundations & Regression | 6 |
+| PCCST503 | 2 | Classification & Trees | 7 |
+| PCCST503 | 3 | Neural Nets & SVMs | 6 |
+| PCCST503 | 4 | PCA & Ensembles | 8 |
+| PCCST601 | 1 | Front End & Scanners | 6 |
+| PCCST601 | 2 | Top-Down Parsing | 8 |
+| PCCST601 | 3 | Bottom-Up Parsing & IR | 10 |
+| PCCST601 | 4 | Code Generation & Optimization | 9 |
+| PCCST602 | 1 | Distributed Models & Enablers | 6 |
+| PCCST602 | 2 | Clusters & Job Management | 7 |
+| PCCST602 | 3 | Virtualization | 7 |
+| PCCST602 | 4 | Cloud, Microservices & Containers | 7 |
+| PECST522 | 1 | Agents & Problem Solving | 9 |
+| PECST522 | 2 | Search & Game Playing | 11 |
+| PECST522 | 3 | Knowledge & Logic | 7 |
+| PECST522 | 4 | Reinforcement Learning | 7 |
+| PECST631 | 1 | Testing Foundations & Automation | 7 |
+| PECST631 | 2 | Unit & Mutation Testing | 7 |
+| PECST631 | 3 | White-Box & Security Testing | 8 |
+| PECST631 | 4 | Black-Box, Grey-Box & PEX | 8 |
+| PECST632 | 1 | MLP, Backprop & SGD | 7 |
+| PECST632 | 2 | Depth, Activations & Autoencoders | 7 |
+| PECST632 | 3 | CNNs & RNNs | 8 |
+| PECST632 | 4 | Applications, GANs & Advanced AEs | 7 |
+| PECST637 | 1 | Number Theory | 8 |
+| PECST637 | 2 | Classical Ciphers | 6 |
+| PECST637 | 3 | Modern Ciphers & RSA | 8 |
+| PECST637 | 4 | Hashes, Signatures & PKI | 7 |
 
 ## Exam-relevant coverage
 
 - Exam-relevant topics in manifest: 432
-- Exam-relevant topics with questions: 226
-- Exam-relevant topics without questions: 206 (not assessed)
-- Coverage: 52%
+- Exam-relevant topics with questions: 432
+- Exam-relevant topics without questions: 0 (not assessed)
+- Coverage: 100%
 
 ## Single- vs multi-question topics
 
-- Topics with exactly 1 question: 156
+- Topics with exactly 1 question: 362
 - Topics with more than 1 question: 70
 
 Single-question topics (course/topic):
@@ -281,31 +281,237 @@ Single-question topics (course/topic):
 - PECST637/m3_06_diffie_hellman_mitm
 - PECST637/m4_03_digital_signatures
 - PECST637/m4_04_key_mgmt_pki
+- GAMAT301/m1_06_expectation_functions_m1_drill
+- GAMAT301/m2_04_exponential_distribution_memoryless
+- GAMAT301/m2_05_joint_pdf_marginals_independence
+- GAMAT301/m2_06_m2_mixed_drill_model_selection
+- GAMAT301/m3_03_stochastic_counting_processes
+- GAMAT301/m3_04_poisson_process_interarrival
+- GAMAT301/m3_05_poisson_process_drill
+- GAMAT301/m4_02_random_walk_gambler_ruin
+- GAMAT301/m4_04_classification_states_irreducible_recurrent
+- GAMAT301/m4_06_m4_mixed_drill
+- GXEST104/m1_03_capacitors_inductors_energy
+- GXEST104/m1_06_nodal_analysis_matrices
+- GXEST104/m1_07_magnetic_circuits_basics
+- GXEST104/m2_04_pure_r_l_c_circuits
+- GXEST104/m2_05_rl_rc_rlc_series
+- GXEST104/m2_06_series_resonance_q_factor_bandwidth
+- GXEST104/m2_07_ac_power_pf_correction
+- GXEST104/m2_08_three_phase_star_delta
+- GXEST104/m3_02_zener_avalanche_regulator
+- GXEST104/m3_03_dc_supply_rectifiers
+- GXEST104/m3_05_bjt_construction_characteristics
+- GXEST104/m3_07_switch_amplifier
+- GXEST104/m3_08_rc_coupled_fet_mosfet
+- GXEST104/m4_02_am_fm_superhet
+- GXEST104/m4_03_wired_wireless_gsm_generations
+- GXEST104/m4_05_cro_lissajous
+- GXEST605/m1_04_idea_self_check
+- GXEST605/m2_02_why_wh_maps
+- GXEST605/m2_03_journey_personas
+- GXEST605/m2_05_workshop_drill
+- GXEST605/m3_02_research_trends
+- GXEST605/m3_03_feasibility_sessions
+- GXEST605/m3_05_ideation_workshop_drill
+- GXEST605/m4_02_standards_code_future
+- GXEST605/m4_04_pilot_scaling
+- GXEST605/m4_05_bmc_production_visit
+- GZPHT121/m1_04_optical_fibre_types_propagation
+- GZPHT121/m1_06_fibre_communication_block_diagram_drill
+- GZPHT121/m2_05_single_slit_diffraction_width
+- GZPHT121/m2_06_diffraction_grating_equation_powers
+- GZPHT121/m2_07_module2_mixed_numerical_drill
+- GZPHT121/m3_03_wavefunction_schrodinger_equations
+- GZPHT121/m3_05_box_numericals_energy_probability
+- GZPHT121/m3_06_quantum_tunnelling_concept_drill
+- GZPHT121/m4_04_sabine_numerical_drill
+- GZPHT121/m4_05_ultrasonics_piezoelectric_diffractometer
+- GZPHT121/m4_06_sonar_ndt_pulse_echo
+- OECST614/m1_02_mle_map_bayesian_estimation
+- OECST614/m1_05_multivariate_gradient_matrix_method
+- OECST614/m1_06_m1_mixed_drill
+- OECST614/m2_02_knn_lazy_learning
+- OECST614/m2_04_train_test_validation_splits
+- OECST614/m2_06_m2_mixed_drill
+- OECST614/m3_04_decision_trees_info_gain_ratio
+- OECST614/m3_05_id3_algorithm_worked
+- OECST614/m3_06_m3_mixed_drill
+- OECST614/m4_04_mds_ensemble_bagging_boosting
+- OECST614/m4_05_resampling_bias_variance_tradeoff
+- OECST614/m4_06_m4_mixed_drill
+- PBCST604/m1_02_reconnaissance_gathering
+- PBCST604/m1_04_format_string_vuln_drill
+- PBCST604/m1_06_m1_mixed_drill
+- PBCST604/m2_04_dns_security_dnssec
+- PBCST604/m2_05_zap_webgoat_dvwa_mirror
+- PBCST604/m2_06_email_security
+- PBCST604/m3_04_traffic_capture_tricks
+- PBCST604/m3_06_wireshark_analysis
+- PBCST604/m3_07_m3_attack_chain_drill
+- PBCST604/m4_02_windows_safe_defender
+- PBCST604/m4_03_linux_attacks_physical_config
+- PBCST604/m4_06_m4_mixed_drill
+- PCCST303/m1_03_polynomial_sparse_matrix_arrays
+- PCCST303/m1_04_stacks_multistacks_applications
+- PCCST303/m1_05_queues_circular_deque
+- PCCST303/m2_03_doubly_linked_list
+- PCCST303/m2_04_circular_linked_list_variations
+- PCCST303/m2_05_memory_allocation_fits
+- PCCST303/m3_04_binary_heaps_priority_queue
+- PCCST303/m3_05_graphs_definitions_representation
+- PCCST303/m3_07_m3_mixed_drill
+- PCCST303/m4_05_linear_binary_search
+- PCCST303/m4_06_hashing_functions_collisions
+- PCCST303/m4_07_m4_mixed_drill
+- PCCST501/m1_04_world_wide_web_and_http
+- PCCST501/m1_05_file_transfer_protocol_ftp
+- PCCST501/m1_07_domain_name_system_dns
+- PCCST501/m1_08_peer_to_peer_bittorrent
+- PCCST501/m1_99_practice_lab_application_layer_drills
+- PCCST501/m2_05_tcp_flow_control_and_connection_management
+- PCCST501/m2_06_congestion_control_principles_and_tcp
+- PCCST501/m2_07_multicast_routing_trees_rpf
+- PCCST501/m2_08_quality_of_service_qos_mechanisms
+- PCCST501/m2_09_ipv4_addressing_forwarding_nat_icmp
+- PCCST501/m2_10_unicast_routing_link_state_distance_vector
+- PCCST501/m2_11_ipv6_next_generation_transition
+- PCCST501/m2_99_practice_lab_transport_drills
+- PCCST501/m3_04_lan_addressing_arp_switches_and_vlans
+- PCCST501/m3_05_wireless_lan_802_11
+- PCCST501/m3_06_mobile_ip_agents_tunneling
+- PCCST501/m4_03_pcm_digitization_sampling_quantization
+- PCCST501/m4_05_transmission_media_guided_unguided
+- PCCST501/m4_06_bandwidth_utilization_multiplexing_spread
+- PCCST501/m4_07_asn1_smi_mib_language
+- PCCST502/m1_01_algorithm_definition_and_criteria
+- PCCST502/m1_02_time_space_complexity_best_worst_average
+- PCCST502/m1_06_recurrence_iteration_method
+- PCCST502/m1_07_recursion_tree_method
+- PCCST502/m1_08_master_theorem_and_cases
+- PCCST502/m1_09_balanced_search_trees_avl_foundations
+- PCCST502/m1_10_avl_tree_rotations_insertion_and_deletion
+- PCCST502/m1_99_practice_lab_asymptotics_and_recurrences
+- PCCST502/m2_02_graph_traversals_bfs_and_dfs
+- PCCST502/m2_05_topological_sorting_dag_linearization
+- PCCST502/m2_99_practice_lab_graphs_divide_drills
+- PCCST502/m3_05_backtracking_n_queens_state_space
+- PCCST502/m3_06_floyd_warshall_all_pairs_shortest
+- PCCST502/m3_99_practice_lab_greedy_dp_backtracking_drills
+- PCCST502/m4_04_bin_packing_approximation_algorithms
+- PCCST502/m4_05_randomized_algorithms_las_vegas_monte_carlo
+- PCCST502/m4_99_practice_lab_branchbound_complexity_drills
+- PCCST503/m1_04_multiple_regression_model_assessment
+- PCCST503/m1_99_practice_lab_foundations_drills
+- PCCST503/m2_03_naive_bayes_generative_models
+- PCCST503/m2_05_gradient_descent_training_engine
+- PCCST503/m2_99_practice_lab_classification_drills
+- PCCST503/m3_04_kernels_soft_margins
+- PCCST503/m3_99_practice_lab_networks_svm_drills
+- PCCST503/m4_02_hierarchical_clustering
+- PCCST503/m4_06_mds_multidimensional_scaling
+- PCCST503/m4_99_practice_lab_unsupervised_ensemble_drills
+- PCCST601/m1_02_regex_fsa_brushup
+- PCCST601/m1_05_m1_mixed_drill
+- PCCST601/m2_03_recursive_descent_predictive
+- PCCST601/m2_06_grammar_transform_drill
+- PCCST601/m2_07_m2_mixed_drill
+- PCCST601/m3_05_lr_drill
+- PCCST601/m3_06_ir_taxonomy_graphical
+- PCCST601/m3_07_linear_ir_tac
+- PCCST601/m3_08_sdt_expressions_control
+- PCCST601/m3_09_m3_mixed_drill
+- PCCST601/m4_02_codegen_boolean_relational
+- PCCST601/m4_04_optimization_opportunities_scope
+- PCCST601/m4_05_local_lvn_balancing
+- PCCST601/m4_06_regional_superlocal_unrolling
+- PCCST602/m1_02_iot_cps
+- PCCST602/m1_04_vms_system_models
+- PCCST602/m2_02_cluster_arch_gpu_ssi
+- PCCST602/m2_03_ha_fault_checkpoint
+- PCCST602/m2_05_job_management_migration
+- PCCST602/m3_03_structures_cpu_virtualization
+- PCCST602/m3_05_virtual_clusters_live_migration
+- PCCST602/m3_06_m3_mixed_drill
+- PCCST602/m4_03_microservices_pros_cons
+- PCCST602/m4_04_ipc_discovery_gateway
+- PCCST602/m4_06_m4_mixed_drill
+- PECST522/m1_03_concept_of_rationality
+- PECST522/m1_04_nature_of_task_environments
+- PECST522/m1_05_agent_architectures_reflex_to_learning
+- PECST522/m1_07_classic_ai_toy_problems
+- PECST522/m2_04_greedy_best_first_search
+- PECST522/m2_06_generate_and_test
+- PECST522/m2_07_csp_arc_consistency_ac3
+- PECST522/m2_08_games_minimax_optimal_play
+- PECST522/m2_09_alpha_beta_pruning
+- PECST522/m2_99_practice_lab_search_strategies_drills
+- PECST522/m3_02_propositional_logic_syntax_semantics
+- PECST522/m3_05_propositional_vs_fol_inference
+- PECST522/m3_99_practice_lab_logic_drills
+- PECST522/m4_02_passive_rl_utility_adp_and_td
+- PECST522/m4_04_policy_search_and_inverse_rl
+- PECST522/m4_05_generalization_applications_rl
+- PECST631/m1_03_test_types_pyramid
+- PECST631/m1_05_automation_ai_trends
+- PECST631/m1_06_m1_mixed_drill
+- PECST631/m2_02_dataflow_domain
+- PECST631/m2_05_ai_testing_tools
+- PECST631/m2_06_m2_mixed_drill
+- PECST631/m3_04_design_call_inheritance
+- PECST631/m3_05_security_owasp_burp
+- PECST631/m3_06_coverage_numerics_drill
+- PECST631/m4_02_decision_random_domain
+- PECST631/m4_04_performance_responsive
+- PECST631/m4_06_genai_advanced_case
+- PECST632/m1_03_sgd_schedules
+- PECST632/m1_04_curse_dimensionality
+- PECST632/m1_06_m1_mixed_drill
+- PECST632/m2_03_unsupervised_rbm
+- PECST632/m2_05_dl_applications
+- PECST632/m2_06_m2_mixed_drill
+- PECST632/m3_04_birnn_seq2seq
+- PECST632/m3_06_dimension_param_drill
+- PECST632/m3_07_m3_mixed_drill
+- PECST632/m4_02_regularized_autoencoders
+- PECST632/m4_03_stochastic_contractive
+- PECST632/m4_05_gan_dynamics_drill
+- PECST637/m1_04_primitive_roots_discrete_log
+- PECST637/m1_05_miller_rabin_primality
+- PECST637/m1_07_m1_mixed_drill
+- PECST637/m2_04_transposition_feistel
+- PECST637/m2_05_m2_mixed_drill
+- PECST637/m3_03_stream_rc4
+- PECST637/m3_04_publickey_principles
+- PECST637/m3_07_m3_mixed_drill
+- PECST637/m4_02_sha3_hmac
+- PECST637/m4_05_protocol_drill
+- PECST637/m4_06_m4_mixed_drill
 
 Question counts use bank order for covered topics and manifest order for uncovered topics.
-Covered topics: 226 listed in the bank; each carries 2–2 questions in this snapshot.
+Covered topics: 432 listed in the bank; each carries 2–2 questions in this snapshot.
 
 ## Remaining gaps
 
-- 206 topics have no questions and are therefore not assessed.
+- 0 topics have no questions and are therefore not assessed.
 - Uncovered counts per course:
 
-  - GAMAT301: 10 uncovered of 24
-  - GXEST104: 16 uncovered of 33
-  - GXEST605: 10 uncovered of 24
-  - GZPHT121: 11 uncovered of 26
-  - OECST614: 12 uncovered of 24
-  - PBCST604: 12 uncovered of 26
-  - PCCST303: 12 uncovered of 27
-  - PCCST501: 20 uncovered of 36
-  - PCCST502: 17 uncovered of 31
-  - PCCST503: 10 uncovered of 23
-  - PCCST601: 14 uncovered of 29
-  - PCCST602: 11 uncovered of 23
-  - PECST522: 16 uncovered of 30
-  - PECST631: 12 uncovered of 26
-  - PECST632: 12 uncovered of 25
-  - PECST637: 11 uncovered of 25
+  - GAMAT301: 0 uncovered of 24
+  - GXEST104: 0 uncovered of 33
+  - GXEST605: 0 uncovered of 24
+  - GZPHT121: 0 uncovered of 26
+  - OECST614: 0 uncovered of 24
+  - PBCST604: 0 uncovered of 26
+  - PCCST303: 0 uncovered of 27
+  - PCCST501: 0 uncovered of 36
+  - PCCST502: 0 uncovered of 31
+  - PCCST503: 0 uncovered of 23
+  - PCCST601: 0 uncovered of 29
+  - PCCST602: 0 uncovered of 23
+  - PECST522: 0 uncovered of 30
+  - PECST631: 0 uncovered of 26
+  - PECST632: 0 uncovered of 25
+  - PECST637: 0 uncovered of 25
 
 Gaps are informational only: nothing is locked or gated, and uncovered topics remain fully readable.
 

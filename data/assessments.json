@@ -4621,6 +4621,3508 @@
       "explanation": "Legacy CN-only checks miss SAN-only certs, so validation must match SAN names after chain and validity checks with fail-closed abort on first red.",
       "difficulty": "beginner",
       "examRelevance": "high"
+    },
+    {
+      "id": "q_gamat301_m1_06_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m1_06_expectation_functions_m1_drill",
+      "type": "multiple_choice",
+      "question": "What is Cov(X,Y) when E[X] equals 2, E[Y] equals 3 and E[XY] equals 7?",
+      "options": [
+        "1",
+        "0",
+        "6",
+        "13"
+      ],
+      "answer": "1",
+      "explanation": "Cov equals E[XY] minus E[X]E[Y], so 7 minus 6 equals 1. A nonzero Cov also means X and Y are dependent and the sum variance needs the 2Cov term.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_gamat301_m2_04_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m2_04_exponential_distribution_memoryless",
+      "type": "multiple_choice",
+      "question": "Which statement expresses the memoryless property of the exponential distribution?",
+      "options": [
+        "P(X greater than s plus t given X greater than s) equals P(X greater than t)",
+        "E[X] equals 1 divided by lambda",
+        "Var(X) equals 1 divided by lambda squared",
+        "The pdf is symmetric about the mean"
+      ],
+      "answer": "P(X greater than s plus t given X greater than s) equals P(X greater than t)",
+      "explanation": "Conditioning on survival to s leaves the same fresh-start law for the remaining time. The file states this characterizes the exponential among continuous distributions.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gamat301_m2_05_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m2_05_joint_pdf_marginals_independence",
+      "type": "multiple_choice",
+      "question": "Why does a constant joint density on the triangle x plus y at most 1 fail independence?",
+      "options": [
+        "The triangular support is not a product rectangle so large X forces small Y",
+        "The formula is constant so the marginals cannot be computed",
+        "The joint density is zero outside the triangle",
+        "The region probability cannot be written as an iterated integral"
+      ],
+      "answer": "The triangular support is not a product rectangle so large X forces small Y",
+      "explanation": "Independence needs product form everywhere on a product rectangle, and the file warns to sketch the region first. A triangle couples X and Y even when the formula splits.",
+      "difficulty": "intermediate",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gamat301_m2_06_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m2_06_m2_mixed_drill_model_selection",
+      "type": "multiple_choice",
+      "question": "What first move does the M2 triage table prescribe for bell-shaped data with mean and sigma?",
+      "options": [
+        "Standardise with z equals (x minus mu) over sigma then use Phi",
+        "Use length ratios on the bounded interval",
+        "Use exponential tails with rate times time",
+        "Integrate out the other variable to get marginals"
+      ],
+      "answer": "Standardise with z equals (x minus mu) over sigma then use Phi",
+      "explanation": "The triage row maps bell data with mu and sigma to Normal with standardisation first. Wrong model with perfect arithmetic still scores zero, so diagnose first.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_gamat301_m3_03_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m3_03_stochastic_counting_processes",
+      "type": "multiple_choice",
+      "question": "Which description defines a counting process N(t) in the taxonomy?",
+      "options": [
+        "Integer valued, non-decreasing, starting at 0 with unit jumps",
+        "Discrete time with continuous prices that can move down",
+        "Continuous time with temperature that can move both ways",
+        "A single random variable observed at one fixed time"
+      ],
+      "answer": "Integer valued, non-decreasing, starting at 0 with unit jumps",
+      "explanation": "The file defines counting by integer plus non-decreasing plus unit jumps from N(0) equals 0. Prices and temperatures move both ways so monotonicity disqualifies them.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gamat301_m3_04_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m3_04_poisson_process_interarrival",
+      "type": "multiple_choice",
+      "question": "For a Poisson process at rate 5 per hour, what mean must be used for a 30 minute window?",
+      "options": [
+        "2.5",
+        "5",
+        "0.5",
+        "10"
+      ],
+      "answer": "2.5",
+      "explanation": "Multiply rate by time first to get lambda t of two point five, then open the Poisson formula. Using raw lambda counts a full hour, not the asked half.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gamat301_m3_05_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m3_05_poisson_process_drill",
+      "type": "multiple_choice",
+      "question": "When may probabilities for two Poisson process windows be multiplied?",
+      "options": [
+        "Only when the two intervals are disjoint",
+        "Always for any pair of intervals",
+        "Only when the intervals overlap partly",
+        "Only when each window has the same length"
+      ],
+      "answer": "Only when the two intervals are disjoint",
+      "explanation": "Disjoint intervals are independent so their counts multiply. The file warns overlapping windows share time and never factorise, so check disjointness first.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gamat301_m4_02_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m4_02_random_walk_gambler_ruin",
+      "type": "multiple_choice",
+      "question": "In the gambler ruin formula, what ratio must be used for r?",
+      "options": [
+        "q over p, losers over winners",
+        "p over q, winners over losers",
+        "p minus q, drift per step",
+        "k over N, stake over target"
+      ],
+      "answer": "q over p, losers over winners",
+      "explanation": "The file pitfall says to label r explicitly as q over p before substituting. Inverting the ratio mirrors the answer to success instead of ruin.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gamat301_m4_04_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m4_04_classification_states_irreducible_recurrent",
+      "type": "multiple_choice",
+      "question": "What must hold for every state of a finite irreducible Markov chain?",
+      "options": [
+        "All states are recurrent",
+        "All states are transient",
+        "All states are absorbing",
+        "All states have period 3"
+      ],
+      "answer": "All states are recurrent",
+      "explanation": "The single class is closed and finite, so escape with permanent absence is impossible. Returns therefore happen with probability 1 everywhere.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gamat301_m4_06_01",
+      "courseCode": "GAMAT301",
+      "topicId": "m4_06_m4_mixed_drill",
+      "type": "multiple_choice",
+      "question": "Which chain has a unique stationary distribution with P to the n converging to rows of pi?",
+      "options": [
+        "A finite irreducible aperiodic chain",
+        "A reducible chain with two closed classes",
+        "A periodic irreducible chain",
+        "A chain with all transient states"
+      ],
+      "answer": "A finite irreducible aperiodic chain",
+      "explanation": "Ergodic means irreducible plus aperiodic plus finite, giving one pi with start-independent convergence. Periodicity oscillates and reducibility traps, breaking convergence.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_gxest104_m1_03_01",
+      "courseCode": "GXEST104",
+      "topicId": "m1_03_capacitors_inductors_energy",
+      "type": "multiple_choice",
+      "question": "In steady DC, how do an ideal capacitor and inductor behave in a circuit?",
+      "options": [
+        "Capacitor open and inductor short",
+        "Capacitor short and inductor open",
+        "Both open",
+        "Both short"
+      ],
+      "answer": "Capacitor open and inductor short",
+      "explanation": "A charged capacitor draws no current so it acts open and a steady inductor has no change so voltage is zero and it acts short.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m1_06_01",
+      "courseCode": "GXEST104",
+      "topicId": "m1_06_nodal_analysis_matrices",
+      "type": "multiple_choice",
+      "question": "How should a voltage source between two non-reference nodes be handled in nodal analysis?",
+      "options": [
+        "Form a supernode with KCL over the envelope plus a voltage constraint",
+        "Treat it as a current injection equal to its voltage value",
+        "Ignore the source and solve the nodal matrix normally",
+        "Ground one node forcibly and delete the other node"
+      ],
+      "answer": "Form a supernode with KCL over the envelope plus a voltage constraint",
+      "explanation": "The source current is unknown so KCL is written around both nodes together and the fixed voltage difference restores the missing equation.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m1_07_01",
+      "courseCode": "GXEST104",
+      "topicId": "m1_07_magnetic_circuits_basics",
+      "type": "multiple_choice",
+      "question": "Which formula gives magnetic flux from MMF and reluctance under linear conditions?",
+      "options": [
+        "Flux equals NI divided by reluctance",
+        "Flux equals reluctance divided by NI",
+        "Flux equals NI times reluctance",
+        "Flux equals reluctance squared divided by NI"
+      ],
+      "answer": "Flux equals NI divided by reluctance",
+      "explanation": "Hopkinson law states flux equals MMF over reluctance and it mirrors Ohm law for magnetic circuits.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m2_04_01",
+      "courseCode": "GXEST104",
+      "topicId": "m2_04_pure_r_l_c_circuits",
+      "type": "multiple_choice",
+      "question": "Which statement correctly pairs each pure element with its current phase relative to voltage?",
+      "options": [
+        "R in phase, L lags 90 degrees, C leads 90 degrees",
+        "R lags 90 degrees, L leads 90 degrees, C in phase",
+        "R leads 90 degrees, L in phase, C lags 90 degrees",
+        "R, L and C currents are all in phase with voltage"
+      ],
+      "answer": "R in phase, L lags 90 degrees, C leads 90 degrees",
+      "explanation": "Resistor current mirrors voltage while inductor current lags by a quarter cycle and capacitor current leads by a quarter cycle with zero net power for pure reactance.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m2_05_01",
+      "courseCode": "GXEST104",
+      "topicId": "m2_05_rl_rc_rlc_series",
+      "type": "multiple_choice",
+      "question": "How must resistor and net reactive voltages be combined to get supply voltage in series AC?",
+      "options": [
+        "Square root of VR squared plus net reactive squared",
+        "Direct scalar sum of all voltage magnitudes",
+        "Product of all voltage magnitudes divided by current",
+        "Algebraic difference of magnitudes without squaring"
+      ],
+      "answer": "Square root of VR squared plus net reactive squared",
+      "explanation": "Series voltages add as phasors so supply equals root of resistor part squared plus reactive difference squared and scalar addition overstates it.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m2_06_01",
+      "courseCode": "GXEST104",
+      "topicId": "m2_06_series_resonance_q_factor_bandwidth",
+      "type": "multiple_choice",
+      "question": "What is the impedance and current at series resonance in an RLC circuit?",
+      "options": [
+        "Impedance equals R minimum with maximum current V divided by R",
+        "Impedance equals zero with infinite current in all cases",
+        "Impedance is maximum with minimum line current",
+        "Resistance vanishes and the inductor acts open"
+      ],
+      "answer": "Impedance equals R minimum with maximum current V divided by R",
+      "explanation": "Reactances cancel at resonance so only R remains and current is limited by that floor rather than becoming a short.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m2_07_01",
+      "courseCode": "GXEST104",
+      "topicId": "m2_07_ac_power_pf_correction",
+      "type": "multiple_choice",
+      "question": "How is power factor corrected for an inductive load drawing excess reactive power?",
+      "options": [
+        "Connect a capacitor in parallel to supply local reactive power",
+        "Connect an inductor in series to add more reactance",
+        "Remove the load resistor to raise the power factor",
+        "Increase the supply frequency to cancel resistance"
+      ],
+      "answer": "Connect a capacitor in parallel to supply local reactive power",
+      "explanation": "The parallel capacitor sources local VARs so line current falls toward P over V cos phi and the grid carries mainly active power.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m2_08_01",
+      "courseCode": "GXEST104",
+      "topicId": "m2_08_three_phase_star_delta",
+      "type": "multiple_choice",
+      "question": "Which assignment of root three relations to star and delta connections is correct?",
+      "options": [
+        "Star scales voltage and delta scales current with root three",
+        "Star scales current and delta scales voltage with root three",
+        "Both star and delta scale only voltage with root three",
+        "Both star and delta scale only current with root three"
+      ],
+      "answer": "Star scales voltage and delta scales current with root three",
+      "explanation": "Star line voltage is root three times phase with equal currents while delta line current is root three times phase with equal voltages.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m3_02_01",
+      "courseCode": "GXEST104",
+      "topicId": "m3_02_zener_avalanche_regulator",
+      "type": "multiple_choice",
+      "question": "What distinguishes Zener breakdown from avalanche breakdown in the notes?",
+      "options": [
+        "Tunnelling in thin heavily doped junctions below 5 volts versus impact ionisation in wide junctions above 6 volts",
+        "Forward conduction in Zener versus reverse blocking in avalanche only",
+        "AC operation of Zener versus DC operation of avalanche only",
+        "Identical silicon doping with no voltage or temperature difference"
+      ],
+      "answer": "Tunnelling in thin heavily doped junctions below 5 volts versus impact ionisation in wide junctions above 6 volts",
+      "explanation": "Doping sets depletion width which sets mechanism and heavy doping gives tunnelling at low voltage while light doping gives avalanche multiplication at higher voltage.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m3_03_01",
+      "courseCode": "GXEST104",
+      "topicId": "m3_03_dc_supply_rectifiers",
+      "type": "multiple_choice",
+      "question": "What is the peak inverse voltage per diode for bridge versus centre tap full wave rectifiers?",
+      "options": [
+        "Bridge Vm and centre tap 2Vm per diode",
+        "Bridge 2Vm and centre tap Vm per diode",
+        "Both need Vm per diode with no difference",
+        "Both need zero blocking voltage in operation"
+      ],
+      "answer": "Bridge Vm and centre tap 2Vm per diode",
+      "explanation": "Bridge diodes each block the transformer peak while centre tap diodes must block both halves so the rating doubles.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m3_05_01",
+      "courseCode": "GXEST104",
+      "topicId": "m3_05_bjt_construction_characteristics",
+      "type": "multiple_choice",
+      "question": "What bias and behavior define the active mode of an npn transistor for amplification?",
+      "options": [
+        "Emitter base forward with collector base reverse and collector current equals beta times base current",
+        "Both junctions forward with collector voltage near point two volts",
+        "Both junctions reverse with only leakage and no collector current",
+        "Emitter base reverse with collector base forward for normal gain"
+      ],
+      "answer": "Emitter base forward with collector base reverse and collector current equals beta times base current",
+      "explanation": "Active mode forward injects from the emitter while reverse collector bias sweeps carriers across so collector current follows beta times base current.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m3_07_01",
+      "courseCode": "GXEST104",
+      "topicId": "m3_07_switch_amplifier",
+      "type": "multiple_choice",
+      "question": "Why must a transistor switch use base overdrive well above the edge saturation value?",
+      "options": [
+        "Nominal beta spread can leave low beta parts unsaturated and hot without overdrive margin",
+        "Overdrive raises cutoff leakage to speed up turn off",
+        "Overdrive removes the need for a collector resistor entirely",
+        "Overdrive keeps the transistor in active mode for switching"
+      ],
+      "answer": "Nominal beta spread can leave low beta parts unsaturated and hot without overdrive margin",
+      "explanation": "Design uses two to five times the edge base current so worst case beta still saturates and the ON voltage stays near saturation.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m3_08_01",
+      "courseCode": "GXEST104",
+      "topicId": "m3_08_rc_coupled_fet_mosfet",
+      "type": "multiple_choice",
+      "question": "Why are capacitors used to couple two amplifier stages instead of direct wire?",
+      "options": [
+        "To block DC bias interaction while passing AC signals between stages",
+        "To provide voltage gain by storing charge each cycle",
+        "To replace resistors and reduce wiring cost sharply",
+        "To create the transistor channel by electric field action"
+      ],
+      "answer": "To block DC bias interaction while passing AC signals between stages",
+      "explanation": "Each stage keeps its own Q point because the capacitor is open to DC yet short to midband AC so bias networks stay independent.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m4_02_01",
+      "courseCode": "GXEST104",
+      "topicId": "m4_02_am_fm_superhet",
+      "type": "multiple_choice",
+      "question": "Which intermediate frequency pairing for AM and FM superheterodyne receivers is correct?",
+      "options": [
+        "455 kilohertz for AM and 10 point 7 megahertz for FM",
+        "10 point 7 megahertz for AM and 455 kilohertz for FM",
+        "455 kilohertz for both AM and FM bands",
+        "10 point 7 megahertz for both AM and FM bands"
+      ],
+      "answer": "455 kilohertz for AM and 10 point 7 megahertz for FM",
+      "explanation": "The notes fix IF at 455 kilohertz for AM and 10 point 7 megahertz for FM and swapping them fails the receiver question.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m4_03_01",
+      "courseCode": "GXEST104",
+      "topicId": "m4_03_wired_wireless_gsm_generations",
+      "type": "multiple_choice",
+      "question": "What roles do HLR and VLR play in GSM location management?",
+      "options": [
+        "HLR holds permanent subscriber record while VLR holds temporary visitor copy",
+        "HLR stores SMS text while VLR stores voice clips",
+        "Both registers are handsets that route calls directly",
+        "HLR handles data only while VLR handles voice only"
+      ],
+      "answer": "HLR holds permanent subscriber record while VLR holds temporary visitor copy",
+      "explanation": "The home register is queried once and the visitor register caches the roaming user at the current MSC area to route the call.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest104_m4_05_01",
+      "courseCode": "GXEST104",
+      "topicId": "m4_05_cro_lissajous",
+      "type": "multiple_choice",
+      "question": "How is the frequency ratio read from Lissajous touch counts on tangent lines?",
+      "options": [
+        "Frequency ratio fY over fX equals touches TX over touches TY",
+        "Frequency ratio fY over fX equals touches TY over touches TX",
+        "Frequency ratio equals sum of both touch counts",
+        "Frequency ratio equals difference of both touch counts"
+      ],
+      "answer": "Frequency ratio fY over fX equals touches TX over touches TY",
+      "explanation": "Touches on the X tangent go upstairs so fY over fX equals TX over TY and crossing the fraction inverts the ratio.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m1_04_01",
+      "courseCode": "GXEST605",
+      "topicId": "m1_04_idea_self_check",
+      "type": "multiple_choice",
+      "question": "How does freedom-to-operate differ from patentability in the idea self-check?",
+      "options": [
+        "Patentability asks if I can patent while FTO asks if I may sell given others live patents",
+        "They are the same search done in either order",
+        "FTO is an optional luxury for small ventures",
+        "A granted patent automatically guarantees FTO"
+      ],
+      "answer": "Patentability asks if I can patent while FTO asks if I may sell given others live patents",
+      "explanation": "Patentability tests novel plus non-obvious plus useful for my filing, while FTO maps blocking live claims on my features. Both searches are needed pre-launch because grant is not permission.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m2_02_01",
+      "courseCode": "GXEST605",
+      "topicId": "m2_02_why_wh_maps",
+      "type": "multiple_choice",
+      "question": "What does member-checking of empathy maps guard against?",
+      "options": [
+        "Facilitator fiction in inferred quadrants drifting from user truth",
+        "Slow sessions with too much documentation",
+        "Having too many sticky notes on the wall",
+        "Recruiting a diverse set of users"
+      ],
+      "answer": "Facilitator fiction in inferred quadrants drifting from user truth",
+      "explanation": "Thinks and feels are inferred and must be shown back to users for correction. Unverified maps stay flagged because they are hypotheses until confirmed.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m2_03_01",
+      "courseCode": "GXEST605",
+      "topicId": "m2_03_journey_personas",
+      "type": "multiple_choice",
+      "question": "Why does the file limit the persona working set to 3 plus minus 2?",
+      "options": [
+        "The team must hold personas live in decisions and dozens blur back to users",
+        "Printing costs rise sharply beyond five personas",
+        "Research budgets forbid more than five interviews",
+        "The template allows at most five persona cards"
+      ],
+      "answer": "The team must hold personas live in decisions and dozens blur back to users",
+      "explanation": "Priority archetypes in a memorable few beat filed dozens that are archived and ignored. The set is revisited per phase to keep it usable.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m2_05_01",
+      "courseCode": "GXEST605",
+      "topicId": "m2_05_workshop_drill",
+      "type": "multiple_choice",
+      "question": "Why does the workshop drill require dissent logs with names and dates?",
+      "options": [
+        "Minority reads preserved early often prove right and insure against groupthink",
+        "Drama archives make meetings entertaining",
+        "Blame for bad decisions can be assigned later",
+        "Meeting minutes need filler to look complete"
+      ],
+      "answer": "Minority reads preserved early often prove right and insure against groupthink",
+      "explanation": "Logged dissent banks contrarian reads with revisit triggers at the test phase. Welcomed and recorded disagreement is the team health metric.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m3_02_01",
+      "courseCode": "GXEST605",
+      "topicId": "m3_02_research_trends",
+      "type": "multiple_choice",
+      "question": "What error does TAM-SAM-SOM shrinking discipline prevent in market research?",
+      "options": [
+        "Fantasy scaling that quotes TAM as the target instead of SOM beachhead",
+        "Small thinking that forbids staged ambition",
+        "Niche domination through beachhead focus",
+        "Any use of market sizing arithmetic"
+      ],
+      "answer": "Fantasy scaling that quotes TAM as the target instead of SOM beachhead",
+      "explanation": "The funnel runs universe to reachable to winnable with honesty shrinking and numbers attached. TAM as target fails diligence while SOM grounds believable growth.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m3_03_01",
+      "courseCode": "GXEST605",
+      "topicId": "m3_03_feasibility_sessions",
+      "type": "multiple_choice",
+      "question": "Which six lenses make up the feasibility six-pack in the file?",
+      "options": [
+        "Technical, economic, market, operational, legal and ethical",
+        "Technical, economic, market, operational, legal and aesthetic",
+        "Technical, economic, market, logistical, legal and ethical",
+        "Creative, economic, market, operational, legal and ethical"
+      ],
+      "answer": "Technical, economic, market, operational, legal and ethical",
+      "explanation": "Each lens gives pass or concern or kill with evidence, with veto rules stated upfront. Ethics is a first-class early lens with veto teeth, not an endgame review.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m3_05_01",
+      "courseCode": "GXEST605",
+      "topicId": "m3_05_ideation_workshop_drill",
+      "type": "multiple_choice",
+      "question": "What is the required call when a matrix winner leads by 1 point with disputed weights?",
+      "options": [
+        "Sensitivity-check then re-vote weights or pilot both finalists cheaply",
+        "Crown the winner because math is math",
+        "Revote until the favourite wins",
+        "Flip a coin to decide the winner"
+      ],
+      "answer": "Sensitivity-check then re-vote weights or pilot both finalists cheaply",
+      "explanation": "Close margins trigger process, not coronations, because scores are approximate. Weight wobble that flips ranks means robustness is missing.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m4_02_01",
+      "courseCode": "GXEST605",
+      "topicId": "m4_02_standards_code_future",
+      "type": "multiple_choice",
+      "question": "What does profile-first optimization ordering defend against?",
+      "options": [
+        "Imaginary bottlenecks where intuition misfires and I/O waits dominate loops",
+        "All performance work on slow code generally",
+        "Code reviews that enforce readability rules",
+        "Versioned APIs that manage compatibility"
+      ],
+      "answer": "Imaginary bottlenecks where intuition misfires and I/O waits dominate loops",
+      "explanation": "Hotspot guesses are wrong most times, so measurement redirects effort to actual hotspots. The loop is profile then hotspot then optimize then re-measure with before and after numbers.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m4_04_01",
+      "courseCode": "GXEST605",
+      "topicId": "m4_04_pilot_scaling",
+      "type": "multiple_choice",
+      "question": "How does a pilot differ operationally from a beta in the file?",
+      "options": [
+        "Beta proves user value while pilot proves operations at scale",
+        "Pilot and beta differ only by duration labels",
+        "Pilot and beta differ only by team size",
+        "Pilot and beta have no substantive difference"
+      ],
+      "answer": "Beta proves user value while pilot proves operations at scale",
+      "explanation": "The ladder runs value to ops to scale, so pilot after beta uses representative conditions with ops metrics. Value unproven plus scale proven would be elegant irrelevance.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gxest605_m4_05_01",
+      "courseCode": "GXEST605",
+      "topicId": "m4_05_bmc_production_visit",
+      "type": "multiple_choice",
+      "question": "What makes an industrial visit report implicate rather than just describe?",
+      "options": [
+        "Every learning lands an implication pair for our product action",
+        "Longer descriptions with more factory details",
+        "Higher photo counts from the factory floor",
+        "More signature sheets proving attendance"
+      ],
+      "answer": "Every learning lands an implication pair for our product action",
+      "explanation": "The format pairs observed practice with so-what-for-us action, such as traveller audits implying our assembly checklist. Implication per observation converts tourism to transfer.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gzpht121_m1_04_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m1_04_optical_fibre_types_propagation",
+      "type": "multiple_choice",
+      "question": "Which fibre type suits long-haul telecom and why?",
+      "options": [
+        "Single-mode step-index fibre with one guided mode and no modal dispersion",
+        "Multimode step-index fibre with wide core and large modal dispersion",
+        "Graded-index fibre with a single mode and LED source",
+        "Step-index fibre with cladding index higher than core index"
+      ],
+      "answer": "Single-mode step-index fibre with one guided mode and no modal dispersion",
+      "explanation": "Single-mode fibre guides only one mode so modal dispersion is absent and pulses survive thousands of kilometres. It needs a narrow core near 9 microns with a laser source and precise splicing.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gzpht121_m1_06_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m1_06_fibre_communication_block_diagram_drill",
+      "type": "multiple_choice",
+      "question": "What is the correct order of blocks in a fibre optic communication link?",
+      "options": [
+        "Electrical input to optical transmitter to fibre to amplifier to photodetector to electrical output",
+        "Fibre to transmitter to receiver to electrical signal",
+        "Photodetector to laser to fibre to LED",
+        "Amplifier to transmitter to fibre to modulator"
+      ],
+      "answer": "Electrical input to optical transmitter to fibre to amplifier to photodetector to electrical output",
+      "explanation": "Bits must become light at the transmitter, travel the fibre, be re-boosted by repeaters, then return to bits at the photodetector. Any order starting with fibre or ending with a transmitter breaks causality.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_gzpht121_m2_05_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m2_05_single_slit_diffraction_width",
+      "type": "multiple_choice",
+      "question": "What is the condition for dark minima in single-slit Fraunhofer diffraction?",
+      "options": [
+        "a sin(theta) equals n lambda with n equals plus or minus 1, 2, and so on",
+        "a sin(theta) equals (2n plus 1) lambda over 2 for all dark fringes",
+        "a sin(theta) equals n lambda over 2 for all orders",
+        "a cos(theta) equals n lambda with n equals 0, 1, 2, and so on"
+      ],
+      "answer": "a sin(theta) equals n lambda with n equals plus or minus 1, 2, and so on",
+      "explanation": "Splitting the slit into halves gives pairwise cancellation when the edge path difference is an integer number of wavelengths. Hence dark fringes sit at integer multiples of lambda.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gzpht121_m2_06_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m2_06_diffraction_grating_equation_powers",
+      "type": "multiple_choice",
+      "question": "Which colour is deviated most in a grating spectrum and why?",
+      "options": [
+        "Red because sin(theta) equals n lambda over d and grows with lambda",
+        "Violet because it is brighter than other colours",
+        "Green in every order regardless of wavelength",
+        "All colours overlap in every order including first and second"
+      ],
+      "answer": "Red because sin(theta) equals n lambda over d and grows with lambda",
+      "explanation": "Longer wavelength needs a larger angle to build the same n lambda path step between slits. Only the zero order overlaps all colours at zero angle.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_gzpht121_m2_07_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m2_07_module2_mixed_numerical_drill",
+      "type": "multiple_choice",
+      "question": "What rule does the file give for picking the right Module 2 formula under time pressure?",
+      "options": [
+        "Read the apparatus noun first because the noun determines the formula choice",
+        "Always use the grating equation for any rings or film question",
+        "Pick the longest equation to earn full marks",
+        "Convert all units to nanometres and then guess the pattern"
+      ],
+      "answer": "Read the apparatus noun first because the noun determines the formula choice",
+      "explanation": "Film, lens, wedge, slit and grating each map to one ruler equation, so naming the apparatus selects the equation. Mixing them, such as grating math for rings, is the planted panic error.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_gzpht121_m3_03_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m3_03_wavefunction_schrodinger_equations",
+      "type": "multiple_choice",
+      "question": "When should the time-independent Schrodinger equation be used instead of the time-dependent one?",
+      "options": [
+        "When the potential is time-independent and only stationary energy states are needed",
+        "When the potential changes rapidly with time and pulses evolve",
+        "Only for photons and never for electrons",
+        "Never because the time-dependent equation is always simpler"
+      ],
+      "answer": "When the potential is time-independent and only stationary energy states are needed",
+      "explanation": "Stationary states separate time as a rotating phase, leaving an eigenvalue problem for psi and E. Spectroscopy and wells live there, while true time evolution needs the full time-dependent form.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gzpht121_m3_05_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m3_05_box_numericals_energy_probability",
+      "type": "multiple_choice",
+      "question": "If an electron box widens from L to 3L, what is the new ground-state energy?",
+      "options": [
+        "E1 over 9 because energy scales as 1 over L squared",
+        "3 times E1 because energy scales with length",
+        "9 times E1 because wider boxes trap more energy",
+        "Unchanged because box size does not affect energy"
+      ],
+      "answer": "E1 over 9 because energy scales as 1 over L squared",
+      "explanation": "Ground energy equals h squared over 8 m L squared, so tripling L multiplies the denominator by nine. A wider trap gives a lazier standing wave and lower energy.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_gzpht121_m3_06_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m3_06_quantum_tunnelling_concept_drill",
+      "type": "multiple_choice",
+      "question": "Which particle tunnels most readily through a given barrier and why?",
+      "options": [
+        "Electron because smallest mass gives smallest kappa and largest transmission",
+        "Proton because heavier mass pushes through walls",
+        "Alpha particle because larger charge helps tunnelling",
+        "All particles tunnel equally regardless of mass"
+      ],
+      "answer": "Electron because smallest mass gives smallest kappa and largest transmission",
+      "explanation": "Kappa scales with the square root of mass, so lighter mass gives a longer exponential tail and vastly larger transmission. The electron-proton mass ratio becomes a huge tunnelling ratio through the exponent.",
+      "difficulty": "intermediate",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gzpht121_m4_04_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m4_04_sabine_numerical_drill",
+      "type": "multiple_choice",
+      "question": "How is total absorption correctly computed from two materials with different areas?",
+      "options": [
+        "10 plus 30 equals 40 sabins by area weighting each coefficient",
+        "0.7 sabins by adding bare coefficients without areas",
+        "150 sabins by adding the areas only",
+        "70 sabins by multiplying the coefficients together"
+      ],
+      "answer": "10 plus 30 equals 40 sabins by area weighting each coefficient",
+      "explanation": "Total A equals the sum of alpha times S, here 0.1 times 100 plus 0.6 times 50 equals 40. Adding bare coefficients is the planted error because coefficients must weight areas.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gzpht121_m4_05_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m4_05_ultrasonics_piezoelectric_diffractometer",
+      "type": "multiple_choice",
+      "question": "What acts as the grating in the ultrasonic diffractometer?",
+      "options": [
+        "The sound wave compression and rarefaction planes forming a density grating in liquid",
+        "The glass walls of the tank holding the liquid",
+        "The focusing lens in front of the laser",
+        "Dust particles floating in the liquid"
+      ],
+      "answer": "The sound wave compression and rarefaction planes forming a density grating in liquid",
+      "explanation": "Pressure antinodes bunch molecules and nodes thin them, writing a live phase grating of pitch equal to the sound wavelength. Killing the sound makes the diffraction vanish instantly.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_gzpht121_m4_06_01",
+      "courseCode": "GZPHT121",
+      "topicId": "m4_06_sonar_ndt_pulse_echo",
+      "type": "multiple_choice",
+      "question": "A SONAR pulse returns after half a second in seawater near 1500 metres per second, what is the seabed depth?",
+      "options": [
+        "375 m from 1500 times 0.5 over 2",
+        "750 m from 1500 times 0.5 without halving",
+        "1500 m from doubling the travel time",
+        "3000 m from multiplying speed by time twice"
+      ],
+      "answer": "375 m from 1500 times 0.5 over 2",
+      "explanation": "Depth equals speed times time over two because sound travels down and back. Forgetting the half doubles the answer and is the standard distractor.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_oecst614_m1_02_01",
+      "courseCode": "OECST614",
+      "topicId": "m1_02_mle_map_bayesian_estimation",
+      "type": "multiple_choice",
+      "question": "With 8 heads in 10 tosses and a Beta(2,2) prior, what is the MAP estimate?",
+      "options": [
+        "(8 plus 1) over (10 plus 2) equals 9 over 12 equals 0.75",
+        "8 over 10 equals 0.8 ignoring the prior",
+        "(8 plus 2) over (10 plus 4) equals about 0.714 by adding raw a and b",
+        "0.5 always under any symmetric prior"
+      ],
+      "answer": "(8 plus 1) over (10 plus 2) equals 9 over 12 equals 0.75",
+      "explanation": "Pseudo-counts are a minus 1 and b minus 1, so one phantom head and one phantom tail join the count. The MAP must sit between the MLE and the prior mean of 0.5.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_oecst614_m1_05_01",
+      "courseCode": "OECST614",
+      "topicId": "m1_05_multivariate_gradient_matrix_method",
+      "type": "multiple_choice",
+      "question": "After a gradient step the MSE rises from 7 point 8 to 12 point 1, what is the correct response?",
+      "options": [
+        "Halve alpha and retry because rising cost proves overshooting on a convex bowl",
+        "Take a bigger step to escape the minimum faster",
+        "Add more features immediately to fix the cost",
+        "Switch loss functions in the middle of the run"
+      ],
+      "answer": "Halve alpha and retry because rising cost proves overshooting on a convex bowl",
+      "explanation": "Mean squared error for linear regression is convex, so a proper step cannot increase cost. Rising cost is the step-size alarm, so shrink alpha first and diagnose second.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_oecst614_m1_06_01",
+      "courseCode": "OECST614",
+      "topicId": "m1_06_m1_mixed_drill",
+      "type": "multiple_choice",
+      "question": "For true values 4 and 4 with predictions 1 and 7, what are MAE and MSE?",
+      "options": [
+        "MAE 3 and MSE 9 from linear versus quadratic pricing",
+        "MAE 9 and MSE 3 with reversed pricing",
+        "Both MAE and MSE equal 3 in all cases",
+        "RMSE is negative for this pair"
+      ],
+      "answer": "MAE 3 and MSE 9 from linear versus quadratic pricing",
+      "explanation": "Mean absolute error averages 3 and 3 to 3, while mean squared error averages 9 and 9 to 9. Same errors give different headline numbers, so compare MAE to MAE only.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_oecst614_m2_02_01",
+      "courseCode": "OECST614",
+      "topicId": "m2_02_knn_lazy_learning",
+      "type": "multiple_choice",
+      "question": "Which statement about KNN training cost is exam-safe?",
+      "options": [
+        "KNN has no training phase beyond storing data and shifts all compute to query time",
+        "KNN fits weights over many epochs like a neural network",
+        "KNN cannot predict at all without gradient descent",
+        "Storing data counts as gradient descent training"
+      ],
+      "answer": "KNN has no training phase beyond storing data and shifts all compute to query time",
+      "explanation": "Lazy means defer: memorize now and compute distances later, unlike eager methods that pay upfront and predict cheaply. Hence KNN adapts instantly yet scales badly to many queries.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_oecst614_m2_04_01",
+      "courseCode": "OECST614",
+      "topicId": "m2_04_train_test_validation_splits",
+      "type": "multiple_choice",
+      "question": "Where should KNN parameter k and ridge parameter lambda be chosen?",
+      "options": [
+        "On the validation set because train error always favours the most complex option",
+        "On the training set by lowest train error",
+        "On the test set because it is the most honest",
+        "With no data by guessing both values"
+      ],
+      "answer": "On the validation set because train error always favours the most complex option",
+      "explanation": "Train error is minimized by memorization, electing k equals 1 and lambda equals 0 every time. Only held-out validation penalizes complexity, which is the entire point.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_oecst614_m2_06_01",
+      "courseCode": "OECST614",
+      "topicId": "m2_06_m2_mixed_drill",
+      "type": "multiple_choice",
+      "question": "With spam prior 0 point 2 and word likelihoods 0 point 9 for spam and 0 point 3 for ham, what wins for a mail with the word?",
+      "options": [
+        "Ham wins with 0.24 versus 0.18 and posterior about 0.571",
+        "Spam wins because likelihood 0.9 dominates every prior",
+        "Always spam with probability 0.9 regardless of base rate",
+        "Tie at 0.5 because likelihoods cancel priors"
+      ],
+      "answer": "Ham wins with 0.24 versus 0.18 and posterior about 0.571",
+      "explanation": "Spam scores 0.2 times 0.9 equals 0.18 against ham 0.8 times 0.3 equals 0.24. Base rates beat bright clues, the prior-strikes-back pattern examiners reuse.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_oecst614_m3_04_01",
+      "courseCode": "OECST614",
+      "topicId": "m3_04_decision_trees_info_gain_ratio",
+      "type": "multiple_choice",
+      "question": "What are the entropies of a 5 Yes 5 No node versus a 10 Yes 0 No node?",
+      "options": [
+        "1.0 bit for the balanced node and 0 bits for the pure node",
+        "0 bits for the balanced node and 1.0 bit for the pure node",
+        "0.5 bits for both nodes equally",
+        "Undefined for pure nodes and 0.5 for balanced nodes"
+      ],
+      "answer": "1.0 bit for the balanced node and 0 bits for the pure node",
+      "explanation": "Balanced binary entropy equals minus two times 0.5 log base 2 of 0.5 equals 1, while pure equals 0. Balance maximizes surprise and purity kills it.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_oecst614_m3_05_01",
+      "courseCode": "OECST614",
+      "topicId": "m3_05_id3_algorithm_worked",
+      "type": "multiple_choice",
+      "question": "What does ID3 do at a node with 4 Yes and 0 No and attributes still unused?",
+      "options": [
+        "Emit a Yes leaf immediately because purity stops recursion regardless of leftover attributes",
+        "Split further for safety even though the node is pure",
+        "Ask the majority instead of using purity",
+        "Backtrack to the root and pick another attribute"
+      ],
+      "answer": "Emit a Yes leaf immediately because purity stops recursion regardless of leftover attributes",
+      "explanation": "Purity is the primary stop rule and unused attributes are irrelevant once labels agree. Further splits add depth without information, which is overfitting by construction.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_oecst614_m3_06_01",
+      "courseCode": "OECST614",
+      "topicId": "m3_06_m3_mixed_drill",
+      "type": "multiple_choice",
+      "question": "With gains 0 point 4 and 0 point 3 and SplitInfo 2 point 0 and 0 point 6, which split wins by gain ratio?",
+      "options": [
+        "The second split wins with ratio 0.5 versus 0.2 despite lower raw gain",
+        "The first split wins with ratio 0.2 versus 0.5 because raw gain rules",
+        "Raw gain always decides so ratios cannot be compared",
+        "Ratios cannot be compared across different attributes"
+      ],
+      "answer": "The second split wins with ratio 0.5 versus 0.2 despite lower raw gain",
+      "explanation": "Ratios are 0.4 over 2.0 equals 0.2 against 0.3 over 0.6 equals 0.5. Fragmentation-heavy splits pay for branches, which is the C4 point 5 correction in action.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_oecst614_m4_04_01",
+      "courseCode": "OECST614",
+      "topicId": "m4_04_mds_ensemble_bagging_boosting",
+      "type": "multiple_choice",
+      "question": "Which ensemble prescription fits high-variance trees versus high-bias stumps?",
+      "options": [
+        "Bag the trees to cancel variance and boost the stumps to drain bias",
+        "Boost the trees and bag the stumps for the same effect",
+        "Use bagging only for both cases always",
+        "Avoid ensembles for both cases entirely"
+      ],
+      "answer": "Bag the trees to cancel variance and boost the stumps to drain bias",
+      "explanation": "Bagging averages independent wobbles away while boosting sequentially repairs systematic blindness. Swapped prescriptions waste both by fitting noise or entrenching blindness.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_oecst614_m4_05_01",
+      "courseCode": "OECST614",
+      "topicId": "m4_05_resampling_bias_variance_tradeoff",
+      "type": "multiple_choice",
+      "question": "For 1000 samples what fraction is expected to be unseen in one bootstrap resample?",
+      "options": [
+        "About 36.8 percent since (1 minus 1 over n) to the n is about 1 over e",
+        "0 percent because every point appears at least once",
+        "50 percent by symmetry of sampling with replacement",
+        "100 percent duplicated with no unique points"
+      ],
+      "answer": "About 36.8 percent since (1 minus 1 over n) to the n is about 1 over e",
+      "explanation": "The miss probability tends to 1 over e in the large n limit, leaving about a third out-of-bag per round. Hence 63.2 percent unique is the scale-free working number.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_oecst614_m4_06_01",
+      "courseCode": "OECST614",
+      "topicId": "m4_06_m4_mixed_drill",
+      "type": "multiple_choice",
+      "question": "With distances 3 and 7 to a third cluster, what are complete and average linkages?",
+      "options": [
+        "Complete 7 for max and average 5 for mean",
+        "Complete 3 for min and average 5 for mean",
+        "Complete 7 and average 3 by swapping max and min",
+        "Both linkages equal 5 regardless of definition"
+      ],
+      "answer": "Complete 7 for max and average 5 for mean",
+      "explanation": "Complete linkage takes the max of 3 and 7 equals 7, while average takes the mean equals 5. Reciting single min, complete max, and average mean blocks the swap.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst604_m1_02_01",
+      "courseCode": "PBCST604",
+      "topicId": "m1_02_reconnaissance_gathering",
+      "type": "multiple_choice",
+      "question": "Which activity is passive reconnaissance with no direct target contact?",
+      "options": [
+        "Searching certificate transparency logs for hidden subdomains",
+        "Running a ping sweep of target netblocks",
+        "Grabbing service banners on ports 80 and 443",
+        "Attempting a DNS zone transfer"
+      ],
+      "answer": "Searching certificate transparency logs for hidden subdomains",
+      "explanation": "The file lists certificate transparency logs as passive OSINT needing no target contact. Ping sweeps, banner grabs, and zone transfers send packets so they are active and logged.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m1_04_01",
+      "courseCode": "PBCST604",
+      "topicId": "m1_04_format_string_vuln_drill",
+      "type": "multiple_choice",
+      "question": "In a format string bug, what do percent-x and percent-n do?",
+      "options": [
+        "percent-x leaks stack words and percent-n writes the printed count to a chosen address",
+        "percent-x writes memory and percent-n reads stack words",
+        "Both only crash the program with no read or write effect",
+        "percent-x encrypts output and percent-n decrypts it"
+      ],
+      "answer": "percent-x leaks stack words and percent-n writes the printed count to a chosen address",
+      "explanation": "The formula vault states percent-x reads and percent-n writes. Leaks expose canaries and ASLR pointers while the write targets addresses like GOT entries.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m1_06_01",
+      "courseCode": "PBCST604",
+      "topicId": "m1_06_m1_mixed_drill",
+      "type": "multiple_choice",
+      "question": "For a gets call into a 32 byte stack buffer, how many bytes reach RET and what comes next?",
+      "options": [
+        "36 bytes to RET then a 4 byte RET overwrite aimed at the sled",
+        "32 bytes to RET then shellcode first",
+        "64 bytes to RET then sled first",
+        "4 bytes to RET then canary first"
+      ],
+      "answer": "36 bytes to RET then a 4 byte RET overwrite aimed at the sled",
+      "explanation": "The worked example gives offset 32 plus saved EBP equals 36 to RET. Padding comes first then control data because field order mirrors memory order.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst604_m2_04_01",
+      "courseCode": "PBCST604",
+      "topicId": "m2_04_dns_security_dnssec",
+      "type": "multiple_choice",
+      "question": "What security property does DNSSEC provide for DNS answers?",
+      "options": [
+        "Authentication of answers by signatures with no query privacy",
+        "Full encryption of queries and answers like TLS",
+        "Faster resolution by caching unsigned answers",
+        "Blocking of all DNS tunnels by port"
+      ],
+      "answer": "Authentication of answers by signatures with no query privacy",
+      "explanation": "The pitfall states DNSSEC proves authorship with RRSIGs but queries stay plaintext. Privacy needs DoT or DoH while authenticity needs DNSSEC.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m2_05_01",
+      "courseCode": "PBCST604",
+      "topicId": "m2_05_zap_webgoat_dvwa_mirror",
+      "type": "multiple_choice",
+      "question": "How do ZAP passive and active scans differ in risk?",
+      "options": [
+        "Passive reads proxied traffic safely and active sends attack payloads that need scoped backed-up lab targets",
+        "Passive costs money and active is free",
+        "Passive corrupts data and active never touches the target",
+        "Both are identical with only speed differences"
+      ],
+      "answer": "Passive reads proxied traffic safely and active sends attack payloads that need scoped backed-up lab targets",
+      "explanation": "The file says passive reads proxied flows safe and always on. Active attacks can corrupt test data so it needs consent plus snapshot discipline.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m2_06_01",
+      "courseCode": "PBCST604",
+      "topicId": "m2_06_email_security",
+      "type": "multiple_choice",
+      "question": "How does DMARC policy p=none differ operationally from p=reject?",
+      "options": [
+        "p=none only monitors delivery while p=reject refuses unauthenticated mail",
+        "p=none encrypts mail while p=reject decrypts it",
+        "p=none blocks all mail while p=reject allows all mail",
+        "Both policies behave identically except report volume"
+      ],
+      "answer": "p=none only monitors delivery while p=reject refuses unauthenticated mail",
+      "explanation": "The file defines none as monitor and collect with delivery unaffected and reject as enforcement. Jumping to reject blind breaks forwarding lists so phase discipline matters.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m3_04_01",
+      "courseCode": "PBCST604",
+      "topicId": "m3_04_traffic_capture_tricks",
+      "type": "multiple_choice",
+      "question": "Why does a rogue DHCP server give total traffic compromise?",
+      "options": [
+        "It assigns gateway plus DNS so it controls path and name resolution",
+        "It only hands out faster leases",
+        "It only enlarges the address pool",
+        "It only extends lease times"
+      ],
+      "answer": "It assigns gateway plus DNS so it controls path and name resolution",
+      "explanation": "The file says gateway gives traffic path and DNS gives name control. The two lies compound and locks are snooping trust ports plus DAI.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m3_06_01",
+      "courseCode": "PBCST604",
+      "topicId": "m3_06_wireshark_analysis",
+      "type": "multiple_choice",
+      "question": "What is the core difference between Wireshark capture and display filters?",
+      "options": [
+        "Capture decides what is recorded irreversibly while display decides what is shown reversibly",
+        "They differ only in syntax flavor",
+        "They differ only in typing speed",
+        "They differ only in color support"
+      ],
+      "answer": "Capture decides what is recorded irreversibly while display decides what is shown reversibly",
+      "explanation": "Capture uses BPF at record time and missed traffic is gone forever. Display re-slices freely so the rule is capture wide when unsure.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst604_m3_07_01",
+      "courseCode": "PBCST604",
+      "topicId": "m3_07_m3_attack_chain_drill",
+      "type": "multiple_choice",
+      "question": "After ARP spoofing exposes clear HTTP POST passwords, what is the root fix?",
+      "options": [
+        "TLS everywhere plus HSTS to remove cleartext exposure",
+        "A stronger Wi-Fi password alone",
+        "Longer user passwords alone",
+        "New gateway hardware alone"
+      ],
+      "answer": "TLS everywhere plus HSTS to remove cleartext exposure",
+      "explanation": "Encryption removes the class of cleartext capture and ride. HttpOnly and SameSite only harden rides while DAI only denies position.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst604_m4_02_01",
+      "courseCode": "PBCST604",
+      "topicId": "m4_02_windows_safe_defender",
+      "type": "multiple_choice",
+      "question": "Which Windows Defender firewall profile applies the strictest rules?",
+      "options": [
+        "Public with discovery off and inbound denied hardest",
+        "Private home with moderate rules",
+        "Domain managed with most open rules",
+        "All profiles use identical rules"
+      ],
+      "answer": "Public with discovery off and inbound denied hardest",
+      "explanation": "The file orders domain most open then private moderate then public hostile. Wrong profile like cafe marked private silently opens gates.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m4_03_01",
+      "courseCode": "PBCST604",
+      "topicId": "m4_03_linux_attacks_physical_config",
+      "type": "multiple_choice",
+      "question": "Why are SUID binaries privilege landmines on Linux?",
+      "options": [
+        "They execute as the file owner so a bug runs attacker input at owner privilege",
+        "They are simply large files",
+        "They bypass firewalls by design",
+        "They log every action securely"
+      ],
+      "answer": "They execute as the file owner so a bug runs attacker input at owner privilege",
+      "explanation": "Owner execution often root inverts caller privilege by design. The audit motion is inventory with find perm 4000 then minimize with capabilities or sudo rules.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pbcst604_m4_06_01",
+      "courseCode": "PBCST604",
+      "topicId": "m4_06_m4_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What is the verdict when a hardened Linux server reports sestatus permissive?",
+      "options": [
+        "A finding that needs enforcing since permissive only logs and allows",
+        "Hardened enough with no action",
+        "Disable SELinux entirely instead",
+        "Ignore it because logs exist"
+      ],
+      "answer": "A finding that needs enforcing since permissive only logs and allows",
+      "explanation": "Permissive is alarm without lock so it is protection theatre. Remediate with reviewed policy then re-verify enforcing and log the change.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst303_m1_03_01",
+      "courseCode": "PCCST303",
+      "topicId": "m1_03_polynomial_sparse_matrix_arrays",
+      "type": "multiple_choice",
+      "question": "What is the time cost of fast transpose of a sparse triplet matrix?",
+      "options": [
+        "O(cols + count) by one counting pass then direct placement",
+        "O(cols times count) by scanning all triples per column",
+        "O(count squared) by repeated sorting",
+        "O(1) with no dependence on size"
+      ],
+      "answer": "O(cols + count) by one counting pass then direct placement",
+      "explanation": "Fast transpose counts column frequencies once then computes start positions and places each triple directly. Naive transpose rescans all triples per column.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m1_04_01",
+      "courseCode": "PCCST303",
+      "topicId": "m1_04_stacks_multistacks_applications",
+      "type": "multiple_choice",
+      "question": "When does overflow occur with two stacks sharing one array from opposite ends?",
+      "options": [
+        "When topA plus 1 equals topB meaning combined contents fill the array",
+        "When either stack holds one item",
+        "When top equals minus 1",
+        "When both stacks are empty"
+      ],
+      "answer": "When topA plus 1 equals topB meaning combined contents fill the array",
+      "explanation": "Opposite growth pools free space so only combined fullness triggers overflow. Fixed halves would waste the emptier side.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m1_05_01",
+      "courseCode": "PCCST303",
+      "topicId": "m1_05_queues_circular_deque",
+      "type": "multiple_choice",
+      "question": "In the circular queue convention used here, what marks full versus empty?",
+      "options": [
+        "Full is (rear+1) mod MAX equals front and empty is front equals -1",
+        "Full is front equals -1 and empty is (rear+1) mod MAX equals front",
+        "Full is rear at MAX-1 even with free cells before front",
+        "Full needs one sacrificed cell so capacity is MAX-1"
+      ],
+      "answer": "Full is (rear+1) mod MAX equals front and empty is front equals -1",
+      "explanation": "Empty uses front equals minus 1 while full uses next rear colliding with front. This convention keeps every cell usable unlike the rival sacrificed cell school.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m2_03_01",
+      "courseCode": "PCCST303",
+      "topicId": "m2_03_doubly_linked_list",
+      "type": "multiple_choice",
+      "question": "Deleting a doubly linked list node given only its address costs what and touches what?",
+      "options": [
+        "O(1) time touching four links with NULL guards at both ends",
+        "O(n) time touching two links with one guard",
+        "O(log n) time touching one link",
+        "O(n squared) time touching all nodes"
+      ],
+      "answer": "O(1) time touching four links with NULL guards at both ends",
+      "explanation": "The own prev pointer reaches the predecessor directly so no search is needed. Both next and prev arrows must be rewired or backward walks break.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m2_04_01",
+      "courseCode": "PCCST303",
+      "topicId": "m2_04_circular_linked_list_variations",
+      "type": "multiple_choice",
+      "question": "How must traversal termination be checked on a circular linked list?",
+      "options": [
+        "Check return to start or use a pre-counted node count since NULL never appears",
+        "Check for NULL as in linear lists",
+        "Traversal is impossible so never walk a ring",
+        "Rely on an exception handler to stop"
+      ],
+      "answer": "Check return to start or use a pre-counted node count since NULL never appears",
+      "explanation": "Rings have no NULL terminator so while not NULL loops forever. Anchor the start with do while or count first.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m2_05_01",
+      "courseCode": "PCCST303",
+      "topicId": "m2_05_memory_allocation_fits",
+      "type": "multiple_choice",
+      "question": "With holes 25, 10, 30 in order and request 12, where does each fit place it?",
+      "options": [
+        "First-fit 25 and best-fit 25 and worst-fit 30",
+        "All choose 30",
+        "All choose 10",
+        "All choose 25"
+      ],
+      "answer": "First-fit 25 and best-fit 25 and worst-fit 30",
+      "explanation": "First stops at the first hole at least 12 which is 25. Best compares sufficient holes 25 and 30 and takes tighter 25 while worst takes largest 30.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m3_04_01",
+      "courseCode": "PCCST303",
+      "topicId": "m3_04_binary_heaps_priority_queue",
+      "type": "multiple_choice",
+      "question": "What are peek, insert, extract, and build costs for a binary heap?",
+      "options": [
+        "Peek O(1) with insert and extract O(log n) and bottom-up build linear",
+        "All operations O(1) including search",
+        "Peek O(n) with insert O(1) and build O(n log n) only",
+        "Search O(log n) because a heap is a BST"
+      ],
+      "answer": "Peek O(1) with insert and extract O(log n) and bottom-up build linear",
+      "explanation": "Heap order plus completeness gives log sifts and constant peek. Bottom-up heapify is linear since half the nodes are leaves while search stays O(n).",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m3_05_01",
+      "courseCode": "PCCST303",
+      "topicId": "m3_05_graphs_definitions_representation",
+      "type": "multiple_choice",
+      "question": "For degrees 4, 3, 3, 2, 2, how many edges exist and is the data valid?",
+      "options": [
+        "Sum 14 gives 7 edges and the data is valid",
+        "Sum 14 gives 14 edges",
+        "Sum gives 5 edges",
+        "7 edges but invalid data"
+      ],
+      "answer": "Sum 14 gives 7 edges and the data is valid",
+      "explanation": "Handshaking says sum of degrees equals twice the edge count so 14 gives 7. Even sum with max degree below vertex count passes the validity screen.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m3_07_01",
+      "courseCode": "PCCST303",
+      "topicId": "m3_07_m3_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What is the level order of root 5 with left 3 holding 1 and 4 and right 8?",
+      "options": [
+        "5, 3, 8, 1, 4 floor by floor",
+        "5, 3, 1, 4, 8 depth first",
+        "1, 4, 3, 8, 5 sorted",
+        "5, 8, 3, 4, 1 reversed"
+      ],
+      "answer": "5, 3, 8, 1, 4 floor by floor",
+      "explanation": "Level order walks breadth first with a queue. Root 5 comes first then 3 and 8 then 1 and 4.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst303_m4_05_01",
+      "courseCode": "PCCST303",
+      "topicId": "m4_05_linear_binary_search",
+      "type": "multiple_choice",
+      "question": "What are worst-case comparisons for binary search on one million sorted items?",
+      "options": [
+        "20 by ceiling of log base 2 of one million",
+        "One million scans",
+        "Five hundred thousand scans",
+        "One thousand probes"
+      ],
+      "answer": "20 by ceiling of log base 2 of one million",
+      "explanation": "Two to the 20th power is about one million so twenty halvings exhaust the array. That ratio of one million to 20 is the case for log search.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst303_m4_06_01",
+      "courseCode": "PCCST303",
+      "topicId": "m4_06_hashing_functions_collisions",
+      "type": "multiple_choice",
+      "question": "With table size 11, where do keys 22 and 33 hash by division and do they collide?",
+      "options": [
+        "Both hash to slot 0 and collide since both are multiples of 11",
+        "They hash to 2 and 3 with no collision",
+        "They hash to 0 and 1 with no collision",
+        "They hash to 11 and 0 with slot 11 valid"
+      ],
+      "answer": "Both hash to slot 0 and collide since both are multiples of 11",
+      "explanation": "Division gives 22 mod 11 equals 0 and 33 mod 11 equals 0. Slot 11 is invalid since indices run 0 to 10.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst303_m4_07_01",
+      "courseCode": "PCCST303",
+      "topicId": "m4_07_m4_mixed_drill",
+      "type": "multiple_choice",
+      "question": "For a chained table with m 10 and n 30, what is expected search cost and action?",
+      "options": [
+        "About 4 probes by 1 plus alpha so rehash bigger toward alpha near 1",
+        "1 probe with no action",
+        "30 probes so rebuild as BST",
+        "0.33 probes so shrink the table"
+      ],
+      "answer": "About 4 probes by 1 plus alpha so rehash bigger toward alpha near 1",
+      "explanation": "Alpha equals 3 so 1 plus alpha equals 4 average probes and worsening. Chains this long signal overload so double m repeatedly.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m1_04_01",
+      "courseCode": "PCCST501",
+      "topicId": "m1_04_world_wide_web_and_http",
+      "type": "multiple_choice",
+      "question": "A page has one HTML file plus five images; how many TCP connections do non-persistent and persistent HTTP use?",
+      "options": [
+        "6 non-persistent and 1 persistent",
+        "1 non-persistent and 6 persistent",
+        "6 and 6",
+        "1 and 1"
+      ],
+      "answer": "6 non-persistent and 1 persistent",
+      "explanation": "Non-persistent opens one connection per object for six total while persistent reuses one connection for all objects.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m1_05_01",
+      "courseCode": "PCCST501",
+      "topicId": "m1_05_file_transfer_protocol_ftp",
+      "type": "multiple_choice",
+      "question": "Which ports carry the FTP control connection and the active-mode data connection?",
+      "options": [
+        "Control 21 and data 20",
+        "Control 20 and data 21",
+        "Control 80 and data 20",
+        "Control 21 and data 80"
+      ],
+      "answer": "Control 21 and data 20",
+      "explanation": "Control stays open on port 21 all session while active-mode data uses port 20 fresh per file.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m1_07_01",
+      "courseCode": "PCCST501",
+      "topicId": "m1_07_domain_name_system_dns",
+      "type": "multiple_choice",
+      "question": "With cold caches, how many total DNS messages are needed to resolve a name via root, TLD, and authoritative servers?",
+      "options": [
+        "8 messages",
+        "6 messages",
+        "2 messages",
+        "4 messages"
+      ],
+      "answer": "8 messages",
+      "explanation": "Four round trips of two messages each for host-local plus root plus TLD plus authoritative total eight.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m1_08_01",
+      "courseCode": "PCCST501",
+      "topicId": "m1_08_peer_to_peer_bittorrent",
+      "type": "multiple_choice",
+      "question": "Which pairing matches each BitTorrent failure to its fix for last-piece starvation and freeloading?",
+      "options": [
+        "Rarest-first for starvation and tit-for-tat for freeloading",
+        "Tit-for-tat for starvation and rarest-first for freeloading",
+        "Tracker replication for both",
+        "Bigger pieces for both"
+      ],
+      "answer": "Rarest-first for starvation and tit-for-tat for freeloading",
+      "explanation": "Rarest-first preserves diversity to cure starvation while tit-for-tat choking rewards sharers and chokes freeloaders.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m1_99_01",
+      "courseCode": "PCCST501",
+      "topicId": "m1_99_practice_lab_application_layer_drills",
+      "type": "multiple_choice",
+      "question": "For a backup of 100 small files, how many connections do FTP and persistent HTTP use in the lab scenario?",
+      "options": [
+        "FTP 1 control plus 100 data and HTTP 1 reused",
+        "FTP 100 plus 100 and HTTP 100",
+        "FTP 1 plus 1 and HTTP 100",
+        "FTP 0 plus 100 and HTTP 0"
+      ],
+      "answer": "FTP 1 control plus 100 data and HTTP 1 reused",
+      "explanation": "FTP pays one fresh data connection per file while persistent HTTP reuses one connection for all transfers.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m2_05_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_05_tcp_flow_control_and_connection_management",
+      "type": "multiple_choice",
+      "question": "Which statement correctly separates what the cwnd window and the rwnd window guard against?",
+      "options": [
+        "cwnd guards network and rwnd guards receiver",
+        "cwnd guards receiver and rwnd guards network",
+        "Both guard only router queues",
+        "Both guard only sender memory"
+      ],
+      "answer": "cwnd guards network and rwnd guards receiver",
+      "explanation": "cwnd is sender-inferred network protection while rwnd is receiver-advertised buffer space and sender honors the smaller.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m2_06_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_06_congestion_control_principles_and_tcp",
+      "type": "multiple_choice",
+      "question": "How does TCP Reno respond to triple duplicate ACKs versus a retransmission timeout?",
+      "options": [
+        "Halve on dup-ACKs and reset to 1 on timeout",
+        "Reset to 1 in both cases",
+        "Halve in both cases",
+        "Ignore both signals"
+      ],
+      "answer": "Halve on dup-ACKs and reset to 1 on timeout",
+      "explanation": "Reno halves with fast recovery on dup-ACKs since delivery continues but resets to 1 with slow start on timeout.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m2_07_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_07_multicast_routing_trees_rpf",
+      "type": "multiple_choice",
+      "question": "When does the RPF check require a router to forward a multicast packet from a source?",
+      "options": [
+        "Only if arrived on best-path-to-source interface",
+        "Only if arrived off the best path",
+        "Always forward every copy",
+        "Always drop every packet"
+      ],
+      "answer": "Only if arrived on best-path-to-source interface",
+      "explanation": "RPF passes only on the unicast best path back to the source and drops other arrivals silently to kill loops.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m2_08_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_08_quality_of_service_qos_mechanisms",
+      "type": "multiple_choice",
+      "question": "On a 9 Mbps link with WFQ weights 3 to 2 to 1 and all classes backlogged, what are the shares?",
+      "options": [
+        "4.5 and 3 and 1.5 Mbps",
+        "3 and 3 and 3 Mbps",
+        "9 and 0 and 0 Mbps",
+        "1.5 and 3 and 4.5 Mbps"
+      ],
+      "answer": "4.5 and 3 and 1.5 Mbps",
+      "explanation": "Six parts make each 1.5 Mbps so shares are weight fractions times 9 and sum to 9.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m2_09_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_09_ipv4_addressing_forwarding_nat_icmp",
+      "type": "multiple_choice",
+      "question": "Which route wins when one packet matches both a slash 24 and a longer slash 26 prefix?",
+      "options": [
+        "Slash 26 because longest wins",
+        "Slash 24 because first",
+        "Default route because last",
+        "Neither matches"
+      ],
+      "answer": "Slash 26 because longest wins",
+      "explanation": "Forwarding picks the most specific prefix so slash 26 beats slash 24 regardless of table order.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m2_10_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_10_unicast_routing_link_state_distance_vector",
+      "type": "multiple_choice",
+      "question": "In RIP distance-vector routing, what cost represents infinity to bound count-to-infinity loops?",
+      "options": [
+        "16 hops",
+        "15 hops",
+        "1 hop",
+        "255 hops"
+      ],
+      "answer": "16 hops",
+      "explanation": "RIP caps usable cost at 15 hops and defines 16 as infinity to stop stale rumours.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m2_11_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_11_ipv6_next_generation_transition",
+      "type": "multiple_choice",
+      "question": "Why is using two double-colon compressions in one IPv6 address illegal?",
+      "options": [
+        "Group count becomes ambiguous",
+        "Address becomes too short to route",
+        "Flow label forced to zero",
+        "Extension headers disabled"
+      ],
+      "answer": "Group count becomes ambiguous",
+      "explanation": "One double colon at the longest zero run only since two uses cannot expand back to eight groups uniquely.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m2_99_01",
+      "courseCode": "PCCST501",
+      "topicId": "m2_99_practice_lab_transport_drills",
+      "type": "multiple_choice",
+      "question": "With window 5 and packet 1 lost once, how many total transmissions do Go-Back-N and Selective Repeat need?",
+      "options": [
+        "10 GBN and 6 SR",
+        "6 GBN and 10 SR",
+        "10 for both",
+        "6 for both"
+      ],
+      "answer": "10 GBN and 6 SR",
+      "explanation": "GBN discards out-of-order 2-4 and resends 1-5 for 10 total while SR buffers and resends only 1 for 6.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m3_04_01",
+      "courseCode": "PCCST501",
+      "topicId": "m3_04_lan_addressing_arp_switches_and_vlans",
+      "type": "multiple_choice",
+      "question": "How do ARP query and reply messages travel on a LAN when binding an IP to a MAC?",
+      "options": [
+        "Broadcast query and unicast reply",
+        "Unicast query and broadcast reply",
+        "Both broadcast always",
+        "Both unicast always"
+      ],
+      "answer": "Broadcast query and unicast reply",
+      "explanation": "Sender broadcasts who-has to all and only the owner unicasts the answer which is then cached.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m3_05_01",
+      "courseCode": "PCCST501",
+      "topicId": "m3_05_wireless_lan_802_11",
+      "type": "multiple_choice",
+      "question": "In a hidden-terminal case with stations A and C sharing access point B, what does the CTS from B accomplish?",
+      "options": [
+        "Informs C which missed RTS of duration",
+        "Encrypts the data frame",
+        "Measures collision probability",
+        "Disconnects C temporarily"
+      ],
+      "answer": "Informs C which missed RTS of duration",
+      "explanation": "RTS reaches only sender neighbours while CTS from the center reaches the whole cell so C sets NAV silence.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m3_06_01",
+      "courseCode": "PCCST501",
+      "topicId": "m3_06_mobile_ip_agents_tunneling",
+      "type": "multiple_choice",
+      "question": "How many legs does default Mobile IP delivery use and how many remain after route optimization?",
+      "options": [
+        "3 by default and 1 optimized",
+        "1 by default and 3 optimized",
+        "3 both times",
+        "1 both times"
+      ],
+      "answer": "3 by default and 1 optimized",
+      "explanation": "Default is correspondent to home to foreign to node for 3 legs while binding cache tunnels directly for 1.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m4_03_01",
+      "courseCode": "PCCST501",
+      "topicId": "m4_03_pcm_digitization_sampling_quantization",
+      "type": "multiple_choice",
+      "question": "For telephone voice limited to 4 kHz with 8-bit quantization, what sampling and bit rates result?",
+      "options": [
+        "8000 per sec and 64 kbps",
+        "4000 per sec and 32 kbps",
+        "44100 per sec and 1411 kbps",
+        "8000 per sec and 8 kbps"
+      ],
+      "answer": "8000 per sec and 64 kbps",
+      "explanation": "Nyquist needs twice 4 kHz for 8000 samples and 8000 times 8 bits gives 64 kbps DS0 rate.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m4_05_01",
+      "courseCode": "PCCST501",
+      "topicId": "m4_05_transmission_media_guided_unguided",
+      "type": "multiple_choice",
+      "question": "Why can a ray traveling from cladding toward core never undergo total internal reflection?",
+      "options": [
+        "Rare-to-dense always refracts inward",
+        "Dense-to-rare always refracts inward",
+        "No index contrast needed",
+        "Wavelength alone decides"
+      ],
+      "answer": "Rare-to-dense always refracts inward",
+      "explanation": "Trapping needs dense-to-rare past critical angle so reverse cladding-to-core path always enters the core.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m4_06_01",
+      "courseCode": "PCCST501",
+      "topicId": "m4_06_bandwidth_utilization_multiplexing_spread",
+      "type": "multiple_choice",
+      "question": "For 5 FDM channels of 10 kHz with 2 kHz guards between adjacent bands, what total bandwidth is needed?",
+      "options": [
+        "58 kHz",
+        "50 kHz",
+        "60 kHz",
+        "52 kHz"
+      ],
+      "answer": "58 kHz",
+      "explanation": "Payload 50 plus 4 internal guards times 2 equals 58 since guards live only between bands.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst501_m4_07_01",
+      "courseCode": "PCCST501",
+      "topicId": "m4_07_asn1_smi_mib_language",
+      "type": "multiple_choice",
+      "question": "How is a SEQUENCE containing INTEGER 5 encoded in BER and how many bytes does it total?",
+      "options": [
+        "30 03 02 01 05 totaling 5",
+        "30 01 05 totaling 3",
+        "02 01 05 alone totaling 3",
+        "04 02 48 49 totaling 4"
+      ],
+      "answer": "30 03 02 01 05 totaling 5",
+      "explanation": "Inner INTEGER is 3 bytes so SEQUENCE length 03 wraps the whole inner encoding for 5 bytes total.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m1_01_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_01_algorithm_definition_and_criteria",
+      "type": "multiple_choice",
+      "question": "In the RAM model, what time cost is assumed for a basic operation like addition or comparison?",
+      "options": [
+        "One constant unit of time regardless of number size",
+        "Time proportional to the size of the numbers involved",
+        "Time proportional to the total memory available",
+        "An unpredictable machine dependent amount of time"
+      ],
+      "answer": "One constant unit of time regardless of number size",
+      "explanation": "The notes define the RAM model so addition comparison assignment and memory access each cost exactly one unit of time. This gives a hardware independent baseline for counting operations.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m1_02_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_02_time_space_complexity_best_worst_average",
+      "type": "multiple_choice",
+      "question": "For linear search on an array of size n, what is the best case time complexity?",
+      "options": [
+        "O(1)",
+        "O(n)",
+        "O(log n)",
+        "O(n squared)"
+      ],
+      "answer": "O(1)",
+      "explanation": "The worked example puts the target at the first element so only one comparison is needed. Worst and average cases both grow with n while the best case stays constant.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m1_06_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_06_recurrence_iteration_method",
+      "type": "multiple_choice",
+      "question": "In the iteration method, what determines the value of level k where expansion stops?",
+      "options": [
+        "The level where the recursive argument reaches the base case",
+        "Always stopping after exactly three levels",
+        "Stopping as soon as the pattern looks complicated",
+        "Using a level count that always equals n"
+      ],
+      "answer": "The level where the recursive argument reaches the base case",
+      "explanation": "The procedure finds the general pattern at level k then solves for the k that hits the base case such as n minus k equals 1 or n divided by b to power k equals 1. Substituting that k leaves a plain sum to evaluate.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m1_07_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_07_recursion_tree_method",
+      "type": "multiple_choice",
+      "question": "In a recursion tree for T(n) equals aT(n divided by b) plus f(n), what occurs at level i?",
+      "options": [
+        "a to power i nodes each of size n divided by b to power i",
+        "b to power i nodes each of size n divided by a to power i",
+        "a times i nodes each of size n minus i",
+        "i nodes each of size n divided by i"
+      ],
+      "answer": "a to power i nodes each of size n divided by b to power i",
+      "explanation": "Each node spawns a children so the count multiplies by a every level while the size divides by b every level. This gives the per level total used in the tree sum.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m1_08_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_08_master_theorem_and_cases",
+      "type": "multiple_choice",
+      "question": "Which recurrence lies in the gap where the basic three case Master Theorem does not apply?",
+      "options": [
+        "T(n) equals 2T(n divided by 2) plus n log n",
+        "T(n) equals 2T(n divided by 2) plus n",
+        "T(n) equals T(n divided by 2) plus 1",
+        "T(n) equals 3T(n divided by 2) plus n to power 3"
+      ],
+      "answer": "T(n) equals 2T(n divided by 2) plus n log n",
+      "explanation": "Here the reference function is n and n log n exceeds it only by a log factor not by a polynomial factor. The notes state this sits between Case 2 and Case 3 so the basic theorem stays silent.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m1_09_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_09_balanced_search_trees_avl_foundations",
+      "type": "multiple_choice",
+      "question": "What condition must hold at every node of a valid AVL tree?",
+      "options": [
+        "Absolute balance factor at most 1",
+        "Every node has exactly two children",
+        "The tree is perfectly complete",
+        "The left subtree is always taller than the right"
+      ],
+      "answer": "Absolute balance factor at most 1",
+      "explanation": "Balance factor is left height minus right height and the AVL invariant requires it to stay in minus 1 0 or plus 1. A value of plus 2 or minus 2 triggers a rotation.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m1_10_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_10_avl_tree_rotations_insertion_and_deletion",
+      "type": "multiple_choice",
+      "question": "Which fix applies to an imbalance caused in the right subtree of the left child?",
+      "options": [
+        "LR double rotation with left on the child then right on the parent",
+        "LL single right rotation",
+        "RR single left rotation",
+        "RL double rotation with right on the child then left on the parent"
+      ],
+      "answer": "LR double rotation with left on the child then right on the parent",
+      "explanation": "That shape is the LR zig zag so a single rotation cannot straighten it. The notes prescribe left on the left child to make a straight line then right on the unbalanced node.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m1_99_01",
+      "courseCode": "PCCST502",
+      "topicId": "m1_99_practice_lab_asymptotics_and_recurrences",
+      "type": "multiple_choice",
+      "question": "When inserting strictly increasing keys into an AVL tree, which rotations keep appearing?",
+      "options": [
+        "RR single left rotations from the growing right side line",
+        "LR and RL double rotations from zig zag shapes",
+        "LL single right rotations from a left lean",
+        "No rotations because sorted order needs none"
+      ],
+      "answer": "RR single left rotations from the growing right side line",
+      "explanation": "Each new maximum extends the rightmost path which is the straight line leaning right shape. The lab trace shows repeated single left rotations that stop degeneration into a line.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m2_02_01",
+      "courseCode": "PCCST502",
+      "topicId": "m2_02_graph_traversals_bfs_and_dfs",
+      "type": "multiple_choice",
+      "question": "If BFS from s reports distance 3 for vertex v, what does that guarantee?",
+      "options": [
+        "A 3 edge path exists and no shorter edge path does with nothing claimed about weights",
+        "The cheapest weighted path costs 3",
+        "v lies in a different connected component",
+        "The graph has exactly 3 vertices"
+      ],
+      "answer": "A 3 edge path exists and no shorter edge path does with nothing claimed about weights",
+      "explanation": "BFS layers certify hop count optimality only because weights never enter the computation. Claiming least weight from BFS is the planted distractor in the notes.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m2_05_01",
+      "courseCode": "PCCST502",
+      "topicId": "m2_05_topological_sorting_dag_linearization",
+      "type": "multiple_choice",
+      "question": "If Kahn algorithm emits only 4 of 7 vertices before the queue empties, what is the verdict?",
+      "options": [
+        "The leftovers contain a directed cycle so no linearization exists",
+        "Rerun the algorithm with a bigger queue",
+        "Ship the partial order as the answer",
+        "The graph is still a DAG regardless"
+      ],
+      "answer": "The leftovers contain a directed cycle so no linearization exists",
+      "explanation": "Every leftover vertex keeps indegree at least 1 from within the leftovers so no zero can ever appear. The notes say to report impossibility with the leftover subgraph as evidence.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m2_99_01",
+      "courseCode": "PCCST502",
+      "topicId": "m2_99_practice_lab_graphs_divide_drills",
+      "type": "multiple_choice",
+      "question": "After UNION(1,2) and UNION(3,4) and UNION(1,3) by rank with FIND(4), what are the ranks and parent of 4?",
+      "options": [
+        "rank of 1 is 2 and rank of 3 is 1 with rest 0 and parent of 4 is 1",
+        "All ranks are 0 and parent of 4 is 3",
+        "Rank of 1 is 3 and parent of 4 is 2",
+        "Ranks are recomputed from scratch after every FIND"
+      ],
+      "answer": "rank of 1 is 2 and rank of 3 is 1 with rest 0 and parent of 4 is 1",
+      "explanation": "Two rank 0 ties create two rank 1 roots and merging them makes rank 2 at root 1. FIND with path compression rewires 4 directly under 1 without changing ranks.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m3_05_01",
+      "courseCode": "PCCST502",
+      "topicId": "m3_05_backtracking_n_queens_state_space",
+      "type": "multiple_choice",
+      "question": "In N-Queens with one queen per row, when do queen i and queen j attack each other?",
+      "options": [
+        "Same column or absolute column difference equals absolute row difference",
+        "Same square color only",
+        "Same row only because rows prevent the rest",
+        "Only when placed in adjacent rows"
+      ],
+      "answer": "Same column or absolute column difference equals absolute row difference",
+      "explanation": "The notes define the attack test as same column or equal rise over run on the diagonal. Rows are fixed by construction so only columns and diagonals need checking.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m3_06_01",
+      "courseCode": "PCCST502",
+      "topicId": "m3_06_floyd_warshall_all_pairs_shortest",
+      "type": "multiple_choice",
+      "question": "In Floyd-Warshall, what does a negative entry on the final distance diagonal signify?",
+      "options": [
+        "A negative cycle through that vertex so shortest paths are undefined there",
+        "Distances simply need one more round",
+        "Normal behavior for any negative edge",
+        "An integer overflow that needs bigger integers"
+      ],
+      "answer": "A negative cycle through that vertex so shortest paths are undefined there",
+      "explanation": "A negative diagonal means a path from the vertex back to itself with total below zero which loops profitably forever. Negative edges are legal input but negative cycles void routing.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m3_99_01",
+      "courseCode": "PCCST502",
+      "topicId": "m3_99_practice_lab_greedy_dp_backtracking_drills",
+      "type": "multiple_choice",
+      "question": "For capacity 50 with items (60,10) and (100,20) and (120,30), what does exact 0/1 DP return?",
+      "options": [
+        "220 using items (100,20) and (120,30) with weight exactly 50",
+        "160 using the first two densest items that fit",
+        "240 using a fractional split of the last item",
+        "180 using the first and last items"
+      ],
+      "answer": "220 using items (100,20) and (120,30) with weight exactly 50",
+      "explanation": "Take or skip DP fills to 220 while ratio greedy stalls at 160 and the fractional relaxation reaches 240. Divisibility changes the feasible set so the three methods disagree.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m4_04_01",
+      "courseCode": "PCCST502",
+      "topicId": "m4_04_bin_packing_approximation_algorithms",
+      "type": "multiple_choice",
+      "question": "What worst case bin count does First-Fit Decreasing guarantee relative to optimal?",
+      "options": [
+        "At most 11 divided by 9 times OPT plus 1 bins",
+        "At most 2 times OPT minus 1 bins",
+        "At most 1.7 times OPT plus 2 bins",
+        "Exactly OPT bins on every instance"
+      ],
+      "answer": "At most 11 divided by 9 times OPT plus 1 bins",
+      "explanation": "Sorting descending first lets big items take empty bins and small items plug gaps like sand. The notes contrast this near 22 percent overhead with online First Fit near 70 percent and Next Fit near double.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst502_m4_05_01",
+      "courseCode": "PCCST502",
+      "topicId": "m4_05_randomized_algorithms_las_vegas_monte_carlo",
+      "type": "multiple_choice",
+      "question": "How do Las Vegas and Monte Carlo randomized algorithms differ in their guarantees?",
+      "options": [
+        "Las Vegas is always correct with random runtime while Monte Carlo has fixed time and probable correctness",
+        "Both guarantee a correct answer in fixed time",
+        "Quicksort is Monte Carlo and Karger is Las Vegas",
+        "The labels are historical accidents with no meaning"
+      ],
+      "answer": "Las Vegas is always correct with random runtime while Monte Carlo has fixed time and probable correctness",
+      "explanation": "Randomized quicksort always sorts correctly with random speed while Karger style methods finish on schedule with small error. Monte Carlo error is then bought down by repetition and voting.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst502_m4_99_01",
+      "courseCode": "PCCST502",
+      "topicId": "m4_99_practice_lab_branchbound_complexity_drills",
+      "type": "multiple_choice",
+      "question": "You reduced new problem X to Vertex Cover and claim X is NP complete, what is the verdict?",
+      "options": [
+        "At most X is in NP and hardness needs a reduction from a known hard problem to X",
+        "The claim is correct and complete as stated",
+        "The argument proves X is in P",
+        "Reductions are unnecessary for completeness claims"
+      ],
+      "answer": "At most X is in NP and hardness needs a reduction from a known hard problem to X",
+      "explanation": "Reducing X to a known problem shows X is no harder than it which is the easiness direction. Hardness must flow into X from known hard ground plus a verifier for membership.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m1_04_01",
+      "courseCode": "PCCST503",
+      "topicId": "m1_04_multiple_regression_model_assessment",
+      "type": "multiple_choice",
+      "question": "Why must R-squared be judged on held-out test data rather than training data?",
+      "options": [
+        "Training R-squared rises by construction when any predictor is added even random noise",
+        "Test R-squared is always higher than training R-squared on the same data",
+        "Held-out data makes training error larger by definition",
+        "R-squared cannot be computed on training data at all"
+      ],
+      "answer": "Training R-squared rises by construction when any predictor is added even random noise",
+      "explanation": "Least squares exploits any added predictor so train score never falls. Test score alone estimates generalization since train error falls while test error U-turns.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m1_99_01",
+      "courseCode": "PCCST503",
+      "topicId": "m1_99_practice_lab_foundations_drills",
+      "type": "multiple_choice",
+      "question": "What happens to a MAP estimate with a fixed prior as the sample size grows very large?",
+      "options": [
+        "It converges to the MLE as data precision swamps prior precision",
+        "It stays fixed at the prior mean regardless of data",
+        "It converges to zero because the prior washes out the data",
+        "It oscillates between MLE and MAP forever"
+      ],
+      "answer": "It converges to the MLE as data precision swamps prior precision",
+      "explanation": "With ten flips the prior owns the answer but with one thousand flips the data does. The file states MAP converges to MLE as n grows.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m2_03_01",
+      "courseCode": "PCCST503",
+      "topicId": "m2_03_naive_bayes_generative_models",
+      "type": "multiple_choice",
+      "question": "Why does Naive Bayes add Laplace pseudocounts to word counts?",
+      "options": [
+        "To speed up counting by skipping rare words",
+        "To prevent one unseen word from zeroing a whole class score with an absolute veto",
+        "To make priors sum to one across classes",
+        "To model correlation between features given the class"
+      ],
+      "answer": "To prevent one unseen word from zeroing a whole class score with an absolute veto",
+      "explanation": "A product amplifies zeros absolutely so unseen lunch would veto spam. Smoothing replaces never seen with rare so unseen is a vote not a veto.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst503_m2_05_01",
+      "courseCode": "PCCST503",
+      "topicId": "m2_05_gradient_descent_training_engine",
+      "type": "multiple_choice",
+      "question": "Training loss is healthy then turns to NaN right after the learning rate is raised, what is the first fix?",
+      "options": [
+        "Halve the learning rate and consider gradient clipping then resume from the last good checkpoint",
+        "Rewrite the model in a different framework immediately",
+        "Treat NaN as convergence and deploy the weights",
+        "Delete the most recent data batch as corrupted"
+      ],
+      "answer": "Halve the learning rate and consider gradient clipping then resume from the last good checkpoint",
+      "explanation": "Overshooting updates race weights to infinity which is the high rate signature. The file says nine of ten broken runs end at the learning rate.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m2_99_01",
+      "courseCode": "PCCST503",
+      "topicId": "m2_99_practice_lab_classification_drills",
+      "type": "multiple_choice",
+      "question": "Three models classify correctly with probabilities 0.9, 0.6 and 0.51, what does cross-entropy add beyond accuracy?",
+      "options": [
+        "It shows confidence quality with losses near 0.105 versus 0.673 so the 0.51 model is fragile",
+        "It proves all three models are equally robust",
+        "It replaces accuracy for deployment reporting",
+        "It proves probabilities above 0.5 are always wrong"
+      ],
+      "answer": "It shows confidence quality with losses near 0.105 versus 0.673 so the 0.51 model is fragile",
+      "explanation": "Accuracy gives tie tie tie while loss preserves confidence. The file says train on the loss and report accuracy.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m3_04_01",
+      "courseCode": "PCCST503",
+      "topicId": "m3_04_kernels_soft_margins",
+      "type": "multiple_choice",
+      "question": "On noisy overlapping data how do SVM settings C equals 1000 and C equals 0.001 compare?",
+      "options": [
+        "C equals 1000 gives a near hard margin that overfits noise while C equals 0.001 forgives violations and underfits signal",
+        "C equals 1000 underfits while C equals 0.001 overfits",
+        "Both settings give identical boundaries because C is decorative",
+        "Both settings always achieve zero training error"
+      ],
+      "answer": "C equals 1000 gives a near hard margin that overfits noise while C equals 0.001 forgives violations and underfits signal",
+      "explanation": "C prices slack violations so huge C bends around mislabels and tiny C ignores signal. Validation must pick the middle.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m3_99_01",
+      "courseCode": "PCCST503",
+      "topicId": "m3_99_practice_lab_networks_svm_drills",
+      "type": "multiple_choice",
+      "question": "A perceptron trace makes 4 mistakes while the margin bound allows about 72, is the bound wrong?",
+      "options": [
+        "No, 4 satisfies the ceiling of 72 since bounds certify worst cases not typical counts",
+        "Yes, the trace must have made exactly 72 mistakes to confirm theory",
+        "Yes, mistake bounds apply only to inseparable data",
+        "No, the bound predicts the exact mistake count on every run"
+      ],
+      "answer": "No, 4 satisfies the ceiling of 72 since bounds certify worst cases not typical counts",
+      "explanation": "Upper bounds are ceilings not schedules so loose but valid is the norm. Report both numbers and their relation.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m4_02_01",
+      "courseCode": "PCCST503",
+      "topicId": "m4_02_hierarchical_clustering",
+      "type": "multiple_choice",
+      "question": "How do single and complete linkage differ when one noisy point bridges two dense blobs?",
+      "options": [
+        "Single linkage chains through the bridge and fuses everything while complete linkage resists until forced",
+        "Complete linkage chains worse than single linkage in this case",
+        "Both linkages ignore the bridge identically",
+        "Linkages differ only on one dimensional data"
+      ],
+      "answer": "Single linkage chains through the bridge and fuses everything while complete linkage resists until forced",
+      "explanation": "Single linkage uses nearest pairs so the bridge is a stepping stone. Complete linkage demands total cohesion so it quarantines the bridge.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst503_m4_06_01",
+      "courseCode": "PCCST503",
+      "topicId": "m4_06_mds_multidimensional_scaling",
+      "type": "multiple_choice",
+      "question": "What is the relation between classical MDS on Euclidean distances and PCA?",
+      "options": [
+        "They are identical up to rotation from the same centered inner product matrix",
+        "They are unrelated projections with different inputs and outputs",
+        "MDS needs class labels while PCA does not",
+        "PCA preserves distances while MDS preserves only ranks"
+      ],
+      "answer": "They are identical up to rotation from the same centered inner product matrix",
+      "explanation": "Double centered squared distances coincide with the PCA Gram matrix. MDS arrives via mileages while PCA comes via features.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst503_m4_99_01",
+      "courseCode": "PCCST503",
+      "topicId": "m4_99_practice_lab_unsupervised_ensemble_drills",
+      "type": "multiple_choice",
+      "question": "Why can forests grow thousands of trees safely while AdaBoost must stop early on noisy data?",
+      "options": [
+        "Forests average votes with variance only effect while boosting reweights onto residuals that are lies on noisy data",
+        "Forests use less memory per tree so more trees always fit",
+        "AdaBoost trees are deeper than forest trees by rule",
+        "Forests never look at labels so they cannot overfit"
+      ],
+      "answer": "Forests average votes with variance only effect while boosting reweights onto residuals that are lies on noisy data",
+      "explanation": "Averaging only smooths while sequential reweighting chases whatever errs. On noisy data weights explode on poison.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst601_m1_02_01",
+      "courseCode": "PCCST601",
+      "topicId": "m1_02_regex_fsa_brushup",
+      "type": "multiple_choice",
+      "question": "What is the language difference between ab-star and paren-ab-star from precedence?",
+      "options": [
+        "ab-star forces one leading a with only b repeated while paren-ab-star repeats pairs and allows empty",
+        "Both patterns match exactly the same language",
+        "Both patterns match everything over a and b",
+        "Neither pattern can ever match a alone"
+      ],
+      "answer": "ab-star forces one leading a with only b repeated while paren-ab-star repeats pairs and allows empty",
+      "explanation": "Star binds tightest so only b repeats without parens. Missing parens is the stated reading error.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m1_05_01",
+      "courseCode": "PCCST601",
+      "topicId": "m1_05_m1_mixed_drill",
+      "type": "multiple_choice",
+      "question": "Why must keyword rules be listed before the identifier rule in Lex?",
+      "options": [
+        "Equal length ties break to the earlier rule so keywords must precede to ever fire",
+        "Earlier rules run faster than later rules",
+        "Alphabetical order is required by Lex",
+        "Identifiers become illegal unless keywords come first"
+      ],
+      "answer": "Equal length ties break to the earlier rule so keywords must precede to ever fire",
+      "explanation": "Longest match comes first then rule order decides ties. Order encodes priority which the file calls the most tested fact.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst601_m2_03_01",
+      "courseCode": "PCCST601",
+      "topicId": "m2_03_recursive_descent_predictive",
+      "type": "multiple_choice",
+      "question": "When is a choice between two productions decidable by one lookahead token with no backtracking?",
+      "options": [
+        "When the FIRST sets of the alternatives are disjoint with FOLLOW awareness for empty",
+        "When parse trees are very deep",
+        "When the grammar has left recursion",
+        "When the input has very many tokens"
+      ],
+      "answer": "When the FIRST sets of the alternatives are disjoint with FOLLOW awareness for empty",
+      "explanation": "Overlapping sets force guessing and rewinding while disjoint sets let the peek pick the branch. Disjoint FIRST gives linear parsing.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m2_06_01",
+      "courseCode": "PCCST601",
+      "topicId": "m2_06_grammar_transform_drill",
+      "type": "multiple_choice",
+      "question": "In indirect left recursion removal what substitution direction is correct?",
+      "options": [
+        "Substitute earlier nonterminals into later ones in index order",
+        "Substitute later nonterminals into earlier ones in reverse order",
+        "Substitute in either direction since order does not matter",
+        "Never substitute and only delete productions"
+      ],
+      "answer": "Substitute earlier nonterminals into later ones in index order",
+      "explanation": "For each later rule substitute earlier bodies to expose hidden recursion. Reversed direction manufactures recursion.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m2_07_01",
+      "courseCode": "PCCST601",
+      "topicId": "m2_07_m2_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What must an LL(1) parser do when the table cell for the stack top and lookahead is blank?",
+      "options": [
+        "Report a syntax error at the lookahead and use panic mode recovery to a sync token",
+        "Pop the stack top and continue silently",
+        "Push the lookahead symbol and keep parsing",
+        "Accept the input as complete"
+      ],
+      "answer": "Report a syntax error at the lookahead and use panic mode recovery to a sync token",
+      "explanation": "Blank means no legal move so it is malformed input. Report the expected set then sync and resume.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst601_m3_05_01",
+      "courseCode": "PCCST601",
+      "topicId": "m3_05_lr_drill",
+      "type": "multiple_choice",
+      "question": "After an LR parser reduces to nonterminal A on top of state s what comes next?",
+      "options": [
+        "Consult GOTO of s and A to land the pushed structure in its continuation state",
+        "Shift the next input symbol without any table lookup",
+        "Accept the input immediately",
+        "Rescan the whole input from the start"
+      ],
+      "answer": "Consult GOTO of s and A to land the pushed structure in its continuation state",
+      "explanation": "Reductions push structure not input so GOTO routes it. Shifting without GOTO strands the parse.",
+      "difficulty": "intermediate",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m3_06_01",
+      "courseCode": "PCCST601",
+      "topicId": "m3_06_ir_taxonomy_graphical",
+      "type": "multiple_choice",
+      "question": "What does a DAG expose for an expression that an AST hides?",
+      "options": [
+        "Shared subexpression reuse with one node having many parents for elimination",
+        "Operator precedence of the expression",
+        "Token positions from the scanner",
+        "Type errors from semantic analysis"
+      ],
+      "answer": "Shared subexpression reuse with one node having many parents for elimination",
+      "explanation": "Trees duplicate shared computations while DAGs fuse them visibly. Multi parent nodes are the redundancy report.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m3_07_01",
+      "courseCode": "PCCST601",
+      "topicId": "m3_07_linear_ir_tac",
+      "type": "multiple_choice",
+      "question": "Why are direct triples unsafe for an optimizer that inserts or deletes code?",
+      "options": [
+        "Results are addressed by instruction position so insertion renumbers downstream references",
+        "Triples hold more operands than quadruples can express",
+        "Triples cannot represent branches at all",
+        "Triples are slower to emit than quadruples"
+      ],
+      "answer": "Results are addressed by instruction position so insertion renumbers downstream references",
+      "explanation": "Quadruples name results explicitly while triples use position. Optimizers need quads or indirect triples to survive motion.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m3_08_01",
+      "courseCode": "PCCST601",
+      "topicId": "m3_08_sdt_expressions_control",
+      "type": "multiple_choice",
+      "question": "Why does single pass translation of control flow use placeholders plus backpatching for jumps?",
+      "options": [
+        "Forward jump targets are not yet emitted so pending lists defer binding until labels land",
+        "Two pass translation is illegal in compilers",
+        "Placeholders execute faster than real addresses",
+        "Labels are never needed for control flow"
+      ],
+      "answer": "Forward jump targets are not yet emitted so pending lists defer binding until labels land",
+      "explanation": "Forward references outrun single pass knowledge for joins and exits. Backpatching is one pass forward reference resolution.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst601_m3_09_01",
+      "courseCode": "PCCST601",
+      "topicId": "m3_09_m3_mixed_drill",
+      "type": "multiple_choice",
+      "question": "When parsing aabb with S to aSb or ab which handle reduces first and why?",
+      "options": [
+        "Inner ab at positions 2 to 3 reduces to S first since outer aSb is not complete until inner collapses",
+        "Outer aSb reduces first because longer rules always go first",
+        "Both handles reduce at the same time",
+        "The pair aa reduces first as ordered by the scanner"
+      ],
+      "answer": "Inner ab at positions 2 to 3 reduces to S first since outer aSb is not complete until inner collapses",
+      "explanation": "Only complete right hand side ab on top qualifies first. Handles climb leaves up innermost first.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst601_m4_02_01",
+      "courseCode": "PCCST601",
+      "topicId": "m4_02_codegen_boolean_relational",
+      "type": "multiple_choice",
+      "question": "How is logical NOT of a condition compiled in jump based boolean code?",
+      "options": [
+        "Swap the true and false exit lists with zero extra instructions",
+        "Always emit an extra NOT instruction",
+        "Emit double jumps through a fresh label",
+        "Emit a function call to negate the value"
+      ],
+      "answer": "Swap the true and false exit lists with zero extra instructions",
+      "explanation": "Exits are the boolean so swapping labels negates. The file calls this zero cost NOT.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m4_04_01",
+      "courseCode": "PCCST601",
+      "topicId": "m4_04_optimization_opportunities_scope",
+      "type": "multiple_choice",
+      "question": "When safety and profitability conflict for a proposed optimization which wins?",
+      "options": [
+        "Safety vetoes since transforms must preserve observable semantics then profitability ranks safe options",
+        "Profitability wins since speed matters first",
+        "Scope alone decides without other checks",
+        "Neither matters for correct compilers"
+      ],
+      "answer": "Safety vetoes since transforms must preserve observable semantics then profitability ranks safe options",
+      "explanation": "Wrong but fast is miscompilation so permits gate everything. Profitability then picks among legal moves.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m4_05_01",
+      "courseCode": "PCCST601",
+      "topicId": "m4_05_local_lvn_balancing",
+      "type": "multiple_choice",
+      "question": "Why must local value numbering kill the value number of a after a equals 5?",
+      "options": [
+        "Old stamps describe the previous a so reuse would equate stale and fresh values",
+        "Tables overflow unless numbers are killed often",
+        "Memory hygiene requires killing numbers after each statement",
+        "The language standard requires a fresh number for constants"
+      ],
+      "answer": "Old stamps describe the previous a so reuse would equate stale and fresh values",
+      "explanation": "Kills end value lifetimes since new a wears an old name. Stale reuse is silent miscompilation.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst601_m4_06_01",
+      "courseCode": "PCCST601",
+      "topicId": "m4_06_regional_superlocal_unrolling",
+      "type": "multiple_choice",
+      "question": "What extra code is needed when unrolling a loop with unknown trip count by a fixed factor?",
+      "options": [
+        "A remainder loop for leftover laps that do not fill a full unrolled block",
+        "Nothing extra since divisibility can be assumed",
+        "Bigger registers for the unrolled body",
+        "Only new variable names with no control change"
+      ],
+      "answer": "A remainder loop for leftover laps that do not fill a full unrolled block",
+      "explanation": "Unrolling assumes divisibility but real counts leave leftovers. Remainder handling preserves exact trip counts.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m1_02_01",
+      "courseCode": "PCCST602",
+      "topicId": "m1_02_iot_cps",
+      "type": "multiple_choice",
+      "question": "What must be present before a sensor deployment can be labelled a cyber-physical system?",
+      "options": [
+        "Actuation with timing and safety guarantees",
+        "More sensors reporting to the cloud",
+        "A dashboard showing live readings",
+        "Larger batteries on every node"
+      ],
+      "answer": "Actuation with timing and safety guarantees",
+      "explanation": "Sensing and reporting at any scale stays IoT. CPS needs closed-loop actuation with real-time deadlines and verified safety proofs.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m1_04_01",
+      "courseCode": "PCCST602",
+      "topicId": "m1_04_vms_system_models",
+      "type": "multiple_choice",
+      "question": "Why is a grid not simply a bigger cluster?",
+      "options": [
+        "It federates autonomous domains with no single scheduler and cert-based trust",
+        "It has fewer nodes than any cluster",
+        "It runs without any network between nodes",
+        "It cannot use virtual machines for isolation"
+      ],
+      "answer": "It federates autonomous domains with no single scheduler and cert-based trust",
+      "explanation": "Clusters have one org and one central scheduler while grids span owners with heterogeneous policies. Scheduling becomes negotiation across virtual organisations, not assignment.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m2_02_01",
+      "courseCode": "PCCST602",
+      "topicId": "m2_02_cluster_arch_gpu_ssi",
+      "type": "multiple_choice",
+      "question": "Why does locality-aware placement stay mandatory even with single-system-image?",
+      "options": [
+        "SSI hides location but not fabric latency for remote memory and files",
+        "SSI removes the network so all access is local",
+        "SSI gives every node its own separate scheduler",
+        "SSI makes remote and local memory equally fast"
+      ],
+      "answer": "SSI hides location but not fabric latency for remote memory and files",
+      "explanation": "Single-system-image unifies names like files and process views but performance stays local. Location-transparent does not mean performance-uniform.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m2_03_01",
+      "courseCode": "PCCST602",
+      "topicId": "m2_03_ha_fault_checkpoint",
+      "type": "multiple_choice",
+      "question": "Why is fencing or STONITH mandatory in an active-active high-availability pair?",
+      "options": [
+        "Two primaries writing at once corrupt state so the survivor must prove the peer dead",
+        "It makes failover complete faster for users",
+        "It removes the need for heartbeat checks",
+        "It lets both nodes safely share one disk without rules"
+      ],
+      "answer": "Two primaries writing at once corrupt state so the survivor must prove the peer dead",
+      "explanation": "Heartbeat loss cannot tell a partition from death, so both sides could promote. Fencing power-cuts the peer first so only one writer survives.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m2_05_01",
+      "courseCode": "PCCST602",
+      "topicId": "m2_05_job_management_migration",
+      "type": "multiple_choice",
+      "question": "How do total migration time and downtime differ for pre-copy live migration?",
+      "options": [
+        "Total time stretches over dirty rounds while downtime is only the final freeze in milliseconds",
+        "They are always equal by definition",
+        "Downtime always equals total time plus queue wait",
+        "Total time is zero because migration is instant"
+      ],
+      "answer": "Total time stretches over dirty rounds while downtime is only the final freeze in milliseconds",
+      "explanation": "Pre-copy iterates memory while running to shrink the final delta, which lengthens total time. The outage SLA counts only the stop-and-copy freeze window.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m3_03_01",
+      "courseCode": "PCCST602",
+      "topicId": "m3_03_structures_cpu_virtualization",
+      "type": "multiple_choice",
+      "question": "What tradeoff does hardware nested paging with EPT or NPT introduce?",
+      "options": [
+        "Fewer exits but deeper page walks that raise TLB miss cost",
+        "No exits and no memory cost at all",
+        "More exits with shallower page walks",
+        "Free memory encryption for every guest"
+      ],
+      "answer": "Fewer exits but deeper page walks that raise TLB miss cost",
+      "explanation": "Nested paging removes shadow-table exits by walking both levels in silicon. The walk gets deeper, so cold TLBs can cost many more memory references.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m3_05_01",
+      "courseCode": "PCCST602",
+      "topicId": "m3_05_virtual_clusters_live_migration",
+      "type": "multiple_choice",
+      "question": "When will pre-copy live migration fail to converge?",
+      "options": [
+        "When the guest dirties memory faster than the network bandwidth can copy it",
+        "When the virtual machine is smaller than one gigabyte",
+        "When the network is faster than the dirty rate",
+        "When the virtual machine uses shared storage"
+      ],
+      "answer": "When the guest dirties memory faster than the network bandwidth can copy it",
+      "explanation": "Rounds shrink only if dirty rate is below bandwidth, else they grow forever. The fix is to throttle vCPUs, force a freeze, or cold-migrate off peak.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst602_m3_06_01",
+      "courseCode": "PCCST602",
+      "topicId": "m3_06_m3_mixed_drill",
+      "type": "multiple_choice",
+      "question": "How should banking ledgers and cat videos sharing one host be housed?",
+      "options": [
+        "Separate hardware VMs for kernel separation between regulated and untrusted tenants",
+        "Side-by-side containers sharing one kernel",
+        "One shared container for both workloads",
+        "One bare-metal server per tenant regardless of cost"
+      ],
+      "answer": "Separate hardware VMs for kernel separation between regulated and untrusted tenants",
+      "explanation": "Regulated plus untrusted needs the fortress floor, so kernel separation is required. Container kernel-sharing is the disqualifier and per-tenant bare metal loses on cost.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst602_m4_03_01",
+      "courseCode": "PCCST602",
+      "topicId": "m4_03_microservices_pros_cons",
+      "type": "multiple_choice",
+      "question": "Why does sharing one database across microservices create a distributed monolith?",
+      "options": [
+        "It re-couples deploys failures and scaling through shared data and lockstep releases",
+        "It makes every query run faster for all services",
+        "It removes all network latency between services",
+        "It guarantees independent scaling of each service"
+      ],
+      "answer": "It re-couples deploys failures and scaling through shared data and lockstep releases",
+      "explanation": "Data per service is pass or fail for autonomy. Shared tables bring join pressure, migration lockstep, and cascading failures.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m4_04_01",
+      "courseCode": "PCCST602",
+      "topicId": "m4_04_ipc_discovery_gateway",
+      "type": "multiple_choice",
+      "question": "What happens to availability and latency in a deep synchronous call chain like A to B to C to D?",
+      "options": [
+        "Availability multiplies down and tail latencies add so depth is danger",
+        "Availability adds up and latency stays flat",
+        "Latency shrinks as more services join the chain",
+        "Failures become impossible once timeouts are set"
+      ],
+      "answer": "Availability multiplies down and tail latencies add so depth is danger",
+      "explanation": "Three 0.99 hops give about 0.97 overall and p99 delays sum across hops. Async buffers break chains, while budgets and breakers bound must-sync cores.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pccst602_m4_06_01",
+      "courseCode": "PCCST602",
+      "topicId": "m4_06_m4_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What two structural fixes curb egress bills for an egress-heavy video startup on public cloud?",
+      "options": [
+        "CDN edge caching plus tiered storage lifecycle from hot to cool to archive",
+        "Bigger instances in more regions only",
+        "Raising prices without changing architecture",
+        "Adding more origin reads per viewer"
+      ],
+      "answer": "CDN edge caching plus tiered storage lifecycle from hot to cool to archive",
+      "explanation": "Edge caches serve hot bytes near viewers so origin pulls collapse. Lifecycle rules demote cold bytes to cheaper tiers by age.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst522_m1_03_01",
+      "courseCode": "PECST522",
+      "topicId": "m1_03_concept_of_rationality",
+      "type": "multiple_choice",
+      "question": "Which set lists all four factors that determine rationality at a given moment?",
+      "options": [
+        "Performance measure, prior knowledge, actions available, and percept sequence",
+        "Sensor accuracy, processor speed, memory size, and battery level",
+        "Omniscience, perfection, success, and autonomy",
+        "Goals, utility scores, learning rate, and exploration rate"
+      ],
+      "answer": "Performance measure, prior knowledge, actions available, and percept sequence",
+      "explanation": "The file defines rationality as depending on performance measure, prior knowledge, actions available, and percept sequence. A stronger gripper changes actions available, not success criteria or past percepts.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m1_04_01",
+      "courseCode": "PECST522",
+      "topicId": "m1_04_nature_of_task_environments",
+      "type": "multiple_choice",
+      "question": "Why is chess with a clock classified as semi-dynamic rather than static?",
+      "options": [
+        "The board waits but the performance score drops while thinking",
+        "The board keeps moving while the agent deliberates",
+        "The rules are unknown and must be learned by trial and error",
+        "Opponent cards are hidden from the agent sensors"
+      ],
+      "answer": "The board waits but the performance score drops while thinking",
+      "explanation": "The file states a semi-dynamic environment does not change while thinking but the performance score decays with time. Chess with a clock is the given example while chess without a clock is static.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m1_05_01",
+      "courseCode": "PECST522",
+      "topicId": "m1_05_agent_architectures_reflex_to_learning",
+      "type": "multiple_choice",
+      "question": "What is the specific job of the Problem Generator in a learning agent?",
+      "options": [
+        "To propose exploratory actions balancing exploration against exploitation",
+        "To evaluate behavior against an external performance standard",
+        "To select external actions based on current percepts",
+        "To update rules and models from critic feedback"
+      ],
+      "answer": "To propose exploratory actions balancing exploration against exploitation",
+      "explanation": "The file lists four learning agent parts and assigns the Problem Generator to suggest novel exploratory actions. This balances exploring unknown states against exploiting known rewards.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m1_07_01",
+      "courseCode": "PECST522",
+      "topicId": "m1_07_classic_ai_toy_problems",
+      "type": "multiple_choice",
+      "question": "Why does the standard 8-puzzle formulation define actions as moving the blank space?",
+      "options": [
+        "It standardizes actions to at most four directions instead of variable tile moves",
+        "It fixes the center tile so parity constraints disappear",
+        "It lets tiles move diagonally through other pieces",
+        "It shrinks the state space from 362880 to only nine states"
+      ],
+      "answer": "It standardizes actions to at most four directions instead of variable tile moves",
+      "explanation": "The file says moving the blank gives a uniform Up Down Left Right set in every state. Moving numbered tiles instead would give a variable number of legal choices by position.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m2_04_01",
+      "courseCode": "PECST522",
+      "topicId": "m2_04_greedy_best_first_search",
+      "type": "multiple_choice",
+      "question": "In the worked graph where S to A costs 1 plus 2 and S to B costs 4 plus 6 with h(A) equal to 5 and h(B) equal to 3, what does greedy best-first return?",
+      "options": [
+        "Path S to B to G costing 10 while the optimum via A costs 3",
+        "Path S to A to G costing 3 which is optimal",
+        "Both paths at once costing 13 in total",
+        "No path because the explored set blocks all expansion"
+      ],
+      "answer": "Path S to B to G costing 10 while the optimum via A costs 3",
+      "explanation": "The file traces greedy comparing h of 3 against 5 and picking B while ignoring the bills of 4 versus 1. It returns cost 10 versus the true optimum 3, proving non-optimality.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m2_06_01",
+      "courseCode": "PECST522",
+      "topicId": "m2_06_generate_and_test",
+      "type": "multiple_choice",
+      "question": "With 4 variables and 3 values each, how many full tests does generate-and-test need in the worst case?",
+      "options": [
+        "81 complete assignments from 3 to the power 4",
+        "12 from 3 times 4",
+        "7 from 3 plus 4",
+        "1 because the first guess suffices"
+      ],
+      "answer": "81 complete assignments from 3 to the power 4",
+      "explanation": "The file prices worst case as d to the power n for complete assignments. Here 3 times 3 times 3 times 3 equals 81, not a sum or product.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m2_07_01",
+      "courseCode": "PECST522",
+      "topicId": "m2_07_csp_arc_consistency_ac3",
+      "type": "multiple_choice",
+      "question": "What does AC-3 delete on the 2-colour triangle with all domains Red and Green?",
+      "options": [
+        "Nothing, since each value keeps a supporting opposite colour though no global solution exists",
+        "Everything, proving inconsistency by wiping all domains",
+        "One colour per node, leaving a unique solution",
+        "Only the Red values, leaving all Green domains"
+      ],
+      "answer": "Nothing, since each value keeps a supporting opposite colour though no global solution exists",
+      "explanation": "The file states every arc stays happy because Red is supported by Green on each neighbour. The whole instance is still unsatisfiable, so arc consistency prunes nothing and search must finish the job.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m2_08_01",
+      "courseCode": "PECST522",
+      "topicId": "m2_08_games_minimax_optimal_play",
+      "type": "multiple_choice",
+      "question": "In the worked tree where MIN node A sees leaves 3, 12 and 8 and MIN node B sees 2, 4 and 6, what is the minimax value and optimal move?",
+      "options": [
+        "Value 3 with optimal move toward A",
+        "Value 12 with optimal move toward A",
+        "Value 2 with optimal move toward B",
+        "Value 6 from averaging B children with move toward B"
+      ],
+      "answer": "Value 3 with optimal move toward A",
+      "explanation": "The file backs up MIN A to 3 and MIN B to 2, then MAX takes the larger floor for value 3 toward A. The flashy 12 is never available against perfect defence.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst522_m2_09_01",
+      "courseCode": "PECST522",
+      "topicId": "m2_09_alpha_beta_pruning",
+      "type": "multiple_choice",
+      "question": "On the same 3-12-8 and 2-4-6 tree explored left to right, how many leaves does alpha-beta evaluate and why?",
+      "options": [
+        "4 leaves, since leaf 2 triggers a cutoff that prunes leaves 4 and 6",
+        "6 leaves, since ordering never changes the evaluation count",
+        "2 leaves, since the right branch is never entered",
+        "0 leaves, since the root value is known in advance"
+      ],
+      "answer": "4 leaves, since leaf 2 triggers a cutoff that prunes leaves 4 and 6",
+      "explanation": "The file traces the left branch setting alpha to 3, then the first leaf 2 in the right branch falls at or below alpha. The cutoff skips 4 and 6 with the same value 3 and move as minimax.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst522_m2_99_01",
+      "courseCode": "PECST522",
+      "topicId": "m2_99_practice_lab_search_strategies_drills",
+      "type": "multiple_choice",
+      "question": "In the lab road graph with a direct 100-cost one-step toll road and a 1-plus-1 two-step backroad, what do BFS and UCS each choose?",
+      "options": [
+        "BFS picks the 100-cost toll road and UCS picks the 2-cost backroad",
+        "BFS picks the 2-cost backroad and UCS picks the 100-cost toll road",
+        "Both pick the toll road because fewer steps always means cheaper",
+        "Both pick the backroad because depth and cost always coincide"
+      ],
+      "answer": "BFS picks the 100-cost toll road and UCS picks the 2-cost backroad",
+      "explanation": "The file says BFS optimizes depth while UCS optimizes dollars. The answers differ exactly when step costs vary, so shallower is not cheaper here.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst522_m3_02_01",
+      "courseCode": "PECST522",
+      "topicId": "m3_02_propositional_logic_syntax_semantics",
+      "type": "multiple_choice",
+      "question": "Which truth-table row makes P implies Q false?",
+      "options": [
+        "P true and Q false, the only broken promise",
+        "P false and Q false, since both sides need truth",
+        "P false and Q true, since truth cannot follow falsity",
+        "No row ever falsifies an implication"
+      ],
+      "answer": "P true and Q false, the only broken promise",
+      "explanation": "The file states implication is false in exactly one row with true premise and false conclusion. Rows with false premise are vacuously true, which drives many exam traps.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m3_05_01",
+      "courseCode": "PECST522",
+      "topicId": "m3_05_propositional_vs_fol_inference",
+      "type": "multiple_choice",
+      "question": "How does decidability differ between propositional entailment and first-order entailment?",
+      "options": [
+        "Propositional is decidable while first-order is only semi-decidable and may loop on non-entailed queries",
+        "First-order is decidable while propositional may loop forever on non-entailed queries",
+        "Both are decidable and always terminate in polynomial time",
+        "Decidability concerns memory size rather than guaranteed termination"
+      ],
+      "answer": "Propositional is decidable while first-order is only semi-decidable and may loop on non-entailed queries",
+      "explanation": "The file states propositional entailment always returns an answer though co-NP-complete. First-order procedures confirm yes cases eventually but may loop forever on no cases.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m3_99_01",
+      "courseCode": "PECST522",
+      "topicId": "m3_99_practice_lab_logic_drills",
+      "type": "multiple_choice",
+      "question": "What is the verdict when unifying P(x, f(x)) with P(y, y)?",
+      "options": [
+        "Refuse for occur-check failure since x would occur inside f(x)",
+        "Succeed with x bound to y and ignore the nesting",
+        "Succeed with y bound to f(y) by symmetric reasoning",
+        "Fail because unification is undefined for nested terms"
+      ],
+      "answer": "Refuse for occur-check failure since x would occur inside f(x)",
+      "explanation": "The file walks x meeting y first, then f(x) meeting x with x inside its own partner. Accepting would build infinite regress x equals f(x) equals f of f(x) onward, so unify must refuse.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst522_m4_02_01",
+      "courseCode": "PECST522",
+      "topicId": "m4_02_passive_rl_utility_adp_and_td",
+      "type": "multiple_choice",
+      "question": "Which passive methods bootstrap and what does bootstrapping mean?",
+      "options": [
+        "ADP and TD bootstrap by updating an estimate from another estimate, while direct estimation does not",
+        "Direct estimation alone bootstraps by averaging full returns in isolation",
+        "All three bootstrap by copying the teacher policy verbatim",
+        "None bootstrap because bootstrapping needs larger neural networks"
+      ],
+      "answer": "ADP and TD bootstrap by updating an estimate from another estimate, while direct estimation does not",
+      "explanation": "The file defines bootstrapping as building a guess on another guess through TD next-state values or solved ADP values. Direct estimation waits for actual full returns and learns in isolation without bootstrapping.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m4_04_01",
+      "courseCode": "PECST522",
+      "topicId": "m4_04_policy_search_and_inverse_rl",
+      "type": "multiple_choice",
+      "question": "How does behavioral cloning differ from apprenticeship inverse RL on unseen driving states?",
+      "options": [
+        "Cloning copies state to action maps and drifts off-distribution while IRL recovers an objective and re-optimizes for novel states",
+        "Cloning generalizes better because it uses deeper networks than IRL",
+        "They are identical methods with different names and same guarantees",
+        "IRL cannot handle unseen states by definition and needs exact demos"
+      ],
+      "answer": "Cloning copies state to action maps and drifts off-distribution while IRL recovers an objective and re-optimizes for novel states",
+      "explanation": "The file says cloning copies moves and compounds drift errors while apprenticeship recovers feature weights and re-optimizes. Objectives transfer to new states while trajectories do not.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst522_m4_05_01",
+      "courseCode": "PECST522",
+      "topicId": "m4_05_generalization_applications_rl",
+      "type": "multiple_choice",
+      "question": "Why can off-policy Q-learning with bootstrapping and a neural approximator diverge when tabular Q-learning solved the task?",
+      "options": [
+        "The deadly triad of off-policy plus bootstrapping plus approximation can diverge and needs stabilizers like frozen targets",
+        "Neural nets cannot do reinforcement learning on any task by definition",
+        "The learning rate was too small so updates never overshoot the target",
+        "More exploration alone always fixes divergence without other changes"
+      ],
+      "answer": "The deadly triad of off-policy plus bootstrapping plus approximation can diverge and needs stabilizers like frozen targets",
+      "explanation": "The file states each leg is safe in pairs but the triple can diverge as targets shift under the approximator. DQN target nets and replay exist as scaffolding for exactly this instability.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m1_03_01",
+      "courseCode": "PECST631",
+      "topicId": "m1_03_test_types_pyramid",
+      "type": "multiple_choice",
+      "question": "Which suite shape follows pyramid economics for healthy test budgets?",
+      "options": [
+        "Many cheap unit tests with few pricey end-to-end tests",
+        "Many pricey end-to-end tests with few unit tests",
+        "Equal counts at every level regardless of cost",
+        "Only manual end-to-end tests with no units"
+      ],
+      "answer": "Many cheap unit tests with few pricey end-to-end tests",
+      "explanation": "The file states pyramid economics wants many cheap fast units at the base and few slow flaky E2E at the peak with 70 20 10-ish ratios.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m1_05_01",
+      "courseCode": "PECST631",
+      "topicId": "m1_05_automation_ai_trends",
+      "type": "multiple_choice",
+      "question": "Which tool assignment matches the pyramid shaped tooling in the file?",
+      "options": [
+        "JUnit for unit functions plus Cypress for critical path E2E",
+        "Selenium for unit functions plus JUnit for browser E2E",
+        "Cypress for unit functions plus Selenium for unit asserts",
+        "JUnit for browser farms plus Cypress for unit asserts"
+      ],
+      "answer": "JUnit for unit functions plus Cypress for critical path E2E",
+      "explanation": "The file assigns JUnit to unit robots with assertions and fixtures and Cypress to in-browser E2E with time travel debugging.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m1_06_01",
+      "courseCode": "PECST631",
+      "topicId": "m1_06_m1_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What does a unit to E2E count ratio of 1 to 5 indicate about suite shape?",
+      "options": [
+        "Ice cream cone with inverted economics and slow flaky peak",
+        "Healthy pyramid with bulk cheap base",
+        "Ideal 70 20 10 balance",
+        "Thorough E2E that needs no rebalance"
+      ],
+      "answer": "Ice cream cone with inverted economics and slow flaky peak",
+      "explanation": "The file reads 1 to 5 as inverted versus healthy 7 to 2 to 1-ish and prescribes fill base trim peak and quarantine flakes.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst631_m2_02_01",
+      "courseCode": "PECST631",
+      "topicId": "m2_02_dataflow_domain",
+      "type": "multiple_choice",
+      "question": "How should a 1 by 1 single legal point domain be tested?",
+      "options": [
+        "Probe the point plus neighbours on both sides",
+        "Probe only the single legal point",
+        "Skip testing because the domain is trivial",
+        "Delete the singleton from the spec"
+      ],
+      "answer": "Probe the point plus neighbours on both sides",
+      "explanation": "The file says degenerate single point universes need the point plus neighbours since a fence exists even at a point.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m2_05_01",
+      "courseCode": "PECST631",
+      "topicId": "m2_05_ai_testing_tools",
+      "type": "multiple_choice",
+      "question": "Why does mutation score expose AI generated coverage theater in growing suites?",
+      "options": [
+        "Trivia asserts kill nothing so score stays flat while count grows",
+        "Scores impress managers regardless of kills",
+        "Tools auto require higher counts",
+        "Mutants fear AI drafted tests"
+      ],
+      "answer": "Trivia asserts kill nothing so score stays flat while count grows",
+      "explanation": "The file says thousands of tautological asserts inflate counts while kill rate stays flat and adoption must require score to rise.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m2_06_01",
+      "courseCode": "PECST631",
+      "topicId": "m2_06_m2_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What is the verdict on an all branches covered suite with only true equals true asserts?",
+      "options": [
+        "Coverage theater that executes all but checks nothing",
+        "Well tested for release",
+        "Adequate because coverage is high",
+        "Better than nothing with no downside"
+      ],
+      "answer": "Coverage theater that executes all but checks nothing",
+      "explanation": "The file says oracle strength is unmeasured by coverage and near zero mutation exposes vacuous asserts that cost maintenance.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst631_m3_04_01",
+      "courseCode": "PECST631",
+      "topicId": "m3_04_design_call_inheritance",
+      "type": "multiple_choice",
+      "question": "Why does a subclass override that demands stricter inputs break substitutability?",
+      "options": [
+        "It narrows preconditions so parent valid clients crash on the child",
+        "It widens preconditions so clients run faster",
+        "It strengthens postconditions so outputs loosen",
+        "It adds logging so contracts grow"
+      ],
+      "answer": "It narrows preconditions so parent valid clients crash on the child",
+      "explanation": "The file states inputs must be looser and outputs tighter with the review check weaken in and strengthen out.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m3_05_01",
+      "courseCode": "PECST631",
+      "topicId": "m3_05_security_owasp_burp",
+      "type": "multiple_choice",
+      "question": "Why is scanner green not equal to secure in security testing?",
+      "options": [
+        "Scanners miss logic flaws like auth bypasses and multi step races",
+        "Scanners find every business logic cheat",
+        "Scanners replace threat modeling fully",
+        "Scanners auto verify fixes without retest"
+      ],
+      "answer": "Scanners miss logic flaws like auth bypasses and multi step races",
+      "explanation": "The file states tools find knowns while minds find novels so manual tamper plus threat model coverage must complete the picture.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m3_06_01",
+      "courseCode": "PECST631",
+      "topicId": "m3_06_coverage_numerics_drill",
+      "type": "multiple_choice",
+      "question": "What is V of G for a method CFG with 9 nodes 11 edges and 1 component?",
+      "options": [
+        "4",
+        "2",
+        "9",
+        "11"
+      ],
+      "answer": "4",
+      "explanation": "The file computes 11 minus 9 plus 2 equals 4 as four independent paths floor requiring at least 4 tour ambitions.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m4_02_01",
+      "courseCode": "PECST631",
+      "topicId": "m4_02_decision_random_domain",
+      "type": "multiple_choice",
+      "question": "How do metamorphic oracles rescue random testing from missing expected values?",
+      "options": [
+        "They check relations across runs like sortedness and scaling without hand oracles",
+        "They slow execution to allow manual review",
+        "They fix flaky networks automatically",
+        "They require only tiny inputs"
+      ],
+      "answer": "They check relations across runs like sortedness and scaling without hand oracles",
+      "explanation": "The file says relations over outputs unlock random volume with millions of property checks and zero hand oracles.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m4_04_01",
+      "courseCode": "PECST631",
+      "topicId": "m4_04_performance_responsive",
+      "type": "multiple_choice",
+      "question": "Why do SLOs govern by p99 rather than mean latency?",
+      "options": [
+        "Tail experience is user experience at scale and means hide bimodal tails",
+        "Means are hard to compute",
+        "p99 sounds more technical",
+        "Means always lie in every case"
+      ],
+      "answer": "Tail experience is user experience at scale and means hide bimodal tails",
+      "explanation": "The file says 1 percent of millions is stadiums of unhappy users so tail first SLOs use p95 p99 ladder.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst631_m4_06_01",
+      "courseCode": "PECST631",
+      "topicId": "m4_06_genai_advanced_case",
+      "type": "multiple_choice",
+      "question": "What guards predictive risk ranking against the selection bias loop?",
+      "options": [
+        "Control sampling of random unranked slices plus hit rate tracking",
+        "Bigger models without controls",
+        "More features added blindly",
+        "Ignoring low risk zones forever"
+      ],
+      "answer": "Control sampling of random unranked slices plus hit rate tracking",
+      "explanation": "The file says risk ranked suites find bugs where they look so unranked controls audit the predictor itself.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m1_03_01",
+      "courseCode": "PECST632",
+      "topicId": "m1_03_sgd_schedules",
+      "type": "multiple_choice",
+      "question": "What mini batch size band is the universal default for training?",
+      "options": [
+        "32 to 256",
+        "1 only",
+        "8000 plus",
+        "1000000 per step"
+      ],
+      "answer": "32 to 256",
+      "explanation": "The file calls 32 to 256 the GPU happy matrix compromise with honest direction plus healthy regularising noise.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m1_04_01",
+      "courseCode": "PECST632",
+      "topicId": "m1_04_curse_dimensionality",
+      "type": "multiple_choice",
+      "question": "Why does distance concentration break kNN methods in high dimensions?",
+      "options": [
+        "Nearest to farthest ratio goes to 1 so nearest loses meaning",
+        "Computation slows only",
+        "Memory overflows only",
+        "Labels vanish from disk"
+      ],
+      "answer": "Nearest to farthest ratio goes to 1 so nearest loses meaning",
+      "explanation": "The file says norms concentrate and relative contrast goes to 0 so neighbourhood semantics fail before compute does.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m1_06_01",
+      "courseCode": "PECST632",
+      "topicId": "m1_06_m1_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What is the sigmoid derivative at zero and its global maximum?",
+      "options": [
+        "0.25 at zero which is the global max",
+        "0 at zero with max 1",
+        "0.5 at zero with max 0.5",
+        "1 at zero with max 1"
+      ],
+      "answer": "0.25 at zero which is the global max",
+      "explanation": "The file states sigma at 0 is 0.5 giving derivative 0.25 and products over L layers decay at most 4 to minus L.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst632_m2_03_01",
+      "courseCode": "PECST632",
+      "topicId": "m2_03_unsupervised_rbm",
+      "type": "multiple_choice",
+      "question": "What does bipartite structure with no within layer ties buy RBMs?",
+      "options": [
+        "Factorised conditionals allowing parallel Gibbs sampling per layer",
+        "More parameters for free",
+        "Deeper stacks automatically",
+        "Free labels without data"
+      ],
+      "answer": "Factorised conditionals allowing parallel Gibbs sampling per layer",
+      "explanation": "The file says P of h given v factorizes as product over units so all hiddens update at once given visibles.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m2_05_01",
+      "courseCode": "PECST632",
+      "topicId": "m2_05_dl_applications",
+      "type": "multiple_choice",
+      "question": "Why do small tabular loan tables still favor gradient boosting over deep learning?",
+      "options": [
+        "Columns lack neighbourhood grammar plus modest size plus audit needs favor trees",
+        "GPUs are too slow for tables",
+        "Libraries for deep learning are missing",
+        "Snobbery against neural nets"
+      ],
+      "answer": "Columns lack neighbourhood grammar plus modest size plus audit needs favor trees",
+      "explanation": "The file says no compositional structure plus sample efficient splits plus interpretability mandates make deserts for classical methods.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m2_06_01",
+      "courseCode": "PECST632",
+      "topicId": "m2_06_m2_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What are ELU with alpha 1 and Leaky ReLU with slope 0.01 outputs at x equals minus 1?",
+      "options": [
+        "About minus 0.632 versus minus 0.01",
+        "0 versus minus 0.01",
+        "Minus 1 versus minus 1",
+        "0.368 versus 0.99"
+      ],
+      "answer": "About minus 0.632 versus minus 0.01",
+      "explanation": "The file computes exp minus 1 minus 1 as minus 0.6321 and 0.01 times minus 1 as minus 0.01 for the shared probe.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst632_m3_04_01",
+      "courseCode": "PECST632",
+      "topicId": "m3_04_birnn_seq2seq",
+      "type": "multiple_choice",
+      "question": "Why are bidirectional RNNs offline only and unsuited to live streaming?",
+      "options": [
+        "They need whole sequences upfront since future is unavailable mid stream",
+        "They are always superior everywhere",
+        "They wastefully double parameters only",
+        "They have no use in NLP"
+      ],
+      "answer": "They need whole sequences upfront since future is unavailable mid stream",
+      "explanation": "The file says future reading costs latency so archives use bidirectional while live streaming uses causal only.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m3_06_01",
+      "courseCode": "PECST632",
+      "topicId": "m3_06_dimension_param_drill",
+      "type": "multiple_choice",
+      "question": "How do recurrent cell parameters scale for RNN versus GRU versus LSTM of same size?",
+      "options": [
+        "Base cell times 1 for RNN times 3 for GRU times 4 for LSTM",
+        "Equal counts for all three",
+        "GRU fewer than RNN",
+        "LSTM equals single gate count"
+      ],
+      "answer": "Base cell times 1 for RNN times 3 for GRU times 4 for LSTM",
+      "explanation": "The file warns single gate math undercounts LSTMs 4 times for f i o candidate matrices and GRUs 3 times.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m3_07_01",
+      "courseCode": "PECST632",
+      "topicId": "m3_07_m3_mixed_drill",
+      "type": "multiple_choice",
+      "question": "Which tribe fits a pen trajectory handwriting recognizer from stroke sequences?",
+      "options": [
+        "RNN or LSTM over stroke sequences with optional CNN front end",
+        "Pure CNN on pixels only",
+        "MLP on raw points only",
+        "RBM alone"
+      ],
+      "answer": "RNN or LSTM over stroke sequences with optional CNN front end",
+      "explanation": "The file says ordered trajectories imply recurrence since temporal order is the signal with time first and space assisted.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst632_m4_02_01",
+      "courseCode": "PECST632",
+      "topicId": "m4_02_regularized_autoencoders",
+      "type": "multiple_choice",
+      "question": "Why does denoising training learn manifold structure?",
+      "options": [
+        "Clean from dirty forces projection of corrupted points back onto data surface",
+        "Noise adds data volume only",
+        "Masks hide answers only",
+        "Deeper nets result automatically"
+      ],
+      "answer": "Clean from dirty forces projection of corrupted points back onto data surface",
+      "explanation": "The file says dirty in clean out mapping is structure with vector field toward manifold and kinship to score methods.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m4_03_01",
+      "courseCode": "PECST632",
+      "topicId": "m4_03_stochastic_contractive",
+      "type": "multiple_choice",
+      "question": "Why does variational training use reparameterization with z equals mu plus sigma times epsilon?",
+      "options": [
+        "Backprop cannot flow through random draws so externalised randomness restores gradients",
+        "Sampling is fun",
+        "It enables faster sampling only",
+        "It improves priors only"
+      ],
+      "answer": "Backprop cannot flow through random draws so externalised randomness restores gradients",
+      "explanation": "The file says externalise randomness to a fixed epsilon source so gradients reach mu and sigma deterministically.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst632_m4_05_01",
+      "courseCode": "PECST632",
+      "topicId": "m4_05_gan_dynamics_drill",
+      "type": "multiple_choice",
+      "question": "How does spectral normalization tame GAN training structurally?",
+      "options": [
+        "It Lipschitz caps the discriminator by rescaling singular values per layer",
+        "It uses bigger learning rates",
+        "It adds more parameters",
+        "It speeds up sampling"
+      ],
+      "answer": "It Lipschitz caps the discriminator by rescaling singular values per layer",
+      "explanation": "The file says each layer stretch at most 1 bounds sharpness so gradients stay informative and dominance is capped.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m1_04_01",
+      "courseCode": "PECST637",
+      "topicId": "m1_04_primitive_roots_discrete_log",
+      "type": "multiple_choice",
+      "question": "How do you test whether g is a primitive root modulo prime p?",
+      "options": [
+        "Check g to the power (p-1)/q is not 1 for every prime factor q of p-1",
+        "Check g to the power p-1 equals 1 once and stop",
+        "Check only composite divisors and skip prime factors",
+        "Check that g squared equals 1 modulo p"
+      ],
+      "answer": "Check g to the power (p-1)/q is not 1 for every prime factor q of p-1",
+      "explanation": "Fermat makes g to the p-1 always 1, so only proper-divisor checks prove order p-1. Prime-factor coverage is necessary and sufficient, and phi of p-1 counts the roots.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m1_05_01",
+      "courseCode": "PECST637",
+      "topicId": "m1_05_miller_rabin_primality",
+      "type": "multiple_choice",
+      "question": "Why do Carmichael numbers not fool Miller-Rabin the way they fool the Fermat test?",
+      "options": [
+        "They fool Fermat for all coprime bases but Miller-Rabin exposes them via nontrivial roots of 1",
+        "They fool every primality test including Miller-Rabin",
+        "They are prime so both tests pass correctly",
+        "Miller-Rabin never detects any composite number"
+      ],
+      "answer": "They fool Fermat for all coprime bases but Miller-Rabin exposes them via nontrivial roots of 1",
+      "explanation": "Miller-Rabin adds square-root interrogation along the power chain. Each random base catches fakes with probability at least three quarters, so error falls as 4 to the minus k.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m1_07_01",
+      "courseCode": "PECST637",
+      "topicId": "m1_07_m1_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What is 7 inverse modulo 26?",
+      "options": [
+        "15",
+        "7",
+        "11",
+        "No inverse exists"
+      ],
+      "answer": "15",
+      "explanation": "Seven times fifteen is one hundred five, which is four times twenty six plus one. Multiply-verify rejects seven and eleven, and gcd one confirms an inverse exists.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst637_m2_04_01",
+      "courseCode": "PECST637",
+      "topicId": "m2_04_transposition_feistel",
+      "type": "multiple_choice",
+      "question": "Why does Feistel decryption not need an inverse of the round function F?",
+      "options": [
+        "XOR and swap structure inverts around F run forward with reversed subkeys",
+        "F is always invertible by design",
+        "Keys reverse the action of F automatically",
+        "Rounds cancel each other without any keys"
+      ],
+      "answer": "XOR and swap structure inverts around F run forward with reversed subkeys",
+      "explanation": "Each round sets L prime to R and R prime to L xor F of R and key, so swap plus XOR undoes it. F can be arbitrary and even non-injective, as in DES.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m2_05_01",
+      "courseCode": "PECST637",
+      "topicId": "m2_05_m2_mixed_drill",
+      "type": "multiple_choice",
+      "question": "What is the verdict on a Hill 2 by 2 key with determinant 13 modulo 26?",
+      "options": [
+        "Dead key with no inverse since gcd of 13 and 26 is 13",
+        "Valid key since 13 is odd",
+        "Valid key after transposing the matrix",
+        "Valid key after doubling all entries"
+      ],
+      "answer": "Dead key with no inverse since gcd of 13 and 26 is 13",
+      "explanation": "Hill needs determinant coprime to twenty six for an inverse modulo twenty six. Transpose keeps the same determinant, so the dodge still fails.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst637_m3_03_01",
+      "courseCode": "PECST637",
+      "topicId": "m3_03_stream_rc4",
+      "type": "multiple_choice",
+      "question": "What leaks when the same stream-cipher keystream encrypts two different messages?",
+      "options": [
+        "XOR of ciphertexts equals XOR of plaintexts so cribs can drag through both",
+        "Nothing leaks because the key still hides everything",
+        "Only the key length leaks to attackers",
+        "Only metadata like message timing leaks"
+      ],
+      "answer": "XOR of ciphertexts equals XOR of plaintexts so cribs can drag through both",
+      "explanation": "Keys cancel when ciphertexts are XORed, leaving plaintext XOR plaintext. Nonce and IV uniqueness per message is the stream-cipher law.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m3_04_01",
+      "courseCode": "PECST637",
+      "topicId": "m3_04_publickey_principles",
+      "type": "multiple_choice",
+      "question": "How does hybrid encryption divide work between asymmetric and symmetric primitives?",
+      "options": [
+        "Asymmetric moves small keys and symmetric moves bulk data for speed",
+        "Asymmetric encrypts gigabytes and symmetric encrypts keys",
+        "Both encrypt bulk data redundantly for safety",
+        "Symmetric alone handles strangers with no prior secrets"
+      ],
+      "answer": "Asymmetric moves small keys and symmetric moves bulk data for speed",
+      "explanation": "Public-key operations cost about a thousand times symmetric per byte. Systems wrap a random symmetric key asymmetrically, then encrypt bulk symmetrically.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m3_07_01",
+      "courseCode": "PECST637",
+      "topicId": "m3_07_m3_mixed_drill",
+      "type": "multiple_choice",
+      "question": "Why pick AES-GCM over AES-CBC alone for cookie encryption?",
+      "options": [
+        "GCM adds authenticity jointly while CBC alone is malleable without a MAC layer",
+        "CBC alone already authenticates data",
+        "ECB is simpler so it should win",
+        "DES heritage makes it stronger than AES"
+      ],
+      "answer": "GCM adds authenticity jointly while CBC alone is malleable without a MAC layer",
+      "explanation": "CBC without a MAC is malleable with padding-oracle lineage. GCM is AEAD for confidentiality plus authenticity, with nonce discipline as its price.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pecst637_m4_02_01",
+      "courseCode": "PECST637",
+      "topicId": "m4_02_sha3_hmac",
+      "type": "multiple_choice",
+      "question": "Why does encrypt-then-MAC ordering win over the alternatives?",
+      "options": [
+        "Ciphertext is verified before decryption so forgeries die before parsing",
+        "It is faster because of alphabetical convention",
+        "It removes the need for any key",
+        "It lets decryption run before verification safely"
+      ],
+      "answer": "Ciphertext is verified before decryption so forgeries die before parsing",
+      "explanation": "Verifying first keeps untrusted bytes away from parsers. MAC-then-encrypt decrypts attacker text and offers oracle surface, while encrypt-and-MAC can leak equality.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m4_05_01",
+      "courseCode": "PECST637",
+      "topicId": "m4_05_protocol_drill",
+      "type": "multiple_choice",
+      "question": "What is the verdict on an expired-yesterday leaf with an otherwise perfect chain?",
+      "options": [
+        "Reject since validity windows are binary gates with no grace in code",
+        "Accept since it is close enough to valid",
+        "Warn and continue silently without logging",
+        "Re-validate next week without renewal"
+      ],
+      "answer": "Reject since validity windows are binary gates with no grace in code",
+      "explanation": "Time gates do not grade curves, so yesterday-expired means untrusted now. The fix is renewal plus rotation with automation, not hand-waving.",
+      "difficulty": "beginner",
+      "examRelevance": "medium"
+    },
+    {
+      "id": "q_pecst637_m4_06_01",
+      "courseCode": "PECST637",
+      "topicId": "m4_06_m4_mixed_drill",
+      "type": "multiple_choice",
+      "question": "Why choose HMAC-SHA256 over raw SHA256 of key plus message for API auth?",
+      "options": [
+        "HMAC nests envelopes to block length extension while raw concat is forgeable without the key",
+        "They are equivalent since both use a key",
+        "Raw concat is faster so it is always safer",
+        "Both are equally broken for authentication"
+      ],
+      "answer": "HMAC nests envelopes to block length extension while raw concat is forgeable without the key",
+      "explanation": "Raw secret-prefix hashes allow extension forgeries by state continuation. HMAC double-dips with inner and outer pads to kill that class.",
+      "difficulty": "intermediate",
+      "examRelevance": "high"
     }
   ]
 }

@@ -539,7 +539,7 @@ describe('live 432-topic repository', () => {
 
   it('builds attention deterministically over all 432 topics', () => {
     assert.equal(manifest.topics.length, 432);
-    assert.equal(liveBank.questions.length, 296);
+    assert.equal(liveBank.questions.length, 502);
     const model = Weak.buildAttentionModel(manifest, none, null, NOW, { bank: liveBank, attempts: emptyStore() });
     assert.ok(model.counts.total > 0);
     assert.equal(model.counts.needsReview, 0);
