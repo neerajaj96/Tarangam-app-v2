@@ -21,8 +21,15 @@ import {
 import {
   buildExamReadiness,
   buildCourseExamReadinessList,
+  getExamAssessmentEvidence,
 } from './exam-readiness.js';
-import { buildRevisionModel, REVIEW_DUE_DAYS } from './revision.js';
+import {
+  buildRevisionModel,
+  REVIEW_DUE_DAYS,
+  buildAssessmentAwareRevisionModel,
+  getAssessmentAwareReviewState,
+  getAssessmentDrivenReviews,
+} from './revision.js';
 import { buildLearningAnalytics, getModuleAnalyticsList } from './learning-analytics.js';
 import {
   buildStudyPlan,
@@ -53,16 +60,25 @@ export { PROGRESS_CHANGED_EVENT };
 // Pure assessment derivation for tests and UI: bank + manifest + attempts
 // store -> deterministic assessment summary plus pure coverage breakdowns
 // (total questions, covered/total topics, uncovered count, exam-relevant
-// coverage, per-course/per-module counts, type distribution). No DOM, no
-// storage of its own, no recommendations — surfaces only.
+// coverage, per-course/per-module counts, type distribution) plus
+// descriptive exam-relevant assessment evidence (attempted/passed/needs
+// review/not assessed among exam topics — diagnostics only, never scores).
+// No DOM, no storage of its own, no recommendations — surfaces only.
 export function buildDashboardAssessmentModel(bank, manifest, attempts) {
   const summary = buildAssessmentSummary(bank, manifest, attempts);
   const coverage = getAssessmentCoverage(bank, manifest);
   const examCoverage = getExamQuestionCoverage(bank, manifest);
+  let examEvidence = null;
+  try {
+    examEvidence = getExamAssessmentEvidence(bank, manifest, attempts);
+  } catch {
+    examEvidence = null;
+  }
   return {
     ...summary,
     coverage,
     examCoverage,
+    examEvidence,
     totalQuestions: getAssessmentQuestionCount(bank),
     coveredCount: coverage.coveredCount,
     totalTopics: coverage.totalTopics,
@@ -83,9 +99,69 @@ export function buildDashboardExamModel(manifest, getStatus) {
 // Pure review derivation for tests and UI: manifest + status reader +
 // timestamp reader + injected now -> deterministic revision snapshot.
 // Only completed topics can enter review queues; without timestamps the
-// queue stays empty (never fabricated).
-export function buildDashboardReviewModel(manifest, getStatus, getTimestamp = null, now) {
-  return buildRevisionModel(manifest, getStatus, getTimestamp, now);
+// queue stays empty (never fabricated). An optional fifth `assessment`
+// argument (`{ bank, attempts }`) layers descriptive assessment evidence
+// alongside the timestamp-only queue: completed topics whose latest attempt
+// needs review become assessment-driven reviews without altering the
+// 7/14-day schedule. Without a bank the model degrades to timestamp-only
+// (never throws).
+export function buildDashboardReviewModel(manifest, getStatus, getTimestamp = null, now, assessment = null) {
+  const base = buildRevisionModel(manifest, getStatus, getTimestamp, now);
+  const hasAssessment = assessment && typeof assessment === 'object' && assessment.bank;
+  if (!hasAssessment) {
+    return { ...base, assessmentDriven: [], assessmentDrivenCount: 0, assessment: null };
+  }
+  let aware = null;
+  try {
+    aware = buildAssessmentAwareRevisionModel(manifest, getStatus, getTimestamp, now, assessment);
+  } catch {
+    return { ...base, assessmentDriven: [], assessmentDrivenCount: 0, assessment: null };
+  }
+  return {
+    ...base,
+    assessmentAwareQueue: aware.reviewQueue,
+    assessmentAwareCounts: aware.counts,
+    assessmentDriven: aware.assessmentDriven,
+    assessmentDrivenCount: aware.assessmentDriven.length,
+    assessment: aware,
+  };
+}
+
+// Pure assessment-aware review derivation: same inputs plus `{ bank,
+// attempts }` -> full assessment-aware revision model (overdue > due >
+// assessment-driven, then exam weight > dependents > manifest order).
+// Never throws; malformed assessment degrades to the timestamp-only queue.
+export function buildDashboardAssessmentReviewModel(manifest, getStatus, getTimestamp = null, now, assessment = null) {
+  try {
+    if (assessment && typeof assessment === 'object' && assessment.bank) {
+      return buildAssessmentAwareRevisionModel(manifest, getStatus, getTimestamp, now, assessment);
+    }
+  } catch {
+    // fall through to timestamp-only
+  }
+  const base = buildRevisionModel(manifest, getStatus, getTimestamp, now);
+  return {
+    ...base,
+    assessmentDriven: [],
+    counts: { ...base.counts, assessmentDriven: 0, assessmentNeedsReview: 0 },
+  };
+}
+
+// Pure exam-assessment diagnostics for tests and UI: bank + manifest +
+// attempts store -> descriptive exam-relevant assessment evidence
+// (attempted/passed/needs review/not assessed). Diagnostics only — the
+// weighted readiness percentage is never altered here.
+export function buildDashboardExamAssessmentModel(bank, manifest, attempts) {
+  try {
+    return getExamAssessmentEvidence(bank, manifest, attempts);
+  } catch {
+    return {
+      totalExamTopics: 0, coveredExamTopics: 0, uncoveredExamTopics: 0,
+      attempted: 0, passed: 0, needsReview: 0, coveredNotAttempted: 0,
+      notAssessed: 0, attemptedList: [], passedList: [],
+      needsReviewList: [], coveredNotAttemptedList: [], uncoveredList: [],
+    };
+  }
 }
 
 // Pure analytics derivation for tests and UI: manifest + status reader +
@@ -223,8 +299,8 @@ async function init() {
     }
   };
   loadAssessmentBank().then(
-    ({ bank }) => { assessmentBank = bank; renderAssessment(); },
-    () => { assessmentBank = null; renderAssessment(); }
+    ({ bank }) => { assessmentBank = bank; renderAssessment(); renderReview(); renderExam(); },
+    () => { assessmentBank = null; renderAssessment(); renderReview(); renderExam(); }
   );
 
   const renderAll = () => {
@@ -245,16 +321,18 @@ async function init() {
     renderAll();
   };
 
-  // Cross-surface sync: progress changes from topic pages, study context,
-  // explorer, or another dashboard tab re-render without reload.
-  // localStorage stays the source of truth; the event only signals re-read.
+  // Cross-surface sync: progress AND assessment-result changes from topic
+  // pages, study context, explorer, assessment page, or another dashboard
+  // tab re-render without reload or polling. localStorage stays the source
+  // of truth; the shared `tarangam:progress-changed` event only signals
+  // re-read (no second event system).
   onJourneyProgressChanged(() => {
     renderAll();
   });
   if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
     window.addEventListener('storage', (event) => {
       if (!event.key) return;
-      if (event.key === 'tarangam_topic_state_v1' || event.key.startsWith('tarangam_visited_')) {
+      if (event.key === 'tarangam_topic_state_v1' || event.key.startsWith('tarangam_visited_') || event.key === ASSESSMENT_STORAGE_KEY) {
         renderAll();
       }
     });
@@ -403,13 +481,25 @@ async function init() {
       `<div class="db-module"><span>${esc(c.courseCode)} · ${esc(c.courseName)}</span>`
       + `<span class="db-course-nums">${c.completed} / ${c.total} exam topics · ${c.readinessPercent}% ready</span></div>`
     ).join('');
+    // Descriptive exam-relevant assessment diagnostics (supporting only —
+    // the weighted readiness percentage above is never altered by
+    // assessment evidence).
+    let examAssessmentLine = '';
+    if (assessmentBank) {
+      try {
+        const evidence = buildDashboardExamAssessmentModel(assessmentBank, manifest, readAttempts());
+        examAssessmentLine = `<div class="xp-path-row"><span class="xp-path-label">Exam assessment diagnostics: ${evidence.attempted} attempted · ${evidence.passed} passed · ${evidence.needsReview} needing review · ${evidence.notAssessed} not assessed (of ${evidence.totalExamTopics} exam topics).</span></div>`;
+      } catch {
+        examAssessmentLine = '';
+      }
+    }
     box.innerHTML = `<h2>Exam readiness</h2>
       <div class="xp-path-next"><span class="xp-path-title">${exam.readinessPercent}% ready</span>
         <span class="xp-path-meta">${exam.completedExamTopics} / ${exam.totalExamTopics} exam-relevant topics · weighted ${exam.weightedCompleted}/${exam.weightedTotal}</span></div>
       <div class="db-course-bar">${bar(exam.readinessPercent)}</div>
       <div class="xp-path-row"><span class="xp-path-label">${countsLine}</span></div>
       <div class="xp-path-row"><span class="xp-path-label">Exam focus:</span> ${focusBlock}</div>
-      <div class="xp-path-row"><span class="xp-path-label">Remaining exam gaps (${exam.examGaps.length}):</span> ${gapsBlock}</div>
+      <div class="xp-path-row"><span class="xp-path-label">Remaining exam gaps (${exam.examGaps.length}):</span> ${gapsBlock}</div>${examAssessmentLine}
       <div class="xp-path-row" style="flex-direction:column;align-items:stretch;"><span class="xp-path-label">Course readiness:</span>${courseLines}</div>`;
     for (const btn of box.querySelectorAll('[data-exam-open]')) {
       btn.addEventListener('click', () => {
@@ -422,27 +512,44 @@ async function init() {
   function renderReview() {
     const box = $('db-review');
     if (!box) return;
-    const revision = buildRevisionModel(manifest, statusReader, timestampReader, Date.now());
-    if (!revision.counts.total) {
+    // Assessment evidence rides alongside the timestamp queue: completed
+    // topics whose latest attempt needs review join as assessment-driven
+    // reviews (descriptive only — the 7/14-day schedule is unchanged).
+    const attempts = readAttempts();
+    const assessment = assessmentBank ? { bank: assessmentBank, attempts } : null;
+    const revision = buildDashboardReviewModel(manifest, statusReader, timestampReader, Date.now(), assessment);
+    const drivenCount = revision.assessmentDrivenCount || 0;
+    if (!revision.counts.total && !drivenCount) {
       box.innerHTML = `<h2>Review &amp; revision</h2>
         <div class="xp-path-next"><span class="xp-path-label">No reviews due.</span>
-        <span class="xp-path-meta">Only completed topics enter review — complete a topic and it will resurface here after ${REVIEW_DUE_DAYS} days.</span></div>`;
+        <span class="xp-path-meta">Only completed topics enter review — complete a topic and it will resurface here after ${REVIEW_DUE_DAYS} days. A completed assessment that needs review also surfaces here.</span></div>`;
       return;
     }
     const next = revision.nextReviewTopic;
-    const dueList = revision.reviewQueue.slice(0, 6).map((e) =>
-      `<button class="xp-path-btn" data-review-open="${esc(e.courseCode)}/${esc(e.id)}" type="button">${esc(e.title)} · ${e.reviewState === 'review_overdue' ? 'overdue' : 'due'} ${e.daysSince} ${e.daysSince === 1 ? 'day' : 'days'}</button>`
-    ).join('');
+    const queue = revision.assessmentAwareQueue || revision.reviewQueue;
+    const dueList = queue.slice(0, 6).map((e) => {
+      const label = e.reviewState === 'review_overdue'
+        ? 'overdue'
+        : e.reviewState === 'review_due'
+          ? `due ${e.daysSince} ${e.daysSince === 1 ? 'day' : 'days'}`
+          : 'assessment needs review';
+      return `<button class="xp-path-btn" data-review-open="${esc(e.courseCode)}/${esc(e.id)}" type="button">${esc(e.title)} · ${label}</button>`;
+    }).join('');
+    const drivenLine = drivenCount
+      ? `<span class="xp-path-meta">${drivenCount} assessment-driven review${drivenCount === 1 ? '' : 's'} (completed topics whose latest assessment needs review)</span>`
+      : '<span class="xp-path-meta">No assessment-driven reviews.</span>';
     box.innerHTML = `<h2>Review &amp; revision</h2>
       <div class="xp-path-next"><span class="xp-path-title">${revision.counts.total} due</span>
-        <span class="xp-path-meta">${revision.counts.overdue} overdue · ${revision.counts.examDue} exam-relevant</span></div>
+        <span class="xp-path-meta">${revision.counts.overdue} overdue · ${revision.counts.examDue} exam-relevant · ${drivenCount} assessment-driven</span></div>
       <div class="xp-path-row"><span class="xp-path-label">Next review:</span>
         <span class="xp-path-title">${esc(next.title)}</span>
-        <span class="xp-path-meta">${esc(next.courseCode)} · M${esc(next.module)} · ${esc(next.daysSince)} ${next.daysSince === 1 ? 'day' : 'days'} since last access</span>
-        <span class="xp-path-meta" data-review-reason="${esc(next.reviewState)}">${esc(next.reason)}</span>
+        <span class="xp-path-meta">${esc(next.courseCode)} · M${esc(next.module)}${next.daysSince !== null && next.daysSince !== undefined ? ` · ${esc(next.daysSince)} ${next.daysSince === 1 ? 'day' : 'days'} since last access` : ''}${next.isAssessmentDriven ? ' · assessment needs review' : ''}</span>
+        <span class="xp-path-meta" data-review-reason="${esc(next.reviewReason || next.reviewState)}">${esc(next.reason)}</span>
         <button class="xp-path-btn" data-review-open="${esc(next.courseCode)}/${esc(next.id)}" type="button">View in explorer</button>
         <a class="xp-open" href="${esc(topicHref(baseUrl, next.topic))}">Open topic →</a></div>
-      <div class="xp-path-row"><span class="xp-path-label">Due now (${revision.counts.total}):</span> ${dueList}</div>`;
+      <div class="xp-path-row"><span class="xp-path-label">Due now (${revision.counts.total}):</span> ${dueList}</div>
+      <div class="xp-path-row">${drivenLine}
+        <a class="xp-open" href="./assessment.html">Start assessment →</a></div>`;
     for (const btn of box.querySelectorAll('[data-review-open]')) {
       btn.addEventListener('click', () => {
         const [course, ...rest] = btn.getAttribute('data-review-open').split('/');
@@ -543,13 +650,28 @@ async function init() {
     const totalQuestions = getAssessmentQuestionCount(assessmentBank);
     const examCoverage = getExamQuestionCoverage(assessmentBank, manifest);
     const typeDist = getQuestionTypeDistribution(assessmentBank);
+    // Descriptive exam-relevant assessment diagnostics (supporting only —
+    // the weighted readiness percentage above is never altered).
+    const examEvidence = buildDashboardExamAssessmentModel(assessmentBank, manifest, attempts);
+    // Assessment-driven review count: completed topics whose latest attempt
+    // needs review (descriptive, never a score).
+    let drivenCount = 0;
+    try {
+      drivenCount = buildDashboardAssessmentReviewModel(
+        manifest, statusReader, timestampReader, Date.now(),
+        { bank: assessmentBank, attempts }
+      ).assessmentDriven.length;
+    } catch {
+      drivenCount = 0;
+    }
     const recent = model.recentAttempt
       ? `<span class="xp-path-meta">Recent: ${model.recentAttempt.percentage}% (${esc(model.recentAttempt.state.replace(/_/g, ' '))})</span>`
       : '<span class="xp-path-meta">No attempts yet.</span>';
     box.innerHTML = `<h2>Self-assessment</h2>
       <div class="xp-path-next"><span class="xp-path-title">${model.coveredCount} of ${model.totalTopics} topics have questions (${totalQuestions} questions)</span></div>
-      <div class="xp-path-row"><span class="xp-path-label">${model.uncoveredCount} topics without questions — not assessed · ${model.attempted} attempted · ${model.passed} passed · ${model.needsReview} needs review</span></div>
-      <div class="xp-path-row"><span class="xp-path-label">Exam-relevant coverage: ${examCoverage.coveredExamTopics} of ${examCoverage.totalExamTopics} exam topics have questions (${examCoverage.coverage}%) · attempted ${exam.attempted} · passed ${exam.passed} · needs review ${exam.needsReview}</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Assessment coverage: ${model.coveredCount} covered · ${model.uncoveredCount} not assessed · ${model.attempted} attempted · ${model.passed} passed · ${model.needsReview} needs review</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Assessment attempts: ${model.attempted} attempted · ${model.passed} passed · ${model.needsReview} needs review · ${drivenCount} assessment-driven reviews</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Exam-relevant coverage: ${examCoverage.coveredExamTopics} of ${examCoverage.totalExamTopics} exam topics have questions (${examCoverage.coverage}%) · attempted ${exam.attempted} · passed ${exam.passed} · needs review ${exam.needsReview} · not assessed ${examEvidence.notAssessed}</span></div>
       <div class="xp-path-row"><span class="xp-path-label">Question types: multiple_choice ${typeDist.multiple_choice} · true_false ${typeDist.true_false} · short_answer ${typeDist.short_answer}</span></div>
       <div class="xp-path-row">${recent}
         <a class="xp-open" href="./assessment.html">Start assessment →</a></div>`;

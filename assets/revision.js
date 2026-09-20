@@ -45,6 +45,7 @@ import {
   getDependents,
 } from './topic-intelligence.js';
 import { weightForTopic } from './exam-readiness.js';
+import { getTopicAssessmentState } from './assessment.js';
 
 export const REVIEW_DUE_DAYS = 7;
 export const REVIEW_OVERDUE_DAYS = 14;
@@ -58,6 +59,23 @@ export const REVIEW_STATE_OVERDUE = 'review_overdue';
 export const REVIEW_STATE_NOT_APPLICABLE = 'not_applicable';
 
 export const REVIEW_FILTERS = ['all', 'review_due', 'review_overdue', 'exam_review_due'];
+
+// Explicit assessment-aware review reasons (descriptive values only, never
+// scores). Timestamp reasons preserve the existing schedule; the assessment
+// reason is additional evidence only.
+export const REVIEW_REASON_OVERDUE = 'overdue';
+export const REVIEW_REASON_DUE = 'due';
+export const REVIEW_REASON_ASSESSMENT_NEEDS_REVIEW = 'assessment_needs_review';
+export const REVIEW_REASON_FRESH = 'fresh';
+export const REVIEW_REASON_NOT_APPLICABLE = 'not_applicable';
+
+export const REVIEW_REASONS = [
+  REVIEW_REASON_OVERDUE,
+  REVIEW_REASON_DUE,
+  REVIEW_REASON_ASSESSMENT_NEEDS_REVIEW,
+  REVIEW_REASON_FRESH,
+  REVIEW_REASON_NOT_APPLICABLE,
+];
 
 // --- Internal guards --------------------------------------------------------
 
@@ -324,4 +342,170 @@ export function filterTopicsByReview(manifest, getStatus, getTimestamp, topicLis
     if (filter === 'review_overdue') return rs.state === REVIEW_STATE_OVERDUE;
     return (rs.state === REVIEW_STATE_DUE || rs.state === REVIEW_STATE_OVERDUE) && weightForTopic(t) > 0;
   });
+}
+
+// --- Assessment-aware review (additional evidence only) ----------------------
+// Completed assessment attempts feed descriptive evidence into the existing
+// review decisions. Existing timestamp rules are unchanged:
+//
+// - Only completed topics can be review-relevant. Unfinished or unknown
+//   topics stay "not_applicable" even with assessment attempts.
+// - A "needs_review" latest attempt makes a completed topic review-relevant
+//   immediately, even when its timestamp is fresh or missing.
+// - A passed attempt never resets or bypasses the 7/14-day schedule: fresh
+//   stays fresh, due stays due, overdue stays overdue.
+// - Ordering preserves overdue > due > assessment > exam weight >
+//   dependents > manifest order, so existing timestamp queues keep their
+//   relative order and assessment items append deterministically.
+//
+// `assessment` is an optional `{ bank, attempts }` pair; null, missing, or
+// malformed values degrade to timestamp-only behavior (never throw).
+
+export function getAssessmentEvidence(bank, store, courseCode, topicId) {
+  try {
+    const s = getTopicAssessmentState(bank, store, courseCode, topicId);
+    return {
+      available: Boolean(s.available),
+      attempted: Boolean(s.attempted),
+      passed: Boolean(s.passed),
+      needsReview: Boolean(s.needsReview),
+      latestScore: s.latestScore ?? null,
+      bestScore: s.bestScore ?? null,
+      attempts: typeof s.attempts === 'number' ? s.attempts : 0,
+      state: s.state ?? 'not_attempted',
+    };
+  } catch {
+    return {
+      available: false,
+      attempted: false,
+      passed: false,
+      needsReview: false,
+      latestScore: null,
+      bestScore: null,
+      attempts: 0,
+      state: 'not_attempted',
+    };
+  }
+}
+
+function reviewReasonFor(baseState, assessmentNeedsReview) {
+  if (baseState === REVIEW_STATE_OVERDUE) return REVIEW_REASON_OVERDUE;
+  if (baseState === REVIEW_STATE_DUE) return REVIEW_REASON_DUE;
+  if (baseState === REVIEW_STATE_NOT_APPLICABLE) return REVIEW_REASON_NOT_APPLICABLE;
+  if (assessmentNeedsReview) return REVIEW_REASON_ASSESSMENT_NEEDS_REVIEW;
+  return REVIEW_REASON_FRESH;
+}
+
+export function getAssessmentAwareReviewState(manifest, getStatus, getTimestamp, courseCode, topicId, now, assessment) {
+  const current = resolveNow(now);
+  const base = getReviewStateForTopic(manifest, getStatus, getTimestamp, courseCode, topicId, current);
+  const bank = assessment && typeof assessment === 'object' ? assessment.bank ?? null : null;
+  const store = assessment && typeof assessment === 'object' ? assessment.attempts : undefined;
+  const evidence = getAssessmentEvidence(bank, store, courseCode, topicId);
+  const isCompleted = base.state !== REVIEW_STATE_NOT_APPLICABLE;
+  const assessmentNeedsReview = isCompleted && evidence.available && evidence.needsReview;
+  const assessmentPassed = isCompleted && evidence.available && evidence.passed;
+  const assessmentAttempted = isCompleted && evidence.available && evidence.attempted;
+  const reviewReason = reviewReasonFor(base.state, assessmentNeedsReview);
+  const isAssessmentDriven = isCompleted
+    && base.state === REVIEW_STATE_FRESH
+    && assessmentNeedsReview;
+  const isReviewRelevant = base.state === REVIEW_STATE_DUE
+    || base.state === REVIEW_STATE_OVERDUE
+    || isAssessmentDriven;
+  return {
+    state: base.state,
+    daysSince: base.daysSince,
+    threshold: base.threshold,
+    timestamp: base.timestamp,
+    assessmentAvailable: evidence.available,
+    assessmentAttempted,
+    assessmentPassed,
+    assessmentNeedsReview,
+    assessmentLatestScore: evidence.latestScore,
+    assessmentBestScore: evidence.bestScore,
+    assessmentAttempts: evidence.attempts,
+    assessmentState: evidence.state,
+    reviewReason,
+    isAssessmentDriven,
+    isReviewRelevant,
+  };
+}
+
+function compareAssessmentAwarePriority(manifest, indexOf, a, b) {
+  const rank = (e) => {
+    if (e.reviewState === REVIEW_STATE_OVERDUE) return 0;
+    if (e.reviewState === REVIEW_STATE_DUE) return 1;
+    if (e.reviewReason === REVIEW_REASON_ASSESSMENT_NEEDS_REVIEW) return 2;
+    return 3;
+  };
+  const ra = rank(a);
+  const rb = rank(b);
+  if (ra !== rb) return ra - rb;
+  if (b.examWeight !== a.examWeight) return b.examWeight - a.examWeight;
+  if (b.dependentCount !== a.dependentCount) return b.dependentCount - a.dependentCount;
+  return (indexOf.get(topicKey(a.courseCode, a.id)) ?? 0) - (indexOf.get(topicKey(b.courseCode, b.id)) ?? 0);
+}
+
+function assessmentAwareEntry(manifest, topic, baseState, aware) {
+  const entry = reviewEntry(manifest, topic, baseState);
+  return {
+    ...entry,
+    assessmentAvailable: aware.assessmentAvailable,
+    assessmentAttempted: aware.assessmentAttempted,
+    assessmentPassed: aware.assessmentPassed,
+    assessmentNeedsReview: aware.assessmentNeedsReview,
+    assessmentLatestScore: aware.assessmentLatestScore,
+    assessmentBestScore: aware.assessmentBestScore,
+    assessmentAttempts: aware.assessmentAttempts,
+    assessmentState: aware.assessmentState,
+    reviewReason: aware.reviewReason,
+    isAssessmentDriven: aware.isAssessmentDriven,
+    isReviewRelevant: aware.isReviewRelevant,
+  };
+}
+
+export function getAssessmentAwareReviewQueue(manifest, getStatus, getTimestamp, now, assessment) {
+  const current = resolveNow(now);
+  const indexOf = manifestIndex(manifest);
+  const queue = [];
+  for (const topic of manifestTopics(manifest)) {
+    const base = getReviewStateForTopic(manifest, getStatus, getTimestamp, topic.courseCode, topic.id, current);
+    const aware = getAssessmentAwareReviewState(manifest, getStatus, getTimestamp, topic.courseCode, topic.id, current, assessment);
+    if (!aware.isReviewRelevant) continue;
+    queue.push(assessmentAwareEntry(manifest, topic, base, aware));
+  }
+  queue.sort((a, b) => compareAssessmentAwarePriority(manifest, indexOf, a, b));
+  return queue;
+}
+
+export function getAssessmentDrivenReviews(manifest, getStatus, getTimestamp, now, assessment) {
+  return getAssessmentAwareReviewQueue(manifest, getStatus, getTimestamp, now, assessment)
+    .filter((e) => e.isAssessmentDriven);
+}
+
+export function buildAssessmentAwareRevisionModel(manifest, getStatus, getTimestamp, now, assessment) {
+  const current = resolveNow(now);
+  const queue = getAssessmentAwareReviewQueue(manifest, getStatus, getTimestamp, current, assessment);
+  const due = queue.filter((e) => e.reviewState === REVIEW_STATE_DUE);
+  const overdue = queue.filter((e) => e.reviewState === REVIEW_STATE_OVERDUE);
+  const driven = queue.filter((e) => e.isAssessmentDriven);
+  const examDue = queue.filter((e) => e.examWeight > 0);
+  return {
+    reviewDue: due,
+    reviewOverdue: overdue,
+    assessmentDriven: driven,
+    reviewQueue: queue,
+    examReviewDue: examDue,
+    nextReviewTopic: queue.length ? queue[0] : null,
+    counts: {
+      total: queue.length,
+      due: due.length,
+      overdue: overdue.length,
+      examDue: examDue.length,
+      assessmentDriven: driven.length,
+      assessmentNeedsReview: driven.length,
+    },
+    now: current,
+  };
 }

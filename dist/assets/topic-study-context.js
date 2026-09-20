@@ -59,6 +59,7 @@ import {
   explainReviewReason,
   REVIEW_STATE_DUE,
   REVIEW_STATE_OVERDUE,
+  getAssessmentAwareReviewState,
 } from './revision.js';
 import { loadManifest } from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
@@ -151,6 +152,21 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     reason: explainTopicPlanMembership(plan, courseCode, topicId),
   };
   const reviewState = getReviewStateForTopic(manifest, getStatus, getTimestamp, courseCode, topicId, options.now);
+  // Assessment-aware review evidence rides alongside the timestamp state:
+  // a completed topic whose latest attempt needs review contributes to
+  // review immediately; a passed attempt never bypasses the 7/14-day
+  // schedule; unfinished topics never become reviewable via assessment.
+  let assessmentAware = null;
+  try {
+    if (options.bank) {
+      assessmentAware = getAssessmentAwareReviewState(
+        manifest, getStatus, getTimestamp, courseCode, topicId, options.now,
+        { bank: options.bank, attempts: options.attempts }
+      );
+    }
+  } catch {
+    assessmentAware = null;
+  }
   const review = {
     state: reviewState.state,
     daysSince: reviewState.daysSince,
@@ -160,6 +176,15 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     isDue: reviewState.state === REVIEW_STATE_DUE,
     isOverdue: reviewState.state === REVIEW_STATE_OVERDUE,
     isExamRelevant: (exam && exam.isExamRelevant) || false,
+    assessmentNeedsReview: assessmentAware ? Boolean(assessmentAware.assessmentNeedsReview) : false,
+    assessmentPassed: assessmentAware ? Boolean(assessmentAware.assessmentPassed) : false,
+    assessmentAttempted: assessmentAware ? Boolean(assessmentAware.assessmentAttempted) : false,
+    assessmentContributesToReview: assessmentAware ? Boolean(assessmentAware.isAssessmentDriven) : false,
+    reviewReason: assessmentAware ? assessmentAware.reviewReason : null,
+    assessmentState: assessmentAware ? assessmentAware.assessmentState : null,
+    assessmentLatestScore: assessmentAware ? assessmentAware.assessmentLatestScore : null,
+    assessmentBestScore: assessmentAware ? assessmentAware.assessmentBestScore : null,
+    assessmentAttempts: assessmentAware ? assessmentAware.assessmentAttempts : 0,
   };
   return {
     courseCode: topic.courseCode,
@@ -323,13 +348,20 @@ export function renderStudyContext(model) {
       ? '<p class="xp-note">Currently overdue for review.</p>'
       : r.isDue
         ? '<p class="xp-note">Currently due for review.</p>'
-        : '<p class="xp-note">Not currently due — fresh.</p>';
+        : r.assessmentContributesToReview
+          ? '<p class="xp-note">Currently due for review because the latest assessment needs review.</p>'
+          : '<p class="xp-note">Not currently due — fresh.</p>';
     const examLine = r.isExamRelevant
       ? '<p class="xp-note">Exam-relevant topic.</p>'
       : '';
+    const assessmentLine = r.assessmentAttempted
+      ? (r.assessmentContributesToReview
+        ? '<p class="xp-note">Assessment is contributing to review (latest attempt needs review).</p>'
+        : '<p class="xp-note">Assessment is not contributing to review (latest attempt passed or schedule already due).</p>')
+      : '';
     return `<div class="ts-block ts-review"><h3>Review status</h3>`
       + `<p class="xp-note">${esc(r.reason)}</p>`
-      + when + dueLine + examLine + `</div>`;
+      + when + dueLine + examLine + assessmentLine + `</div>`;
   })();
 
   const analyticsBlock = (() => {
@@ -363,7 +395,9 @@ export function renderStudyContext(model) {
 
   const assessmentBlock = (() => {
     // Assessment availability is explicit: topics without bank questions
-    // say so outright (never fabricated coverage).
+    // say so outright (never fabricated coverage). Covered topics show
+    // status, latest/best result, attempt count, passed/needs-review state,
+    // whether assessment contributes to review, and a start/retry link.
     const a = model.assessment;
     if (!a || !a.available) {
       return `<div class="ts-block ts-assessment"><h3>Self-assessment</h3>`
@@ -375,9 +409,21 @@ export function renderStudyContext(model) {
       : a.passed
         ? `Passed — latest ${a.latestScore}% · best ${a.bestScore}% over ${a.attempts} ${a.attempts === 1 ? 'attempt' : 'attempts'}.`
         : `Needs review — latest ${a.latestScore}% · best ${a.bestScore}% over ${a.attempts} ${a.attempts === 1 ? 'attempt' : 'attempts'}.`;
+    const stateLine = !a.attempted
+      ? 'Assessment status: not attempted.'
+      : a.passed
+        ? 'Assessment status: passed.'
+        : 'Assessment status: needs review.';
+    const reviewLine = model.review && model.review.assessmentContributesToReview
+      ? 'Assessment is contributing to review.'
+      : (a.attempted && a.needsReview && model.status !== 'completed'
+        ? 'Assessment needs review, but only completed topics enter review.'
+        : 'Assessment is not contributing to review.');
+    const linkLabel = a.attempted ? 'Retry assessment →' : 'Start assessment →';
     return `<div class="ts-block ts-assessment"><h3>Self-assessment</h3>`
       + `<p class="xp-note">${a.questionCount} ${a.questionCount === 1 ? 'question' : 'questions'} available. ${esc(statusLine)}</p>`
-      + `<p><a class="xp-open" href="${esc(assessmentHrefFrom(model.courseCode, model.courseCode, model.id))}">Start assessment →</a></p>`
+      + `<p class="xp-note">${esc(stateLine)} ${esc(reviewLine)}</p>`
+      + `<p><a class="xp-open" href="${esc(assessmentHrefFrom(model.courseCode, model.courseCode, model.id))}">${linkLabel}</a></p>`
       + `</div>`;
   })();
 
@@ -478,6 +524,17 @@ export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode,
       .then(({ manifest }) => renderWith(manifest))
       .catch(() => {});
   });
+  // Cross-tab assessment-result sync without polling: assessment completions
+  // in another tab re-render via storage, using the same shared state.
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('storage', (event) => {
+      if (!event.key) return;
+      if (event.key === ASSESSMENT_STORAGE_KEY) {
+        if (lastManifest) renderWith(lastManifest);
+        else rerender();
+      }
+    });
+  }
   rerender();
   return { rerender };
 }

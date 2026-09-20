@@ -75,7 +75,7 @@ import {
   getRemainingExamTopics,
   buildExamReadiness,
 } from './exam-readiness.js';
-import { getReviewQueue, getReviewStateForTopic } from './revision.js';
+import { getReviewQueue, getReviewStateForTopic, getAssessmentAwareReviewQueue, getAssessmentAwareReviewState } from './revision.js';
 
 export const PLAN_CONFIG_KEY = 'tarangam_study_plan_v1';
 
@@ -314,6 +314,7 @@ export function explainPlanReason(manifest, safeStatus, topic, context) {
   if (context.isBlocker) parts.push(`prerequisite blocker for ${context.blockedCount} unfinished ${context.blockedCount === 1 ? 'topic' : 'topics'}`);
   if (context.isReviewOverdue) parts.push(`review-overdue (${context.daysSince} days)`);
   else if (context.isReviewDue) parts.push(`due for review (${context.daysSince} days)`);
+  else if (context.isAssessmentNeedsReview) parts.push('assessment needs review');
   if (context.isExamRelevant) parts.push(`exam-relevant (${topic.examRelevance})`);
   if (context.recommendationRank !== null && context.recommendationRank !== undefined) {
     parts.push(`canonical recommendation #${context.recommendationRank + 1}`);
@@ -361,12 +362,13 @@ function parseTargetDate(targetDate) {
 
 // --- Plan builder ----------------------------------------------------------------------------------
 
-export function buildStudyPlan(manifest, getStatus, getTimestamp, config, now) {
+export function buildStudyPlan(manifest, getStatus, getTimestamp, config, now, assessment) {
   const current = resolveNow(now);
   const clean = sanitizeConfig(config);
   const topics = manifestTopics(manifest);
   const safeStatus = (c, id) => readStatus(getStatus, c, id);
   const indexOf = manifestIndex(manifest);
+  const hasAssessment = assessment && typeof assessment === 'object' && assessment.bank;
 
   if (!clean || !topics.length) {
     return {
@@ -450,8 +452,14 @@ export function buildStudyPlan(manifest, getStatus, getTimestamp, config, now) {
     reviewIncluded = reviewBacklogInScope(manifest, safeStatus, getTimestamp, clean, current);
   } else {
     // review target: due/overdue in-scope queue in revision priority order.
-    const queue = getReviewQueue(manifest, safeStatus, getTimestamp, current).filter((e) => inScope(e, clean));
-    currentState = { dueAndOverdue: queue.length };
+    // With assessment evidence, needs_review topics join the same queue
+    // after overdue/due (existing overdue priority stays stronger);
+    // prerequisite-order repair below is unchanged.
+    const queue = hasAssessment
+      ? getAssessmentAwareReviewQueue(manifest, safeStatus, getTimestamp, current, assessment).filter((e) => inScope(e, clean))
+      : getReviewQueue(manifest, safeStatus, getTimestamp, current).filter((e) => inScope(e, clean));
+    const assessmentDriven = hasAssessment ? queue.filter((e) => e.isAssessmentDriven).length : 0;
+    currentState = { dueAndOverdue: queue.length, assessmentDriven };
     targetState = { goal: 0, unit: 'remaining due topics' };
     baseOrder = queue.map((e) => e.topic);
     candidates = [...baseOrder];
@@ -487,6 +495,15 @@ export function buildStudyPlan(manifest, getStatus, getTimestamp, config, now) {
       return { state: 'fresh', daysSince: null };
     }
   };
+  const assessmentDrivenOf = (t) => {
+    if (!hasAssessment) return false;
+    try {
+      const aware = getAssessmentAwareReviewState(manifest, safeStatus, getTimestamp, t.courseCode, t.id, current, assessment);
+      return Boolean(aware.isAssessmentDriven);
+    } catch {
+      return false;
+    }
+  };
   const plannedTopics = ordered.map((t) => {
     const key = topicKey(t.courseCode, t.id);
     const blockedCount = countBlockedBy(manifest, safeStatus, clean, t);
@@ -499,12 +516,14 @@ export function buildStudyPlan(manifest, getStatus, getTimestamp, config, now) {
       module: t.module,
       examRelevance: t.examRelevance ?? null,
       estimatedMinutes: knownMinutes(t),
+      isAssessmentDriven: assessmentDrivenOf(t),
       reason: explainPlanReason(manifest, safeStatus, t, {
         isBlocker: blockers.has(key),
         blockedCount,
         isReviewOverdue: rs.state === 'review_overdue',
         isReviewDue: rs.state === 'review_due',
         daysSince: rs.daysSince,
+        isAssessmentNeedsReview: assessmentDrivenOf(t),
         isExamRelevant: isExamRelevantTopic(t),
         recommendationRank: recRank >= 0 ? recRank : null,
       }),

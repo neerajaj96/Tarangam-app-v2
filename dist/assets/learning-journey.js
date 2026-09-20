@@ -68,13 +68,16 @@ import {
   getExamReviewDue,
   getNextReviewTopic,
   getReviewCounts,
+  buildAssessmentAwareRevisionModel,
+  getAssessmentAwareReviewState,
+  getAssessmentDrivenReviews,
 } from './revision.js';
 
 // Revision is an additional learning mode over existing timestamps and
 // metadata (see assets/revision.js), never a replacement for the canonical
 // next-topic algorithm. These re-exports let surfaces read review state
 // through the journey without duplicating logic.
-export { buildRevisionModel, getReviewDue, getReviewOverdue, getExamReviewDue, getNextReviewTopic, getReviewCounts };
+export { buildRevisionModel, getReviewDue, getReviewOverdue, getExamReviewDue, getNextReviewTopic, getReviewCounts, buildAssessmentAwareRevisionModel, getAssessmentAwareReviewState, getAssessmentDrivenReviews };
 
 import { buildLearningAnalytics } from './learning-analytics.js';
 
@@ -447,6 +450,55 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     ? buildAssessmentSummary(assessmentInput.bank, manifest, assessmentInput.attempts)
     : null;
 
+  // Assessment-aware revision rides alongside the timestamp-only revision:
+  // identical progress with different assessment evidence may change review
+  // relevance, but the canonical recommendation above never changes.
+  const assessmentAwareRevision = assessmentInput && assessmentInput.bank
+    ? buildAssessmentAwareRevisionModel(manifest, safeStatus, getTimestamp, reviewNow, assessmentInput)
+    : null;
+
+  // Descriptive assessment evidence for journey surfaces (no recommendation).
+  // Assessment state for the recommended topic, for in-progress topics, plus
+  // topics needing a first assessment, topics needing review because of
+  // assessment, and the coverage summary. All derived from the canonical
+  // assessment layer; never fabricated when no bank is present.
+  let assessmentForRecommended = null;
+  let assessmentForInProgress = [];
+  let topicsNeedingAssessment = [];
+  let topicsNeedingAssessmentReview = [];
+  let assessmentCoverage = null;
+  if (assessment && assessmentInput && assessmentInput.bank) {
+    const bank = assessmentInput.bank;
+    const attempts = assessmentInput.attempts;
+    topicsNeedingAssessment = Array.isArray(assessment.needsAssessment) ? assessment.needsAssessment : [];
+    topicsNeedingAssessmentReview = Array.isArray(assessment.needsAssessmentReview) ? assessment.needsAssessmentReview : [];
+    try {
+      assessmentCoverage = getAssessmentCoverage(bank, manifest);
+    } catch {
+      assessmentCoverage = null;
+    }
+    try {
+      assessmentForInProgress = inProgress.map((t) => ({
+        courseCode: t.courseCode,
+        id: t.id,
+        assessment: getTopicAssessmentState(bank, attempts, t.courseCode, t.id),
+      }));
+    } catch {
+      assessmentForInProgress = [];
+    }
+    try {
+      assessmentForRecommended = recommended
+        ? {
+          courseCode: recommended.courseCode,
+          id: recommended.id,
+          assessment: getTopicAssessmentState(bank, attempts, recommended.courseCode, recommended.id),
+        }
+        : null;
+    } catch {
+      assessmentForRecommended = null;
+    }
+  }
+
   return {
     inProgress,
     ready,
@@ -472,6 +524,12 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     examReviewDue: revision.examReviewDue,
     reviewCounts: revision.counts,
     revision,
+    assessmentAwareRevision,
+    assessmentForRecommended,
+    assessmentForInProgress,
+    topicsNeedingAssessment,
+    topicsNeedingAssessmentReview,
+    assessmentCoverage,
     analytics,
     studyPlan,
     planStatus: studyPlan.status,
@@ -485,8 +543,11 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
 /**
  * Per-topic journey slice: dependencies, navigation, and unlock preview
  * for one topic card/detail/study-context. Null when the topic is unknown.
+ * An optional fifth `assessment` argument (`{ bank, attempts }`) attaches
+ * descriptive assessment evidence for this topic without changing any
+ * recommendation fields.
  */
-export function buildTopicJourney(manifest, getStatus, courseCode, topicId) {
+export function buildTopicJourney(manifest, getStatus, courseCode, topicId, assessment) {
   const topic = getTopic(manifest, courseCode, topicId);
   if (!topic) return null;
   const safeStatus = (c, id) => readStatus(getStatus, c, id);
@@ -500,6 +561,14 @@ export function buildTopicJourney(manifest, getStatus, courseCode, topicId) {
     : false;
   const readyList = getReadyTopics(manifest, safeStatus);
   const isReady = readyList.some((t) => topicKey(t.courseCode, t.id) === topicKey(courseCode, topicId));
+  let assessmentState = null;
+  if (assessment && typeof assessment === 'object' && assessment.bank) {
+    try {
+      assessmentState = getTopicAssessmentState(assessment.bank, assessment.attempts, courseCode, topicId);
+    } catch {
+      assessmentState = null;
+    }
+  }
   return {
     courseCode: topic.courseCode,
     courseName: topic.courseName || topic.courseCode,
@@ -529,6 +598,7 @@ export function buildTopicJourney(manifest, getStatus, courseCode, topicId) {
     courseProgress: getCourseProgress(manifest, safeStatus, courseCode),
     moduleProgress: getModuleProgress(manifest, safeStatus, courseCode, topic.module),
     overall: getOverallProgress(manifest, safeStatus),
+    assessment: assessmentState,
   };
 }
 

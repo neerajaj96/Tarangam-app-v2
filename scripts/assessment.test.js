@@ -588,7 +588,7 @@ describe('topic study context wiring', () => {
     const covered = buildStudyContextModel(fixture, none, 'C1', 'm1_01_a', { bank, attempts: store });
     assert.equal(covered.assessment.available, true);
     assert.equal(covered.assessment.passed, true);
-    assert.match(renderStudyContext(covered), /Start assessment/);
+    assert.match(renderStudyContext(covered), /(Start|Retry) assessment/);
     const bare = buildStudyContextModel(fixture, none, 'C1', 'm2_01_c', { bank, attempts: store });
     assert.equal(bare.assessment.available, false);
     assert.match(renderStudyContext(bare), /Assessment not available for this topic yet/);

@@ -38,6 +38,7 @@ import {
   normalizeReviewFilter,
   filterTopicsByReview,
   getReviewStateForTopic,
+  getAssessmentAwareReviewState,
 } from './revision.js';
 import { getCourseAnalytics, getModuleAnalytics } from './learning-analytics.js';
 import {
@@ -122,10 +123,32 @@ export function getExplorerAssessmentInfo(bank, attempts, courseCode, topicId) {
       passed: s.passed,
       needsReview: s.needsReview,
       latestScore: s.latestScore,
+      bestScore: s.bestScore ?? null,
+      attempts: typeof s.attempts === 'number' ? s.attempts : 0,
       state: s.state,
+      // Descriptive indicator: available but never attempted (composes with
+      // the existing assessment filters — `available` minus `attempted`).
+      notAttempted: Boolean(s.available && !s.attempted),
     };
   } catch {
-    return { available: false, questionCount: 0, attempted: false, passed: false, needsReview: false, latestScore: null, state: 'not_attempted' };
+    return { available: false, questionCount: 0, attempted: false, passed: false, needsReview: false, latestScore: null, bestScore: null, attempts: 0, state: 'not_attempted', notAttempted: false };
+  }
+}
+
+// Composable "assessment not attempted" view over an already-scoped topic
+// list: available topics with zero recorded attempts, in input order.
+// Composes with the existing course/module/difficulty/exam/revision/journey
+// filters via getExplorerVisibleTopics (callers chain it the same way as
+// filterTopicsByAssessment). Never throws; without a bank matches nothing.
+export function filterTopicsByAssessmentNotAttempted(bank, attempts, topicList) {
+  const list = Array.isArray(topicList) ? topicList : [];
+  try {
+    return list.filter((t) => {
+      const s = getTopicAssessmentState(bank, attempts, t.courseCode, t.id);
+      return Boolean(s.available && !s.attempted);
+    });
+  } catch {
+    return [];
   }
 }
 
@@ -325,13 +348,26 @@ function journeyChips(topic) {
 
 function reviewChips(topic) {
   // Per-card review signal from the shared revision module (completed
-  // topics only; unfinished topics never show review chips).
+  // topics only; unfinished topics never show review chips). Timestamp
+  // overdue/due first; completed fresh topics whose latest assessment
+  // needs review show an assessment-driven review chip (descriptive only).
   if (!state.manifest || !state.progress) return '';
   const rs = getReviewStateForTopic(
     state.manifest, statusReader(), timestampReader(), topic.courseCode, topic.id, Date.now()
   );
   if (rs.state === REVIEW_STATE_OVERDUE) return '<span class="badge badge-gold">↻ Overdue</span>';
   if (rs.state === REVIEW_STATE_DUE) return '<span class="badge badge-accent">↻ Review due</span>';
+  if (state.assessmentBank) {
+    try {
+      const aware = getAssessmentAwareReviewState(
+        state.manifest, statusReader(), timestampReader(), topic.courseCode, topic.id, Date.now(),
+        { bank: state.assessmentBank, attempts: readAttempts() }
+      );
+      if (aware.isAssessmentDriven) return '<span class="badge badge-gold">↻ Assessment review</span>';
+    } catch {
+      // fall through to no chip
+    }
+  }
   return '';
 }
 
@@ -345,14 +381,17 @@ function planChips(topic, plan) {
 
 function assessmentChips(topic) {
   // Per-card assessment signal from the canonical assessment module.
-  // Topics without bank questions show an explicit "No quiz" marker.
+  // Topics without bank questions show an explicit "No quiz" marker;
+  // available-but-unattempted topics show an explicit not-attempted marker.
+  // Composes with course/module/difficulty/exam/revision/journey filters
+  // via getExplorerVisibleTopics (no separate recommendation).
   if (!state.manifest) return '';
   const info = getExplorerAssessmentInfo(state.assessmentBank, readAttempts(), topic.courseCode, topic.id);
   if (!info.available) return '<span class="badge xp-st-todo">○ No quiz</span>';
   if (info.needsReview) return '<span class="badge badge-gold">Needs review</span>';
   if (info.passed) return '<span class="badge xp-st-done">✓ Passed</span>';
   if (info.attempted) return '<span class="badge badge-accent">… Attempted</span>';
-  return '<span class="badge badge-accent">Quiz available</span>';
+  return '<span class="badge badge-accent">○ Quiz available — not attempted</span>';
 }
 
 function currentFilters() {

@@ -381,3 +381,97 @@ export function filterTopicsByExam(manifest, getStatus, topicList, examFilter = 
   }
   return list.filter((t) => isExamRelevantTopic(t) && safe(t.courseCode, t.id) !== STATUS_COMPLETED);
 }
+
+// --- Descriptive assessment evidence (diagnostics only) ----------------------
+// The weighted readiness calculation above is unchanged: high = 3,
+// medium = 2, low = 1, unknown = 0. Assessment evidence never alters the
+// readiness percentage; it only describes, among exam-relevant topics with
+// questions, how many were attempted, passed, need review, or were not
+// assessed. Uncovered exam topics (no questions) are listed as not assessed
+// — never implied to be assessed. Never throws; malformed banks or stores
+// degrade to zeroed diagnostics.
+export function getExamAssessmentEvidence(bank, manifest, store) {
+  const topics = manifest && Array.isArray(manifest.topics) ? manifest.topics : [];
+  const examTopics = topics.filter(isExamRelevantTopic);
+  const bankByTopic = new Map();
+  const questions = bank && Array.isArray(bank.questions) ? bank.questions : [];
+  for (const q of questions) {
+    if (!q || typeof q.courseCode !== 'string' || typeof q.topicId !== 'string') continue;
+    bankByTopic.set(`${q.courseCode}/${q.topicId}`, true);
+  }
+  const covered = examTopics.filter((t) => bankByTopic.has(`${t.courseCode}/${t.id}`));
+  const uncovered = examTopics.filter((t) => !bankByTopic.has(`${t.courseCode}/${t.id}`));
+  let attempted = 0;
+  let passed = 0;
+  let needsReview = 0;
+  const attemptedList = [];
+  const passedList = [];
+  const needsReviewList = [];
+  const coveredNotAttemptedList = [];
+  try {
+    // Reuse the canonical assessment state without duplicating its logic.
+    // Dynamic import is avoided for static-first bundling; the lookup below
+    // mirrors getTopicAssessmentState over recorded attempts only.
+    const attempts = store && Array.isArray(store.attempts) ? store.attempts : [];
+    const byTopic = new Map();
+    const questionById = new Map(questions.map((q) => [q && q.id, q]));
+    for (const a of attempts) {
+      if (!a || typeof a !== 'object') continue;
+      const keys = new Set();
+      if (Array.isArray(a.topics)) {
+        for (const t of a.topics) {
+          if (t && typeof t.courseCode === 'string' && typeof t.id === 'string') keys.add(`${t.courseCode}/${t.id}`);
+        }
+      }
+      if (Array.isArray(a.questionIds)) {
+        for (const qid of a.questionIds) {
+          const q = questionById.get(qid);
+          if (q && typeof q.courseCode === 'string' && typeof q.topicId === 'string') keys.add(`${q.courseCode}/${q.topicId}`);
+        }
+      }
+      if (a.scope && typeof a.scope.courseCode === 'string' && typeof a.scope.topicId === 'string' && a.scope.topicId) {
+        keys.add(`${a.scope.courseCode}/${a.scope.topicId}`);
+      }
+      for (const key of keys) {
+        if (!byTopic.has(key)) byTopic.set(key, []);
+        byTopic.get(key).push(a);
+      }
+    }
+    for (const t of covered) {
+      const key = `${t.courseCode}/${t.id}`;
+      const related = (byTopic.get(key) || []).slice().sort((a, b) => b.submittedAt - a.submittedAt);
+      if (!related.length) {
+        coveredNotAttemptedList.push({ courseCode: t.courseCode, id: t.id });
+        continue;
+      }
+      const latest = related[0];
+      attempted += 1;
+      attemptedList.push({ courseCode: t.courseCode, id: t.id });
+      if (latest.state === 'passed') {
+        passed += 1;
+        passedList.push({ courseCode: t.courseCode, id: t.id });
+      } else if (latest.state === 'needs_review') {
+        needsReview += 1;
+        needsReviewList.push({ courseCode: t.courseCode, id: t.id });
+      }
+    }
+  } catch {
+    // degrade to zeroed attempt counts; coverage above still holds
+  }
+  const notAssessed = examTopics.length - attempted;
+  return {
+    totalExamTopics: examTopics.length,
+    coveredExamTopics: covered.length,
+    uncoveredExamTopics: uncovered.length,
+    attempted,
+    passed,
+    needsReview,
+    coveredNotAttempted: coveredNotAttemptedList.length,
+    notAssessed,
+    attemptedList,
+    passedList,
+    needsReviewList,
+    coveredNotAttemptedList,
+    uncoveredList: uncovered.map((t) => ({ courseCode: t.courseCode, id: t.id })),
+  };
+}
