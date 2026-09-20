@@ -97,6 +97,18 @@ import {
   getTopicAssessmentState,
   getAssessmentReviewTopics,
   getExamAssessmentStats,
+  getAssessmentCoverage,
+  getAssessmentQuestionCount,
+  getQuestionsPerCourse,
+  getCoveredTopicsPerCourse,
+  getQuestionsPerModule,
+  getTopicQuestionCounts,
+  getSingleQuestionTopics,
+  getMultiQuestionTopics,
+  getExamQuestionCoverage,
+  getQuestionTypeDistribution,
+  getCoveredTopics,
+  getUncoveredTopics,
 } from './assessment.js';
 
 // Assessment is an observational layer over recorded attempts (see
@@ -109,6 +121,18 @@ export {
   getTopicAssessmentState,
   getAssessmentReviewTopics,
   getExamAssessmentStats,
+  getAssessmentCoverage,
+  getAssessmentQuestionCount,
+  getQuestionsPerCourse,
+  getCoveredTopicsPerCourse,
+  getQuestionsPerModule,
+  getTopicQuestionCounts,
+  getSingleQuestionTopics,
+  getMultiQuestionTopics,
+  getExamQuestionCoverage,
+  getQuestionTypeDistribution,
+  getCoveredTopics,
+  getUncoveredTopics,
 };
 
 // --- Recommendation reasons (stable contract) -------------------------------

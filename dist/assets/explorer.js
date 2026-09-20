@@ -52,10 +52,42 @@ import {
   normalizeAssessmentFilter,
   filterTopicsByAssessment,
   getTopicAssessmentState,
+  getAssessmentCoverage,
+  getAssessmentQuestionCount,
+  getExamQuestionCoverage,
+  getQuestionTypeDistribution,
   loadAssessmentBank,
   parseAttemptStore,
   ASSESSMENT_STORAGE_KEY,
 } from './assessment.js';
+
+// Pure assessment coverage for Explorer indicators (no recommendations):
+// total questions, covered/total topics, uncovered count, exam-relevant
+// coverage, type distribution. Uncovered topics are reported as without
+// questions — never implied to be assessed.
+export function getExplorerAssessmentCoverage(bank, manifest) {
+  try {
+    const coverage = getAssessmentCoverage(bank, manifest);
+    const examCoverage = getExamQuestionCoverage(bank, manifest);
+    return {
+      totalQuestions: getAssessmentQuestionCount(bank),
+      coveredCount: coverage.coveredCount,
+      totalTopics: coverage.totalTopics,
+      uncoveredCount: coverage.uncoveredTopics.length,
+      examCoverage,
+      typeDistribution: getQuestionTypeDistribution(bank),
+    };
+  } catch {
+    return {
+      totalQuestions: 0,
+      coveredCount: 0,
+      totalTopics: 0,
+      uncoveredCount: 0,
+      examCoverage: null,
+      typeDistribution: null,
+    };
+  }
+}
 
 // Plan membership derived from the single saved plan configuration plus
 // canonical learner state — no per-topic planning state is ever stored.
@@ -612,6 +644,18 @@ function renderProgress() {
     if (state.module !== 'all') {
       const m = state.progress.getModuleProgress(state.course, Number(state.module));
       parts.push(`M${state.module}: ${m.completed} / ${m.total}`);
+    }
+  }
+  // Assessment coverage indicator (deterministic counts only, no
+  // recommendations): total questions, covered/total topics, uncovered
+  // count, exam-relevant coverage. Topics without questions are reported
+  // as not assessed.
+  if (state.manifest) {
+    const cov = getExplorerAssessmentCoverage(state.assessmentBank, state.manifest);
+    if (cov.totalQuestions > 0) {
+      parts.push(`Assessment: ${cov.coveredCount}/${cov.totalTopics} topics have questions (${cov.totalQuestions} questions, ${cov.uncoveredCount} without — not assessed)`);
+    } else {
+      parts.push('Assessment: question bank unavailable');
     }
   }
   el.textContent = parts.join(' · ');

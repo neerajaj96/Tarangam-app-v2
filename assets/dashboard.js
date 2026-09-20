@@ -38,15 +38,40 @@ import {
   serializeAttemptStore,
   buildAssessmentSummary,
   getExamAssessmentStats,
+  getAssessmentCoverage,
+  getAssessmentQuestionCount,
+  getQuestionsPerCourse,
+  getCoveredTopicsPerCourse,
+  getQuestionsPerModule,
+  getQuestionTypeDistribution,
+  getExamQuestionCoverage,
   ASSESSMENT_STORAGE_KEY,
 } from './assessment.js';
 
 export { PROGRESS_CHANGED_EVENT };
 
 // Pure assessment derivation for tests and UI: bank + manifest + attempts
-// store -> deterministic assessment summary (no DOM, no storage of its own).
+// store -> deterministic assessment summary plus pure coverage breakdowns
+// (total questions, covered/total topics, uncovered count, exam-relevant
+// coverage, per-course/per-module counts, type distribution). No DOM, no
+// storage of its own, no recommendations — surfaces only.
 export function buildDashboardAssessmentModel(bank, manifest, attempts) {
-  return buildAssessmentSummary(bank, manifest, attempts);
+  const summary = buildAssessmentSummary(bank, manifest, attempts);
+  const coverage = getAssessmentCoverage(bank, manifest);
+  const examCoverage = getExamQuestionCoverage(bank, manifest);
+  return {
+    ...summary,
+    coverage,
+    examCoverage,
+    totalQuestions: getAssessmentQuestionCount(bank),
+    coveredCount: coverage.coveredCount,
+    totalTopics: coverage.totalTopics,
+    uncoveredCount: coverage.uncoveredTopics.length,
+    questionsPerCourse: getQuestionsPerCourse(bank),
+    coveredPerCourse: getCoveredTopicsPerCourse(bank, manifest),
+    questionsPerModule: getQuestionsPerModule(bank, manifest),
+    typeDistribution: getQuestionTypeDistribution(bank),
+  };
 }
 
 // Pure exam derivation for tests and UI: manifest + status reader ->
@@ -510,15 +535,22 @@ async function init() {
       return;
     }
     const attempts = readAttempts();
-    const summary = buildAssessmentSummary(assessmentBank, manifest, attempts);
+    const model = buildDashboardAssessmentModel(assessmentBank, manifest, attempts);
     const exam = getExamAssessmentStats(assessmentBank, manifest, attempts);
-    const recent = summary.recentAttempt
-      ? `<span class="xp-path-meta">Recent: ${summary.recentAttempt.percentage}% (${esc(summary.recentAttempt.state.replace(/_/g, ' '))})</span>`
+    // Pure coverage values surface directly (no recommendation logic):
+    // total questions, covered/total topics, uncovered count, exam-relevant
+    // coverage from the deterministic coverage APIs.
+    const totalQuestions = getAssessmentQuestionCount(assessmentBank);
+    const examCoverage = getExamQuestionCoverage(assessmentBank, manifest);
+    const typeDist = getQuestionTypeDistribution(assessmentBank);
+    const recent = model.recentAttempt
+      ? `<span class="xp-path-meta">Recent: ${model.recentAttempt.percentage}% (${esc(model.recentAttempt.state.replace(/_/g, ' '))})</span>`
       : '<span class="xp-path-meta">No attempts yet.</span>';
     box.innerHTML = `<h2>Self-assessment</h2>
-      <div class="xp-path-next"><span class="xp-path-title">${summary.coveredCount} of ${summary.totalTopics} topics have questions (${summary.totalQuestions} questions)</span></div>
-      <div class="xp-path-row"><span class="xp-path-label">${summary.attempted} attempted · ${summary.passed} passed · ${summary.needsReview} needs review</span></div>
-      <div class="xp-path-row"><span class="xp-path-label">Exam topics with questions: ${exam.coveredExamTopics} · attempted ${exam.attempted} · passed ${exam.passed} · needs review ${exam.needsReview}</span></div>
+      <div class="xp-path-next"><span class="xp-path-title">${model.coveredCount} of ${model.totalTopics} topics have questions (${totalQuestions} questions)</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">${model.uncoveredCount} topics without questions — not assessed · ${model.attempted} attempted · ${model.passed} passed · ${model.needsReview} needs review</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Exam-relevant coverage: ${examCoverage.coveredExamTopics} of ${examCoverage.totalExamTopics} exam topics have questions (${examCoverage.coverage}%) · attempted ${exam.attempted} · passed ${exam.passed} · needs review ${exam.needsReview}</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Question types: multiple_choice ${typeDist.multiple_choice} · true_false ${typeDist.true_false} · short_answer ${typeDist.short_answer}</span></div>
       <div class="xp-path-row">${recent}
         <a class="xp-open" href="./assessment.html">Start assessment →</a></div>`;
   }

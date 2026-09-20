@@ -445,10 +445,15 @@ if (fs.existsSync('dist')) {
     const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
     if (!js.includes('buildDashboardAssessmentModel') && !js.includes('assessment.js')) fail('assessment: assets/dashboard.js does not use the canonical assessment module');
     if (!js.includes('db-assessment') && !js.includes('renderAssessment')) fail('assessment: assets/dashboard.js does not render the assessment section');
+    if (!js.includes('getAssessmentQuestionCount')) fail('assessment: assets/dashboard.js does not surface total questions via getAssessmentQuestionCount');
+    if (!js.includes('getExamQuestionCoverage')) fail('assessment: assets/dashboard.js does not surface exam-relevant coverage via getExamQuestionCoverage');
+    if (!js.includes('getQuestionTypeDistribution')) fail('assessment: assets/dashboard.js does not surface type distribution via getQuestionTypeDistribution');
   }
   if (fs.existsSync('assets/explorer.js')) {
     const js = fs.readFileSync('assets/explorer.js', 'utf-8');
     if (!js.includes('filterTopicsByAssessment') && !js.includes('assessment.js')) fail('assessment: assets/explorer.js does not use the canonical assessment module');
+    if (!js.includes('getExplorerAssessmentCoverage')) fail('assessment: assets/explorer.js does not expose coverage indicators via getExplorerAssessmentCoverage');
+    if (!js.includes('getAssessmentCoverage') && !js.includes('getExamQuestionCoverage')) fail('assessment: assets/explorer.js does not use the deterministic coverage APIs');
   }
   if (fs.existsSync('assets/topic-study-context.js')) {
     const js = fs.readFileSync('assets/topic-study-context.js', 'utf-8');
@@ -632,7 +637,7 @@ if (fs.existsSync('dist')) {
       fail('assessment: expected source file assets/assessment.js — actual: missing');
     } else {
       const js = fs.readFileSync('assets/assessment.js', 'utf-8');
-      for (const token of ['validateAssessmentBank', 'createAssessmentSession', 'evaluateAnswer', 'scoreSession', 'recordAttempt', 'getTopicAssessmentState', 'buildAssessmentSummary', 'PASS_THRESHOLD']) {
+      for (const token of ['validateAssessmentBank', 'createAssessmentSession', 'evaluateAnswer', 'scoreSession', 'recordAttempt', 'getTopicAssessmentState', 'buildAssessmentSummary', 'PASS_THRESHOLD', 'acceptedAnswers', 'getShortAnswerVariants', 'getAssessmentQuestionCount', 'getCoveredTopics', 'getUncoveredTopics', 'getQuestionsPerCourse', 'getCoveredTopicsPerCourse', 'getQuestionsPerModule', 'getSingleQuestionTopics', 'getMultiQuestionTopics', 'getExamQuestionCoverage', 'getQuestionTypeDistribution', 'getTopicQuestionCounts', 'ASSESSMENT_DIFFICULTIES']) {
         if (!js.includes(token)) fail(`assessment: assets/assessment.js is missing "${token}"`);
       }
       if (!js.includes("from './topic-intelligence.js'")) fail('assessment: assets/assessment.js must build on the canonical Topic Intelligence Layer');
@@ -644,17 +649,155 @@ if (fs.existsSync('dist')) {
       if (/semantic[A-Z_(]|new\s+\w*semantic/i.test(js)) fail('assessment: assets/assessment.js must not add semantic grading');
       if (/\bmastery[A-Z_]|["']mastery["']\s*:|mastery\s*=\s*\d/i.test(js)) fail('assessment: assets/assessment.js must not add artificial mastery scores');
       if (/\bxp\b|experience points|\blevels\b.*streak/i.test(js)) fail('assessment: assets/assessment.js must not add gamification');
+      if (/quality\s*score|QualityScore/i.test(js)) fail('assessment: assets/assessment.js must not add quality scores');
+    }
+    // Deterministic, dependency-free bank QA: every failure below names the
+    // question id, the offending field, and expected vs actual. Mirrors the
+    // canonical validator so CI fails loudly on the same contract.
+    const norm = (v) => String(v ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+    if (!Array.isArray(assessmentBank.questions)) {
+      fail('assessment-bank: bank must contain a "questions" array — actual: missing or wrong type');
+    } else {
+      const seenIds = new Set();
+      const seenText = new Map();
+      const validTypes = new Set(['multiple_choice', 'true_false', 'short_answer']);
+      const validDifficulties = new Set(['beginner', 'intermediate', 'advanced']);
+      const validExam = new Set(['high', 'medium', 'low']);
+      const requiredFields = ['id', 'courseCode', 'topicId', 'type', 'question', 'answer', 'explanation', 'difficulty', 'examRelevance'];
+      assessmentBank.questions.forEach((q, i) => {
+        const label = q && typeof q.id === 'string' && q.id ? `question "${q.id}"` : `question at index ${i}`;
+        if (!q || typeof q !== 'object' || Array.isArray(q)) {
+          fail(`assessment-bank: ${label} must be an object — actual: malformed`);
+          return;
+        }
+        for (const field of requiredFields) {
+          if (q[field] === undefined || q[field] === null) {
+            fail(`assessment-bank: ${label} missing required field "${field}" — expected a value`);
+          }
+        }
+        if (typeof q.id === 'string' && q.id) {
+          if (seenIds.has(q.id)) fail(`assessment-bank: duplicate question id "${q.id}" — expected unique ids`);
+          seenIds.add(q.id);
+        }
+        if (typeof q.question === 'string' && q.question.trim() && typeof q.courseCode === 'string' && typeof q.topicId === 'string') {
+          const key = `${q.courseCode}/${q.topicId}::${norm(q.question)}`;
+          if (seenText.has(key)) fail(`assessment-bank: duplicate question text in topic "${q.courseCode}/${q.topicId}": "${q.id || i}" duplicates "${seenText.get(key)}" — expected unique text per topic`);
+          else seenText.set(key, q.id || String(i));
+        }
+        if (q.type !== undefined && !validTypes.has(q.type)) {
+          fail(`assessment-bank: ${label} has invalid type "${q.type}" — expected one of multiple_choice, true_false, short_answer`);
+        }
+        if (typeof q.question === 'string' && q.question !== undefined && !q.question.trim()) {
+          fail(`assessment-bank: ${label} has empty "question" — expected a non-empty string`);
+        }
+        if (typeof q.explanation === 'string' && !q.explanation.trim()) {
+          fail(`assessment-bank: ${label} has missing/empty "explanation" — expected a non-empty string`);
+        }
+        if (q.difficulty !== undefined && !validDifficulties.has(q.difficulty)) {
+          fail(`assessment-bank: ${label} has malformed difficulty "${q.difficulty}" — expected one of beginner, intermediate, advanced`);
+        }
+        if (q.examRelevance !== undefined && !validExam.has(q.examRelevance)) {
+          fail(`assessment-bank: ${label} has malformed examRelevance "${q.examRelevance}" — expected one of high, medium, low`);
+        }
+        if (q.type === 'multiple_choice') {
+          if (!Array.isArray(q.options) || q.options.length < 2) {
+            fail(`assessment-bank: ${label} has too few "options" — expected at least 2 entries`);
+          } else {
+            if (q.options.some((o) => typeof o !== 'string' || !o.trim())) {
+              fail(`assessment-bank: ${label} has an empty option — expected all non-empty strings`);
+            }
+            if (new Set(q.options).size !== q.options.length) {
+              fail(`assessment-bank: ${label} has duplicate MCQ options — expected unique options`);
+            }
+            if (!q.options.includes(q.answer)) {
+              fail(`assessment-bank: ${label} has an invalid answer ref — answer must belong to "options"`);
+            }
+          }
+          if (q.acceptedAnswers !== undefined) {
+            fail(`assessment-bank: ${label} must not carry "acceptedAnswers" — only short_answer may`);
+          }
+        }
+        if (q.type === 'true_false') {
+          if (typeof q.answer !== 'boolean') {
+            fail(`assessment-bank: ${label} has an invalid answer ref — true_false answer must be a boolean`);
+          }
+          if (q.acceptedAnswers !== undefined) {
+            fail(`assessment-bank: ${label} must not carry "acceptedAnswers" — only short_answer may`);
+          }
+        }
+        if (q.type === 'short_answer') {
+          if (typeof q.answer !== 'string' || !q.answer.trim()) {
+            fail(`assessment-bank: ${label} has an invalid answer ref — short_answer answer must be a non-empty string`);
+          }
+          if (q.options !== undefined) {
+            fail(`assessment-bank: ${label} must not carry "options" — short_answer takes answer/acceptedAnswers only`);
+          }
+          if (q.acceptedAnswers !== undefined) {
+            if (!Array.isArray(q.acceptedAnswers) || q.acceptedAnswers.length === 0) {
+              fail(`assessment-bank: ${label} has malformed "acceptedAnswers" — expected a non-empty array`);
+            } else {
+              if (q.acceptedAnswers.some((a) => typeof a !== 'string' || !a.trim())) {
+                fail(`assessment-bank: ${label} has malformed "acceptedAnswers" — expected all non-empty strings`);
+              } else {
+                const normalized = q.acceptedAnswers.map(norm);
+                if (new Set(normalized).size !== normalized.length) {
+                  fail(`assessment-bank: ${label} has duplicate "acceptedAnswers" after normalization — expected unique variants`);
+                }
+                if (typeof q.answer === 'string' && q.answer.trim() && !normalized.includes(norm(q.answer))) {
+                  fail(`assessment-bank: ${label} has malformed "acceptedAnswers" — answer must be listed when both are present`);
+                }
+              }
+            }
+          }
+        }
+      });
     }
     // Bank validation against the live manifest (unique ids, existing
-    // course/topic references, answer integrity). Loader failures elsewhere
-    // are reported by their own sections; skip validation then.
+    // course/topic references, answer integrity, orphans). Loader failures
+    // elsewhere are reported by their own sections; skip validation then.
     try {
-      const { validateAssessmentBank, getAssessmentCoverage } = await import('./assessment.js');
+      const { validateAssessmentBank, getAssessmentCoverage, getAssessmentQuestionCount, getQuestionsPerCourse, getCoveredTopicsPerCourse, getQuestionsPerModule, getQuestionTypeDistribution, getExamQuestionCoverage } = await import('./assessment.js');
       const { buildTopicManifest } = await import('./topic-manifest.js');
       const manifest = buildTopicManifest({ curriculumDoc, schema: loadTopicSchema() });
       for (const e of validateAssessmentBank(assessmentBank, manifest)) fail(`assessment-bank: ${e}`);
+      // Orphan / invalid course-topic refs surface here as well (unknown
+      // topics never count as covered).
+      const validKeys = new Set(manifest.topics.map((t) => `${t.courseCode}/${t.id}`));
+      for (const q of assessmentBank.questions) {
+        if (q && typeof q.courseCode === 'string' && typeof q.topicId === 'string' && !validKeys.has(`${q.courseCode}/${q.topicId}`)) {
+          fail(`assessment-bank: question "${q.id}" is an orphan — unknown topic "${q.courseCode}/${q.topicId}" (invalid course/topic ref)`);
+        }
+      }
       const coverage = getAssessmentCoverage(assessmentBank, manifest);
+      const totalQuestions = getAssessmentQuestionCount(assessmentBank);
+      const perCourse = getQuestionsPerCourse(assessmentBank);
+      const coveredPerCourse = getCoveredTopicsPerCourse(assessmentBank, manifest);
+      const perModule = getQuestionsPerModule(assessmentBank, manifest);
+      const typeDist = getQuestionTypeDistribution(assessmentBank);
+      const examCov = getExamQuestionCoverage(assessmentBank, manifest);
+      const perCourseSum = perCourse.reduce((a, r) => a + r.questionCount, 0);
+      if (perCourseSum !== totalQuestions) fail(`assessment-bank: questions-per-course sums to ${perCourseSum} but bank holds ${totalQuestions} — expected equal`);
+      const perModuleSum = perModule.reduce((a, r) => a + r.questionCount, 0);
+      if (perModuleSum !== totalQuestions) fail(`assessment-bank: questions-per-module sums to ${perModuleSum} but bank holds ${totalQuestions} — expected equal`);
+      const typeSum = typeDist.multiple_choice + typeDist.true_false + typeDist.short_answer;
+      if (typeSum !== totalQuestions) fail(`assessment-bank: type distribution sums to ${typeSum} but bank holds ${totalQuestions} — expected equal`);
+      const coveredSum = coveredPerCourse.reduce((a, r) => a + r.coveredCount, 0);
+      if (coveredSum !== coverage.coveredCount) fail(`assessment-bank: topics-covered-per-course sums to ${coveredSum} but coverage reports ${coverage.coveredCount} — expected equal`);
       console.log(`assessment bank: ${coverage.totalQuestions} questions, ${coverage.coveredCount} covered topics, ${coverage.uncoveredTopics.length} uncovered topics`);
+      console.log(`assessment coverage: per-course [${perCourse.map((r) => `${r.courseCode}:${r.questionCount}`).join(', ')}]; types mcq=${typeDist.multiple_choice} tf=${typeDist.true_false} short=${typeDist.short_answer}; exam ${examCov.coveredExamTopics}/${examCov.totalExamTopics} (${examCov.coverage}%)`);
+      // Reproducible coverage report must exist and match the live bank.
+      if (!fs.existsSync(path.join('docs', 'assessment-coverage.md'))) {
+        fail('assessment: expected generated report docs/assessment-coverage.md — actual: missing (run node scripts/generate-assessment-coverage.js)');
+      } else {
+        const report = fs.readFileSync(path.join('docs', 'assessment-coverage.md'), 'utf-8');
+        if (!report.includes(`Questions: ${totalQuestions}`)) fail('assessment: docs/assessment-coverage.md is stale — question total does not match the live bank');
+        if (!report.includes(`Covered topics: ${coverage.coveredCount} of ${coverage.totalTopics}`)) fail('assessment: docs/assessment-coverage.md is stale — covered topics do not match the live bank');
+        if (/uncovered[^]*assessed as|assesses uncovered/i.test(report)) fail('assessment: docs/assessment-coverage.md must never imply uncovered topics are assessed');
+        if (!report.includes('not assessed')) fail('assessment: docs/assessment-coverage.md must state uncovered topics are not assessed');
+      }
+      if (!fs.existsSync(path.join('scripts', 'generate-assessment-coverage.js'))) {
+        fail('assessment: expected reproducible generator scripts/generate-assessment-coverage.js — actual: missing');
+      }
     } catch (e) {
       warn(`assessment: bank validation skipped (${(e && e.message) || e})`);
     }

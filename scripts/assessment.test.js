@@ -19,9 +19,11 @@ import { buildDashboardAssessmentModel } from '../assets/dashboard.js';
 import {
   getExplorerVisibleTopics,
   getExplorerAssessmentInfo,
+  getExplorerAssessmentCoverage,
 } from '../assets/explorer.js';
 import { buildStudyContextModel, renderStudyContext } from '../assets/topic-study-context.js';
 import { parseAssessmentHash } from '../assets/assessment-page.js';
+import { buildCoverageReport } from './generate-assessment-coverage.js';
 import { buildTopicManifest } from './topic-manifest.js';
 import { loadTopicSchema } from './topic-metadata.js';
 import { loadCurriculum } from './curriculum.js';
@@ -92,13 +94,18 @@ describe('module identity and constants', () => {
       'validateAssessmentBank', 'getQuestionsForTopic', 'createAssessmentSession',
       'evaluateAnswer', 'scoreSession', 'submitSession', 'parseAttemptStore',
       'recordAttempt', 'getTopicAssessmentState', 'buildAssessmentSummary',
-      'filterTopicsByAssessment',
+      'filterTopicsByAssessment', 'getAssessmentQuestionCount', 'getCoveredTopics',
+      'getUncoveredTopics', 'getQuestionsPerCourse', 'getCoveredTopicsPerCourse',
+      'getQuestionsPerModule', 'getTopicQuestionCounts', 'getSingleQuestionTopics',
+      'getMultiQuestionTopics', 'getExamQuestionCoverage', 'getQuestionTypeDistribution',
+      'getShortAnswerVariants', 'getAssessmentCoverage',
     ]) {
       assert.equal(Assessment[name], AssetsAssessment[name]);
     }
     assert.equal(Assessment.PASS_THRESHOLD, 70);
     assert.equal(Assessment.ASSESSMENT_STORAGE_KEY, 'tarangam_assessments_v1');
     assert.deepEqual(Assessment.ASSESSMENT_FILTERS, ['all', 'available', 'attempted', 'passed', 'needs_review']);
+    assert.deepEqual(Assessment.ASSESSMENT_DIFFICULTIES, ['beginner', 'intermediate', 'advanced']);
   });
 });
 
@@ -177,6 +184,153 @@ describe('short-answer normalization', () => {
     assert.equal(Assessment.evaluateAnswer(q, 'Alpha').correct, false);
     assert.equal(Assessment.evaluateAnswer(q, '').correct, false);
     assert.equal(Assessment.evaluateAnswer(q, '   ').correct, false);
+  });
+});
+
+describe('acceptedAnswers short-answer support', () => {
+  const variantBank = {
+    version: 1,
+    questions: [
+      {
+        id: 'q_v1', courseCode: 'C1', topicId: 'm1_01_a', type: 'short_answer',
+        question: 'Hyphen word?', answer: 'non-negative',
+        acceptedAnswers: ['non-negative', 'nonnegative'],
+        explanation: 'E.', difficulty: 'beginner', examRelevance: 'high',
+      },
+      {
+        id: 'q_v2', courseCode: 'C1', topicId: 'm1_01_a', type: 'short_answer',
+        question: 'Volts?', answer: '0.7',
+        acceptedAnswers: ['0.7', '0.7V', '0.7 V'],
+        explanation: 'E.', difficulty: 'beginner', examRelevance: 'high',
+      },
+    ],
+  };
+  it('matches the normalized answer or any accepted variant', () => {
+    assert.equal(Assessment.evaluateAnswer(variantBank.questions[0], 'nonnegative').correct, true);
+    assert.equal(Assessment.evaluateAnswer(variantBank.questions[0], 'NON-NEGATIVE ').correct, true);
+    assert.equal(Assessment.evaluateAnswer(variantBank.questions[0], 'negative').correct, false);
+    assert.equal(Assessment.evaluateAnswer(variantBank.questions[1], '0.7V').correct, true);
+    assert.equal(Assessment.evaluateAnswer(variantBank.questions[1], '0.7 v').correct, true);
+    assert.equal(Assessment.evaluateAnswer(variantBank.questions[1], '0.8').correct, false);
+    assert.deepEqual(Assessment.getShortAnswerVariants(variantBank.questions[0]), ['non-negative', 'nonnegative']);
+    assert.deepEqual(Assessment.getShortAnswerVariants(variantBank.questions[1]), ['0.7', '0.7v', '0.7 v']);
+  });
+  it('accepts banks where short answers omit acceptedAnswers', () => {
+    assert.deepEqual(Assessment.validateAssessmentBank(bank, fixture), []);
+  });
+  it('rejects acceptedAnswers that omit the primary answer', () => {
+    const bad = { version: 1, questions: [{ ...variantBank.questions[0], id: 'q_bad', acceptedAnswers: ['nonnegative'] }] };
+    // Normalized 'non-negative' is missing from ['nonnegative'].
+    const missing = { version: 1, questions: [{ ...variantBank.questions[0], id: 'q_bad2', answer: 'non-negative', acceptedAnswers: ['negative'] }] };
+    assert.ok(Assessment.validateAssessmentBank(missing, fixture).some((e) => e.includes('must be listed in "acceptedAnswers"')));
+  });
+  it('rejects malformed acceptedAnswers', () => {
+    const empty = { version: 1, questions: [{ ...variantBank.questions[0], id: 'q_e', acceptedAnswers: [] }] };
+    assert.ok(Assessment.validateAssessmentBank(empty, fixture).some((e) => e.includes('"acceptedAnswers" must be a non-empty array')));
+    const nonString = { version: 1, questions: [{ ...variantBank.questions[0], id: 'q_n', acceptedAnswers: ['non-negative', 42] }] };
+    assert.ok(Assessment.validateAssessmentBank(nonString, fixture).some((e) => e.includes('"acceptedAnswers" must all be non-empty strings')));
+    const dup = { version: 1, questions: [{ ...variantBank.questions[0], id: 'q_d', acceptedAnswers: ['non-negative', ' Non-Negative '] }] };
+    assert.ok(Assessment.validateAssessmentBank(dup, fixture).some((e) => e.includes('"acceptedAnswers" must be unique')));
+  });
+  it('rejects acceptedAnswers on multiple_choice and true_false', () => {
+    const mcq = { version: 1, questions: [{ ...bank.questions[0], id: 'q_mx', acceptedAnswers: ['A'] }] };
+    assert.ok(Assessment.validateAssessmentBank(mcq, fixture).some((e) => e.includes('must not carry "acceptedAnswers"')));
+    const tf = { version: 1, questions: [{ ...bank.questions[1], id: 'q_tx', acceptedAnswers: ['true'] }] };
+    assert.ok(Assessment.validateAssessmentBank(tf, fixture).some((e) => e.includes('must not carry "acceptedAnswers"')));
+  });
+});
+
+describe('deterministic coverage APIs', () => {
+  it('counts total questions and covered/uncovered topics', () => {
+    assert.equal(Assessment.getAssessmentQuestionCount(bank), 4);
+    assert.deepEqual(Assessment.getCoveredTopics(bank, fixture).map((t) => `${t.courseCode}/${t.id}`), ['C1/m1_01_a', 'C1/m1_02_b', 'C2/m1_01_z']);
+    assert.deepEqual(Assessment.getUncoveredTopics(bank, fixture).map((t) => `${t.courseCode}/${t.id}`), ['C1/m2_01_c']);
+    const cov = Assessment.getAssessmentCoverage(bank, fixture);
+    assert.equal(cov.totalQuestions, 4);
+    assert.equal(cov.coveredCount, 3);
+    assert.equal(cov.totalTopics, 4);
+  });
+  it('reports questions-per-course deterministically', () => {
+    assert.deepEqual(Assessment.getQuestionsPerCourse(bank), [
+      { courseCode: 'C1', questionCount: 3 },
+      { courseCode: 'C2', questionCount: 1 },
+    ]);
+  });
+  it('reports topics-covered-per-course deterministically', () => {
+    assert.deepEqual(Assessment.getCoveredTopicsPerCourse(bank, fixture), [
+      { courseCode: 'C1', courseName: 'Course One', coveredCount: 2, totalTopics: 3, uncoveredCount: 1 },
+      { courseCode: 'C2', courseName: 'Course Two', coveredCount: 1, totalTopics: 1, uncoveredCount: 0 },
+    ]);
+  });
+  it('reports questions-per-module deterministically', () => {
+    assert.deepEqual(Assessment.getQuestionsPerModule(bank, fixture), [
+      { courseCode: 'C1', module: 1, moduleName: 'M1', questionCount: 3 },
+      { courseCode: 'C1', module: 2, moduleName: 'M2', questionCount: 0 },
+      { courseCode: 'C2', module: 1, moduleName: 'M1', questionCount: 1 },
+    ]);
+  });
+  it('splits single- vs multi-question topics', () => {
+    assert.deepEqual(Assessment.getTopicQuestionCounts(bank, fixture), [
+      { courseCode: 'C1', id: 'm1_01_a', questionCount: 2 },
+      { courseCode: 'C1', id: 'm1_02_b', questionCount: 1 },
+      { courseCode: 'C2', id: 'm1_01_z', questionCount: 1 },
+    ]);
+    assert.deepEqual(Assessment.getSingleQuestionTopics(bank, fixture).map((t) => t.id), ['m1_02_b', 'm1_01_z']);
+    assert.deepEqual(Assessment.getMultiQuestionTopics(bank, fixture).map((t) => t.id), ['m1_01_a']);
+  });
+  it('reports exam-relevant covered/uncovered without attempts', () => {
+    const exam = Assessment.getExamQuestionCoverage(bank, fixture);
+    assert.equal(exam.totalExamTopics, 4);
+    assert.equal(exam.coveredExamTopics, 3);
+    assert.equal(exam.uncoveredExamTopics, 1);
+    assert.equal(exam.coverage, 75);
+    assert.deepEqual(exam.uncovered.map((t) => t.id), ['m2_01_c']);
+  });
+  it('reports question-type distribution as counts only', () => {
+    assert.deepEqual(Assessment.getQuestionTypeDistribution(bank), { multiple_choice: 2, true_false: 1, short_answer: 1 });
+  });
+});
+
+describe('extended QA failure cases', () => {
+  it('detects duplicate question text within a topic', () => {
+    const dup = { version: 1, questions: [bank.questions[0], { ...bank.questions[0], id: 'q_dup' }] };
+    assert.ok(Assessment.validateAssessmentBank(dup, fixture).some((e) => e.includes('duplicate question text')));
+  });
+  it('detects invalid course/topic refs as orphans', () => {
+    const badCourse = { version: 1, questions: [{ ...bank.questions[0], id: 'q_c', courseCode: 'CX' }] };
+    assert.ok(Assessment.validateAssessmentBank(badCourse, fixture).some((e) => e.includes('orphan reference')));
+    const badTopic = { version: 1, questions: [{ ...bank.questions[0], id: 'q_t', topicId: 'ghost' }] };
+    assert.ok(Assessment.validateAssessmentBank(badTopic, fixture).some((e) => e.includes('orphan reference')));
+  });
+  it('detects invalid answer refs', () => {
+    const tf = { version: 1, questions: [{ ...bank.questions[1], id: 'q_tf', answer: 'yes' }] };
+    assert.ok(Assessment.validateAssessmentBank(tf, fixture).some((e) => e.includes('must be a boolean')));
+    const short = { version: 1, questions: [{ ...bank.questions[2], id: 'q_s', answer: '  ' }] };
+    assert.ok(Assessment.validateAssessmentBank(short, fixture).some((e) => e.includes('must be a non-empty string')));
+  });
+  it('detects empty options', () => {
+    const bad = { version: 1, questions: [{ ...bank.questions[0], id: 'q_e', options: ['A', '  '] }] };
+    assert.ok(Assessment.validateAssessmentBank(bad, fixture).some((e) => e.includes('empty option')));
+  });
+  it('detects duplicate MCQ options', () => {
+    const bad = { version: 1, questions: [{ ...bank.questions[0], id: 'q_d', options: ['A', 'A'], answer: 'A' }] };
+    assert.ok(Assessment.validateAssessmentBank(bad, fixture).some((e) => e.includes('must be unique')));
+  });
+  it('detects missing explanations', () => {
+    const empty = { version: 1, questions: [{ ...bank.questions[0], id: 'q_x', explanation: '   ' }] };
+    assert.ok(Assessment.validateAssessmentBank(empty, fixture).some((e) => e.includes('"explanation" must be a non-empty string')));
+  });
+  it('detects malformed difficulty/examRelevance metadata', () => {
+    const diff = { version: 1, questions: [{ ...bank.questions[0], id: 'q_df', difficulty: 'easy' }] };
+    assert.ok(Assessment.validateAssessmentBank(diff, fixture).some((e) => e.includes('invalid difficulty')));
+    const exam = { version: 1, questions: [{ ...bank.questions[0], id: 'q_ef', examRelevance: 'critical' }] };
+    assert.ok(Assessment.validateAssessmentBank(exam, fixture).some((e) => e.includes('invalid examRelevance')));
+  });
+  it('detects missing courseCode/topicId fields', () => {
+    const { courseCode, ...rest } = bank.questions[0];
+    void courseCode;
+    const bad = { version: 1, questions: [{ ...rest, id: 'q_m' }] };
+    assert.ok(Assessment.validateAssessmentBank(bad, fixture).some((e) => e.includes('missing required field "courseCode"')));
   });
 });
 
@@ -469,6 +623,73 @@ describe('event synchronization', () => {
   });
 });
 
+describe('dashboard and explorer coverage wiring', () => {
+  it('exposes coverage breakdowns through the dashboard model', () => {
+    const model = buildDashboardAssessmentModel(bank, fixture, Assessment.emptyAttemptStore());
+    assert.equal(model.totalQuestions, 4);
+    assert.equal(model.coveredCount, 3);
+    assert.equal(model.totalTopics, 4);
+    assert.equal(model.uncoveredCount, 1);
+    assert.deepEqual(model.typeDistribution, { multiple_choice: 2, true_false: 1, short_answer: 1 });
+    assert.equal(model.examCoverage.coveredExamTopics, 3);
+    assert.deepEqual(model.questionsPerCourse, [
+      { courseCode: 'C1', questionCount: 3 },
+      { courseCode: 'C2', questionCount: 1 },
+    ]);
+    assert.equal(model.coveredPerCourse.length, 2);
+    assert.equal(model.questionsPerModule.length, 3);
+    const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
+    assert.ok(js.includes('getAssessmentQuestionCount'));
+    assert.ok(js.includes('getExamQuestionCoverage'));
+    assert.ok(js.includes('getQuestionTypeDistribution'));
+    assert.ok(js.includes('Start assessment'));
+  });
+  it('exposes deterministic coverage indicators through the explorer', () => {
+    const cov = getExplorerAssessmentCoverage(bank, fixture);
+    assert.deepEqual(
+      { totalQuestions: cov.totalQuestions, coveredCount: cov.coveredCount, totalTopics: cov.totalTopics, uncoveredCount: cov.uncoveredCount },
+      { totalQuestions: 4, coveredCount: 3, totalTopics: 4, uncoveredCount: 1 }
+    );
+    assert.equal(cov.examCoverage.coveredExamTopics, 3);
+    assert.deepEqual(cov.typeDistribution, { multiple_choice: 2, true_false: 1, short_answer: 1 });
+    const js = fs.readFileSync('assets/explorer.js', 'utf-8');
+    assert.ok(js.includes('getExplorerAssessmentCoverage'));
+    assert.ok(js.includes('filterTopicsByAssessment'));
+    assert.ok(fs.readFileSync('explorer.html', 'utf-8').includes('id="xp-assessment"'));
+  });
+});
+
+describe('coverage report reproducibility', () => {
+  const schema = loadTopicSchema();
+  const curriculumDoc = loadCurriculum();
+  const manifest = buildTopicManifest({ curriculumDoc, schema });
+  const liveBank = JSON.parse(fs.readFileSync('data/assessments.json', 'utf-8'));
+  it('generates the report deterministically from the live bank', () => {
+    const first = buildCoverageReport({ bank: liveBank, manifest });
+    const second = buildCoverageReport({ bank: liveBank, manifest });
+    assert.equal(first, second);
+    assert.ok(fs.existsSync('docs/assessment-coverage.md'));
+    assert.ok(fs.existsSync('scripts/generate-assessment-coverage.js'));
+    const onDisk = fs.readFileSync('docs/assessment-coverage.md', 'utf-8');
+    assert.equal(onDisk, first);
+  });
+  it('reports totals, breakdowns, and gaps without implying uncovered work is assessed', () => {
+    const report = fs.readFileSync('docs/assessment-coverage.md', 'utf-8');
+    assert.ok(report.includes('Questions: 140'));
+    assert.ok(report.includes('Covered topics: 70 of 432'));
+    assert.ok(report.includes('Uncovered topics: 362'));
+    assert.ok(report.includes('multiple_choice | 70'));
+    assert.ok(report.includes('true_false | 65'));
+    assert.ok(report.includes('short_answer | 5'));
+    assert.ok(report.includes('| GAMAT301 | 12 | 6 |'));
+    assert.ok(report.includes('Exam-relevant coverage'));
+    assert.ok(report.includes('Single-question topics: 0'));
+    assert.ok(report.includes('Multi-question topics: 70'));
+    assert.ok(report.includes('not assessed'));
+    assert.ok(!/uncovered[^]*assessed as|assesses uncovered/i.test(report));
+  });
+});
+
 describe('live 432-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
@@ -487,6 +708,30 @@ describe('live 432-topic repository', () => {
       JSON.stringify(Assessment.getAssessmentCoverage(liveBank, manifest)),
       JSON.stringify(Assessment.getAssessmentCoverage(liveBank, manifest))
     );
+    assert.equal(Assessment.getAssessmentQuestionCount(liveBank), 140);
+    assert.deepEqual(Assessment.getCoveredTopics(liveBank, manifest).length, 70);
+    assert.deepEqual(Assessment.getUncoveredTopics(liveBank, manifest).length, 362);
+    const perCourse = Assessment.getQuestionsPerCourse(liveBank);
+    assert.equal(perCourse.reduce((a, r) => a + r.questionCount, 0), 140);
+    assert.deepEqual(perCourse.find((r) => r.courseCode === 'GAMAT301'), { courseCode: 'GAMAT301', questionCount: 12 });
+    assert.deepEqual(perCourse.find((r) => r.courseCode === 'GXEST104'), { courseCode: 'GXEST104', questionCount: 12 });
+    const coveredPerCourse = Assessment.getCoveredTopicsPerCourse(liveBank, manifest);
+    assert.equal(coveredPerCourse.reduce((a, r) => a + r.coveredCount, 0), 70);
+    const perModule = Assessment.getQuestionsPerModule(liveBank, manifest);
+    assert.equal(perModule.reduce((a, r) => a + r.questionCount, 0), 140);
+    assert.equal(perModule.length, 64);
+    assert.deepEqual(Assessment.getQuestionTypeDistribution(liveBank), { multiple_choice: 70, true_false: 65, short_answer: 5 });
+    assert.equal(Assessment.getSingleQuestionTopics(liveBank, manifest).length, 0);
+    assert.equal(Assessment.getMultiQuestionTopics(liveBank, manifest).length, 70);
+    const examCov = Assessment.getExamQuestionCoverage(liveBank, manifest);
+    assert.equal(examCov.totalExamTopics, 432);
+    assert.equal(examCov.coveredExamTopics, 70);
+    assert.equal(examCov.uncoveredExamTopics, 362);
+    // Accepted-answer variants already shipped keep evaluating exactly.
+    const hyphen = liveBank.questions.find((q) => q.id === 'q_gamat301_m3_01_02');
+    assert.equal(Assessment.evaluateAnswer(hyphen, 'nonnegative').correct, true);
+    const volts = liveBank.questions.find((q) => q.id === 'q_gxest104_m3_01_02');
+    assert.equal(Assessment.evaluateAnswer(volts, '0.7V').correct, true);
   });
 
   it('runs sessions, attempts, and integrations on live topics', () => {

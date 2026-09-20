@@ -14,6 +14,10 @@
  *   listing preserves that order (no random selection).
  * - Question types: "multiple_choice" (options required), "true_false"
  *   (boolean answer), "short_answer" (exact match after normalization).
+ *   Short answers may carry optional "acceptedAnswers" (non-empty string
+ *   array); evaluation matches the normalized answer OR any normalized
+ *   variant, and validation requires the primary answer to be listed when
+ *   both are present. Other types must not carry "acceptedAnswers".
  * - Pass threshold is centralized: PASS_THRESHOLD = 70. Submitted
  *   sessions at/above 70% are "passed", below are "needs_review".
  *   Attempt states: "not_attempted" | "attempted" | "passed" |
@@ -21,6 +25,11 @@
  * - Evaluation is exact: MCQ compares option identity (===), true/false
  *   compares normalized booleans, short answers compare after trim +
  *   lowercase + whitespace-collapse. No semantic similarity, ever.
+ * - Coverage APIs are pure counts only (total questions, covered/
+ *   uncovered topics, per-course/per-module breakdowns, single vs multi,
+ *   exam-relevant covered/uncovered, type distribution). No quality
+ *   scores, ever. Uncovered topics are listed explicitly and never
+ *   implied to be assessed.
  * - Attempts persist under ASSESSMENT_STORAGE_KEY ({ version, attempts })
  *   holding only identifiers, answers, results, and timestamps — never a
  *   copy of learner progress. Malformed data parses to an empty store.
@@ -38,6 +47,9 @@ export const QUESTION_TYPE_MCQ = 'multiple_choice';
 export const QUESTION_TYPE_TF = 'true_false';
 export const QUESTION_TYPE_SHORT = 'short_answer';
 export const QUESTION_TYPES = [QUESTION_TYPE_MCQ, QUESTION_TYPE_TF, QUESTION_TYPE_SHORT];
+
+// Allowed difficulty metadata for bank questions (mirrors topic metadata).
+export const ASSESSMENT_DIFFICULTIES = ['beginner', 'intermediate', 'advanced'];
 
 export const ASSESSMENT_STATE_NOT_ATTEMPTED = 'not_attempted';
 export const ASSESSMENT_STATE_ATTEMPTED = 'attempted';
@@ -191,11 +203,26 @@ export function validateQuestion(question, index) {
   if (question.id !== undefined && !isNonEmptyString(question.id)) {
     errors.push(`${label}: "id" must be a non-empty string`);
   }
+  if (question.courseCode !== undefined && !isNonEmptyString(question.courseCode)) {
+    errors.push(`${label}: "courseCode" must be a non-empty string`);
+  }
+  if (question.topicId !== undefined && !isNonEmptyString(question.topicId)) {
+    errors.push(`${label}: "topicId" must be a non-empty string`);
+  }
   if (!QUESTION_TYPES.includes(question.type)) {
     errors.push(`${label}: invalid type "${question.type}" — expected one of ${QUESTION_TYPES.join(', ')}`);
   }
   if (question.question !== undefined && !isNonEmptyString(question.question)) {
     errors.push(`${label}: "question" must be a non-empty string`);
+  }
+  if (question.explanation !== undefined && !isNonEmptyString(question.explanation)) {
+    errors.push(`${label}: "explanation" must be a non-empty string`);
+  }
+  if (question.difficulty !== undefined && !ASSESSMENT_DIFFICULTIES.includes(question.difficulty)) {
+    errors.push(`${label}: invalid difficulty "${question.difficulty}" — expected one of ${ASSESSMENT_DIFFICULTIES.join(', ')} (malformed metadata)`);
+  }
+  if (question.examRelevance !== undefined && !EXAM_ASSESSMENT_LEVELS.includes(question.examRelevance)) {
+    errors.push(`${label}: invalid examRelevance "${question.examRelevance}" — expected one of ${EXAM_ASSESSMENT_LEVELS.join(', ')} (malformed metadata)`);
   }
   if (question.type === QUESTION_TYPE_MCQ) {
     if (!Array.isArray(question.options) || question.options.length < 2) {
@@ -204,37 +231,69 @@ export function validateQuestion(question, index) {
       if (!question.options.every((o) => typeof o === 'string')) {
         errors.push(`${label}: "options" must all be strings`);
       }
+      if (question.options.some((o) => typeof o !== 'string' || !o.trim())) {
+        errors.push(`${label}: "options" must all be non-empty strings (empty option)`);
+      }
       if (new Set(question.options).size !== question.options.length) {
-        errors.push(`${label}: "options" must be unique`);
+        errors.push(`${label}: "options" must be unique (duplicate MCQ options)`);
       }
       if (!question.options.includes(question.answer)) {
-        errors.push(`${label}: correct answer must belong to "options"`);
+        errors.push(`${label}: correct answer must belong to "options" (invalid answer ref)`);
       }
+    }
+    if (question.acceptedAnswers !== undefined) {
+      errors.push(`${label}: multiple_choice must not carry "acceptedAnswers" (only short_answer may)`);
     }
   }
   if (question.type === QUESTION_TYPE_TF && typeof question.answer !== 'boolean') {
-    errors.push(`${label}: true_false "answer" must be a boolean`);
+    errors.push(`${label}: true_false "answer" must be a boolean (invalid answer ref)`);
+  }
+  if (question.type === QUESTION_TYPE_TF && question.acceptedAnswers !== undefined) {
+    errors.push(`${label}: true_false must not carry "acceptedAnswers" (only short_answer may)`);
   }
   if (question.type === QUESTION_TYPE_SHORT) {
     if (typeof question.answer !== 'string' || !question.answer.trim()) {
-      errors.push(`${label}: short_answer "answer" must be a non-empty string`);
+      errors.push(`${label}: short_answer "answer" must be a non-empty string (invalid answer ref)`);
     }
     if (question.options !== undefined) {
       errors.push(`${label}: short_answer must not carry "options"`);
+    }
+    if (question.acceptedAnswers !== undefined) {
+      if (!Array.isArray(question.acceptedAnswers) || question.acceptedAnswers.length === 0) {
+        errors.push(`${label}: short_answer "acceptedAnswers" must be a non-empty array when present`);
+      } else {
+        if (!question.acceptedAnswers.every((a) => typeof a === 'string' && a.trim().length > 0)) {
+          errors.push(`${label}: short_answer "acceptedAnswers" must all be non-empty strings`);
+        } else {
+          const normalizedAccepted = question.acceptedAnswers.map((a) => normalizeShortAnswer(a));
+          if (new Set(normalizedAccepted).size !== normalizedAccepted.length) {
+            errors.push(`${label}: short_answer "acceptedAnswers" must be unique after normalization`);
+          }
+          if (typeof question.answer === 'string' && question.answer.trim()) {
+            const normalizedAnswer = normalizeShortAnswer(question.answer);
+            if (!normalizedAccepted.includes(normalizedAnswer)) {
+              errors.push(`${label}: short_answer "answer" must be listed in "acceptedAnswers" when both are present`);
+            }
+          }
+        }
+      }
     }
   }
   return errors;
 }
 
 // Validate a whole bank against a manifest. Returns error strings
-// (empty = valid): unique ids, required fields, valid types, existing
-// course/topic references, answer integrity. Never throws.
+// (empty = valid): unique ids, duplicate question text within a topic,
+// required fields, valid types, existing course/topic references, answer
+// integrity, explanation presence, option integrity, acceptedAnswers
+// integrity, malformed metadata. Never throws.
 export function validateAssessmentBank(bank, manifest) {
   if (!bank || typeof bank !== 'object' || !Array.isArray(bank.questions)) {
     return ['assessment bank must be an object with a "questions" array'];
   }
   const errors = [];
   const seen = new Set();
+  const textSeen = new Map();
   bank.questions.forEach((q, i) => {
     for (const e of validateQuestion(q, i)) errors.push(e);
     if (q && typeof q.id === 'string' && q.id) {
@@ -244,6 +303,16 @@ export function validateAssessmentBank(bank, manifest) {
     if (q && typeof q.courseCode === 'string' && typeof q.topicId === 'string' && manifest) {
       if (!getTopic(manifest, q.courseCode, q.topicId)) {
         errors.push(`question "${q.id || i}": orphan reference to unknown topic "${q.courseCode}/${q.topicId}"`);
+      }
+    }
+    if (q && typeof q.question === 'string' && typeof q.courseCode === 'string' && typeof q.topicId === 'string') {
+      const key = `${q.courseCode}/${q.topicId}::${normalizeShortAnswer(q.question)}`;
+      if (q.question.trim()) {
+        if (textSeen.has(key)) {
+          errors.push(`duplicate question text in topic "${q.courseCode}/${q.topicId}": "${q.id || i}" duplicates "${textSeen.get(key)}"`);
+        } else {
+          textSeen.set(key, q.id || String(i));
+        }
       }
     }
   });
@@ -305,6 +374,172 @@ export function getAssessmentCoverage(bank, manifest) {
     coveredCount: covered.length,
     totalTopics: topics.length,
   };
+}
+
+// --- Pure deterministic coverage breakdowns (counts only, no scores) --------
+// Every function is pure, dependency-free apart from the manifest lookup,
+// deterministic across runs, and never implies uncovered topics are
+// assessed. Orderings: courses sorted by code, modules by (course, number),
+// covered topics in bank order, uncovered in manifest order.
+
+// Total questions in the bank (author order length, orphans included).
+export function getAssessmentQuestionCount(bank) {
+  return bankQuestions(bank).length;
+}
+
+// Topics with questions (bank order, deduplicated) and without (manifest order).
+export function getCoveredTopics(bank, manifest) {
+  return getAssessmentCoverage(bank, manifest).coveredTopics;
+}
+
+export function getUncoveredTopics(bank, manifest) {
+  return getAssessmentCoverage(bank, manifest).uncoveredTopics;
+}
+
+// Questions per course, sorted by courseCode.
+export function getQuestionsPerCourse(bank) {
+  const counts = new Map();
+  for (const q of bankQuestions(bank)) {
+    if (!q || typeof q.courseCode !== 'string' || !q.courseCode.trim()) continue;
+    counts.set(q.courseCode, (counts.get(q.courseCode) || 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([courseCode, questionCount]) => ({ courseCode, questionCount }));
+}
+
+// Covered vs total topics per course, sorted by courseCode. Manifest gives
+// totals; the bank gives covered sets (orphans excluded when a manifest is
+// supplied). Uncovered = total - covered, never negative.
+export function getCoveredTopicsPerCourse(bank, manifest) {
+  const topics = manifest && Array.isArray(manifest.topics) ? manifest.topics : [];
+  const totals = new Map();
+  const names = new Map();
+  for (const t of topics) {
+    totals.set(t.courseCode, (totals.get(t.courseCode) || 0) + 1);
+    if (!names.has(t.courseCode)) names.set(t.courseCode, t.courseName || t.courseCode);
+  }
+  const covered = new Map();
+  for (const q of bankQuestions(bank)) {
+    if (!q || typeof q.courseCode !== 'string' || typeof q.topicId !== 'string') continue;
+    if (manifest && !getTopic(manifest, q.courseCode, q.topicId)) continue;
+    if (!covered.has(q.courseCode)) covered.set(q.courseCode, new Set());
+    covered.get(q.courseCode).add(q.topicId);
+  }
+  const codes = new Set([...totals.keys(), ...covered.keys()]);
+  return [...codes].sort().map((courseCode) => {
+    const coveredCount = covered.has(courseCode) ? covered.get(courseCode).size : 0;
+    const totalTopics = totals.get(courseCode) || 0;
+    return {
+      courseCode,
+      courseName: names.get(courseCode) || courseCode,
+      coveredCount,
+      totalTopics,
+      uncoveredCount: Math.max(0, totalTopics - coveredCount),
+    };
+  });
+}
+
+// Questions per (course, module), sorted by (courseCode, module). Module
+// resolution comes from the manifest (orphans excluded); without a manifest
+// there is no module to attribute, so the result is empty. Every manifest
+// module appears exactly once, even with zero questions.
+export function getQuestionsPerModule(bank, manifest) {
+  const topics = manifest && Array.isArray(manifest.topics) ? manifest.topics : [];
+  if (!topics.length) return [];
+  const counts = new Map();
+  const names = new Map();
+  for (const t of topics) {
+    const key = `${t.courseCode}/${t.module}`;
+    if (!counts.has(key)) {
+      counts.set(key, 0);
+      names.set(key, t.moduleName || `Module ${t.module}`);
+    }
+  }
+  for (const q of bankQuestions(bank)) {
+    if (!q || typeof q.courseCode !== 'string' || typeof q.topicId !== 'string') continue;
+    const topic = getTopic(manifest, q.courseCode, q.topicId);
+    if (!topic) continue;
+    const key = `${topic.courseCode}/${topic.module}`;
+    counts.set(key, (counts.get(key) || 0) + 1);
+    if (topic.moduleName) names.set(key, topic.moduleName);
+  }
+  const rows = [];
+  for (const [key, questionCount] of counts.entries()) {
+    const slash = key.lastIndexOf('/');
+    const courseCode = key.slice(0, slash);
+    const module = Number(key.slice(slash + 1));
+    rows.push({ courseCode, module, moduleName: names.get(key) || `Module ${module}`, questionCount });
+  }
+  rows.sort((a, b) => a.courseCode.localeCompare(b.courseCode) || a.module - b.module);
+  return rows;
+}
+
+// Question counts per covered topic (bank order, deduplicated).
+export function getTopicQuestionCounts(bank, manifest) {
+  const counts = new Map();
+  const order = [];
+  for (const q of bankQuestions(bank)) {
+    if (!q || typeof q.courseCode !== 'string' || typeof q.topicId !== 'string') continue;
+    if (manifest && !getTopic(manifest, q.courseCode, q.topicId)) continue;
+    const key = `${q.courseCode}/${q.topicId}`;
+    if (!counts.has(key)) {
+      counts.set(key, 0);
+      order.push({ courseCode: q.courseCode, id: q.topicId });
+    }
+    counts.set(key, counts.get(key) + 1);
+  }
+  return order.map(({ courseCode, id }) => ({
+    courseCode,
+    id,
+    questionCount: counts.get(`${courseCode}/${id}`),
+  }));
+}
+
+// Single-question topics (exactly 1) vs multi-question topics (>1).
+export function getSingleQuestionTopics(bank, manifest) {
+  return getTopicQuestionCounts(bank, manifest).filter((r) => r.questionCount === 1);
+}
+
+export function getMultiQuestionTopics(bank, manifest) {
+  return getTopicQuestionCounts(bank, manifest).filter((r) => r.questionCount > 1);
+}
+
+// Exam-relevant coverage (pure, no attempts): which exam-relevant manifest
+// topics have questions. Uncovered exam topics are listed explicitly — never
+// claimed as assessed.
+export function getExamQuestionCoverage(bank, manifest) {
+  const topics = manifest && Array.isArray(manifest.topics) ? manifest.topics : [];
+  const examTopics = topics.filter((t) => EXAM_ASSESSMENT_LEVELS.includes(t.examRelevance));
+  const coveredKeys = new Set();
+  for (const q of bankQuestions(bank)) {
+    if (!q || typeof q.courseCode !== 'string' || typeof q.topicId !== 'string') continue;
+    if (manifest && !getTopic(manifest, q.courseCode, q.topicId)) continue;
+    coveredKeys.add(`${q.courseCode}/${q.topicId}`);
+  }
+  const covered = examTopics
+    .filter((t) => coveredKeys.has(`${t.courseCode}/${t.id}`))
+    .map((t) => ({ courseCode: t.courseCode, id: t.id }));
+  const uncovered = examTopics
+    .filter((t) => !coveredKeys.has(`${t.courseCode}/${t.id}`))
+    .map((t) => ({ courseCode: t.courseCode, id: t.id }));
+  return {
+    totalExamTopics: examTopics.length,
+    coveredExamTopics: covered.length,
+    uncoveredExamTopics: uncovered.length,
+    covered,
+    uncovered,
+    coverage: examTopics.length ? Math.round((covered.length / examTopics.length) * 100) : 0,
+  };
+}
+
+// Question-type distribution (counts only, no scores).
+export function getQuestionTypeDistribution(bank) {
+  const dist = { multiple_choice: 0, true_false: 0, short_answer: 0 };
+  for (const q of bankQuestions(bank)) {
+    if (q && Object.prototype.hasOwnProperty.call(dist, q.type)) dist[q.type] += 1;
+  }
+  return dist;
 }
 
 // --- Session engine (deterministic, no randomness) -------------------------------
@@ -417,8 +652,31 @@ export function normalizeBoolean(value) {
   return null;
 }
 
+// Normalized acceptable answers for a short-answer question: the primary
+// answer plus any acceptedAnswers, deduplicated after normalization.
+// Non-short questions yield []. Never throws.
+export function getShortAnswerVariants(question) {
+  if (!question || question.type !== QUESTION_TYPE_SHORT) return [];
+  const seen = new Set();
+  const out = [];
+  const push = (value) => {
+    if (typeof value !== 'string') return;
+    const normalized = normalizeShortAnswer(value);
+    if (!normalized || seen.has(normalized)) return;
+    seen.add(normalized);
+    out.push(normalized);
+  };
+  push(question.answer);
+  if (Array.isArray(question.acceptedAnswers)) {
+    for (const variant of question.acceptedAnswers) push(variant);
+  }
+  return out;
+}
+
 // Evaluate one answer. Returns { correct, expected, received }.
 // Unanswerable input (undefined/null/'' for short text) counts incorrect.
+// Short answers match (after normalization) the primary answer OR any
+// acceptedAnswers variant — exact only, never semantic.
 export function evaluateAnswer(question, answer) {
   if (!question || !QUESTION_TYPES.includes(question.type)) {
     return { correct: false, expected: null, received: answer ?? null };
@@ -436,7 +694,9 @@ export function evaluateAnswer(question, answer) {
   }
   const received = normalizeShortAnswer(answer);
   const expected = normalizeShortAnswer(question.answer);
-  return { correct: received.length > 0 && received === expected, expected, received };
+  const variants = new Set(getShortAnswerVariants(question));
+  if (!variants.size) variants.add(expected);
+  return { correct: received.length > 0 && variants.has(received), expected, received };
 }
 
 // --- Scoring --------------------------------------------------------------------------
