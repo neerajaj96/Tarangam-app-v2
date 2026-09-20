@@ -1,3 +1,28 @@
+---
+id: m3_07_m3_mixed_drill
+courseCode: PECST637
+module: 3
+sequence: 7
+title: 'M3 Drill: Ciphers at Exam Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Trace structures from Feistel rounds to SPN transforms
+  - Place modes and sprint keygens behind gates
+  - Narrate protocols without dropping authentication holes
+concepts:
+  - cipher structures
+  - protocol narration
+prerequisites:
+  - m3_01_des_structure_strength
+  - m3_02_aes_structure_modes
+  - m3_05_rsa_keygen_decrypt
+  - m3_06_diffie_hellman_mitm
+examRelevance: high
+tags:
+  - modern-ciphers
+  - m3-drill
+---
 # M3 Drill: Ciphers at Exam Pace
 
 **Feistel-to-RSA in one sitting — structure traces, mode placements, keygen sprints, protocol narrations.**

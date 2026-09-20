@@ -35,9 +35,9 @@ describe('manifest contents', () => {
     assert.equal(manifest.aggregates.totalTopics, 432);
   });
 
-  it('contains exactly 316 metadata topics', () => {
-    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 316);
-    assert.equal(manifest.aggregates.metadataTopics, 316);
+  it('contains exactly 341 metadata topics', () => {
+    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 341);
+    assert.equal(manifest.aggregates.metadataTopics, 341);
   });
 
   it('represents the GAMAT301 prerequisite chain correctly', () => {

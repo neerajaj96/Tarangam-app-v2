@@ -1,3 +1,26 @@
+---
+id: m4_05_protocol_drill
+courseCode: PECST637
+module: 4
+sequence: 5
+title: 'Protocol Drill: Sign, Verify & Chain Walk'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Stamp signatures and check verifications round-trip exactly
+  - Walk chains with freshening decisions at every link
+  - Fail closed at the first red flag under pressure
+concepts:
+  - ceremony traces
+  - chain validation
+prerequisites:
+  - m4_03_digital_signatures
+  - m4_04_key_mgmt_pki
+examRelevance: medium
+tags:
+  - protocols
+  - ceremony-drill
+---
 # Protocol Drill: Sign, Verify & Chain Walk
 
 **Ceremony traces — signature round-trips, chain validation runs, and revocation decisions under time pressure.**

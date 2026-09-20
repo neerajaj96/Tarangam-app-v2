@@ -1,3 +1,25 @@
+---
+id: m1_01_divisibility_euclid
+courseCode: PECST637
+module: 1
+sequence: 1
+title: 'Divisibility, Euclid & Extended Euclid'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Divide with quotient-remainder discipline for crypto arithmetic
+  - Compute gcds by repeated remainders to the last nonzero holdout
+  - Invert via back-substitution exactly when gcd equals one
+concepts:
+  - division algorithm
+  - Euclidean algorithm
+  - modular inverses
+prerequisites: []
+examRelevance: medium
+tags:
+  - number-theory
+  - gcd
+---
 # Divisibility, Euclid & Extended Euclid
 
 **Remainders that rule crypto — division algorithm, gcd by repeated remainder, and inverses via back-substitution.**

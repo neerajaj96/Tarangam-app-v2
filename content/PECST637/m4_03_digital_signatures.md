@@ -1,3 +1,27 @@
+---
+id: m4_03_digital_signatures
+courseCode: PECST637
+module: 4
+sequence: 3
+title: 'Digital Signatures: RSA, ElGamal & DSS'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Sign hashes private and verify them public exactly
+  - Sketch ElGamal and DSS verification algebra honestly
+  - Condemn raw textbook signing with fresh-nonce mandate
+concepts:
+  - digital signatures
+  - hash-then-sign
+  - nonce freshness
+prerequisites:
+  - m3_05_rsa_keygen_decrypt
+  - m4_01_hash_md5_sha
+examRelevance: high
+tags:
+  - signatures
+  - authentication
+---
 # Digital Signatures: RSA, ElGamal & DSS
 
 **Asymmetric authorship — hash-then-sign, verification algebra, and why raw textbook signing dies.**

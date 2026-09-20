@@ -1,3 +1,27 @@
+---
+id: m1_06_crt_applications
+courseCode: PECST637
+module: 1
+sequence: 6
+title: Chinese Remainder Theorem & Applications
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Split coprime moduli and conquer the small pieces
+  - Glue solutions with the weighted-sum construction
+  - Quadruple RSA speed through half-size decryption
+concepts:
+  - Chinese remainder theorem
+  - Garner assembly
+  - RSA-CRT speedup
+prerequisites:
+  - m1_01_divisibility_euclid
+  - m1_02_modular_arithmetic
+examRelevance: high
+tags:
+  - number-theory
+  - crt
+---
 # Chinese Remainder Theorem & Applications
 
 **Split moduli, conquer pieces, recombine — CRT construction, Garner-flavoured assembly, and RSA-speedup cameo.**

@@ -1,3 +1,26 @@
+---
+id: m1_04_primitive_roots_discrete_log
+courseCode: PECST637
+module: 1
+sequence: 4
+title: Primitive Roots & Discrete Logarithms
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Test generators with prime-factor quotients of p-minus-one
+  - Count generators with the totient of p-minus-one
+  - Walk the discrete-log one-way street guarding DH
+concepts:
+  - primitive roots
+  - discrete logarithms
+  - generator testing
+prerequisites:
+  - m1_03_fermat_euler_totient
+examRelevance: medium
+tags:
+  - number-theory
+  - discrete-log
+---
 # Primitive Roots & Discrete Logarithms
 
 **Generators of the multiplicative world — who generates, who doesn't, and the one-way street guarding DH.**

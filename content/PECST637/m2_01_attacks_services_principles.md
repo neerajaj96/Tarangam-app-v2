@@ -1,3 +1,25 @@
+---
+id: m2_01_attacks_services_principles
+courseCode: PECST637
+module: 2
+sequence: 1
+title: 'Attacks, Services, Mechanisms & Design Principles'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Pair passive and active attacks into threat quartets
+  - Promise five services with troops of mechanisms each
+  - Apply all eight Saltzer-Schroeder principles by name
+concepts:
+  - threat models
+  - security services
+  - design principles
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - security-model
+---
 # Attacks, Services, Mechanisms & Design Principles
 
 **Security vocabulary with teeth — threat models, what we guarantee, how, and the principles that survive contact.**

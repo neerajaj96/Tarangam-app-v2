@@ -1,3 +1,26 @@
+---
+id: m1_03_fermat_euler_totient
+courseCode: PECST637
+module: 1
+sequence: 3
+title: 'Fermat, Euler Totient & Euler Theorem'
+difficulty: beginner
+estimatedMinutes: 2
+learningObjectives:
+  - Collapse exponents with little Fermat on prime moduli
+  - Count totients across prime powers multiplicatively
+  - Reduce RSA-scale exponents modulo the period exactly
+concepts:
+  - Fermat's little theorem
+  - Euler totient
+  - Euler theorem
+prerequisites:
+  - m1_02_modular_arithmetic
+examRelevance: high
+tags:
+  - number-theory
+  - totient
+---
 # Fermat, Euler Totient & Euler Theorem
 
 **Exponent collapsers — little theorem, totient counting, and the big reduction powering RSA.**

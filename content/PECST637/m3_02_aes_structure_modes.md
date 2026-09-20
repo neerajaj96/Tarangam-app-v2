@@ -1,3 +1,26 @@
+---
+id: m3_02_aes_structure_modes
+courseCode: PECST637
+module: 3
+sequence: 2
+title: 'AES Structure: Rijndael Rounds'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Round four SPN transforms with ten, twelve or fourteen counts
+  - Expand keys on schedule without Feistel habits
+  - Place modes with never-ECB-data and GCM-default discipline
+concepts:
+  - AES structure
+  - substitution-permutation network
+  - block-cipher modes
+prerequisites:
+  - m3_01_des_structure_strength
+examRelevance: high
+tags:
+  - block-ciphers
+  - aes
+---
 # AES Structure: Rijndael Rounds
 
 **The modern workhorse — SPN (not Feistel!), four transforms, key schedules, and mode discipline.**

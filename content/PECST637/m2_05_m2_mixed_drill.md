@@ -1,3 +1,27 @@
+---
+id: m2_05_m2_mixed_drill
+courseCode: PECST637
+module: 2
+sequence: 5
+title: 'M2 Drill: Classical Cipher Triage'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Profile cipher families from ciphertext symptoms
+  - Decrypt with period and inverse checks in order
+  - Sprint Hill-matrix cameos without derailing
+concepts:
+  - cipher triage
+  - family verdicts
+prerequisites:
+  - m2_02_symmetric_model
+  - m2_03_substitution_cryptanalysis
+  - m2_04_transposition_feistel
+examRelevance: high
+tags:
+  - classical-ciphers
+  - m2-drill
+---
 # M2 Drill: Classical Cipher Triage
 
 **Profile, decrypt, cycle — family verdicts plus Hill-matrix cameo at exam pace.**

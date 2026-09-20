@@ -1,3 +1,26 @@
+---
+id: m3_01_des_structure_strength
+courseCode: PECST637
+module: 3
+sequence: 1
+title: 'DES: Structure, Avalanche & Strength'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Pipe sixty-four-bit blocks through sixteen Feistel rounds
+  - Credit S-boxes as the nonlinear soul with avalanche drama
+  - Bury fifty-six-bit keys with brute-force verdicts
+concepts:
+  - DES structure
+  - S-boxes
+  - avalanche effect
+prerequisites:
+  - m2_04_transposition_feistel
+examRelevance: high
+tags:
+  - block-ciphers
+  - des
+---
 # DES: Structure, Avalanche & Strength
 
 **The Data Encryption Standard — Feistel at scale, S-box soul, avalanche drama, and why $56$ bits died.**

@@ -1,3 +1,26 @@
+---
+id: m2_02_symmetric_model
+courseCode: PECST637
+module: 2
+sequence: 2
+title: Symmetric Cipher Model
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Diagram two parties sharing one secret exactly
+  - Demand strong algorithms plus secret keys together
+  - Escalate attacks by attacker power with distribution IOUs
+concepts:
+  - symmetric model
+  - key distribution problem
+  - attack escalation
+prerequisites:
+  - m2_01_attacks_services_principles
+examRelevance: high
+tags:
+  - symmetric-crypto
+  - cipher-model
+---
 # Symmetric Cipher Model
 
 **Two parties, one secret — the model diagram plus what each arrow demands (and what it can't give).**

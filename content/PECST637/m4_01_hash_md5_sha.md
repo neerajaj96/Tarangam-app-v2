@@ -1,3 +1,25 @@
+---
+id: m4_01_hash_md5_sha
+courseCode: PECST637
+module: 4
+sequence: 1
+title: 'Hash Functions: Uses, MD5 & SHA'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Grade preimage against birthday-halved collision resistance
+  - Apply hashes across fingerprinting uses exactly
+  - Retire MD5 and SHA-1 onto the SHA-2 workhorse
+concepts:
+  - hash resistance grades
+  - birthday bound
+  - SHA family
+prerequisites: []
+examRelevance: high
+tags:
+  - hashing
+  - sha
+---
 # Hash Functions: Uses, MD5 & SHA
 
 **Fingerprinting data — preimage/collision resistance grades, applications, and why MD5 fell.**

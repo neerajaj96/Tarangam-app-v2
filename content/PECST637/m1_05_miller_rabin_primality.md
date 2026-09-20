@@ -1,3 +1,26 @@
+---
+id: m1_05_miller_rabin_primality
+courseCode: PECST637
+module: 1
+sequence: 5
+title: 'Primality Testing: Miller–Rabin & Deterministic'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Expose Fermat liars that survive compositeness naively
+  - Catch composites with Miller-Rabin witnesses per base
+  - Price error at four-to-the-minus-k with AKS crowned
+concepts:
+  - Miller-Rabin test
+  - Fermat liars
+  - AKS algorithm
+prerequisites:
+  - m1_03_fermat_euler_totient
+examRelevance: medium
+tags:
+  - number-theory
+  - primality
+---
 # Primality Testing: Miller–Rabin & Deterministic
 
 **Probably-prime vs proven-prime — Fermat liars, Miller–Rabin witnesses, and AKS in the honours corner.**

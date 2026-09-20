@@ -1,3 +1,28 @@
+---
+id: m1_07_m1_mixed_drill
+courseCode: PECST637
+module: 1
+sequence: 7
+title: 'M1 Drill: Number Theory at Exam Pace'
+difficulty: intermediate
+estimatedMinutes: 2
+learningObjectives:
+  - Gate first on gcd, period and coprimality checks
+  - Compute through the gcd-to-CRT circuit without slips
+  - Verify every result a third time before committing
+concepts:
+  - computation circuit
+  - exam gates
+prerequisites:
+  - m1_01_divisibility_euclid
+  - m1_02_modular_arithmetic
+  - m1_03_fermat_euler_totient
+  - m1_06_crt_applications
+examRelevance: high
+tags:
+  - number-theory
+  - m1-drill
+---
 # M1 Drill: Number Theory at Exam Pace
 
 **Gcd-to-CRT in one sitting — the computation circuit with gates at every station.**

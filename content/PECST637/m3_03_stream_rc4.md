@@ -1,3 +1,26 @@
+---
+id: m3_03_stream_rc4
+courseCode: PECST637
+module: 3
+sequence: 3
+title: Stream Ciphers & RC4
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Ballet keystream XOR with unpredictability as security
+  - Shuffle KSA then drip PRGA in RC4 order
+  - Condemn keystream reuse as two-time-pad catastrophe
+concepts:
+  - stream ciphers
+  - RC4
+  - keystream reuse
+prerequisites:
+  - m2_03_substitution_cryptanalysis
+examRelevance: medium
+tags:
+  - stream-ciphers
+  - rc4
+---
 # Stream Ciphers & RC4
 
 **Keystream XOR ballet — one-time-pad dreams on keystream generators, LFSR basics, and RC4's rise-and-fall.**

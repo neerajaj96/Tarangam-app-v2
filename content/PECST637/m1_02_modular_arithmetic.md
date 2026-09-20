@@ -1,3 +1,26 @@
+---
+id: m1_02_modular_arithmetic
+courseCode: PECST637
+module: 1
+sequence: 2
+title: 'Modular Arithmetic: Congruences & Operations'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read congruences as divisibility of differences exactly
+  - Reduce early and often through modular operations
+  - Power by squaring and divide through inverses only
+concepts:
+  - congruences
+  - modular reduction
+  - fast exponentiation
+prerequisites:
+  - m1_01_divisibility_euclid
+examRelevance: high
+tags:
+  - number-theory
+  - modular-arithmetic
+---
 # Modular Arithmetic: Congruences & Operations
 
 **Clock math that runs crypto — congruence classes, arithmetic mod $n$, and exponent juggling.**

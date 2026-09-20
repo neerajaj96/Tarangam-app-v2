@@ -1,3 +1,26 @@
+---
+id: m4_02_sha3_hmac
+courseCode: PECST637
+module: 4
+sequence: 2
+title: 'SHA-3 Sponge & MACs (HMAC)'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Absorb and squeeze sponge phases with permutation discipline
+  - Envelope nested MACs against extension forgeries
+  - Compare tags in constant time without early exits
+concepts:
+  - SHA-3 sponge
+  - HMAC construction
+  - constant-time comparison
+prerequisites:
+  - m4_01_hash_md5_sha
+examRelevance: medium
+tags:
+  - hashing
+  - hmac
+---
 # SHA-3 Sponge & MACs (HMAC)
 
 **Squeeze-and-absorb hashing plus keyed integrity — sponge mechanics and the nested-MAC fix.**

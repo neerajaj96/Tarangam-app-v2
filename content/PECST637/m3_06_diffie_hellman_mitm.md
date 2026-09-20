@@ -1,3 +1,27 @@
+---
+id: m3_06_diffie_hellman_mitm
+courseCode: PECST637
+module: 3
+sequence: 6
+title: 'Diffie–Hellman Key Exchange & MITM'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Swap public halves over shouting channels into shared secrets
+  - Compute toy paint-mixing arithmetic exactly
+  - Expose the no-authentication hole and sign the fix
+concepts:
+  - Diffie-Hellman exchange
+  - man-in-the-middle attack
+  - authenticated exchange
+prerequisites:
+  - m1_04_primitive_roots_discrete_log
+  - m3_04_publickey_principles
+examRelevance: high
+tags:
+  - public-key
+  - key-exchange
+---
 # Diffie–Hellman Key Exchange & MITM
 
 **Strangers agree secretly over shouting channels — paint-mixing protocol, toy arithmetic, and the authentication hole.**

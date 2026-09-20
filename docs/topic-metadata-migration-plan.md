@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **316**
-- Pending: **116**
-- Coverage: **73.15%** (tracked by `npm run check`)
+- Migrated: **341**
+- Pending: **91**
+- Coverage: **78.94%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PECST637 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST632 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PBCST604 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST602 — Module 1 in progress (23 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -32,23 +33,53 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PECST632 — Deep Learning (started — see step 1)
-   2. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
-   3. PCCST602 — Advanced Computing Systems (started — see step 1)
-   4. PCCST601 — Compiler Design (started — see step 1)
-   5. PECST522 — Artificial Intelligence (started — see step 1)
-   6. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   7. PCCST503 — Machine Learning (started — see step 1)
-   8. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   9. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   10. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   11. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   12. PCCST501 — Computer Networks (started — see step 1)
-   13. PECST637 — Fundamentals of Cryptography
+   1. PECST637 — Fundamentals of Cryptography (started — see step 1)
+   2. PECST632 — Deep Learning (started — see step 1)
+   3. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
+   4. PCCST602 — Advanced Computing Systems (started — see step 1)
+   5. PCCST601 — Compiler Design (started — see step 1)
+   6. PECST522 — Artificial Intelligence (started — see step 1)
+   7. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   8. PCCST503 — Machine Learning (started — see step 1)
+   9. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   10. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   11. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   12. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   13. PCCST501 — Computer Networks (started — see step 1)
    14. PECST631 — Software Testing
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PECST637 — Fundamentals of Cryptography (25/25 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Number Theory | 01 | `m1_01_divisibility_euclid.md` | `m1_01_divisibility_euclid` | migrated |
+| M1 Number Theory | 02 | `m1_02_modular_arithmetic.md` | `m1_02_modular_arithmetic` | migrated |
+| M1 Number Theory | 03 | `m1_03_fermat_euler_totient.md` | `m1_03_fermat_euler_totient` | migrated |
+| M1 Number Theory | 04 | `m1_04_primitive_roots_discrete_log.md` | `m1_04_primitive_roots_discrete_log` | migrated |
+| M1 Number Theory | 05 | `m1_05_miller_rabin_primality.md` | `m1_05_miller_rabin_primality` | migrated |
+| M1 Number Theory | 06 | `m1_06_crt_applications.md` | `m1_06_crt_applications` | migrated |
+| M1 Number Theory | 07 | `m1_07_m1_mixed_drill.md` | `m1_07_m1_mixed_drill` | migrated |
+| M2 Classical Ciphers | 01 | `m2_01_attacks_services_principles.md` | `m2_01_attacks_services_principles` | migrated |
+| M2 Classical Ciphers | 02 | `m2_02_symmetric_model.md` | `m2_02_symmetric_model` | migrated |
+| M2 Classical Ciphers | 03 | `m2_03_substitution_cryptanalysis.md` | `m2_03_substitution_cryptanalysis` | migrated |
+| M2 Classical Ciphers | 04 | `m2_04_transposition_feistel.md` | `m2_04_transposition_feistel` | migrated |
+| M2 Classical Ciphers | 05 | `m2_05_m2_mixed_drill.md` | `m2_05_m2_mixed_drill` | migrated |
+| M3 Modern Ciphers & RSA | 01 | `m3_01_des_structure_strength.md` | `m3_01_des_structure_strength` | migrated |
+| M3 Modern Ciphers & RSA | 02 | `m3_02_aes_structure_modes.md` | `m3_02_aes_structure_modes` | migrated |
+| M3 Modern Ciphers & RSA | 03 | `m3_03_stream_rc4.md` | `m3_03_stream_rc4` | migrated |
+| M3 Modern Ciphers & RSA | 04 | `m3_04_publickey_principles.md` | `m3_04_publickey_principles` | migrated |
+| M3 Modern Ciphers & RSA | 05 | `m3_05_rsa_keygen_decrypt.md` | `m3_05_rsa_keygen_decrypt` | migrated |
+| M3 Modern Ciphers & RSA | 06 | `m3_06_diffie_hellman_mitm.md` | `m3_06_diffie_hellman_mitm` | migrated |
+| M3 Modern Ciphers & RSA | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | migrated |
+| M4 Hashes, Signatures & PKI | 01 | `m4_01_hash_md5_sha.md` | `m4_01_hash_md5_sha` | migrated |
+| M4 Hashes, Signatures & PKI | 02 | `m4_02_sha3_hmac.md` | `m4_02_sha3_hmac` | migrated |
+| M4 Hashes, Signatures & PKI | 03 | `m4_03_digital_signatures.md` | `m4_03_digital_signatures` | migrated |
+| M4 Hashes, Signatures & PKI | 04 | `m4_04_key_mgmt_pki.md` | `m4_04_key_mgmt_pki` | migrated |
+| M4 Hashes, Signatures & PKI | 05 | `m4_05_protocol_drill.md` | `m4_05_protocol_drill` | migrated |
+| M4 Hashes, Signatures & PKI | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | migrated |
 
 ## PECST632 — Deep Learning (25/25 migrated)
 
@@ -442,36 +473,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PECST637 — Fundamentals of Cryptography (0/25 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Number Theory | 01 | `m1_01_divisibility_euclid.md` | `m1_01_divisibility_euclid` | pending |
-| M1 Number Theory | 02 | `m1_02_modular_arithmetic.md` | `m1_02_modular_arithmetic` | pending |
-| M1 Number Theory | 03 | `m1_03_fermat_euler_totient.md` | `m1_03_fermat_euler_totient` | pending |
-| M1 Number Theory | 04 | `m1_04_primitive_roots_discrete_log.md` | `m1_04_primitive_roots_discrete_log` | pending |
-| M1 Number Theory | 05 | `m1_05_miller_rabin_primality.md` | `m1_05_miller_rabin_primality` | pending |
-| M1 Number Theory | 06 | `m1_06_crt_applications.md` | `m1_06_crt_applications` | pending |
-| M1 Number Theory | 07 | `m1_07_m1_mixed_drill.md` | `m1_07_m1_mixed_drill` | pending |
-| M2 Classical Ciphers | 01 | `m2_01_attacks_services_principles.md` | `m2_01_attacks_services_principles` | pending |
-| M2 Classical Ciphers | 02 | `m2_02_symmetric_model.md` | `m2_02_symmetric_model` | pending |
-| M2 Classical Ciphers | 03 | `m2_03_substitution_cryptanalysis.md` | `m2_03_substitution_cryptanalysis` | pending |
-| M2 Classical Ciphers | 04 | `m2_04_transposition_feistel.md` | `m2_04_transposition_feistel` | pending |
-| M2 Classical Ciphers | 05 | `m2_05_m2_mixed_drill.md` | `m2_05_m2_mixed_drill` | pending |
-| M3 Modern Ciphers & RSA | 01 | `m3_01_des_structure_strength.md` | `m3_01_des_structure_strength` | pending |
-| M3 Modern Ciphers & RSA | 02 | `m3_02_aes_structure_modes.md` | `m3_02_aes_structure_modes` | pending |
-| M3 Modern Ciphers & RSA | 03 | `m3_03_stream_rc4.md` | `m3_03_stream_rc4` | pending |
-| M3 Modern Ciphers & RSA | 04 | `m3_04_publickey_principles.md` | `m3_04_publickey_principles` | pending |
-| M3 Modern Ciphers & RSA | 05 | `m3_05_rsa_keygen_decrypt.md` | `m3_05_rsa_keygen_decrypt` | pending |
-| M3 Modern Ciphers & RSA | 06 | `m3_06_diffie_hellman_mitm.md` | `m3_06_diffie_hellman_mitm` | pending |
-| M3 Modern Ciphers & RSA | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | pending |
-| M4 Hashes, Signatures & PKI | 01 | `m4_01_hash_md5_sha.md` | `m4_01_hash_md5_sha` | pending |
-| M4 Hashes, Signatures & PKI | 02 | `m4_02_sha3_hmac.md` | `m4_02_sha3_hmac` | pending |
-| M4 Hashes, Signatures & PKI | 03 | `m4_03_digital_signatures.md` | `m4_03_digital_signatures` | pending |
-| M4 Hashes, Signatures & PKI | 04 | `m4_04_key_mgmt_pki.md` | `m4_04_key_mgmt_pki` | pending |
-| M4 Hashes, Signatures & PKI | 05 | `m4_05_protocol_drill.md` | `m4_05_protocol_drill` | pending |
-| M4 Hashes, Signatures & PKI | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
 
 ## PECST631 — Software Testing (0/26 migrated)
 

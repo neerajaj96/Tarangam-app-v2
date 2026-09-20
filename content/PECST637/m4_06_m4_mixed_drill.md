@@ -1,3 +1,27 @@
+---
+id: m4_06_m4_mixed_drill
+courseCode: PECST637
+module: 4
+sequence: 6
+title: 'M4 Drill: Trust Decisions at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Grade hashes against resistance rungs rapidly
+  - Round-trip signatures without mandate slips
+  - Walk chains and call revocations at trust pace
+concepts:
+  - trust decisions
+  - verification reflexes
+prerequisites:
+  - m4_01_hash_md5_sha
+  - m4_03_digital_signatures
+  - m4_04_key_mgmt_pki
+examRelevance: high
+tags:
+  - trust
+  - m4-drill
+---
 # M4 Drill: Trust Decisions at Pace
 
 **Hash-grade, sign-round, chain-walk, revoke-call — M4 as verification reflexes.**

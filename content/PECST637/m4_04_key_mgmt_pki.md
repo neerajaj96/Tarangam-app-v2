@@ -1,3 +1,27 @@
+---
+id: m4_04_key_mgmt_pki
+courseCode: PECST637
+module: 4
+sequence: 4
+title: 'Key Management, X.509 & PKI'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Distribute symmetric keys via KDC, envelope and signed exchange
+  - Bind identities with SAN-checked X.509 certificates
+  - Propagate revocations that actually unbind at scale
+concepts:
+  - key distribution
+  - X.509 certificates
+  - revocation
+prerequisites:
+  - m3_06_diffie_hellman_mitm
+  - m4_03_digital_signatures
+examRelevance: high
+tags:
+  - pki
+  - key-management
+---
 # Key Management, X.509 & PKI
 
 **The unsexy hard part — distributing symmetric keys, certifying bindings, and revoking trust at scale.**

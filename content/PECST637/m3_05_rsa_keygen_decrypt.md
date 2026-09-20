@@ -1,3 +1,27 @@
+---
+id: m3_05_rsa_keygen_decrypt
+courseCode: PECST637
+module: 3
+sequence: 5
+title: 'RSA: Keygen, Encrypt, Decrypt & Proofs'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Generate keys with totient products gated on coprimality
+  - Encrypt and decrypt toy messages end to end
+  - Prove decryption returns the message with OAEP deployment
+concepts:
+  - RSA key generation
+  - RSA correctness
+  - OAEP padding
+prerequisites:
+  - m1_03_fermat_euler_totient
+  - m3_04_publickey_principles
+examRelevance: high
+tags:
+  - public-key
+  - rsa
+---
 # RSA: Keygen, Encrypt, Decrypt & Proofs
 
 **Multiply easy, factor hard — full toy walkthroughs plus why decryption returns the message.**

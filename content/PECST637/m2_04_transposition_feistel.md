@@ -1,3 +1,26 @@
+---
+id: m2_04_transposition_feistel
+courseCode: PECST637
+module: 2
+sequence: 4
+title: 'Transposition & Block Structure (Feistel)'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Permute positions with rail and order ciphers exactly
+  - Round Feistel halves with non-invertible function freedom
+  - Twin confusion with diffusion for exam statements
+concepts:
+  - transposition ciphers
+  - Feistel structure
+  - confusion and diffusion
+prerequisites:
+  - m2_03_substitution_cryptanalysis
+examRelevance: medium
+tags:
+  - classical-ciphers
+  - feistel
+---
 # Transposition & Block Structure (Feistel)
 
 **Scrambling positions, not letters — rail/order ciphers, then the Feistel shape modern blocks inherit.**

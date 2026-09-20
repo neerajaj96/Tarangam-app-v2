@@ -1,3 +1,26 @@
+---
+id: m2_03_substitution_cryptanalysis
+courseCode: PECST637
+module: 2
+sequence: 3
+title: Substitution Techniques & Cryptanalysis
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Run Caesar, monoalphabetic, Playfair and Vigenere by hand
+  - Break monoalphabets with frequency and periods with leaks
+  - State one-time-pad perfection terms exactly
+concepts:
+  - substitution ciphers
+  - frequency analysis
+  - one-time pad
+prerequisites:
+  - m2_02_symmetric_model
+examRelevance: high
+tags:
+  - classical-ciphers
+  - cryptanalysis
+---
 # Substitution Techniques & Cryptanalysis
 
 **Letter swaps from Caesar to Vigenère — ciphers, keyspaces, and frequency cheerfully breaking them.**

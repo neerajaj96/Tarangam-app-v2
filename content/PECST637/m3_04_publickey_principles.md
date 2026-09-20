@@ -1,3 +1,25 @@
+---
+id: m3_04_publickey_principles
+courseCode: PECST637
+module: 3
+sequence: 4
+title: Public-Key Principles & Requirements
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Charter asymmetry with trapdoors and hardness gaps
+  - Map confidentiality, signatures and exchange to three families
+  - Bulk through hybrid construction honestly stated
+concepts:
+  - public-key charter
+  - trapdoor functions
+  - hybrid encryption
+prerequisites: []
+examRelevance: medium
+tags:
+  - public-key
+  - principles
+---
 # Public-Key Principles & Requirements
 
 **Asymmetry's charter — trapdoors, the three application families, and what hardness must hold.**
