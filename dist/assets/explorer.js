@@ -61,6 +61,13 @@ import {
   parseAttemptStore,
   ASSESSMENT_STORAGE_KEY,
 } from './assessment.js';
+import {
+  ATTENTION_FILTERS,
+  normalizeAttentionFilter,
+  filterTopicsByAttention,
+  getTopicAttention,
+  explainAttention,
+} from './weak-topic-analysis.js';
 
 // Pure assessment coverage for Explorer indicators (no recommendations):
 // total questions, covered/total topics, uncovered count, exam-relevant
@@ -113,8 +120,7 @@ export function getExplorerPlanInfo(manifest, getStatus, getTimestamp, planConfi
 // Pure assessment state for one topic, reusing the canonical assessment
 // module (no duplicated calculations). Unknown topics yield a
 // not-attempted state (never throw).
-export function getExplorerAssessmentInfo(bank, attempts, courseCode, topicId) {
-  try {
+export function getExplorerAssessmentInfo(bank, attempts, courseCode, topicId) {  try {
     const s = getTopicAssessmentState(bank, attempts, courseCode, topicId);
     return {
       available: s.available,
@@ -152,6 +158,28 @@ export function filterTopicsByAssessmentNotAttempted(bank, attempts, topicList) 
   }
 }
 
+// Pure attention record for one topic, reusing the canonical weak-topic
+// analysis layer (no duplicated calculations). Unknown topics yield null
+// (never throw).
+export function getExplorerAttentionInfo(manifest, getStatus, getTimestamp, courseCode, topicId, now, assessment) {
+  try {
+    const entry = getTopicAttention(manifest, getStatus, getTimestamp, courseCode, topicId, now, assessment);
+    if (!entry) return null;
+    return {
+      needsAttention: entry.needsAttention,
+      reasons: [...entry.reasons],
+      explanation: explainAttention(entry),
+      reviewState: entry.reviewState,
+      assessmentState: entry.assessmentState,
+      examRelevance: entry.examRelevance,
+      unfinishedDependentCount: entry.unfinishedDependentCount,
+      blocksExamTopic: entry.blocksExamTopic,
+    };
+  } catch {
+    return null;
+  }
+}
+
 // Pure analytics indicators for course/module views, reusing the canonical
 // analytics module (no duplicated calculations). Unknown courses/modules
 // yield null (never throw).
@@ -173,7 +201,7 @@ export function getExplorerModuleAnalytics(manifest, getStatus, getTimestamp, co
   }
 }
 
-export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter, REVIEW_FILTERS, normalizeReviewFilter, ASSESSMENT_FILTERS, normalizeAssessmentFilter };
+export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter, REVIEW_FILTERS, normalizeReviewFilter, ASSESSMENT_FILTERS, normalizeAssessmentFilter, ATTENTION_FILTERS, normalizeAttentionFilter };
 
 const $ = (id) => (typeof document !== 'undefined' ? document.getElementById(id) : null);
 
@@ -181,13 +209,16 @@ const $ = (id) => (typeof document !== 'undefined' ? document.getElementById(id)
 // (course/module/search/difficulty/exam) then the deterministic journey
 // filter (all/not_started/in_progress/completed/ready), the exam-readiness
 // view (all/exam_relevant/exam_completed/exam_remaining), the revision view
-// (all/review_due/review_overdue/exam_review_due), and the assessment view
-// (all/available/attempted/passed/needs_review) via the shared modules —
-// no duplicated intelligence logic.
+// (all/review_due/review_overdue/exam_review_due), the assessment view
+// (all/available/attempted/passed/needs_review), and the attention view
+// (all/needs_attention/assessment_needs_review/review_overdue/review_due/
+// exam_not_assessed) via the shared modules — no duplicated intelligence
+// logic.
 // Preserves manifest order; unknown filters fall back to 'all'. The review
-// view needs a timestamp reader and injected now; without timestamps it
-// yields no review matches (never fabricated). The assessment view needs
-// { bank, attempts }; without a bank it matches nothing but 'all'.
+// and attention views need a timestamp reader and injected now; without
+// timestamps the review matches stay empty (never fabricated). The
+// assessment and attention views need { bank, attempts }; without a bank the
+// assessment-specific matches stay empty (never fabricated).
 export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
   const {
     courseCode = null,
@@ -199,6 +230,7 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
     examView = 'all',
     reviewFilter = 'all',
     assessmentFilter = 'all',
+    attentionFilter = 'all',
     assessment = null,
     getTimestamp = null,
     now,
@@ -216,7 +248,8 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
   const byReview = filterTopicsByReview(manifest, getStatus, getTimestamp, byExam, reviewFilter, now);
   const bank = assessment && typeof assessment === 'object' ? assessment.bank ?? null : null;
   const attempts = assessment && typeof assessment === 'object' ? assessment.attempts : undefined;
-  return filterTopicsByAssessment(bank, attempts, byReview, assessmentFilter);
+  const byAssessment = filterTopicsByAssessment(bank, attempts, byReview, assessmentFilter);
+  return filterTopicsByAttention(manifest, getStatus, getTimestamp, byAssessment, attentionFilter, now, assessment);
 }
 
 export function getExplorerTopicJourney(manifest, getStatus, courseCode, topicId) {
@@ -237,6 +270,7 @@ const state = {
   examView: 'all',
   reviewFilter: 'all',
   assessmentFilter: 'all',
+  attentionFilter: 'all',
   selectedKey: null,
   loadError: null,
 };
@@ -394,6 +428,19 @@ function assessmentChips(topic) {
   return '<span class="badge badge-accent">○ Quiz available — not attempted</span>';
 }
 
+function attentionChips(topic) {
+  // Per-card attention signal from the canonical weak-topic analysis
+  // layer. Only topics with explicit evidence show a marker (unassessed
+  // topics without questions never show one here).
+  if (!state.manifest || !state.progress) return '';
+  const info = getExplorerAttentionInfo(
+    state.manifest, statusReader(), timestampReader(), topic.courseCode, topic.id,
+    Date.now(), { bank: state.assessmentBank, attempts: readAttempts() }
+  );
+  if (!info || !info.needsAttention) return '';
+  return '<span class="badge badge-gold">◉ Needs attention</span>';
+}
+
 function currentFilters() {
   return {
     q: state.q,
@@ -403,6 +450,7 @@ function currentFilters() {
     examView: state.examView,
     reviewFilter: state.reviewFilter,
     assessmentFilter: state.assessmentFilter,
+    attentionFilter: state.attentionFilter,
   };
 }
 
@@ -412,8 +460,8 @@ function visibleTopics() {
   const f = currentFilters();
   // One canonical combined filter (see assets/topic-intelligence.js):
   // course + module scope, whole-manifest search, difficulty/exam facets,
-  // then the deterministic journey, exam-readiness, revision, and
-  // assessment views. Manifest order within a course already sorts
+  // then the deterministic journey, exam-readiness, revision, assessment,
+  // and attention views. Manifest order within a course already sorts
   // module/sequence/id.
   return getExplorerVisibleTopics(manifest, statusReader(), {
     courseCode: course,
@@ -425,6 +473,7 @@ function visibleTopics() {
     examView: f.examView || 'all',
     reviewFilter: f.reviewFilter || 'all',
     assessmentFilter: f.assessmentFilter || 'all',
+    attentionFilter: f.attentionFilter || 'all',
     assessment: { bank: state.assessmentBank, attempts: readAttempts() },
     getTimestamp: timestampReader(),
     now: Date.now(),
@@ -532,6 +581,21 @@ function renderFilterOptions() {
     state.assessmentFilter = normalizeAssessmentFilter(state.assessmentFilter);
     assessmentSelect.value = state.assessmentFilter;
   }
+  const attentionSelect = $('xp-attention');
+  if (attentionSelect) {
+    const attentionLabels = {
+      all: 'All attention states',
+      needs_attention: 'Needs attention',
+      assessment_needs_review: 'Assessment needs review',
+      review_overdue: 'Review overdue',
+      review_due: 'Review due',
+      exam_not_assessed: 'Exam not assessed',
+    };
+    attentionSelect.innerHTML = ATTENTION_FILTERS.map((f) =>
+      `<option value="${f}">${esc(attentionLabels[f] || f)}</option>`).join('');
+    state.attentionFilter = normalizeAttentionFilter(state.attentionFilter);
+    attentionSelect.value = state.attentionFilter;
+  }
 }
 
 function renderList() {
@@ -549,7 +613,7 @@ function renderList() {
     return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}${attentionChips(t)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
@@ -609,6 +673,13 @@ function renderDetail() {
   const assessmentBlock = !assessInfo.available
     ? ''
     : `<div class="xp-pre-head">Self-assessment: ${assessInfo.attempted ? (assessInfo.passed ? `passed (latest ${assessInfo.latestScore}%)` : `needs review (latest ${assessInfo.latestScore}%)`) : `${assessInfo.questionCount} ${assessInfo.questionCount === 1 ? 'question' : 'questions'} available — not attempted yet`} · <a class="xp-open" href="${esc(assessmentPageHref(topic.courseCode, topic.id))}">Start assessment →</a></div>`;
+  const attentionInfo = getExplorerAttentionInfo(
+    state.manifest, statusReader(), timestampReader(), topic.courseCode, topic.id,
+    Date.now(), { bank: state.assessmentBank, attempts: readAttempts() }
+  );
+  const attentionBlock = attentionInfo && attentionInfo.needsAttention
+    ? `<div class="xp-pre-head">◉ ${esc(attentionInfo.explanation)}</div>`
+    : '';
   const plan = activePlan();
   const planDay = plan ? getTopicPlanDay(plan, topic.courseCode, topic.id) : null;
   const planBlock = planDay !== null
@@ -621,11 +692,12 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}${assessmentChips(topic)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}${assessmentChips(topic)}${attentionChips(topic)}</div>
       ${journeyBlock}
       ${reviewBlock}
       ${planBlock}
       ${assessmentBlock}
+      ${attentionBlock}
       <button class="xp-toggle" data-toggle="${esc(topic.id)}" type="button">${isDone ? '✓ Completed — mark not started' : 'Mark completed'}</button>
       ${planDay === null ? `<button class="xp-toggle" data-plan-add="${esc(topic.courseCode)}/${esc(topic.id)}" type="button">Add course to study plan</button>` : ''}
     </div>
@@ -798,6 +870,7 @@ async function init() {
     if ($('xp-examview')) $('xp-examview').addEventListener('change', (e) => { state.examView = normalizeExamFilter(e.target.value); renderAll(); });
     if ($('xp-review')) $('xp-review').addEventListener('change', (e) => { state.reviewFilter = normalizeReviewFilter(e.target.value); renderAll(); });
     if ($('xp-assessment')) $('xp-assessment').addEventListener('change', (e) => { state.assessmentFilter = normalizeAssessmentFilter(e.target.value); renderAll(); });
+    if ($('xp-attention')) $('xp-attention').addEventListener('change', (e) => { state.attentionFilter = normalizeAttentionFilter(e.target.value); renderAll(); });
     if ($('xp-retry')) $('xp-retry').addEventListener('click', () => {
       Data.clearManifestCache();
       const errBox = $('xp-error');

@@ -1,0 +1,10 @@
+/**
+ * Node-side entry point for the canonical Weak-Topic Analysis Layer.
+ *
+ * The implementation lives in assets/weak-topic-analysis.js so browsers and
+ * Node share one dependency-free copy (the published static bundle only
+ * ships assets/, never scripts/). This module re-exports it for repo-side
+ * conventions (tests, QA) without duplicating any logic — the same pattern
+ * as scripts/revision.js over assets/revision.js.
+ */
+export * from '../assets/weak-topic-analysis.js';

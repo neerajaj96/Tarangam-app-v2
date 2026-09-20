@@ -88,12 +88,19 @@ import { buildLearningAnalytics } from './learning-analytics.js';
 export { buildLearningAnalytics };
 
 import { buildStudyPlan } from './study-planner.js';
-
 // Planning is a derived view over an explicit target plus recorded facts
 // (see assets/study-planner.js): it never replaces the normal, exam, or
 // review recommendations above. Re-exported so surfaces read plans through
 // the journey without duplicating logic.
 export { buildStudyPlan };
+
+import { buildAttentionModel } from './weak-topic-analysis.js';
+
+// Attention is a descriptive lens over recorded evidence (see
+// assets/weak-topic-analysis.js): it never scores, predicts, or replaces
+// the canonical next-topic mechanism above. Re-exported so surfaces read
+// attention through the journey without duplicating logic.
+export { buildAttentionModel };
 
 import {
   buildAssessmentSummary,
@@ -457,6 +464,12 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     ? buildAssessmentAwareRevisionModel(manifest, safeStatus, getTimestamp, reviewNow, assessmentInput)
     : null;
 
+  // Weak-topic attention rides along as a descriptive lens over the same
+  // recorded evidence (progress, attempts, review states, exam relevance,
+  // dependencies). It exposes what needs attention with explicit reasons;
+  // the canonical recommendation above never changes.
+  const attention = buildAttentionModel(manifest, safeStatus, getTimestamp, reviewNow, assessmentInput);
+
   // Descriptive assessment evidence for journey surfaces (no recommendation).
   // Assessment state for the recommended topic, for in-progress topics, plus
   // topics needing a first assessment, topics needing review because of
@@ -525,6 +538,9 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     reviewCounts: revision.counts,
     revision,
     assessmentAwareRevision,
+    attentionTopics: attention.attentionTopics,
+    attentionCounts: attention.counts,
+    topAttentionTopics: attention.topAttentionTopics,
     assessmentForRecommended,
     assessmentForInProgress,
     topicsNeedingAssessment,

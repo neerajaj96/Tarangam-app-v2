@@ -61,6 +61,10 @@ import {
   REVIEW_STATE_OVERDUE,
   getAssessmentAwareReviewState,
 } from './revision.js';
+import {
+  getTopicAttention,
+  explainAttention,
+} from './weak-topic-analysis.js';
 import { loadManifest } from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
 
@@ -186,6 +190,29 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     assessmentBestScore: assessmentAware ? assessmentAware.assessmentBestScore : null,
     assessmentAttempts: assessmentAware ? assessmentAware.assessmentAttempts : 0,
   };
+  // Descriptive attention record for this topic (explicit reasons only —
+  // no warning is rendered when no evidence requires attention).
+  let attention = null;
+  try {
+    const entry = getTopicAttention(
+      manifest, getStatus, getTimestamp, courseCode, topicId, options.now,
+      options.bank ? { bank: options.bank, attempts: options.attempts } : null
+    );
+    if (entry) {
+      attention = {
+        needsAttention: entry.needsAttention,
+        reasons: [...entry.reasons],
+        explanation: explainAttention(entry),
+        reviewState: entry.reviewState,
+        assessmentState: entry.assessmentState,
+        examRelevance: entry.examRelevance,
+        unfinishedDependentCount: entry.unfinishedDependentCount,
+        blocksExamTopic: entry.blocksExamTopic,
+      };
+    }
+  } catch {
+    attention = null;
+  }
   return {
     courseCode: topic.courseCode,
     courseName: topic.courseName || topic.courseCode,
@@ -235,6 +262,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     unfinishedUnlockCount,
     exam,
     review,
+    attention,
     analytics,
     planned,
     assessment,
@@ -364,6 +392,19 @@ export function renderStudyContext(model) {
       + when + dueLine + examLine + assessmentLine + `</div>`;
   })();
 
+  const attentionBlock = (() => {
+    // Shown only when recorded evidence requires attention; topics with
+    // no such evidence render no warning block (never fabricated).
+    const a = model.attention;
+    if (!a || !a.needsAttention || !a.explanation) return '';
+    const depLine = a.blocksExamTopic
+      ? `<p class="xp-note">Blocks an unfinished exam-relevant topic (${a.unfinishedDependentCount} unfinished ${a.unfinishedDependentCount === 1 ? 'dependent' : 'dependents'}).</p>`
+      : '';
+    return `<div class="ts-block ts-attention"><h3>Needs attention</h3>`
+      + `<p class="xp-note">${esc(a.explanation)}</p>`
+      + depLine + `</div>`;
+  })();
+
   const analyticsBlock = (() => {
     const a = model.analytics;
     if (!a) return '';
@@ -440,6 +481,7 @@ export function renderStudyContext(model) {
   </div>
   ${examBlock}
   ${reviewBlock}
+  ${attentionBlock}
   ${analyticsBlock}
   ${planBlock}
   ${assessmentBlock}

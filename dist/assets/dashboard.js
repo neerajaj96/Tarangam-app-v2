@@ -30,6 +30,10 @@ import {
   getAssessmentAwareReviewState,
   getAssessmentDrivenReviews,
 } from './revision.js';
+import {
+  buildAttentionModel,
+  explainAttention,
+} from './weak-topic-analysis.js';
 import { buildLearningAnalytics, getModuleAnalyticsList } from './learning-analytics.js';
 import {
   buildStudyPlan,
@@ -162,6 +166,14 @@ export function buildDashboardExamAssessmentModel(bank, manifest, attempts) {
       needsReviewList: [], coveredNotAttemptedList: [], uncoveredList: [],
     };
   }
+}
+
+// Pure attention derivation for tests and UI: manifest + status reader +
+// timestamp reader + injected now + optional `{ bank, attempts }` ->
+// deterministic attention snapshot (explicit reasons, never scores).
+// Without a bank, assessment reasons degrade to absent (never fabricated).
+export function buildDashboardAttentionModel(manifest, getStatus, getTimestamp = null, now, assessment = null) {
+  return buildAttentionModel(manifest, getStatus, getTimestamp, now, assessment);
 }
 
 // Pure analytics derivation for tests and UI: manifest + status reader +
@@ -299,8 +311,8 @@ async function init() {
     }
   };
   loadAssessmentBank().then(
-    ({ bank }) => { assessmentBank = bank; renderAssessment(); renderReview(); renderExam(); },
-    () => { assessmentBank = null; renderAssessment(); renderReview(); renderExam(); }
+    ({ bank }) => { assessmentBank = bank; renderAssessment(); renderReview(); renderExam(); renderAttention(); },
+    () => { assessmentBank = null; renderAssessment(); renderReview(); renderExam(); renderAttention(); }
   );
 
   const renderAll = () => {
@@ -309,6 +321,7 @@ async function init() {
     renderContinue();
     renderExam();
     renderReview();
+    renderAttention();
     renderPlan();
     renderAssessment();
     renderLists();
@@ -558,6 +571,68 @@ async function init() {
     }
   }
 
+  function attentionAssessmentHref(topic) {
+    return `./assessment.html#scope=topic&course=${encodeURIComponent(topic.courseCode)}&topic=${encodeURIComponent(topic.id)}`;
+  }
+
+  function renderAttention() {
+    const box = $('db-attention');
+    if (!box) return;
+    // Descriptive attention lens over recorded evidence only: explicit
+    // reasons, states, and dependency facts. No scores, no rankings, no
+    // gamification — the canonical next-topic suggestion lives above.
+    const attempts = readAttempts();
+    const assessment = assessmentBank ? { bank: assessmentBank, attempts } : null;
+    const model = buildDashboardAttentionModel(manifest, statusReader, timestampReader, Date.now(), assessment);
+    if (!model.counts.total) {
+      box.innerHTML = `<h2>Attention — needs review</h2>
+        <div class="xp-path-next"><span class="xp-path-label">Nothing needs attention right now.</span>
+        <span class="xp-path-meta">Topics appear here with an explicit reason: assessment needs review, review overdue/due, exam-relevant but not yet assessed, or blocking an unfinished exam-relevant topic. Topics without questions are listed under self-assessment, never here.</span></div>`;
+      return;
+    }
+    const cards = model.topAttentionTopics.map((e) => {
+      const assessLine = !e.assessmentAvailable
+        ? 'No questions available.'
+        : !e.assessmentAttempted
+          ? `Not attempted yet (${e.assessmentState.replace(/_/g, ' ')}).`
+          : e.assessmentPassed
+            ? `Passed — latest ${e.assessmentLatestScore}% · best ${e.assessmentBestScore}% over ${e.assessmentAttempts} ${e.assessmentAttempts === 1 ? 'attempt' : 'attempts'}.`
+            : `Needs review — latest ${e.assessmentLatestScore}% · best ${e.assessmentBestScore}% over ${e.assessmentAttempts} ${e.assessmentAttempts === 1 ? 'attempt' : 'attempts'}.`;
+      const reviewLine = e.reviewState === 'review_overdue'
+        ? `Review overdue${e.daysSince !== null ? ` (${e.daysSince} days)` : ''}.`
+        : e.reviewState === 'review_due'
+          ? `Review due${e.daysSince !== null ? ` (${e.daysSince} days)` : ''}.`
+          : `Revision state: ${e.reviewState.replace(/_/g, ' ')}.`;
+      const examLine = e.isExamRelevant
+        ? `Exam-relevant (${e.examRelevance}, weight ${e.examWeight}).`
+        : 'Not exam-relevant.';
+      const depLine = e.blocksExamTopic
+        ? `Blocks an unfinished exam-relevant topic (${e.unfinishedDependentCount} unfinished ${e.unfinishedDependentCount === 1 ? 'dependent' : 'dependents'}).`
+        : e.unfinishedDependentCount > 0
+          ? `${e.unfinishedDependentCount} unfinished ${e.unfinishedDependentCount === 1 ? 'dependent' : 'dependents'}.`
+          : 'No unfinished dependents.';
+      const assessLink = e.assessmentAvailable
+        ? `<a class="xp-open" href="${esc(attentionAssessmentHref(e))}">Start assessment →</a>`
+        : '';
+      return `<div class="xp-path-row"><span class="xp-path-title">${esc(e.title)}</span>
+        <span class="xp-path-meta">${esc(e.courseCode)} · M${esc(e.module)}</span>
+        <span class="xp-path-meta">${esc(explainAttention(e))}</span>
+        <span class="xp-path-meta">Assessment: ${esc(assessLine)} ${esc(reviewLine)} ${esc(examLine)} ${esc(depLine)}</span>
+        <button class="xp-path-btn" data-attention-open="${esc(e.courseCode)}/${esc(e.id)}" type="button">View in explorer</button>
+        <a class="xp-open" href="${esc(topicHref(baseUrl, e.topic))}">Open topic →</a>${assessLink}</div>`;
+    }).join('');
+    box.innerHTML = `<h2>Attention — needs review</h2>
+      <div class="xp-path-next"><span class="xp-path-title">${model.counts.total} needing attention</span>
+        <span class="xp-path-meta">${model.counts.needsReview} assessment needs review · ${model.counts.overdue} overdue · ${model.counts.due} due · ${model.counts.examNotAssessed} exam-relevant not assessed · ${model.counts.blocking} blocking</span></div>
+      ${cards}`;
+    for (const btn of box.querySelectorAll('[data-attention-open]')) {
+      btn.addEventListener('click', () => {
+        const [course, ...rest] = btn.getAttribute('data-attention-open').split('/');
+        window.location.href = explorerHref({ courseCode: course, id: rest.join('/') });
+      });
+    }
+  }
+
   function planCourseOptions(selected) {
     const codes = [...new Set(manifest.topics.map((t) => t.courseCode))].sort();
     return `<option value="">All courses</option>` + codes.map((c) =>
@@ -790,6 +865,7 @@ async function init() {
       renderContinue();
       renderExam();
       renderReview();
+      renderAttention();
       renderPlan();
       renderAssessment();
       renderLists();
@@ -803,6 +879,7 @@ async function init() {
   renderContinue();
   renderExam();
   renderReview();
+  renderAttention();
   renderPlan();
   renderAssessment();
   renderLists();

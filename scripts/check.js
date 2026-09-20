@@ -807,6 +807,62 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 15. Canonical deterministic weak-topic analysis layer: descriptive
+// attention over recorded evidence — no AI/LLM, no prediction, no mastery
+// scores, no numerical weakness scores, no gamification, no second
+// recommendation engine, no polling. The existing recommendation API must
+// remain intact.
+{
+  if (!fs.existsSync('assets/weak-topic-analysis.js')) {
+    fail('attention: expected source file assets/weak-topic-analysis.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/weak-topic-analysis.js', 'utf-8');
+    for (const token of ['getTopicAttention', 'explainAttention', 'getAttentionTopics', 'getTopAttentionTopics', 'buildAttentionModel', 'getCourseAttention', 'getModuleAttention', 'filterTopicsByAttention', 'normalizeAttentionFilter', 'ATTENTION_REASONS', 'ATTENTION_FILTERS']) {
+      if (!js.includes(token)) fail(`attention: assets/weak-topic-analysis.js is missing "${token}"`);
+    }
+    for (const token of ['assessment_needs_review', 'review_overdue', 'review_due', 'exam_not_assessed', 'blocks_unfinished_exam_topic']) {
+      if (!js.includes(token)) fail(`attention: assets/weak-topic-analysis.js is missing reason "${token}"`);
+    }
+    for (const dep of ["from './topic-intelligence.js'", "from './learner-state.js'", "from './assessment.js'", "from './revision.js'", "from './exam-readiness.js'"]) {
+      if (!js.includes(dep)) fail(`attention: assets/weak-topic-analysis.js must build on the canonical layers (missing ${dep})`);
+    }
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+      if (js.toLowerCase().includes(banned)) fail(`attention: assets/weak-topic-analysis.js must stay deterministic and static-first (found "${banned}")`);
+    }
+    if (/\bLLM\b|\bAI\s+(grad|recommend|suggest|tutor)/i.test(js)) fail('attention: assets/weak-topic-analysis.js must not add AI/LLM grading or suggestions');
+    if (/semantic\s+(grad|similarity|scor)/i.test(js)) fail('attention: assets/weak-topic-analysis.js must not add semantic grading');
+    if (/mastery/i.test(js)) fail('attention: assets/weak-topic-analysis.js must not add mastery scores');
+    if (/weakness.?score|weakScore/i.test(js)) fail('attention: assets/weak-topic-analysis.js must not add numerical weakness scores');
+    if (/xps\b|experience points/i.test(js)) fail('attention: assets/weak-topic-analysis.js must not add gamification');
+    if (/function\s+getRecommendedNextTopics|function\s+getNextRecommendedTopic|const\s+getRecommendedNextTopics/.test(js)) fail('attention: assets/weak-topic-analysis.js must not define a second recommendation engine');
+    // Journey integration exposes attention without replacing the engine.
+    const journey = fs.existsSync('assets/learning-journey.js') ? fs.readFileSync('assets/learning-journey.js', 'utf-8') : '';
+    for (const token of ['attentionTopics', 'attentionCounts', 'topAttentionTopics', 'buildAttentionModel']) {
+      if (!journey.includes(token)) fail(`attention: assets/learning-journey.js is missing journey integration "${token}"`);
+    }
+    if (!journey.includes('getRecommendedNextTopics')) fail('attention: existing recommendation API must remain intact in assets/learning-journey.js');
+    // Dashboard attention section (descriptive, no scores).
+    const dash = fs.existsSync('assets/dashboard.js') ? fs.readFileSync('assets/dashboard.js', 'utf-8') : '';
+    for (const token of ['buildDashboardAttentionModel', 'renderAttention', 'db-attention']) {
+      if (!dash.includes(token)) fail(`attention: assets/dashboard.js is missing dashboard integration "${token}"`);
+    }
+    if (/weak.?score|mastery|performance score/i.test(dash)) fail('attention: assets/dashboard.js must not add scores to the attention section');
+    const dashHtml = fs.existsSync('dashboard.html') ? fs.readFileSync('dashboard.html', 'utf-8') : '';
+    if (!dashHtml.includes('id="db-attention"')) fail('attention: dashboard.html is missing the attention section (db-attention)');
+    // Explorer attention filters compose with existing facets.
+    const explorer = fs.existsSync('assets/explorer.js') ? fs.readFileSync('assets/explorer.js', 'utf-8') : '';
+    for (const token of ['filterTopicsByAttention', 'normalizeAttentionFilter', 'ATTENTION_FILTERS']) {
+      if (!explorer.includes(token)) fail(`attention: assets/explorer.js is missing explorer integration "${token}"`);
+    }
+    const explorerHtml = fs.existsSync('explorer.html') ? fs.readFileSync('explorer.html', 'utf-8') : '';
+    if (!explorerHtml.includes('id="xp-attention"')) fail('attention: explorer.html is missing the attention filter (xp-attention)');
+    // Study-context attention explanation (only when evidence applies).
+    const study = fs.existsSync('assets/topic-study-context.js') ? fs.readFileSync('assets/topic-study-context.js', 'utf-8') : '';
+    if (!study.includes('getTopicAttention') && !study.includes('explainAttention')) fail('attention: assets/topic-study-context.js is missing study-context integration');
+    if (!study.includes('ts-attention')) fail('attention: assets/topic-study-context.js does not render the attention explanation');
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
