@@ -1,3 +1,26 @@
+---
+id: m2_02_activations_relu_family
+courseCode: PECST632
+module: 2
+sequence: 2
+title: 'Activations: ReLU, LReLU, ELU & Classics'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Price sigmoid caps and tanh saturation honestly
+  - Switch to ReLU ones and zeros with derivative discipline
+  - Revive dying units with leaky and exponential fixes
+concepts:
+  - activation functions
+  - ReLU family
+  - dying units
+prerequisites:
+  - m1_01_mlp_forward_pass
+examRelevance: high
+tags:
+  - activations
+  - relu
+---
 # Activations: ReLU, LReLU, ELU & Classics
 
 **Squash menu — sigmoid/tanh heritage, ReLU revolution, leaky/exponential fixes, and the dying-unit ward.**

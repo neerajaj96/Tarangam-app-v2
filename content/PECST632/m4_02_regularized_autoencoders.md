@@ -1,3 +1,25 @@
+---
+id: m4_02_regularized_autoencoders
+courseCode: PECST632
+module: 4
+sequence: 2
+title: 'Regularized Autoencoders: Sparse & Denoising'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Penalise latents toward sparsity with KL-to-rho targets
+  - Armour with corruption that rebuilds dirty-in clean-out
+  - Beat identity without narrowing bottlenecks
+concepts:
+  - sparse autoencoders
+  - denoising autoencoders
+prerequisites:
+  - m2_04_autoencoders
+examRelevance: medium
+tags:
+  - autoencoders
+  - regularization
+---
 # Regularized Autoencoders: Sparse & Denoising
 
 **Constraints with teeth — sparsity penalties and corruption armour that rescue wide latents.**

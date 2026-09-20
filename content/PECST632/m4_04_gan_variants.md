@@ -1,3 +1,25 @@
+---
+id: m4_04_gan_variants
+courseCode: PECST632
+module: 4
+sequence: 4
+title: 'GANs & Variants'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Pit forgers against detectives in minimax training
+  - Choreograph the swapped practical generator loss exactly
+  - Steer, shape and translate with conditional, DCGAN and cycle kin
+concepts:
+  - generative adversarial networks
+  - minimax training
+  - GAN variants
+prerequisites: []
+examRelevance: high
+tags:
+  - gan
+  - generative-models
+---
 # GANs & Variants
 
 **Forger vs detective — minimax game, training choreography, and the family (conditional, DCGAN, cycle).**

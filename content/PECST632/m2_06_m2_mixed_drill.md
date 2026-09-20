@@ -1,3 +1,29 @@
+---
+id: m2_06_m2_mixed_drill
+courseCode: PECST632
+module: 2
+sequence: 6
+title: 'M2 Drill: Depth Decisions at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Triage regimes, units, histories and bottlenecks rapidly
+  - Call floodplains for depth against deserts for classical
+  - Decide depth questions from sprint-sheet reflexes
+concepts:
+  - depth triage
+  - regime decisions
+prerequisites:
+  - m2_01_ml_vs_dl_representation
+  - m2_02_activations_relu_family
+  - m2_03_unsupervised_rbm
+  - m2_04_autoencoders
+  - m2_05_dl_applications
+examRelevance: high
+tags:
+  - foundations
+  - m2-drill
+---
 # M2 Drill: Depth Decisions at Pace
 
 **Regime, activation, pretraining, bottleneck, floodplain — M2 as rapid triage.**

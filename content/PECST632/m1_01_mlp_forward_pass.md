@@ -1,3 +1,25 @@
+---
+id: m1_01_mlp_forward_pass
+courseCode: PECST632
+module: 1
+sequence: 1
+title: MLP Architecture & Forward Pass
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Stack perceptrons into layered weights and biases
+  - Sweep forward with z-equals-Wx-plus-b and activations
+  - Count parameters layer by layer with depth as hierarchy
+concepts:
+  - multilayer perceptron
+  - forward propagation
+  - parameter counting
+prerequisites: []
+examRelevance: high
+tags:
+  - mlp
+  - forward-pass
+---
 # MLP Architecture & Forward Pass
 
 **From perceptron to deep stacks — layers, weights, biases, and one full hand-computed forward sweep (S5 ML reunion).**

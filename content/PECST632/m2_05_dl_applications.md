@@ -1,3 +1,24 @@
+---
+id: m2_05_dl_applications
+courseCode: PECST632
+module: 2
+sequence: 5
+title: Deep Learning Applications Survey
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Map vision, speech, language and science wins to patterns
+  - State the floods plus composition plus objectives formula
+  - Concede deserts where classical methods still win
+concepts:
+  - application domains
+  - win patterns
+prerequisites: []
+examRelevance: medium
+tags:
+  - applications
+  - survey
+---
 # Deep Learning Applications Survey
 
 **Where depth pays rent — vision, speech, language, science, and the pattern behind the wins.**

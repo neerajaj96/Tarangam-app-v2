@@ -1,3 +1,26 @@
+---
+id: m3_01_cnn_layers_filters
+courseCode: PECST632
+module: 3
+sequence: 1
+title: 'CNNs: Layers, Filters & Sharing'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Slide windows with convolution size arithmetic exact
+  - Share weights into equivariance with pooling shrinkage
+  - Price filter parameters against dense explosions
+concepts:
+  - convolutional layers
+  - weight sharing
+  - pooling
+prerequisites:
+  - m1_01_mlp_forward_pass
+examRelevance: high
+tags:
+  - cnn
+  - convolution
+---
 # CNNs: Layers, Filters & Sharing
 
 **Seeing with sliding windows — convolution, pooling, and why sharing tames vision's dimensions.**

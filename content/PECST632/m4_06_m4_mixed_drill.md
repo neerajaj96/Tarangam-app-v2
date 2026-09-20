@@ -1,3 +1,28 @@
+---
+id: m4_06_m4_mixed_drill
+courseCode: PECST632
+module: 4
+sequence: 6
+title: 'M4 Drill: Deploy, Constrain & Generate'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Shape deployment cases without tribe slips
+  - Constrain latents and employ dice mappings at pace
+  - Duel forgers against detectives past the gate
+concepts:
+  - deployment reflexes
+  - generative reflexes
+prerequisites:
+  - m4_01_cv_speech_nlp_cases
+  - m4_02_regularized_autoencoders
+  - m4_03_stochastic_contractive
+  - m4_04_gan_variants
+examRelevance: high
+tags:
+  - applications
+  - m4-drill
+---
 # M4 Drill: Deploy, Constrain & Generate
 
 **Cases, constraints, dice, and duels — M4 as deployment-and-dynamics reflexes.**

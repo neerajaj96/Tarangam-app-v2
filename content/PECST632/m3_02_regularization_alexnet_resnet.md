@@ -1,3 +1,27 @@
+---
+id: m3_02_regularization_alexnet_resnet
+courseCode: PECST632
+module: 3
+sequence: 2
+title: 'Regularization, AlexNet & ResNet'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Keep giants honest with dropout, augmentation and decay
+  - Dissect the two architectures that proved depth
+  - Shortcut residuals into gradient elevators exactly
+concepts:
+  - dropout
+  - residual connections
+  - landmark architectures
+prerequisites:
+  - m1_05_deep_feedforward_init
+  - m3_01_cnn_layers_filters
+examRelevance: high
+tags:
+  - regularization
+  - architectures
+---
 # Regularization, AlexNet & ResNet
 
 **Keeping giants honest — dropout/augmentation/decay — then the two architectures that proved depth.**

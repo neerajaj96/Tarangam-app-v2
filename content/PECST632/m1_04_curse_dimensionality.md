@@ -1,3 +1,25 @@
+---
+id: m1_04_curse_dimensionality
+courseCode: PECST632
+module: 1
+sequence: 4
+title: Curse of Dimensionality
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Explode volumes exponentially with dimension counts
+  - Collapse distances until neighbours stop meaning anything
+  - Escape through the manifold hypothesis to representations
+concepts:
+  - curse of dimensionality
+  - distance concentration
+  - manifold hypothesis
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - high-dimensions
+---
 # Curse of Dimensionality
 
 **Why high dimensions starve data — volume explosion, distance collapse, and the representation escape hatch.**

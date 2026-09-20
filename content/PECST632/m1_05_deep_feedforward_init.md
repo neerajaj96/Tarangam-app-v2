@@ -1,3 +1,27 @@
+---
+id: m1_05_deep_feedforward_init
+courseCode: PECST632
+module: 1
+sequence: 5
+title: 'Deep Feedforward Nets: Depth, Init & Normalization'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Argue depth over width for hierarchical efficiency
+  - Initialise with Xavier and He rules matched to activations
+  - Keep signals alive with normalization and residual previews
+concepts:
+  - network depth
+  - weight initialization
+  - normalization
+prerequisites:
+  - m1_01_mlp_forward_pass
+  - m1_02_backprop_variants
+examRelevance: high
+tags:
+  - deep-networks
+  - initialization
+---
 # Deep Feedforward Nets: Depth, Init & Normalization
 
 **Going truly deep — why depth beats width, how to initialise, and keeping signals alive (normalization + residuals preview).**

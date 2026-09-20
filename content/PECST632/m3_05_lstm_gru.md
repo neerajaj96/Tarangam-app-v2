@@ -1,3 +1,26 @@
+---
+id: m3_05_lstm_gru
+courseCode: PECST632
+module: 3
+sequence: 5
+title: 'LSTMs (and GRU Sibling)'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Bounce forget, input and output gates off the conveyor
+  - Carry additive gradients past fading links
+  - Merge lean with GRU gate arithmetic exactly
+concepts:
+  - LSTM gates
+  - gated memory
+  - GRU
+prerequisites:
+  - m3_03_rnn_bptt
+examRelevance: high
+tags:
+  - rnn
+  - lstm-gru
+---
 # LSTMs (and GRU Sibling)
 
 **Gated memory that keeps — forget/input/output bouncers, conveyor gradients, and gate-arithmetic drills.**

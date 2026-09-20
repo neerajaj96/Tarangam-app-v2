@@ -1,3 +1,25 @@
+---
+id: m4_03_stochastic_contractive
+courseCode: PECST632
+module: 4
+sequence: 3
+title: Stochastic & Contractive Encoders
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Sample latents with reparameterized variational leashes
+  - Smooth mappings with Jacobian contractive penalties
+  - Separate dice latents from shock-absorber latents
+concepts:
+  - variational autoencoders
+  - contractive penalty
+prerequisites:
+  - m2_04_autoencoders
+examRelevance: medium
+tags:
+  - autoencoders
+  - vae
+---
 # Stochastic & Contractive Encoders
 
 **Latents with dice and shock absorbers — variational sampling and penalty-smoothed mappings.**

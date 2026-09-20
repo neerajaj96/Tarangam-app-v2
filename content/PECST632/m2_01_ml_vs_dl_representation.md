@@ -1,3 +1,25 @@
+---
+id: m2_01_ml_vs_dl_representation
+courseCode: PECST632
+module: 2
+sequence: 1
+title: ML vs DL & Representation Learning
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Contrast hand features against learned features exactly
+  - Price width as vocabulary and depth as grammar
+  - Explain why data floods let depth win vision
+concepts:
+  - representation learning
+  - paradigm break
+  - width-depth economics
+prerequisites: []
+examRelevance: medium
+tags:
+  - foundations
+  - representation
+---
 # ML vs DL & Representation Learning
 
 **Hand features vs learned features — the paradigm break, width/depth roles, and why depth won vision.**

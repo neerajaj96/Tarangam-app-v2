@@ -9450,16 +9450,23 @@
       "moduleName": "MLP, Backprop & SGD",
       "module": 1,
       "sequence": 1,
-      "title": "1.1 MLP Forward Pass",
+      "title": "MLP Architecture & Forward Pass",
       "filename": "m1_01_mlp_forward_pass.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "multilayer perceptron",
+        "forward propagation",
+        "parameter counting"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "mlp",
+        "forward-pass"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m1_02_backprop_variants",
@@ -9468,16 +9475,25 @@
       "moduleName": "MLP, Backprop & SGD",
       "module": 1,
       "sequence": 2,
-      "title": "1.2 Backprop Variants",
+      "title": "Backpropagation & Its Variants",
       "filename": "m1_02_backprop_variants.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "backpropagation",
+        "chain rule",
+        "Adam optimizer"
+      ],
+      "prerequisites": [
+        "m1_01_mlp_forward_pass"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "backpropagation",
+        "optimization"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m1_03_sgd_schedules",
@@ -9486,16 +9502,25 @@
       "moduleName": "MLP, Backprop & SGD",
       "module": 1,
       "sequence": 3,
-      "title": "1.3 SGD Schedules",
+      "title": "SGD: Batch, Mini-Batch & Learning Schedules",
       "filename": "m1_03_sgd_schedules.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "stochastic gradient descent",
+        "mini-batch training",
+        "learning schedules"
+      ],
+      "prerequisites": [
+        "m1_02_backprop_variants"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "optimization",
+        "sgd"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m1_04_curse_dimensionality",
@@ -9504,16 +9529,23 @@
       "moduleName": "MLP, Backprop & SGD",
       "module": 1,
       "sequence": 4,
-      "title": "1.4 Curse Dimensionality",
+      "title": "Curse of Dimensionality",
       "filename": "m1_04_curse_dimensionality.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "curse of dimensionality",
+        "distance concentration",
+        "manifold hypothesis"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "foundations",
+        "high-dimensions"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m1_05_deep_feedforward_init",
@@ -9522,16 +9554,26 @@
       "moduleName": "MLP, Backprop & SGD",
       "module": 1,
       "sequence": 5,
-      "title": "1.5 Deep Feedforward Init",
+      "title": "Deep Feedforward Nets: Depth, Init & Normalization",
       "filename": "m1_05_deep_feedforward_init.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "network depth",
+        "weight initialization",
+        "normalization"
+      ],
+      "prerequisites": [
+        "m1_01_mlp_forward_pass",
+        "m1_02_backprop_variants"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "deep-networks",
+        "initialization"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m1_06_m1_mixed_drill",
@@ -9540,16 +9582,28 @@
       "moduleName": "MLP, Backprop & SGD",
       "module": 1,
       "sequence": 6,
-      "title": "1.6 M1 Mixed Drill",
+      "title": "M1 Drill: Forward to Update in One Sitting",
       "filename": "m1_06_m1_mixed_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "forward-backward chain",
+        "training regimes"
+      ],
+      "prerequisites": [
+        "m1_01_mlp_forward_pass",
+        "m1_02_backprop_variants",
+        "m1_03_sgd_schedules",
+        "m1_04_curse_dimensionality",
+        "m1_05_deep_feedforward_init"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "foundations",
+        "m1-drill"
+      ],
+      "prerequisiteDepth": 3
     },
     {
       "id": "m2_01_ml_vs_dl_representation",
@@ -9558,16 +9612,23 @@
       "moduleName": "Depth, Activations & Autoencoders",
       "module": 2,
       "sequence": 1,
-      "title": "2.1 ML Vs Dl Representation",
+      "title": "ML vs DL & Representation Learning",
       "filename": "m2_01_ml_vs_dl_representation.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "representation learning",
+        "paradigm break",
+        "width-depth economics"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "foundations",
+        "representation"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_02_activations_relu_family",
@@ -9576,16 +9637,25 @@
       "moduleName": "Depth, Activations & Autoencoders",
       "module": 2,
       "sequence": 2,
-      "title": "2.2 Activations RELU Family",
+      "title": "Activations: ReLU, LReLU, ELU & Classics",
       "filename": "m2_02_activations_relu_family.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "activation functions",
+        "ReLU family",
+        "dying units"
+      ],
+      "prerequisites": [
+        "m1_01_mlp_forward_pass"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "activations",
+        "relu"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m2_03_unsupervised_rbm",
@@ -9594,16 +9664,23 @@
       "moduleName": "Depth, Activations & Autoencoders",
       "module": 2,
       "sequence": 3,
-      "title": "2.3 Unsupervised RBM",
+      "title": "Unsupervised Pretraining & RBMs",
       "filename": "m2_03_unsupervised_rbm.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "restricted Boltzmann machines",
+        "contrastive divergence",
+        "layer-wise pretraining"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "unsupervised",
+        "rbm"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_04_autoencoders",
@@ -9612,16 +9689,23 @@
       "moduleName": "Depth, Activations & Autoencoders",
       "module": 2,
       "sequence": 4,
-      "title": "2.4 Autoencoders",
+      "title": "Autoencoders: Bottlenecks That Learn",
       "filename": "m2_04_autoencoders.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "autoencoders",
+        "bottleneck constraint",
+        "reconstruction loss"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "unsupervised",
+        "autoencoders"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_05_dl_applications",
@@ -9630,16 +9714,22 @@
       "moduleName": "Depth, Activations & Autoencoders",
       "module": 2,
       "sequence": 5,
-      "title": "2.5 Dl Applications",
+      "title": "Deep Learning Applications Survey",
       "filename": "m2_05_dl_applications.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "application domains",
+        "win patterns"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "medium",
+      "tags": [
+        "applications",
+        "survey"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m2_06_m2_mixed_drill",
@@ -9648,16 +9738,28 @@
       "moduleName": "Depth, Activations & Autoencoders",
       "module": 2,
       "sequence": 6,
-      "title": "2.6 M2 Mixed Drill",
+      "title": "M2 Drill: Depth Decisions at Pace",
       "filename": "m2_06_m2_mixed_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "depth triage",
+        "regime decisions"
+      ],
+      "prerequisites": [
+        "m2_01_ml_vs_dl_representation",
+        "m2_02_activations_relu_family",
+        "m2_03_unsupervised_rbm",
+        "m2_04_autoencoders",
+        "m2_05_dl_applications"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "foundations",
+        "m2-drill"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m3_01_cnn_layers_filters",
@@ -9666,16 +9768,25 @@
       "moduleName": "CNNs & RNNs",
       "module": 3,
       "sequence": 1,
-      "title": "3.1 CNN Layers Filters",
+      "title": "CNNs: Layers, Filters & Sharing",
       "filename": "m3_01_cnn_layers_filters.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "convolutional layers",
+        "weight sharing",
+        "pooling"
+      ],
+      "prerequisites": [
+        "m1_01_mlp_forward_pass"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "cnn",
+        "convolution"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m3_02_regularization_alexnet_resnet",
@@ -9684,16 +9795,26 @@
       "moduleName": "CNNs & RNNs",
       "module": 3,
       "sequence": 2,
-      "title": "3.2 Regularization Alexnet Resnet",
+      "title": "Regularization, AlexNet & ResNet",
       "filename": "m3_02_regularization_alexnet_resnet.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "dropout",
+        "residual connections",
+        "landmark architectures"
+      ],
+      "prerequisites": [
+        "m1_05_deep_feedforward_init",
+        "m3_01_cnn_layers_filters"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "regularization",
+        "architectures"
+      ],
+      "prerequisiteDepth": 3
     },
     {
       "id": "m3_03_rnn_bptt",
@@ -9702,16 +9823,25 @@
       "moduleName": "CNNs & RNNs",
       "module": 3,
       "sequence": 3,
-      "title": "3.3 RNN BPTT",
+      "title": "RNNs & BPTT: Memory That Loops",
       "filename": "m3_03_rnn_bptt.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "recurrent networks",
+        "backpropagation through time",
+        "vanishing gradients"
+      ],
+      "prerequisites": [
+        "m1_02_backprop_variants"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "rnn",
+        "bptt"
+      ],
+      "prerequisiteDepth": 2
     },
     {
       "id": "m3_04_birnn_seq2seq",
@@ -9720,16 +9850,25 @@
       "moduleName": "CNNs & RNNs",
       "module": 3,
       "sequence": 4,
-      "title": "3.4 Birnn Seq2seq",
+      "title": "Bidirectional RNNs & Seq2Seq",
       "filename": "m3_04_birnn_seq2seq.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "bidirectional RNNs",
+        "sequence-to-sequence",
+        "teacher forcing"
+      ],
+      "prerequisites": [
+        "m3_03_rnn_bptt"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "rnn",
+        "seq2seq"
+      ],
+      "prerequisiteDepth": 3
     },
     {
       "id": "m3_05_lstm_gru",
@@ -9738,16 +9877,25 @@
       "moduleName": "CNNs & RNNs",
       "module": 3,
       "sequence": 5,
-      "title": "3.5 LSTM Gru",
+      "title": "LSTMs (and GRU Sibling)",
       "filename": "m3_05_lstm_gru.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "LSTM gates",
+        "gated memory",
+        "GRU"
+      ],
+      "prerequisites": [
+        "m3_03_rnn_bptt"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "rnn",
+        "lstm-gru"
+      ],
+      "prerequisiteDepth": 3
     },
     {
       "id": "m3_06_dimension_param_drill",
@@ -9756,16 +9904,26 @@
       "moduleName": "CNNs & RNNs",
       "module": 3,
       "sequence": 6,
-      "title": "3.6 Dimension Param Drill",
+      "title": "CNN/RNN Parameter & Dimension Drill",
       "filename": "m3_06_dimension_param_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "parameter counting",
+        "output-shape chains"
+      ],
+      "prerequisites": [
+        "m3_01_cnn_layers_filters",
+        "m3_03_rnn_bptt",
+        "m3_05_lstm_gru"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "architectures",
+        "param-drill"
+      ],
+      "prerequisiteDepth": 4
     },
     {
       "id": "m3_07_m3_mixed_drill",
@@ -9774,16 +9932,26 @@
       "moduleName": "CNNs & RNNs",
       "module": 3,
       "sequence": 7,
-      "title": "3.7 M3 Mixed Drill",
+      "title": "M3 Drill: Architectures at Pace",
       "filename": "m3_07_m3_mixed_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "architecture triage",
+        "tribe trade-offs"
+      ],
+      "prerequisites": [
+        "m3_01_cnn_layers_filters",
+        "m3_03_rnn_bptt",
+        "m3_05_lstm_gru"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "architectures",
+        "m3-drill"
+      ],
+      "prerequisiteDepth": 4
     },
     {
       "id": "m4_01_cv_speech_nlp_cases",
@@ -9792,16 +9960,26 @@
       "moduleName": "Applications, GANs & Advanced AEs",
       "module": 4,
       "sequence": 1,
-      "title": "4.1 Cv Speech Nlp Cases",
+      "title": "CV, Speech, NLP & Case Studies",
       "filename": "m4_01_cv_speech_nlp_cases.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "deployment pipelines",
+        "case shapes"
+      ],
+      "prerequisites": [
+        "m3_01_cnn_layers_filters",
+        "m3_03_rnn_bptt",
+        "m3_04_birnn_seq2seq"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "applications",
+        "deployment"
+      ],
+      "prerequisiteDepth": 4
     },
     {
       "id": "m4_02_regularized_autoencoders",
@@ -9810,16 +9988,24 @@
       "moduleName": "Applications, GANs & Advanced AEs",
       "module": 4,
       "sequence": 2,
-      "title": "4.2 Regularized Autoencoders",
+      "title": "Regularized Autoencoders: Sparse & Denoising",
       "filename": "m4_02_regularized_autoencoders.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "sparse autoencoders",
+        "denoising autoencoders"
+      ],
+      "prerequisites": [
+        "m2_04_autoencoders"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "autoencoders",
+        "regularization"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m4_03_stochastic_contractive",
@@ -9828,16 +10014,24 @@
       "moduleName": "Applications, GANs & Advanced AEs",
       "module": 4,
       "sequence": 3,
-      "title": "4.3 Stochastic Contractive",
+      "title": "Stochastic & Contractive Encoders",
       "filename": "m4_03_stochastic_contractive.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "variational autoencoders",
+        "contractive penalty"
+      ],
+      "prerequisites": [
+        "m2_04_autoencoders"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "autoencoders",
+        "vae"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m4_04_gan_variants",
@@ -9846,16 +10040,23 @@
       "moduleName": "Applications, GANs & Advanced AEs",
       "module": 4,
       "sequence": 4,
-      "title": "4.4 GAN Variants",
+      "title": "GANs & Variants",
       "filename": "m4_04_gan_variants.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "generative adversarial networks",
+        "minimax training",
+        "GAN variants"
+      ],
       "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "examRelevance": "high",
+      "tags": [
+        "gan",
+        "generative-models"
+      ],
+      "prerequisiteDepth": 0
     },
     {
       "id": "m4_05_gan_dynamics_drill",
@@ -9864,16 +10065,24 @@
       "moduleName": "Applications, GANs & Advanced AEs",
       "module": 4,
       "sequence": 5,
-      "title": "4.5 GAN Dynamics Drill",
+      "title": "GAN Dynamics Drill: Stability at Pace",
       "filename": "m4_05_gan_dynamics_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "beginner",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "training instabilities",
+        "GAN evaluation"
+      ],
+      "prerequisites": [
+        "m4_04_gan_variants"
+      ],
+      "examRelevance": "medium",
+      "tags": [
+        "gan",
+        "stability-drill"
+      ],
+      "prerequisiteDepth": 1
     },
     {
       "id": "m4_06_m4_mixed_drill",
@@ -9882,16 +10091,27 @@
       "moduleName": "Applications, GANs & Advanced AEs",
       "module": 4,
       "sequence": 6,
-      "title": "4.6 M4 Mixed Drill",
+      "title": "M4 Drill: Deploy, Constrain & Generate",
       "filename": "m4_06_m4_mixed_drill.md",
-      "hasMetadata": false,
-      "difficulty": null,
-      "estimatedMinutes": null,
-      "concepts": [],
-      "prerequisites": [],
-      "examRelevance": null,
-      "tags": [],
-      "prerequisiteDepth": null
+      "hasMetadata": true,
+      "difficulty": "intermediate",
+      "estimatedMinutes": 3,
+      "concepts": [
+        "deployment reflexes",
+        "generative reflexes"
+      ],
+      "prerequisites": [
+        "m4_01_cv_speech_nlp_cases",
+        "m4_02_regularized_autoencoders",
+        "m4_03_stochastic_contractive",
+        "m4_04_gan_variants"
+      ],
+      "examRelevance": "high",
+      "tags": [
+        "applications",
+        "m4-drill"
+      ],
+      "prerequisiteDepth": 5
     },
     {
       "id": "m1_01_divisibility_euclid",
@@ -10346,7 +10566,7 @@
   ],
   "aggregates": {
     "totalTopics": 432,
-    "metadataTopics": 291,
+    "metadataTopics": 316,
     "byCourse": {
       "GAMAT301": {
         "total": 24,
@@ -10406,7 +10626,7 @@
       },
       "PECST632": {
         "total": 25,
-        "metadata": 0
+        "metadata": 25
       },
       "PECST637": {
         "total": 25,
@@ -10640,19 +10860,19 @@
       },
       "PECST632:M1": {
         "total": 6,
-        "metadata": 0
+        "metadata": 6
       },
       "PECST632:M2": {
         "total": 6,
-        "metadata": 0
+        "metadata": 6
       },
       "PECST632:M3": {
         "total": 7,
-        "metadata": 0
+        "metadata": 7
       },
       "PECST632:M4": {
         "total": 6,
-        "metadata": 0
+        "metadata": 6
       },
       "PECST637:M1": {
         "total": 7,
@@ -10672,14 +10892,14 @@
       }
     },
     "byDifficulty": {
-      "beginner": 259,
-      "intermediate": 32
+      "beginner": 280,
+      "intermediate": 36
     },
     "byExamRelevance": {
-      "high": 165,
-      "medium": 126
+      "high": 179,
+      "medium": 137
     },
-    "prerequisiteEdges": 345,
+    "prerequisiteEdges": 382,
     "maxDepth": 8
   }
 }

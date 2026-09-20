@@ -1,3 +1,26 @@
+---
+id: m1_03_sgd_schedules
+courseCode: PECST632
+module: 1
+sequence: 3
+title: 'SGD: Batch, Mini-Batch & Learning Schedules'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Trade exact slow batches against noisy escaping singles
+  - Default to mini-batches in the thirty-two to two-fifty-six band
+  - Choreograph warmup to decay learning schedules
+concepts:
+  - stochastic gradient descent
+  - mini-batch training
+  - learning schedules
+prerequisites:
+  - m1_02_backprop_variants
+examRelevance: medium
+tags:
+  - optimization
+  - sgd
+---
 # SGD: Batch, Mini-Batch & Learning Schedules
 
 **How much data per step — full-batch truth, stochastic noise, mini-batch compromise, and learning-rate choreography.**

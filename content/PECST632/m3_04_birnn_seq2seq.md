@@ -1,3 +1,26 @@
+---
+id: m3_04_birnn_seq2seq
+courseCode: PECST632
+module: 3
+sequence: 4
+title: Bidirectional RNNs & Seq2Seq
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read both ways with forward-backward concatenation
+  - Translate through encoder-bottleneck-decoder patterns
+  - Train teacher-forced without inference-time leakage
+concepts:
+  - bidirectional RNNs
+  - sequence-to-sequence
+  - teacher forcing
+prerequisites:
+  - m3_03_rnn_bptt
+examRelevance: medium
+tags:
+  - rnn
+  - seq2seq
+---
 # Bidirectional RNNs & Seq2Seq
 
 **Reading both ways, and the encoder-bottleneck-decoder pattern that translates.**

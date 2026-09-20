@@ -1,3 +1,27 @@
+---
+id: m3_07_m3_mixed_drill
+courseCode: PECST632
+module: 3
+sequence: 7
+title: 'M3 Drill: Architectures at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Pick conv, recurrent or gated tribes from shape symptoms
+  - Count tribe parameters without formula slips
+  - Justify trade-offs under exam time pressure
+concepts:
+  - architecture triage
+  - tribe trade-offs
+prerequisites:
+  - m3_01_cnn_layers_filters
+  - m3_03_rnn_bptt
+  - m3_05_lstm_gru
+examRelevance: high
+tags:
+  - architectures
+  - m3-drill
+---
 # M3 Drill: Architectures at Pace
 
 **Conv vs recurrent vs gated — pick, count, and justify under exam time.**

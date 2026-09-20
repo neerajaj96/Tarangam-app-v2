@@ -1,3 +1,27 @@
+---
+id: m3_06_dimension_param_drill
+courseCode: PECST632
+module: 3
+sequence: 6
+title: 'CNN/RNN Parameter & Dimension Drill'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Count shared conv params against dense fully-connected heads
+  - Tally recurrent weights once and LSTM gates times four
+  - Chain output shapes without dropping the vocabulary watch
+concepts:
+  - parameter counting
+  - output-shape chains
+prerequisites:
+  - m3_01_cnn_layers_filters
+  - m3_03_rnn_bptt
+  - m3_05_lstm_gru
+examRelevance: medium
+tags:
+  - architectures
+  - param-drill
+---
 # CNN/RNN Parameter & Dimension Drill
 
 **Count everything — conv params, FC heads, RNN/LSTM tallies, and output-shape chains.**

@@ -1,3 +1,26 @@
+---
+id: m1_02_backprop_variants
+courseCode: PECST632
+module: 1
+sequence: 2
+title: Backpropagation & Its Variants
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Assign credit backwards with chain-rule deltas
+  - Price full gradients at parameter order cost
+  - Upgrade with momentum, RMSprop and Adam debiasing
+concepts:
+  - backpropagation
+  - chain rule
+  - Adam optimizer
+prerequisites:
+  - m1_01_mlp_forward_pass
+examRelevance: high
+tags:
+  - backpropagation
+  - optimization
+---
 # Backpropagation & Its Variants
 
 **Credit assignment by chain rule — deltas flowing backwards, plus momentum/RMSprop/Adam upgrades.**

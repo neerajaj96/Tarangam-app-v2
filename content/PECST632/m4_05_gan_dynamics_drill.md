@@ -1,3 +1,25 @@
+---
+id: m4_05_gan_dynamics_drill
+courseCode: PECST632
+module: 4
+sequence: 5
+title: 'GAN Dynamics Drill: Stability at Pace'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Diagnose collapse, dominance and oscillation from signals
+  - Corner each injury with its named fix rapidly
+  - Score quality plus coverage with evaluation pairs
+concepts:
+  - training instabilities
+  - GAN evaluation
+prerequisites:
+  - m4_04_gan_variants
+examRelevance: medium
+tags:
+  - gan
+  - stability-drill
+---
 # GAN Dynamics Drill: Stability at Pace
 
 **Diagnose-and-tame reflexes — collapse, dominance, oscillation — plus evaluation pairs.**

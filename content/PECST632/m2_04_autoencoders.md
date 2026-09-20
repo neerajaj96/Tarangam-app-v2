@@ -1,3 +1,25 @@
+---
+id: m2_04_autoencoders
+courseCode: PECST632
+module: 2
+sequence: 4
+title: 'Autoencoders: Bottlenecks That Learn'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Copy inputs through keyhole bottlenecks with reconstruction loss
+  - Prove identity teaches nothing without constraints
+  - Reduce linear-tight bottlenecks to PCA exactly
+concepts:
+  - autoencoders
+  - bottleneck constraint
+  - reconstruction loss
+prerequisites: []
+examRelevance: high
+tags:
+  - unsupervised
+  - autoencoders
+---
 # Autoencoders: Bottlenecks That Learn
 
 **Copy through a keyhole — undercomplete squeeze, and why identity needs constraints to teach anything.**

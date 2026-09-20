@@ -1,3 +1,26 @@
+---
+id: m3_03_rnn_bptt
+courseCode: PECST632
+module: 3
+sequence: 3
+title: 'RNNs & BPTT: Memory That Loops'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Hold state with recurrence shared across time steps
+  - Unroll and sum gradients through backpropagation in time
+  - Diagnose fading long links that gates must rescue
+concepts:
+  - recurrent networks
+  - backpropagation through time
+  - vanishing gradients
+prerequisites:
+  - m1_02_backprop_variants
+examRelevance: high
+tags:
+  - rnn
+  - bptt
+---
 # RNNs & BPTT: Memory That Loops
 
 **Sequences need state — recurrence, unrolling through time, and gradients that fade across steps.**

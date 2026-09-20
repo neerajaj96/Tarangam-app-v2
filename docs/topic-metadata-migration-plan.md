@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **291**
-- Pending: **141**
-- Coverage: **67.36%** (tracked by `npm run check`)
+- Migrated: **316**
+- Pending: **116**
+- Coverage: **73.15%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - PECST632 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PBCST604 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST602 — Module 1 in progress (23 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST601 — Module 1 in progress (29 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -31,23 +32,53 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
-   2. PCCST602 — Advanced Computing Systems (started — see step 1)
-   3. PCCST601 — Compiler Design (started — see step 1)
-   4. PECST522 — Artificial Intelligence (started — see step 1)
-   5. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   6. PCCST503 — Machine Learning (started — see step 1)
-   7. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   8. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   9. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   10. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   11. PCCST501 — Computer Networks (started — see step 1)
-   12. PECST632 — Deep Learning
+   1. PECST632 — Deep Learning (started — see step 1)
+   2. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
+   3. PCCST602 — Advanced Computing Systems (started — see step 1)
+   4. PCCST601 — Compiler Design (started — see step 1)
+   5. PECST522 — Artificial Intelligence (started — see step 1)
+   6. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   7. PCCST503 — Machine Learning (started — see step 1)
+   8. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   9. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   10. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   11. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   12. PCCST501 — Computer Networks (started — see step 1)
    13. PECST637 — Fundamentals of Cryptography
    14. PECST631 — Software Testing
    15. GXEST605 — Design Thinking and Product Development
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## PECST632 — Deep Learning (25/25 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 MLP, Backprop & SGD | 01 | `m1_01_mlp_forward_pass.md` | `m1_01_mlp_forward_pass` | migrated |
+| M1 MLP, Backprop & SGD | 02 | `m1_02_backprop_variants.md` | `m1_02_backprop_variants` | migrated |
+| M1 MLP, Backprop & SGD | 03 | `m1_03_sgd_schedules.md` | `m1_03_sgd_schedules` | migrated |
+| M1 MLP, Backprop & SGD | 04 | `m1_04_curse_dimensionality.md` | `m1_04_curse_dimensionality` | migrated |
+| M1 MLP, Backprop & SGD | 05 | `m1_05_deep_feedforward_init.md` | `m1_05_deep_feedforward_init` | migrated |
+| M1 MLP, Backprop & SGD | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | migrated |
+| M2 Depth, Activations & Autoencoders | 01 | `m2_01_ml_vs_dl_representation.md` | `m2_01_ml_vs_dl_representation` | migrated |
+| M2 Depth, Activations & Autoencoders | 02 | `m2_02_activations_relu_family.md` | `m2_02_activations_relu_family` | migrated |
+| M2 Depth, Activations & Autoencoders | 03 | `m2_03_unsupervised_rbm.md` | `m2_03_unsupervised_rbm` | migrated |
+| M2 Depth, Activations & Autoencoders | 04 | `m2_04_autoencoders.md` | `m2_04_autoencoders` | migrated |
+| M2 Depth, Activations & Autoencoders | 05 | `m2_05_dl_applications.md` | `m2_05_dl_applications` | migrated |
+| M2 Depth, Activations & Autoencoders | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | migrated |
+| M3 CNNs & RNNs | 01 | `m3_01_cnn_layers_filters.md` | `m3_01_cnn_layers_filters` | migrated |
+| M3 CNNs & RNNs | 02 | `m3_02_regularization_alexnet_resnet.md` | `m3_02_regularization_alexnet_resnet` | migrated |
+| M3 CNNs & RNNs | 03 | `m3_03_rnn_bptt.md` | `m3_03_rnn_bptt` | migrated |
+| M3 CNNs & RNNs | 04 | `m3_04_birnn_seq2seq.md` | `m3_04_birnn_seq2seq` | migrated |
+| M3 CNNs & RNNs | 05 | `m3_05_lstm_gru.md` | `m3_05_lstm_gru` | migrated |
+| M3 CNNs & RNNs | 06 | `m3_06_dimension_param_drill.md` | `m3_06_dimension_param_drill` | migrated |
+| M3 CNNs & RNNs | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | migrated |
+| M4 Applications, GANs & Advanced AEs | 01 | `m4_01_cv_speech_nlp_cases.md` | `m4_01_cv_speech_nlp_cases` | migrated |
+| M4 Applications, GANs & Advanced AEs | 02 | `m4_02_regularized_autoencoders.md` | `m4_02_regularized_autoencoders` | migrated |
+| M4 Applications, GANs & Advanced AEs | 03 | `m4_03_stochastic_contractive.md` | `m4_03_stochastic_contractive` | migrated |
+| M4 Applications, GANs & Advanced AEs | 04 | `m4_04_gan_variants.md` | `m4_04_gan_variants` | migrated |
+| M4 Applications, GANs & Advanced AEs | 05 | `m4_05_gan_dynamics_drill.md` | `m4_05_gan_dynamics_drill` | migrated |
+| M4 Applications, GANs & Advanced AEs | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | migrated |
 
 ## PBCST604 — Fundamentals of Cyber Security (26/26 migrated)
 
@@ -411,36 +442,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## PECST632 — Deep Learning (0/25 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 MLP, Backprop & SGD | 01 | `m1_01_mlp_forward_pass.md` | `m1_01_mlp_forward_pass` | pending |
-| M1 MLP, Backprop & SGD | 02 | `m1_02_backprop_variants.md` | `m1_02_backprop_variants` | pending |
-| M1 MLP, Backprop & SGD | 03 | `m1_03_sgd_schedules.md` | `m1_03_sgd_schedules` | pending |
-| M1 MLP, Backprop & SGD | 04 | `m1_04_curse_dimensionality.md` | `m1_04_curse_dimensionality` | pending |
-| M1 MLP, Backprop & SGD | 05 | `m1_05_deep_feedforward_init.md` | `m1_05_deep_feedforward_init` | pending |
-| M1 MLP, Backprop & SGD | 06 | `m1_06_m1_mixed_drill.md` | `m1_06_m1_mixed_drill` | pending |
-| M2 Depth, Activations & Autoencoders | 01 | `m2_01_ml_vs_dl_representation.md` | `m2_01_ml_vs_dl_representation` | pending |
-| M2 Depth, Activations & Autoencoders | 02 | `m2_02_activations_relu_family.md` | `m2_02_activations_relu_family` | pending |
-| M2 Depth, Activations & Autoencoders | 03 | `m2_03_unsupervised_rbm.md` | `m2_03_unsupervised_rbm` | pending |
-| M2 Depth, Activations & Autoencoders | 04 | `m2_04_autoencoders.md` | `m2_04_autoencoders` | pending |
-| M2 Depth, Activations & Autoencoders | 05 | `m2_05_dl_applications.md` | `m2_05_dl_applications` | pending |
-| M2 Depth, Activations & Autoencoders | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | pending |
-| M3 CNNs & RNNs | 01 | `m3_01_cnn_layers_filters.md` | `m3_01_cnn_layers_filters` | pending |
-| M3 CNNs & RNNs | 02 | `m3_02_regularization_alexnet_resnet.md` | `m3_02_regularization_alexnet_resnet` | pending |
-| M3 CNNs & RNNs | 03 | `m3_03_rnn_bptt.md` | `m3_03_rnn_bptt` | pending |
-| M3 CNNs & RNNs | 04 | `m3_04_birnn_seq2seq.md` | `m3_04_birnn_seq2seq` | pending |
-| M3 CNNs & RNNs | 05 | `m3_05_lstm_gru.md` | `m3_05_lstm_gru` | pending |
-| M3 CNNs & RNNs | 06 | `m3_06_dimension_param_drill.md` | `m3_06_dimension_param_drill` | pending |
-| M3 CNNs & RNNs | 07 | `m3_07_m3_mixed_drill.md` | `m3_07_m3_mixed_drill` | pending |
-| M4 Applications, GANs & Advanced AEs | 01 | `m4_01_cv_speech_nlp_cases.md` | `m4_01_cv_speech_nlp_cases` | pending |
-| M4 Applications, GANs & Advanced AEs | 02 | `m4_02_regularized_autoencoders.md` | `m4_02_regularized_autoencoders` | pending |
-| M4 Applications, GANs & Advanced AEs | 03 | `m4_03_stochastic_contractive.md` | `m4_03_stochastic_contractive` | pending |
-| M4 Applications, GANs & Advanced AEs | 04 | `m4_04_gan_variants.md` | `m4_04_gan_variants` | pending |
-| M4 Applications, GANs & Advanced AEs | 05 | `m4_05_gan_dynamics_drill.md` | `m4_05_gan_dynamics_drill` | pending |
-| M4 Applications, GANs & Advanced AEs | 06 | `m4_06_m4_mixed_drill.md` | `m4_06_m4_mixed_drill` | pending |
 
 ## PECST637 — Fundamentals of Cryptography (0/25 migrated)
 

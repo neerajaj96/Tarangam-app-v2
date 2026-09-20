@@ -1,3 +1,29 @@
+---
+id: m1_06_m1_mixed_drill
+courseCode: PECST632
+module: 1
+sequence: 6
+title: 'M1 Drill: Forward to Update in One Sitting'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Count parameters then sweep forward without slips
+  - Blame backwards and pick regimes at exam pace
+  - Price curses and plumb depth factors from reflex
+concepts:
+  - forward-backward chain
+  - training regimes
+prerequisites:
+  - m1_01_mlp_forward_pass
+  - m1_02_backprop_variants
+  - m1_03_sgd_schedules
+  - m1_04_curse_dimensionality
+  - m1_05_deep_feedforward_init
+examRelevance: high
+tags:
+  - foundations
+  - m1-drill
+---
 # M1 Drill: Forward to Update in One Sitting
 
 **Parameters, forward sweep, blame math, regime picks, curse numbers, plumbing factors — M1 as reflexes.**

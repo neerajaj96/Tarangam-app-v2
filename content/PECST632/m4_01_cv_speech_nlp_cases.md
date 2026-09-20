@@ -1,3 +1,27 @@
+---
+id: m4_01_cv_speech_nlp_cases
+courseCode: PECST632
+module: 4
+sequence: 1
+title: 'CV, Speech, NLP & Case Studies'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Tokenize pixels, waves and tokens into tribe-shaped pipelines
+  - Rule vision with CNNs, speech with RNNs and language with encoders
+  - Separate classification cases from regression cases by shape
+concepts:
+  - deployment pipelines
+  - case shapes
+prerequisites:
+  - m3_01_cnn_layers_filters
+  - m3_03_rnn_bptt
+  - m3_04_birnn_seq2seq
+examRelevance: medium
+tags:
+  - applications
+  - deployment
+---
 # CV, Speech, NLP & Case Studies
 
 **Three flagship deployments — what each tokenizes, which tribe rules, and classification-vs-regression case shapes.**

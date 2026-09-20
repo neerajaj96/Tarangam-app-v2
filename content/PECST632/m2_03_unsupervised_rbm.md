@@ -1,3 +1,25 @@
+---
+id: m2_03_unsupervised_rbm
+courseCode: PECST632
+module: 2
+sequence: 3
+title: Unsupervised Pretraining & RBMs
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Learn without labels through greedy layer-wise history
+  - Run bipartite factorised conditionals with contrastive divergence
+  - Stack, unroll and fine-tune into deep feasts
+concepts:
+  - restricted Boltzmann machines
+  - contrastive divergence
+  - layer-wise pretraining
+prerequisites: []
+examRelevance: medium
+tags:
+  - unsupervised
+  - rbm
+---
 # Unsupervised Pretraining & RBMs
 
 **Learning without labels — greedy layer-wise pretraining history and the Boltzmann machine that started feasts.**
