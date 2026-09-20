@@ -379,7 +379,7 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'style.css']) {
+  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'assets/revision.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'scripts/revision.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
   }
   if (fs.existsSync('explorer.html')) {
@@ -390,13 +390,14 @@ if (fs.existsSync('dist')) {
   }
   if (fs.existsSync('dashboard.html')) {
     const html = fs.readFileSync('dashboard.html', 'utf-8');
-    for (const ref of ['id="db-continue"', 'id="db-exam"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
+    for (const ref of ['id="db-continue"', 'id="db-exam"', 'id="db-review"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
       if (!html.includes(ref)) fail(`journey: dashboard.html is missing unified journey section ${ref}`);
     }
   }
   if (fs.existsSync('explorer.html')) {
     const html = fs.readFileSync('explorer.html', 'utf-8');
     if (!html.includes('id="xp-examview"')) fail('exam: explorer.html is missing the exam-readiness view filter (xp-examview)');
+    if (!html.includes('id="xp-review"')) fail('review: explorer.html is missing the revision view filter (xp-review)');
   }
   if (fs.existsSync('assets/explorer.js')) {
     const js = fs.readFileSync('assets/explorer.js', 'utf-8');
@@ -429,7 +430,7 @@ if (fs.existsSync('dist')) {
     if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/data/topic-manifest.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
   }
@@ -445,6 +446,15 @@ if (fs.existsSync('dist')) {
   if (fs.existsSync('assets/topic-study-context.js')) {
     const js = fs.readFileSync('assets/topic-study-context.js', 'utf-8');
     if (!js.includes('Exam readiness')) fail('exam: assets/topic-study-context.js does not surface exam readiness');
+    if (!js.includes('Review status')) fail('review: assets/topic-study-context.js does not surface review status');
+  }
+  if (fs.existsSync('assets/dashboard.js')) {
+    const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
+    if (!js.includes('db-review') && !js.includes('renderReview')) fail('review: assets/dashboard.js does not render the review section');
+  }
+  if (fs.existsSync('assets/explorer.js')) {
+    const js = fs.readFileSync('assets/explorer.js', 'utf-8');
+    if (!js.includes('filterTopicsByReview') && !js.includes('revision.js')) fail('review: assets/explorer.js does not use the revision layer');
   }
 }
 
@@ -486,6 +496,25 @@ if (fs.existsSync('dist')) {
       if (js.toLowerCase().includes(banned)) fail(`exam: assets/exam-readiness.js must stay deterministic and static-first (found "${banned}")`);
     }
     if (/predict(s|ed|ive|ion)?\s+(score|grade|exam\s+score|model)/i.test(js)) fail('exam: assets/exam-readiness.js must not add predictive exam scores');
+// 12. Deterministic revision & review layer: pure timestamp math over
+// existing state — no AI/ML, no retention predictions, no gamification,
+// no backend, no second recommendation engine.
+{
+  if (!fs.existsSync('assets/revision.js')) {
+    fail('review: expected source file assets/revision.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/revision.js', 'utf-8');
+    for (const token of ['REVIEW_DUE_DAYS', 'REVIEW_OVERDUE_DAYS', 'buildRevisionModel', 'getNextReviewTopic', 'filterTopicsByReview', 'explainReviewReason']) {
+      if (!js.includes(token)) fail(`review: assets/revision.js is missing "${token}"`);
+    }
+    if (!js.includes("from './topic-intelligence.js'")) fail('review: assets/revision.js must build on the canonical Topic Intelligence Layer');
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+      if (js.toLowerCase().includes(banned)) fail(`review: assets/revision.js must stay deterministic and static-first (found "${banned}")`);
+    }
+    if (/retention\s+model|forgetting\s+curve\s+fit|predict\w*\s+(retention|recall|memory)/i.test(js)) fail('review: assets/revision.js must not add predictive retention models');
+    if (/xps\b|experience points/i.test(js)) fail('review: assets/revision.js must not add gamification');
+  }
+}
     if (/xps\b|experience points/i.test(js)) fail('exam: assets/exam-readiness.js must not add gamification');
   }
 }

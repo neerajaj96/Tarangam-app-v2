@@ -29,17 +29,28 @@ import {
   normalizeExamFilter,
   filterTopicsByExam,
 } from './exam-readiness.js';
+import {
+  REVIEW_FILTERS,
+  REVIEW_STATE_DUE,
+  REVIEW_STATE_OVERDUE,
+  normalizeReviewFilter,
+  filterTopicsByReview,
+  getReviewStateForTopic,
+} from './revision.js';
 
-export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter };
+export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter, REVIEW_FILTERS, normalizeReviewFilter };
 
 const $ = (id) => (typeof document !== 'undefined' ? document.getElementById(id) : null);
 
 // Pure Explorer filtering for tests and UI: canonical combined filter
 // (course/module/search/difficulty/exam) then the deterministic journey
-// filter (all/not_started/in_progress/completed/ready) and the exam-readiness
-// view (all/exam_relevant/exam_completed/exam_remaining) via the shared
-// exam-readiness module — no duplicated intelligence logic.
-// Preserves manifest order; unknown filters fall back to 'all'.
+// filter (all/not_started/in_progress/completed/ready), the exam-readiness
+// view (all/exam_relevant/exam_completed/exam_remaining), and the revision
+// view (all/review_due/review_overdue/exam_review_due) via the shared
+// modules — no duplicated intelligence logic.
+// Preserves manifest order; unknown filters fall back to 'all'. The review
+// view needs a timestamp reader and injected now; without timestamps it
+// yields no review matches (never fabricated).
 export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
   const {
     courseCode = null,
@@ -49,6 +60,9 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
     examRelevances = null,
     journey = 'all',
     examView = 'all',
+    reviewFilter = 'all',
+    getTimestamp = null,
+    now,
   } = options;
   if (!manifest || !courseCode) return [];
   const scoped = Data.combinedFilter(manifest, {
@@ -59,7 +73,8 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
     examRelevances: examRelevances ? [examRelevances] : null,
   });
   const byJourney = filterTopicsByJourney(manifest, getStatus, scoped, journey);
-  return filterTopicsByExam(manifest, getStatus, byJourney, examView);
+  const byExam = filterTopicsByExam(manifest, getStatus, byJourney, examView);
+  return filterTopicsByReview(manifest, getStatus, getTimestamp, byExam, reviewFilter, now);
 }
 
 export function getExplorerTopicJourney(manifest, getStatus, courseCode, topicId) {
@@ -77,6 +92,7 @@ const state = {
   exam: 'all',
   journey: 'all',
   examView: 'all',
+  reviewFilter: 'all',
   selectedKey: null,
   loadError: null,
 };
@@ -131,6 +147,11 @@ function statusReader() {
   return (courseCode, topicId) => state.progress.getTopicState(courseCode, topicId).status;
 }
 
+function timestampReader() {
+  if (!state.progress) return null;
+  return (courseCode, topicId) => state.progress.lastAccessed(courseCode, topicId);
+}
+
 function currentRecommendedKey() {
   if (!state.manifest || !state.progress) return null;
   const next = getNextRecommendedTopic(state.manifest, statusReader());
@@ -152,6 +173,18 @@ function journeyChips(topic) {
   return chips.join('');
 }
 
+function reviewChips(topic) {
+  // Per-card review signal from the shared revision module (completed
+  // topics only; unfinished topics never show review chips).
+  if (!state.manifest || !state.progress) return '';
+  const rs = getReviewStateForTopic(
+    state.manifest, statusReader(), timestampReader(), topic.courseCode, topic.id, Date.now()
+  );
+  if (rs.state === REVIEW_STATE_OVERDUE) return '<span class="badge badge-gold">↻ Overdue</span>';
+  if (rs.state === REVIEW_STATE_DUE) return '<span class="badge badge-accent">↻ Review due</span>';
+  return '';
+}
+
 function currentFilters() {
   return {
     q: state.q,
@@ -159,6 +192,7 @@ function currentFilters() {
     exam: state.exam === 'all' ? null : state.exam,
     journey: state.journey,
     examView: state.examView,
+    reviewFilter: state.reviewFilter,
   };
 }
 
@@ -168,7 +202,7 @@ function visibleTopics() {
   const f = currentFilters();
   // One canonical combined filter (see assets/topic-intelligence.js):
   // course + module scope, whole-manifest search, difficulty/exam facets,
-  // then the deterministic journey filter and the exam-readiness view.
+  // then the deterministic journey, exam-readiness, and revision views.
   // Manifest order within a course already sorts module/sequence/id.
   return getExplorerVisibleTopics(manifest, statusReader(), {
     courseCode: course,
@@ -178,6 +212,9 @@ function visibleTopics() {
     examRelevances: f.exam || null,
     journey: f.journey || 'all',
     examView: f.examView || 'all',
+    reviewFilter: f.reviewFilter || 'all',
+    getTimestamp: timestampReader(),
+    now: Date.now(),
   });
 }
 
@@ -251,6 +288,19 @@ function renderFilterOptions() {
     state.examView = normalizeExamFilter(state.examView);
     examViewSelect.value = state.examView;
   }
+  const reviewSelect = $('xp-review');
+  if (reviewSelect) {
+    const reviewLabels = {
+      all: 'All review states',
+      review_due: 'Review due',
+      review_overdue: 'Review overdue',
+      exam_review_due: 'Exam review due',
+    };
+    reviewSelect.innerHTML = REVIEW_FILTERS.map((f) =>
+      `<option value="${f}">${esc(reviewLabels[f] || f)}</option>`).join('');
+    state.reviewFilter = normalizeReviewFilter(state.reviewFilter);
+    reviewSelect.value = state.reviewFilter;
+  }
 }
 
 function renderList() {
@@ -267,7 +317,7 @@ function renderList() {
     return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
@@ -317,6 +367,12 @@ function renderDetail() {
   const journeyBlock = journey
     ? `<div class="xp-pre-head">${esc(journey.readyLabel)} · ${journey.prereqCompletion.completed}/${journey.prereqCompletion.total} prerequisites complete · ${journey.remainingDependencies} remaining ${journey.remainingDependencies === 1 ? 'dependency' : 'dependencies'}${isRecommended ? ' · ★ current recommendation' : ''}</div>`
     : '';
+  const reviewRs = getReviewStateForTopic(
+    state.manifest, statusReader(), timestampReader(), topic.courseCode, topic.id, Date.now()
+  );
+  const reviewBlock = (reviewRs.state === REVIEW_STATE_DUE || reviewRs.state === REVIEW_STATE_OVERDUE)
+    ? `<div class="xp-pre-head">↻ ${reviewRs.state === REVIEW_STATE_OVERDUE ? 'Overdue' : 'Review due'} — ${reviewRs.daysSince} ${reviewRs.daysSince === 1 ? 'day' : 'days'} since last access (threshold ${reviewRs.threshold}). Revisiting refreshes its timestamp.</div>`
+    : '';
   const listOrNone = (items, kind) => items.length
     ? items.map((t) => chipLink(t, kind)).join('')
     : '<span class="xp-none">None</span>';
@@ -324,8 +380,9 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}</div>
       ${journeyBlock}
+      ${reviewBlock}
       <button class="xp-toggle" data-toggle="${esc(topic.id)}" type="button">${isDone ? '✓ Completed — mark not started' : 'Mark completed'}</button>
     </div>
     <div class="xp-detail-sec"><h3>Concepts</h3>
@@ -472,6 +529,7 @@ async function init() {
     if ($('xp-exam')) $('xp-exam').addEventListener('change', (e) => { state.exam = e.target.value; renderAll(); });
     if ($('xp-journey')) $('xp-journey').addEventListener('change', (e) => { state.journey = normalizeJourneyFilter(e.target.value); renderAll(); });
     if ($('xp-examview')) $('xp-examview').addEventListener('change', (e) => { state.examView = normalizeExamFilter(e.target.value); renderAll(); });
+    if ($('xp-review')) $('xp-review').addEventListener('change', (e) => { state.reviewFilter = normalizeReviewFilter(e.target.value); renderAll(); });
     if ($('xp-retry')) $('xp-retry').addEventListener('click', () => {
       Data.clearManifestCache();
       const errBox = $('xp-error');

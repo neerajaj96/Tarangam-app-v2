@@ -22,6 +22,7 @@ import {
   buildExamReadiness,
   buildCourseExamReadinessList,
 } from './exam-readiness.js';
+import { buildRevisionModel, REVIEW_DUE_DAYS } from './revision.js';
 
 export { PROGRESS_CHANGED_EVENT };
 
@@ -29,6 +30,14 @@ export { PROGRESS_CHANGED_EVENT };
 // deterministic exam-readiness snapshot (no DOM, no storage of its own).
 export function buildDashboardExamModel(manifest, getStatus) {
   return buildExamReadiness(manifest, getStatus);
+}
+
+// Pure review derivation for tests and UI: manifest + status reader +
+// timestamp reader + injected now -> deterministic revision snapshot.
+// Only completed topics can enter review queues; without timestamps the
+// queue stays empty (never fabricated).
+export function buildDashboardReviewModel(manifest, getStatus, getTimestamp = null, now) {
+  return buildRevisionModel(manifest, getStatus, getTimestamp, now);
 }
 
 // Pure journey derivation for tests and UI: manifest + status reader +
@@ -143,6 +152,7 @@ async function init() {
     renderHero();
     renderContinue();
     renderExam();
+    renderReview();
     renderLists();
     renderCourses();
   };
@@ -311,6 +321,38 @@ async function init() {
     }
   }
 
+  function renderReview() {
+    const box = $('db-review');
+    if (!box) return;
+    const revision = buildRevisionModel(manifest, statusReader, timestampReader, Date.now());
+    if (!revision.counts.total) {
+      box.innerHTML = `<h2>Review &amp; revision</h2>
+        <div class="xp-path-next"><span class="xp-path-label">No reviews due.</span>
+        <span class="xp-path-meta">Only completed topics enter review — complete a topic and it will resurface here after ${REVIEW_DUE_DAYS} days.</span></div>`;
+      return;
+    }
+    const next = revision.nextReviewTopic;
+    const dueList = revision.reviewQueue.slice(0, 6).map((e) =>
+      `<button class="xp-path-btn" data-review-open="${esc(e.courseCode)}/${esc(e.id)}" type="button">${esc(e.title)} · ${e.reviewState === 'review_overdue' ? 'overdue' : 'due'} ${e.daysSince} ${e.daysSince === 1 ? 'day' : 'days'}</button>`
+    ).join('');
+    box.innerHTML = `<h2>Review &amp; revision</h2>
+      <div class="xp-path-next"><span class="xp-path-title">${revision.counts.total} due</span>
+        <span class="xp-path-meta">${revision.counts.overdue} overdue · ${revision.counts.examDue} exam-relevant</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Next review:</span>
+        <span class="xp-path-title">${esc(next.title)}</span>
+        <span class="xp-path-meta">${esc(next.courseCode)} · M${esc(next.module)} · ${esc(next.daysSince)} ${next.daysSince === 1 ? 'day' : 'days'} since last access</span>
+        <span class="xp-path-meta" data-review-reason="${esc(next.reviewState)}">${esc(next.reason)}</span>
+        <button class="xp-path-btn" data-review-open="${esc(next.courseCode)}/${esc(next.id)}" type="button">View in explorer</button>
+        <a class="xp-open" href="${esc(topicHref(baseUrl, next.topic))}">Open topic →</a></div>
+      <div class="xp-path-row"><span class="xp-path-label">Due now (${revision.counts.total}):</span> ${dueList}</div>`;
+    for (const btn of box.querySelectorAll('[data-review-open]')) {
+      btn.addEventListener('click', () => {
+        const [course, ...rest] = btn.getAttribute('data-review-open').split('/');
+        window.location.href = explorerHref({ courseCode: course, id: rest.join('/') });
+      });
+    }
+  }
+
   function renderLists() {
     const model = buildDashboardModel(manifest, statusReader, { getTimestamp: timestampReader });
     const progressBox = $('db-progress-list');
@@ -412,6 +454,7 @@ async function init() {
       renderHero();
       renderContinue();
       renderExam();
+      renderReview();
       renderLists();
       renderCourses();
     }
@@ -421,6 +464,7 @@ async function init() {
   renderHero();
   renderContinue();
   renderExam();
+  renderReview();
   renderLists();
   renderCourses();
 }

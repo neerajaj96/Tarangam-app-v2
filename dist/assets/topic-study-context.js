@@ -46,6 +46,12 @@ import {
   onJourneyProgressChanged,
 } from './learning-journey.js';
 import { buildTopicExamModel } from './exam-readiness.js';
+import {
+  getReviewStateForTopic,
+  explainReviewReason,
+  REVIEW_STATE_DUE,
+  REVIEW_STATE_OVERDUE,
+} from './revision.js';
 import { loadManifest } from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
 
@@ -87,7 +93,12 @@ function linkEntry(currentCourseCode, topic, extraState) {
 
 // Full study-context model for one topic. Null when the topic is unknown.
 // getStatus is `(courseCode, topicId) => status` (unknown safely unfinished).
-export function buildStudyContextModel(manifest, getStatus, courseCode, topicId) {
+// options is an optional `{ getTimestamp, now }`: getTimestamp feeds the
+// deterministic review state (completed topics only — unfinished topics are
+// never marked due), now injects the clock for tests. Completing a topic
+// resets its review clock through the existing learner-state timestamp
+// mechanism (setTopicState touches the timestamp); no separate reset path.
+export function buildStudyContextModel(manifest, getStatus, courseCode, topicId, options = {}) {
   const topic = getTopic(manifest, courseCode, topicId);
   if (!topic) return null;
   const statusOf = (c, id) => {
@@ -107,6 +118,18 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId)
     .map((t) => linkEntry(courseCode, t, { state: statusOf(t.courseCode, t.id) }));
   const unfinishedUnlockCount = getUnfinishedDescendants(manifest, getStatus, courseCode, topicId).length;
   const exam = buildTopicExamModel(manifest, getStatus, courseCode, topicId);
+  const getTimestamp = typeof options.getTimestamp === 'function' ? options.getTimestamp : null;
+  const reviewState = getReviewStateForTopic(manifest, getStatus, getTimestamp, courseCode, topicId, options.now);
+  const review = {
+    state: reviewState.state,
+    daysSince: reviewState.daysSince,
+    threshold: reviewState.threshold,
+    timestamp: reviewState.timestamp,
+    reason: explainReviewReason(manifest, topic, reviewState),
+    isDue: reviewState.state === REVIEW_STATE_DUE,
+    isOverdue: reviewState.state === REVIEW_STATE_OVERDUE,
+    isExamRelevant: (exam && exam.isExamRelevant) || false,
+  };
   return {
     courseCode: topic.courseCode,
     courseName: topic.courseName || topic.courseCode,
@@ -155,6 +178,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId)
     unlockedDependents: unlocked,
     unfinishedUnlockCount,
     exam,
+    review,
   };
 }
 
@@ -254,6 +278,26 @@ export function renderStudyContext(model) {
       + prereqLine + prereqItems + `</div>`;
   })();
 
+  const reviewBlock = (() => {
+    // Completed topics only: unfinished topics never render as review due.
+    if (model.status !== 'completed' || !model.review) return '';
+    const r = model.review;
+    const when = r.timestamp !== null && r.timestamp !== undefined
+      ? `<p class="xp-note">Last visit ${esc(r.daysSince === null ? 'date unknown' : `${r.daysSince} ${r.daysSince === 1 ? 'day' : 'days'} ago`)} · next review threshold ${esc(r.threshold)} days.</p>`
+      : '<p class="xp-note">No usable visit timestamp — treated as fresh, never marked due.</p>';
+    const dueLine = r.isOverdue
+      ? '<p class="xp-note">Currently overdue for review.</p>'
+      : r.isDue
+        ? '<p class="xp-note">Currently due for review.</p>'
+        : '<p class="xp-note">Not currently due — fresh.</p>';
+    const examLine = r.isExamRelevant
+      ? '<p class="xp-note">Exam-relevant topic.</p>'
+      : '';
+    return `<div class="ts-block ts-review"><h3>Review status</h3>`
+      + `<p class="xp-note">${esc(r.reason)}</p>`
+      + when + dueLine + examLine + `</div>`;
+  })();
+
   return `<div class="ts-context-head"><h2>Study context</h2>
     <div class="topic-badges">${chips.join('')}</div></div>
   <div class="ts-actions">
@@ -266,6 +310,7 @@ export function renderStudyContext(model) {
     <div class="ts-block"><h3>Concepts</h3>${concepts}</div>
   </div>
   ${examBlock}
+  ${reviewBlock}
   <details class="ts-details"><summary>Dependency chain (${model.chain.length} topics · ancestors ${model.ancestorCompletion.completed}/${model.ancestorCompletion.total} complete)</summary>
     <ol class="ts-list">${chainItems}</ol></details>
   <details class="ts-details"><summary>Dependents (${model.dependents.length})</summary>
@@ -289,9 +334,12 @@ export function initStudyContext({ mountId = STUDY_CONTEXT_MOUNT_ID, courseCode,
   if (!mount || !courseCode || !topicId) return null;
   const store = createLearnerState({});
   const statusReader = (c, id) => store.getTopicState(c, id).status;
+  const timestampReader = (c, id) => store.lastAccessed(c, id);
 
   function renderWith(manifest) {
-    const model = manifest ? buildStudyContextModel(manifest, statusReader, courseCode, topicId) : null;
+    const model = manifest
+      ? buildStudyContextModel(manifest, statusReader, courseCode, topicId, { getTimestamp: timestampReader, now: Date.now() })
+      : null;
     if (!model) {
       const done = store.isTopicCompleted(courseCode, topicId);
       mount.innerHTML = `<div class="ts-context-head"><h2>Study context</h2></div>

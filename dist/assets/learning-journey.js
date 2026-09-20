@@ -61,6 +61,21 @@ import {
 // the normal recommendation.
 export { buildExamReadiness, getNextExamTopic, getExamGaps, getInProgressExamTopics };
 
+import {
+  buildRevisionModel,
+  getReviewDue,
+  getReviewOverdue,
+  getExamReviewDue,
+  getNextReviewTopic,
+  getReviewCounts,
+} from './revision.js';
+
+// Revision is an additional learning mode over existing timestamps and
+// metadata (see assets/revision.js), never a replacement for the canonical
+// next-topic algorithm. These re-exports let surfaces read review state
+// through the journey without duplicating logic.
+export { buildRevisionModel, getReviewDue, getReviewOverdue, getExamReviewDue, getNextReviewTopic, getReviewCounts };
+
 // --- Recommendation reasons (stable contract) -------------------------------
 
 export const REASON_CONTINUE_IN_PROGRESS = 'continue_in_progress';
@@ -349,6 +364,13 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
   // Exam readiness rides along without changing the normal recommendation.
   const examReadiness = buildExamReadiness(manifest, safeStatus);
 
+  // Revision rides along as an additional mode: same canonical
+  // recommendation above is untouched. Timestamps are optional — without
+  // them the review queue stays empty (never fabricated).
+  const getTimestamp = typeof options.getTimestamp === 'function' ? options.getTimestamp : null;
+  const reviewNow = options.now;
+  const revision = buildRevisionModel(manifest, safeStatus, getTimestamp, reviewNow);
+
   return {
     inProgress,
     ready,
@@ -368,6 +390,12 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     nextExamTopic: examReadiness.nextExamTopic,
     examGaps: examReadiness.examGaps,
     examRelevantInProgress: examReadiness.inProgressExamTopics,
+    reviewDue: revision.reviewDue,
+    reviewOverdue: revision.reviewOverdue,
+    nextReviewTopic: revision.nextReviewTopic,
+    examReviewDue: revision.examReviewDue,
+    reviewCounts: revision.counts,
+    revision,
   };
 }
 
@@ -452,8 +480,8 @@ export function getRecentlyCompleted(manifest, getStatus, getTimestamp, limit = 
 }
 
 export function buildDashboardModel(manifest, getStatus, options = {}) {
-  const journey = buildJourneyModel(manifest, getStatus);
   const getTimestamp = options.getTimestamp || null;
+  const journey = buildJourneyModel(manifest, getStatus, { getTimestamp, now: options.now });
   const recentLimit = options.recentLimit ?? 5;
   const readyLimit = options.readyLimit ?? 12;
   const progressLimit = options.inProgressLimit ?? 12;
