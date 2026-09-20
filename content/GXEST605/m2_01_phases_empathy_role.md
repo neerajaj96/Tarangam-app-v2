@@ -1,3 +1,26 @@
+---
+id: m2_01_phases_empathy_role
+courseCode: GXEST605
+module: 2
+sequence: 1
+title: Design Thinking Phases & Role of Empathy
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Contract all five design thinking phases exactly
+  - Prescribe feeling-with over thinking-about users
+  - Surface latent, emotional and workaround truths with empathy
+concepts:
+  - five-phase map
+  - empathy mandate
+  - latent needs
+prerequisites:
+  - m1_01_lifecycle_dt_defined
+examRelevance: high
+tags:
+  - empathize
+  - phases
+---
 # Design Thinking Phases & Role of Empathy
 
 **The five-phase map and why feeling-with beats thinking-about in design.**

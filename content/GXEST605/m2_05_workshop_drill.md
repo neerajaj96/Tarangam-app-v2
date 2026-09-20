@@ -1,3 +1,26 @@
+---
+id: m2_05_workshop_drill
+courseCode: GXEST605
+module: 2
+sequence: 5
+title: Empathy + Define Workshop Drill
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Timebox a fortnight of empathy into one hour
+  - Stamp grades with dissent logged on every claim
+  - Deliver mini-dossiers with maps, POV and success specs
+concepts:
+  - workshop runbook
+  - mini-dossier
+prerequisites:
+  - m2_02_why_wh_maps
+  - m2_04_define_story_items_success
+examRelevance: medium
+tags:
+  - empathize
+  - workshop-drill
+---
 # Empathy + Define Workshop Drill
 
 **Run the fortnight in an hour — mini-dossier with maps, POV, and success spec on a fresh brief.**

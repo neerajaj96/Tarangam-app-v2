@@ -1,3 +1,28 @@
+---
+id: m1_05_m1_mixed_drill
+courseCode: GXEST605
+module: 1
+sequence: 5
+title: 'M1 Drill: Foundations at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Place lifecycles and lenses from rapid prompts
+  - Engage edges and sustain triples without hedging
+  - Audit ideas to verdicts under sprint pressure
+concepts:
+  - foundations sprint
+  - verdict discipline
+prerequisites:
+  - m1_01_lifecycle_dt_defined
+  - m1_02_social_hcd_inclusion
+  - m1_03_sustainability_trl
+  - m1_04_idea_self_check
+examRelevance: high
+tags:
+  - foundations
+  - m1-drill
+---
 # M1 Drill: Foundations at Pace
 
 **Lifecycle, lenses, impact, sustainability, self-check — M1 as rapid verdicts.**

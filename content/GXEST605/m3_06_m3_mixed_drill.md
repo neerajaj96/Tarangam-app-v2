@@ -1,3 +1,28 @@
+---
+id: m3_06_m3_mixed_drill
+courseCode: GXEST605
+module: 3
+sequence: 6
+title: 'M3 Drill: Sparks to Proof at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint provoke, pin, lens and question-to-verdict stations
+  - Keep sparks-to-proof chains straight at pace
+  - Gate proof before scale earns a hearing
+concepts:
+  - sparks-to-proof chain
+  - verdict sprint
+prerequisites:
+  - m3_01_ideation_tools
+  - m3_02_research_trends
+  - m3_03_feasibility_sessions
+  - m3_04_poc_objectives_validation
+examRelevance: high
+tags:
+  - ideate
+  - m3-drill
+---
 # M3 Drill: Sparks to Proof at Pace
 
 **Tools, research, feasibility, PoC — M3 as rapid verdicts.**

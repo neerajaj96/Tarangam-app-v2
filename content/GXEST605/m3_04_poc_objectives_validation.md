@@ -1,3 +1,26 @@
+---
+id: m3_04_poc_objectives_validation
+courseCode: GXEST605
+module: 3
+sequence: 4
+title: 'Proof of Concept: Objectives to Validation'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Scope PoC objectives as questions that earn budgets
+  - Register risks with scouting and documentation trails
+  - Validate verdicts into fundable next-step stories
+concepts:
+  - proof of concept
+  - risk registers
+  - validation verdicts
+prerequisites:
+  - m3_03_feasibility_sessions
+examRelevance: high
+tags:
+  - ideate
+  - poc
+---
 # Proof of Concept: Objectives to Validation
 
 **De-risking on purpose — scoped objectives, risk registers, tech scouting, and validation that earns the next budget.**

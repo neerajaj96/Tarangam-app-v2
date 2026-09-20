@@ -1,3 +1,27 @@
+---
+id: m4_03_prototyping_alpha_beta
+courseCode: GXEST605
+module: 4
+sequence: 3
+title: 'Prototyping: Alpha to Beta'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Prove works-questions with alpha builds honestly
+  - Prove for-users questions with beta expectations
+  - Budget fidelity per question with honest buffers
+concepts:
+  - alpha prototypes
+  - beta prototypes
+  - fidelity budgeting
+prerequisites:
+  - m3_04_poc_objectives_validation
+  - m4_01_detailed_design_srd_dfmea
+examRelevance: high
+tags:
+  - prototype
+  - prototyping
+---
 # Prototyping: Alpha to Beta
 
 **Looks-like/works-like ladders — alpha goals, beta expectations, timeline discipline, and test-refine loops.**

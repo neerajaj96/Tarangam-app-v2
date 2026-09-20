@@ -1,3 +1,26 @@
+---
+id: m4_02_standards_code_future
+courseCode: GXEST605
+module: 4
+sequence: 2
+title: 'Standards, Readable Code & Future-Proofing'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Comply with industrial bylaws without cargo-culting
+  - Amnesia-proof code with readability rules that last
+  - Margin churn with versioned change discipline
+concepts:
+  - standards compliance
+  - code readability
+  - future-proofing
+prerequisites:
+  - m4_01_detailed_design_srd_dfmea
+examRelevance: medium
+tags:
+  - prototype
+  - engineering-standards
+---
 # Standards, Readable Code & Future-Proofing
 
 **Industrial manners — standards compliance, code humans can maintain, optimized-but-honest code, and designing for change.**

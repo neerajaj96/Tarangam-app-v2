@@ -1,3 +1,26 @@
+---
+id: m3_03_feasibility_sessions
+courseCode: GXEST605
+module: 3
+sequence: 3
+title: Feasibility Six-Pack & Session Tips
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Check technical, economic, market, operational, legal and ethical lenses
+  - State veto rules with pre-set kill lines honestly
+  - Run sessions that actually decide instead of drifting
+concepts:
+  - feasibility lenses
+  - kill criteria
+  - decision sessions
+prerequisites:
+  - m3_01_ideation_tools
+examRelevance: medium
+tags:
+  - ideate
+  - feasibility
+---
 # Feasibility Six-Pack & Session Tips
 
 **Six lenses or blind — technical/economic/market/operational/legal/ethical checks plus sessions that actually decide.**

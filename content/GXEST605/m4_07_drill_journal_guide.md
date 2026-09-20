@@ -1,3 +1,27 @@
+---
+id: m4_07_drill_journal_guide
+courseCode: GXEST605
+module: 4
+sequence: 7
+title: 'M4 Drill + Reflective Journal Guide'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint promise, rehearse and produce stations in order
+  - Reflect dated, honest and linked for journal marks
+  - Close the course with habits that outlive it
+concepts:
+  - design-to-scale sprint
+  - reflective journaling
+prerequisites:
+  - m4_01_detailed_design_srd_dfmea
+  - m4_03_prototyping_alpha_beta
+  - m4_04_pilot_scaling
+examRelevance: high
+tags:
+  - prototype
+  - m4-drill
+---
 # M4 Drill + Reflective Journal Guide
 
 **Design-to-scale sprint plus the 5-mark reflective journal — closing the course, opening the habit.**

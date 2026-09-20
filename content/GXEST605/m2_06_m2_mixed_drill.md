@@ -1,3 +1,28 @@
+---
+id: m2_06_m2_mixed_drill
+courseCode: GXEST605
+module: 2
+sequence: 6
+title: 'M2 Drill: Empathy-to-Brief at Pace'
+difficulty: intermediate
+estimatedMinutes: 3
+learningObjectives:
+  - Sprint phases, ladders, maps, pains, POVs and gates
+  - Keep empathy-to-brief artefacts straight at pace
+  - Gate briefs before ideation earns them
+concepts:
+  - empathy-to-brief chain
+  - artefact sprint
+prerequisites:
+  - m2_01_phases_empathy_role
+  - m2_02_why_wh_maps
+  - m2_03_journey_personas
+  - m2_04_define_story_items_success
+examRelevance: high
+tags:
+  - empathize
+  - m2-drill
+---
 # M2 Drill: Empathy-to-Brief at Pace
 
 **Phases, ladders, maps, diaries, POVs, metrics — M2 as rapid artefacts.**

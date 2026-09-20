@@ -1,3 +1,25 @@
+---
+id: m1_01_lifecycle_dt_defined
+courseCode: GXEST605
+module: 1
+sequence: 1
+title: Product Lifecycle & Design Thinking Defined
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Walk products from need through scale to sunset
+  - Define design thinking with human-centred iterative laps
+  - Target innovation at desirable, feasible and viable overlap
+concepts:
+  - product lifecycle
+  - design thinking definition
+  - innovation Venn
+prerequisites: []
+examRelevance: high
+tags:
+  - foundations
+  - lifecycle
+---
 # Product Lifecycle & Design Thinking Defined
 
 **From need to sunset — lifecycle stages, what design thinking is (and isn't), and innovation with intent.**

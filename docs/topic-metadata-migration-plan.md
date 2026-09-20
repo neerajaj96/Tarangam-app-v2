@@ -5,9 +5,9 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Summary
 
 - Total topics: **432**
-- Migrated: **367**
-- Pending: **65**
-- Coverage: **84.95%** (tracked by `npm run check`)
+- Migrated: **391**
+- Pending: **41**
+- Coverage: **90.51%** (tracked by `npm run check`)
 
 ## Migration rules
 
@@ -19,6 +19,7 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 ## Recommended migration order
 
 1. Finish the started modules first (both pilots sit in Module 1):
+   - GXEST605 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST631 — Module 1 in progress (26 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST637 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PECST632 — Module 1 in progress (25 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
@@ -34,23 +35,52 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
    - GAMAT301 — Module 1 in progress (24 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
    - PCCST501 — Module 1 in progress (31 migrated); complete its remaining Module 1 topics in sequence order, then Modules 2-4.
 2. Then proceed course-by-course in dashboard order (module by module, sequence order within each module):
-   1. PECST631 — Software Testing (started — see step 1)
-   2. PECST637 — Fundamentals of Cryptography (started — see step 1)
-   3. PECST632 — Deep Learning (started — see step 1)
-   4. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
-   5. PCCST602 — Advanced Computing Systems (started — see step 1)
-   6. PCCST601 — Compiler Design (started — see step 1)
-   7. PECST522 — Artificial Intelligence (started — see step 1)
-   8. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
-   9. PCCST503 — Machine Learning (started — see step 1)
-   10. PCCST303 — Data Structures and Algorithms (started — see step 1)
-   11. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
-   12. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
-   13. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
-   14. PCCST501 — Computer Networks (started — see step 1)
-   15. GXEST605 — Design Thinking and Product Development
+   1. GXEST605 — Design Thinking and Product Development (started — see step 1)
+   2. PECST631 — Software Testing (started — see step 1)
+   3. PECST637 — Fundamentals of Cryptography (started — see step 1)
+   4. PECST632 — Deep Learning (started — see step 1)
+   5. PBCST604 — Fundamentals of Cyber Security (started — see step 1)
+   6. PCCST602 — Advanced Computing Systems (started — see step 1)
+   7. PCCST601 — Compiler Design (started — see step 1)
+   8. PECST522 — Artificial Intelligence (started — see step 1)
+   9. PCCST502 — Design and Analysis of Algorithms (started — see step 1)
+   10. PCCST503 — Machine Learning (started — see step 1)
+   11. PCCST303 — Data Structures and Algorithms (started — see step 1)
+   12. GZPHT121 — Physics for Physical Science and Life Science (started — see step 1)
+   13. GXEST104 — Introduction to Electrical and Electronics Engineering (started — see step 1)
+   14. GAMAT301 — Mathematics for Computer and Information Science-3 (started — see step 1)
+   15. PCCST501 — Computer Networks (started — see step 1)
    16. OECST614 — Machine Learning for Engineers
 3. Preserve prerequisite ordering: migrate in increasing `(module, sequence)` order so any `prerequisites` reference points at an already-migrated (or concurrently reviewed) topic; module `00` overviews before their numbered topics, `99` practice labs last.
+
+## GXEST605 — Design Thinking and Product Development (24/24 migrated)
+
+| Module | Sequence | Filename | Topic ID | Status |
+| --- | --- | --- | --- | --- |
+| M1 Fundamentals & Self-Check | 01 | `m1_01_lifecycle_dt_defined.md` | `m1_01_lifecycle_dt_defined` | migrated |
+| M1 Fundamentals & Self-Check | 02 | `m1_02_social_hcd_inclusion.md` | `m1_02_social_hcd_inclusion` | migrated |
+| M1 Fundamentals & Self-Check | 03 | `m1_03_sustainability_trl.md` | `m1_03_sustainability_trl` | migrated |
+| M1 Fundamentals & Self-Check | 04 | `m1_04_idea_self_check.md` | `m1_04_idea_self_check` | migrated |
+| M1 Fundamentals & Self-Check | 05 | `m1_05_m1_mixed_drill.md` | `m1_05_m1_mixed_drill` | migrated |
+| M2 Empathize & Define | 01 | `m2_01_phases_empathy_role.md` | `m2_01_phases_empathy_role` | migrated |
+| M2 Empathize & Define | 02 | `m2_02_why_wh_maps.md` | `m2_02_why_wh_maps` | migrated |
+| M2 Empathize & Define | 03 | `m2_03_journey_personas.md` | `m2_03_journey_personas` | migrated |
+| M2 Empathize & Define | 04 | `m2_04_define_story_items_success.md` | `m2_04_define_story_items_success` | migrated |
+| M2 Empathize & Define | 05 | `m2_05_workshop_drill.md` | `m2_05_workshop_drill` | migrated |
+| M2 Empathize & Define | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | migrated |
+| M3 Ideate & PoC | 01 | `m3_01_ideation_tools.md` | `m3_01_ideation_tools` | migrated |
+| M3 Ideate & PoC | 02 | `m3_02_research_trends.md` | `m3_02_research_trends` | migrated |
+| M3 Ideate & PoC | 03 | `m3_03_feasibility_sessions.md` | `m3_03_feasibility_sessions` | migrated |
+| M3 Ideate & PoC | 04 | `m3_04_poc_objectives_validation.md` | `m3_04_poc_objectives_validation` | migrated |
+| M3 Ideate & PoC | 05 | `m3_05_ideation_workshop_drill.md` | `m3_05_ideation_workshop_drill` | migrated |
+| M3 Ideate & PoC | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | migrated |
+| M4 Design, Prototype & Pilot | 01 | `m4_01_detailed_design_srd_dfmea.md` | `m4_01_detailed_design_srd_dfmea` | migrated |
+| M4 Design, Prototype & Pilot | 02 | `m4_02_standards_code_future.md` | `m4_02_standards_code_future` | migrated |
+| M4 Design, Prototype & Pilot | 03 | `m4_03_prototyping_alpha_beta.md` | `m4_03_prototyping_alpha_beta` | migrated |
+| M4 Design, Prototype & Pilot | 04 | `m4_04_pilot_scaling.md` | `m4_04_pilot_scaling` | migrated |
+| M4 Design, Prototype & Pilot | 05 | `m4_05_bmc_production_visit.md` | `m4_05_bmc_production_visit` | migrated |
+| M4 Design, Prototype & Pilot | 06 | `m4_06_usability_testing_iteration.md` | `m4_06_usability_testing_iteration` | migrated |
+| M4 Design, Prototype & Pilot | 07 | `m4_07_drill_journal_guide.md` | `m4_07_drill_journal_guide` | migrated |
 
 ## PECST631 — Software Testing (26/26 migrated)
 
@@ -505,35 +535,6 @@ Generated 2026-09-19 from the repository itself (`data/curriculum.json` + `conte
 | M4 Physical Layer & SNMP | 06 | `m4_06_bandwidth_utilization_multiplexing_spread.md` | `m4_06_bandwidth_utilization_multiplexing_spread` | migrated |
 | M4 Physical Layer & SNMP | 07 | `m4_07_asn1_smi_mib_language.md` | `m4_07_asn1_smi_mib_language` | pending |
 | M4 Physical Layer & SNMP | 99 | `m4_99_practice_lab_management_physical_drills.md` | `m4_99_practice_lab_management_physical_drills` | pending |
-
-## GXEST605 — Design Thinking and Product Development (0/24 migrated)
-
-| Module | Sequence | Filename | Topic ID | Status |
-| --- | --- | --- | --- | --- |
-| M1 Fundamentals & Self-Check | 01 | `m1_01_lifecycle_dt_defined.md` | `m1_01_lifecycle_dt_defined` | pending |
-| M1 Fundamentals & Self-Check | 02 | `m1_02_social_hcd_inclusion.md` | `m1_02_social_hcd_inclusion` | pending |
-| M1 Fundamentals & Self-Check | 03 | `m1_03_sustainability_trl.md` | `m1_03_sustainability_trl` | pending |
-| M1 Fundamentals & Self-Check | 04 | `m1_04_idea_self_check.md` | `m1_04_idea_self_check` | pending |
-| M1 Fundamentals & Self-Check | 05 | `m1_05_m1_mixed_drill.md` | `m1_05_m1_mixed_drill` | pending |
-| M2 Empathize & Define | 01 | `m2_01_phases_empathy_role.md` | `m2_01_phases_empathy_role` | pending |
-| M2 Empathize & Define | 02 | `m2_02_why_wh_maps.md` | `m2_02_why_wh_maps` | pending |
-| M2 Empathize & Define | 03 | `m2_03_journey_personas.md` | `m2_03_journey_personas` | pending |
-| M2 Empathize & Define | 04 | `m2_04_define_story_items_success.md` | `m2_04_define_story_items_success` | pending |
-| M2 Empathize & Define | 05 | `m2_05_workshop_drill.md` | `m2_05_workshop_drill` | pending |
-| M2 Empathize & Define | 06 | `m2_06_m2_mixed_drill.md` | `m2_06_m2_mixed_drill` | pending |
-| M3 Ideate & PoC | 01 | `m3_01_ideation_tools.md` | `m3_01_ideation_tools` | pending |
-| M3 Ideate & PoC | 02 | `m3_02_research_trends.md` | `m3_02_research_trends` | pending |
-| M3 Ideate & PoC | 03 | `m3_03_feasibility_sessions.md` | `m3_03_feasibility_sessions` | pending |
-| M3 Ideate & PoC | 04 | `m3_04_poc_objectives_validation.md` | `m3_04_poc_objectives_validation` | pending |
-| M3 Ideate & PoC | 05 | `m3_05_ideation_workshop_drill.md` | `m3_05_ideation_workshop_drill` | pending |
-| M3 Ideate & PoC | 06 | `m3_06_m3_mixed_drill.md` | `m3_06_m3_mixed_drill` | pending |
-| M4 Design, Prototype & Pilot | 01 | `m4_01_detailed_design_srd_dfmea.md` | `m4_01_detailed_design_srd_dfmea` | pending |
-| M4 Design, Prototype & Pilot | 02 | `m4_02_standards_code_future.md` | `m4_02_standards_code_future` | pending |
-| M4 Design, Prototype & Pilot | 03 | `m4_03_prototyping_alpha_beta.md` | `m4_03_prototyping_alpha_beta` | pending |
-| M4 Design, Prototype & Pilot | 04 | `m4_04_pilot_scaling.md` | `m4_04_pilot_scaling` | pending |
-| M4 Design, Prototype & Pilot | 05 | `m4_05_bmc_production_visit.md` | `m4_05_bmc_production_visit` | pending |
-| M4 Design, Prototype & Pilot | 06 | `m4_06_usability_testing_iteration.md` | `m4_06_usability_testing_iteration` | pending |
-| M4 Design, Prototype & Pilot | 07 | `m4_07_drill_journal_guide.md` | `m4_07_drill_journal_guide` | pending |
 
 ## OECST614 — Machine Learning for Engineers (0/24 migrated)
 

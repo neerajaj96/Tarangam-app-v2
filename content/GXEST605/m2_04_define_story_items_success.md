@@ -1,3 +1,27 @@
+---
+id: m2_04_define_story_items_success
+courseCode: GXEST605
+module: 2
+sequence: 4
+title: 'Define: Storytelling, Critical Items & Success'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Narrate findings until stakeholders feel them
+  - Triage critical items to scope the mission
+  - Write success measures before sketching solutions
+concepts:
+  - point-of-view statements
+  - success metrics
+  - scope triage
+prerequisites:
+  - m2_02_why_wh_maps
+  - m2_03_journey_personas
+examRelevance: high
+tags:
+  - define
+  - problem-framing
+---
 # Define: Storytelling, Critical Items & Success
 
 **From mess to mission — narrating findings, diagramming what matters, and writing success before solutions.**

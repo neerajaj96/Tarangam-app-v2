@@ -1,3 +1,26 @@
+---
+id: m3_01_ideation_tools
+courseCode: GXEST605
+module: 3
+sequence: 1
+title: Ideation Stages & Thinking Tools
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Storm divergent with rules before sieving convergent
+  - Provoke with SCAMPER verbs and parallel hats honestly
+  - Bank every capture against loss with sieve matrices
+concepts:
+  - divergent ideation
+  - SCAMPER technique
+  - idea capture
+prerequisites:
+  - m2_04_define_story_items_success
+examRelevance: high
+tags:
+  - ideate
+  - ideation-tools
+---
 # Ideation Stages & Thinking Tools
 
 **Divergent storms, convergent sieves, and capture discipline — SCAMPER, six hats, SWOT, matrices in action.**

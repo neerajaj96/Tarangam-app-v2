@@ -1,3 +1,27 @@
+---
+id: m4_06_usability_testing_iteration
+courseCode: GXEST605
+module: 4
+sequence: 6
+title: Usability Testing & Iteration Discipline
+difficulty: beginner
+estimatedMinutes: 5
+learningObjectives:
+  - Price five-user economics against issue-coverage math
+  - Run think-aloud protocols with neutral tasks exactly
+  - Triage feedback into must, should and could waves with stop rules
+concepts:
+  - usability testing
+  - SUS scoring
+  - feedback triage
+prerequisites:
+  - m2_01_phases_empathy_role
+  - m4_03_prototyping_alpha_beta
+examRelevance: high
+tags:
+  - prototype
+  - usability
+---
 # Usability Testing & Iteration Discipline
 
 **The Test phase as its own craft — five-user economics, think-aloud protocol, SUS scoring traced by hand, feedback triage, and knowing when to stop refining.**

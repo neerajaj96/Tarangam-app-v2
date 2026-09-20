@@ -1,3 +1,26 @@
+---
+id: m1_04_idea_self_check
+courseCode: GXEST605
+module: 1
+sequence: 4
+title: 'Idea Self-Check: Originality to Business Models'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Locate novelty on mapped competitive landscapes
+  - Screen patentability into one-sentence unique selling points
+  - Shape makeable ideas into money-shaped models
+concepts:
+  - idea validation
+  - unique selling proposition
+  - business models
+prerequisites:
+  - m1_01_lifecycle_dt_defined
+examRelevance: medium
+tags:
+  - foundations
+  - ideation-screening
+---
 # Idea Self-Check: Originality to Business Models
 
 **Interrogate your brainwave — novelty, landscape, patentability, USP, manufacturability, and money-shape.**

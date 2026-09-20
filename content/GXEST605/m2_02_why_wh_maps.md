@@ -1,3 +1,26 @@
+---
+id: m2_02_why_wh_maps
+courseCode: GXEST605
+module: 2
+sequence: 2
+title: '5 Why, 5W+H & Empathy Maps'
+difficulty: beginner
+estimatedMinutes: 4
+learningObjectives:
+  - Ladder why-questions down to actionable roots
+  - Cover blind spots with five-W-plus-H sweeps
+  - Grade quadrant evidence under session protocols
+concepts:
+  - five-whys technique
+  - empathy maps
+  - session protocol
+prerequisites:
+  - m2_01_phases_empathy_role
+examRelevance: medium
+tags:
+  - empathize
+  - inquiry-methods
+---
 # 5 Why, 5W+H & Empathy Maps
 
 **Drilling to roots and mapping minds — question ladders plus quadrant cartography with session discipline.**

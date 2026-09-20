@@ -1,3 +1,25 @@
+---
+id: m3_02_research_trends
+courseCode: GXEST605
+module: 3
+sequence: 2
+title: 'Research: Market, Consumer & Tech Trends'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Size markets with TAM-SAM-SOM honesty exactly
+  - Read consumer habits as jobs-to-be-done evidence
+  - Transplant cross-industry mechanisms with boundaries stated
+concepts:
+  - market sizing
+  - trend radar
+  - cross-industry transfer
+prerequisites: []
+examRelevance: medium
+tags:
+  - ideate
+  - research
+---
 # Research: Market, Consumer & Tech Trends
 
 **Evidence-fed imagination — desk/field research, trend radar, and cross-industry theft done right.**

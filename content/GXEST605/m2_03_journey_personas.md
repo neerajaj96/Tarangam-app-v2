@@ -1,3 +1,26 @@
+---
+id: m2_03_journey_personas
+courseCode: GXEST605
+module: 2
+sequence: 3
+title: Journey Maps & Personas
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Chart stages, touchpoints, emotions, pains and backstage rows
+  - Compose researched personas three-plus-minus-two strong
+  - Dodge persona anti-patterns with evidence discipline
+concepts:
+  - journey maps
+  - personas
+  - touchpoint pains
+prerequisites:
+  - m2_02_why_wh_maps
+examRelevance: medium
+tags:
+  - empathize
+  - personas
+---
 # Journey Maps & Personas
 
 **Time-travel empathy — end-to-end experience cartography plus archetypes with a pulse.**

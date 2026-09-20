@@ -1,3 +1,25 @@
+---
+id: m3_05_ideation_workshop_drill
+courseCode: GXEST605
+module: 3
+sequence: 5
+title: 'Ideation Workshop Drill: Full Storm Cycle'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Read one brief into burst-ready framing exactly
+  - Cycle burst, hats, cluster and sieve inside thirty-five minutes
+  - Bank verdict tables without losing sparks
+concepts:
+  - storm cycle
+  - verdict tables
+prerequisites:
+  - m3_01_ideation_tools
+examRelevance: medium
+tags:
+  - ideate
+  - workshop-drill
+---
 # Ideation Workshop Drill: Full Storm Cycle
 
 **One brief, full weather — storm to verdict-table in a single sitting.**

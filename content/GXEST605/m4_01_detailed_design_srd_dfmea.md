@@ -1,3 +1,26 @@
+---
+id: m4_01_detailed_design_srd_dfmea
+courseCode: GXEST605
+module: 4
+sequence: 1
+title: 'Detailed Design: SRD, DFM, Cost & DFMEA'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Bind promises with system-requirements documents exactly
+  - Shape manufacture-friendly forms under cost-in budgets
+  - Autopsy failures in advance with RPN-ranked DFMEA
+concepts:
+  - system requirements
+  - design for manufacturing
+  - DFMEA analysis
+prerequisites:
+  - m3_04_poc_objectives_validation
+examRelevance: high
+tags:
+  - prototype
+  - detailed-design
+---
 # Detailed Design: SRD, DFM, Cost & DFMEA
 
 **From PoC to blueprints — requirements that bind, manufacture-friendly shapes, cost ceilings, and failure autopsies in advance.**

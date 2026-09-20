@@ -1,3 +1,26 @@
+---
+id: m4_04_pilot_scaling
+courseCode: GXEST605
+module: 4
+sequence: 4
+title: Pilot Build & Scaling to Production
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Prove operations with dressed-rehearsal pilot objectives
+  - Vet partners before waving rollouts outward
+  - Keep rollbacks ready against scale-day surprises
+concepts:
+  - pilot builds
+  - partner vetting
+  - waved rollouts
+prerequisites:
+  - m4_03_prototyping_alpha_beta
+examRelevance: medium
+tags:
+  - pilot
+  - scaling
+---
 # Pilot Build & Scaling to Production
 
 **Dress rehearsal at scale — objectives, partners, procedures, and the production leap.**

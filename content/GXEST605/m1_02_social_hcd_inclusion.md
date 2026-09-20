@@ -1,3 +1,26 @@
+---
+id: m1_02_social_hcd_inclusion
+courseCode: GXEST605
+module: 1
+sequence: 2
+title: 'Social Impact, HCD & Inclusive Design'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Map multi-faceted societal needs before immersing
+  - Bridge needs with human-centred design discipline
+  - Design edges-first with diverse users, not for them
+concepts:
+  - human-centred design
+  - inclusive design
+  - social impact
+prerequisites:
+  - m1_01_lifecycle_dt_defined
+examRelevance: medium
+tags:
+  - foundations
+  - hcd
+---
 # Social Impact, HCD & Inclusive Design
 
 **Whose problems count — societal needs, human-centred bridging, and designing with (not for) diverse users.**

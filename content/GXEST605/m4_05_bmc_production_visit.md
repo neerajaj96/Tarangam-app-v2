@@ -1,3 +1,27 @@
+---
+id: m4_05_bmc_production_visit
+courseCode: GXEST605
+module: 4
+sequence: 5
+title: 'BMC, Production Plan & Industrial Visit'
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Fit nine business-model boxes into one honest page
+  - Plan production from demand forecasts to spares shelves
+  - Implicate observations from factory-floor visits exactly
+concepts:
+  - business model canvas
+  - production planning
+  - industrial visits
+prerequisites:
+  - m1_04_idea_self_check
+  - m4_01_detailed_design_srd_dfmea
+examRelevance: medium
+tags:
+  - business-model
+  - production
+---
 # BMC, Production Plan & Industrial Visit
 
 **One-page business, full-scale making, and learning from factory floors — the syllabus assignments, worked.**

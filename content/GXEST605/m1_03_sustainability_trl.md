@@ -1,3 +1,26 @@
+---
+id: m1_03_sustainability_trl
+courseCode: GXEST605
+module: 1
+sequence: 3
+title: Sustainability & Technology Readiness Levels
+difficulty: beginner
+estimatedMinutes: 3
+learningObjectives:
+  - Design to planet, people and profit triples together
+  - Grade honesty on the one-to-nine readiness scale
+  - Match money to rungs across lifecycle placement
+concepts:
+  - triple bottom line
+  - technology readiness levels
+  - lifecycle placement
+prerequisites:
+  - m1_01_lifecycle_dt_defined
+examRelevance: medium
+tags:
+  - foundations
+  - sustainability
+---
 # Sustainability & Technology Readiness Levels
 
 **Triple-bottom-line design plus the 1–9 honesty scale for "how ready is this really?"**
