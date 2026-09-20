@@ -48,6 +48,19 @@ import {
 // without a second engine.
 export { getRecommendedNextTopics, getNextRecommendedTopic };
 
+import {
+  buildExamReadiness,
+  getNextExamTopic,
+  getExamGaps,
+  getInProgressExamTopics,
+} from './exam-readiness.js';
+
+// Exam focus is a filter over the canonical recommendation order (see
+// assets/exam-readiness.js), never a second algorithm. These wrappers let
+// journey consumers read exam state through the journey without replacing
+// the normal recommendation.
+export { buildExamReadiness, getNextExamTopic, getExamGaps, getInProgressExamTopics };
+
 // --- Recommendation reasons (stable contract) -------------------------------
 
 export const REASON_CONTINUE_IN_PROGRESS = 'continue_in_progress';
@@ -333,6 +346,9 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     focus = buildTopicJourney(manifest, safeStatus, focusCourse, focusId);
   }
 
+  // Exam readiness rides along without changing the normal recommendation.
+  const examReadiness = buildExamReadiness(manifest, safeStatus);
+
   return {
     inProgress,
     ready,
@@ -348,6 +364,10 @@ export function buildJourneyModel(manifest, getStatus, options = {}) {
     isEmpty,
     totalTopics: topics.length,
     focus,
+    examReadiness,
+    nextExamTopic: examReadiness.nextExamTopic,
+    examGaps: examReadiness.examGaps,
+    examRelevantInProgress: examReadiness.inProgressExamTopics,
   };
 }
 

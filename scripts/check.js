@@ -379,7 +379,7 @@ if (fs.existsSync('dist')) {
 // published manifest must all exist and reference each other, in source
 // and (when present) in dist/.
 {
-  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'style.css']) {
+  for (const f of ['explorer.html', 'dashboard.html', 'assets/curriculum-data.js', 'assets/explorer.js', 'assets/dashboard.js', 'assets/learner-state.js', 'assets/learner-path.js', 'assets/topic-intelligence.js', 'assets/topic-study-context.js', 'assets/learning-journey.js', 'assets/exam-readiness.js', 'scripts/learner-path.js', 'scripts/topic-intelligence.js', 'scripts/learning-journey.js', 'scripts/exam-readiness.js', 'style.css']) {
     if (!fs.existsSync(f)) fail(`explorer: expected source file ${f} — actual: missing`);
   }
   if (fs.existsSync('explorer.html')) {
@@ -390,9 +390,13 @@ if (fs.existsSync('dist')) {
   }
   if (fs.existsSync('dashboard.html')) {
     const html = fs.readFileSync('dashboard.html', 'utf-8');
-    for (const ref of ['id="db-continue"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
+    for (const ref of ['id="db-continue"', 'id="db-exam"', 'id="db-progress-list"', 'id="db-ready-list"', 'id="db-recent-list"']) {
       if (!html.includes(ref)) fail(`journey: dashboard.html is missing unified journey section ${ref}`);
     }
+  }
+  if (fs.existsSync('explorer.html')) {
+    const html = fs.readFileSync('explorer.html', 'utf-8');
+    if (!html.includes('id="xp-examview"')) fail('exam: explorer.html is missing the exam-readiness view filter (xp-examview)');
   }
   if (fs.existsSync('assets/explorer.js')) {
     const js = fs.readFileSync('assets/explorer.js', 'utf-8');
@@ -425,9 +429,22 @@ if (fs.existsSync('dist')) {
     if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/data/topic-manifest.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/data/topic-manifest.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
+  }
+  if (fs.existsSync('assets/dashboard.js')) {
+    const js = fs.readFileSync('assets/dashboard.js', 'utf-8');
+    if (!js.includes('exam-readiness.js') && !js.includes('buildExamReadiness')) fail('exam: assets/dashboard.js does not use the exam readiness layer');
+    if (!js.includes('db-exam')) fail('exam: assets/dashboard.js does not render the exam readiness section');
+  }
+  if (fs.existsSync('assets/explorer.js')) {
+    const js = fs.readFileSync('assets/explorer.js', 'utf-8');
+    if (!js.includes('filterTopicsByExam') && !js.includes('exam-readiness.js')) fail('exam: assets/explorer.js does not use the exam readiness layer');
+  }
+  if (fs.existsSync('assets/topic-study-context.js')) {
+    const js = fs.readFileSync('assets/topic-study-context.js', 'utf-8');
+    if (!js.includes('Exam readiness')) fail('exam: assets/topic-study-context.js does not surface exam readiness');
   }
 }
 
@@ -449,6 +466,27 @@ if (fs.existsSync('dist')) {
       fail('journey: assets/learning-journey.js must not add AI/ML or gamification');
     }
     if (!js.includes("from './topic-intelligence.js'")) fail('journey: assets/learning-journey.js must build on the canonical Topic Intelligence Layer');
+  }
+}
+
+// 11. Deterministic exam readiness layer: pure math over existing
+// examRelevance metadata — no AI/ML, no predictions, no gamification, no
+// backend, no second recommendation engine, no curriculum changes.
+{
+  if (!fs.existsSync('assets/exam-readiness.js')) {
+    fail('exam: expected source file assets/exam-readiness.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/exam-readiness.js', 'utf-8');
+    for (const token of ['buildExamReadiness', 'getNextExamTopic', 'getExamGaps', 'explainExamContribution', 'readinessPercent']) {
+      if (!js.includes(token)) fail(`exam: assets/exam-readiness.js is missing "${token}"`);
+    }
+    if (!js.includes("from './topic-intelligence.js'")) fail('exam: assets/exam-readiness.js must build on the canonical Topic Intelligence Layer');
+    if (!js.includes('high') || !js.includes('medium') || !js.includes('low')) fail('exam: assets/exam-readiness.js must document the high/medium/low weighting');
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+      if (js.toLowerCase().includes(banned)) fail(`exam: assets/exam-readiness.js must stay deterministic and static-first (found "${banned}")`);
+    }
+    if (/predict(s|ed|ive|ion)?\s+(score|grade|exam\s+score|model)/i.test(js)) fail('exam: assets/exam-readiness.js must not add predictive exam scores');
+    if (/xps\b|experience points/i.test(js)) fail('exam: assets/exam-readiness.js must not add gamification');
   }
 }
 

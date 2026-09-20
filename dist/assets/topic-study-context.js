@@ -45,6 +45,7 @@ import {
   emitJourneyProgressChanged,
   onJourneyProgressChanged,
 } from './learning-journey.js';
+import { buildTopicExamModel } from './exam-readiness.js';
 import { loadManifest } from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
 
@@ -105,6 +106,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId)
   const unlocked = getUnlockedDependents(manifest, getStatus, courseCode, topicId)
     .map((t) => linkEntry(courseCode, t, { state: statusOf(t.courseCode, t.id) }));
   const unfinishedUnlockCount = getUnfinishedDescendants(manifest, getStatus, courseCode, topicId).length;
+  const exam = buildTopicExamModel(manifest, getStatus, courseCode, topicId);
   return {
     courseCode: topic.courseCode,
     courseName: topic.courseName || topic.courseCode,
@@ -152,6 +154,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId)
       : false,
     unlockedDependents: unlocked,
     unfinishedUnlockCount,
+    exam,
   };
 }
 
@@ -229,6 +232,28 @@ export function renderStudyContext(model) {
       + `<ul class="ts-list">${items}</ul></div>`;
   })();
 
+  const examBlock = (() => {
+    const exam = model.exam;
+    if (!exam) return '';
+    const stateLabel = exam.status === 'completed'
+      ? 'completed — counted in exam readiness'
+      : exam.status === 'in_progress'
+        ? 'in progress — not yet counted'
+        : 'remaining — not yet counted';
+    const prereqLine = exam.isExamRelevant
+      ? (exam.remainingExamPrereqCount > 0
+        ? `<p class="xp-note">${exam.remainingExamPrereqCount} remaining exam-relevant ${exam.remainingExamPrereqCount === 1 ? 'prerequisite' : 'prerequisites'}.</p>`
+        : '<p class="xp-note">No remaining exam-relevant prerequisites.</p>')
+      : '';
+    const prereqItems = exam.remainingExamPrereqs.length
+      ? `<ul class="ts-list">${exam.remainingExamPrereqs.map((t) => `<li><a href="${esc(topicHrefFrom(model.courseCode, t))}">${esc(t.title)}</a> <span class="badge">🎯 ${esc(t.examRelevance)}</span></li>`).join('')}</ul>`
+      : '';
+    return `<div class="ts-block ts-exam"><h3>Exam readiness</h3>`
+      + `<p class="xp-note">${esc(exam.explanation)}</p>`
+      + `<p class="xp-note">State: ${esc(stateLabel)}.</p>`
+      + prereqLine + prereqItems + `</div>`;
+  })();
+
   return `<div class="ts-context-head"><h2>Study context</h2>
     <div class="topic-badges">${chips.join('')}</div></div>
   <div class="ts-actions">
@@ -240,6 +265,7 @@ export function renderStudyContext(model) {
     <div class="ts-block"><h3>Objectives</h3>${objectives}</div>
     <div class="ts-block"><h3>Concepts</h3>${concepts}</div>
   </div>
+  ${examBlock}
   <details class="ts-details"><summary>Dependency chain (${model.chain.length} topics · ancestors ${model.ancestorCompletion.completed}/${model.ancestorCompletion.total} complete)</summary>
     <ol class="ts-list">${chainItems}</ol></details>
   <details class="ts-details"><summary>Dependents (${model.dependents.length})</summary>

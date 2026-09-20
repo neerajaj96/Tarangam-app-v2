@@ -18,8 +18,18 @@ import {
   buildDashboardModel,
   buildJourneyModel,
 } from './learning-journey.js';
+import {
+  buildExamReadiness,
+  buildCourseExamReadinessList,
+} from './exam-readiness.js';
 
 export { PROGRESS_CHANGED_EVENT };
+
+// Pure exam derivation for tests and UI: manifest + status reader ->
+// deterministic exam-readiness snapshot (no DOM, no storage of its own).
+export function buildDashboardExamModel(manifest, getStatus) {
+  return buildExamReadiness(manifest, getStatus);
+}
 
 // Pure journey derivation for tests and UI: manifest + status reader +
 // optional timestamp reader -> full dashboard model (recommended topic,
@@ -132,6 +142,7 @@ async function init() {
   const renderAll = () => {
     renderHero();
     renderContinue();
+    renderExam();
     renderLists();
     renderCourses();
   };
@@ -245,6 +256,61 @@ async function init() {
     wireRelButtons(box);
   }
 
+  function renderExam() {
+    const box = $('db-exam');
+    if (!box) return;
+    const exam = buildExamReadiness(manifest, statusReader);
+    const courses = buildCourseExamReadinessList(manifest, statusReader);
+    const bd = exam.breakdown;
+    const countsLine = ['high', 'medium', 'low']
+      .map((level) => `${level} ${bd[level].completed}/${bd[level].total}`)
+      .join(' · ');
+    let focusBlock;
+    if (!exam.totalExamTopics) {
+      focusBlock = '<span class="xp-path-label">No exam-relevant topics tracked in this curriculum.</span>';
+    } else if (exam.isComplete) {
+      focusBlock = `<span class="xp-path-title">Exam readiness 100% — all ${exam.totalExamTopics} tracked exam-relevant topics completed.</span>
+        <span class="xp-path-meta">Coverage only, not a guarantee of exam success. Explorer and topic pages stay open.</span>
+        <a class="xp-open" href="./explorer.html">Browse the curriculum →</a>`;
+    } else if (exam.nextExamTopic) {
+      const t = exam.nextExamTopic;
+      const emptyHint = exam.isEmpty
+        ? '<span class="xp-path-meta">No exam-relevant topics completed yet — this deterministic target is first in exam-focused order.</span>'
+        : '';
+      focusBlock = `<span class="xp-path-title">${esc(t.title)}</span>
+        <span class="xp-path-meta">${esc(t.courseCode)} · M${esc(t.module)} · 🎯 ${esc(t.examRelevance)} (weight ${esc(t.examRelevance === 'high' ? 3 : t.examRelevance === 'medium' ? 2 : 1)})</span>
+        ${statusChip(store, t)} ${emptyHint}
+        <button class="xp-path-btn" data-exam-open="${esc(t.courseCode)}/${esc(t.id)}" type="button">View in explorer</button>
+        <a class="xp-open" href="${esc(topicHref(baseUrl, t))}">Open topic →</a>`;
+    } else {
+      focusBlock = '<span class="xp-path-label">No remaining exam-relevant topic.</span>';
+    }
+    const gaps = exam.examGaps.slice(0, 6);
+    const gapsBlock = gaps.length
+      ? gaps.map((t) => `<button class="xp-path-btn" data-exam-open="${esc(t.courseCode)}/${esc(t.id)}" type="button">${esc(t.title)} (🎯 ${esc(t.examRelevance)})</button>`).join('')
+      : (exam.isComplete
+        ? '<span class="xp-path-label">none — all exam-relevant dependencies complete</span>'
+        : '<span class="xp-path-label">none — no exam-relevant prerequisite gaps</span>');
+    const courseLines = courses.map((c) =>
+      `<div class="db-module"><span>${esc(c.courseCode)} · ${esc(c.courseName)}</span>`
+      + `<span class="db-course-nums">${c.completed} / ${c.total} exam topics · ${c.readinessPercent}% ready</span></div>`
+    ).join('');
+    box.innerHTML = `<h2>Exam readiness</h2>
+      <div class="xp-path-next"><span class="xp-path-title">${exam.readinessPercent}% ready</span>
+        <span class="xp-path-meta">${exam.completedExamTopics} / ${exam.totalExamTopics} exam-relevant topics · weighted ${exam.weightedCompleted}/${exam.weightedTotal}</span></div>
+      <div class="db-course-bar">${bar(exam.readinessPercent)}</div>
+      <div class="xp-path-row"><span class="xp-path-label">${countsLine}</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Exam focus:</span> ${focusBlock}</div>
+      <div class="xp-path-row"><span class="xp-path-label">Remaining exam gaps (${exam.examGaps.length}):</span> ${gapsBlock}</div>
+      <div class="xp-path-row" style="flex-direction:column;align-items:stretch;"><span class="xp-path-label">Course readiness:</span>${courseLines}</div>`;
+    for (const btn of box.querySelectorAll('[data-exam-open]')) {
+      btn.addEventListener('click', () => {
+        const [course, ...rest] = btn.getAttribute('data-exam-open').split('/');
+        window.location.href = explorerHref({ courseCode: course, id: rest.join('/') });
+      });
+    }
+  }
+
   function renderLists() {
     const model = buildDashboardModel(manifest, statusReader, { getTimestamp: timestampReader });
     const progressBox = $('db-progress-list');
@@ -345,6 +411,7 @@ async function init() {
       emitJourneyProgressChanged({ courseCode: code, topicId: null, source: 'dashboard-reset' });
       renderHero();
       renderContinue();
+      renderExam();
       renderLists();
       renderCourses();
     }
@@ -353,6 +420,7 @@ async function init() {
   $('db-status').textContent = `${manifest.topics.length} topics · your progress is stored only in this browser`;
   renderHero();
   renderContinue();
+  renderExam();
   renderLists();
   renderCourses();
 }

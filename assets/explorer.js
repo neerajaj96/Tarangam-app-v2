@@ -24,14 +24,21 @@ import {
   emitJourneyProgressChanged,
   onJourneyProgressChanged,
 } from './learning-journey.js';
+import {
+  EXAM_FILTERS,
+  normalizeExamFilter,
+  filterTopicsByExam,
+} from './exam-readiness.js';
 
-export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter };
+export { PROGRESS_CHANGED_EVENT, JOURNEY_FILTERS, normalizeJourneyFilter, EXAM_FILTERS, normalizeExamFilter };
 
 const $ = (id) => (typeof document !== 'undefined' ? document.getElementById(id) : null);
 
 // Pure Explorer filtering for tests and UI: canonical combined filter
-// (course/module/search/difficulty/exam) then the deterministic
-// journey filter (all/not_started/in_progress/completed/ready).
+// (course/module/search/difficulty/exam) then the deterministic journey
+// filter (all/not_started/in_progress/completed/ready) and the exam-readiness
+// view (all/exam_relevant/exam_completed/exam_remaining) via the shared
+// exam-readiness module — no duplicated intelligence logic.
 // Preserves manifest order; unknown filters fall back to 'all'.
 export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
   const {
@@ -41,6 +48,7 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
     difficulties = null,
     examRelevances = null,
     journey = 'all',
+    examView = 'all',
   } = options;
   if (!manifest || !courseCode) return [];
   const scoped = Data.combinedFilter(manifest, {
@@ -50,7 +58,8 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
     difficulties: difficulties ? [difficulties] : null,
     examRelevances: examRelevances ? [examRelevances] : null,
   });
-  return filterTopicsByJourney(manifest, getStatus, scoped, journey);
+  const byJourney = filterTopicsByJourney(manifest, getStatus, scoped, journey);
+  return filterTopicsByExam(manifest, getStatus, byJourney, examView);
 }
 
 export function getExplorerTopicJourney(manifest, getStatus, courseCode, topicId) {
@@ -67,6 +76,7 @@ const state = {
   difficulty: 'all',
   exam: 'all',
   journey: 'all',
+  examView: 'all',
   selectedKey: null,
   loadError: null,
 };
@@ -148,6 +158,7 @@ function currentFilters() {
     difficulty: state.difficulty === 'all' ? null : state.difficulty,
     exam: state.exam === 'all' ? null : state.exam,
     journey: state.journey,
+    examView: state.examView,
   };
 }
 
@@ -157,7 +168,7 @@ function visibleTopics() {
   const f = currentFilters();
   // One canonical combined filter (see assets/topic-intelligence.js):
   // course + module scope, whole-manifest search, difficulty/exam facets,
-  // then the deterministic journey filter from the unified journey model.
+  // then the deterministic journey filter and the exam-readiness view.
   // Manifest order within a course already sorts module/sequence/id.
   return getExplorerVisibleTopics(manifest, statusReader(), {
     courseCode: course,
@@ -166,6 +177,7 @@ function visibleTopics() {
     difficulties: f.difficulty || null,
     examRelevances: f.exam || null,
     journey: f.journey || 'all',
+    examView: f.examView || 'all',
   });
 }
 
@@ -225,6 +237,19 @@ function renderFilterOptions() {
       `<option value="${f}">${esc(labels[f] || f)}</option>`).join('');
     state.journey = normalizeJourneyFilter(state.journey);
     journeySelect.value = state.journey;
+  }
+  const examViewSelect = $('xp-examview');
+  if (examViewSelect) {
+    const examLabels = {
+      all: 'All topics',
+      exam_relevant: 'Exam-relevant',
+      exam_completed: 'Completed exam topics',
+      exam_remaining: 'Remaining exam topics',
+    };
+    examViewSelect.innerHTML = EXAM_FILTERS.map((f) =>
+      `<option value="${f}">${esc(examLabels[f] || f)}</option>`).join('');
+    state.examView = normalizeExamFilter(state.examView);
+    examViewSelect.value = state.examView;
   }
 }
 
@@ -446,6 +471,7 @@ async function init() {
     if ($('xp-difficulty')) $('xp-difficulty').addEventListener('change', (e) => { state.difficulty = e.target.value; renderAll(); });
     if ($('xp-exam')) $('xp-exam').addEventListener('change', (e) => { state.exam = e.target.value; renderAll(); });
     if ($('xp-journey')) $('xp-journey').addEventListener('change', (e) => { state.journey = normalizeJourneyFilter(e.target.value); renderAll(); });
+    if ($('xp-examview')) $('xp-examview').addEventListener('change', (e) => { state.examView = normalizeExamFilter(e.target.value); renderAll(); });
     if ($('xp-retry')) $('xp-retry').addEventListener('click', () => {
       Data.clearManifestCache();
       const errBox = $('xp-error');
