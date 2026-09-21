@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -289,7 +289,9 @@
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-how-each-strategy-is-judged">2. Basic Layer: How Each Strategy … →</a></p>
 <p>You stand in an unlit maze with no map or compass. You can feel neighbouring walls, step, and check &quot;is this the exit?&quot; That is <strong>uninformed (blind) search</strong>: no estimate of closeness to the goal, only systematic exploration.</p>
 <p><strong>Definitions:</strong> BFS expands level by level (all depth-1 nodes, then depth-2, ...). DFS plunges down one branch to the bottom before backtracking. UCS expands the cheapest-known path first. FIFO (First-In First-Out) queue serves BFS; LIFO (Last-In First-Out) stack serves DFS; priority queue ordered by path cost serves UCS.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Navigating in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Blind does not mean random — it means systematic without guidance. Drop the maze after this; the technical content is frontier order plus data structure.</p>
+<details class="interactive-toggle"><summary>What are `state`, `state space`, `search tree`, `node`, `frontier`, `explored set`?</summary><div class="toggle-content"><p><code>State</code> = one configuration of the world (a maze cell, a board layout). <code>State space</code> = all reachable states plus legal moves (the territory). <code>Search tree</code> = the explored paths overlaid as a tree (same state can repeat at many tree nodes — tree nodes are paths, not places). <code>Node</code> = one tree entry (state + parent + path cost + depth). <code>Frontier</code> (open list) = generated-but-unexpanded nodes (the waiting room). <code>Explored</code> (closed set) = finished nodes (never re-expand — prevents loops). Mixing up state vs node is the classic error: the map is small, the path-tree is huge.</p>
+</div></details><details class="interactive-toggle"><summary>Trace BFS/DFS/UCS queues on A→B(1), A→C(5), B→G(1)</summary><div class="toggle-content"><p>BFS (FIFO queue): [A] → pop A, push B,C → [B,C] → pop B, push G → [C,G] → pop C → [G] → pop G. Order A,B,C,G (level order). DFS (LIFO stack): [A] → pop A, push B,C → [B,C] → pop C first (last-in!) → … (dives C&#39;s subtree before G — order depends on push sequence). UCS (priority on g): {A:0} → pop A, push B:1, C:5 → pop B (1&lt;5), push G:2 → pop G at 2 before C at 5 (goal test on popping returns cheapest — every frontier entry costs ≥ 2, so nothing unfinished beats it).</p>
+</div></details><details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Navigating in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Blind does not mean random — it means systematic without guidance. Drop the maze after this; the technical content is frontier order plus data structure.</p>
 </div></details><p><strong>Tiny beginner example:</strong> root A connects to B (cost 1) and C (cost 5); B connects to goal G (cost 1). BFS finds G in 2 steps. DFS might too — or might wander. UCS compares totals (A-B-G = 2 vs. A-C = 5) and picks the cheap road. Same map, different orderings, different bills.</p>
 <p><a id="basics"></a></p>
 <h2 id="2-basic-layer-how-each-strategy-is-judged">2. Basic Layer: How Each Strategy Is Judged</h2>
@@ -301,7 +303,8 @@
 <li><strong>Time</strong> — nodes expanded? 4. <strong>Space</strong> — nodes held in memory?</li>
 </ol>
 <p>Symbols: <code>b</code> = branching factor (max successors per node); <code>d</code> = depth of shallowest goal; <code>m</code> = maximum depth (possibly infinite); <code>g(n)</code> = path cost from start to node <code>n</code>; <code>C*</code> = optimal path cost; <code>epsilon</code> = minimum step cost (smallest edge price, must be positive).</p>
-<p><strong>BFS:</strong> expands shallowest frontier node first (FIFO). Level diagram:</p>
+<details class="interactive-toggle"><summary>What do `branching factor`, `depth`, `path cost`, `completeness`, `optimality` mean?</summary><div class="toggle-content"><p>Branching factor <code>b</code> = most successors any node has (maze junctions ≈ 3–4). Depth <code>d</code> = edges from start to the shallowest goal (answer length). Path cost <code>g(n)</code> = price sum along the route to <code>n</code> (steps, fuel, time — whatever the problem prices). Completeness = finds a solution whenever one exists (DFS fails in bottomless spaces). Optimality = finds the cheapest solution (BFS only under equal step costs; UCS under the epsilon bound). Time/space = nodes expanded vs nodes held (BFS holds exponential tiers; DFS holds one path).</p>
+</div></details><p><strong>BFS:</strong> expands shallowest frontier node first (FIFO). Level diagram:</p>
 <pre><code class="language-text">        [A] level 0
         /     \
     [B]       [C] level 1

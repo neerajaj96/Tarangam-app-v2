@@ -33,6 +33,14 @@ tags:
 
 **Problem first:** exams compress Tell/Ask, model sets, refutation, and UNIFY into single questions. **Method:** one worked drill per machinery, then the confusion table.
 
+::: toggle How do I run the four drills (one procedure each)?
+Safety proof: list percepts → TELL visited facts + general rules → ASK candidates → accept only entailed squares (disjunctions locate suspicion; negated rules locate safety). Model race: enumerate $2^n$ rows → keep KB-satisfying survivors → verdict holds iff true in all survivors (free atoms double rows, teaching cost). Refutation: CNF(KB ∧ ¬query) → resolve complementary pairs keeping remainders → empty box ends it (no survivors allowed). Unification trials: same predicate+arity → bind left-to-right with composition → occur-check refusals end it (no infinite regress).
+:::
+
+::: toggle Verify Scenario 2's survivor count and Scenario 4c's refusal
+Scenario 2: 8 rows over {A,B,Z}; `A` kills 4 (A-false half); `A=>B` kills A-true-B-false rows (2 of the remaining 4); survivors {(T,T,T),(T,T,F)} — B true in both, so KB |= B (Z free: doubles rows, changes nothing — cost follows vocabulary, not content). Scenario 4c: `P(x,f(x))` vs `P(y,y)` — x/y unify first, reducing to x vs `f(x)` (x inside its own partner) → occur-check refusal (accepting builds x = f(x) = f(f(x)) = … forever). Success, composition, refusal: the complete docket in three calls.
+:::
+
 **Scenario 1 — Safety proof under time pressure:** visited (1,1) silent (`¬B`, `¬S`); visited (2,1) breezy without stench. Breeze rule at (2,1) gives `P(1,1) ∨ P(3,1) ∨ P(2,2)`; `¬P(1,1)` leaves suspects `P(3,1) ∨ P(2,2)` — neither provable. Silence at (1,1) forces `¬P(2,1) ∧ ¬P(1,2)` and `¬W(2,1) ∧ ¬W(1,2)`. Verdict in 60 seconds: **(1,2) provably safe** (pit-free and Wumpus-free); (2,2)/(3,1) possibly mined — probe (1,2). Disjunctions locate suspicion; only negated rules locate safety.
 
 **Scenario 2 — Model-counting race (3 atoms, 8 rows, 1 verdict):** KB `{A, A => B}` over `{A, B, Z}` (Z free). Rows: 8 total; `A` kills 4; `A => B` kills A-true-B-false rows (2 of the 4); survivors `(A,B,Z)` in `{(T,T,T),(T,T,F)}` — B true in both, so `KB |= B`. Free atom Z doubles rows while changing nothing: model checking prices vocabulary, not content (the inefficiency, demonstrated).

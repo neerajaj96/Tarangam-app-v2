@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -291,7 +291,9 @@
 <p><strong>Definitions:</strong> variable <code>X_i</code> (what to assign); domain <code>D_i</code> (allowed values); constraint (allowed combinations; unary on one variable, binary on pairs, global like Alldiff). An <strong>arc</strong> <code>X -&gt; Y</code> (directed pair) is consistent iff every <code>x</code> in <code>D_X</code> has some supporting <code>y</code> in <code>D_Y</code> satisfying the constraint.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Seating Feuds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;delete unsupported values first&quot; here, then drop the party; directed arcs plus the re-queue rule below are the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> X, Y in {1, 2} with X &lt; Y. Value 2 in X has no partner above it — delete 2 from X before any search. Propagation solves pieces of the puzzle for free.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>Trace the tiny example revision by revision</summary><div class="toggle-content"><p>Queue starts with both directed arcs: [X→Y, Y→X]. Revise X→Y: x=1 needs y&gt;1 in {1,2} → y=2 witnesses, keep; x=2 needs y&gt;2 → none → delete 2. D_X shrank {1,2}→{1}: re-queue neighbours pointing at X → [Y→X, Y→X]. Revise Y→X: y=1 needs x&lt;1 in {1} → none → delete 1; y=2 needs x&lt;2 → x=1 witnesses, keep. D_Y = {2}. Queue drains. Fixpoint X={1}, Y={2} — the unique solution found with zero guessing. Each deletion re-queues exactly the arcs that could cascade (neighbours of the shrunk domain).</p>
+</div></details><details class="interactive-toggle"><summary>What are `arc`, `revise`, `consistent/complete assignment`, `termination`?</summary><div class="toggle-content"><p>Arc <code>X→Y</code> = directed pair (direction matters — revise X→Y shrinks only X). Revise = delete every value lacking a supporting witness in the other domain (existential per value: one witness saves). Consistent assignment = satisfies all constraints (a solution); complete = every variable assigned (partial assignments are untestable here). Termination = empty queue (quiescence — no arc can delete further; domains are maximal arc-consistent sets, not solutions). Empty domain mid-run = proven local impossibility → backtrack at once.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-csp-anatomy-and-the-ac-3-loop">2. Basic Layer: CSP Anatomy and the AC-3 Loop</h2>
 <p class="secnav"><a href="#1-start-from-zero-seating-feuds">← 1. Start From Zero: Seating Feuds</a><span class="secnav-sep">·</span><a href="#3-formal-layer-limits-and-levels">3. Formal Layer: Limits and Levels →</a></p>
 <p><strong>Data/state:</strong> current domains per variable. <strong>Goal:</strong> shrink domains to their maximal arc-consistent sets, then search the residue.</p>

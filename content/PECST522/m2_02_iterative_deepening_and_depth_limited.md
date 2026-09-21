@@ -38,6 +38,14 @@ Search 1 metre out; reset; 2 metres; reset; expand until found. Shallow complete
 
 **Tiny beginner example:** goal at depth 2. DLS with l=1 reports cutoff (wall hit, maybe deeper). IDS tries l=0 (miss), l=1 (miss), l=2 (hit) — three cheap failures buying a guaranteed shallow find.
 
+::: toggle What are `depth limit`, `cutoff vs failure`, and the IDS loop?
+Depth limit `l` = artificial wall (nodes at depth `l` are treated childless). Cutoff = wall hit with tree unexhausted (deeper solutions may exist — keep going). Failure = tree exhausted within `l` (provably nothing there — stop, unsolvable). IDS loop: for l in 0,1,2,… run DLS(l); stop on solution or exhaustive failure; continue on cutoff. Tiny trace above: l=0 checks root only, l=1 checks two tiers, l=2 finds the goal — each round depth-first (linear memory), all rounds together complete like BFS.
+:::
+
+::: toggle Where does the `11% overhead` number come from?
+Round `l` regenerates tiers 0..l, so tier `i` is built in rounds i..d — $(d-i+1)$ times. Total $N = \sum(d-i+1)b^i$; the bottom tier $b^d$ dwarfs all above (geometric series sums upper tiers to $\approx b^d/(b-1)$). Tiny numbers: b=10, d=5 — BFS builds 111,111 nodes; IDS rebuilds crumbs for 123,450 total, only ~11% more work, while memory collapses from $O(b^d)$ tiers to one $O(b·d)$ branch. Re-walking crumbs costs crumbs because crumbs are exponentially small beside the bottom tier.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: DLS Outcomes and IDS Loop
 

@@ -38,6 +38,14 @@ Feel "bill plus guess" here, then drop the road; the contracts below decide opti
 
 **Tiny beginner example:** X (g=5, h=2, f=7) vs. Y (g=2, h=6, f=8). A* pops X first — its small quote (h=2) outweighs its larger paid cost, giving the smaller total. Greedy would also pop X here (2 < 6 means X looks closer) — greedy follows h alone, so the two agree whenever the smallest quote sits on the smallest total, and diverge when a rosy quote on one branch hides a cheaper total on another.
 
+::: toggle Frontier table: who pops what on X(g=5,h=2), Y(g=2,h=6), Z(g=4,h=4)?
+Compute totals first: X f = 5+2 = 7; Y f = 2+6 = 8; Z f = 4+4 = 8. A* pops min-f → X (7 < 8; Y/Z tie at 8 needs a stated tie-break). Greedy pops min-h → X (2 < 4 < 6 — smallest quote wins, g invisible). UCS pops min-g → Y (2 < 4 < 5 — cheapest bill wins, h invisible). Same frontier, three winners: A* reads totals, Greedy reads quotes, UCS reads bills. Ordering rule per algorithm in one line each — confusing them is the exact error this note exists to prevent.
+:::
+
+::: toggle Expand `f(n) = g(n) + h(n)` symbol by symbol
+`n` = the frontier node being priced (one candidate route-end). `g(n)` = paid-so-far cost start→n (odometer — known exactly). `h(n)` = guessed remainder n→goal (quote — estimate, contract: admissible/consistent). `+` = totals bill plus quote into one estimated route price (addition is the repair: neither half suffices alone). `f(n)` = estimated total through n (the pop priority — smallest first). Tiny numbers above: X 5+2 = 7 beats Y 2+6 = 8 (quote outweighs bill) and Z 4+4 = 8. Why add: bills alone crawl blind (UCS), quotes alone get fooled (Greedy) — totals balance both, and admissibility makes the smallest popped goal provably cheapest.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: The Algorithm
 
@@ -61,6 +69,10 @@ Testing on generation returns the first *seen* goal, not the cheapest. A generat
 :::
 
 **Hand-trace where greedy failed (new numbers):** S (h=3) to A (g=1, h=2) and B (g=2, h=2); A-to-goal 4, B-to-goal 5. Consistency: 3 <= 1+2 and <= 2+2; 2 <= 4 and <= 5. Pop S, push A(f=3), B(f=4). Pop A, push goal-via-A (f=5). Frontier {B:4, G:5}: pop B, push goal-via-B (f=7). Pop G at 5 — optimal via A, with 5 <= every frontier `f`.
+
+::: toggle When does A* lose its guarantees (and what survives)?
+Inadmissible `h` (some overestimate): optimality gone — the popped goal may be pricier than an unfinished route whose tag was inflated. Admissible-but-inconsistent `h` with no re-opening: graph optimality can break (better late path to a closed node ignored — re-open or accept tree-search-only guarantees). Either way, completeness on finite graphs with positive costs survives (the frontier still drains to a goal). Memory never promised anything: `O(b^d)` ceiling holds regardless. Guarantees follow contracts one by one — drop a contract, name exactly what falls.
+:::
 
 <a id="worked-example"></a>
 ## 4. Worked Example, Distinctions, Limitations

@@ -37,6 +37,14 @@ Feel "proofs instead of enumeration" here, then drop the court; CNF plus the res
 
 **Tiny beginner example:** from `(P)` and `(¬P ∨ Q)`, resolve on `P/¬P` to get `(Q)` — Modus Ponens in disguise, with zero worlds visited.
 
+::: toggle What are `inference rule`, `Modus Ponens`, `resolution`, `clause`, `literal`, `CNF`?
+Inference rule = a licensed symbol-move (premises above the line, conclusion below — licensed means truth-preserving). Modus Ponens = from `P` and `P => Q`, get `Q` (the workhorse — tiny example above is exactly this). Resolution = from clauses sharing `l` and `¬l`, infer everything-except-the-pair (one rule subsuming Modus Ponens). Clause = OR of literals (a disjunct-bundle). Literal = atom or its negation (`P`, `¬P` — resolution's currency). CNF = AND of clauses (the required input shape — implications must be converted first, they resolve nothing directly).
+:::
+
+::: toggle Trace the refutation: which clauses cancel, in what order?
+Goal: prove pit neighbours (1,1). Negated query adds `(¬P12)`, `(¬P21)`. Round 1: C1 `(¬B ∨ P12 ∨ P21)` + C3 `(B)` cancel on B/¬B → `(P12 ∨ P21)` (breeze consumed, disjunction remains). Round 2: that + C2 `(¬P12)` cancel on P12/¬P12 → `(P21)` (unit — one survivor). Round 3: `(P21)` + `(¬P21)` cancel → empty box (nothing left — contradiction). Read: each round deletes one complementary pair and keeps the rest; the box certifies no counter-model exists (KB ∧ ¬query unsatisfiable), hence entailment.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: CNF and the Resolution Rule
 
@@ -59,6 +67,10 @@ Resolve complementary literals, keep the rest. Prove alpha by refuting ¬alpha: 
 
 - **Forward chaining (data-driven):** fire every rule whose premises are known; repeat until the query appears or nothing new fires. Complete for Horn KBs, linear in KB size — rediscovers everything.
 - **Backward chaining (goal-driven):** start from the query; recursively prove each premise (facts succeed, rules recurse). Touches only relevant rules — demand-driven. Basis of Prolog (a logic programming language).
+
+::: toggle What are `Horn clause`, `forward chaining`, `backward chaining` — and when does each win?
+Horn clause = at most one positive literal (equivalently: positive premises implying one head — count un-negated atoms, allow at most one). Forward chaining = flood from facts (fire all applicable rules repeatedly — complete for Horn, linear, rediscovers everything; wins when many queries share one KB). Backward chaining = drill from the goal (prove premises recursively — touches only relevant rules; wins when one query meets a huge KB, Prolog's engine). Outside Horn, neither is complete — resolution alone survives there. Count positives first, then choose the engine.
+:::
 
 ::: callout-pitfall Horn Means ≤1 Positive Literal — Count Carefully
 `(A ∨ ¬B ∨ ¬C)` is Horn (one positive: A); `(A ∨ B ∨ ¬C)` is not (two positives). Neither chaining algorithm is complete outside Horn — that territory belongs to resolution alone.

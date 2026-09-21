@@ -37,6 +37,14 @@ Feel "compact generalization versus exact silence" here, then drop the metaphor;
 
 **Tiny beginner example:** two road states share feature "wet." Updating weights on one wet skid adjusts predictions for all wet roads — generalization across states via features, impossible for isolated table entries.
 
+::: toggle What are `function approximation`, `θ`, `f(s)`, `deadly triad`, `DQN`?
+Function approximation = predicting values with few weights instead of per-state tables (compact instinct vs memorised answers). θ (theta) = the weight vector (what learning moves). f(s) = feature vector of state s (hand-built summaries — zero-valued features freeze their weights silently). Deadly triad = off-policy data + bootstrapping + function approximation together (each pair safe, the triple can diverge — structural, not bad luck). DQN (Deep Q-Network) = deep Q-learning tamed with frozen target networks + experience replay (scaffolding that steadies, never proves).
+:::
+
+::: toggle Verify the trace number by number, then read the triad warning
+Current: θᵀf = 0.5×1 + 0.5×2 = 1.5. Target: 1 + 0.9×2.0 = 2.8. Error δ = 2.8 − 1.5 = 1.3. Update: θ ← [0.5,0.5] + 0.1×1.3×[1,2] = [0.63, 0.76] (each weight moves proportionally to its feature — f(s) steers). New estimate 0.63 + 2×0.76 = 2.15 (up toward 2.8 without overshooting). Triad reading: this linear on-policy step is near-best-representable safe; swap in off-policy data plus a nonlinear net and the same arithmetic can diverge — convergence follows the triple's composition, never the formula alone.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Linear Approximation and the TD Step
 

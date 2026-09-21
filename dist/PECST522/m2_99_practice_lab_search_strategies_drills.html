@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -286,7 +286,9 @@
 <h2 id="1-start-from-zero-three-autopsies">1. Start From Zero: Three Autopsies</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-do-not-confuse-table">2. Basic Layer: Do-Not-Confuse Tab… →</a></p>
 <p><strong>Problem first:</strong> students memorize verdicts without numbers. <strong>Method:</strong> count one case fully per strategy family, then generalize.</p>
-<p><strong>Scenario 1 — The 11% miracle (IDS vs. BFS, counted):</strong> branching b = 10, goal depth d = 5. BFS builds levels 0..5: 1 + 10 + 100 + 1000 + 10,000 + 100,000 = 111,111 nodes. IDS re-walks upper tiers: 5x10 + 4x100 + 3x1000 + 2x10,000 + 1x100,000 = 123,450 — ~11% more — for linear <code>O(b*d)</code> memory instead of <code>O(b^d)</code>, plus uniform-cost optimality. Upper tiers are exponentially tiny, so re-walking crumbs costs crumbs.</p>
+<details class="interactive-toggle"><summary>How do I run the three autopsies (numbers first, verdicts second)?</summary><div class="toggle-content"><p>Autopsy 1 (IDS overhead): count BFS tiers (1+10+…+100,000 = 111,111), count IDS regenerations per tier ((d−i+1) weights → 123,450), divide (11% more) — then quote memory collapse O(b^d)→O(b·d). Autopsy 2 (cost trap): price both routes in dollars ($100 vs $1+$1), name which algorithm optimizes which currency (BFS steps, UCS dollars), split verdicts exactly where costs vary. Autopsy 3 (heuristic court): test every node against h* (one violation voids the license), disqualify before ranking (dominance needs two admissible rivals). Numbers first, slogans never.</p>
+</div></details><details class="interactive-toggle"><summary>Verify the 11% arithmetic line by line</summary><div class="toggle-content"><p>BFS: tiers 10^0..10^5 sum to 111,111 (geometric sum (10^6−1)/9). IDS: tier 10^i built in rounds i..5, i.e. (6−i) times for i≥1 (tier 10 appears in rounds 1–5 = 5 times): 5·10 + 4·100 + 3·1000 + 2·10,000 + 1·100,000 = 50+400+3000+20,000+100,000 = 123,450. Overhead (123,450−111,111)/111,111 ≈ 11%. Memory: BFS holds the 100,000-leaf tier (O(b^d)); IDS holds one branch plus siblings (O(b·d)). Eleven percent buys exponential memory collapse — the cheapest trade in search.</p>
+</div></details><p><strong>Scenario 1 — The 11% miracle (IDS vs. BFS, counted):</strong> branching b = 10, goal depth d = 5. BFS builds levels 0..5: 1 + 10 + 100 + 1000 + 10,000 + 100,000 = 111,111 nodes. IDS re-walks upper tiers: 5x10 + 4x100 + 3x1000 + 2x10,000 + 1x100,000 = 123,450 — ~11% more — for linear <code>O(b*d)</code> memory instead of <code>O(b^d)</code>, plus uniform-cost optimality. Upper tiers are exponentially tiny, so re-walking crumbs costs crumbs.</p>
 <p><strong>Scenario 2 — The $100 shortcut trap (BFS vs. UCS):</strong> start-goal direct toll $100 (1 step); start-A-goal backroad $1 + $1 (2 steps). BFS (counts steps) takes the toll; UCS (counts dollars) takes the backroad. &quot;Fewest edges&quot; answers BFS; &quot;cheapest&quot; answers UCS; &quot;both&quot; is correct only at uniform cost.</p>
 <p><strong>Scenario 3 — Heuristic court:</strong> true costs h*(A) = 8, h*(B) = 4. Candidate h1: A 7, B 5 — fails at B (5 &gt; 4), hence <strong>inadmissible</strong> everywhere as a license (A* may go suboptimal). Candidate h2: A 6, B 3 — passes both, hence admissible. Dominance needs two admissible rivals, so with h1 disqualified no dominance relation exists; among admissible rivals, higher-never-over wins node by node.</p>
 <p><a id="basics"></a></p>

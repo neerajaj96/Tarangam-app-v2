@@ -32,6 +32,14 @@ tags:
 
 **Problem first:** students memorize verdicts without numbers. **Method:** count one case fully per strategy family, then generalize.
 
+::: toggle How do I run the three autopsies (numbers first, verdicts second)?
+Autopsy 1 (IDS overhead): count BFS tiers (1+10+…+100,000 = 111,111), count IDS regenerations per tier ((d−i+1) weights → 123,450), divide (11% more) — then quote memory collapse O(b^d)→O(b·d). Autopsy 2 (cost trap): price both routes in dollars ($100 vs $1+$1), name which algorithm optimizes which currency (BFS steps, UCS dollars), split verdicts exactly where costs vary. Autopsy 3 (heuristic court): test every node against h* (one violation voids the license), disqualify before ranking (dominance needs two admissible rivals). Numbers first, slogans never.
+:::
+
+::: toggle Verify the 11% arithmetic line by line
+BFS: tiers 10^0..10^5 sum to 111,111 (geometric sum (10^6−1)/9). IDS: tier 10^i built in rounds i..5, i.e. (6−i) times for i≥1 (tier 10 appears in rounds 1–5 = 5 times): 5·10 + 4·100 + 3·1000 + 2·10,000 + 1·100,000 = 50+400+3000+20,000+100,000 = 123,450. Overhead (123,450−111,111)/111,111 ≈ 11%. Memory: BFS holds the 100,000-leaf tier (O(b^d)); IDS holds one branch plus siblings (O(b·d)). Eleven percent buys exponential memory collapse — the cheapest trade in search.
+:::
+
 **Scenario 1 — The 11% miracle (IDS vs. BFS, counted):** branching b = 10, goal depth d = 5. BFS builds levels 0..5: 1 + 10 + 100 + 1000 + 10,000 + 100,000 = 111,111 nodes. IDS re-walks upper tiers: 5x10 + 4x100 + 3x1000 + 2x10,000 + 1x100,000 = 123,450 — ~11% more — for linear `O(b*d)` memory instead of `O(b^d)`, plus uniform-cost optimality. Upper tiers are exponentially tiny, so re-walking crumbs costs crumbs.
 
 **Scenario 2 — The \$100 shortcut trap (BFS vs. UCS):** start-goal direct toll \$100 (1 step); start-A-goal backroad \$1 + \$1 (2 steps). BFS (counts steps) takes the toll; UCS (counts dollars) takes the backroad. "Fewest edges" answers BFS; "cheapest" answers UCS; "both" is correct only at uniform cost.

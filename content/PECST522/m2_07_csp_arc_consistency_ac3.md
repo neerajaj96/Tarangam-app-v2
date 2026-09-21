@@ -38,6 +38,14 @@ Feel "delete unsupported values first" here, then drop the party; directed arcs 
 
 **Tiny beginner example:** X, Y in {1, 2} with X < Y. Value 2 in X has no partner above it — delete 2 from X before any search. Propagation solves pieces of the puzzle for free.
 
+::: toggle Trace the tiny example revision by revision
+Queue starts with both directed arcs: [X→Y, Y→X]. Revise X→Y: x=1 needs y>1 in {1,2} → y=2 witnesses, keep; x=2 needs y>2 → none → delete 2. D_X shrank {1,2}→{1}: re-queue neighbours pointing at X → [Y→X, Y→X]. Revise Y→X: y=1 needs x<1 in {1} → none → delete 1; y=2 needs x<2 → x=1 witnesses, keep. D_Y = {2}. Queue drains. Fixpoint X={1}, Y={2} — the unique solution found with zero guessing. Each deletion re-queues exactly the arcs that could cascade (neighbours of the shrunk domain).
+:::
+
+::: toggle What are `arc`, `revise`, `consistent/complete assignment`, `termination`?
+Arc `X→Y` = directed pair (direction matters — revise X→Y shrinks only X). Revise = delete every value lacking a supporting witness in the other domain (existential per value: one witness saves). Consistent assignment = satisfies all constraints (a solution); complete = every variable assigned (partial assignments are untestable here). Termination = empty queue (quiescence — no arc can delete further; domains are maximal arc-consistent sets, not solutions). Empty domain mid-run = proven local impossibility → backtrack at once.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: CSP Anatomy and the AC-3 Loop
 

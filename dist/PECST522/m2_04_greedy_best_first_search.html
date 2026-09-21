@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -291,7 +291,9 @@
 <p><strong>Definitions:</strong> Greedy best-first search orders its frontier (the set of unexpanded nodes) by the heuristic alone. Evaluation function <code>f(n) = h(n)</code> where <code>h(n)</code> is the estimated remaining cost from node <code>n</code> and <code>f(n)</code> is the expansion priority. <code>g(n)</code> (paid-so-far cost) is ignored. Best-first is a family name: greedy uses <code>h</code>, UCS uses <code>g</code>, A* uses <code>g + h</code>.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Moth to the Closest Lamp</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;guess-only ordering&quot; here, then drop the insect; the formula <code>f = h</code> plus the failure trace below is the examinable content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> from S, road to A looks 5 away, road to B looks 3 away. Greedy picks B sight unseen — never asking what S-to-A vs. S-to-B already cost.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>Why does Greedy pop the smallest `h` (and what does it ignore)?</summary><div class="toggle-content"><p>Greedy orders the frontier by <code>h</code> alone: pop min-<code>h</code> means &quot;expand whatever looks closest&quot; (B&#39;s 3 &lt; A&#39;s 5 → B expands first — smaller guess wins, always). Ignored: <code>g</code> (paid-so-far — the 4-vs-1 already spent is invisible to <code>f = h</code>). Consequence: B&#39;s rosy 3 beats A&#39;s honest 5 even though B already cost more — nose-following with no bill-checking. Ordering rule in one line: min-h pops, ties need a stated policy.</p>
+</div></details><details class="interactive-toggle"><summary>Trace the four-node conviction as a frontier table</summary><div class="toggle-content"><p>Start: frontier {S}. Expand S → {A(h=5,g=1), B(h=3,g=4)}. Pop B (3 &lt; 5 — min-h rule, g ignored) → expand to goal (h=0), return S-B-G costing 4+6 = 10. Never expanded: A (whose true total 1+2 = 3 was optimal). Verdict: greedy returned 10 vs optimum 3 — over 3× worse on four nodes, because the <code>h</code>-gap decided while the <code>g</code>-gap stayed invisible. Repair preview: A* adds <code>g</code> back (<code>f = 4</code> for A vs <code>7</code> for B — A pops first).</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-algorithm-and-price">2. Basic Layer: Algorithm and Price</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-moth-and-the-lamp">← 1. Start From Zero: The Moth and t…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-the-four-node-conviction">3. Formal Layer: The Four-Node Con… →</a></p>
 <p><strong>Data/state:</strong> frontier ordered by <code>h</code>, plus an explored set (visited states) against re-expansion loops. <strong>Goal:</strong> reach a goal quickly, with no optimality promise.</p>

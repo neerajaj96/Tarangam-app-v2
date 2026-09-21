@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -290,7 +290,9 @@
 <p>New town, new restaurants. <strong>Exploit:</strong> eat nightly at the first decent cafe — guaranteed okay, possibly missing the legendary place two streets over. <strong>Explore:</strong> try random doors — mostly mediocre, one life-changing. Exploration pays in information (future meals); exploitation pays in reward (tonight). Active RL formalizes this: deliberately take currently-believed-suboptimal actions, because beliefs without evidence are prejudices.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The New Town Foodie</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;information versus reward&quot; here, then drop the town; Q-values plus epsilon schedules below are the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> action Left is believed worth 2, Right believed worth 1. Trying Right once reveals it is actually worth 9 — one exploratory loss buying permanent gains. Never exploring locks in the wrong belief forever.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>What are `Q(s,a)`, `Q-table`, `ε-greedy`, `exploitation`, `exploration`?</summary><div class="toggle-content"><p>$Q(s,a)$ = expected discounted return of taking action $a$ in state $s$ then acting optimally (action-value — grades pairs, not states). Q-table = all $Q(s,a)$ stored per pair (tabular case — enumerable states × actions only). ε-greedy = with probability ε act randomly, else greedily (ε = exploration knob: fixed ε probes forever; decaying ε (GLIE) retires probing). Exploitation = milking the best-known pair (reward now). Exploration = trying believed-suboptimal pairs (information for later — beliefs without evidence are prejudices). Tiny check above: Right&#39;s believed 1 vs true 9 — only exploration exposes the gap.</p>
+</div></details><details class="interactive-toggle"><summary>Verify the hand update number by number</summary><div class="toggle-content"><p>Start $Q(A,\text{left}) = 2.0$; take left, $r = 0$, land B with $Q(B,\text{left}) = 1.0$, $Q(B,\text{right}) = 4.0$; $\alpha = 0.5$, $\gamma = 0.9$. Target $= r + \gamma\max_{a&#39;}Q = 0 + 0.9 \times 4.0 = 3.6$ (best imaginable continuation — the max detaches learning from the actually-taken next action, hence off-policy). Error $= 3.6 − 2.0 = 1.6$ (underestimate — worth more than believed). Update $2.0 + 0.5 \times 1.6 = 2.8$ (half-stride toward target). The next action actually taken in B never entered the math — even exploratory moves aim at the optimum.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-q-values-and-the-off-policy-update">2. Basic Layer: Q-Values and the Off-Policy Update</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-explorer-s-dilemma">← 1. Start From Zero: The Explorer&#39;s…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-exploration-schedules-and-convergence-contrac">3. Formal Layer: Exploration Sched… →</a></p>
 <p><strong>Data/state:</strong> state-action pairs. <strong>Goal:</strong> the optimal policy without any transition model.</p>

@@ -37,6 +37,14 @@ Feel "complete candidates only, no partial credit" here, then drop the keys; the
 
 **Tiny beginner example:** two switches X, Y each {on, off}, constraint "not equal." Candidates: on/on fail, on/off pass — stop at 2 of 4 tests. Exhaustion proves absence when nothing passes.
 
+::: toggle What are `variable`, `domain`, `constraint`, `assignment`, `d^n`?
+`Variable` = a thing to decide (switch X). `Domain` = its allowed values ({on, off} — size `d = 2`). `Constraint` = a rule combinations must satisfy ("not equal"). `Assignment` = one value per variable (complete: on/off — testable; partial: X=on alone — untestable here). `d^n` = worst-case full tests (2² = 4 candidates — exponentiation because each of `n` variables multiplies options by `d`). Tiny check above: 2 of 4 tests ran before success (best case); worst case runs all 4.
+:::
+
+::: toggle Why `d^n` and not `d × n`?
+Each variable independently multiplies the candidate count: 4 variables × 3 values = 3·3·3·3 = 81 (each new variable triples the bill — one more variable triples everything). Addition would count values, not combinations; the space is a product because choices combine. Exam trap: "12 tests" for 4×3 mistakes sum for product — always exponentiate per-variable options.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: The Loop and Its Price
 

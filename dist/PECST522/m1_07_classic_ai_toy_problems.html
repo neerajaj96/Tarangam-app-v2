@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -305,7 +305,9 @@
 </code></pre>
 <p><strong>Meaning, variables, formula:</strong> 2 agent positions times 2 dirt states per room (clean/dirty each):</p>
 <p>$$\text{States} = 2 \times 2 \times 2 = 8$$</p>
-<p><strong>8-Puzzle:</strong> 3x3 board, 8 numbered tiles, one blank.
+<details class="interactive-toggle"><summary>Where does `2 × 2 × 2 = 8` come from?</summary><div class="toggle-content"><p>Three independent binary choices multiply: agent position (A or B = 2 options) × dirt in A (clean or dirty = 2) × dirt in B (2). Each combination is one distinct state (e.g. [Agent B, A-dirty, B-clean]). Tiny check: list all 8 — 2 positions × 4 dirt patterns (none/A/B/both) = 8. Formulation skill = spotting the independent dimensions, then multiplying (never adding — choices combine, not alternative).</p>
+</div></details><details class="interactive-toggle"><summary>What is `9!/2 = 181,440` and why half?</summary><div class="toggle-content"><p><code>9!</code> (9 factorial = 9×8×…×1 = 362,880) counts all tile arrangements. Each slide swaps the blank with a neighbour — an even permutation (two swaps in disguise), so parity (even/odd inversion count) never changes. Goal has even parity; odd-parity layouts are unreachable, not just hard — exactly half the arrangements. Reachable = 362,880/2 = 181,440. Intuition: parity is a conserved quantity like energy — moves preserve it, so half the space is walled off from any start.</p>
+</div></details><p><strong>8-Puzzle:</strong> 3x3 board, 8 numbered tiles, one blank.
 States: tile-plus-blank positions. Actions: move the <strong>blank</strong> Up/Down/Left/Right (standardizing on the blank keeps at most 4 uniform choices; tile-based moves vary by position). Transitions: swap blank with neighbour. Goal test: target arrangement. Path cost: 1 per slide.</p>
 <pre><code class="language-text">1 2 3      1 2 3
 8 _ 4  --&gt; 8 4 _

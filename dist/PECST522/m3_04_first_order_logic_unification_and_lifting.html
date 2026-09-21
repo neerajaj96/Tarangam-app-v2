@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -291,7 +291,9 @@
 <p><strong>Definitions:</strong> <strong>objects</strong> (squares, agents, the Wumpus); <strong>relations/predicates</strong> (Adjacent, At — truth-valued connections); <strong>functions</strong> (LocationOf, LeftOf — each mapping objects to exactly one object); <strong>variables</strong> (x, y — placeholders); <strong>quantifiers</strong>: <code>∀</code> (&quot;for all&quot;) and <code>∃</code> (&quot;there exists,&quot; at least one). One FOL sentence routinely replaces exponentially many propositional ones.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Stamps vs. Stencil Machine</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;one template, infinite groundings&quot; here, then drop the machine; quantifier-plus-connective discipline below is the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> <code>∀x (At(x,Cave) =&gt; Dark(x))</code> says every cave square is dark. <code>∃x (At(x,Cave) ∧ Glitter(x))</code> says some cave square glitters. Swapping connectives states nonsense (next section) — the most-tested syntax fact.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>What are `predicate`, `constant`, `variable`, `function`, `∀`, `∃`, `substitution`?</summary><div class="toggle-content"><p>Predicate = truth-valued relation (At, Adjacent — connects objects into claims). Constant = named object (Wumpus, S12 — fixed referent). Variable = placeholder (x, y — ranges over objects). Function = object-to-object map (LeftOf(x) — exactly one output per input, unlike predicates). <code>∀x</code> = for every object x (universal — pairs with <code>=&gt;</code>). <code>∃x</code> = for at least one x (existential — pairs with <code>∧</code>). Substitution <code>θ = {x/A}</code> = replace x by A everywhere (bindings applied simultaneously, not sequentially — order illusions corrupt proofs).</p>
+</div></details><details class="interactive-toggle"><summary>Trace `UNIFY(Knows(John,x), Knows(y,Mother(y)))` substitution by substitution</summary><div class="toggle-content"><p>Same predicate (Knows), same arity (2) — proceed left to right with composition. Pair 1: John vs y → bind y/John (variable-meets-constant; record θ={y/John}). Compose forward: Mother(y) rewrites to Mother(John) <em>before</em> pair 2 is compared (early bindings rewrite later pairs — the load-bearing order). Pair 2: x vs Mother(John) → bind x/Mother(John); θ = {y/John, x/Mother(John)}. Occur check passes (no variable inside its own partner). Result is most general: any other unifier (e.g. grounding John further) is this one plus extra commitments. Reverse order (x first) would still work here, but left-to-right-with-composition is the rule that never over-binds.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-syntax-semantics-pairings">2. Basic Layer: Syntax, Semantics, Pairings</h2>
 <p class="secnav"><a href="#1-start-from-zero-stamps-vs-stencil-machine">← 1. Start From Zero: Stamps vs. Ste…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-unification-and-lifted-inference">3. Formal Layer: Unification and L… →</a></p>
 <p><strong>Data/state:</strong> terms (constants like Wumpus, variables like x, functions of terms like LeftOf(x)); atomic sentences (predicate on terms: At(Agent,(1,1))). <strong>Goal:</strong> quantify correctly with scope discipline.</p>

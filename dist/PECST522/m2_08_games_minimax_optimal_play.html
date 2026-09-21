@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -314,7 +314,9 @@
     <div class="video-observations"><strong>What to observe:</strong> MIN floors sink to their smallest leaf while the MAX roof rises to the largest floor — watch $3$ and $2$ surface, then the root take $3$.</div>
   </div>
 </div><p><strong>Tiny beginner example:</strong> MAX picks left (MIN replies 1 or 9, so MIN forces 1) or right (MIN replies 5 only, so 5). Guarantees: left secures 1, right secures 5 — optimal move is right despite the flashy 9 that MIN will never allow.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>What are `game tree`, `MAX/MIN node`, `utility`, `terminal`, `minimax value`?</summary><div class="toggle-content"><p>Game tree = all move sequences as branches (root = current position, edges = moves, leaves = game ends). MAX node = our turn (take the maximum child — best guaranteed outcome). MIN node = adversary&#39;s turn (take the minimum child — worst reply assumed). Utility = terminal score from MAX&#39;s viewpoint (+1 win, −1 loss, draws between). Terminal = game-over node (no moves left — scored, never expanded). Minimax value = backed-up worth (leaves: utility; MAX: max of children; MIN: min of children). Tiny check above: left&#39;s MIN backs up min(1,9) = 1; right backs up 5; root MAX takes max(1,5) = 5 — move right.</p>
+</div></details><details class="interactive-toggle"><summary>Trace the 3-vs-2 tree node by node</summary><div class="toggle-content"><p>Leaves under MIN A: 3, 12, 8 → A backs up min = 3 (the 12 tempts only the unwary — MIN picks the floor). Leaves under MIN B: 2, 4, 6 → B backs up 2. Root MAX sees floors {A:3, B:2} → takes max = 3 (move toward A). Winner 3 was A&#39;s smallest leaf: guarantees bank floors, never flashy leaves behind perfect defence. Verify: any other root move secures ≤ 2 — 3 is the best assured floor.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-backup-rules-and-viewpoint-discipline">2. Basic Layer: Backup Rules and Viewpoint Discipline</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-pessimist-s-elevator">← 1. Start From Zero: The Pessimist&#39;…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-full-trace-and-price-tag">3. Formal Layer: Full Trace and Pr… →</a></p>
 <p><strong>Data/state:</strong> game tree with players, actions, terminal utilities. <strong>Goal:</strong> the root move toward the child whose minimax value equals the root&#39;s (best guaranteed outcome).</p>

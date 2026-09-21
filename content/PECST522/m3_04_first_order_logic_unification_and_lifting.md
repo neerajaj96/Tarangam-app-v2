@@ -39,6 +39,14 @@ Feel "one template, infinite groundings" here, then drop the machine; quantifier
 
 **Tiny beginner example:** `∀x (At(x,Cave) => Dark(x))` says every cave square is dark. `∃x (At(x,Cave) ∧ Glitter(x))` says some cave square glitters. Swapping connectives states nonsense (next section) — the most-tested syntax fact.
 
+::: toggle What are `predicate`, `constant`, `variable`, `function`, `∀`, `∃`, `substitution`?
+Predicate = truth-valued relation (At, Adjacent — connects objects into claims). Constant = named object (Wumpus, S12 — fixed referent). Variable = placeholder (x, y — ranges over objects). Function = object-to-object map (LeftOf(x) — exactly one output per input, unlike predicates). `∀x` = for every object x (universal — pairs with `=>`). `∃x` = for at least one x (existential — pairs with `∧`). Substitution `θ = {x/A}` = replace x by A everywhere (bindings applied simultaneously, not sequentially — order illusions corrupt proofs).
+:::
+
+::: toggle Trace `UNIFY(Knows(John,x), Knows(y,Mother(y)))` substitution by substitution
+Same predicate (Knows), same arity (2) — proceed left to right with composition. Pair 1: John vs y → bind y/John (variable-meets-constant; record θ={y/John}). Compose forward: Mother(y) rewrites to Mother(John) *before* pair 2 is compared (early bindings rewrite later pairs — the load-bearing order). Pair 2: x vs Mother(John) → bind x/Mother(John); θ = {y/John, x/Mother(John)}. Occur check passes (no variable inside its own partner). Result is most general: any other unifier (e.g. grounding John further) is this one plus extra commitments. Reverse order (x first) would still work here, but left-to-right-with-composition is the rule that never over-binds.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Syntax, Semantics, Pairings
 

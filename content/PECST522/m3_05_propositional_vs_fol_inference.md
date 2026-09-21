@@ -38,6 +38,14 @@ Feel "mountain versus template" here, then drop the shop; grounding arithmetic p
 
 **Tiny beginner example:** rule `Cat(x) => Mammal(x)` with 10 cats grounds to 10 copies plus 20 atoms — then fires on Tom. Lifted Modus Ponens unifies once (`x/Tom`) and concludes in one step touching one fact.
 
+::: toggle Where does `p · dᵏ` come from, and what do `lifting`, `decidable`, `semi-decidable` mean?
+`d` constants combined `k` at a time (ordered, with repetition) give $d^k$ ground atoms per $k$-ary predicate (2 binary predicates over 10 constants: $2 × 10^2 = 200$ atoms — and $2^{200}$ models for the census). $p$ predicates multiply the count ($p·d^k$). Lifting = reasoning from templates with UNIFY (one step per proof move, touching only demanded facts). Decidable = both yes and no answers arrive in finite time (propositional). Semi-decidable = yes-answers arrive, no-answers may loop forever (full FOL — a theory ceiling: no strategy fixes it in general).
+:::
+
+::: toggle What are the three escapes (Datalog, Prolog, lifting) and what does each cost?
+Datalog-style restriction (no functions, constrained rules) = buys back decidability by shrinking expressiveness. Prolog backward chaining = buys industrial speed by trading corners (depth-first can loop where breadth succeeds; skipped occur check risks cyclic terms). Lifting itself = shrinks the mountain to a hill that still needs climbing gear (factoring, subsumption, strategy). Few objects tolerate grounding; many demand templates; infinite functional domains forbid grounding entirely — choose by workload.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Grounding Arithmetic
 

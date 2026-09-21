@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -291,7 +291,9 @@
 <p><strong>Definitions:</strong> <strong>supervised learning</strong> says &quot;do this here&quot; (labelled correct actions). RL says &quot;that earned +10 — do more of whatever led there.&quot; <strong>Credit assignment</strong> is deciding which of 40 pre-goal moves actually mattered — the entire difficulty, since rewards arrive delayed.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Training a Puppy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;reward signals, not instructions&quot; here, then drop the puppy; MDP slots plus the Bellman equation below are the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> a grid robot reaches cheese (+10) after 5 moves through empty squares (0 each). Which move earned the cheese? All five share credit through discounted backups — the mechanism below.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>What are `agent`, `environment`, `state`, `action`, `reward`, `policy`, `return`, `episode`?</summary><div class="toggle-content"><p>Agent = the learner/actor (robot, puppy, program). Environment = everything outside it (grid, stadium — responds to actions with next states and rewards). State = one configuration (robot&#39;s cell). Action = one choice there (move up). Reward = immediate numeric feedback (+10 cheese, 0 empty, −scold). Policy π = action choice per state (the behaviour being learned). Return = discounted reward sum over a run (the maximand). Episode = one run start-to-terminal (a season, a maze attempt). Supervised learning gets correct actions as labels; RL gets only rewards — no per-step answers, hence credit assignment.</p>
+</div></details><details class="interactive-toggle"><summary>What are `MDP 5-tuple`, `Markov assumption`, `γ`, `U`, `π*`?</summary><div class="toggle-content"><p>MDP = (S states, A actions, T transition odds, R rewards, γ discount) — the formal arena. Markov assumption = future depends only on present state+action (history irrelevant given now — conditional independence, not determinism). γ (gamma, 0 ≤ γ &lt; 1) = impatience knob (future rewards shrink geometrically — treats now beat treats tomorrow, and infinite totals stay finite). U = utility (expected discounted return — desirability score). π* (pi-star) = optimal policy (maximises expected utility per state — the learning target). Tiny check above: 5 zero-reward moves share the +10 through γ-discounted backups — no single move &quot;earned&quot; it alone.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-mdps-the-formal-arena">2. Basic Layer: MDPs — The Formal Arena</h2>
 <p class="secnav"><a href="#1-start-from-zero-rewards-instead-of-rules">← 1. Start From Zero: Rewards Instea…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-bellman-equation-and-module-map">3. Formal Layer: Bellman Equation … →</a></p>
 <p><strong>Data/state:</strong> fully observable states (partial observability needs POMDPs — Partially Observable MDPs, beyond syllabus). <strong>Goal:</strong> learn the optimal policy (action choice per state maximizing expected utility).</p>
@@ -305,7 +307,8 @@
 <p><strong>Utility of a history</strong> <code>[s0, s1, ...]</code>:</p>
 <p>$$U([s_0, s_1, \dots]) = \sum_{t=0}^{\infty} \gamma^t R(s_t)$$</p>
 <p>Symbols: <code>gamma^t</code> discounts step <code>t</code>; <code>R(s_t)</code> is its reward; the sum is total desirability. The <strong>optimal policy</strong> <code>pi*</code> (pi-star) maximizes expected utility per state.</p>
-<p><a id="formal-model"></a></p>
+<details class="interactive-toggle"><summary>Expand the Bellman equation term by term with the §3 numbers</summary><div class="toggle-content"><p>$U(s)$ = utility of being in $s$ (the unknown being solved). $R(s)$ = immediate reward here ($R(A) = 1$ — banked now, no discount). $\gamma$ = 0.9 (one-step patience factor). $\max_a$ = best action&#39;s value (choose the max, not the average — control, not prediction). $\sum_{s&#39;} P(s&#39;|s,a),U(s&#39;)$ = expected next-utility (0.8×5 + 0.2×0 = 4.0 — odds-weighted futures). Full: $U_{new}(A) = 1 + 0.9 × 4.0 = 4.6$ (guess 5 corrected down toward consistency). True value solves $U = 1 + 0.72U$ → ~3.57 (repeated backups contract there from any start, given γ &lt; 1).</p>
+</div></details><p><a id="formal-model"></a></p>
 <h2 id="3-formal-layer-bellman-equation-and-module-map">3. Formal Layer: Bellman Equation and Module Map</h2>
 <p class="secnav"><a href="#2-basic-layer-mdps-the-formal-arena">← 2. Basic Layer: MDPs — The Formal …</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
 <p><strong>Meaning, variables, intuition, formula — the Bellman optimality equation:</strong></p>

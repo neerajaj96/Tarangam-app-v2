@@ -43,6 +43,14 @@ Feel "form versus worlds" here, then drop the bricks; connectives plus the model
 
 Complex sentences via connectives: `¬` (not), `∧` (and), `∨` (or), `=>` (implies), `<=>` (if-and-only-if). **Precedence** tightest-first: `¬`, then `∧`, then `∨`, then `=>`, then `<=>`. So `P ∨ Q => R` parses as `(P ∨ Q) => R`. When in doubt, parenthesize — exams punish precedence slips.
 
+::: toggle What are `proposition`, `atomic sentence`, `truth value`, `syntax`, `semantics`, `model`?
+Proposition = a claim with a definite true/false value (pit at (1,2) — not questions or commands). Atomic sentence = indivisible proposition symbol (`P`, `Q` — no internal structure). Truth value = its assignment (true or false — nothing between). Syntax = formation rules (which strings are legal sentences). Semantics = meaning via models (what sentences claim about worlds). Model = one complete true/false assignment to every atom (a fully-specified what-if world — satisfies or violates each sentence).
+:::
+
+::: toggle Read `¬ ∧ ∨ => <=>` with precedence and one truth table
+`¬P` flips truth (not). `P ∧ Q` true iff both true (and). `P ∨ Q` true iff at least one true (or — inclusive, unlike English sometimes). `P => Q` false in exactly one row: P true with Q false (broken promise; false premise implies anything — vacuous truth). `P <=> Q` true iff both sides match (if-and-only-if — two implications bundled). Precedence ¬, ∧, ∨, =>, <=> (tightest first): `P ∨ Q => R` parses `(P ∨ Q) => R`. Tiny check: P=true, Q=false makes `P => Q` false but `P ∨ Q` true — same atoms, different connective, different verdict.
+:::
+
 **Implication truth table (memorize):** `P => Q` is false in exactly one row: `P` true with `Q` false (the only broken promise). False premise implies anything (vacuous truth): `P = false` rows are true regardless of `Q`.
 
 <a id="formal-model"></a>

@@ -38,6 +38,14 @@ Step 1: Matrix — internal thought or external action? Human mimicry or rationa
 
 **Tiny beginner drill:** a spam filter. Matrix: acting rationally (scores probabilities, never chats). PEAS: performance (accuracy, low false positives); environment (mail stream); actuators (folder moves/tags); sensors (text stream). Rationality: judged on odds available then, not on one missed phish. Environment: partially observable, single-agent, stochastic, episodic, static, discrete, known.
 
+::: toggle How do I write a PEAS specification from scratch?
+Four slots in order: Performance (how winning is measured — accuracy, yield, safety margins). Environment (the world acted upon — mail stream, field, maze). Actuators (how the agent changes it — folder moves, nozzles, wheels). Sensors (how it perceives — text, probes, cameras). Tiny check on the spam filter above: every slot filled with concrete nouns, no slot borrowed from another (sensors read, actuators write — swapping them is the classic error).
+:::
+
+::: toggle How do I classify on all seven environment dimensions?
+Ask in fixed order: Observable? (fully/partially — what is hidden). Agents? (single/multi — who else acts). Deterministic? (same action, same outcome — else stochastic). Episodic? (decisions independent — else sequential). Static? (world waits while deciding — else dynamic/semidynamic). Discrete? (finite distinct states — else continuous). Known? (rules known — else unknown). Pac-Man decoded: visible maze (fully observable) with ghosts (multi-agent) on fixed rules (known, deterministic-if-fixed) where pellets shape futures (sequential) in real-time (dynamic) on a grid (discrete).
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Five Worked Scenarios
 

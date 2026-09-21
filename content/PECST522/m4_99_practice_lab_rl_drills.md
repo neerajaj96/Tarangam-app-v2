@@ -33,6 +33,14 @@ tags:
 
 **Problem first:** one-step positions prove nothing — procedures converge as trajectories. **Method:** run every estimator on the same two-state world (R(A) = 1, 80/20 dynamics, gamma 0.9, truth U*(A) approx 3.57, current U(A) = 5), then compare philosophies.
 
+::: toggle How do I run the backup race (same world, three philosophies)?
+Fix the world (R(A)=1, 80/20, γ=0.9, truth ≈3.57, current 5.0). Value-iteration backup: full expectation 1+0.9(0.8×5) = 4.6 (model-exact, contracts downward). TD single sample: r=1 landing B, α=0.5 → 4.6+0.5(1−4.6) = 2.8 (sample bounce below truth — noise, not failure). Direct: one episode returning 1 → running average 1.0 (single-trajectory hostage). Verdict shape: all converge with enough experience (VI deterministically, TD with decaying α + visitation, direct by LLN) — first-step addresses differ completely, destinations coincide.
+:::
+
+::: toggle How do I prescribe exploration (stakes × stationarity)?
+Two axes decide: stakes (cost of a random move) × stationarity (does truth move?). Factory arm + simulator + offline trials → Q-learning + GLIE (simulate everything, deploy frozen greedy). Live trading + regime shifts → small fixed ε forever (GLIE purity unsafe when truth moves — perpetual probing tracks shifts). Surgical robot + first-do-no-harm → no naive exploration (offline/batch RL or human gating — random moves are malpractice). Policy follows the quadrant, never habit: low-stakes-stationary explores freely, high-stakes-anything gates hard.
+:::
+
 **Scenario 1 — Backup race:** **value-iteration backup** (model-exact expectation): `1 + 0.9(0.8x5) = 4.6`. **TD single sample** (r = 1, land B with U(B) = 0, alpha 0.5): `4.6 + 0.5(1 - 4.6) = 2.8` — overshooting below truth (sample noise, not failure). **Direct estimation** after one A-episode returning 1: running average 1.0 (single-trajectory hostage). Model-exact contracts downward; samples bounce around truth; episodes anecdotalize. All converge with enough experience (VI deterministically; TD with decaying alpha plus visitation; direct by the Law of Large Numbers — LLN); first-step addresses differ completely.
 
 **Scenario 2 — Q-trace sprint:** Q(A,left) = 2.0 with r = 0 and max Q(B) = 4.0 goes to 2.8 in one update (alpha 0.5). Continue: take left from B (exploratory), r = 0, land C with max Q(C) = 2.0, current Q(B,left) = 1.0. Target `0 + 0.9x2.0 = 1.8`; Q <- `1.0 + 0.5x0.8 = 1.4` — aimed at the max (right-side values) despite taking left. SARSA (on-policy) would target the taken action's value instead. One trace, the whole off-policy distinction.

@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -290,7 +290,9 @@
 <p>Value methods learn the physics (how good every situation is) then derive behaviour. <strong>Policy search</strong> skips physics and choreographs directly: parametrize the dance (<code>pi_theta</code> — e.g. a neural net mapping sensors to motor torques with weights theta), perform it, measure applause (total reward), adjust toward applause. Grading every (state, torque-vector) pair is hopeless for a 7-joint arm — tweaking dance parameters by feel works.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Choreography vs. Physics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;tune behaviour, skip value tables&quot; here, then drop the dance; policy gradients plus the inverse-RL ambiguity below are the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> a thermostat threshold theta (turn on below theta degrees). Try theta 19 (bill $80, comfort 7), theta 21 (bill $95, comfort 9) — hill-climb theta toward the scored trade-off. No value per temperature needed, just dance-parameter scores.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>What are `π_θ`, `J(θ)`, `policy gradient`, `demonstration`, `reward inference`?</summary><div class="toggle-content"><p>$\pi_\theta$ = policy with knobs $\theta$ (e.g. neural net mapping sensors to torques — the dance, parametrised). $J(\theta)$ = expected total reward following $\pi_\theta$ (applause score — the hill being climbed). Policy gradient = estimated uphill direction in $\theta$-space (REINFORCE: return × surprise-weighted action-gradients, averaged over trials — high-return trials reinforce their actions). Demonstration = expert behaviour trace (states + actions, no rewards written). Reward inference = recovering the objective the expert seems to optimise (IRL output — transfers across bodies/cities; copied steering does not).</p>
+</div></details><details class="interactive-toggle"><summary>Why is inverse RL ill-posed, and what do the two fixes do?</summary><div class="toggle-content"><p>Any behaviour is optimal under infinitely many rewards — including all-zero (everything optimal, explaining nothing). Apprenticeship/feature matching: match the expert&#39;s feature expectations (averages, not actions), then optimise the matched reward (Abbeel-Ng near-expert certificate under the true unknown reward). Max-entropy: among consistent rewards, pick the one making expert behaviour least surprising (no extra commitments). Tiny trace above: expert (0.9, 0.8) vs crawler (1.0, 0.4) — weights shift toward adherence, policy re-optimised, gap checked, iterate on residuals.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-hill-climbing-expected-reward">2. Basic Layer: Hill-Climbing Expected Reward</h2>
 <p class="secnav"><a href="#1-start-from-zero-choreography-vs-physics">← 1. Start From Zero: Choreography v…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-inverse-rl-and-its-ambiguity">3. Formal Layer: Inverse RL and It… →</a></p>
 <p><strong>Data/state:</strong> parametrized stochastic policies <code>pi_theta</code>. <strong>Goal:</strong> <code>theta* = argmax J(theta)</code> where <code>J(theta) = E[total reward following pi_theta]</code> (expected return).</p>

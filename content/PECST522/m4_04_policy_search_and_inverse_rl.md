@@ -36,6 +36,14 @@ Feel "tune behaviour, skip value tables" here, then drop the dance; policy gradi
 
 **Tiny beginner example:** a thermostat threshold theta (turn on below theta degrees). Try theta 19 (bill \$80, comfort 7), theta 21 (bill \$95, comfort 9) — hill-climb theta toward the scored trade-off. No value per temperature needed, just dance-parameter scores.
 
+::: toggle What are `π_θ`, `J(θ)`, `policy gradient`, `demonstration`, `reward inference`?
+$\pi_\theta$ = policy with knobs $\theta$ (e.g. neural net mapping sensors to torques — the dance, parametrised). $J(\theta)$ = expected total reward following $\pi_\theta$ (applause score — the hill being climbed). Policy gradient = estimated uphill direction in $\theta$-space (REINFORCE: return × surprise-weighted action-gradients, averaged over trials — high-return trials reinforce their actions). Demonstration = expert behaviour trace (states + actions, no rewards written). Reward inference = recovering the objective the expert seems to optimise (IRL output — transfers across bodies/cities; copied steering does not).
+:::
+
+::: toggle Why is inverse RL ill-posed, and what do the two fixes do?
+Any behaviour is optimal under infinitely many rewards — including all-zero (everything optimal, explaining nothing). Apprenticeship/feature matching: match the expert's feature expectations (averages, not actions), then optimise the matched reward (Abbeel-Ng near-expert certificate under the true unknown reward). Max-entropy: among consistent rewards, pick the one making expert behaviour least surprising (no extra commitments). Tiny trace above: expert (0.9, 0.8) vs crawler (1.0, 0.4) — weights shift toward adherence, policy re-optimised, gap checked, iterate on residuals.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Hill-Climbing Expected Reward
 

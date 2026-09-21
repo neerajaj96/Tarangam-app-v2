@@ -32,6 +32,14 @@ You stand in an unlit maze with no map or compass. You can feel neighbouring wal
 
 **Definitions:** BFS expands level by level (all depth-1 nodes, then depth-2, ...). DFS plunges down one branch to the bottom before backtracking. UCS expands the cheapest-known path first. FIFO (First-In First-Out) queue serves BFS; LIFO (Last-In First-Out) stack serves DFS; priority queue ordered by path cost serves UCS.
 
+::: toggle What are `state`, `state space`, `search tree`, `node`, `frontier`, `explored set`?
+`State` = one configuration of the world (a maze cell, a board layout). `State space` = all reachable states plus legal moves (the territory). `Search tree` = the explored paths overlaid as a tree (same state can repeat at many tree nodes — tree nodes are paths, not places). `Node` = one tree entry (state + parent + path cost + depth). `Frontier` (open list) = generated-but-unexpanded nodes (the waiting room). `Explored` (closed set) = finished nodes (never re-expand — prevents loops). Mixing up state vs node is the classic error: the map is small, the path-tree is huge.
+:::
+
+::: toggle Trace BFS/DFS/UCS queues on A→B(1), A→C(5), B→G(1)
+BFS (FIFO queue): [A] → pop A, push B,C → [B,C] → pop B, push G → [C,G] → pop C → [G] → pop G. Order A,B,C,G (level order). DFS (LIFO stack): [A] → pop A, push B,C → [B,C] → pop C first (last-in!) → … (dives C's subtree before G — order depends on push sequence). UCS (priority on g): {A:0} → pop A, push B:1, C:5 → pop B (1<5), push G:2 → pop G at 2 before C at 5 (goal test on popping returns cheapest — every frontier entry costs ≥ 2, so nothing unfinished beats it).
+:::
+
 ::: callout-intuition Core Mental Model: Navigating in the Dark
 Blind does not mean random — it means systematic without guidance. Drop the maze after this; the technical content is frontier order plus data structure.
 :::
@@ -48,6 +56,10 @@ Blind does not mean random — it means systematic without guidance. Drop the ma
 3. **Time** — nodes expanded? 4. **Space** — nodes held in memory?
 
 Symbols: `b` = branching factor (max successors per node); `d` = depth of shallowest goal; `m` = maximum depth (possibly infinite); `g(n)` = path cost from start to node `n`; `C*` = optimal path cost; `epsilon` = minimum step cost (smallest edge price, must be positive).
+
+::: toggle What do `branching factor`, `depth`, `path cost`, `completeness`, `optimality` mean?
+Branching factor `b` = most successors any node has (maze junctions ≈ 3–4). Depth `d` = edges from start to the shallowest goal (answer length). Path cost `g(n)` = price sum along the route to `n` (steps, fuel, time — whatever the problem prices). Completeness = finds a solution whenever one exists (DFS fails in bottomless spaces). Optimality = finds the cheapest solution (BFS only under equal step costs; UCS under the epsilon bound). Time/space = nodes expanded vs nodes held (BFS holds exponential tiers; DFS holds one path).
+:::
 
 **BFS:** expands shallowest frontier node first (FIFO). Level diagram:
 

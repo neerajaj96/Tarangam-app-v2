@@ -1563,7 +1563,7 @@
         "It searches without a frontier"
       ],
       "answer": "It uses no domain knowledge beyond successor generation and goal testing",
-      "explanation": "Blind search cannot see the goal ahead; it explores the graph systematically without goal estimates.",
+      "explanation": "Correct: blind search explores systematically using only successors and goal tests, with no closeness estimates. Never-expanding, always-optimal-first, and frontier-free options each deny the mechanism (expansion without guidance, guarantees needing contracts, frontiers holding every strategy's waiting room).",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -4057,7 +4057,7 @@
         "When the frontier becomes empty and search ends"
       ],
       "answer": "When the node is popped from the frontier for expansion",
-      "explanation": "The file warns testing at generation returns the first seen goal rather than the cheapest and requires popping so the smallest total is settled before anything unfinished can beat it.",
+      "explanation": "Correct: popping settles the smallest total, so the first popped goal is provably cheapest — nothing unfinished can beat it under admissibility. Testing at generation returns the first seen goal (possibly expensive); heuristic-computation and empty-frontier options test the wrong event entirely.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },

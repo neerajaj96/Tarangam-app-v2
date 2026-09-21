@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -291,7 +291,9 @@
 <p><strong>Definitions:</strong> <strong>grounding</strong> instantiates all variables with all constants. <strong>Lifted inference</strong> binds variables only as proofs demand (generalized Modus Ponens, FOL forward/backward chaining with UNIFY). <strong>Decidable</strong> means an answer always arrives in finite time. <strong>Semi-decidable</strong> means yes-instances are confirmed in finite time but no-instances may loop forever.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Photocopy Shop vs Master Template</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;mountain versus template&quot; here, then drop the shop; grounding arithmetic plus decidability below are the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> rule <code>Cat(x) =&gt; Mammal(x)</code> with 10 cats grounds to 10 copies plus 20 atoms — then fires on Tom. Lifted Modus Ponens unifies once (<code>x/Tom</code>) and concludes in one step touching one fact.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>Where does `p · dᵏ` come from, and what do `lifting`, `decidable`, `semi-decidable` mean?</summary><div class="toggle-content"><p><code>d</code> constants combined <code>k</code> at a time (ordered, with repetition) give $d^k$ ground atoms per $k$-ary predicate (2 binary predicates over 10 constants: $2 × 10^2 = 200$ atoms — and $2^{200}$ models for the census). $p$ predicates multiply the count ($p·d^k$). Lifting = reasoning from templates with UNIFY (one step per proof move, touching only demanded facts). Decidable = both yes and no answers arrive in finite time (propositional). Semi-decidable = yes-answers arrive, no-answers may loop forever (full FOL — a theory ceiling: no strategy fixes it in general).</p>
+</div></details><details class="interactive-toggle"><summary>What are the three escapes (Datalog, Prolog, lifting) and what does each cost?</summary><div class="toggle-content"><p>Datalog-style restriction (no functions, constrained rules) = buys back decidability by shrinking expressiveness. Prolog backward chaining = buys industrial speed by trading corners (depth-first can loop where breadth succeeds; skipped occur check risks cyclic terms). Lifting itself = shrinks the mountain to a hill that still needs climbing gear (factoring, subsumption, strategy). Few objects tolerate grounding; many demand templates; infinite functional domains forbid grounding entirely — choose by workload.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-grounding-arithmetic">2. Basic Layer: Grounding Arithmetic</h2>
 <p class="secnav"><a href="#1-start-from-zero-photocopy-shop-vs-master-template">← 1. Start From Zero: Photocopy Shop…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-decidability-and-practice">3. Formal Layer: Decidability and … →</a></p>
 <p><strong>Data/state:</strong> <code>p</code> predicate symbols of max arity <code>k</code> over <code>d</code> constants. <strong>Goal:</strong> count the mountain.</p>

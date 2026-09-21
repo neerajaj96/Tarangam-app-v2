@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -291,7 +291,9 @@
 <p><strong>Definitions:</strong> all three estimate <code>U^pi(s)</code> (expected discounted return following fixed policy pi from state s) from trials <code>(s0, r1, s1, r2, ...)</code>. <strong>Bootstrapping</strong> means updating an estimate from another (possibly wrong) estimate. <strong>TD error</strong> is the surprise signal (actual one-step return minus current estimate).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Sports Commentator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;grade, don&#39;t coach&quot; here, then drop the booth; the three updates below are the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> policy always moves right; from A the agent banks rewards-to-go of 10, then 6, then 8. Direct estimation averages to 8. TD instead corrects per step toward <code>r + gamma U(next)</code> — online, no episode wait.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>What are `U^π`, `TD target`, `TD error δ`, `α`, `bootstrapping`?</summary><div class="toggle-content"><p>$U^\pi(s)$ = expected discounted return following fixed policy π from s (grading the behaviour, never improving it). TD target $r + \gamma U(s&#39;)$ = one real reward plus discounted old guess (half-truth driving the update). TD error $\delta$ = target minus current estimate (surprise signal — negative means reality undershot). $\alpha$ = learning rate (correction stride — must decay per the two-sum contract). Bootstrapping = updating a guess from another guess (TD&#39;s $U(s&#39;)$, ADP&#39;s solved values — direct averaging alone avoids it).</p>
+</div></details><details class="interactive-toggle"><summary>Verify the hand update number by number</summary><div class="toggle-content"><p>Start $U(A) = 4.6$, $U(B) = 0$; transition A→B pays $r = 1$; $\alpha = 0.5$, $\gamma = 0.9$. Target $= 1 + 0.9×0 = 1$ (one truth plus discounted guess). Error $\delta = 1 − 4.6 = −3.6$ (undershoot — estimate was too rosy). Update $U(A) ← 4.6 + 0.5×(−3.6) = 4.6 − 1.8 = 2.8$ (half-stride toward the target). Overshoot past truth (~3.57) is normal single-step behaviour — later visits with decaying $\alpha$ sand it back up. That correct-per-transition rhythm (not per-episode) is TD.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-three-estimators-one-target">2. Basic Layer: Three Estimators, One Target</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-critic-who-never-coaches">← 1. Start From Zero: The Critic Who…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-bootstrapping-bias-step-sizes">3. Formal Layer: Bootstrapping, Bi… →</a></p>
 <p><strong>Data/state:</strong> experience trials under fixed pi. <strong>Goal:</strong> <code>U^pi</code> per state.</p>

@@ -36,6 +36,14 @@ Feel "information versus reward" here, then drop the town; Q-values plus epsilon
 
 **Tiny beginner example:** action Left is believed worth 2, Right believed worth 1. Trying Right once reveals it is actually worth 9 — one exploratory loss buying permanent gains. Never exploring locks in the wrong belief forever.
 
+::: toggle What are `Q(s,a)`, `Q-table`, `ε-greedy`, `exploitation`, `exploration`?
+$Q(s,a)$ = expected discounted return of taking action $a$ in state $s$ then acting optimally (action-value — grades pairs, not states). Q-table = all $Q(s,a)$ stored per pair (tabular case — enumerable states × actions only). ε-greedy = with probability ε act randomly, else greedily (ε = exploration knob: fixed ε probes forever; decaying ε (GLIE) retires probing). Exploitation = milking the best-known pair (reward now). Exploration = trying believed-suboptimal pairs (information for later — beliefs without evidence are prejudices). Tiny check above: Right's believed 1 vs true 9 — only exploration exposes the gap.
+:::
+
+::: toggle Verify the hand update number by number
+Start $Q(A,\text{left}) = 2.0$; take left, $r = 0$, land B with $Q(B,\text{left}) = 1.0$, $Q(B,\text{right}) = 4.0$; $\alpha = 0.5$, $\gamma = 0.9$. Target $= r + \gamma\max_{a'}Q = 0 + 0.9 \times 4.0 = 3.6$ (best imaginable continuation — the max detaches learning from the actually-taken next action, hence off-policy). Error $= 3.6 − 2.0 = 1.6$ (underestimate — worth more than believed). Update $2.0 + 0.5 \times 1.6 = 2.8$ (half-stride toward target). The next action actually taken in B never entered the math — even exploratory moves aim at the optimum.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Q-Values and the Off-Policy Update
 

@@ -37,6 +37,14 @@ Feel "reward signals, not instructions" here, then drop the puppy; MDP slots plu
 
 **Tiny beginner example:** a grid robot reaches cheese (+10) after 5 moves through empty squares (0 each). Which move earned the cheese? All five share credit through discounted backups — the mechanism below.
 
+::: toggle What are `agent`, `environment`, `state`, `action`, `reward`, `policy`, `return`, `episode`?
+Agent = the learner/actor (robot, puppy, program). Environment = everything outside it (grid, stadium — responds to actions with next states and rewards). State = one configuration (robot's cell). Action = one choice there (move up). Reward = immediate numeric feedback (+10 cheese, 0 empty, −scold). Policy π = action choice per state (the behaviour being learned). Return = discounted reward sum over a run (the maximand). Episode = one run start-to-terminal (a season, a maze attempt). Supervised learning gets correct actions as labels; RL gets only rewards — no per-step answers, hence credit assignment.
+:::
+
+::: toggle What are `MDP 5-tuple`, `Markov assumption`, `γ`, `U`, `π*`?
+MDP = (S states, A actions, T transition odds, R rewards, γ discount) — the formal arena. Markov assumption = future depends only on present state+action (history irrelevant given now — conditional independence, not determinism). γ (gamma, 0 ≤ γ < 1) = impatience knob (future rewards shrink geometrically — treats now beat treats tomorrow, and infinite totals stay finite). U = utility (expected discounted return — desirability score). π* (pi-star) = optimal policy (maximises expected utility per state — the learning target). Tiny check above: 5 zero-reward moves share the +10 through γ-discounted backups — no single move "earned" it alone.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: MDPs — The Formal Arena
 
@@ -54,6 +62,10 @@ An **MDP** is a 5-tuple `(S, A, T, R, gamma)`:
 $$U([s_0, s_1, \dots]) = \sum_{t=0}^{\infty} \gamma^t R(s_t)$$
 
 Symbols: `gamma^t` discounts step `t`; `R(s_t)` is its reward; the sum is total desirability. The **optimal policy** `pi*` (pi-star) maximizes expected utility per state.
+
+::: toggle Expand the Bellman equation term by term with the §3 numbers
+$U(s)$ = utility of being in $s$ (the unknown being solved). $R(s)$ = immediate reward here ($R(A) = 1$ — banked now, no discount). $\gamma$ = 0.9 (one-step patience factor). $\max_a$ = best action's value (choose the max, not the average — control, not prediction). $\sum_{s'} P(s'|s,a)\,U(s')$ = expected next-utility (0.8×5 + 0.2×0 = 4.0 — odds-weighted futures). Full: $U_{new}(A) = 1 + 0.9 × 4.0 = 4.6$ (guess 5 corrected down toward consistency). True value solves $U = 1 + 0.72U$ → ~3.57 (repeated backups contract there from any start, given γ < 1).
+:::
 
 <a id="formal-model"></a>
 ## 3. Formal Layer: Bellman Equation and Module Map

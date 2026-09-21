@@ -41,6 +41,14 @@ The left branch sets alpha = 3; the right branch's first leaf (2) falls below it
 
 **Tiny beginner example:** MAX holds 5 from the left branch (alpha = 5). Right MIN branch opens with 4 — already below 5, so its unborn siblings cannot rescue it. Cut.
 
+::: toggle What are `alpha`, `beta`, `window`, `beta-cutoff`, `alpha-cutoff`?
+Alpha = best value MAX is assured so far (starts −∞, only rises — a growing floor). Beta = best value MIN is assured so far (starts +∞, only falls — a shrinking ceiling). Window [alpha, beta] = the relevance interval passed down the current path (values outside cannot affect decisions above). Beta-cutoff (at MIN): running minimum ≤ inherited alpha → prune rest (MAX already holds better elsewhere). Alpha-cutoff (at MAX): running maximum ≥ inherited beta → prune rest (MIN already holds better elsewhere). Tiny check above: running min 4 ≤ alpha 5 fires the beta-cutoff — siblings unborn, decision unchanged.
+:::
+
+::: toggle Node-by-node trace with A, B, C, D labels and live bounds
+Tree: MAX root R over MIN A (leaves 3, 12, 8) and MIN B (leaves 2, 4, 6), left-to-right. A inherits (α=−∞, β=+∞): leaf 3 → running min 3; leaves 12, 8 cannot lower it → A returns 3 (fully evaluated — first branch never cuts). R updates α = max(−∞, 3) = 3. B inherits (α=3, β=+∞): leaf 2 → running min 2 ≤ α=3 → beta-cutoff fires; leaves 4, 6 never generated (label them cut, not evaluated). B returns ≤ 2. R = max(3, ≤2) = 3 — identical to minimax, 4 leaves instead of 6. Reversed order (B first): α still −∞ at B → no cutoff anywhere (bounds arrive too late) — ordering is half the topic.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Window Mechanics
 

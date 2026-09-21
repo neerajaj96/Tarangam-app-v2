@@ -37,6 +37,14 @@ Feel "guess-only ordering" here, then drop the insect; the formula `f = h` plus 
 
 **Tiny beginner example:** from S, road to A looks 5 away, road to B looks 3 away. Greedy picks B sight unseen — never asking what S-to-A vs. S-to-B already cost.
 
+::: toggle Why does Greedy pop the smallest `h` (and what does it ignore)?
+Greedy orders the frontier by `h` alone: pop min-`h` means "expand whatever looks closest" (B's 3 < A's 5 → B expands first — smaller guess wins, always). Ignored: `g` (paid-so-far — the 4-vs-1 already spent is invisible to `f = h`). Consequence: B's rosy 3 beats A's honest 5 even though B already cost more — nose-following with no bill-checking. Ordering rule in one line: min-h pops, ties need a stated policy.
+:::
+
+::: toggle Trace the four-node conviction as a frontier table
+Start: frontier {S}. Expand S → {A(h=5,g=1), B(h=3,g=4)}. Pop B (3 < 5 — min-h rule, g ignored) → expand to goal (h=0), return S-B-G costing 4+6 = 10. Never expanded: A (whose true total 1+2 = 3 was optimal). Verdict: greedy returned 10 vs optimum 3 — over 3× worse on four nodes, because the `h`-gap decided while the `g`-gap stayed invisible. Repair preview: A* adds `g` back (`f = 4` for A vs `7` for B — A pops first).
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Algorithm and Price
 

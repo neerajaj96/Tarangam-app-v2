@@ -38,6 +38,14 @@ Feel "grade, don't coach" here, then drop the booth; the three updates below are
 
 **Tiny beginner example:** policy always moves right; from A the agent banks rewards-to-go of 10, then 6, then 8. Direct estimation averages to 8. TD instead corrects per step toward `r + gamma U(next)` — online, no episode wait.
 
+::: toggle What are `U^π`, `TD target`, `TD error δ`, `α`, `bootstrapping`?
+$U^\pi(s)$ = expected discounted return following fixed policy π from s (grading the behaviour, never improving it). TD target $r + \gamma U(s')$ = one real reward plus discounted old guess (half-truth driving the update). TD error $\delta$ = target minus current estimate (surprise signal — negative means reality undershot). $\alpha$ = learning rate (correction stride — must decay per the two-sum contract). Bootstrapping = updating a guess from another guess (TD's $U(s')$, ADP's solved values — direct averaging alone avoids it).
+:::
+
+::: toggle Verify the hand update number by number
+Start $U(A) = 4.6$, $U(B) = 0$; transition A→B pays $r = 1$; $\alpha = 0.5$, $\gamma = 0.9$. Target $= 1 + 0.9×0 = 1$ (one truth plus discounted guess). Error $\delta = 1 − 4.6 = −3.6$ (undershoot — estimate was too rosy). Update $U(A) ← 4.6 + 0.5×(−3.6) = 4.6 − 1.8 = 2.8$ (half-stride toward the target). Overshoot past truth (~3.57) is normal single-step behaviour — later visits with decaying $\alpha$ sand it back up. That correct-per-transition rhythm (not per-episode) is TD.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Three Estimators, One Target
 

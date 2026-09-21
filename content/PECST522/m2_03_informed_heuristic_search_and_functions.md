@@ -38,6 +38,14 @@ The compass points but obstacles remain — guidance prunes, it does not telepor
 
 **Tiny beginner example:** driving to a city 100 km away. `h = straight-line distance` (say 80 km) underestimates road distance — optimistic, hence safe for optimal search. `h = 150 km` overestimates and could discard the true best route — unsafe.
 
+::: toggle What are `h(n)`, `h*(n)`, `g(n)`, `admissible`, `consistent`?
+`h(n)` = guessed cheapest remainder from `n` (the compass reading). `h*(n)` = true cheapest remainder (unknown — the territory). `g(n)` = price already paid start-to-`n` (the odometer). Admissible = $h \le h^*$ everywhere (never overestimates — optimism license). Consistent = $h(n) \le c + h(n')$ on every edge (triangle inequality — estimates cohere across steps; implies admissible, strictly stronger). Tiny check: true 8, guess 7 admissible; guess 9 voids the license at that one node.
+:::
+
+::: toggle How do `h1` and `h2` work, and why does one dominate?
+`h1` (misplaced tiles) = count of tiles off-goal (relaxation: any tile teleports in one move — each misplaced tile needs ≥ 1 real move). `h2` (Manhattan) = sum of per-tile grid distances home (relaxation: tiles slide through each other — each unit of grid distance needs ≥ 1 real move). Dominance: every misplaced tile contributes ≥ 1 to Manhattan, so $h_2 \ge h_1$ pointwise while both stay ≤ $h^*$ — dominant admissible heuristics expand no more A* nodes (up to ties). More informed = fewer expansions, never fewer guarantees.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Admissibility (Never Overestimate)
 

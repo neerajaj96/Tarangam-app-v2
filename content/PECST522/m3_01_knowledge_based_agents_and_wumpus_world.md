@@ -32,6 +32,14 @@ You enter a dark cave with gold, pits, and a monster. You cannot see — but the
 
 **Definitions:** **TELL** adds percept sentences to the KB. **ASK** queries what follows (what to do). **Entailment** (`KB |= alpha`, read "KB entails alpha") is the semantic fact that `alpha` is true in every world where the KB is true. **Inference** (`KB |- alpha`, "derives") is the syntactic procedure pushing symbols. **Sound** means everything derived is entailed (no lies). **Complete** means everything entailed is derivable (nothing missed).
 
+::: toggle What are `knowledge base`, `sentence`, `percept`, `model`, `entailment`, `inference`?
+Knowledge base = stored sentences (facts + general rules — the agent's written beliefs). Sentence = one logical claim (percept reports like "stench at (1,2)", rules like "stench iff adjacent Wumpus"). Percept = one sensor snapshot (stench/breeze/glitter/bump/scream at the current square). Model = one fully-specified world (every square's contents fixed — a what-if reality). Entailment (`|=`) = true in every KB-satisfying model (semantic fact — god's-eye). Inference (`|-`) = reached by running rules on symbols (syntactic procedure — machine's-eye). Sound + complete procedures make the two coincide.
+:::
+
+::: toggle Trace safety at (1,2) from the stench percept
+Perceive stench at (1,2): TELL `Stench(1,2)`. Rule: stench iff Wumpus orthogonally adjacent → candidates (1,1), (2,2), (1,3) — (0,2) is wall (eliminate). Visited-safe (1,1) eliminates itself (no Wumpus where the agent stood alive unharmed... precisely: visited squares proved safe). Remaining disjunction: `W(1,3) OR W(2,2)` — certainty about the set, ignorance within it. ASK "is (1,3) safe?" → unprovable (no disjunct entailed). Rational move: probe elsewhere (2,1) instead of guessing a disjunct. Logic earns "I don't know which" — acting on ignorance is rationality.
+:::
+
 ::: callout-intuition Core Mental Model: The Cautious Spelunker
 Reasoning beats seeing where seeing is impossible. Drop the cave after this; Tell/Ask plus entailment-vs-inference are the technical content.
 :::

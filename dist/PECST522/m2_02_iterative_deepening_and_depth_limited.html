@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -291,7 +291,9 @@
 <p><strong>Definitions:</strong> Depth-Limited Search (DLS) is DFS that treats depth <code>l</code> as a wall (nodes at <code>l</code> have no children). Iterative Deepening Search (IDS, also IDDFS) runs DLS for <code>l = 0, 1, 2, ...</code> until the goal appears. Bidirectional search runs two searches (start-forward, goal-backward) until frontiers meet.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Searching in Expanding Radii</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Search 1 metre out; reset; 2 metres; reset; expand until found. Shallow completeness with deep memory. Drop the lost-item story after this; the limit loop is the technical content.</p>
 </div></details><p><strong>Tiny beginner example:</strong> goal at depth 2. DLS with l=1 reports cutoff (wall hit, maybe deeper). IDS tries l=0 (miss), l=1 (miss), l=2 (hit) — three cheap failures buying a guaranteed shallow find.</p>
-<p><a id="basics"></a></p>
+<details class="interactive-toggle"><summary>What are `depth limit`, `cutoff vs failure`, and the IDS loop?</summary><div class="toggle-content"><p>Depth limit <code>l</code> = artificial wall (nodes at depth <code>l</code> are treated childless). Cutoff = wall hit with tree unexhausted (deeper solutions may exist — keep going). Failure = tree exhausted within <code>l</code> (provably nothing there — stop, unsolvable). IDS loop: for l in 0,1,2,… run DLS(l); stop on solution or exhaustive failure; continue on cutoff. Tiny trace above: l=0 checks root only, l=1 checks two tiers, l=2 finds the goal — each round depth-first (linear memory), all rounds together complete like BFS.</p>
+</div></details><details class="interactive-toggle"><summary>Where does the `11% overhead` number come from?</summary><div class="toggle-content"><p>Round <code>l</code> regenerates tiers 0..l, so tier <code>i</code> is built in rounds i..d — $(d-i+1)$ times. Total $N = \sum(d-i+1)b^i$; the bottom tier $b^d$ dwarfs all above (geometric series sums upper tiers to $\approx b^d/(b-1)$). Tiny numbers: b=10, d=5 — BFS builds 111,111 nodes; IDS rebuilds crumbs for 123,450 total, only ~11% more work, while memory collapses from $O(b^d)$ tiers to one $O(b·d)$ branch. Re-walking crumbs costs crumbs because crumbs are exponentially small beside the bottom tier.</p>
+</div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-dls-outcomes-and-ids-loop">2. Basic Layer: DLS Outcomes and IDS Loop</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-dilemma">← 1. Start From Zero: The Dilemma</a><span class="secnav-sep">·</span><a href="#3-formal-layer-overhead-proof-and-bidirectional-arithmetic">3. Formal Layer: Overhead Proof an… →</a></p>
 <p><strong>Data/state:</strong> same frontier as DFS plus a depth counter. <strong>Goal:</strong> find the shallowest goal with linear memory.</p>

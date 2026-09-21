@@ -42,6 +42,14 @@ MIN floors sink to their smallest leaf while the MAX roof rises to the largest f
 
 **Tiny beginner example:** MAX picks left (MIN replies 1 or 9, so MIN forces 1) or right (MIN replies 5 only, so 5). Guarantees: left secures 1, right secures 5 — optimal move is right despite the flashy 9 that MIN will never allow.
 
+::: toggle What are `game tree`, `MAX/MIN node`, `utility`, `terminal`, `minimax value`?
+Game tree = all move sequences as branches (root = current position, edges = moves, leaves = game ends). MAX node = our turn (take the maximum child — best guaranteed outcome). MIN node = adversary's turn (take the minimum child — worst reply assumed). Utility = terminal score from MAX's viewpoint (+1 win, −1 loss, draws between). Terminal = game-over node (no moves left — scored, never expanded). Minimax value = backed-up worth (leaves: utility; MAX: max of children; MIN: min of children). Tiny check above: left's MIN backs up min(1,9) = 1; right backs up 5; root MAX takes max(1,5) = 5 — move right.
+:::
+
+::: toggle Trace the 3-vs-2 tree node by node
+Leaves under MIN A: 3, 12, 8 → A backs up min = 3 (the 12 tempts only the unwary — MIN picks the floor). Leaves under MIN B: 2, 4, 6 → B backs up 2. Root MAX sees floors {A:3, B:2} → takes max = 3 (move toward A). Winner 3 was A's smallest leaf: guarantees bank floors, never flashy leaves behind perfect defence. Verify: any other root move secures ≤ 2 — 3 is the best assured floor.
+:::
+
 <a id="basics"></a>
 ## 2. Basic Layer: Backup Rules and Viewpoint Discipline
 

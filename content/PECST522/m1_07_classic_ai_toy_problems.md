@@ -55,6 +55,14 @@ Master principles cheaply in simulation, then deploy where mistakes cost money. 
 
 $$\text{States} = 2 \times 2 \times 2 = 8$$
 
+::: toggle Where does `2 × 2 × 2 = 8` come from?
+Three independent binary choices multiply: agent position (A or B = 2 options) × dirt in A (clean or dirty = 2) × dirt in B (2). Each combination is one distinct state (e.g. [Agent B, A-dirty, B-clean]). Tiny check: list all 8 — 2 positions × 4 dirt patterns (none/A/B/both) = 8. Formulation skill = spotting the independent dimensions, then multiplying (never adding — choices combine, not alternative).
+:::
+
+::: toggle What is `9!/2 = 181,440` and why half?
+`9!` (9 factorial = 9×8×…×1 = 362,880) counts all tile arrangements. Each slide swaps the blank with a neighbour — an even permutation (two swaps in disguise), so parity (even/odd inversion count) never changes. Goal has even parity; odd-parity layouts are unreachable, not just hard — exactly half the arrangements. Reachable = 362,880/2 = 181,440. Intuition: parity is a conserved quantity like energy — moves preserve it, so half the space is walled off from any start.
+:::
+
 **8-Puzzle:** 3x3 board, 8 numbered tiles, one blank.
 States: tile-plus-blank positions. Actions: move the **blank** Up/Down/Left/Right (standardizing on the blank keeps at most 4 uniform choices; tile-based moves vary by position). Transitions: swap blank with neighbour. Goal test: target arrangement. Path cost: 1 per slide.
 
