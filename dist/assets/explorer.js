@@ -220,11 +220,18 @@ const $ = (id) => (typeof document !== 'undefined' ? document.getElementById(id)
 // (all/needs_attention/assessment_needs_review/review_overdue/review_due/
 // exam_not_assessed) via the shared modules — no duplicated intelligence
 // logic.
-// Preserves manifest order; unknown filters fall back to 'all'. The review
-// and attention views need a timestamp reader and injected now; without
-// timestamps the review matches stay empty (never fabricated). The
-// assessment and attention views need { bank, attempts }; without a bank the
-// assessment-specific matches stay empty (never fabricated).
+// Course scope: a course code narrows to that course; 'all' (or null)
+// searches the entire curriculum. Module scope applies within one course;
+// with 'all' courses the module facet is treated as 'all' (module numbers
+// are not comparable across courses).
+// Ordering: with a search query, results follow the canonical ranked
+// search order (stronger matches first, manifest order breaking ties);
+// without a query, manifest order is preserved. Unknown filters fall back
+// to 'all'. The review and attention views need a timestamp reader and
+// injected now; without timestamps the review matches stay empty (never
+// fabricated). The assessment and attention views need { bank, attempts };
+// without a bank the assessment-specific matches stay empty (never
+// fabricated).
 export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
   const {
     courseCode = null,
@@ -241,15 +248,39 @@ export function getExplorerVisibleTopics(manifest, getStatus, options = {}) {
     getTimestamp = null,
     now,
   } = options;
-  if (!manifest || !courseCode) return [];
-  const scoped = Data.combinedFilter(manifest, {
-    courseCode,
-    module: module === 'all' ? null : Number(module),
-    query: query || null,
-    difficulties: difficulties ? [difficulties] : null,
-    examRelevances: examRelevances ? [examRelevances] : null,
-  });
-  const byJourney = filterTopicsByJourney(manifest, getStatus, scoped, journey);
+  if (!manifest) return [];
+  const searchAllCourses = !courseCode || courseCode === 'all';
+  const effectiveCourse = searchAllCourses ? null : courseCode;
+  const effectiveModule = searchAllCourses ? null : (module === 'all' ? null : Number(module));
+  const hasQuery = Boolean(query && Data.normalizeSearchText(query));
+  // Base list: ranked canonical search when querying (entire curriculum
+  // when course scope is 'all'), otherwise the manifest-ordered combined
+  // filter exactly as before.
+  let base;
+  if (hasQuery) {
+    const scopeList = effectiveCourse
+      ? Data.getCourseTopics(manifest, effectiveCourse)
+      : [...(manifest.topics || [])];
+    base = Data.searchCurriculum({ topics: scopeList }, query).map((e) => e.topic);
+  } else {
+    base = Data.combinedFilter(manifest, {
+      courseCode: effectiveCourse,
+      module: effectiveModule,
+      query: null,
+      difficulties: difficulties ? [difficulties] : null,
+      examRelevances: examRelevances ? [examRelevances] : null,
+    });
+  }
+  const diffList = difficulties ? [difficulties] : null;
+  const examList = examRelevances ? [examRelevances] : null;
+  // Facets preserve the base order (ranked with a query, manifest without).
+  // The module facet is a no-op when courses are unscoped (null module).
+  const byFacets = base.filter((t) =>
+    (!diffList || diffList.includes(t.difficulty))
+    && (!examList || examList.includes(t.examRelevance))
+    && (effectiveModule === null || effectiveModule === undefined || t.module === effectiveModule)
+  );
+  const byJourney = filterTopicsByJourney(manifest, getStatus, byFacets, journey);
   const byExam = filterTopicsByExam(manifest, getStatus, byJourney, examView);
   const byReview = filterTopicsByReview(manifest, getStatus, getTimestamp, byExam, reviewFilter, now);
   const bank = assessment && typeof assessment === 'object' ? assessment.bank ?? null : null;
@@ -447,6 +478,33 @@ function attentionChips(topic) {
   return '<span class="badge badge-gold">◉ Needs attention</span>';
 }
 
+const SEARCH_MATCH_LABELS = {
+  exact_id: 'Exact ID match',
+  exact_title: 'Exact title match',
+  title: 'Title match',
+  id: 'ID match',
+  concept: 'Concept match',
+  tag: 'Tag match',
+  objective: 'Objective match',
+  course: 'Course match',
+  module: 'Module match',
+};
+
+function searchChips(topic) {
+  // Per-card search signal from the canonical ranked search: the strongest
+  // match tier for the active query (a categorical reason, never a score).
+  // Shown only while a query is active.
+  if (!state.manifest || !state.q || !Data.normalizeSearchText(state.q)) return '';
+  let kind = null;
+  try {
+    kind = Data.describeSearchMatch(topic, state.q);
+  } catch {
+    return '';
+  }
+  if (!kind) return '';
+  return `<span class="badge badge-accent">⌕ ${esc(SEARCH_MATCH_LABELS[kind] || kind)}</span>`;
+}
+
 function progressionChips(topic) {
   // Per-card progression signal from the canonical adaptive-learning
   // views. Completed/available states are already covered by the status
@@ -480,11 +538,11 @@ function visibleTopics() {
   const { manifest, course, module } = state;
   if (!manifest || !course) return [];
   const f = currentFilters();
-  // One canonical combined filter (see assets/topic-intelligence.js):
-  // course + module scope, whole-manifest search, difficulty/exam facets,
-  // then the deterministic journey, exam-readiness, revision, assessment,
-  // and attention views. Manifest order within a course already sorts
-  // module/sequence/id.
+  // One canonical pipeline (see assets/topic-intelligence.js): ranked
+  // global search when a query is present (entire curriculum under the
+  // 'all' course scope), otherwise the manifest-ordered combined filter;
+  // then difficulty/exam facets and the deterministic journey,
+  // exam-readiness, revision, assessment, and attention views.
   return getExplorerVisibleTopics(manifest, statusReader(), {
     courseCode: course,
     module,
@@ -506,18 +564,30 @@ function renderCourses() {
   const select = $('xp-course');
   const codes = Data.courseCodes(state.manifest);
   const names = new Map(state.manifest.topics.map((t) => [t.courseCode, t.courseName || t.courseCode]));
-  select.innerHTML = codes.map((c) => {
+  const total = state.manifest.topics.length;
+  select.innerHTML = `<option value="all">All courses (${total})</option>` + codes.map((c) => {
     const n = Data.getCourseTopics(state.manifest, c).length;
     const a = getExplorerCourseAnalytics(state.manifest, statusReader(), timestampReader(), c, Date.now());
     const indicator = a ? ` — ${a.percent}% · about ${a.remainingMinutes} min left` : '';
     return `<option value="${esc(c)}">${esc(names.get(c) || c)} (${n})${esc(indicator)}</option>`;
   }).join('');
-  if (!state.course || !codes.includes(state.course)) state.course = codes[0] || null;
+  if (!state.course || (state.course !== 'all' && !codes.includes(state.course))) {
+    state.course = codes[0] || null;
+  }
   select.value = state.course || '';
 }
 
 function renderModules() {
   const select = $('xp-module');
+  // Module numbers are not comparable across courses, so the module facet
+  // only applies within one course; with all courses scoped, only 'all' is
+  // offered (matches getExplorerVisibleTopics).
+  if (!state.course || state.course === 'all') {
+    select.innerHTML = '<option value="all">All modules</option>';
+    state.module = 'all';
+    select.value = state.module;
+    return;
+  }
   const mods = Data.moduleNumbers(state.manifest, state.course);
   const names = new Map();
   for (const t of Data.getCourseTopics(state.manifest, state.course)) {
@@ -534,7 +604,9 @@ function renderModules() {
 }
 
 function renderFilterOptions() {
-  const topics = Data.getCourseTopics(state.manifest, state.course);
+  const topics = !state.course || state.course === 'all'
+    ? [...(state.manifest.topics || [])]
+    : Data.getCourseTopics(state.manifest, state.course);
   const uniq = (vals) => [...new Set(vals.filter((v) => v != null))].sort();
   const diffs = uniq(topics.map((t) => t.difficulty));
   const exams = uniq(topics.map((t) => t.examRelevance));
@@ -623,7 +695,8 @@ function renderFilterOptions() {
 function renderList() {
   const list = $('xp-topics');
   const topics = visibleTopics();
-  $('xp-count').textContent = `${topics.length} topic${topics.length === 1 ? '' : 's'}`;
+  const scopeNote = state.course === 'all' ? ' · all courses' : '';
+  $('xp-count').textContent = `${topics.length} topic${topics.length === 1 ? '' : 's'}${scopeNote}`;
   if (!topics.length) {
     list.innerHTML = '<div class="xp-empty">No topics match the current filters.</div>';
     return;
@@ -632,14 +705,14 @@ function renderList() {
   list.innerHTML = topics.map((t) => {
     const key = `${t.courseCode}/${t.id}`;
     const active = key === state.selectedKey ? ' xp-active' : '';
-    return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
+    return `<button class="xp-card${active}" data-course="${esc(t.courseCode)}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}${attentionChips(t)}${progressionChips(t)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}${attentionChips(t)}${progressionChips(t)}${searchChips(t)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
-    card.addEventListener('click', () => selectTopic(state.course, card.getAttribute('data-topic'), true));
+    card.addEventListener('click', () => selectTopic(card.getAttribute('data-course') || state.course, card.getAttribute('data-topic'), true));
   }
 }
 
@@ -728,7 +801,7 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}${assessmentChips(topic)}${attentionChips(topic)}${progressionChips(topic)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}${assessmentChips(topic)}${attentionChips(topic)}${progressionChips(topic)}${searchChips(topic)}</div>
       ${journeyBlock}
       ${reviewBlock}
       ${planBlock}
@@ -786,13 +859,15 @@ function renderProgress() {
   if (!state.progress) { el.textContent = ''; return; }
   const overall = state.progress.getOverallProgress();
   const parts = [`Overall ${overall.completed} / ${overall.total} (${overall.percent}%)`];
-  if (state.course) {
+  if (state.course && state.course !== 'all') {
     const c = state.progress.getCourseProgress(state.course);
     parts.push(`${state.course}: ${c.completed} / ${c.total}`);
     if (state.module !== 'all') {
       const m = state.progress.getModuleProgress(state.course, Number(state.module));
       parts.push(`M${state.module}: ${m.completed} / ${m.total}`);
     }
+  } else if (state.course === 'all') {
+    parts.push('All courses in scope');
   }
   // Assessment coverage indicator (deterministic counts only, no
   // recommendations): total questions, covered/total topics, uncovered
@@ -869,7 +944,9 @@ function renderAll() {
 }
 
 function selectTopic(courseCode, id, fromUser) {
-  if (courseCode && courseCode !== state.course) {
+  // Scope follows explicit cross-course navigation, except the global
+  // 'all' scope persists so search results stay visible on selection.
+  if (courseCode && courseCode !== 'all' && state.course !== 'all' && courseCode !== state.course) {
     state.course = courseCode;
     state.module = 'all';
     if (fromUser) { $('xp-search').value = ''; state.q = ''; }
@@ -900,7 +977,20 @@ async function init() {
       renderAll();
     });
     if ($('xp-module')) $('xp-module').addEventListener('change', (e) => { state.module = e.target.value; renderAll(); });
-    if ($('xp-search')) $('xp-search').addEventListener('input', (e) => { state.q = e.target.value; renderList(); renderDetail(); });
+    if ($('xp-search')) $('xp-search').addEventListener('input', (e) => {
+      state.q = e.target.value;
+      // Typing a query widens scope to the entire curriculum so every
+      // matching topic is discoverable; facets (including course) still
+      // narrow afterwards. Clearing the query keeps the current scope.
+      if (state.q && Data.normalizeSearchText(state.q) && state.course !== 'all') {
+        state.course = 'all';
+        state.module = 'all';
+        renderAll();
+        return;
+      }
+      renderList();
+      renderDetail();
+    });
     if ($('xp-difficulty')) $('xp-difficulty').addEventListener('change', (e) => { state.difficulty = e.target.value; renderAll(); });
     if ($('xp-exam')) $('xp-exam').addEventListener('change', (e) => { state.exam = e.target.value; renderAll(); });
     if ($('xp-journey')) $('xp-journey').addEventListener('change', (e) => { state.journey = normalizeJourneyFilter(e.target.value); renderAll(); });

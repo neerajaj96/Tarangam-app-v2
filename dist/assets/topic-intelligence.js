@@ -246,21 +246,130 @@ export function getLearningObjectives(manifest, courseCode, id) {
   return Array.isArray(objectives) ? [...objectives] : [];
 }
 
-// --- Topic discovery -------------------------------------------------------
+// --- Topic discovery (one canonical matcher, two presentations) -----------
+// Every discovery API below shares a single field matcher over title, ID,
+// course code, course name, module name, concepts, tags, and learning
+// objectives. Queries are normalized deterministically (see
+// normalizeSearchText): case-insensitive, whitespace-tolerant substring
+// matching. Empty queries match nothing. No backend, no external service,
+// no similarity ranking — only exact/substring tiers plus manifest order.
+
+// Strongest-first match tiers (documented, explainable, stable). Each
+// result carries its tier as `matchKind` — a categorical reason, never a
+// numeric relevance score. Ties always resolve in canonical manifest order.
+export const SEARCH_MATCH_EXACT_ID = 'exact_id';
+export const SEARCH_MATCH_EXACT_TITLE = 'exact_title';
+export const SEARCH_MATCH_TITLE = 'title';
+export const SEARCH_MATCH_ID = 'id';
+export const SEARCH_MATCH_CONCEPT = 'concept';
+export const SEARCH_MATCH_TAG = 'tag';
+export const SEARCH_MATCH_OBJECTIVE = 'objective';
+export const SEARCH_MATCH_COURSE = 'course';
+export const SEARCH_MATCH_MODULE = 'module';
+
+export const SEARCH_MATCH_KINDS = [
+  SEARCH_MATCH_EXACT_ID,
+  SEARCH_MATCH_EXACT_TITLE,
+  SEARCH_MATCH_TITLE,
+  SEARCH_MATCH_ID,
+  SEARCH_MATCH_CONCEPT,
+  SEARCH_MATCH_TAG,
+  SEARCH_MATCH_OBJECTIVE,
+  SEARCH_MATCH_COURSE,
+  SEARCH_MATCH_MODULE,
+];
+
+const SEARCH_TIER_RANK = new Map(SEARCH_MATCH_KINDS.map((kind, i) => [kind, i]));
+
+function normList(values) {
+  return (Array.isArray(values) ? values : [])
+    .map((v) => normalizeSearchText(v))
+    .filter((v) => v.length > 0);
+}
+
+// Strongest tier at which one topic matches a normalized query, or null.
+// Whole-query equality wins first (exact ID / exact title). Otherwise
+// multi-word queries use token AND: every whitespace-separated token must
+// match at least one field (so "gamat301 poisson" spans course code plus
+// title); the reported tier is the strongest across all token matches.
+// Pure and total: unknown shapes yield null (never throws).
+export function describeSearchMatch(topic, query) {
+  if (!topic || typeof topic !== 'object') return null;
+  const q = normalizeSearchText(query);
+  if (!q) return null;
+  const id = normalizeSearchText(topic.id);
+  const title = normalizeSearchText(topic.title);
+  if (id && id === q) return SEARCH_MATCH_EXACT_ID;
+  if (title && title === q) return SEARCH_MATCH_EXACT_TITLE;
+  let bestRank = SEARCH_MATCH_KINDS.length;
+  let bestKind = null;
+  for (const token of q.split(' ').filter((w) => w.length > 0)) {
+    const kind = matchSingleToken(topic, token);
+    if (kind === null) return null;
+    const rank = SEARCH_TIER_RANK.get(kind) ?? SEARCH_MATCH_KINDS.length;
+    if (rank < bestRank) {
+      bestRank = rank;
+      bestKind = kind;
+    }
+  }
+  return bestKind;
+}
+
+function matchSingleToken(topic, token) {
+  const id = normalizeSearchText(topic.id);
+  const title = normalizeSearchText(topic.title);
+  if (title.includes(token)) return SEARCH_MATCH_TITLE;
+  if (id.includes(token)) return SEARCH_MATCH_ID;
+  if (normList(topic.concepts).some((c) => c.includes(token))) return SEARCH_MATCH_CONCEPT;
+  if (normList(topic.tags).some((t) => t.includes(token))) return SEARCH_MATCH_TAG;
+  if (normList(topic.learningObjectives).some((o) => o.includes(token))) return SEARCH_MATCH_OBJECTIVE;
+  if (normalizeSearchText(topic.courseCode).includes(token)
+    || normalizeSearchText(topic.courseName).includes(token)) return SEARCH_MATCH_COURSE;
+  if (normalizeSearchText(topic.moduleName).includes(token)) return SEARCH_MATCH_MODULE;
+  return null;
+}
+
+// True when a topic matches a query in any searchable field. The single
+// matcher behind searchTopics, searchCurriculum, and combinedFilter.
+export function topicMatchesQuery(topic, query) {
+  return describeSearchMatch(topic, query) !== null;
+}
 
 export function normalizeSearchText(value) {
   return String(value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
 // Case-insensitive, whitespace-tolerant substring search across title, ID,
-// concepts, and tags. Manifest order; empty queries match nothing.
+// course code/name, module name, concepts, tags, and learning objectives.
+// Manifest order; empty queries match nothing.
 export function searchTopics(manifest, query) {
   const q = normalizeSearchText(query);
   if (!q) return [];
-  return manifestTopics(manifest).filter((t) => {
-    const haystacks = [t.title, t.id, ...(t.concepts || []), ...(t.tags || [])];
-    return haystacks.some((h) => normalizeSearchText(h).includes(q));
+  return manifestTopics(manifest).filter((t) => topicMatchesQuery(t, q));
+}
+
+// Ranked curriculum search: every matching topic with its strongest match
+// tier, ordered by tier (exact/stronger first) with canonical manifest
+// order breaking ties. Deterministic and explainable — same inputs always
+// produce the same entries in the same order. Empty queries yield [].
+export function searchCurriculum(manifest, query) {
+  const q = normalizeSearchText(query);
+  if (!q) return [];
+  const topics = manifestTopics(manifest);
+  const indexOf = new Map(topics.map((t, i) => [topicKey(t.courseCode, t.id), i]));
+  const out = [];
+  for (const t of topics) {
+    const matchKind = describeSearchMatch(t, q);
+    if (matchKind !== null) out.push({ topic: t, matchKind });
+  }
+  out.sort((a, b) => {
+    const rank = (SEARCH_TIER_RANK.get(a.matchKind) ?? SEARCH_MATCH_KINDS.length)
+      - (SEARCH_TIER_RANK.get(b.matchKind) ?? SEARCH_MATCH_KINDS.length);
+    if (rank !== 0) return rank;
+    return (indexOf.get(topicKey(a.topic.courseCode, a.topic.id)) ?? 0)
+      - (indexOf.get(topicKey(b.topic.courseCode, b.topic.id)) ?? 0);
   });
+  return out;
 }
 
 export function searchConcepts(manifest, query) {
@@ -334,10 +443,7 @@ export function combinedFilter(manifest, filters = {}) {
   }
   if (query !== undefined && query !== null && normalizeSearchText(query)) {
     const q = normalizeSearchText(query);
-    topics = topics.filter((t) => {
-      const haystacks = [t.title, t.id, ...(t.concepts || []), ...(t.tags || [])];
-      return haystacks.some((h) => normalizeSearchText(h).includes(q));
-    });
+    topics = topics.filter((t) => topicMatchesQuery(t, q));
   }
   const tagList = asArray(tags);
   if (tagList && tagList.length) {

@@ -916,6 +916,51 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 17. Canonical deterministic curriculum search: one shared matcher plus
+// ranked presentation over title/ID/course/module/concepts/tags/objectives
+// — no backend, no external service, no AI/semantic similarity, no numeric
+// relevance scores, no polling. Ranked order first, manifest order for
+// ties; the existing searchTopics API and every other layer stay intact.
+{
+  if (!fs.existsSync('assets/topic-intelligence.js')) {
+    fail('search: expected source file assets/topic-intelligence.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/topic-intelligence.js', 'utf-8');
+    for (const token of ['searchTopics', 'searchCurriculum', 'describeSearchMatch', 'topicMatchesQuery', 'combinedFilter', 'SEARCH_MATCH_KINDS', 'normalizeSearchText']) {
+      if (!js.includes(token)) fail(`search: assets/topic-intelligence.js is missing "${token}"`);
+    }
+    for (const token of ['exact_id', 'exact_title', 'title', 'concept', 'tag', 'objective', 'course', 'module']) {
+      if (!js.includes(token)) fail(`search: assets/topic-intelligence.js is missing match tier "${token}"`);
+    }
+    if (!js.includes('manifest order')) fail('search: assets/topic-intelligence.js must document manifest-order tie-breaking');
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'openai', 'anthropic', 'setInterval', 'localStorage']) {
+      if (js.toLowerCase().includes(banned)) fail(`search: assets/topic-intelligence.js must stay static-first (found "${banned}")`);
+    }
+    if (/\bLLMs?\b.*(grad|recommend|suggest|rank|search)|semantic\s+similarity/i.test(js)) fail('search: assets/topic-intelligence.js must not add AI/semantic search');
+    const data = fs.existsSync('assets/curriculum-data.js') ? fs.readFileSync('assets/curriculum-data.js', 'utf-8') : '';
+    for (const token of ['searchCurriculum', 'describeSearchMatch', 'topicMatchesQuery']) {
+      if (!data.includes(token)) fail(`search: assets/curriculum-data.js must re-export "${token}" without duplicating logic`);
+    }
+    // Explorer global search across the curriculum with existing deep links.
+    const explorer = fs.existsSync('assets/explorer.js') ? fs.readFileSync('assets/explorer.js', 'utf-8') : '';
+    for (const token of ['searchCurriculum', 'describeSearchMatch', 'topicPageUrl']) {
+      if (!explorer.includes(token)) fail(`search: assets/explorer.js is missing search integration "${token}"`);
+    }
+    if (!explorer.includes('All courses')) fail('search: assets/explorer.js must offer whole-curriculum scope');
+    const explorerHtml = fs.existsSync('explorer.html') ? fs.readFileSync('explorer.html', 'utf-8') : '';
+    if (!explorerHtml.includes('id="xp-search"')) fail('search: explorer.html is missing the search input (xp-search)');
+    // Untouched engines: recommendation, weights, thresholds, evaluation.
+    const journey = fs.existsSync('assets/learning-journey.js') ? fs.readFileSync('assets/learning-journey.js', 'utf-8') : '';
+    if (!journey.includes('getRecommendedNextTopics')) fail('search: existing recommendation API must remain intact');
+    const exam = fs.existsSync('assets/exam-readiness.js') ? fs.readFileSync('assets/exam-readiness.js', 'utf-8') : '';
+    if (!exam.includes('high: 3') && !exam.includes('high:3')) fail('search: existing exam-readiness weights must remain unchanged');
+    const revision = fs.existsSync('assets/revision.js') ? fs.readFileSync('assets/revision.js', 'utf-8') : '';
+    if (!revision.includes('REVIEW_DUE_DAYS = 7') || !revision.includes('REVIEW_OVERDUE_DAYS = 14')) fail('search: existing revision thresholds must remain unchanged');
+    const assessment = fs.existsSync('assets/assessment.js') ? fs.readFileSync('assets/assessment.js', 'utf-8') : '';
+    if (!assessment.includes('PASS_THRESHOLD')) fail('search: existing assessment evaluation must remain unchanged');
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
