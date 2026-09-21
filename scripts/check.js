@@ -1056,6 +1056,55 @@ if (fs.existsSync('dist')) {
   if (!dash.includes('course.html?course=')) fail('topic-nav: dashboard must keep course navigation working');
 }
 
+// 20. Responsive learning UX: narrow-screen hardening without behavior
+// changes — viewports, collapsing layouts, overflow guards, wrapping
+// titles/breadcrumbs, touch-sized semantic controls, and present
+// navigation on every learner surface. CSS-only; no framework, no
+// backend, no new dependency.
+{
+  const pages = ['dashboard.html', 'explorer.html', 'course.html', 'assessment.html', 'index.html'];
+  for (const page of pages) {
+    if (!fs.existsSync(page)) {
+      fail(`responsive: expected page ${page} — actual: missing`);
+      continue;
+    }
+    const html = fs.readFileSync(page, 'utf-8');
+    if (!html.includes('name="viewport"') || !html.includes('width=device-width')) {
+      fail(`responsive: ${page} must declare a device-width viewport`);
+    }
+    if (!html.includes('@media')) fail(`responsive: ${page} must include responsive rules`);
+  }
+  if (!fs.existsSync(path.join('templates', 'base.html')) || !fs.readFileSync(path.join('templates', 'base.html'), 'utf-8').includes('name="viewport"')) {
+    fail('responsive: templates/base.html must declare a device-width viewport');
+  }
+  const css = fs.existsSync('style.css') ? fs.readFileSync('style.css', 'utf-8') : '';
+  for (const token of ['@media (max-width: 860px)', '@media (max-width: 640px)', 'overflow-wrap: break-word', 'min-height: 44px']) {
+    if (!css.includes(token)) fail(`responsive: style.css is missing shared hardening "${token}"`);
+  }
+  if (!/img,\s*video,\s*svg,\s*canvas\s*\{\s*max-width:\s*100%/.test(css)) fail('responsive: style.css must bound media inside narrow viewports');
+  if (!/\.crumb\s*\{[^}]*flex-wrap:\s*wrap/.test(css)) fail('responsive: breadcrumbs must wrap cleanly');
+  if (/width:\s*100vw/.test(css)) fail('responsive: style.css must not introduce viewport-width overflow traps');
+  for (const page of ['dashboard.html', 'explorer.html', 'course.html', 'assessment.html']) {
+    const html = fs.readFileSync(page, 'utf-8');
+    if (!html.includes('min-height: 44px')) fail(`responsive: ${page} must size essential controls for touch`);
+    if (!html.includes('overflow-wrap: break-word')) fail(`responsive: ${page} must wrap long titles`);
+    if (/width:\s*100vw/.test(html)) fail(`responsive: ${page} must not introduce viewport-width overflow traps`);
+  }
+  const explorer = fs.existsSync('explorer.html') ? fs.readFileSync('explorer.html', 'utf-8') : '';
+  if (!explorer.includes('.xp-card { grid-template-columns: 1fr; }')) fail('responsive: explorer cards must stack on narrow screens');
+  if (!fs.readFileSync('course.html', 'utf-8').includes('.co-modules { grid-template-columns: 1fr; }')) {
+    fail('responsive: course modules must stack on narrow screens');
+  }
+  const template = fs.existsSync(path.join('templates', 'base.html')) ? fs.readFileSync(path.join('templates', 'base.html'), 'utf-8') : '';
+  for (const token of ['id="prevTopicLink"', 'id="nextTopicLink"', 'id="crumb"']) {
+    if (!template.includes(token)) fail(`responsive: topic navigation control missing "${token}"`);
+  }
+  for (const id of ['xp-search', 'xp-course', 'xp-module', 'as-start', 'co-course', 'db-courses']) {
+    const owner = id.startsWith('xp-') ? 'explorer.html' : id.startsWith('as-') ? 'assessment.html' : id.startsWith('co-') ? 'course.html' : 'dashboard.html';
+    if (!fs.readFileSync(owner, 'utf-8').includes(`id="${id}"`)) fail(`responsive: navigation control missing "${id}" in ${owner}`);
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
