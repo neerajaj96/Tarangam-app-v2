@@ -167,7 +167,7 @@ function renderModules(overview) {
         <a class="xp-open" href="${esc(topicHref(t))}">Open →</a>${assessLink}
       </div>`;
     }).join('');
-    return `<section class="co-module" aria-label="Module ${esc(m.module)}">
+    return `<section class="co-module" id="module-${esc(m.module)}" aria-label="Module ${esc(m.module)}">
       <h3>M${esc(m.module)} · ${esc(m.moduleName)}</h3>
       <div class="xp-path-meta">${m.completed} / ${m.totalTopics} complete · ${m.percent}% · exam readiness ${m.exam.readinessPercent}% · review due ${m.review.queueTotal} · attention ${m.attentionCounts.total} · questions ${m.assessment.totalQuestions}</div>
       <div class="co-bar"><div class="co-fill" style="width:${m.percent}%"></div></div>
@@ -259,6 +259,16 @@ async function init() {
     $('co-app').hidden = false;
     renderCourses();
     renderAll();
+    // Module-deep links from topic breadcrumbs (course.html?course=X#module-N):
+    // content renders after the manifest load, so scroll once it exists.
+    try {
+      const hash = typeof location !== 'undefined' ? location.hash : '';
+      const anchor = hash && hash.match(/^#module-(\d+)$/);
+      if (anchor) {
+        const el = document.getElementById(`module-${anchor[1]}`);
+        if (el && typeof el.scrollIntoView === 'function') el.scrollIntoView();
+      }
+    } catch { /* non-browser or restricted context */ }
   } catch (e) {
     state.loadError = e;
     const box = $('co-error');

@@ -1011,6 +1011,51 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 19. Complete topic learning navigation: deterministic Previous/Next
+// from canonical in-course order, Course → Module → Topic breadcrumb
+// links to canonical overviews, prerequisite/action/related blocks from
+// existing layers only — no AI/LLM, no new state, no second next-topic
+// mechanism. All surfaces keep working through shared helpers.
+{
+  const template = fs.existsSync(path.join('templates', 'base.html'))
+    ? fs.readFileSync(path.join('templates', 'base.html'), 'utf-8')
+    : null;
+  if (!template) {
+    fail('topic-nav: expected template templates/base.html — actual: missing');
+  } else {
+    if (!template.includes('id="prevTopicLink"') || !template.includes('id="nextTopicLink"')) {
+      fail('topic-nav: templates/base.html must render deterministic Previous/Next controls');
+    }
+    if (!template.includes('{% if prev_page %}') || !template.includes('{% if next_page %}')) {
+      fail('topic-nav: templates/base.html must handle first/last topic boundaries');
+    }
+    for (const token of ['course.html?course={{ course_code }}', '#module-{{ current_mod }}', 'id="crumb"']) {
+      if (!template.includes(token)) fail(`topic-nav: templates/base.html breadcrumb is missing "${token}"`);
+    }
+    if (!template.includes('id="tsStudyContext"')) fail('topic-nav: templates/base.html must mount the canonical study context');
+  }
+  const coursePage = fs.existsSync('assets/course-page.js') ? fs.readFileSync('assets/course-page.js', 'utf-8') : '';
+  if (!coursePage.includes('id="module-')) fail('topic-nav: course modules must expose anchors for breadcrumb deep links');
+  for (const banned of ['openai', 'anthropic', 'streak', 'leaderboard']) {
+    if ((template || '').toLowerCase().includes(banned)) fail(`topic-nav: templates/base.html must stay static-first (found "${banned}")`);
+  }
+  // Prerequisite, action, related, and event blocks reuse canonical layers.
+  const study = fs.existsSync('assets/topic-study-context.js') ? fs.readFileSync('assets/topic-study-context.js', 'utf-8') : '';
+  for (const token of ['getPrerequisites', 'getDirectPrerequisiteCompletion', 'getDependents', 'assessmentHrefFrom', 'PROGRESS_CHANGED_EVENT']) {
+    if (!study.includes(token)) fail(`topic-nav: assets/topic-study-context.js is missing canonical integration "${token}"`);
+  }
+  if (/function\s+getNextRecommendedTopic|function\s+getRecommendedNextTopics|const\s+getNextRecommendedTopic\s*=/.test(study)) fail('topic-nav: study context must not define a next-topic mechanism (reuse the canonical one)');
+  // Navigable loop intact on every surface through shared helpers.
+  const course = fs.existsSync('assets/course-overview.js') ? fs.readFileSync('assets/course-overview.js', 'utf-8') : '';
+  for (const token of ['getTopicNeighbors', 'courseHrefFrom', 'getPreviousInCourse', 'getNextInCourse']) {
+    if (!course.includes(token)) fail(`topic-nav: assets/course-overview.js is missing navigation integration "${token}"`);
+  }
+  const explorer = fs.existsSync('assets/explorer.js') ? fs.readFileSync('assets/explorer.js', 'utf-8') : '';
+  if (!explorer.includes('topicPageUrl')) fail('topic-nav: explorer must navigate via the canonical page-URL helper');
+  const dash = fs.existsSync('assets/dashboard.js') ? fs.readFileSync('assets/dashboard.js', 'utf-8') : '';
+  if (!dash.includes('course.html?course=')) fail('topic-nav: dashboard must keep course navigation working');
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
