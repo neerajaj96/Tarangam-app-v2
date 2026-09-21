@@ -134,9 +134,15 @@ function storageKeys(store) {
 function legacyCoursesIn(store) {
   const courses = new Set();
   for (const key of storageKeys(store)) {
-    let m = key.match(/^tarangam_visited_(.+)$/);
-    if (m) courses.add(m[1]);
-    m = key.match(/^tarangam_visited_ts_(.+)$/);
+    // Timestamp keys (`…_ts_<COURSE>`) must be tested first: they also
+    // match the visited prefix and would otherwise phantom a `ts_<C>`
+    // course into every validation/migration report.
+    let m = typeof key === 'string' && key.match(/^tarangam_visited_ts_(.+)$/);
+    if (m) {
+      courses.add(m[1]);
+      continue;
+    }
+    m = typeof key === 'string' && key.match(/^tarangam_visited_(.+)$/);
     if (m) courses.add(m[1]);
   }
   return [...courses].sort();

@@ -58,6 +58,8 @@ const SHELL_URLS = [
   'assets/explorer.js',
   'assets/learner-path.js',
   'assets/learner-state.js',
+  'assets/learner-state-schema.js',
+  'assets/learner-state-backup.js',
   'assets/learning-analytics.js',
   'assets/learning-journey.js',
   'assets/pwa-register.js',

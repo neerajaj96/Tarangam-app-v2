@@ -10,7 +10,7 @@
  * backend, no AI, no gamification.
  */
 import * as Data from './curriculum-data.js';
-import { createLearnerState } from './learner-state.js';
+import { createLearnerState, defaultStorage } from './learner-state.js';
 import {
   PROGRESS_CHANGED_EVENT,
   emitJourneyProgressChanged,
@@ -34,6 +34,12 @@ import {
   buildAttentionModel,
   explainAttention,
 } from './weak-topic-analysis.js';
+import {
+  exportBackup,
+  downloadBackup,
+  previewBackupImport,
+  importBackup,
+} from './learner-state-backup.js';
 import {
   buildAdaptiveModel,
 } from './adaptive-learning.js';
@@ -299,7 +305,12 @@ async function init() {
     const loaded = await Data.loadManifest();
     manifest = loaded.manifest;
     baseUrl = loaded.baseUrl || '';
-    store = createLearnerState({ manifest });
+    // Backing store shared with the learner-state object above, so the
+  // backup section exports/imports exactly what the dashboard reads.
+  // Identical to the previous default (createLearnerState defaults to
+  // defaultStorage() when no storage is passed).
+  const backingStore = defaultStorage();
+  store = createLearnerState({ manifest, storage: backingStore });
     $('db-error').hidden = true;
   } catch (e) {
     $('db-error').hidden = false;
@@ -940,6 +951,98 @@ async function init() {
       renderCourses();
     }
   });
+
+  // Data backup & restore (local-only file round-trip; nothing leaves the
+  // browser). Import is two-step: selecting a file only validates and
+  // previews — Restore commits after validation succeeds.
+  let pendingBackupText = null;
+  const setBackupStatus = (message) => {
+    const el = $('db-backup-status');
+    if (el) el.textContent = message;
+  };
+  const setRestoreEnabled = (enabled) => {
+    const btn = $('db-import-btn');
+    if (btn) {
+      if (enabled) btn.removeAttribute('disabled');
+      else btn.setAttribute('disabled', '');
+    }
+  };
+  const exportBtn = $('db-export-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      try {
+        void exportBackup(backingStore);
+      } catch {
+        // fall through to status below
+      }
+      setBackupStatus(downloadBackup(backingStore)
+        ? 'Progress exported to a local JSON file. Nothing left this browser.'
+        : 'Export is unavailable in this browser context.');
+    });
+  }
+  const fileInput = $('db-import-file');
+  if (fileInput) {
+    fileInput.addEventListener('change', () => {
+      pendingBackupText = null;
+      setRestoreEnabled(false);
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        setBackupStatus('No backup file checked yet. Exports download a local JSON file; nothing ever leaves this browser.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = typeof reader.result === 'string' ? reader.result : '';
+        let preview = null;
+        try {
+          preview = previewBackupImport(text, manifest);
+        } catch (e) {
+          preview = { ok: false, errors: [String((e && e.message) || e)], warnings: [], summary: null };
+        }
+        if (!preview.ok) {
+          setBackupStatus(`Backup rejected — nothing was changed. ${preview.errors.join(' ')}`);
+          return;
+        }
+        pendingBackupText = text;
+        setRestoreEnabled(true);
+        const s = preview.summary;
+        const warn = preview.warnings.length ? ` Warnings: ${preview.warnings.join(' ')}` : '';
+        setBackupStatus(
+          `Backup valid: ${s.records} records (${s.completed} completed) across ${s.legacyCourses} legacy courses.` +
+          `${warn} Choose “Restore validated backup” to replace local progress.`
+        );
+      };
+      reader.onerror = () => {
+        setBackupStatus('Could not read the selected file — nothing was changed.');
+      };
+      reader.readAsText(file);
+    });
+  }
+  const importBtn = $('db-import-btn');
+  if (importBtn) {
+    importBtn.addEventListener('click', () => {
+      if (!pendingBackupText) return;
+      let result = null;
+      try {
+        result = importBackup(backingStore, pendingBackupText, manifest);
+      } catch (e) {
+        result = { ok: false, errors: [String((e && e.message) || e)], warnings: [], summary: null };
+      }
+      pendingBackupText = null;
+      setRestoreEnabled(false);
+      if (fileInput) fileInput.value = '';
+      if (result.ok) {
+        setBackupStatus(
+          `Progress restored: ${result.summary.records} records (${result.summary.completed} completed).` +
+          `${result.warnings.length ? ` Warnings: ${result.warnings.join(' ')}` : ''}`
+        );
+        emitJourneyProgressChanged({ courseCode: null, topicId: null, source: 'dashboard-restore' });
+        renderAll();
+      } else {
+        setBackupStatus(`Restore refused — nothing was changed. ${result.errors.join(' ')}`);
+      }
+    });
+  }
 
   $('db-status').textContent = `${manifest.topics.length} topics · your progress is stored only in this browser`;
   renderHero();

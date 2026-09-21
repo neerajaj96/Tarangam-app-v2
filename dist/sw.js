@@ -8,7 +8,7 @@
  *
  * Deterministic cache-version strategy: TARANGAM_CACHE_VERSION names
  * every cache this worker owns. At build time scripts/output.js replaces
- * tarangam-0ad3a65efb56 with `tarangam-<12 hex chars>`, a content hash over
+ * tarangam-ee17cf936800 with `tarangam-<12 hex chars>`, a content hash over
  * the shell file list below plus curriculum data, templates, entry pages,
  * and topic content (see computeServiceWorkerVersion). Any deploy that
  * changes what the user sees therefore mints a new version, activates it
@@ -23,7 +23,7 @@
  * responses. No IndexedDB, no backend, no sync, no polling.
  */
 
-const TARANGAM_CACHE_VERSION = 'tarangam-0ad3a65efb56';
+const TARANGAM_CACHE_VERSION = 'tarangam-ee17cf936800';
 const SHELL_CACHE = `${TARANGAM_CACHE_VERSION}::shell`;
 const CONTENT_CACHE = `${TARANGAM_CACHE_VERSION}::content`;
 const DATA_CACHE = `${TARANGAM_CACHE_VERSION}::data`;
@@ -58,6 +58,8 @@ const SHELL_URLS = [
   'assets/explorer.js',
   'assets/learner-path.js',
   'assets/learner-state.js',
+  'assets/learner-state-schema.js',
+  'assets/learner-state-backup.js',
   'assets/learning-analytics.js',
   'assets/learning-journey.js',
   'assets/pwa-register.js',

@@ -1354,6 +1354,39 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 25. Learner-state backup and restore: deterministic local-only file
+// round-trip with validate-first atomic restore — no backend, no sync,
+// no new engines. Failed imports change nothing; future data is never
+// downgraded; dashboard wiring stays descriptive.
+{
+  if (!fs.existsSync('assets/learner-state-backup.js')) {
+    fail('backup: expected module assets/learner-state-backup.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/learner-state-backup.js', 'utf-8');
+    for (const token of ['BACKUP_FORMAT', 'buildBackup', 'exportBackup', 'downloadBackup', 'previewBackupImport', 'importBackup']) {
+      if (!js.includes(token)) fail(`backup: assets/learner-state-backup.js is missing "${token}"`);
+    }
+    for (const dep of ["from './learner-state.js'", "from './learner-state-schema.js'"]) {
+      if (!js.includes(dep)) fail(`backup: backup layer must build on canonical state layers (missing ${dep})`);
+    }
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'indexedDB', 'localStorage', 'openai', 'setInterval']) {
+      if (js.includes(banned)) fail(`backup: backup layer must stay local-only (found "${banned}")`);
+    }
+    if (!js.includes('tarangam-learner-state-backup')) fail('backup: backup format identity must be explicit');
+  }
+  if (!fs.existsSync('scripts/learner-state-backup.js')) {
+    fail('backup: expected Node entry scripts/learner-state-backup.js — actual: missing');
+  }
+  const dashHtml = fs.existsSync('dashboard.html') ? fs.readFileSync('dashboard.html', 'utf-8') : '';
+  for (const id of ['db-backup', 'db-export-btn', 'db-import-file', 'db-import-btn', 'db-backup-status']) {
+    if (!dashHtml.includes(`id="${id}"`)) fail(`backup: dashboard.html is missing backup section "${id}"`);
+  }
+  const dash = fs.existsSync('assets/dashboard.js') ? fs.readFileSync('assets/dashboard.js', 'utf-8') : '';
+  for (const token of ['previewBackupImport', 'importBackup', 'downloadBackup']) {
+    if (!dash.includes(token)) fail(`backup: assets/dashboard.js is missing backup wiring "${token}"`);
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);

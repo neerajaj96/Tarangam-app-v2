@@ -133,6 +133,18 @@
       </label>
       <button id="db-reset-btn" type="button">Reset selected course</button>
     </div>
+
+    <h2 class="db-sec-title">Data — backup &amp; restore</h2>
+    <section class="xp-path" id="db-backup" aria-label="Backup and restore">
+      <div class="xp-path-row">
+        <button class="xp-path-btn" id="db-export-btn" type="button">Export progress</button>
+        <label class="xp-path-label" for="db-import-file">Import file
+          <input id="db-import-file" type="file" accept=".json,application/json">
+        </label>
+        <button class="xp-path-btn" id="db-import-btn" type="button" disabled>Restore validated backup</button>
+      </div>
+      <div class="xp-path-row"><span class="xp-path-label" id="db-backup-status" role="status">No backup file checked yet. Exports download a local JSON file; nothing ever leaves this browser.</span></div>
+    </section>
   </main>
 </div>
 <script type="module" src="assets/dashboard.js"></script>
