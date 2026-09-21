@@ -297,86 +297,267 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 24 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
-    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
+    <a href="#purpose" class="jump-pill">purpose</a>
+    <a href="#bridge" class="jump-pill">bridge</a>
+    <a href="#framing" class="jump-pill">framing</a>
+    <a href="#error-detection" class="jump-pill">error-detection</a>
+    <a href="#aloha" class="jump-pill">aloha</a>
+    <a href="#ethernet-size" class="jump-pill">ethernet-size</a>
   </div>
 </div>
 <h1>Module 3 Practice Lab: Data-Link Drills</h1>
-<p><strong>Stuffing and CRC by hand, access-method selection, ARP traces, wireless scenarios, and exam essay models.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
-<p>Each scenario is a sprint verdict: compute, then convict. Abbreviations: CRC (Cyclic Redundancy Check), ARP (Address Resolution Protocol), CSMA/CD (Carrier Sense Multiple Access with Collision Detection), CSMA/CA (… with Collision Avoidance), RTS/CTS (Request to Send / Clear to Send), NAV (Network Allocation Vector), AP (Access Point), BER (Bit Error Rate).</p>
-<h3>Scenario 1: Stuff-and-Check Sprint</h3>
-<p>Data <code>11011111110</code> (11 bits). Bit-stuff it: indices 3–9 hold seven consecutive 1s — insert <code>0</code> after the fifth (index 7); indices 8–9 are only two more 1s (no second run). Stuffed: <code>11011111</code> + <code>0</code> + <code>110</code> = <code>110111110110</code> (12 bits). Destuff check: strip the 0 after the five-run → original restored. One inserted bit, zero ambiguity.</p>
-<h3>Scenario 2: CRC Courtroom</h3>
-<p>Claim: &quot;data <code>1010001101</code> with generator <code>110101</code> yields CRC <code>01110</code>.&quot; Verify like an examiner: recompute the division (alignments <code>101000</code>→<code>011101</code>→<code>111011</code>→<code>001110</code>→<code>111010</code>→<code>001111</code>→<code>111110</code>→<code>001011</code>→<code>101100</code>→<code>011001</code>→<code>110010</code>→<code>000111</code>, remainder <code>01110</code> ✓), then divide $\langle D, R \rangle$ = <code>101000110101110</code> by the generator → <code>00000</code> ✓. Claim upheld twice — computation plus receiver check, the belt-and-suspenders standard.</p>
-<h3>Scenario 3: Shared-Medium Triage</h3>
-<p>Three deployments, one choice each: (a) 50 wired desktops, bursty traffic — <strong>CSMA/CD</strong> (listen+abort wastes only $2\tau$ per collision; partitioning would idle most slots). (b) 3 always-backlogged lab machines needing guarantees — <strong>TDMA</strong> (Time Division Multiple Access) (collision-free shares beat contention odds). (c) warehouse handhelds roaming around shelving (hidden terminals everywhere) — <strong>CSMA/CA with RTS/CTS</strong> (radios can&#39;t detect; reservations inform the hidden). Rule: bursty-wired → CD, guaranteed-shares → partition, wireless → CA.</p>
-<h3>Scenario 4: The Silent Printer</h3>
-<p>A printer (known IP — Internet Protocol) stops responding. ARP table shows no entry; pinging gives &quot;no route&quot;-style silence <em>within</em> the LAN (Local Area Network). Diagnosis chain: (1) ARP query broadcast heard? Check switch flooding/cabling. (2) Reply sent but table still empty? TTL (Time To Live) expiry loop or spoofed replies (poisoning suspect — verify MAC — Media Access Control — against the asset tag). (3) Reply cached yet ping fails? Problem is above ARP (IP/config, not addressing). Layered elimination: resolve addressing <em>before</em> blaming routing.</p>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
-<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<p><strong>A teaching lab for the data-link layer: frame boundaries by hand, error-detection arithmetic with every intermediate value, medium-access reasoning from network conditions, ARP and switch traces, and ordered LAN diagnosis — each solvable from the reasoning taught here.</strong></p>
+<p><a id="purpose"></a></p>
+<h2 id="1-lab-purpose">1. Lab Purpose</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-quick-prerequisite-bridge">2. Quick Prerequisite Bridge →</a></p>
+<p>This lab covers the five hands-on skills of Module 3: (1) framing data with bit stuffing and recovering it by destuffing; (2) detecting errors with parity, 2D parity, Internet checksum, and Cyclic Redundancy Check (CRC); (3) pricing shared-medium access with ALOHA mathematics and choosing access methods by scenario; (4) tracing Address Resolution Protocol (ARP) exchanges and switch learning tables; (5) diagnosing Local Area Network (LAN) faults in the correct order.</p>
+<p>These concepts matter because every frame on every link is delimited, checked, and forwarded by exactly these mechanisms — exams test them as calculations and traces. After completion you will be able to: delimit payloads with flags and stuffing; compute all four error checks by hand; derive ALOHA throughput and Ethernet frame size from first principles; justify access-method choices; trace ARP and switch tables; and walk LAN faults down the diagnostic ladder.</p>
+<p><a id="bridge"></a></p>
+<h2 id="2-quick-prerequisite-bridge">2. Quick Prerequisite Bridge</h2>
+<p class="secnav"><a href="#1-lab-purpose">← 1. Lab Purpose</a><span class="secnav-sep">·</span><a href="#3-framing-bit-stuffing-step-by-step">3. Framing + Bit Stuffing, Step by… →</a></p>
+<p>You need only these ideas from the four prerequisite notes — refreshed here so you never leave the page:</p>
+<ul>
+<li><strong>Frame:</strong> one data-link packet (headers + payload + trailer) travelling one hop. <strong>Flag:</strong> reserved pattern (here <code>01111110</code>) marking frame start/end.</li>
+<li><strong>Parity bit:</strong> extra bit keeping word 1-count even (even) or odd (odd parity). <strong>Checksum:</strong> sum-based packet value, recomputed by the receiver. <strong>CRC:</strong> modulo-2 division remainder by an agreed generator, appended then rechecked.</li>
+<li><strong>Collision:</strong> overlapping transmissions garbling each other on a shared medium. <strong>Carrier sensing:</strong> listening before talking. <strong>MAC address:</strong> permanent interface hardware address (e.g. <code>AA-AA-AA-AA-AA-AA</code>), used on one LAN; <strong>IP address</strong> (e.g. <code>192.168.1.10</code>) names hosts across networks. ARP maps IP→MAC per LAN; routing moves packets between LANs.</li>
+<li><strong>Switch vs hub:</strong> a hub repeats every frame out of every port; a switch learns MAC→port mappings and forwards selectively, flooding only unknown/broadcast destinations.</li>
+</ul>
+<p><a id="framing"></a></p>
+<h2 id="3-framing-bit-stuffing-step-by-step">3. Framing + Bit Stuffing, Step by Step</h2>
+<p class="secnav"><a href="#2-quick-prerequisite-bridge">← 2. Quick Prerequisite Bridge</a><span class="secnav-sep">·</span><a href="#4-error-detection-drills">4. Error Detection Drills →</a></p>
+<p><strong>What.</strong> A frame is the data-link unit on one hop. <strong>Why boundaries matter.</strong> The receiver sees one continuous bit stream; without marked start and end it cannot tell where one frame stops and the next begins. <strong>How.</strong> Protocols reserve a special flag pattern — here <code>01111110</code> — placed before the first payload bit and after the last. <strong>The problem this creates.</strong> Payloads are arbitrary bits and may <em>contain</em> the flag pattern, which would fake a boundary. <strong>The solution.</strong> Bit stuffing: the sender inserts an extra <code>0</code> after every run of five consecutive <code>1</code>s in the payload; the receiver, after seeing five consecutive <code>1</code>s, drops the following bit (which must be <code>0</code> unless the pattern is a real flag).</p>
+<p><strong>Exact rule.</strong> Scan payload left to right, counting consecutive <code>1</code>s. After the fifth consecutive <code>1</code>, output an extra <code>0</code> and reset the count. Destuffing mirrors it: after five consecutive <code>1</code>s, discard the next bit. A real flag (<code>01111110</code> = six 1s plus framing 0s) is never produced inside stuffed payload because the sixth 1 can never appear there.</p>
+<p><strong>Complete worked example.</strong> Flag <code>01111110</code>. Payload (17 bits): <code>0 1 1 0 1 1 1 1 1 1 0 1 1 1 1 1 0</code>, i.e. <code>01101111110111110</code>.</p>
+<ul>
+<li>Run 1: six <code>1</code>s (positions 5–10). After the first five, insert <code>0</code>; the sixth <code>1</code> restarts the count, then a payload <code>0</code> ends the run.</li>
+<li>Run 2: five <code>1</code>s (positions 12–16). Insert <code>0</code> after them; the payload&#39;s final <code>0</code> follows.</li>
+<li>Stuffed payload (19 bits): <code>0110 11111 0 1 0 11111 0 0</code> = <code>0110111110101111100</code> (17 + 2 stuffed).</li>
+<li>Frame: <code>01111110</code> + <code>0110111110101111100</code> + <code>01111110</code>.</li>
+<li>Destuffing: after each five-<code>1</code> run drop the <code>0</code>; recovered <code>01101111110111110</code> — identical. <strong>Result:</strong> two inserted bits, zero ambiguity. <strong>Interpretation:</strong> the flag pattern then occurs only at true boundaries — framing stays self-synchronizing.</li>
+</ul>
+<details class="interactive-toggle"><summary>Exam trap: stuffing the flag itself</summary><div class="toggle-content"><p>Never scan the flags you add — stuffing applies to the payload only. A common error is re-scanning the whole transmitted frame (flags included) and &quot;finding&quot; runs inside <code>01111110</code>. Stuff once, on payload bits, before adding flags.</p>
+</div></details><p><a id="error-detection"></a></p>
+<h2 id="4-error-detection-drills">4. Error Detection Drills</h2>
+<p class="secnav"><a href="#3-framing-bit-stuffing-step-by-step">← 3. Framing + Bit Stuffing, Step by…</a><span class="secnav-sep">·</span><a href="#5-aloha-carrier-sensing-derived">5. ALOHA + Carrier Sensing, Derive… →</a></p>
+<p>No method here detects <em>every</em> possible error — each section ends with what escapes it.</p>
+<h3>4.1 Parity</h3>
+<p><strong>What/Why/How.</strong> One redundant bit per word catches odd-count flips: even parity keeps word 1-count even (odd count → even bit <code>1</code>). Receiver: odd total ⇒ error.</p>
+<p><strong>Numerical example.</strong> Data <code>1011001</code> (four 1s) → even-parity bit <code>0</code>, transmit <code>10110010</code> (odd parity would use <code>1</code>). Received <code>1011011</code> + <code>0</code> has five 1s → error flagged. Two flips keep parity → silent. <strong>Interpretation:</strong> all odd-count errors caught (incl. every single-bit error); all even-count errors escape.</p>
+<h3>4.2 2D Parity</h3>
+<p><strong>What/Why.</strong> One-dimensional parity is blind to even-count patterns: arrange data in rows + columns, guard both — a single error then fails exactly one row and one column check, locating it. <strong>How.</strong> For an $r \times c$ block (even parity): one parity bit per row, one per column, plus overall parity of all parity bits.</p>
+<p><strong>Complete matrix example.</strong> Data (4 rows × 4 columns):</p>
+<pre><code class="language-text">row 1:  1 0 1 1   (three 1s → row parity 1)
+row 2:  0 1 0 1   (two 1s → row parity 0)
+row 3:  1 1 0 0   (two 1s → row parity 0)
+row 4:  0 0 1 1   (two 1s → row parity 0)
+col parity: 0 0 0 1   (column 1s: 2,2,2,3 → parities 0,0,0,1)
+overall parity: data 1s (3+2+2+2 = 9) + row parities (1) + column parities (1) = 11, odd → overall bit 1
+</code></pre>
+<p><strong>Detection trace.</strong> Flip cell (2,3) (<code>0</code> → <code>1</code>): row 2 holds three 1s vs parity <code>0</code> → fails; column 3 holds three 1s vs <code>0</code> → fails; rest pass. Failing row × failing column = cell (2,3). <strong>Limitation (trace it).</strong> Flip rectangle corners (1,1), (1,2), (2,1), (2,2): every involved row/column gains two flips (parity preserved), overall gains four (preserved) → all checks pass silently. <strong>Interpretation:</strong> single errors locate exactly; even-per-row-and-column patterns defeat counting.</p>
+<h3>4.3 Internet Checksum</h3>
+<p><strong>What/Why.</strong> Packets need a cheap whole-header check; the Internet checksum sums fixed-width words with end-around carry. <strong>How.</strong> Sender: add all words with one&#39;s-complement addition (carry wraps back), complement the sum; transmit as checksum. Receiver: add all words <em>including</em> checksum the same way; correct packets yield all-ones, complementing to zero.</p>
+<p><strong>Full arithmetic (8-bit words here for hand calculation; real IP uses 16-bit words — identical procedure).</strong> Words: <code>10101010</code> (170) and <code>01101100</code> (108).</p>
+<ul>
+<li>Add: <code>10101010 + 01101100 = 100010110</code> ($170 + 108 = 278$, 9 bits).</li>
+<li>End-around carry: low 8 bits <code>00010110</code> (22) + carried <code>1</code> → <code>00010111</code> (23).</li>
+<li>Complement → checksum <code>11101000</code> (232). Transmit it.</li>
+<li>Receiver: <code>10101010 + 01101100</code> → wrap → <code>00010111</code>; add checksum: <code>00010111 + 11101000 = 11111111</code> (255) → complement <code>00000000</code>. <strong>Result:</strong> zero means accept. <strong>Interpretation:</strong> any single-word change breaks all-ones and is caught; compensating multi-word changes can cancel out and escape.</li>
+</ul>
+<details class="interactive-toggle"><summary>Exam trap: forgetting the end-around carry</summary><div class="toggle-content"><p>Adding <code>170 + 108 = 278</code> and truncating to 8 bits (22) without adding the carried 1 back gives sum 22 and checksum <code>11101001</code> — a wrong answer that looks almost right. The carry wrap is load-bearing: one&#39;s-complement addition <em>is</em> plain addition plus end-around carry. Always show the wrap line explicitly.</p>
+</div></details><h3>4.4 CRC From First Principles</h3>
+<p><strong>What/Why.</strong> CRC treats bits as polynomial coefficients and uses the division remainder as the check: far stronger than parity (all bursts up to generator length, all odd-count errors with standard generators) at hardware-shift-register cost. <strong>How.</strong> Agree on generator $G$ of length $r+1$ (degree $r$). Sender: append $r$ zeros to $D$, divide by $G$ modulo-2 (subtraction = XOR, no borrows), take the $r$-bit remainder $R$; transmit $\langle D, R\rangle$. Receiver: divide the whole word by $G$; zero means accept.</p>
+<p><strong>Complete small binary example.</strong> Data $D = 1011$, generator $G = 101$ ($r = 2$). Append two zeros: <code>101100</code>. Modulo-2 division by <code>101</code>:</p>
+<pre><code class="language-text">          1 0 1          &lt;- quotient (not transmitted)
+        _________
+101 )   1 0 1 1 0 0
+        1 0 1            &lt;- XOR under first 1
+        -------
+        0 0 0 1          &lt;- bring down 1; leading 0: shift
+              0
+        -------
+        0 0 1 0          &lt;- bring down 0; leading 0: shift
+              0
+        -------
+        0 1 0 0          &lt;- bring down 0; window 100
+          1 0 1          &lt;- leading 1: XOR
+          -----
+          0 0 1          &lt;- remainder R = 01
+</code></pre>
+<p>Remainder $R = 01$. Codeword: <code>1011</code> + <code>01</code> = <code>101101</code>. Receiver divides <code>101101</code> by <code>101</code>: <code>101 XOR 101 = 000</code>, shifts through, final window <code>101 XOR 101 = 000</code> → remainder <code>00</code> → accept. <strong>Result:</strong> $R = 01$, verified twice. <strong>Interpretation:</strong> any single-bit error changes the remainder (nonzero → discard + retransmit); the method detects all bursts shorter than $r+1 = 3$ bits and — since $x^2+1 = (x+1)^2$ carries the $(x+1)$ factor — all odd-count errors. Longer bursts escape with probability $2^{-r} = 1/4$ here: strong, never perfect.</p>
+<p><strong>Comparison (no method is perfect).</strong></p>
 <table>
 <thead>
 <tr>
-<th>Pair</th>
-<th>Distinction that earns marks</th>
+<th>Method</th>
+<th>Basic idea</th>
+<th>Good at detecting</th>
+<th>Important limitation</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Byte vs. bit stuffing</td>
-<td>Escape FLAG bytes vs. 0-after-five-1s with 01111110 flags (self-synchronizing)</td>
+<td>Parity (1D)</td>
+<td>One bit keeps word parity even/odd</td>
+<td>All odd-count errors incl. every single-bit error</td>
+<td>Blind to all even-count errors</td>
 </tr>
 <tr>
-<td>Parity vs. CRC</td>
-<td>Odd-count-only / rectangle-blind vs. bursts + odd + $2^{-r}$ leakage</td>
+<td>2D parity</td>
+<td>Row + column + overall parity</td>
+<td>Single errors (locates them); most small patterns</td>
+<td>Even-per-row-and-column patterns (rectangles) pass silently</td>
 </tr>
 <tr>
-<td>Detection vs. correction</td>
-<td>Says corrupt (retransmit) vs. locates+fixes (Hamming territory, heavier codes)</td>
+<td>Internet checksum</td>
+<td>One&#39;s-complement sum + complement</td>
+<td>Single-word corruption; cheap whole-header tripwire</td>
+<td>Compensating multi-word changes cancel out</td>
 </tr>
 <tr>
-<td>Pure vs. slotted Aloha</td>
-<td>18% ($1/2e$, 2-frame vulnerability) vs. 37% ($1/e$, slotted alignment)</td>
-</tr>
-<tr>
-<td>CSMA vs. CSMA/CD</td>
-<td>Listen-before-talk vs. +abort-while-talking, jam, backoff, $2\tau$ min-frame rule</td>
-</tr>
-<tr>
-<td>CD vs. CA</td>
-<td>Wired voltage-sensing vs. wireless RTS/CTS avoidance (self-deaf + hidden terminals)</td>
-</tr>
-<tr>
-<td>Hub vs. switch</td>
-<td>One collision domain, floods always vs. learned table, per-port domains, flood-if-unknown</td>
-</tr>
-<tr>
-<td>ARP scope</td>
-<td>LAN-local broadcast/unicast/TTL; routers need gateway-ARP per hop, never end-to-end</td>
-</tr>
-<tr>
-<td>Hidden vs. exposed terminals</td>
-<td>Unheard colliders at AP (needs CTS echo) vs. needlessly silenced parallel pairs (lost reuse)</td>
-</tr>
-<tr>
-<td>Baud vs. bit rate</td>
-<td>Symbols/s vs. data/s ($R = S\log_2 N$ — M4 bridge, same confusion family)</td>
+<td>CRC ($r$-bit)</td>
+<td>Modulo-2 remainder as check</td>
+<td>Single-bit, odd-count (with $(x+1)$ factor), bursts $&lt; r+1$</td>
+<td>Longer bursts escape with probability $2^{-r}$</td>
 </tr>
 </tbody></table>
-<p><strong>Watch out:</strong> (1) Stuffing flag bits instead of data — scan payload only. (2) Quoting 37% for pure Aloha. (3) &quot;Switches never flood&quot; — unknowns flood once. (4) Blaming routing before ARP resolves — addressing first, always.</p>
-<p><a id="self-check"></a></p>
-<h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
+<p><a id="aloha"></a></p>
+<h2 id="5-aloha-carrier-sensing-derived">5. ALOHA + Carrier Sensing, Derived</h2>
+<p class="secnav"><a href="#4-error-detection-drills">← 4. Error Detection Drills</a><span class="secnav-sep">·</span><a href="#6-ethernet-minimum-frame-size-from-first-principles">6. Ethernet Minimum Frame Size Fro… →</a></p>
+<p><strong>What/Why.</strong> On a shared medium with no coordinator, transmissions collide and garble. <strong>Vulnerable period</strong> = the window in which another start destroys a frame. <strong>Pure ALOHA:</strong> transmit whenever ready — a frame of duration $T$ collides with any start in the $2T$ window around it. <strong>Slotted ALOHA:</strong> starts only at slot boundaries — window halves to $T$. <strong>Carrier sensing (CSMA):</strong> listen first, defer on busy — the window shrinks to propagation delay, since only starts during the brief deaf interval still collide.</p>
+<p><strong>Throughput derivation (not just the formula).</strong> Let $G$ = offered load (attempts per frame time, incl. retransmissions) and $S$ = carried load (successes per frame time). Poisson arrivals at rate $G$ leave a window of $k$ frame times silent with probability $e^{-kG}$ (the exponential = silence probability). Success needs silence across the vulnerable window: pure ALOHA $k = 2$, so $S = G\cdot e^{-2G}$; slotted $k = 1$, so $S = G\cdot e^{-G}$.</p>
+<ul>
+<li><strong>What $S$ means:</strong> useful throughput (frames delivered per frame time). <strong>What $G$ means:</strong> total attempted traffic per frame time. <strong>Why exponential:</strong> Poisson silence probability over the vulnerable window. <strong>Numerical substitution:</strong> pure ALOHA at $G = 0.5$: $S = 0.5 \times e^{-1} \approx 0.5 \times 0.3679 \approx 0.184$ (18.4% — the maximum; the peak sits at $G = 0.5$ by differentiation). At $G = 0.2$: $S = 0.2 \times e^{-0.4} \approx 0.2 \times 0.6703 \approx 0.134$. <strong>Interpretation:</strong> pushing load past the peak <em>reduces</em> delivered traffic — maxima are $1/(2e) \approx 18%$ pure and $1/e \approx 37%$ slotted at $G = 1$.</li>
+</ul>
+<details class="interactive-toggle"><summary>Exam trap: quoting 37% for pure ALOHA</summary><div class="toggle-content"><p>37% ($1/e$) is slotted ALOHA&#39;s maximum at $G = 1$. Pure ALOHA peaks at $1/(2e) \approx 18%$ at $G = 0.5$ — the factor 2 in the exponent (two frame times of vulnerability) is the entire difference. Name the exponent before the percentage.</p>
+</div></details><p><a id="ethernet-size"></a></p>
+<h2 id="6-ethernet-minimum-frame-size-from-first-principles">6. Ethernet Minimum Frame Size From First Principles</h2>
+<p class="secnav"><a href="#5-aloha-carrier-sensing-derived">← 5. ALOHA + Carrier Sensing, Derive…</a><span class="secnav-sep">·</span><a href="#7-medium-access-scenario-questions">7. Medium-Access Scenario Question… →</a></p>
+<p><strong>What/Why.</strong> Ethernet detects collisions by hearing its own transmission garbled — but a sender that finishes too quickly hangs up before the collision echo returns, mistaking collision for success. <strong>The relationship:</strong> frame transmission time must cover the worst-case detection time: $T_{\text{trans}} \ge 2\tau$ (plus margins), with $\tau$ one-way propagation delay across the maximum segment.</p>
+<p><strong>Step-by-step calculation (classic 10 Mbps Ethernet).</strong> Define: $R = 10 \times 10^6$ bits/s (bit rate); $L_{\max} = 2500$ m (maximum segment length); $v = 2 \times 10^8$ m/s (signal speed in copper); $\tau = L_{\max}/v$ (one-way delay).</p>
+<ul>
+<li>$\tau = 2500 / (2 \times 10^8) = 12.5$ µs (microseconds).</li>
+<li>Round trip $2\tau = 25$ µs; with repeater/processing margins the standard slot time is $T_{\text{slot}} = 51.2$ µs.</li>
+<li>$L_{\min} = R \times T_{\text{slot}} = (10 \times 10^6) \times (51.2 \times 10^{-6}) = 512$ bits $= 64$ bytes.</li>
+<li><strong>Result:</strong> 64 bytes. <strong>Interpretation:</strong> shorter frames could finish before a far-end collision returns, so Ethernet pads to 64 bytes — transmission time <em>is</em> the detection window. Distinct concepts: bit rate $R$ (bits/s, pushing speed) vs transmission time $L/R$ (seconds occupied).</li>
+</ul>
+<p><a id="scenarios"></a></p>
+<h2 id="7-medium-access-scenario-questions">7. Medium-Access Scenario Questions</h2>
+<p class="secnav"><a href="#6-ethernet-minimum-frame-size-from-first-principles">← 6. Ethernet Minimum Frame Size Fro…</a><span class="secnav-sep">·</span><a href="#8-mac-address-arp-trace-fully-worked">8. MAC Address + ARP Trace, Fully … →</a></p>
+<p>For each scenario: situation → problem → constraints → candidates → selection → why → why not the alternatives. This is reasoning from network conditions, never a &quot;best technology&quot; ranking.</p>
+<p><strong>Scenario A — 50 wired desktops, bursty traffic.</strong> Unpredictable stations share one wire; idle capacity must not be wasted. Constraints: bursty arrivals, wire sensing available. Selection: <strong>CSMA/CD</strong> — idle listening is free, abort caps waste at $2\tau$ gaps plus backoff retries. Not TDMA (fixed turns idle during bursts). Not ALOHA (18–37% ceilings waste a sensable wire).</p>
+<p><strong>Scenario B — 3 always-backlogged machines needing guaranteed shares.</strong> Each machine must be assured throughput. Constraints: tiny fixed population, continuous demand. Selection: <strong>TDMA</strong> — collision-free shares give deterministic guarantees. Not CSMA/CD: backoff randomness cannot promise shares. Guarantees beat averages where contracts exist.</p>
+<p><strong>Scenario C — warehouse handhelds roaming behind shelving (hidden terminals).</strong> Senders cannot hear each other, so transmissions collide unheard at the Access Point (AP). Constraints: radio self-deafness, hidden pairs, mobility. Selection: <strong>CSMA/CA with RTS/CTS</strong> — the CTS echo informs precisely the hidden nodes (heard CTS, no RTS ⇒ set NAV — Network Allocation Vector — timer, stay silent). Not CSMA/CD (no radio equivalent of wire sensing). Not plain CA (data-frame collisions still cost full frames; short reservations collide cheaply instead).</p>
+<p><a id="arp"></a></p>
+<h2 id="8-mac-address-arp-trace-fully-worked">8. MAC Address + ARP Trace, Fully Worked</h2>
+<p class="secnav"><a href="#7-medium-access-scenario-questions">← 7. Medium-Access Scenario Question…</a><span class="secnav-sep">·</span><a href="#9-switch-learning-table-fully-walked">9. Switch Learning Table, Fully Wa… →</a></p>
+<p><strong>What/Why.</strong> To send an IP packet on a LAN, the sender needs the destination&#39;s MAC for the frame header — IP says <em>which host</em>, MAC says <em>which interface on this wire</em>. ARP resolves IP → MAC on demand. <strong>Why broadcast the request:</strong> the sender does not know who holds the IP, so it asks everyone (<code>FF-FF-FF-FF-FF-FF</code>). <strong>Why the reply is unicast:</strong> only the owner answers, directly to the requester.</p>
+<p><strong>Concrete trace.</strong> Host A: IP <code>192.168.1.10</code>, MAC <code>AA-AA-AA-AA-AA-AA</code>. Host B: IP <code>192.168.1.20</code>, MAC <code>BB-BB-BB-BB-BB-BB</code>. A wants to send to B.</p>
+<ol>
+<li>A checks its ARP cache for <code>192.168.1.20</code> → no entry (miss).</li>
+<li>A broadcasts ARP Request (sender <code>AA…</code>/<code>192.168.1.10</code>, target-HW unknown, target <code>192.168.1.20</code>, opcode request). Switch floods it out of all ports.</li>
+<li>B recognizes its own IP; other hosts ignore it.</li>
+<li>B unicasts ARP Reply to A (sender <code>BB…</code>/<code>192.168.1.20</code>, target <code>AA…</code>/<code>192.168.1.10</code>, opcode reply).</li>
+<li>A stores (<code>192.168.1.20</code> → <code>BB…</code>, Time-To-Live expiry) and sends the data frame to <code>BB…</code>.</li>
+<li><strong>Result:</strong> one broadcast, one unicast, one cached mapping. <strong>Interpretation:</strong> ARP is LAN-local (routers re-ARP per hop — never end-to-end); IP routes across networks while MAC delivers across one wire.</li>
+</ol>
+<p><a id="switch"></a></p>
+<h2 id="9-switch-learning-table-fully-walked">9. Switch Learning Table, Fully Walked</h2>
+<p class="secnav"><a href="#8-mac-address-arp-trace-fully-worked">← 8. MAC Address + ARP Trace, Fully …</a><span class="secnav-sep">·</span><a href="#10-lan-troubleshooting-drill-in-order">10. LAN Troubleshooting Drill, In … →</a></p>
+<p><strong>What/Why.</strong> A switch forwards by destination but learns by source: arriving frames teach (source MAC → port); known destinations forward selectively (<strong>known unicast</strong>); unknown destinations and broadcasts <strong>flood</strong>; entries <strong>age</strong> out (typically ~300 s) so moves heal.</p>
+<p><strong>Complete walkthrough.</strong> Empty 4-port switch. A (<code>AA…</code>) on port 1, B (<code>BB…</code>) on port 2, C (<code>CC…</code>) on port 3.</p>
+<table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Incoming port</th>
+<th>Source MAC</th>
+<th>Destination MAC</th>
+<th>Switch action</th>
+<th>Learning-table change</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>t1</td>
+<td>1</td>
+<td>AA…</td>
+<td>BB…</td>
+<td>Flood (unknown)</td>
+<td>Learn AA…→1</td>
+</tr>
+<tr>
+<td>t2</td>
+<td>2</td>
+<td>BB…</td>
+<td>AA…</td>
+<td>Forward port 1 (known)</td>
+<td>Learn BB…→2</td>
+</tr>
+<tr>
+<td>t3</td>
+<td>3</td>
+<td>CC…</td>
+<td>BB…</td>
+<td>Forward port 2 (known)</td>
+<td>Learn CC…→3</td>
+</tr>
+<tr>
+<td>t4</td>
+<td>1</td>
+<td>AA…</td>
+<td>CC…</td>
+<td>Forward port 3 (known)</td>
+<td>Refresh AA…→1 (age reset)</td>
+</tr>
+</tbody></table>
+<p><strong>Result:</strong> after t3 the table is complete; t4 needs no flood. <strong>Interpretation:</strong> learning reads sources, forwarding reads destinations — the standard confusion, resolved.</p>
+<p><strong>Trace problem (solve, then check).</strong> Continuing above: t5 B→C, t6 C→A, t7 new host D (<code>DD…</code>) on port 4 sends to A. Answers: t5 forward port 3 (both known, refresh BB…); t6 forward port 1 (refresh CC…); t7 learn DD…→4, forward port 1 (only the source is new — no flood needed). Unknown destinations would flood while learning — one flood, one lesson, as always.</p>
+<p><a id="troubleshooting"></a></p>
+<h2 id="10-lan-troubleshooting-drill-in-order">10. LAN Troubleshooting Drill, In Order</h2>
+<p class="secnav"><a href="#9-switch-learning-table-fully-walked">← 9. Switch Learning Table, Fully Wa…</a><span class="secnav-sep">·</span><a href="#11-integrated-practice-problems">11. Integrated Practice Problems →</a></p>
+<p><strong>The ladder (each stage before the next, with why).</strong> Lower stages precondition upper ones: no link voids addresses; no address voids ARP; unresolved ARP exonerates routing; unanswered gateway localizes the fault.</p>
+<ol>
+<li><strong>Physical/link:</strong> cable seated? Carrier (<code>UP</code> without <code>LOWER_UP</code> = unplugged)? Dead physical voids everything above.</li>
+<li><strong>Local configuration:</strong> interface enabled, speed/duplex sane? Wrong VLAN (Virtual LAN) strands hosts silently.</li>
+<li><strong>IP configuration:</strong> address, mask, gateway present and consistent? Missing gateway = no off-LAN path by definition.</li>
+<li><strong>ARP:</strong> cache entry for target/gateway? Missing → is the request heard (cabling/flooding)? Reply sent but table empty → expiry loop or spoofing (check MAC vs asset tag).</li>
+<li><strong>Switch/MAC:</strong> table correct? Unknown-unicast flooding once is normal; persistent flooding means learning failed (loop, full table, spoofed sources).</li>
+<li><strong>Routing/gateway:</strong> only after local ARP resolves — ping the gateway before any remote host.</li>
+<li><strong>Higher layers:</strong> DNS, firewall, service ports — last, with the network path already exonerated.</li>
+</ol>
+<p><strong>Walked scenario.</strong> Printer (known IP) stops responding; ARP shows no entry; LAN-local silence. Stages 1–3 pass (link up, addresses sane). Stage 4: broadcast the request, watch the flood — no reply arrives. Verdict: printer-side (powered off, unplugged, wrong VLAN) — not routing, not DNS. Had a reply arrived with ping still failing, the ladder moves up (IP mismatch, then service ports), each stage spending only its own suspects.</p>
+<p><a id="problems"></a></p>
+<h2 id="11-integrated-practice-problems">11. Integrated Practice Problems</h2>
+<p class="secnav"><a href="#10-lan-troubleshooting-drill-in-order">← 10. LAN Troubleshooting Drill, In …</a><span class="secnav-sep">·</span><a href="#12-exam-oriented-summary-revision-only">12. Exam-Oriented Summary (Revisio… →</a></p>
+<p>For every solution: Given → Asked → Concept → Why it applies → Rule/formula → Step-by-step work → Result → Interpretation.</p>
+<p><strong>P1 (bit stuffing + destuffing).</strong> Flag <code>01111110</code>, payload <code>01101111110111110</code>. Runs of six and five 1s → insert <code>0</code> after each five-run → <code>0110111110101111100</code> (19 bits); destuff drops each post-five <code>0</code>. Result: recovered data identical. Interpretation: two inserted bits buy unambiguous boundaries.</p>
+<p><strong>P2 (parity).</strong> Byte <code>1011001</code>, even parity → bit <code>0</code>; received <code>1011011</code> (five 1s, odd) → error flagged. Interpretation: single-bit errors always caught; a second flip would escape.</p>
+<p><strong>P3 (2D parity location).</strong> §4.2 matrix, cell (2,3) flipped → row 2 and column 3 checks fail, rest pass → cell (2,3). Interpretation: single errors locate exactly; rectangles stay silent.</p>
+<p><strong>P4 (checksum).</strong> Words <code>10101010</code>, <code>01101100</code>: $170+108 = 278$ → wrap $22+1 = 23$ → complement <code>11101000</code>. Receiver: $23 + 232 = 255$ → complement zero → accept. Interpretation: one-word changes break all-ones; compensating pairs escape.</p>
+<p><strong>P5 (CRC).</strong> $D = 1010001101$, $G = 110101$: append five zeros, XOR division → $R = 01110$; codeword <code>101000110101110</code>; receiver → <code>00000</code> → accept. Catches single-bit, odd-count, bursts $&lt; 6$ bits, all but $2^{-5}$ of longer bursts. Interpretation: computed twice — belt and suspenders.</p>
+<p><strong>P6 (ALOHA).</strong> $G = 0.5$ pure: $S = 0.5 \times e^{-1} \approx 0.184$ (the maximum). Interpretation: past the peak, more load reduces delivery; slotted gives $\approx 0.303$ at the same $G$.</p>
+<p><strong>P7 (Ethernet size).</strong> 10 Mbps, 2500 m: $\tau = 12.5$ µs, slot $51.2$ µs, $L_{\min} = 512$ bits $= 64$ B → pad short frames. Interpretation: transmission time is the detection window.</p>
+<p><strong>P8 (ARP trace).</strong> A (<code>192.168.1.10</code>/<code>AA…</code>) to B (<code>192.168.1.20</code>/<code>BB…</code>), empty caches: miss → broadcast request → flood → B answers unicast → A caches → data to <code>BB…</code>. Interpretation: IP routed, MAC delivered, ARP asked locally.</p>
+<p><strong>P9 (switch table).</strong> §9 plus t5 B→C, t6 C→A, t7 D(<code>DD…</code>, port 4)→A: forward port 3; forward port 1; learn <code>DD…</code>→4, forward port 1. Interpretation: floods happen only for unknown/broadcast.</p>
+<p><strong>P10 (troubleshooting).</strong> §10 printer: link → config → IP → ARP (heard? sent? cached?) → switch → gateway → services → printer-side fault isolated. Interpretation: each stage exonerates a layer.</p>
+<p><strong>P11 (access choice).</strong> 30 bursty desktops → CSMA/CD; warehouse hidden Wi-Fi → CSMA/CA + RTS/CTS (swap fails physically). Interpretation: bursty-wired → CD, guaranteed → partition, wireless-hidden → CA.</p>
+<p><a id="exam-summary"></a></p>
+<h2 id="12-exam-oriented-summary-revision-only">12. Exam-Oriented Summary (Revision Only)</h2>
+<p class="secnav"><a href="#11-integrated-practice-problems">← 11. Integrated Practice Problems</a><span class="secnav-sep">·</span><a href="#13-active-recall-quizzes">13. Active Recall Quizzes →</a></p>
+<p><strong>Definitions:</strong> frame (one-hop unit); flag <code>01111110</code>; stuffing (0 after five 1s); parity/2D/checksum/CRC checks; vulnerable period; $G$ vs $S$; slot time; ARP (IP→MAC, LAN-local); learning (source) vs forwarding (destination).</p>
+<p><strong>Rules:</strong> stuff payload only; $T_{\text{trans}} \ge 2\tau$ (+ margins → 64 B at 10 Mbps); unknown/broadcast floods once; ARP before routing; lower ladder stages first.</p>
+<p><strong>Formulas:</strong> $S = G e^{-2G}$ pure (max $1/2e$ at $G=0.5$), $S = G e^{-G}$ slotted (max $1/e$ at $G=1$); $\tau = L/v$; $L_{\min} = R \times T_{\text{slot}}$; checksum = complement of end-around sum; CRC = modulo-2 remainder, verify-to-zero.</p>
+<p><strong>Distinctions:</strong> detection vs correction; parity vs CRC strength; CD (wired abort) vs CA (wireless avoid); hub (always flood) vs switch (learn then forward); ARP (local who) vs routing (global which-way); bit rate (bits/s) vs transmission time (seconds); baud vs bit rate ($R = S\log_2 N$ symbols bridge).</p>
+<p><strong>Common mistakes:</strong> scanning flags for stuffing; dropping the end-around carry; 37%-for-pure-ALOHA; switches-never-flood; routing-before-ARP; averaging attempts into ALOHA (throughput = offered × silence probability).</p>
+<p><strong>Calculation patterns:</strong> stuffing counts (runs of five); CRC division with alignment list; checksum wrap line; ALOHA substitution at given $G$; $\tau$ → slot → 64 B chain; switch-table walkthroughs; ARP field listing.</p>
+<details class="interactive-toggle"><summary>Enrichment: why `2τ` and not `τ`?</summary><div class="toggle-content"><p>A sender must hear a collision <em>it</em> caused: the latest possible start collides at the far end, and that news needs a full trip back. One $\tau$ out, one $\tau$ back — the frame must still be on the wire after $2\tau$, or it hangs up before the echo returns.</p>
+</div></details><details class="interactive-toggle"><summary>Enrichment: CRC vs checksum — when does each win?</summary><div class="toggle-content"><p>Checksum wins on cost (one adder — headers at line rate in software). CRC wins on strength (burst/odd-count polynomial guarantees). Headers use checksums where errors are rare; frames and disks use CRC where corruption bursts. Strength follows mathematics; ubiquity follows cost.</p>
+</div></details><p><a id="self-check"></a></p>
+<h2 id="13-active-recall-quizzes">13. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#12-exam-oriented-summary-revision-only">← 12. Exam-Oriented Summary (Revisio…</a><span class="secnav-sep">·</span><a href="#14-high-yield-university-exam-questions">14. High-Yield University Exam Que… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A 2D-parity checker receives a block with errors at four cells forming a rectangle (even per row and column). What happens, and what does this prove about parity?</span>
@@ -399,7 +580,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Tallies count parity, not errors: two flips per involved row <em>and</em> column leave all counts legal. Geometry defeats counting — the canonical blind spot proving detection ≠ correction and motivating CRC&#39;s polynomial armor for real links.</p><pre><code>&lt;/div&gt;
+      <p>Tallies count parity, not errors: two flips per involved row <em>and</em> column leave all counts legal. Geometry defeats counting — the blind spot proving detection ≠ correction.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -424,7 +605,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>One ladder, one mechanism repeated: shrink the collision-vulnerable window (2 frames → 1 frame → propagation delay → abort gap), then schedule the retries (backoff). Each rung attacks the previous rung&#39;s dominant waste — the whole topic as a single ascending argument.</p><pre><code>&lt;/div&gt;
+      <p>One ladder, one mechanism repeated: shrink the vulnerable window (2 frames → 1 frame → propagation delay → abort gap), then spread retries (backoff). Each rung attacks the previous rung&#39;s dominant waste.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -449,7 +630,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Heard CTS, no RTS&quot; <em>defines</em> hidden-terminal geometry (in AP range, out of sender range). The NAV silence converts the sender&#39;s one-sided announcement into cell-wide reservation — the echo doing the job the original shout physically cannot.</p><pre><code>&lt;/div&gt;
+      <p>&quot;Heard CTS, no RTS&quot; <em>defines</em> hidden-terminal geometry (in AP range, out of sender range). The NAV silence turns one-sided announcement into cell-wide reservation.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -474,23 +655,23 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Unknown-unicast flooding is the bootstrap both share; learning is what separates them afterward. First frame: identical behavior. Second frame onward: surgical forwarding vs. eternal shouting. The table is the difference between a device and a repeater.</p><pre><code>&lt;/div&gt;
+      <p>Unknown-unicast flooding is the bootstrap both share; learning separates them afterward. First frame: identical behavior. Second frame onward: surgical forwarding vs. eternal shouting.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><p><a id="exam-focus"></a></p>
-<h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
-<p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="14-high-yield-university-exam-questions">14. High-Yield University Exam Questions</h2>
+<p class="secnav"><a href="#13-active-recall-quizzes">← 13. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
 <ul>
-<li><strong>3 Marks:</strong> Any cheat-table row (Aloha efficiencies and CD-vs-CA lead); bit-stuffing or CRC short numericals.</li>
+<li><strong>3 Marks:</strong> Any exam-summary row (ALOHA efficiencies and CD-vs-CA lead); bit-stuffing or CRC short numericals.</li>
 <li><strong>7 Marks:</strong> Full CRC division with verification, access-method selection with justification, or ARP/troubleshooting traces.</li>
 </ul>
 </div></details><h3>Essay Question 1 (7 Marks)</h3>
 <p><strong>Q: For D = 1010001101, G = 110101: compute the CRC, form the codeword, and verify at the receiver. State exactly which error classes this CRC catches.</strong></p>
-<p><strong>Model Answer:</strong> Append 5 zeros; XOR long division yields $R = 01110$ (alignments as in Scenario 2); transmit <code>1010001101 01110</code>; receiver division gives <code>00000</code> → accept. Catches: all single-bit errors, all odd-count errors (standard generators carry the $(x+1)$ factor that guarantees this), all bursts $&lt; 6$ bits, all but $2^{-5}$ of longer bursts. Detection only — failures mean discard + retransmit.</p>
+<p><strong>Model Answer:</strong> Append 5 zeros; XOR division yields $R = 01110$; transmit <code>101000110101110</code>; receiver gives <code>00000</code> → accept. Catches: single-bit, odd-count ($(x+1)$ factor), bursts $&lt; 6$ bits, all but $2^{-5}$ of longer bursts. Detection only — failures mean discard + retransmit.</p>
 <h3>Essay Question 2 (7 Marks)</h3>
 <p><strong>Q: A wired lab (30 desktops, bursty) and a warehouse Wi-Fi deployment (hidden terminals) need shared-medium access. Choose each method, derive the efficiency argument, and explain why they cannot swap.</strong></p>
-<p><strong>Model Answer:</strong> Lab: CSMA/CD — sensing + abort keeps waste at $2\tau$ per collision with backoff-spread retries; partitioning would idle bursty slots; CA&#39;s reservations add needless overhead on wire. Warehouse: CSMA/CA + RTS/CTS — radios can&#39;t detect (self-deaf) and hidden pairs collide unheard; CTS echo informs the hidden. Swap fails physically: CD needs measurable wire voltage; CA&#39;s control overhead buys nothing where detection already works. Medium physics picks the protocol.</p>
+<p><strong>Model Answer:</strong> Lab: CSMA/CD — sensing + abort caps waste at $2\tau$ per collision with backoff retries; partitioning idles bursty slots; CA overhead wasted on wire. Warehouse: CSMA/CA + RTS/CTS — self-deaf radios with unheard hidden pairs; CTS echo informs the hidden. Swap fails physically: CD needs wire voltage; CA overhead buys nothing where detection works.</p>
 
     </main>
 

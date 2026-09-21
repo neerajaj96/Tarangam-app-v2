@@ -4,6 +4,14 @@ Per-topic audit of in-place (`::: toggle`) beginner explanations across S5 theor
 
 Scope note: this table begins with all PCCST502 topics (Part 2). Other S5 courses follow in later parts.
 
+## PCCST501 — Computer Networks (partial: m3_99 only)
+
+Only `m3_99_practice_lab_datalink_drills` has been audited to completion in the datalink-lab rewrite task. Remaining PCCST501 topics are pending a future part and are intentionally absent from this table (no partial rows).
+
+| Topic ID | Major concepts, formulas, algorithms | Difficult terminology | Toggles added (summaries) | Trace added | Remaining friction | Status |
+|---|---|---|---|---|---|---|
+| `m3_99_practice_lab_datalink_drills` | Bit stuffing/destuffing; parity/2D/checksum/CRC with full arithmetic; ALOHA S=G·e^(−2G); Ethernet 64 B from T_trans≥2τ; access-method reasoning; ARP exchange; switch learning table; ordered LAN diagnosis | flag/runs; end-around carry; modulo-2 division; vulnerable period; slot time; broadcast vs unicast; learn vs forward | Enrichment only (2τ round-trip reason; CRC-vs-checksum chooser) — main prose teaches standalone | Stuffing chain; checksum/CRC divisions; ALOHA substitution; τ→slot→64 B; ARP fields; 4-row switch table + trace problem; diagnosis ladder | none | Complete |
+
 ## PCCST502 — Design and Analysis of Algorithms (31 topics)
 
 | Topic ID | Major concepts, formulas, algorithms | Difficult terminology | Toggles added (summaries) | Trace added | Remaining friction | Status |
