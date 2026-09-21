@@ -961,6 +961,56 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 18. Canonical course/module overview navigation: pure overview models
+// over recorded evidence — no AI/LLM, no prediction, no ratings, no
+// gamification, no next-topic mechanism of any kind, no new learner state,
+// no polling. Topic Previous/Next stays canonical manifest order on every
+// hosting mode; all surfaces link through shared helpers.
+{
+  if (!fs.existsSync('assets/course-overview.js')) {
+    fail('course: expected source file assets/course-overview.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/course-overview.js', 'utf-8');
+    for (const token of ['getCourseOverview', 'getModuleOverview', 'buildCourseOverviewList', 'getTopicNeighbors', 'courseHrefFrom', 'parseCourseQuery']) {
+      if (!js.includes(token)) fail(`course: assets/course-overview.js is missing "${token}"`);
+    }
+    for (const dep of ["from './topic-intelligence.js'", "from './learner-state.js'", "from './exam-readiness.js'", "from './revision.js'", "from './weak-topic-analysis.js'", "from './assessment.js'"]) {
+      if (!js.includes(dep)) fail(`course: assets/course-overview.js must reuse the canonical layers (missing ${dep})`);
+    }
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'localStorage', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+      if (js.toLowerCase().includes(banned)) fail(`course: assets/course-overview.js must stay deterministic and static-first (found "${banned}")`);
+    }
+    if (/\bLLM\b/i.test(js)) fail('course: assets/course-overview.js must not add AI/LLM');
+    if (/mastery|weakness.?score|performance score|ability score|predicted/i.test(js)) fail('course: assets/course-overview.js must not add ratings or predictions');
+    if (/xps\b|experience points/i.test(js)) fail('course: assets/course-overview.js must not add gamification');
+    if (/getRecommendedNextTopics|getNextRecommendedTopic/.test(js)) fail('course: assets/course-overview.js must not define or shadow a next-topic mechanism');
+    if (!/no description field/i.test(js)) fail('course: assets/course-overview.js must document that no description is fabricated');
+    // Course page ships with shared sync and link mechanisms.
+    if (!fs.existsSync('course.html')) fail('course: expected page course.html — actual: missing');
+    if (!fs.existsSync('assets/course-page.js')) fail('course: expected source file assets/course-page.js — actual: missing');
+    const page = fs.existsSync('assets/course-page.js') ? fs.readFileSync('assets/course-page.js', 'utf-8') : '';
+    for (const token of ['getCourseOverview', 'PROGRESS_CHANGED_EVENT', 'topicPageUrl']) {
+      if (!page.includes(token)) fail(`course: assets/course-page.js is missing shared integration "${token}"`);
+    }
+    if (page.includes('setInterval')) fail('course: assets/course-page.js must not poll');
+    if (/getRecommendedNextTopics|getNextRecommendedTopic/.test(page)) fail('course: assets/course-page.js must not add a next-topic mechanism');
+    const courseHtml = fs.existsSync('course.html') ? fs.readFileSync('course.html', 'utf-8') : '';
+    if (!courseHtml.includes('assets/course-page.js')) fail('course: course.html must load assets/course-page.js');
+    if (!courseHtml.includes('name="viewport"')) fail('course: course.html must declare a responsive viewport');
+    if (!/@media[^{]*max-width/.test(courseHtml)) fail('course: course.html must include responsive rules');
+    // Cross-surface links reuse the shared helpers on every surface.
+    const dash = fs.existsSync('assets/dashboard.js') ? fs.readFileSync('assets/dashboard.js', 'utf-8') : '';
+    if (!dash.includes('course.html?course=')) fail('course: assets/dashboard.js must link course overviews');
+    const explorer = fs.existsSync('assets/explorer.js') ? fs.readFileSync('assets/explorer.js', 'utf-8') : '';
+    if (!explorer.includes('course.html?course=')) fail('course: assets/explorer.js must link course overviews');
+    const study = fs.existsSync('assets/topic-study-context.js') ? fs.readFileSync('assets/topic-study-context.js', 'utf-8') : '';
+    if (!study.includes('courseHrefFrom')) fail('course: assets/topic-study-context.js must link course overviews via the shared helper');
+    // Static prev/next ordering matches the canonical in-course neighbors.
+    const studyCtx = study;
+    if (!studyCtx.includes('getPreviousInCourse') && !studyCtx.includes('getNextInCourse')) fail('course: topic navigation must use canonical in-course neighbors');
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);

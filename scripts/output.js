@@ -130,6 +130,15 @@ export function copyDashboardPage(outputDir) {
   }
 }
 
+// Copy the course overview page (manifest, learner state, and question
+// bank all resolve client-side at runtime, so no path rewrite is needed
+// here — same static-first pattern as the explorer page).
+export function copyCoursePage(outputDir) {
+  if (fs.existsSync('course.html')) {
+    fs.copyFileSync('course.html', path.join(outputDir, 'course.html'));
+  }
+}
+
 // Copy the curriculum explorer page (its topic links resolve client-side
 // against the manifest base URL, so no path rewrite is needed here).
 export function copyExplorerPage(outputDir) {

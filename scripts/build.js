@@ -35,6 +35,7 @@ import {
   copyAssessmentPage,
   copyAssessmentData,
   copyDashboardPage,
+  copyCoursePage,
   copyAssetDirs,
 } from './output.js';
 import { buildTopicManifest } from './topic-manifest.js';
@@ -238,6 +239,8 @@ export function buildSite() {
   copyAssessmentData(OUTPUT_DIR);
 
   copyDashboardPage(OUTPUT_DIR);
+
+  copyCoursePage(OUTPUT_DIR);
 
   copyAssetDirs(OUTPUT_DIR);
 

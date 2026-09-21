@@ -68,6 +68,9 @@ import {
 import {
   getProgressionPath,
 } from './adaptive-learning.js';
+import {
+  courseHrefFrom,
+} from './course-overview.js';
 import { loadManifest } from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
 
@@ -516,7 +519,8 @@ export function renderStudyContext(model) {
   })();
 
   return `<div class="ts-context-head"><h2>Study context</h2>
-    <div class="topic-badges">${chips.join('')}</div></div>
+    <div class="topic-badges">${chips.join('')}</div>
+    <div><a class="xp-open" href="${esc(courseHrefFrom(model.courseCode, model.courseCode))}">Course overview →</a></div></div>
   <div class="ts-actions">
     <button type="button" class="ts-complete" data-ts-action="toggle" aria-pressed="${done ? 'true' : 'false'}">${done ? '✓ Completed — mark not started' : 'Mark completed'}</button>
   </div>

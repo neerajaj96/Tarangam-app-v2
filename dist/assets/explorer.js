@@ -828,6 +828,7 @@ function renderDetail() {
         : '<span class="xp-none">None</span>'}
     </div>
     <a class="xp-open-page" href="${esc(topicPageHref(topic))}">Open topic page →</a>
+    <a class="xp-open" href="./course.html?course=${esc(topic.courseCode)}">Course overview →</a>
     ${topic.hasMetadata ? '' : '<p class="xp-note">Legacy topic: shown with catalog info only. Full details unlock as metadata migration continues.</p>'}
   `;
   for (const btn of panel.querySelectorAll('[data-go]')) {

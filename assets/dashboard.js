@@ -869,6 +869,7 @@ async function init() {
           <span class="db-course-nums">${r.completed} / ${r.total} · ${r.percent}%</span>
         </button>
         <div class="db-course-bar">${bar(r.percent)}</div>
+        <div class="xp-path-row"><a class="xp-open" href="./course.html?course=${esc(r.courseCode)}">Course overview →</a></div>
         <div class="db-modules" data-modules-for="${esc(r.courseCode)}" hidden></div>
       </div>`).join('');
     for (const btn of box.querySelectorAll('[data-course]')) {
