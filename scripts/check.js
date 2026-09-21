@@ -437,7 +437,7 @@ if (fs.existsSync('dist')) {
     if (!home.includes('dashboard.html')) fail('explorer: index.html has no visible Dashboard entry');
   }
   if (fs.existsSync('dist')) {
-    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assessment.html', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/assessment.js', 'dist/assets/assessment-page.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/assets/learning-analytics.js', 'dist/assets/study-planner.js', 'dist/data/topic-manifest.json', 'dist/data/assessments.json']) {
+    for (const f of ['dist/explorer.html', 'dist/dashboard.html', 'dist/assessment.html', 'dist/course.html', 'dist/manifest.webmanifest', 'dist/sw.js', 'dist/offline.html', 'dist/icons/icon-192.png', 'dist/icons/icon-512.png', 'dist/assets/curriculum-data.js', 'dist/assets/explorer.js', 'dist/assets/dashboard.js', 'dist/assets/assessment.js', 'dist/assets/assessment-page.js', 'dist/assets/learner-state.js', 'dist/assets/learner-path.js', 'dist/assets/topic-intelligence.js', 'dist/assets/topic-study-context.js', 'dist/assets/learning-journey.js', 'dist/assets/exam-readiness.js', 'dist/assets/revision.js', 'dist/assets/learning-analytics.js', 'dist/assets/study-planner.js', 'dist/data/topic-manifest.json', 'dist/data/assessments.json']) {
       if (!fs.existsSync(f)) fail(`explorer: expected built file ${f} — actual: missing (run npm run build:notes)`);
     }
   }
@@ -1174,6 +1174,81 @@ if (fs.existsSync('dist')) {
       const ratio = (y + 0.05) / (x + 0.05);
       if (ratio < 4.5) fail(`a11y: ${theme} ${fg} on ${bg} is ${ratio.toFixed(2)} (needs WCAG AA 4.5)`);
     }
+  }
+}
+
+// 22. Offline/PWA foundation: versioned worker, valid manifest, offline
+// fallback, graceful registration — static-first, no backend, no new
+// learner-state mechanism, Pages-relative paths throughout.
+{
+  if (!fs.existsSync('manifest.webmanifest')) {
+    fail('pwa: expected manifest.webmanifest — actual: missing');
+  } else {
+    let manifest = null;
+    try {
+      manifest = JSON.parse(fs.readFileSync('manifest.webmanifest', 'utf-8'));
+    } catch (e) {
+      fail(`pwa: manifest.webmanifest is not valid JSON (${(e && e.message) || e})`);
+    }
+    if (manifest) {
+      for (const key of ['name', 'short_name', 'description', 'start_url', 'display', 'icons']) {
+        if (!manifest[key]) fail(`pwa: manifest.webmanifest needs "${key}"`);
+      }
+      if (manifest.start_url && (manifest.start_url.startsWith('/') || manifest.start_url.startsWith('http'))) {
+        fail('pwa: manifest start_url must stay Pages-relative');
+      }
+      for (const icon of Array.isArray(manifest.icons) ? manifest.icons : []) {
+        if (!icon.src || icon.src.startsWith('/') || icon.src.startsWith('http')) {
+          fail(`pwa: manifest icon paths must stay Pages-relative (found "${icon && icon.src}")`);
+        }
+        if (!fs.existsSync(icon.src)) fail(`pwa: manifest icon file ${icon.src} is missing`);
+      }
+    }
+  }
+  if (!fs.existsSync('sw.js')) {
+    fail('pwa: expected service worker sw.js — actual: missing');
+  } else {
+    const sw = fs.readFileSync('sw.js', 'utf-8');
+    if (!/const TARANGAM_CACHE_VERSION = '[^']+'/.test(sw)) fail('pwa: sw.js must pin a deterministic cache version');
+    for (const token of ["addEventListener('install'", "addEventListener('activate'", "addEventListener('fetch'", 'skipWaiting', 'clients.claim', 'caches.delete', 'offline.html']) {
+      if (!sw.includes(token)) fail(`pwa: sw.js is missing offline wiring "${token}"`);
+    }
+    for (const banned of ['localStorage', 'indexedDB', 'tarangam_topic_state_v1', 'openai', 'setInterval']) {
+      if (sw.includes(banned)) fail(`pwa: sw.js must not contain "${banned}"`);
+    }
+  }
+  if (!fs.existsSync('offline.html')) {
+    fail('pwa: expected offline fallback offline.html — actual: missing');
+  } else {
+    const html = fs.readFileSync('offline.html', 'utf-8');
+    if (!html.includes('<main') || !html.includes('name="viewport"')) fail('pwa: offline.html must render a landmarked responsive fallback');
+    if (!html.includes('./index.html') || !html.includes('./dashboard.html')) fail('pwa: offline.html must link entry points relatively');
+  }
+  if (!fs.existsSync('assets/pwa-register.js')) {
+    fail('pwa: expected shared registration assets/pwa-register.js — actual: missing');
+  } else {
+    const reg = fs.readFileSync('assets/pwa-register.js', 'utf-8');
+    if (!reg.includes("'serviceWorker' in navigator") || !reg.includes("register('sw.js')")) {
+      fail('pwa: registration must feature-detect and use a relative worker URL');
+    }
+  }
+  for (const page of ['index.html', 'dashboard.html', 'explorer.html', 'course.html', 'assessment.html']) {
+    if (!fs.existsSync(page)) continue;
+    const html = fs.readFileSync(page, 'utf-8');
+    if (!html.includes('assets/pwa-register.js')) fail(`pwa: ${page} must include the shared registration`);
+    if (!html.includes('rel="manifest"')) fail(`pwa: ${page} must link the web manifest`);
+  }
+  if (fs.existsSync('dist')) {
+    for (const f of ['dist/manifest.webmanifest', 'dist/sw.js', 'dist/offline.html', 'dist/icons/icon-192.png', 'dist/icons/icon-512.png']) {
+      if (!fs.existsSync(f)) fail(`pwa: expected published file ${f} — actual: missing (run npm run build:notes)`);
+    }
+    if (fs.existsSync('dist/sw.js') && fs.readFileSync('dist/sw.js', 'utf-8') !== fs.readFileSync('sw.js', 'utf-8')) {
+      fail('pwa: dist/sw.js must match sw.js byte-identically');
+    }
+  }
+  const learnerState = fs.existsSync('assets/learner-state.js') ? fs.readFileSync('assets/learner-state.js', 'utf-8') : '';
+  if (learnerState.includes('fetch(') || learnerState.includes('indexedDB')) {
+    fail('pwa: learner state must stay local without network mechanisms');
   }
 }
 

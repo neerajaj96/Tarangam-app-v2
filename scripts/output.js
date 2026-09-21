@@ -139,6 +139,25 @@ export function copyCoursePage(outputDir) {
   }
 }
 
+// Copy the PWA/static-offline assets: web manifest, service worker,
+// offline fallback page, and icons. Byte-identical copies (the worker's
+// relative URLs resolve within the deployment scope, so no path rewrite
+// is needed for domain-root or Pages-subpath hosting).
+export function copyPwaAssets(outputDir) {
+  if (fs.existsSync('manifest.webmanifest')) {
+    fs.copyFileSync('manifest.webmanifest', path.join(outputDir, 'manifest.webmanifest'));
+  }
+  if (fs.existsSync('sw.js')) {
+    fs.copyFileSync('sw.js', path.join(outputDir, 'sw.js'));
+  }
+  if (fs.existsSync('offline.html')) {
+    fs.copyFileSync('offline.html', path.join(outputDir, 'offline.html'));
+  }
+  if (fs.existsSync('icons')) {
+    fs.cpSync('icons', path.join(outputDir, 'icons'), { recursive: true });
+  }
+}
+
 // Copy the curriculum explorer page (its topic links resolve client-side
 // against the manifest base URL, so no path rewrite is needed here).
 export function copyExplorerPage(outputDir) {
