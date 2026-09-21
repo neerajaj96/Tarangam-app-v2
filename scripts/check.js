@@ -1313,6 +1313,36 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 24. Learner-state integrity and migrations: versioned, validated,
+// migratable local state — no backend, no sync, no new engines. Corrupt
+// storage recovers with backups; unknown future versions are preserved
+// read-only, never downgraded or overwritten.
+{
+  if (!fs.existsSync('assets/learner-state-schema.js')) {
+    fail('storage: expected schema registry assets/learner-state-schema.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/learner-state-schema.js', 'utf-8');
+    for (const token of ['LEARNER_SCHEMA_VERSION', 'describeLearnerSchema', 'detectStoredVersion', 'isFutureVersion', 'validateV1Entry', 'validateV1Map', 'validateLegacyVisited', 'validateLegacyStamps', 'validateStoredState', 'migrateStoredState', 'ensureDefaultState']) {
+      if (!js.includes(token)) fail(`storage: assets/learner-state-schema.js is missing "${token}"`);
+    }
+    for (const dep of ["from './learner-state.js'"]) {
+      if (!js.includes(dep)) fail(`storage: schema registry must build on the canonical learner-state module (missing ${dep})`);
+    }
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'indexedDB', 'localStorage', 'openai', 'setInterval']) {
+      if (js.includes(banned)) fail(`storage: schema registry must stay local-only (found "${banned}")`);
+    }
+    if (!js.includes('readOnly') || !js.includes('read-only')) fail('storage: schema registry must document the read-only preservation path');
+  }
+  const state = fs.existsSync('assets/learner-state.js') ? fs.readFileSync('assets/learner-state.js', 'utf-8') : '';
+  for (const token of ['V1_CORRUPT_BACKUP_KEY', 'V2_STATE_KEY', 'isReadOnly', 'getSchemaInfo']) {
+    if (!state.includes(token)) fail(`storage: assets/learner-state.js is missing integrity integration "${token}"`);
+  }
+  if (state.includes('indexedDB')) fail('storage: learner state must not add IndexedDB');
+  if (!fs.existsSync('scripts/learner-state-schema.js')) {
+    fail('storage: expected Node entry scripts/learner-state-schema.js — actual: missing');
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);

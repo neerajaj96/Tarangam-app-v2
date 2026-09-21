@@ -37,6 +37,16 @@ export const VALID_STATUSES = [STATUS_NOT_STARTED, STATUS_IN_PROGRESS, STATUS_CO
 
 export const V1_STATE_KEY = 'tarangam_topic_state_v1';
 
+// Backup for unparseable v1 blobs, written before recovery overwrites.
+// Fixed key (no timestamps) so recovery stays deterministic. The schema
+// registry (./learner-state-schema.js) reuses this constant.
+export const V1_CORRUPT_BACKUP_KEY = 'tarangam_topic_state_v1_corrupt_backup';
+
+// Future-version probe key. v2+ writers MUST use `tarangam_topic_state_vN`
+// naming; presence of a higher-version key switches readers to safe
+// read-only preservation mode (never write, downgrade, or overwrite).
+export const V2_STATE_KEY = 'tarangam_topic_state_v2';
+
 export const legacyVisitedKey = (courseCode) => `tarangam_visited_${courseCode}`;
 export const legacyTimestampKey = (courseCode) => `tarangam_visited_ts_${courseCode}`;
 export const topicKey = (courseCode, topicId) => `${courseCode}/${topicId}`;
@@ -104,6 +114,32 @@ function writeJson(store, key, value) {
   }
 }
 
+// Best-effort check for legacy evidence without depending on the schema
+// registry (which imports this module — kept one-directional). Used only
+// to decide whether a missing v1 map means "fresh" (ensure an explicit
+// default) or "legacy-owned" (leave untouched so legacy reads, including
+// their legacy flags, behave exactly as before).
+function hasLegacyEvidence(store) {
+  try {
+    if (store && typeof store._dump === 'function') {
+      return Object.keys(store._dump()).some((k) => typeof k === 'string' && k.startsWith('tarangam_visited_'));
+    }
+    if (store && typeof store.length === 'number' && typeof store.key === 'function') {
+      for (let i = 0; i < store.length; i += 1) {
+        try {
+          const k = store.key(i);
+          if (typeof k === 'string' && k.startsWith('tarangam_visited_')) return true;
+        } catch {
+          // ignore unreadable slots
+        }
+      }
+    }
+  } catch {
+    // enumeration unavailable
+  }
+  return false;
+}
+
 function sanitizeV1Entry(entry) {
   if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return null;
   if (!VALID_STATUSES.includes(entry.status)) return null;
@@ -122,6 +158,48 @@ function sanitizeV1Entry(entry) {
  */
 export function createLearnerState({ manifest = null, storage = null } = {}) {
   const store = storage || defaultStorage();
+
+  // Load-time integrity: detect an unknown future writer first (safe
+  // read-only mode — readers keep working, writers become no-ops, and no
+  // byte is ever overwritten or downgraded). Otherwise recover corrupt or
+  // missing v1 state to a valid default (backing corrupt blobs up first).
+  // Valid legacy-only data is left exactly as is: the read fallback below
+  // already interprets it, including its legacy flags.
+  let readOnly = false;
+  try {
+    if (store.getItem(V2_STATE_KEY) !== null) {
+      readOnly = true;
+    }
+  } catch {
+    // unreadable probe: proceed normally; per-read guards still apply
+  }
+  if (!readOnly) {
+    const rawV1 = store.getItem(V1_STATE_KEY);
+    if (rawV1 === null || rawV1 === undefined) {
+      // Missing v1 map: fresh stores get an explicit valid default, while
+      // legacy-owned stores are left byte-identical (read fallback below
+      // interprets them, preserving legacy flags and array order).
+      if (!hasLegacyEvidence(store)) {
+        writeJson(store, V1_STATE_KEY, {});
+      }
+    } else {
+      let usable = false;
+      try {
+        const parsed = JSON.parse(rawV1);
+        usable = Boolean(parsed) && typeof parsed === 'object' && !Array.isArray(parsed);
+      } catch {
+        usable = false;
+      }
+      if (!usable) {
+        try {
+          store.setItem(V1_CORRUPT_BACKUP_KEY, typeof rawV1 === 'string' ? rawV1 : '');
+        } catch {
+          // backup is best-effort; recovery still proceeds
+        }
+        writeJson(store, V1_STATE_KEY, {});
+      }
+    }
+  }
 
   const manifestTopics = () => (manifest && Array.isArray(manifest.topics) ? manifest.topics : []);
 
@@ -149,6 +227,7 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
   }
 
   function touchTimestamp(courseCode, topicId, now = Date.now()) {
+    if (readOnly) return;
     const key = legacyTimestampKey(courseCode);
     const stamps = readLegacyStamps(store, courseCode);
     stamps[topicId] = now;
@@ -158,6 +237,11 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
   function setTopicState(courseCode, topicId, status, now = Date.now()) {
     if (!VALID_STATUSES.includes(status)) {
       throw new TypeError(`Invalid topic status "${status}" — expected one of ${VALID_STATUSES.join(', ')}`);
+    }
+    // Read-only preservation mode: never write, downgrade, or overwrite
+    // data owned by an unknown future writer.
+    if (readOnly) {
+      return getTopicState(courseCode, topicId);
     }
     const key = topicKey(courseCode, topicId);
     const v1 = readV1Map(store);
@@ -255,8 +339,9 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
 
   // Removes all progress for one course (visited array, v1 records,
   // timestamps). Explicit reset action only — never called implicitly.
+  // Disabled in read-only preservation mode.
   function clearCourseState(courseCode) {
-    try {
+    if (readOnly) return;    try {
       store.removeItem(legacyVisitedKey(courseCode));
     } catch { /* ignore */ }
     try {
@@ -278,6 +363,17 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
   // remaining requested helper).
   const statusReader = (courseCode, topicId) => getTopicState(courseCode, topicId).status;
 
+  // Schema introspection (see ./learner-state-schema.js for the full
+  // registry, validation, and migration pipeline). isReadOnly reports the
+  // future-writer preservation mode detected at load time.
+  function isReadOnly() {
+    return readOnly;
+  }
+
+  function getSchemaInfo() {
+    return { version: 1, readOnly };
+  }
+
   function getNextTopic() {
     return engineGetNextTopic(manifest, statusReader);
   }
@@ -292,6 +388,8 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
 
   return {
     manifest,
+    isReadOnly,
+    getSchemaInfo,
     getTopicState,
     lastAccessed,
     setTopicState,
