@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -212,7 +212,9 @@
 <p><strong>Aim:</strong> find groups with no labels — k-means on local data, k chosen by elbow + silhouette, limits confessed.</p>
 <p><strong>Theory (one paragraph):</strong> k-means alternates assign-to-nearest-centroid and move-centroid-to-mean, decreasing WCSS (within-cluster squares) to a local optimum — restart luck matters (k-means++ seeding helps). No labels exist, so &quot;accuracy&quot; is meaningless; elbow (diminishing returns) + silhouette (cohesion vs separation) choose k (PCCST503 clustering in three lines — here we run and choose).</p>
 <p><strong>Dataset meaning (<code>mall.csv</code>, local — customer age/income/spending style rows):</strong> rows = customers; features = numeric behaviours; no target column exists (unsupervised — the absence is the point).</p>
-<h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
+<details class="interactive-toggle"><summary>Dataset card: mall.csv row by row</summary><div class="toggle-content"><p>File location: lab folder (<code>mall.csv</code> — verify with <code>ls</code>; the classic set has 200 rows — record yours). One row = one customer. Typical columns: age (years), annual income ($k units), spending score (1–100 index — higher = spends more freely). All numeric (verify with <code>dtypes</code>; any codes need meaning lookup, not guessing). No target column exists — the absence defines unsupervised work (no accuracy, only structure). Missing values: triage per M1.03. Units matter for scaling (income-$k vs age-years would rig distances raw).</p>
+</div></details><details class="interactive-toggle"><summary>What do `inertia_`, `silhouette_score`, and `n_init` mean?</summary><div class="toggle-content"><p><code>inertia_</code> (WCSS) = sum of squared distances to assigned centroids (compactness price — always falls with k, so never optimise it alone). <code>silhouette_score</code> = per-point (own-cluster closeness vs nearest-other-cluster distance) averaged (−1…1; higher = separated blobs). <code>n_init=10</code> = ten random starts, best WCSS kept (single runs trap in local optima — restarts tame luck; seed pinned for repeatability).</p>
+</div></details><h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-expected-output-and-result">2. Expected Output and Result →</a></p>
 <ol>
 <li>Load → scale (distances need fairness — M1.05 ruler, fit on all here since no held-out grading exists; note why).</li>

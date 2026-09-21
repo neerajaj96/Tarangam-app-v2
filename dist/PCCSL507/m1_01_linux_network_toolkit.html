@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -224,10 +224,13 @@ $ ss -tlnp
 <li><code>ping -c 4 8.8.8.8</code> — 4 echo requests; replies carry <code>time=</code> RTT; <code>100% packet loss</code> ⇒ peer unreachable (or ICMP filtered).</li>
 <li><code>ss -tlnp</code> — <code>-t</code> TCP, <code>-l</code> listening, <code>-n</code> numeric, <code>-p</code> process: <code>0.0.0.0:80</code> = program waiting on port 80 for anyone.</li>
 </ul>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<details class="interactive-toggle"><summary>Expand: `ip addr show dev eth0`</summary><div class="toggle-content"><p><code>ip</code> = the iproute2 network tool (modern replacement for ifconfig/route/netstat). <code>addr</code> = address object (manage interface addresses). <code>show</code> = display (read-only — changes nothing, safe anywhere). <code>dev eth0</code> = restrict to device eth0 (Ethernet interface 0). Reads: kernel interface state. Why: proves link + address before all else. Unavailable? Install <code>iproute2</code> (rare — preinstalled on virtually all Linux).</p>
+</div></details><details class="interactive-toggle"><summary>Expand: `ip route show`</summary><div class="toggle-content"><p><code>ip</code> = network tool (above). <code>route</code> = routing-table object (which door each destination leaves by). <code>show</code> = display only. Reads: the kernel forwarding table. Why: a missing <code>default via &lt;gateway&gt;</code> explains all off-net failures. Output columns: destination prefix, <code>via</code> next-hop gateway (absent = directly connected), <code>dev</code> outgoing interface, <code>proto</code> who installed it, <code>metric</code> tie-break cost.</p>
+</div></details><details class="interactive-toggle"><summary>Expand: `ping -c 4 8.8.8.8` and `ss -tlnp`</summary><div class="toggle-content"><p><code>ping</code> = ICMP echo requester (&quot;are you alive?&quot;); <code>-c 4</code> = stop after 4 packets (without it, pings forever); <code>8.8.8.8</code> = target address. Output <code>time=</code> = round-trip ms; <code>0% loss</code> = healthy path. <code>ss</code> = socket statistics; <code>-t</code> = TCP only; <code>-l</code> = listening sockets; <code>-n</code> = numeric (no slow DNS lookups); <code>-p</code> = owning process (needs root for others&#39; processes). <code>0.0.0.0:80</code> = port 80 on every interface (public); <code>127.0.0.1:80</code> = loopback only (self-only).</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-commands-and-line-by-line-explanation">← 3. Commands and Line-by-Line Expla…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p>Healthy host shows: <code>eth0: UP</code> with an <code>inet</code> address; a <code>default</code> route; <code>0% packet loss</code> with RTT in ms; your server&#39;s port in <code>ss</code> output. Verify each layer in order — a missing lower layer explains every upper failure (no address ⇒ no route ⇒ no ping ⇒ no service).</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Three Failures, Three Layers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Cable/unplugged ⇒ no <code>UP</code>/carrier (link). No DHCP ⇒ <code>UP</code> but no <code>inet</code> (address). No gateway ⇒ address but no <code>default</code> (route). Diagnose downward-first: the lowest broken layer is always the true cause.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Three Failures, Three Layers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Cable/unplugged ⇒ no <code>UP</code>/carrier (link). No DHCP ⇒ <code>UP</code> but no <code>inet</code> (address). No gateway ⇒ address but no <code>default</code> (route). Diagnose downward-first: the lowest broken layer is the first suspect (firewall-filtered ICMP can still fool ping on a healthy stack — layers first, filters second).</p>
 </div></details><h2 id="5-common-errors-and-viva-questions">5. Common Errors and Viva Questions</h2>
 <p class="secnav"><a href="#4-expected-output-and-how-to-verify">← 4. Expected Output and How to Veri…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
 <table>

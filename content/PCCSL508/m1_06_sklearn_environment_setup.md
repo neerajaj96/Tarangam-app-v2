@@ -47,6 +47,14 @@ print(m.score(X[300:], y[300:]))              # held-out R^2: the shape of all M
 
 Line-by-line honesty: version recorded because defaults drift across releases (report it or results mystify); `fit`/`predict`/`score` is the universal rhythm (learn it once, read every later script fluently); bundled data is the fallback, local CSVs the rule (exams provide files, not Wi-Fi).
 
+::: toggle What do `fit`, `predict`, and `score` receive, change, and return?
+`fit(Xtr, ytr)` = learn: receives features + labels, changes internal parameters (coefficients, splits, centroids — the model's memory), returns the model itself (chainable). `predict(Xte)` = guess: receives features only, changes nothing, returns one prediction per row. `score(Xte, yte)` = grade: receives features + held-out truth, changes nothing, returns one number (R² for regressors, accuracy for classifiers). Order is law: fit before predict, predict before trust, test data never inside fit.
+:::
+
+::: toggle What does `load_diabetes(return_X_y=True)` give, and when is it used?
+A small bundled regression dataset (diabetes progression): `return_X_y=True` splits it directly into features `X` and target `y` (no DataFrame wrapping). Used only as the offline emergency fallback (smoke tests, no-file situations) — real experiments use the staged local CSVs. Expect modest scores (unscaled, untuned) — the smoke test proves plumbing, not performance.
+:::
+
 **Offline-first policy (course law):** scripts read `./data/*.csv` relative paths; no `fetch_*` downloads, no URLs in code; missing file ⇒ clean error naming the expected filename (fail loudly at line one, not silently at line forty).
 
 ## 2. Expected Output and Result

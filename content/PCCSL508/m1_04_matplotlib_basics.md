@@ -46,6 +46,14 @@ plt.xlabel("value"); plt.ylabel("count"); plt.show()
 
 Line-by-line honesty: `s=5` avoids ink-blobs on big data (default dots merge into lies); `xlabel/ylabel/title` are mandatory (a figure without axes is a Rorschach); `bins=50` resolves shape (too few hides modes, too many shows noise); `show()` flushes the figure (forget it in scripts and figures silently stack).
 
+::: toggle What do `scatter`, `hist`, `s`, `alpha`, and `bins` control?
+`scatter(x, y)` = one dot per sample at (feature, target) — relationships live here. `hist(values, bins=50)` = count values into 50 buckets and bar them — distributions live here (piles, tails, outliers). `s` = dot size in points (small for big data — overplotting lies). `alpha` = opacity 0–1 (0.1 lets overlaps accumulate into visible density). `bins` = bucket count (few hides modes, many shows noise — try several, trust surviving shapes).
+:::
+
+::: toggle How do I read a residual plot (prediction vs error)?
+Axes: x = predicted value, y = error (actual − predicted). Healthy = formless cloud around zero (nothing left to learn). U-curve = systematic underfit (missing bend — add capacity). Funnel (spread growing with x) = unstable variance (errors scale with size — transform or weight). Flat top at 5.0 = censored targets (the housing cap — data property, not model sin).
+:::
+
 **Input/features/target:** x-axis = feature, y-axis = target — the visual form of "predict y from x" that every experiment repeats.
 
 ## 2. Expected Output and Result

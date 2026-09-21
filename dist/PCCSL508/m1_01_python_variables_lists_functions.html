@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -216,10 +216,10 @@
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-expected-output-and-result">2. Expected Output and Result →</a></p>
 <ol>
 <li>Install Python 3 (<code>python3 --version</code> proves it) and open any editor/terminal.</li>
-<li>Run each block below in order (file or REPL — REPL echoes results instantly).</li>
+<li>Run each block below in order (file or REPL — REPL echoes results line by line).</li>
 <li>Break one thing per block deliberately (wrong indent, typo) and read the traceback last line first.</li>
 </ol>
-<pre><code class="language-python"># variables: names for values (types ride along, never declared)
+<pre><code class="language-python"># variables: names for values (types ride along with no declarations needed at this level)
 x = 7                 # int: whole count
 price = 12.5          # float: measured quantity
 name = &quot;sensor-A&quot;     # str: label text
@@ -240,7 +240,9 @@ def mean(values):
 print(mean(temps))
 </code></pre>
 <p>Line-by-line honesty: <code>temps[-1]</code> counts from the end (Python idiom #1); <code>append</code> mutates in place (returns nothing — <code>x = temps.append(v)</code> stores <code>None</code>, classic bug); <code>mean</code> divides by <code>len</code> (empty list ⇒ crash, guard at call sites).</p>
-<p><strong>Input/features/target:</strong> no dataset yet — but notice the shape forming: <code>temps</code> is one <em>feature column</em> in waiting; <code>mean</code> is the first <em>statistic</em> of many.</p>
+<details class="interactive-toggle"><summary>What do `def`, `return`, `for...in`, and `if...else` do here?</summary><div class="toggle-content"><p><code>def mean(values):</code> = define a function named mean taking one input (values); everything indented below belongs to it. <code>return a/b</code> = hand a/b back to the caller and exit (no return ⇒ hands back <code>None</code>). <code>for t in temps:</code> = repeat the indented body once per item, naming each <code>t</code> in turn. <code>&quot;high&quot; if t &gt; 22 else &quot;ok&quot;</code> = one-line decision: value-if-true, condition, value-if-false. Inputs: the list; output: one number (or None on empty — the guard&#39;s job).</p>
+</div></details><details class="interactive-toggle"><summary>What does `temps[0]`, `temps[-1]`, and `print(...)` do?</summary><div class="toggle-content"><p><code>temps[0]</code> = first item (counting starts at 0, not 1). <code>temps[-1]</code> = last item (negatives count back from the end). <code>print(a, b)</code> = display values separated by a space (debugging&#39;s cheapest tool — output goes to terminal, nothing is stored). Index beyond range raises <code>IndexError</code> (the list&#39;s length is law).</p>
+</div></details><p><strong>Input/features/target:</strong> no dataset yet — but notice the shape forming: <code>temps</code> is one <em>feature column</em> in waiting; <code>mean</code> is the first <em>statistic</em> of many.</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Prints: <code>21.5 23.1</code>, four ok/high lines, then the mean (≈22.16 with the appended value). Result: you can name, order, repeat, and package — the four moves every later experiment composes.</p>

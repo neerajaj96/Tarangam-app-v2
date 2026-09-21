@@ -42,6 +42,14 @@ Abbreviations defined on first use: Liquid-Crystal Display (LCD), Light-Emitting
 | What does an LCD need? | Command + data bytes (RS line selects), enable pulse latches each |
 | What is keypad ghosting? | False reads from multiple presses — diodes or disciplined scanning cure it |
 
+::: toggle How does "common-cathode" wiring actually light a segment?
+All segment LEDs in one digit share their negative legs (cathodes) at one common pin; each positive leg (anode) has its own segment line. Ground the common pin (digit enabled) and drive a segment line high, and only that segment's LED has both voltage across it — so it lights. Common-anode inverts everything (shared positive, segments pulled low to light).
+:::
+
+::: toggle What do RS and EN do on the LCD, signal by signal?
+RS (Register Select): 0 means "the byte I'm sending is a command" (clear, move cursor), 1 means "it's a character to print" — same data wires, different meaning. EN (Enable): a high pulse that tells the controller "latch the byte now" — data sits on the pins, EN's falling edge commits it. RW tied low means write-only (saves a pin by giving up reading back).
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — Output Vocabulary
 

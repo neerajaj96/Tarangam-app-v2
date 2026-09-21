@@ -56,6 +56,10 @@ $ sudo tc qdisc del dev lo root                  # ALWAYS remove the loss rule a
 - Dup ACKs: same Ack number repeated — receiver saying "still waiting for X".
 - FIN pair per direction: `FIN, ACK` each way — orderly close, compare against RST (abort: instant, data at risk).
 
+::: toggle What do FIN, RST, "dup ACK", and black "retransmission" rows prove?
+FIN = "I am done sending" (half-close legal — the other direction may continue). RST = abort now, discard unread receive data (kill/crash signature — data at risk). Dup ACK (same Ack number repeated) = "still waiting for byte X" (the begging signal). Black retransmission row = same sequence re-sent after timeout/dup threshold (the repair receipt). On your lossy capture: dups diagnose the gap, black rows cure it, byte-identical output certifies it.
+:::
+
 ## 4. Expected Output and How to Verify
 
 Lossless run: exactly 3 handshake + data/ACKs + 4 teardown packets, zero black lines. 15% run: ≥1 black retransmission + dup ACKs, yet client output byte-identical — reliability proved by identical bytes despite red-black capture. Verify teardown directionality: FINs originate from closer first (client's `close`), server's after.

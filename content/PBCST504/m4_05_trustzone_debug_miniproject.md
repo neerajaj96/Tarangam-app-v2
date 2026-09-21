@@ -42,6 +42,14 @@ Abbreviations defined on first use: Software Development Kit (SDK) partition tem
 | What goes Non-secure? | App logic, drivers, radio stacks, tasks — everything replaceable |
 | What proves it works? | Debug evidence + power numbers + demo, documented |
 
+::: toggle What do SAU, IDAU, MPC/PPC, and SecureFault name?
+SAU (Security Attribution Unit) = core-side table the Secure world programs to label memory regions. IDAU (Implementation-Defined Attribution Unit) = the chip's hardwired region labels (fixed by silicon). MPC/PPC (Memory/Peripheral Protection Controllers) = gatekeepers enforcing labels on memory and peripherals. SecureFault = the exception raised on any violation — with fault registers naming the offender address (evidence, not mystery).
+:::
+
+::: toggle What does the five-step debug method do at each step?
+Reproduce = trigger the bug on demand (intermittent bugs get logging first). Isolate = binary-search halves of code/config until one half is clean. Inspect = breakpoints, watches, and fault registers on the guilty half. Hypothesise = state exactly one cause (never two — test one thing). Fix + regression-test = repair, then prove the old tests still pass (fixes that break neighbours are new bugs).
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — Deployment Vocabulary
 

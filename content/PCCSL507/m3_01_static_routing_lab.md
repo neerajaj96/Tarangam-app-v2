@@ -58,6 +58,14 @@ sudo ip netns exec h2 ip link set v2h up; sudo ip netns exec h2 ip link set lo u
 sudo ip netns exec h1 ip route add 10.0.2.0/24 via 10.0.1.1   # far net via router
 sudo ip netns exec h2 ip route add 10.0.1.0/24 via 10.0.2.1
 sudo ip netns exec h1 ping -c 3 10.0.2.2     # the moment of truth
+
+::: toggle Expand word by word: `sudo ip netns exec r1 ip route add 10.0.2.0/24 via 10.0.1.2`
+`sudo` = run as root (network namespaces and routing tables need privilege). `ip` = iproute2 network tool. `netns` = network-namespace object (private stacks). `exec` = run the following command inside the namespace. `r1` = which namespace (the router's private stack — the change lands here, nowhere else). Second `ip` = the same tool, now running *inside* r1. `route` = routing-table object. `add` = install an entry (vs `show`/`del`). `10.0.2.0/24` = destination prefix (all 256 addresses starting 10.0.2 — `/24` = first 24 bits fixed). `via` = send through gateway (vs directly-connected). `10.0.1.2` = the next-hop gateway address (must be directly reachable from r1). What changes: r1's kernel table gains one door. Why: without it r1 has no path to 10.0.2.0/24. Verify: `ip netns exec r1 ip route show` lists it. Undo: same line with `del` instead of `add`.
+:::
+
+::: toggle What do "namespace", "veth", and "ip_forward" do, each in one mechanism?
+Namespace = a private network stack (own interfaces, addresses, routes) — a VM's network without the machine. veth pair = a virtual cable with two ends: packets entering one end pop out the other (plug ends into different namespaces to wire them). `ip_forward` = the kernel switch permitting inter-interface packet passing (0 = host behaviour, drop transit; 1 = router behaviour). Off by default — routes name doors, forwarding opens them.
+:::
 ```
 
 - `peer name` builds both cable ends at once; each end moved into its namespace before addressing (addresses live per-stack).
@@ -66,7 +74,7 @@ sudo ip netns exec h1 ping -c 3 10.0.2.2     # the moment of truth
 
 ## 4. Expected Output and How to Verify
 
-`ping` replies `0% loss`; `traceroute 10.0.2.2` from h1 shows hop 10.0.1.1 then destination; `ip netns exec r1 ip route` shows both connected nets. Verify forwarding's role: `sysctl ... =0` breaks ping instantly (routes intact, forwarding dead — the two-half diagnosis).
+`ping` replies `0% loss`; `traceroute 10.0.2.2` from h1 shows hop 10.0.1.1 then destination; `ip netns exec r1 ip route` shows both connected nets. Verify forwarding's role: `sysctl ... =0` breaks ping at once (routes intact, forwarding dead — the two-half diagnosis).
 
 ::: callout-pitfall Forwarding Amnesia
 Every static-routing lab death is `ip_forward` (off), missing `via` (host has no door), or down interface (address without UP). Check in that order — switch, route, link.

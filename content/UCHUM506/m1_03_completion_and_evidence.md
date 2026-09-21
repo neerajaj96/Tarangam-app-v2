@@ -47,6 +47,10 @@ Universities convert MOOC effort into records (credits/marks/eligibility) only t
 Certificates issued to nicknames, wrong spellings, or personal (not registered) emails routinely fail verification. Match the institution's records character-for-character at enrollment — corrections later are slow or impossible.
 :::
 
+::: toggle What are "proctored exams", "credit mapping", and "submission acknowledgment"?
+Proctored exam = supervised final assessment (exam centre or remote-proctored with camera/screen monitoring), on notified dates, usually needing separate registration plus fee weeks earlier. Credit mapping = how your institution counts the MOOC (audit, pass/fail, or graded credit — decides rational effort and follows the specific notification). Submission acknowledgment = written confirmation the department received your proof (email reply, stamped receipt — chase it; unacknowledged submissions are unfiled evidence).
+:::
+
 **Watch out:** (1) Assuming auto-credit (nothing transfers without the notified submission step). (2) Missing fee/exam-registration windows (learning without the exam sitting = incomplete where exams apply). (3) Trusting memory over filed acknowledgments (get submission receipts in writing).
 
 **Active-recall checklist:** Notification screenshot filed? Name matched? Exam registered? Submission acknowledged in writing?

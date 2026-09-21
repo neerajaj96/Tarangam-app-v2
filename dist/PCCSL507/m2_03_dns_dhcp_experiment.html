@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -223,10 +223,12 @@ $ cat /etc/resolv.conf
 <li><code>/etc/resolv.conf</code> — the machine&#39;s chosen DNS servers (often the DHCP-provided gateway) — wrong entries here break names while IPs still ping (classic split symptom).</li>
 <li>DORA capture: Discover to broadcast, Offer unicast with proposed IP, Request re-broadcast (claiming publicly so rogues hear), Ack with lease time + gateway + DNS — read all three lease facts from the Ack.</li>
 </ul>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<details class="interactive-toggle"><summary>Expand: `dig example.com +noall +answer` and `+trace`</summary><div class="toggle-content"><p><code>dig</code> = DNS lookup tool (asks questions, prints all sections). <code>example.com</code> = the query name. <code>+noall</code> = print nothing by default (opt-in verbosity). <code>+answer</code> = …except the answer section (the IPs). <code>+comments</code> (used above) = …plus metadata (query time, server). <code>+trace</code> = disable recursion and walk root→TLD→authoritative visibly (educational, slow — never daily use). Output sections: ANSWER (the IPs), AUTHORITY (who knows), ADDITIONAL (helpers); <code>Query time: 0 msec</code> = cache hit.</p>
+</div></details><details class="interactive-toggle"><summary>What do Discover, Offer, Request, Ack each carry?</summary><div class="toggle-content"><p>Discover (broadcast): &quot;any DHCP server here?&quot; + client&#39;s MAC (no address yet — broadcast is the only language available). Offer (unicast): &quot;take 192.168.1.20&quot; + lease terms proposed. Request (broadcast): &quot;yes, that one&quot; — public so competing servers withdraw. Ack: confirmed lease time + gateway + DNS (the three facts every host needs). Same transaction ID across all four proves one conversation.</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-commands-and-line-by-line-explanation">← 3. Commands and Line-by-Line Expla…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p><code>dig</code> answers with an <code>A</code> record + <code>Query time</code> (0 msec = cache hit, tens of ms = real lookup); <code>+trace</code> ends at an authoritative server; DORA shows 4 packets with matching transaction IDs and the Ack&#39;s lease/gateway/DNS. Verify caching: repeat <code>dig</code> → <code>Query time: 0 msec</code> (served from cache, TTL counting down).</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Name-Blind Ping</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Ping 8.8.8.8 works, browser fails&quot; is DNS, not connectivity — always test IPs before names to split the two. Names failing + IPs working = resolver path (<code>resolv.conf</code>, DNS server), never routing.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Name-Blind Ping</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Ping 8.8.8.8 works, browser fails&quot; is DNS, not connectivity — test IPs before names first to split the two. Names failing + IPs working = resolver path (<code>resolv.conf</code>, DNS server), never routing.</p>
 </div></details><h2 id="5-common-errors-and-viva-questions">5. Common Errors and Viva Questions</h2>
 <p class="secnav"><a href="#4-expected-output-and-how-to-verify">← 4. Expected Output and How to Veri…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
 <table>

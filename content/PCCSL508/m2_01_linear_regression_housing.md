@@ -29,6 +29,14 @@ tags:
 
 **Dataset meaning (`housing.csv`, local):** each row = one census block; features = block statistics (income, age, rooms, population…); target = median house value (in $100k, capped 5.0 — remember the cap when residuals flatten at top).
 
+::: toggle Dataset card: housing.csv row by row
+File location: lab folder beside the script (`./housing.csv` or `./data/housing.csv` — verify with `ls` before running; missing file must error at line one). One row = one US census block (≈600–3000 people). Key columns: `MedInc` (median income, $10k units, numeric), `HouseAge` (median house age, years), `AveRooms`/`AveBedrms` (averages per household), `Population`, `AveOccup` (people per household), `Latitude`/`Longitude` (block location, degrees), `MedHouseVal` = target (median value, $100k units, capped at 5.0 — values above the cap are recorded as exactly 5.0). Missing values: none expected in the canonical file (verify with `isna().sum()` anyway). Train/test: 80/20 pinned split — the cap affects test grading honestly only if never used for selection.
+:::
+
+::: toggle What do `LinearRegression().fit`, `predict`, `r2_score`, and coefficients mean here?
+`LinearRegression()` = ordinary-least-squares model object (no knobs — closed-form solver inside). `.fit(Xtr, ytr)` = solve normal equations once (in: scaled train features + labels; out: weight vector stored as `m.coef_` + intercept `m.intercept_`). `.predict(Xte)` = apply weights to held-out features (out: one guess per row). `r2_score(yte, pred)` = 1 − residual-squares/total-squares (fraction of variance explained on unseen data; 1 perfect, 0 mean-level, negative worse). Coefficients read per standardised unit (bigger |w| = more influence per std-dev — unscaled reading lies).
+:::
+
 ## 1. Procedure Step by Step
 
 1. Load local CSV → inspect (M1.03 ritual) → note the 5.0 cap in `describe` (max exactly 5.00000 = censored, not coincidental).

@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -315,7 +315,9 @@ while (!(USART2-&gt;ISR &amp; USART_ISR_RXNE)) {} /* wait: byte arrived? */
 ch = USART2-&gt;RDR;                          /* read clears RXNE */
 </code></pre>
 <p>Read line by line: spin on flag, move one byte, hardware adds start/stop. Overrun rule: read RDR before the next frame completes, or enable RXNE interrupts into a buffer.</p>
-<p><strong>Interrupt upgrade:</strong> enable RXNE interrupt, ISR drains RDR into a ring buffer, main consumes at leisure; TX similarly from a queue. ISRs stay tiny (move bytes only) per M2.05 discipline. Sync mode adds the CK pin and clock-phase choices — same flags, shared drum.</p>
+<details class="interactive-toggle"><summary>What do `USART2-&gt;ISR`, `TXE`, `TDR`, `RXNE`, `RDR` each name?</summary><div class="toggle-content"><p><code>USART2</code> = the peripheral instance (second USART block). <code>ISR</code> = its Interrupt-and-Status Register (flags live here). <code>TXE</code> = Transmit-data-register-Empty flag (1 means &quot;you may load the next byte&quot;). <code>TDR</code> = Transmit Data Register (the byte&#39;s departure lounge — writing starts framing). <code>RXNE</code> = Read-data-register-Not-Empty flag (1 means &quot;a byte arrived, read now&quot;). <code>RDR</code> = Receive Data Register (reading it delivers the byte and clears RXNE).</p>
+</div></details><details class="interactive-toggle"><summary>What does &quot;overrun&quot; destroy, exactly, and what survives?</summary><div class="toggle-content"><p>The <em>old</em> unread byte is destroyed (overwritten by the newcomer); the status flag records the crime. What survives: the new byte (readable) plus the knowledge (flag) that one was lost — so all data after the gap is suspect-shifted. Overrun punishes slowness by deleting history, not by stopping the line.</p>
+</div></details><p><strong>Interrupt upgrade:</strong> enable RXNE interrupt, ISR drains RDR into a ring buffer, main consumes at leisure; TX similarly from a queue. ISRs stay tiny (move bytes only) per M2.05 discipline. Sync mode adds the CK pin and clock-phase choices — same flags, shared drum.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: USART Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>USART ⊃ UART (+sync CK mode) · DIV = $f_{clk}$/baud, recompute after clock changes · TXE = may send, RXNE = must read · overrun = unread byte overwritten · polling simple/blocking, interrupts buffered/free · frame must match partner bit-for-bit.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Stale Divisor</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Any clock retune without baud recompute garbles the terminal while code is &quot;unchanged.&quot; Baud is a ratio, not a constant — name $f_{clk}$ in every baud answer.</p>
 </div></details><p><a id="worked-example"></a></p>

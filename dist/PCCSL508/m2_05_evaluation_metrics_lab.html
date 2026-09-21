@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -230,7 +230,9 @@ for name, m in models.items():                       # M2.04&#39;s fitted trio, 
     RocCurveDisplay.from_predictions(yte, proba)      # curve per model, same axes, compare visually
 </code></pre>
 <p>Line-by-line honesty: <code>ravel()</code> order is TN,FP,FN,TP (row-major — misreading it swaps precision/recall!); <code>predict_proba</code> missing on some models ⇒ <code>decision_function</code> fallback (scores need only order, not calibration); curves on shared axes (separate plots per model hide domination); AUC beside operating-point scores (area ranks, dots decide).</p>
-<p><strong>Algorithm:</strong> counting (cells) → ratios (P/R/F1) → sweep (ROC) → integrate (AUC).</p>
+<details class="interactive-toggle"><summary>What do `confusion_matrix().ravel()`, `precision/recall/f1_score`, and `roc_auc_score` compute?</summary><div class="toggle-content"><p><code>confusion_matrix(yte, pred)</code> = 2×2 counts [[TN, FP],[FN, TP]] (rows = truth, columns = verdict). <code>.ravel()</code> flattens row-major → TN, FP, FN, TP (memorise this order — misreading swaps precision with recall). <code>precision_score</code> = TP/(TP+FP) (alarm trust); <code>recall_score</code> = TP/(TP+FN) (capture completeness); <code>f1_score</code> = harmonic compromise (punishes lopsidedness). <code>roc_auc_score(yte, proba)</code> = P(positive outscores negative) across all thresholds (ranking grade 0–1, 0.5 = chance). <code>RocCurveDisplay.from_predictions</code> draws TPR-vs-FPR sweeping the threshold (the curve whose area AUC integrates).</p>
+</div></details><details class="interactive-toggle"><summary>Why the fallback `decision_function` when `predict_proba` is missing?</summary><div class="toggle-content"><p>ROC needs <em>scores with order</em>, not probabilities: any number ranking positives above negatives draws a curve (SVM margins qualify; trees&#39; <code>predict_proba</code> fractions qualify). <code>hasattr</code> checks capability per model instead of assuming it — curves compare ranking skill fairly even when calibration differs. Never threshold-then-curve (labels have no sweep left).</p>
+</div></details><p><strong>Algorithm:</strong> counting (cells) → ratios (P/R/F1) → sweep (ROC) → integrate (AUC).</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Per model: 4-cell line, P/R/F1 triple, AUC; curves crossing or dominating; cost-matched verdict (e.g. tree best F1, logreg best AUC — different winners per metric is normal and reportable). Result: a metric table + overlaid curves + one matched recommendation.</p>

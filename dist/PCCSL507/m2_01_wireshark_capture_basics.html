@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -222,7 +222,9 @@
 <li>Display filter <code>tcp</code> then <code>tcp.flags.syn==1</code> — narrows the view after capture; mistakes cost nothing, retype and continue.</li>
 <li>Click packet 1 → expand <code>Transmission Control Protocol</code> → read <code>Source/Destination Port</code>, <code>Sequence/Acknowledgment numbers</code>, <code>Flags (SYN)</code>; click the SYN flag → hex pane highlights its byte (field↔bytes binding proved).</li>
 </ul>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<details class="interactive-toggle"><summary>Packet vs frame vs segment vs datagram — which word when?</summary><div class="toggle-content"><p>Frame = link-layer unit (Ethernet: MACs + payload). Datagram/packet = network-layer unit (IP: source/destination addresses). Segment = TCP&#39;s piece of the stream (sequence numbers); UDP&#39;s piece keeps &quot;datagram&quot;. Use: frame on the wire, packet/IP in routing, segment for TCP flows. Wireshark&#39;s panes show all three stacked — read top (frame) to bottom (TCP/UDP/data) to follow encapsulation outward-in.</p>
+</div></details><details class="interactive-toggle"><summary>What do sequence number, acknowledgment number, SYN, and ACK mean on this capture?</summary><div class="toggle-content"><p>Sequence number = this segment&#39;s first byte position in the stream (SYN consumes one: <code>Seq=0</code> synchronises the start). Acknowledgment number = next byte expected (cumulative coffee-stub: everything below arrived). SYN flag = &quot;synchronise with my starting number&quot; (connection birth). ACK flag = &quot;this ack-number is valid&quot; (set on everything after the first SYN). On your capture: SYN <code>Seq=0</code> → SYN-ACK <code>Seq=0 Ack=1</code> → ACK <code>Ack=1</code> = both directions synchronised, zero data yet.</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-commands-and-line-by-line-explanation">← 3. Commands and Line-by-Line Expla…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p>One client run yields ≈ 7 packets: SYN, SYN-ACK, ACK, data→, ACK, data←, ACK (+ FIN teardown). Verify: packet count matches expectation; <code>tcp.flags.syn==1</code> shows exactly 1 (client&#39;s) — plus <code>tcp.flags.syn==1 &amp;&amp; tcp.flags.ack==1</code> shows the server&#39;s one; follow <code>tcp.stream eq 0</code> isolates the conversation.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Filter Amnesia</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Typing the display filter into the <em>capture</em> filter box (or vice versa) — syntax differs (<code>port 5000</code> vs <code>tcp.port==5000</code>). Capture box errors warn before Start; display box turns red on mistakes. Red box? You&#39;re in the wrong box or syntax.</p>

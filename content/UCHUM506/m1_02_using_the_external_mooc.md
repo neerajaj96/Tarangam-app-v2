@@ -45,7 +45,11 @@ MOOCs fail by drift (week-6 pileups) not difficulty. The routine: fixed weekly s
 5. File the week's certificate-progress screenshot/statement where your records live (evidence hygiene from day one).
 
 ::: callout-pitfall Deadline Amnesia
-External MOOC deadlines ignore college exam seasons — calendar them in week one with two reminders each (one week, one day before). "The site was closed" has never been accepted as an excuse anywhere.
+External MOOC deadlines ignore college exam seasons — calendar them in week one with two reminders each (one week, one day before). "The site was closed" is accepted almost nowhere: platforms publish deadlines as final.
+:::
+
+::: toggle What are "graded items", "discussion forums", and "re-attempt rules"?
+Graded items = quizzes/assignments counting toward completion (videos watched don't count — only submitted scored work does). Discussion forums = per-week Q&A boards (ask doubts, answer peers — participation deepens retention and sometimes counts). Re-attempt rules = the platform's policy (some average attempts, some take best, some lock after N tries — read the specific approved MOOC's rules; never assume one platform's habits hold on another).
 :::
 
 **Watch out:** (1) Binge-watching without quizzes (views ≠ completion — only graded items count). (2) Sharing quiz answers as "help" (platforms treat it as malpractice; discuss concepts, never copy answers). (3) Skipping forums entirely (peer explanation is the cheapest revision available).

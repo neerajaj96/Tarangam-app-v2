@@ -74,6 +74,14 @@ ch = USART2->RDR;                          /* read clears RXNE */
 
 Read line by line: spin on flag, move one byte, hardware adds start/stop. Overrun rule: read RDR before the next frame completes, or enable RXNE interrupts into a buffer.
 
+::: toggle What do `USART2->ISR`, `TXE`, `TDR`, `RXNE`, `RDR` each name?
+`USART2` = the peripheral instance (second USART block). `ISR` = its Interrupt-and-Status Register (flags live here). `TXE` = Transmit-data-register-Empty flag (1 means "you may load the next byte"). `TDR` = Transmit Data Register (the byte's departure lounge — writing starts framing). `RXNE` = Read-data-register-Not-Empty flag (1 means "a byte arrived, read now"). `RDR` = Receive Data Register (reading it delivers the byte and clears RXNE).
+:::
+
+::: toggle What does "overrun" destroy, exactly, and what survives?
+The *old* unread byte is destroyed (overwritten by the newcomer); the status flag records the crime. What survives: the new byte (readable) plus the knowledge (flag) that one was lost — so all data after the gap is suspect-shifted. Overrun punishes slowness by deleting history, not by stopping the line.
+:::
+
 **Interrupt upgrade:** enable RXNE interrupt, ISR drains RDR into a ring buffer, main consumes at leisure; TX similarly from a queue. ISRs stay tiny (move bytes only) per M2.05 discipline. Sync mode adds the CK pin and clock-phase choices — same flags, shared drum.
 
 ::: callout-formula KTU Formula Vault: USART Facts

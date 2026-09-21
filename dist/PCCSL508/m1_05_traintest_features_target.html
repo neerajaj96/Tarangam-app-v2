@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -229,7 +229,9 @@ Xtr_s, Xte_s = sc.transform(Xtr), sc.transform(Xte)  # apply same ruler to both
 print(Xtr_s.shape, Xte_s.shape)     # (16512, 8) (4128, 8): shapes confess the split
 </code></pre>
 <p>Line-by-line honesty: <code>drop(columns=[target])</code> defines the question (leak = forgetting this); <code>random_state</code> pins the shuffle (unpinned = unrepeatable grades); <code>fit</code> on train only (fitting on all = test statistics leaking into training — the #1 silent sin); shapes printed prove the 80/20 actually happened.</p>
-<p><strong>Stratification sense:</strong> classification with rare classes → <code>stratify=y</code> (keeps ratios in both halves); regression → plain shuffle usually suffices (note it in the report either way).</p>
+<details class="interactive-toggle"><summary>What do `train_test_split`, `test_size`, `random_state`, and `stratify` do?</summary><div class="toggle-content"><p><code>train_test_split(X, y, ...)</code> = shuffle rows and deal two hands (features and labels travel together — never split X from y). <code>test_size=0.2</code> = deal 20% to test (80% trains — the standard generosity). <code>random_state=42</code> = pin the shuffle (same number ⇒ identical deal every rerun; any integer works — fixed is what matters). <code>stratify=y</code> = deal preserving class ratios (rare classes survive in both hands — classification honesty; regression usually skips it).</p>
+</div></details><details class="interactive-toggle"><summary>What do `fit`, `transform`, `StandardScaler`, and &quot;leakage&quot; mean here?</summary><div class="toggle-content"><p><code>StandardScaler()</code> = standardiser (subtract mean, divide by std — common ruler). <code>.fit(Xtr)</code> = learn the ruler from train only (means/variances are train knowledge). <code>.transform(X)</code> = apply that ruler (train and test alike — test never teaches the ruler). Leakage = test information reaching training (fit-on-all, select-by-test, tune-on-test) — every leak inflates grades and voids conclusions; exactly-0 test means would indict it.</p>
+</div></details><p><strong>Stratification sense:</strong> classification with rare classes → <code>stratify=y</code> (keeps ratios in both halves); regression → plain shuffle usually suffices (note it in the report either way).</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Shapes <code>(16512, 8)</code>/<code>(4128, 8)</code> (exact counts vary by dataset version — ratios, not absolutes, are the check), train means ≈ 0 after scaling, test means merely near 0 (unseen data never centres perfectly — that&#39;s honesty visible). Result: <code>Xtr_s, Xte_s, ytr, yte</code> ready for every M2–M3 experiment.</p>

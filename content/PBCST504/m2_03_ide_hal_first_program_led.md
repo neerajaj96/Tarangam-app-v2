@@ -82,6 +82,14 @@ int main(void) {
 
 Read it as contracts: include (declarations), HAL_Init (tick alive), clock enable (power), descriptor (personality), init (commit), infinite toggle (never return from main, per M1.02). Speed LOW is deliberate: fast edges on a slow LED waste power and spray noise.
 
+::: toggle What does each HAL line do, and what goes in vs comes out?
+`HAL_Init()` — starts the SysTick timer and low-level handles; in: nothing; out: a running 1 ms tick (needed by `HAL_Delay`). `__HAL_RCC_GPIOA_CLK_ENABLE()` — powers the GPIOA block; in: nothing; out: writes to live registers finally take effect. `GPIO_InitTypeDef g = {0}` — a zeroed descriptor struct; fields filled next select pin/mode/pull/speed (inputs), and `HAL_GPIO_Init(GPIOA, &g)` commits them to hardware (output: configured pins). `HAL_GPIO_TogglePin` flips one pin (in: port + pin; out: changed voltage); `HAL_Delay(500)` busy-waits 500 ticks (in: milliseconds; out: elapsed time, CPU blocked meanwhile).
+:::
+
+::: toggle What is "push-pull" vs "open-drain" on the actual wire?
+Push-pull drives the pin both high (transistor to supply) and low (transistor to ground) — a complete driver for LEDs and logic. Open-drain only pulls low and floats otherwise, needing an external pull-up resistor to ever read high — used for shared lines (like I2C) where several drivers must never fight. Choose push-pull unless sharing the wire.
+:::
+
 **Debugging a dark LED, in order:** (1) probe connected and code actually flashed? (2) correct port/pin (PA5 vs PB5)? (3) clock enable present? (4) mode really output (reset default is analog!)? (5) delay visible (1 ms looks permanently dim-on)? Check in this order and the bug confesses.
 
 ::: callout-formula KTU Formula Vault: Bring-Up Facts

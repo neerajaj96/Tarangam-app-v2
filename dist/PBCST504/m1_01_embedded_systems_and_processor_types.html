@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -247,7 +247,7 @@
 <p><a id="the-problem"></a></p>
 <h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
-<p>A washing machine never runs Word or browses the web, yet a computer inside it reads buttons, spins the drum, heats water, and drains — for ten years without crashing. The problem: general computers are too big, hungry, and unreliable for one fixed job. The solution family is <strong>embedded systems</strong>: computers built into a product to do one job repeatedly, cheaply, and dependably.</p>
+<p>A washing machine rarely runs Word or browses the web, yet a computer inside it reads buttons, spins the drum, heats water, and drains — often for a decade without a reboot. The problem: general computers are too big, hungry, and unreliable for one fixed job. The solution family is <strong>embedded systems</strong>: computers built into a product to do one job repeatedly, cheaply, and dependably.</p>
 <p>Tiny beginner example. A microwave keypad press &quot;2:00&quot; becomes heat for exactly two minutes then a beep. One chip reads the keypad, times the interval, drives the magnetron relay, and beeps. No screen, no operating system, no fan — one fixed program on one small chip.</p>
 <p>Analogy as support, then dropped. Think of a hired specialist versus a consultant: the specialist (embedded chip) does one job brilliantly for pennies; the consultant (laptop processor) does anything expensively. From here on we use exact terms only: embedded system, microcontroller, microprocessor, Central Processing Unit (CPU).</p>
 <p>Abbreviations defined on first use: Central Processing Unit (CPU), Microcontroller (MC), Microprocessor (MP), Input/Output (I/O), Random Access Memory (RAM), Read-Only Memory (ROM). Symbols: none needed yet — vocabulary first.</p>
@@ -271,7 +271,10 @@
 <td>Must respond before a deadline, not just correctly</td>
 </tr>
 </tbody></table>
-<p><a id="words-first"></a></p>
+<details class="interactive-toggle"><summary>What is &quot;firmware&quot; (vs software)?</summary><div class="toggle-content"><p>Firmware is the program baked into the product&#39;s non-volatile memory: it runs automatically at power-up and never changes unless deliberately re-flashed. Phone apps are software (installed, updated, removed casually); the microwave&#39;s program is firmware (fixed, always there). Same code idea, different permanence.</p>
+</div></details><details class="interactive-toggle"><summary>What does &quot;real-time&quot; mean here?</summary><div class="toggle-content"><p>It means <em>timeliness is correctness</em>: a brake signal computed perfectly but 2 seconds late is a failure, not a success. &quot;Real-time&quot; never means &quot;fast&quot; — a slow system meeting a generous deadline is real-time; a fast system missing a tight one is not.</p>
+</div></details><details class="interactive-toggle"><summary>What is &quot;non-volatile&quot; memory?</summary><div class="toggle-content"><p>Memory that keeps its contents with power off (flash, ROM, EEPROM). RAM is volatile (forgets at power-off). Firmware must live in non-volatile memory, or the product would wake up amnesiac every morning.</p>
+</div></details><p><a id="words-first"></a></p>
 <h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
 <p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-formal-theory-mc-vs-mp-and-classifications">3. Formal Theory — MC vs MP and Cl… →</a></p>
 <table>
@@ -302,11 +305,13 @@
 <td>8-bit (one byte per step: AVR, 8051), 16-bit (MSP430), 32-bit (ARM Cortex-M — this course). Wider usually means faster math, more memory reach, higher cost and hunger.</td>
 </tr>
 </tbody></table>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The One-Job Computer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A microcontroller is a kitchen with the chef, pantry, and tools in one room: small, complete, and always cooking the same dish. A microprocessor is just the chef — you must rent the pantry (RAM), recipe book (ROM), and tools (I/O chips) separately before dinner starts. Exam questions exploit exactly this: &quot;which needs external memory?&quot; is answered by the kitchen test.</p>
+<details class="interactive-toggle"><summary>What does &quot;8-bit / 32-bit&quot; actually count?</summary><div class="toggle-content"><p>The width of one data chunk the CPU moves and computes per basic step: an 8-bit core adds 8 bits at a time (adding 32-bit numbers takes 4 steps), a 32-bit core does it in one. It does <em>not</em> count speed (Megahertz) — width is chunk size, MHz is steps per second.</p>
+</div></details><details class="interactive-toggle"><summary>What is CISC vs RISC in one breath each?</summary><div class="toggle-content"><p>CISC (Complex): the core understands many powerful instructions (one can copy a whole string). x86 laptops use it. RISC (Reduced): the core understands few simple ones that each finish fast (ARM uses it). Fewer types of instructions — not fewer instructions executed.</p>
+</div></details><details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The One-Job Computer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A microcontroller is a kitchen with the chef, pantry, and tools in one room: small, complete, and always cooking the same dish. A microprocessor is just the chef — you must rent the pantry (RAM), recipe book (ROM), and tools (I/O chips) separately before dinner starts. Exam questions exploit exactly this: &quot;which needs external memory?&quot; is answered by the kitchen test.</p>
 </div></details><p><a id="formal-theory"></a></p>
 <h2 id="3-formal-theory-mc-vs-mp-and-classifications">3. Formal Theory — MC vs MP and Classifications</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
-<p><strong>MC vs MP, the five examinable contrasts:</strong> (1) Integration: MC has memory and I/O on-chip; MP needs external chips. (2) Purpose: MC runs one fixed firmware task; MP runs general software under an Operating System (OS). (3) Power and cost: MC sips milliamps and costs cents-to-dollars; MP needs watts, cooling, and dollars-to-hundreds. (4) Speed: MC tens-to-hundreds of Megahertz (MHz); MP Gigahertz (GHz). (5) Boot: MC starts its firmware instantly from flash; MP boots an OS from disk.</p>
+<p><strong>MC vs MP, the five examinable contrasts:</strong> (1) Integration: MC has memory and I/O on-chip; MP needs external chips. (2) Purpose: MC runs one fixed firmware task; MP runs general software under an Operating System (OS). (3) Power and cost: MC sips milliamps and costs cents-to-dollars; desktop-class MP needs watts, cooling, and dollars-to-hundreds (phone-class processors sip less, but they are SoCs, not bare MPs). (4) Speed: MC tens-to-hundreds of Megahertz (MHz); desktop MP Gigahertz (GHz). (5) Boot: MC starts its firmware in microseconds-to-milliseconds straight from flash (no OS to load); MP boots an OS from disk.</p>
 <p><strong>Processor classifications examiners ask:</strong> by width (8/16/32-bit, above); by instruction set — Complex Instruction Set Computer (CISC: many powerful instructions, e.g. x86) vs Reduced Instruction Set Computer (RISC: few simple fast instructions, e.g. ARM); by use — general-purpose (laptop), embedded (microwave), Digital Signal Processor (DSP: math-heavy audio/video). ARM Cortex-M is 32-bit RISC for embedded use — all three answers in one chip.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Embedded Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Embedded = CPU + memory + I/O + firmware, one job · MC = all on one chip, MP = CPU only · 8/16/32-bit = bytes per step · ARM = 32-bit RISC · CISC vs RISC = many-powerful vs few-fast instructions.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: SoC vs MC vs MP</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>An SoC with everything integrated is <em>not</em> automatically a microcontroller — exam options use integration to bait. Decide by purpose and scale: one fixed control job on a small chip (MC), general computing needing an OS (MP), phone-grade integration with radios and graphics (SoC). Integration alone never settles it.</p>
@@ -381,7 +386,7 @@
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Why does a microcontroller boot instantly while a laptop takes seconds, and what memory makes it possible?</span>
+    <span class="quiz-category">Why does a microcontroller start so much faster than a laptop, and what memory makes it possible?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>

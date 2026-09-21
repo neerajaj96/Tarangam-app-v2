@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -211,7 +211,7 @@
 <pre><code class="language-python"># server.py — uppercase line server
 import socket
 srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP/IPv4 handset
-srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # rebind instantly after restart
+srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # rebind without waiting out TIME_WAIT
 srv.bind((&quot;127.0.0.1&quot;, 5000))      # claim port 5000 on loopback only
 srv.listen(5)                      # queue up to 5 unaccepted dials
 print(&quot;serving on 127.0.0.1:5000&quot;)
@@ -231,7 +231,10 @@ print(cli.recv(1024).decode())     # print the uppercased reply
 cli.close()
 </code></pre>
 <p>Run: terminal 1 <code>python3 server.py</code>; terminal 2 <code>python3 client.py hello</code> → prints <code>HELLO</code>.</p>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<details class="interactive-toggle"><summary>Expand: `socket.socket(AF_INET, SOCK_STREAM)` and `setsockopt`</summary><div class="toggle-content"><p><code>socket</code> = imported module (Python&#39;s OS networking interface). <code>.socket(...)</code> = create one endpoint: <code>AF_INET</code> = IPv4 address family (32-bit addresses); <code>SOCK_STREAM</code> = TCP byte-stream semantics (connected, reliable, ordered). Returns a socket object (an integer file descriptor wrapped with methods). <code>setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)</code> = set socket-layer option &quot;reuse address&quot; to true — permits rebind during TIME_WAIT (what changes: kernel allows immediate rebind; why: fast restarts; undo: remove the line and wait ~60 s instead).</p>
+</div></details><details class="interactive-toggle"><summary>Expand: `bind`, `listen`, `accept`, `sendall`, `recv`</summary><div class="toggle-content"><p><code>bind((&quot;127.0.0.1&quot;, 5000))</code> = claim port 5000 on loopback (tuple = address + port; loopback = self-only audience). <code>listen(5)</code> = hook the phone, queue up to 5 unaccepted dials (parameter = backlog depth, not client count). <code>accept()</code> = sleep till a dial, return <code>(conn, addr)</code>: a <em>fresh</em> socket for exactly this client plus its address (blocking: waits indefinitely). <code>sendall(bytes)</code> = loop <code>send</code> till all bytes leave (returns None; partial sends handled inside). <code>recv(1024)</code> = read up to 1024 arrived bytes (blocking till some arrive; returns <code>b&#39;&#39;</code> only at orderly close — never data).</p>
+</div></details><details class="interactive-toggle"><summary>Expand: `connect` and the ephemeral port</summary><div class="toggle-content"><p><code>connect((&quot;127.0.0.1&quot;, 5000))</code> = dial: kernel runs SYN/SYN-ACK/ACK, then returns (blocking through the handshake; refused if nobody listens). The client&#39;s own port is ephemeral (kernel-picked, e.g. 52344) — the return address the server logs. Errors: <code>ConnectionRefusedError</code> = no listener (start server, match ports); hanging = filtered route (check path).</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-code-and-line-by-line-explanation">← 3. Code and Line-by-Line Explanati…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p>Client prints the uppercase of its argument; server logs <code>call from (&#39;127.0.0.1&#39;, &lt;ephemeral&gt;)</code>. Verify with <code>ss -tnp</code> mid-call (ESTABLISHED pair), and Wireshark on <code>lo</code> (next experiment&#39;s preview: SYN/SYN-ACK/ACK then data).</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Address in Use</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Restarting the server fast fails with <code>OSError: [Errno 98]</code> — the old socket lingers in TIME_WAIT. <code>SO_REUSEADDR</code> (line 4) is the cure; without it, wait ~60 s or change ports.</p>

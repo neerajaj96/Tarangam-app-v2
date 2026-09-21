@@ -43,7 +43,7 @@ Server: `socket` (buy phone) → `bind` (print number 5000) → `listen` (hook i
 # server.py — uppercase line server
 import socket
 srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP/IPv4 handset
-srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # rebind instantly after restart
+srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # rebind without waiting out TIME_WAIT
 srv.bind(("127.0.0.1", 5000))      # claim port 5000 on loopback only
 srv.listen(5)                      # queue up to 5 unaccepted dials
 print("serving on 127.0.0.1:5000")
@@ -66,6 +66,18 @@ cli.close()
 ```
 
 Run: terminal 1 `python3 server.py`; terminal 2 `python3 client.py hello` → prints `HELLO`.
+
+::: toggle Expand: `socket.socket(AF_INET, SOCK_STREAM)` and `setsockopt`
+`socket` = imported module (Python's OS networking interface). `.socket(...)` = create one endpoint: `AF_INET` = IPv4 address family (32-bit addresses); `SOCK_STREAM` = TCP byte-stream semantics (connected, reliable, ordered). Returns a socket object (an integer file descriptor wrapped with methods). `setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)` = set socket-layer option "reuse address" to true — permits rebind during TIME_WAIT (what changes: kernel allows immediate rebind; why: fast restarts; undo: remove the line and wait ~60 s instead).
+:::
+
+::: toggle Expand: `bind`, `listen`, `accept`, `sendall`, `recv`
+`bind(("127.0.0.1", 5000))` = claim port 5000 on loopback (tuple = address + port; loopback = self-only audience). `listen(5)` = hook the phone, queue up to 5 unaccepted dials (parameter = backlog depth, not client count). `accept()` = sleep till a dial, return `(conn, addr)`: a *fresh* socket for exactly this client plus its address (blocking: waits indefinitely). `sendall(bytes)` = loop `send` till all bytes leave (returns None; partial sends handled inside). `recv(1024)` = read up to 1024 arrived bytes (blocking till some arrive; returns `b''` only at orderly close — never data).
+:::
+
+::: toggle Expand: `connect` and the ephemeral port
+`connect(("127.0.0.1", 5000))` = dial: kernel runs SYN/SYN-ACK/ACK, then returns (blocking through the handshake; refused if nobody listens). The client's own port is ephemeral (kernel-picked, e.g. 52344) — the return address the server logs. Errors: `ConnectionRefusedError` = no listener (start server, match ports); hanging = filtered route (check path).
+:::
 
 ## 4. Expected Output and How to Verify
 

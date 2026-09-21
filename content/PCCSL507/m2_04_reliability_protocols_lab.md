@@ -62,6 +62,14 @@ print("done in", round(time.time() - t0, 2), "s")
 - Cumulative ACK slides `base` — one number confirms everything below (GBN's efficiency and its rewinding curse).
 - Timeout rewinds `nxt = base` — resend from the gap; with N=1 that's exactly one packet (stop-and-wait falls out, not bolted on).
 
+::: toggle What do `base`, `nxt`, `N`, cumulative ACK, and timeout each govern?
+`base` = oldest unacknowledged packet (window's left edge — everything below arrived). `nxt` = next fresh packet to send (window's right edge grows here). `N` = window size (max unacked in flight; N=1 degenerates to stop-and-wait). Cumulative ACK ("next wanted", e.g. 7) = confirms all below + paces the window (one number does both jobs). Timeout = alarm on the oldest unacked (expiry rewinds `nxt = base` — resend from the gap; GBN resends the whole tail, stop-and-wait resends the one).
+:::
+
+::: toggle Why must the timeout exceed RTT, and how do you set it?
+Timeout < RTT fires while healthy packets still fly (needless resends = self-made congestion). Timeout ≫ RTT naps through real loss (throughput bleeds waiting). Rule: measure RTT first, set 2–4× it. Below RTT storms, above wastes — the exam's favourite "why slow?" diagnosis in one multiplication.
+:::
+
 ## 4. Expected Output and How to Verify
 
 20 packets over `delay 50ms loss 10%`: stop-and-wait ≈ 20×RTT+ (≥2 s with resends); GBN-4 ≈ 4–5× fewer RTTs (measure ~4× speedup). Verify: receiver log shows in-order delivery both ways; sender log shows rewind events only under loss; zero-loss control run shows no rewinds (mechanism idle, not broken).

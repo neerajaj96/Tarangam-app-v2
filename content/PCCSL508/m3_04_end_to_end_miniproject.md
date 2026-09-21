@@ -46,6 +46,10 @@ for stage in ["01_inspect", "02_baseline", "03_select", "04_grade", "05_errors"]
 
 Line-by-line honesty: `runpy` executes stage files in a fresh namespace each (no leaked variables between stages — order dependence made explicit); printed shapes/scores are the evaluation trail (silent stages score zero); clean-machine rerun is the acceptance test (your laptop's luck doesn't travel).
 
+::: toggle What does `runpy.run_path` do, and why stage files instead of one notebook?
+`runpy.run_path("03_select.py")` = execute that file top-to-bottom in a fresh namespace (like `python3 03_select.py`, but inside this driver — no shared variables leak between stages, so stage 4 cannot secretly depend on stage 2's leftovers). Stage files (not one notebook) because: order is explicit (01→05), reruns are total (one command reproduces everything), and hidden out-of-order cell execution — notebooks' classic irreproducibility — becomes impossible.
+:::
+
 **Artefact list (each mandatory):** frozen question + cost-matched metric; cleaning log; split record (seed, ratios, shapes); baseline score; CV selection table; test-once grade; error analysis (worst slices + residual/confusion reading); demo script + viva bank answers.
 
 ## 2. Expected Output and Result

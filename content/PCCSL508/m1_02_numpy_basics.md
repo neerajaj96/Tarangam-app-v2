@@ -47,6 +47,14 @@ print(np.mean(b, axis=0))         # per-column means: axis names the collapsed d
 
 Line-by-line honesty: `b[:, 0]` vs `b[1, :]` (colon = all along that axis); `axis=0` collapses rows (result per column — say it aloud); `reshape` shares memory (mutating the view mutates the original!); broadcasting `(3,)+(1,)` works but `(3,)+(2,)` errors — rules, not wishes.
 
+::: toggle What do `shape`, `dtype`, `reshape`, and `axis` mean?
+`shape` = the size tuple, e.g. `(1000, 5)` (1000 rows, 5 columns — read as samples × features by this course's convention; transposed layouts exist elsewhere, so confirm per dataset). `dtype` = element type (`float64` = 64-bit decimals; mixed-type arrays upcast or object-ify — check it). `reshape(4)` = new view with a new shape sharing the same memory (cheap; `.copy()` when independence is needed). `axis` = the dimension an operation collapses: `axis=0` eats rows (per-column result), `axis=1` eats columns (per-row result).
+:::
+
+::: toggle What is the broadcasting rule, exactly, with an example?
+Align shapes from the trailing (right) end; each axis pair must match or have a 1 (stretched to match), else error. `(3,) + (1,)`: trailing 3 vs 1 → stretch the 1 → `[11,12,13]`. `(100,5) + (5,)`: 5 matches 5, leading 100 stands alone → row-wise stretch. `(100,5) + (100,)`: trailing 5 vs 100 → mismatch → loud error. Legal-but-unintended stretches corrupt silently — print shapes after arithmetic.
+:::
+
 **Input/features/target:** `X = b` (features, shape (2,2)); a column sliced out (`b[:, 1]`) is tomorrow's *target* `y` (shape (2,) — note: 1-D, not (2,1)!).
 
 ## 2. Expected Output and Result

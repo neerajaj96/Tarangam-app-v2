@@ -26,6 +26,43 @@ satisfy all 18 rules below; reviewers check against this list, not taste.
 18. Correct technically over-absolute or misleading statements; qualify
     guarantees (convexity, optimality, convergence, "P = NP" consequences).
 
+19. Every difficult element must be explainable in place. Whenever reasonably
+    useful, provide an expandable explanation close to first use — not just a
+    once-defined glossary — for: technical terms, abbreviations, acronyms,
+    mathematical symbols, variables, formulas, notation, commands, command
+    arguments, flags/options, API functions, programming statements,
+    parameters, return values, hardware components, register names, protocols,
+    algorithms, data structures, graph terms, ML/AI/networking/OS terminology,
+    laboratory equipment, configuration values, units, diagrams, outputs,
+    error messages, prerequisite concepts, individual procedural steps, and
+    any phrase a first-time learner may reasonably find unfamiliar. The test
+    is: "can a person who knows almost nothing understand this page itself?"
+    Never compress several cognitive steps into one unexplained instruction:
+    split compound steps (e.g. timer setup → what/why timer, prescaler,
+    counter, interrupt, register, value, aftermath) with What/Why/How help
+    where appropriate. Layer substantial concepts progressively (one-line
+    meaning → beginner explanation → why → how → tiny example → formal/exam
+    definition → common confusion), using progressive disclosure so the main
+    flow stays readable: main explanation first, deeper and exam detail
+    behind expandable help.
+
+## Expandable-explanation mechanism
+
+Use the existing `::: toggle <summary>` widget (renders as
+`<details><summary>` — no new widget system):
+
+::: toggle What does `EXAMPLE` mean?
+Plain-markdown micro-explanation: what it is, why it is needed, and what
+goes in / comes out. Never nest other `:::` widgets inside a toggle body.
+:::
+
+Cover per-item: for commands, each argument/flag plus what it changes, why,
+verification, and undo; for code lines, what it does, why needed, inputs,
+outputs; for formulas, every symbol and operation plus a tiny numerical
+example; for errors, what happened and the fix. Keep toggle bodies to plain
+markdown (text, lists, inline code, fenced code) so widget parsing stays
+unambiguous.
+
 ## Canonical orders
 
 - **Mathematics-heavy:** meaning → variables → intuition → formula → worked

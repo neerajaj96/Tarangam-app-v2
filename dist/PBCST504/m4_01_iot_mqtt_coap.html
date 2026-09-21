@@ -271,7 +271,9 @@
 <td>HTTP-like GET/POST/PUT/DELETE over UDP, tiny headers, confirmable or not</td>
 </tr>
 </tbody></table>
-<p><a id="words-first"></a></p>
+<details class="interactive-toggle"><summary>What do QoS 0, 1, and 2 promise, and what does each cost?</summary><div class="toggle-content"><p>QoS 0 (at most once): fire and forget — cheapest, loss accepted. QoS 1 (at least once): sender retries till ACKed — duplicates possible (receiver must tolerate repeats). QoS 2 (exactly once): four-way handshake between client and broker — strongest promise, most packets and broker storage. Higher QoS never creates connectivity; it only grades delivery promises on a live link.</p>
+</div></details><details class="interactive-toggle"><summary>What do &quot;retain&quot; and &quot;Last Will&quot; do at the broker?</summary><div class="toggle-content"><p>Retain: the broker keeps the latest message per topic and hands it to each new subscriber instantly (no waiting for the next publish). Last Will: a death notice the client registers at connect — if the client vanishes ungracefully, the broker publishes it (presence monitoring without polling). One serves latecomers, the other reports disappearances.</p>
+</div></details><p><a id="words-first"></a></p>
 <h2 id="2-words-first-iot-vocabulary">2. Words First — IoT Vocabulary</h2>
 <p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-formal-theory-choosing-honestly">3. Formal Theory — Choosing Honest… →</a></p>
 <table>

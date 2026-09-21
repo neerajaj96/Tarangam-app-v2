@@ -42,6 +42,14 @@ Abbreviations defined on first use: Static Random Access Memory (SRAM), First-In
 | What is the stack? | FILO scratch space growing down from RAM top, tracked by SP |
 | What is arbitration? | Deciding which bus master transfers when several ask at once |
 
+::: toggle What is a "bus master" vs a "slave"?
+A master starts transfers (CPU fetching code, DMA moving samples); a slave only answers (flash, SRAM, peripheral registers). The bus matrix connects any master to any slave and arbitrates when two masters ask at once — masters act, slaves respond, the matrix referees.
+:::
+
+::: toggle What do the units Hz, MHz, ms, V, A mean here?
+Hz (hertz) = cycles per second; MHz = million per second (clock speeds). ms = millisecond, one-thousandth of a second (delays, ticks). V (volt) = electrical pressure (3.3 V logic levels). A (ampere) = current flow; mA/µA/nA = thousandths/millionths/billionths (power budgets). bit = one binary digit; byte = 8 bits.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — Map Regions
 
@@ -61,6 +69,10 @@ Flash district stores the recipe books permanently; SRAM district holds today's 
 ## 3. Formal Theory — Stack Discipline and Bus Fabric
 
 **Stack, exactly:** on function call the CPU pushes return address (LR) and locals, SP decrements (Cortex-M stack grows toward lower addresses); on return it pops and SP restores. Push order and pop order mirror — interrupt nesting reuses the same SP automatically, which is why deep call chains plus interrupts overflow into variables below. Armv8-M stack-limit registers fault instead of silently corrupting — the M1.04 feature paying off here.
+
+::: toggle What does "push" and "pop" do to SP, step by step?
+Push (call): (1) SP decreases by 4 (one 32-bit word), (2) the value (return address, saved register) is stored at the new SP. Pop (return): (1) the value at SP is loaded back, (2) SP increases by 4. Grows-down means the pile extends toward smaller addresses — overflow therefore eats whatever lives below (heap, variables), never empty space above.
+:::
 
 **Bus fabric (AHB/APB/DMA):** fast masters (CPU, DMA) ride the AHB matrix to flash/SRAM; slow peripherals hang off APB bridges (one wait-state world, lower power). The matrix arbitrates concurrent masters — e.g. CPU fetching code while DMA streams ADC samples to SRAM — by fixed or round-robin priority. fast paths stay fast because slow gadgets never share their road. Exam line: AHB = high-speed backbone, APB = low-power peripheral branches, DMA = CPU-free transfers between them.
 

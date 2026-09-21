@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -227,7 +227,8 @@ for stage in [&quot;01_inspect&quot;, &quot;02_baseline&quot;, &quot;03_select&q
 # ^ evaluator runs THIS on a clean machine: identical numbers = reproducibility grade earned
 </code></pre>
 <p>Line-by-line honesty: <code>runpy</code> executes stage files in a fresh namespace each (no leaked variables between stages — order dependence made explicit); printed shapes/scores are the evaluation trail (silent stages score zero); clean-machine rerun is the acceptance test (your laptop&#39;s luck doesn&#39;t travel).</p>
-<p><strong>Artefact list (each mandatory):</strong> frozen question + cost-matched metric; cleaning log; split record (seed, ratios, shapes); baseline score; CV selection table; test-once grade; error analysis (worst slices + residual/confusion reading); demo script + viva bank answers.</p>
+<details class="interactive-toggle"><summary>What does `runpy.run_path` do, and why stage files instead of one notebook?</summary><div class="toggle-content"><p><code>runpy.run_path(&quot;03_select.py&quot;)</code> = execute that file top-to-bottom in a fresh namespace (like <code>python3 03_select.py</code>, but inside this driver — no shared variables leak between stages, so stage 4 cannot secretly depend on stage 2&#39;s leftovers). Stage files (not one notebook) because: order is explicit (01→05), reruns are total (one command reproduces everything), and hidden out-of-order cell execution — notebooks&#39; classic irreproducibility — becomes impossible.</p>
+</div></details><p><strong>Artefact list (each mandatory):</strong> frozen question + cost-matched metric; cleaning log; split record (seed, ratios, shapes); baseline score; CV selection table; test-once grade; error analysis (worst slices + residual/confusion reading); demo script + viva bank answers.</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>One reproducible run, one evidence pack, one ten-minute story with named limits. Result: evaluation-ready project, not a notebook of hopeful cells.</p>

@@ -46,6 +46,14 @@ print(df.describe())              # means/min/max: outliers confess here (huge m
 
 Line-by-line honesty: `read_csv` guesses types (a stray `"?"` string turns a column to `object` — find it via `dtypes`); `isna().sum()` is the triage list (most-missing first? or drop?); `describe` skips non-numeric silently (object columns vanish from it — check `dtypes` so nothing hides).
 
+::: toggle What do `read_csv`, `dtypes`, `isna().sum()`, and `describe()` each reveal?
+`read_csv("housing.csv")` = parse the local file into a DataFrame (guessing types per column — a stray `"?"` makes `object`). `dtypes` = the guessed type per column (int64/float64 = numbers; object = strings/mixed — inspect these first). `isna().sum()` = missing count per column (the cleaning work order, most-missing first). `describe()` = count/mean/std/min/max per numeric column (outliers confess as absurd max; silent about non-numerics — cross-check with `dtypes`).
+:::
+
+::: toggle What do "median fill", "mode fill", and "coerce" do, and when?
+Median fill (`fillna(median)`) = replace gaps with the middle value (resists outliers — income's choice). Mode fill = replace with the most common value (categorical gaps). `pd.to_numeric(errors="coerce")` = force a column numeric, turning unparseable entries into NaN honestly (instead of object-regime). All logged in the report — cleaning is methodology, and method is written down.
+:::
+
 **Cleaning moves (deliberate, logged):** numeric gaps → `df["col"].fillna(df["col"].median())` (median resists outliers, mean doesn't); categorical gaps → mode or `"missing"` label; wrong types → `pd.to_numeric(..., errors="coerce")` then re-triage. Log every fill in the report — cleaning is methodology, not janitorial invisibility.
 
 ## 2. Expected Output and Result

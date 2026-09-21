@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -226,7 +226,9 @@ cli.sendto(sys.argv[1].encode(), (&quot;127.0.0.1&quot;, 5001))  # destination p
 print(cli.recvfrom(1024)[0].decode())  # raises socket.timeout on loss — catch and retry in real code
 </code></pre>
 <p>Loss demo: <code>sudo tc qdisc add dev lo root netem loss 20%</code> then run 10 requests — ~2 time out; remove with <code>tc qdisc del dev lo root</code>.</p>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<details class="interactive-toggle"><summary>Expand: `sendto`, `recvfrom`, `settimeout`</summary><div class="toggle-content"><p><code>sendto(bytes, (ip, port))</code> = one datagram to that destination (address per message — no connection exists to remember it; returns bytes sent). <code>recvfrom(1024)</code> = one datagram plus sender address as <code>(data, addr)</code> tuple (address per arrival — reply to <em>that</em> addr). <code>settimeout(2.0)</code> = cap every blocking wait at 2 s, raising <code>socket.timeout</code> after (what changes: waits become bounded; why: loss would otherwise freeze forever; verify: request with server down raises instead of hanging).</p>
+</div></details><details class="interactive-toggle"><summary>Expand: `sudo tc qdisc add dev lo root netem loss 20%`</summary><div class="toggle-content"><p><code>sudo</code> = run as root (kernel packet scheduling needs privilege). <code>tc</code> = traffic-control tool. <code>qdisc</code> = queueing discipline object (how packets queue on a device). <code>add dev lo</code> = attach to loopback interface. <code>root</code> = at the root (outermost) hook. <code>netem</code> = network emulator. <code>loss 20%</code> = drop 1 in 5 randomly. What changes: kernel drops egress datagrams probabilistically. Verify: <code>tc qdisc show dev lo</code> lists the rule. Undo (mandatory): <code>sudo tc qdisc del dev lo root</code> — forgotten rules poison later labs.</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-code-and-line-by-line-explanation">← 3. Code and Line-by-Line Explanati…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p>No loss: every request answered, uppercase correct. With 20% netem: some <code>socket.timeout</code> exceptions — count ≈ 2/10. Verify no handshake: <code>ss -unp</code> shows UDP sockets with no ESTABLISHED state; Wireshark shows lone datagrams, zero SYN.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Timeoutless UDP</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Blocking <code>recvfrom</code> with no timeout hangs forever on the first lost datagram — the #1 frozen-demo cause. Always <code>settimeout</code>; always plan the retry.</p>

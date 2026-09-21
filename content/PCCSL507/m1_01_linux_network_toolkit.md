@@ -53,12 +53,24 @@ $ ss -tlnp
 - `ping -c 4 8.8.8.8` — 4 echo requests; replies carry `time=` RTT; `100% packet loss` ⇒ peer unreachable (or ICMP filtered).
 - `ss -tlnp` — `-t` TCP, `-l` listening, `-n` numeric, `-p` process: `0.0.0.0:80` = program waiting on port 80 for anyone.
 
+::: toggle Expand: `ip addr show dev eth0`
+`ip` = the iproute2 network tool (modern replacement for ifconfig/route/netstat). `addr` = address object (manage interface addresses). `show` = display (read-only — changes nothing, safe anywhere). `dev eth0` = restrict to device eth0 (Ethernet interface 0). Reads: kernel interface state. Why: proves link + address before all else. Unavailable? Install `iproute2` (rare — preinstalled on virtually all Linux).
+:::
+
+::: toggle Expand: `ip route show`
+`ip` = network tool (above). `route` = routing-table object (which door each destination leaves by). `show` = display only. Reads: the kernel forwarding table. Why: a missing `default via <gateway>` explains all off-net failures. Output columns: destination prefix, `via` next-hop gateway (absent = directly connected), `dev` outgoing interface, `proto` who installed it, `metric` tie-break cost.
+:::
+
+::: toggle Expand: `ping -c 4 8.8.8.8` and `ss -tlnp`
+`ping` = ICMP echo requester ("are you alive?"); `-c 4` = stop after 4 packets (without it, pings forever); `8.8.8.8` = target address. Output `time=` = round-trip ms; `0% loss` = healthy path. `ss` = socket statistics; `-t` = TCP only; `-l` = listening sockets; `-n` = numeric (no slow DNS lookups); `-p` = owning process (needs root for others' processes). `0.0.0.0:80` = port 80 on every interface (public); `127.0.0.1:80` = loopback only (self-only).
+:::
+
 ## 4. Expected Output and How to Verify
 
 Healthy host shows: `eth0: UP` with an `inet` address; a `default` route; `0% packet loss` with RTT in ms; your server's port in `ss` output. Verify each layer in order — a missing lower layer explains every upper failure (no address ⇒ no route ⇒ no ping ⇒ no service).
 
 ::: callout-pitfall Three Failures, Three Layers
-Cable/unplugged ⇒ no `UP`/carrier (link). No DHCP ⇒ `UP` but no `inet` (address). No gateway ⇒ address but no `default` (route). Diagnose downward-first: the lowest broken layer is always the true cause.
+Cable/unplugged ⇒ no `UP`/carrier (link). No DHCP ⇒ `UP` but no `inet` (address). No gateway ⇒ address but no `default` (route). Diagnose downward-first: the lowest broken layer is the first suspect (firewall-filtered ICMP can still fool ping on a healthy stack — layers first, filters second).
 :::
 
 ## 5. Common Errors and Viva Questions

@@ -34,7 +34,7 @@ Tiny beginner example. Three phones use three brands of chips, yet all run the s
 
 Analogy as support, then dropped. Think of a franchise recipe: ARM writes the recipe (core + instructions); bakeries (chip makers) add local flavours (memory sizes, timers, radios) while every cake still rises the same way. From here on we use exact terms only: architecture, core, instruction set, licensee.
 
-Abbreviations defined on first use: Reduced Instruction Set Computer (RISC), Program Counter (PC), Link Register (LR), Stack Pointer (SP). Symbols: none yet.
+Abbreviations defined on first use: Reduced Instruction Set Computer (RISC), Program Counter (PC), Link Register (LR), Stack Pointer (SP). Symbols: none yet. (Note: PC reads ahead of execution due to the pipeline — detailed in the toggle below.)
 
 | Question to ask | Meaning |
 |---|---|
@@ -53,6 +53,14 @@ Abbreviations defined on first use: Reduced Instruction Set Computer (RISC), Pro
 | **CMSIS** (Cortex Microcontroller Software Interface Standard) | ARM's standard software layer: same register names and startup shape across all licensees' chips. |
 | **Nested Vectored Interrupt Controller (NVIC)** | The core's built-in interrupt manager: prioritised, low-latency, standard on every Cortex-M. |
 
+::: toggle What is an "interrupt" in one paragraph?
+A hardware tap on the CPU's shoulder: some event (button press, timer expiry, byte arrived) pauses the current program, runs a short handler function (ISR), then resumes where it left off. Without interrupts the CPU must poll everything in a loop (wasteful); with them it sleeps until tapped. Priority decides which tap wins when several arrive together.
+:::
+
+::: toggle What is the difference between architecture, core, and chip?
+Architecture = the contract (which instructions and registers exist — e.g. Armv8-M). Core = one implementation of it (e.g. Cortex-M33). Chip = a licensee's product wrapping a core with memory and peripherals (e.g. STM32U575). Code talks to the architecture, runs on the core, ships in the chip.
+:::
+
 ::: callout-intuition Core Mental Model: Recipe Plus Bakeries
 ARM guards the recipe (core design + ISA); licensees run bakeries (complete chips). Your STM32 and a competitor's LPC speak the same core instructions, take interrupts through the same NVIC, and start via the same CMSIS shape — only the bakery extras (which timers, how much flash, which radio) differ. Porting skill transfers because the recipe is shared.
 :::
@@ -63,6 +71,14 @@ ARM guards the recipe (core design + ISA); licensees run bakeries (complete chip
 **Load-store, stated exactly:** arithmetic instructions name registers only (`ADD r0, r1, r2`); memory moves only through loads and stores (`LDR r0, [r1]`, `STR r0, [r1]`). Consequence examiners love: a C statement like `a[i] += 5` compiles to load–add–store triples, never one memory-arithmetic instruction — the read-modify-write window from M1.02 is literally visible in the instruction stream.
 
 **Register file (know the three specials):** r0–r12 general workhorses; SP (r13) stack top; LR (r14) return address; PC (r15) next instruction. Function calls park returns in LR; nested calls push LR to the stack. Thumb-2 mixes 16-bit (compact, common ops) and 32-bit (full reach) encodings so firmware stays small without losing power.
+
+::: toggle What do SP, LR, and PC do while a function runs?
+SP (Stack Pointer) tracks the top of the scratch pile (stack) where nested calls park data. LR (Link Register) holds the return address — where to continue after this function finishes. PC (Program Counter) holds the fetch address tracking the instruction stream — note the classic exam trap: because of the pipeline, reading PC in ARM state yields the current instruction address plus 4 (Thumb: plus 4 as well on Cortex-M), not the executing instruction itself. Call = save a return address into LR and jump; return = jump back to LR.
+:::
+
+::: toggle How do I read `ADD r0, r1, r2` and `LDR r0, [r1]`?
+`ADD r0, r1, r2` means r0 = r1 + r2 (destination first, then sources — result lands in r0). `LDR r0, [r1]` means load into r0 the memory word whose address sits in r1 (square brackets = "memory at"). Arithmetic names registers only; memory appears only inside brackets on loads/stores.
+:::
 
 **Generation comparison (honest, no "newer is always better"):** M0/M0+ — smallest gate count, cheapest, no divide; M3 — adds hardware divide, bit-banding era mainstream; M4 — adds DSP instructions plus optional Floating-Point Unit (FPU); M7 — dual-issue speed with caches, hungriest; M23/M33 — Armv8-M security (TrustZone) plus modern debug. Examiner bait: M4 without FPU still runs floats — slowly, in software. Generation answers cost/power/math-needs, never prestige.
 

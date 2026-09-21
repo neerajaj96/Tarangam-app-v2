@@ -29,6 +29,14 @@ tags:
 
 **Dataset meaning (`mall.csv`, local — customer age/income/spending style rows):** rows = customers; features = numeric behaviours; no target column exists (unsupervised — the absence is the point).
 
+::: toggle Dataset card: mall.csv row by row
+File location: lab folder (`mall.csv` — verify with `ls`; the classic set has 200 rows — record yours). One row = one customer. Typical columns: age (years), annual income ($k units), spending score (1–100 index — higher = spends more freely). All numeric (verify with `dtypes`; any codes need meaning lookup, not guessing). No target column exists — the absence defines unsupervised work (no accuracy, only structure). Missing values: triage per M1.03. Units matter for scaling (income-$k vs age-years would rig distances raw).
+:::
+
+::: toggle What do `inertia_`, `silhouette_score`, and `n_init` mean?
+`inertia_` (WCSS) = sum of squared distances to assigned centroids (compactness price — always falls with k, so never optimise it alone). `silhouette_score` = per-point (own-cluster closeness vs nearest-other-cluster distance) averaged (−1…1; higher = separated blobs). `n_init=10` = ten random starts, best WCSS kept (single runs trap in local optima — restarts tame luck; seed pinned for repeatability).
+:::
+
 ## 1. Procedure Step by Step
 
 1. Load → scale (distances need fairness — M1.05 ruler, fit on all here since no held-out grading exists; note why).

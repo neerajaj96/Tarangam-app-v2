@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -247,7 +247,7 @@
 <p><a id="the-problem"></a></p>
 <h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-sleep-ladder">2. Words First — Sleep Ladder →</a></p>
-<p>A door sensor must live two years on a coin cell yet answer instantly when the door opens. The problem: running at full speed drains the cell in days; sleeping deeply risks missing the event. Power management is the art of being almost-dead yet instantly-wakeable — sleep 99.9% of the time, sprint 0.1%.</p>
+<p>A door sensor must live two years on a coin cell yet answer quickly when the door opens. The problem: running at full speed drains the cell in days; sleeping deeply risks missing the event. Power management is the art of being almost-dead yet wakeable in microseconds — sleep 99.9% of the time, sprint 0.1%.</p>
 <p>Tiny beginner example. Active current 10 mA, deep-sleep current 1 µA (microamp), awake 1 second per hour. Average ≈ (10 mA × 1 + 0.001 mA × 3599)/3600 ≈ 0.0038 mA — the cell lasts years because sleep dominates the average, not because active sipping was optimised.</p>
 <p>Analogy as support, then dropped. Think of a night guard: dozing in the chair (sleep, ears open for the alarm wire) versus patrolling (active, torch on). The wire (wake-up source) matters more than the doze depth. From here on we use exact terms only: Run/Sleep/Stop/Standby/Shutdown, wake-up source, average current.</p>
 <p>Abbreviations defined on first use: Microamp (µA), Real-Time Clock (RTC), Low-Power (LP). Symbols: mA/µA/nA (milli/micro/nanoamp).</p>
@@ -285,7 +285,7 @@
 <tbody><tr>
 <td><strong>Run / Sleep</strong></td>
 <td>CPU paused, peripherals on</td>
-<td>Lightest doze; any interrupt wakes instantly; microamps-to-milliamp savings only</td>
+<td>Lightest doze; interrupts wake in a few clock cycles; microamps-to-milliamp savings only</td>
 </tr>
 <tr>
 <td><strong>Stop</strong></td>
@@ -313,7 +313,9 @@
 <h2 id="3-formal-theory-average-current-and-wake-contracts">3. Formal Theory — Average Current and Wake Contracts</h2>
 <p class="secnav"><a href="#2-words-first-sleep-ladder">← 2. Words First — Sleep Ladder</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
 <p><strong>The only formula that matters:</strong> $I_{avg} = (I_{active}T_{active} + I_{sleep}T_{sleep})/(T_{active}+T_{sleep})$. Meaning: charge spent awake plus charge spent asleep, over total time. Variables: $I$ currents, $T$ durations. Intuition: with 0.1% duty cycle, sleep current sets the answer — halving active current barely moves $I_{avg}$; halving sleep current nearly halves it. Worked above: 10 mA × 1 s vs 1 µA × 3599 s gives ≈ 3.8 µA average. Exam move: always compute both terms before declaring a winner.</p>
-<p><strong>Wake contracts per depth:</strong> lighter modes keep clocks and RAM (fast wake, state intact); Stop keeps RAM but kills most clocks (re-init clocks on exit — LP libraries do this); Standby/Shutdown lose most state (design wake as re-entry, save essentials in backup registers/RTC domain first). Peripherals as wake sources must be explicitly enabled pre-sleep; a sleeping UART (Universal Asynchronous Receiver-Transmitter) receives nothing unless its clock stays on — the classic &quot;slept through the message&quot; bug.</p>
+<details class="interactive-toggle"><summary>Why is the formula charge divided by time (not just an average of currents)?</summary><div class="toggle-content"><p>Current × time = charge (the battery&#39;s actual currency, milliamp-hours). The formula totals each mode&#39;s charge, then divides by total time to get the equivalent steady current. Averaging 10 mA and 1 µA directly (5 mA) would pretend both modes last equally long — weighting by time is what makes the 99.9% sleep dominate honestly.</p>
+</div></details><details class="interactive-toggle"><summary>What do &quot;duty cycle&quot; and &quot;wake-up source&quot; mean in one breath each?</summary><div class="toggle-content"><p>Duty cycle = fraction of time awake (1 s per hour ≈ 0.03% — the smaller, the more sleep rules). Wake-up source = the peripheral allowed to interrupt sleep (a pin edge, the RTC alarm, a radio packet) — chosen before sleeping, because an unwired event never arrives however light the sleep.</p>
+</div></details><p><strong>Wake contracts per depth:</strong> lighter modes keep clocks and RAM (fast wake, state intact); Stop keeps RAM but kills most clocks (re-init clocks on exit — LP libraries do this); Standby/Shutdown lose most state (design wake as re-entry, save essentials in backup registers/RTC domain first). Peripherals as wake sources must be explicitly enabled pre-sleep; a sleeping UART (Universal Asynchronous Receiver-Transmitter) receives nothing unless its clock stays on — the classic &quot;slept through the message&quot; bug.</p>
 <p><strong>LP libraries honestly:</strong> they sequence regulator scaling, clock gating, mode entry, and wake restore — the exact order the reference manual demands. They cannot choose your wake source or duty cycle; architecture still decides, libraries only execute.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Power Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$I_{avg}$ = charge-weighted mean (sleep term usually dominates) · deeper = cheaper sleep + costlier wake + less retention · wake sources enabled pre-sleep · Stop keeps RAM, Standby/Shutdown ~reboot · libraries sequence, architects decide.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Megahertz Myopia</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Optimising active MHz while sleeping at milliamps loses to a slower chip sleeping at nanoamps — the average-current formula punishes the 99.9%, not the sprint. Quote duty cycle before clock speed in every power answer.</p>

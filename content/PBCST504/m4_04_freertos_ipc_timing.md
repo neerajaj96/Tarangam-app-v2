@@ -42,6 +42,14 @@ Abbreviations defined on first use: Inter-Process Communication (IPC), First-In-
 | Mutex vs binary semaphore? | Mutex = owned lock with inheritance (M4.03 cure); binary semaphore = ownerless flag (ISR-safe signalling) |
 | Delay vs timer? | Delay sleeps one task; timer callback fires for the system on schedule |
 
+::: toggle When do I use a queue, a mutex, a binary semaphore, or a counting semaphore?
+Queue = data must move between tasks safely (sensor readings to radio). Mutex = one hardware/one structure needs one-at-a-time access with ownership (UART, shared buffer) — take and give in the same task. Binary semaphore = an ISR must wake a task (button press flag, no ownership). Counting semaphore = N identical resources or N pending events (three DMA channels, burst counts). Data→queue, hardware→mutex, ISR-event→binary, pool→counting.
+:::
+
+::: toggle What is the difference between `vTaskDelay` and `vTaskDelayUntil`?
+`vTaskDelay(200)` sleeps 200 ticks from *now* — each period starts late by the previous jitter, so error accumulates (drift). `vTaskDelayUntil(&last, 200)` sleeps until *last + 200* — each wake re-anchors, shedding jitter (no drift). Naps versus anchors: exact periods need Until (or a timer), never Delay.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — IPC Vocabulary
 

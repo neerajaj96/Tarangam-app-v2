@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -229,7 +229,8 @@ print(&quot;sizes:&quot;, {int(k): list(labels).count(k) for k in set(labels)})
 # contrast: linkage(Xs, method=&quot;single&quot;) chains stragglers; method=&quot;complete&quot; balls up
 </code></pre>
 <p>Line-by-line honesty: <code>ward</code> minimises merged variance (blobs, not chains — method matches data shape); cut chosen after viewing (the deferral advantage — k-means cannot do this); <code>fcluster</code> labels from the tree (no refit, no randomness — deterministic given data); single-linkage chaining demo proves methods see different truths.</p>
-<p><strong>Algorithm:</strong> greedy closest-pair merging with Lance-Williams updates per linkage.</p>
+<details class="interactive-toggle"><summary>What do `linkage`, `dendrogram`, `fcluster`, and &quot;method&quot; mean?</summary><div class="toggle-content"><p><code>linkage(Xs, method=&quot;ward&quot;)</code> = merge history table: each row (merged pair, merge distance, new size) — <code>ward</code> merges the pair raising variance least (blob-friendly); <code>single</code> uses nearest-point distance (chains); <code>complete</code> farthest-point (compact balls). <code>dendrogram(Z)</code> = draw the tree (x = samples, y = merge dissimilarity — long bare stems = natural gaps). <code>fcluster(Z, t=3, criterion=&quot;maxclust&quot;)</code> = cut into 3 clusters (t chosen AFTER seeing the tree — the deferral advantage; deterministic, no randomness, no refit).</p>
+</div></details><p><strong>Algorithm:</strong> greedy closest-pair merging with Lance-Williams updates per linkage.</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Dendrogram with readable stems; cut at a long stem (e.g. 3 clusters); sizes balanced-ish; profiles comparable to k-means k (agreement = confidence, disagreement = shape insight). Result: tree figure + cut choice + linkage contrast note.</p>

@@ -47,6 +47,10 @@ Proctored MOOC exams reward revisiting official videos, transcripts, and reading
 Polished third-party summaries feel efficient and test nothing reliably — fidelity unknown, outcomes unmapped. Summaries may *index* revision (what to rewatch), never *replace* official segments.
 :::
 
+::: toggle What are "week-outcomes", "transcripts", and "closed-book rehearsal"?
+Week-outcomes = the MOOC's stated learning goals per week (copy verbatim — they enumerate what's testable and blueprint your revision). Transcripts = text versions of videos (searchable — find gaps in seconds instead of rewatching hours). Closed-book rehearsal = recalling without notes (recognition while reading ≠ recall under exam — only rehearsal tests the exam skill itself).
+:::
+
 **Watch out:** (1) Memorising article numbers from unverified lists (verify-then-memorise). (2) Skipping transcripts (searchable text beats rewatching hours for targeted gaps). (3) No closed-book rehearsal (recognition ≠ recall — the exam tests recall).
 
 **Active-recall checklist:** Outcomes listed verbatim? Self-rated honestly? Shaky ones rewatched officially? Closed-book redo logged? Three explained aloud?

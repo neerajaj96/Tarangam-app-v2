@@ -29,6 +29,14 @@ tags:
 
 **Dataset meaning (`mpg.csv`, local):** each row = one car model-year; features = engine/body numbers (horsepower has `?` gaps — M1.03 cleaning applies!); target = miles per gallon.
 
+::: toggle Dataset card: mpg.csv row by row
+File location: lab folder (`mpg.csv` — verify with `ls`; row count ≈ 398 expected for the classic set, variants differ — record yours). One row = one car (model year included as a column). Key columns: `mpg` = target (miles per US gallon, numeric); `cylinders` (count 3–8); `displacement` (engine size, cubic inches); `horsepower` (numeric but polluted with `"?"` strings — coerce to NaN, median-fill, logged); `weight` (pounds — the bending feature vs mpg); `acceleration` (0–60-ish seconds); `model year`, `origin` (categorical codes 1–3: American/European/Japanese — encode or drop deliberately). Missing: horsepower `?` entries (never zero-fill — median). Train/test: 80/20 pinned; degree chosen on CV, graded once on test.
+:::
+
+::: toggle What do `PolynomialFeatures`, `make_pipeline`, and `cross_val_score` do?
+`PolynomialFeatures(d)` = expand each row into all monomials up to degree d (x, x², … plus cross-terms — representation, still linear in weights). `make_pipeline(A, B)` = chain steps so CV refits A per fold (leak-proof geography: expansion inside, never upfront). `cross_val_score(pipe, X, y, cv=5)` = split in 5, train on 4, validate on 1, rotate, return 5 scores (mean = the selection evidence; spread = its stability). Degree picked on the mean — test sees the winner once.
+:::
+
 ## 1. Procedure Step by Step
 
 1. Load → clean horsepower `?` → numeric (M1.03: coerce + median) → scatter weight-vs-mpg (see the bend first).

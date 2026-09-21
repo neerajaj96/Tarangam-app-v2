@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -228,6 +228,12 @@ sudo ip netns exec h2 ip link set v2h up; sudo ip netns exec h2 ip link set lo u
 sudo ip netns exec h1 ip route add 10.0.2.0/24 via 10.0.1.1   # far net via router
 sudo ip netns exec h2 ip route add 10.0.1.0/24 via 10.0.2.1
 sudo ip netns exec h1 ping -c 3 10.0.2.2     # the moment of truth
+
+&lt;details class=&quot;interactive-toggle&quot;&gt;&lt;summary&gt;Expand word by word: `sudo ip netns exec r1 ip route add 10.0.2.0/24 via 10.0.1.2`&lt;/summary&gt;&lt;div class=&quot;toggle-content&quot;&gt;&lt;p&gt;&lt;code&gt;sudo&lt;/code&gt; = run as root (network namespaces and routing tables need privilege). &lt;code&gt;ip&lt;/code&gt; = iproute2 network tool. &lt;code&gt;netns&lt;/code&gt; = network-namespace object (private stacks). &lt;code&gt;exec&lt;/code&gt; = run the following command inside the namespace. &lt;code&gt;r1&lt;/code&gt; = which namespace (the router&amp;#39;s private stack — the change lands here, nowhere else). Second &lt;code&gt;ip&lt;/code&gt; = the same tool, now running &lt;em&gt;inside&lt;/em&gt; r1. &lt;code&gt;route&lt;/code&gt; = routing-table object. &lt;code&gt;add&lt;/code&gt; = install an entry (vs &lt;code&gt;show&lt;/code&gt;/&lt;code&gt;del&lt;/code&gt;). &lt;code&gt;10.0.2.0/24&lt;/code&gt; = destination prefix (all 256 addresses starting 10.0.2 — &lt;code&gt;/24&lt;/code&gt; = first 24 bits fixed). &lt;code&gt;via&lt;/code&gt; = send through gateway (vs directly-connected). &lt;code&gt;10.0.1.2&lt;/code&gt; = the next-hop gateway address (must be directly reachable from r1). What changes: r1&amp;#39;s kernel table gains one door. Why: without it r1 has no path to 10.0.2.0/24. Verify: &lt;code&gt;ip netns exec r1 ip route show&lt;/code&gt; lists it. Undo: same line with &lt;code&gt;del&lt;/code&gt; instead of &lt;code&gt;add&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;&lt;/details&gt;
+
+&lt;details class=&quot;interactive-toggle&quot;&gt;&lt;summary&gt;What do &amp;quot;namespace&amp;quot;, &amp;quot;veth&amp;quot;, and &amp;quot;ip_forward&amp;quot; do, each in one mechanism?&lt;/summary&gt;&lt;div class=&quot;toggle-content&quot;&gt;&lt;p&gt;Namespace = a private network stack (own interfaces, addresses, routes) — a VM&amp;#39;s network without the machine. veth pair = a virtual cable with two ends: packets entering one end pop out the other (plug ends into different namespaces to wire them). &lt;code&gt;ip_forward&lt;/code&gt; = the kernel switch permitting inter-interface packet passing (0 = host behaviour, drop transit; 1 = router behaviour). Off by default — routes name doors, forwarding opens them.&lt;/p&gt;
+&lt;/div&gt;&lt;/details&gt;
 </code></pre>
 <ul>
 <li><code>peer name</code> builds both cable ends at once; each end moved into its namespace before addressing (addresses live per-stack).</li>
@@ -236,7 +242,7 @@ sudo ip netns exec h1 ping -c 3 10.0.2.2     # the moment of truth
 </ul>
 <h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-commands-and-line-by-line-explanation">← 3. Commands and Line-by-Line Expla…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
-<p><code>ping</code> replies <code>0% loss</code>; <code>traceroute 10.0.2.2</code> from h1 shows hop 10.0.1.1 then destination; <code>ip netns exec r1 ip route</code> shows both connected nets. Verify forwarding&#39;s role: <code>sysctl ... =0</code> breaks ping instantly (routes intact, forwarding dead — the two-half diagnosis).</p>
+<p><code>ping</code> replies <code>0% loss</code>; <code>traceroute 10.0.2.2</code> from h1 shows hop 10.0.1.1 then destination; <code>ip netns exec r1 ip route</code> shows both connected nets. Verify forwarding&#39;s role: <code>sysctl ... =0</code> breaks ping at once (routes intact, forwarding dead — the two-half diagnosis).</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Forwarding Amnesia</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Every static-routing lab death is <code>ip_forward</code> (off), missing <code>via</code> (host has no door), or down interface (address without UP). Check in that order — switch, route, link.</p>
 </div></details><h2 id="5-common-errors-and-viva-questions">5. Common Errors and Viva Questions</h2>
 <p class="secnav"><a href="#4-expected-output-and-how-to-verify">← 4. Expected Output and How to Veri…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>

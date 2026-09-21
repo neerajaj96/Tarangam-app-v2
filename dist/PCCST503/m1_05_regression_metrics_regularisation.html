@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 12 MIN READ</span>
+    <span class="badge">⏱️ 13 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -312,7 +312,8 @@
 <p>Formulas:</p>
 <p>$$\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\lvert e_i\rvert, \quad \mathrm{MSE} = \frac{1}{n}\sum e_i^2, \quad \mathrm{RMSE} = \sqrt{\mathrm{MSE}}, \quad R^2 = 1 - \frac{\sum e_i^2}{\sum (y_i - \bar{y})^2} = 1 - \frac{SS_{res}}{SS_{tot}}.$$</p>
 <p>Here $\lvert e_i\rvert$ is absolute miss, $e_i^2$ is squared miss, $SS_{res}$ is unexplained squares, $SS_{tot}$ is baseline squares around the mean. Intuition: MAE treats all lakhs equally; RMSE squares first so one 10-lakh blunder outweighs ten 1-lakh misses; R² $=1$ is perfect, $0$ ties the mean, negative loses to it. Worked micro-example is §1&#39;s $[10,12,14]$ vs $[11,12,17]$: MAE $\approx 1.33$, RMSE $\approx 1.83$, and R² on this toy triple is $1 - 10/8 = -0.25$ (worse than predicting the mean $12$ every time — small toys exaggerate, which is why KTU asks R² on real test sets, never three points).</p>
-<table>
+<details class="interactive-toggle"><summary>Expand every RMSE element: RMSE, n, i, y_i, ŷ_i, −, ², Σ, ÷, √</summary><div class="toggle-content"><p>RMSE = Root Mean Squared Error (the name lists the operations inside-out: square, mean, root — of errors). $n$ = number of test points (the averaging count). $i$ = the running index (1st point, 2nd, …). $y_i$ = true target of point $i$. $\hat{y}_i$ (y-hat) = model&#39;s prediction for point $i$ (hat = estimated). $−$ (subtraction) = signed miss per point ($y_i − \hat{y}_i$; sign kept till squaring). $²$ (square) = miss × miss (kills signs, punishes big misses disproportionately — the outlier sensitivity). $\Sigma$ (summation over $i=1..n$) = total the squared misses. $÷ n$ (division = mean) = average squared miss (MSE — size-independent grade). $\sqrt{}$ (square root) = back to original units (lakhs, not lakhs-squared — RMSE speaks the target&#39;s language). Why this structure: squaring prices big misses extra, averaging removes size dependence, rooting restores units. Tiny numbers: misses $[1,0,3]$ → squares $[1,0,9]$ → mean $3.33$ → root $\approx 1.83$.</p>
+</div></details><table>
 <thead>
 <tr>
 <th>Similar pair</th>

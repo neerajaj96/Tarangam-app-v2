@@ -42,6 +42,14 @@ Abbreviations defined on first use: Master-Out-Slave-In (MOSI), Master-In-Slave-
 | What is a page? | EEPROM's write chunk (e.g. 16–64 bytes): writes cannot cross it in one go |
 | What is the write cycle? | ~5 ms internal burn-in after the bus transfer — reads too early lie |
 
+::: toggle What do WREN, WRITE, READ, RDSR, and WIP each do?
+WREN (WRite ENable) = sets the protection latch permitting the next burn (without it, writes are ignored). WRITE = opcode + address + data bytes clocked under one CS (the dictation). READ = opcode + address, then keep clocking to stream bytes out (no burn involved). RDSR (ReaD Status Register) = asks "are you busy?". WIP (Write-In-Progress bit inside it) = 1 means ink still drying — poll until 0 instead of guessing 5 ms.
+:::
+
+::: toggle What do CPOL and CPHA agree on, and what breaks when they differ?
+CPOL (Clock POLarity) = the clock line's resting level between bytes (0 = rests low, 1 = rests high). CPHA (Clock PHase) = which edge samples data (0 = first edge after CS, 1 = second). Together they pick modes 0–3. If master and slave disagree, every bit is sampled at the wrong instant — total systematic corruption of all bytes, never random noise.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — SPI Vocabulary
 

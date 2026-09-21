@@ -51,6 +51,14 @@ print("lasso kept:", [c for c, w in zip(poly.get_feature_names_out(FEATS), lasso
 
 Line-by-line honesty: `logspace` sweeps orders of magnitude (strength is logarithmic intuition); `RidgeCV/LassoCV` internalise the CV (no hand loops, no test peeking); `max_iter` raised (Lasso must converge — unconverged warnings invalidate the path); survivors listed by name (the selection evidence); standardised inputs mandatory (penalties punish raw magnitudes otherwise).
 
+::: toggle What do `RidgeCV`, `LassoCV`, `alphas`, and the survivor list mean?
+`RidgeCV(alphas=...)` = Ridge over a strength grid with internal 5-fold CV (in: expanded train data; out: best `alpha_` + fitted weights — selection automated, test untouched). `LassoCV(...)` = same for L1 (plus `max_iter` raised so the coordinate solver actually converges — heed warnings). `alphas=logspace(...)` = strengths 10⁻²…10⁴ (logarithmic sweep because strength intuition is multiplicative). Survivor list = features with |w| > tiny threshold (Lasso's exact zeros dropped — the named selection finding; correlated twins may swap across seeds, reported honestly).
+:::
+
+::: toggle Why expand to degree 2 here if M2.02 already did polynomials?
+Deliberate scaffolding: degree-2 expansion manufactures the overfit (many columns, collinear monomials) that penalties are built to cure — watch test sag first, then recover it. Reported as scaffolding, not discovery: the experiment's point is the cure's behaviour (shrink vs select), measured against the M2.01 linear baseline.
+:::
+
 **Algorithm:** penalised least squares, $\lambda$ at the CV minimum per method.
 
 ## 2. Expected Output and Result

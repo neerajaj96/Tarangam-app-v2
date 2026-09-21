@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -228,7 +228,9 @@ print(a + np.array([10]))         # broadcast: (3,) + (1,) -&gt; (3,) stretched
 print(np.mean(b, axis=0))         # per-column means: axis names the collapsed dim
 </code></pre>
 <p>Line-by-line honesty: <code>b[:, 0]</code> vs <code>b[1, :]</code> (colon = all along that axis); <code>axis=0</code> collapses rows (result per column — say it aloud); <code>reshape</code> shares memory (mutating the view mutates the original!); broadcasting <code>(3,)+(1,)</code> works but <code>(3,)+(2,)</code> errors — rules, not wishes.</p>
-<p><strong>Input/features/target:</strong> <code>X = b</code> (features, shape (2,2)); a column sliced out (<code>b[:, 1]</code>) is tomorrow&#39;s <em>target</em> <code>y</code> (shape (2,) — note: 1-D, not (2,1)!).</p>
+<details class="interactive-toggle"><summary>What do `shape`, `dtype`, `reshape`, and `axis` mean?</summary><div class="toggle-content"><p><code>shape</code> = the size tuple, e.g. <code>(1000, 5)</code> (1000 rows, 5 columns — read as samples × features by this course&#39;s convention; transposed layouts exist elsewhere, so confirm per dataset). <code>dtype</code> = element type (<code>float64</code> = 64-bit decimals; mixed-type arrays upcast or object-ify — check it). <code>reshape(4)</code> = new view with a new shape sharing the same memory (cheap; <code>.copy()</code> when independence is needed). <code>axis</code> = the dimension an operation collapses: <code>axis=0</code> eats rows (per-column result), <code>axis=1</code> eats columns (per-row result).</p>
+</div></details><details class="interactive-toggle"><summary>What is the broadcasting rule, exactly, with an example?</summary><div class="toggle-content"><p>Align shapes from the trailing (right) end; each axis pair must match or have a 1 (stretched to match), else error. <code>(3,) + (1,)</code>: trailing 3 vs 1 → stretch the 1 → <code>[11,12,13]</code>. <code>(100,5) + (5,)</code>: 5 matches 5, leading 100 stands alone → row-wise stretch. <code>(100,5) + (100,)</code>: trailing 5 vs 100 → mismatch → loud error. Legal-but-unintended stretches corrupt silently — print shapes after arithmetic.</p>
+</div></details><p><strong>Input/features/target:</strong> <code>X = b</code> (features, shape (2,2)); a column sliced out (<code>b[:, 1]</code>) is tomorrow&#39;s <em>target</em> <code>y</code> (shape (2,) — note: 1-D, not (2,1)!).</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Elementwise prints, correct slices, <code>(4,)</code> reshape, broadcast sum <code>[11,12,13]</code>, column means <code>[2,3]</code>. Result: loops replaced by expressions; shapes predicted before printed.</p>

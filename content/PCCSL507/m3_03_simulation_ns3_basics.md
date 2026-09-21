@@ -73,6 +73,14 @@ int main(int argc, char *argv[]) {
 - `EnablePcapAll` writes per-node pcaps — open node0's in Wireshark: your real-capture reading skills transfer exactly.
 - Sweep: wrap loss via `RateErrorModel` on the device, loop rates in shell, parse FlowMonitor `rxPackets/txPackets` per run into one plot.
 
+::: toggle What do NodeContainer, Helpers, `Install`, `EnablePcapAll`, and FlowMonitor each contribute?
+NodeContainer = the cast (empty nodes awaiting roles). Helpers (`PointToPointHelper`, `InternetStackHelper`, address helper) = stage directions setting rates, delays, stacks, addresses (attributes like `DataRate`/`Delay` are the set design). `Install` = build the described objects onto nodes (nothing exists until installed). `EnablePcapAll` = record every interface to Wireshark-readable pcaps (evidence files). FlowMonitor = statistics collector (per-flow tx/rx/loss/delay numbers — graphs come from here, not from staring at packets).
+:::
+
+::: toggle What do "seed", "DataRate", and "calibration" mean for honest results?
+Seed = RNG start (same seed = same "random" losses — repeatability; vary deliberately for confidence, fix for comparison). DataRate = link ceiling (results above it indict the measurement, never celebrate). Calibration = reproducing one real number (a ping, a loss rate) before scaling up (validity flows upward from reality, never down from ambition).
+:::
+
 ## 4. Expected Output and How to Verify
 
 100 packets requested; loss 0% ⇒ rx 100, delay ≈ 2 ms + queuing; loss 20% ⇒ rx ≈ 80 (UDP echo never repairs — matches M1.03 morals). Verify honesty: zero-loss throughput ≈ 5 Mbps ceiling (never above DataRate — models that beat physics are misconfigured); pcap opens in Wireshark with sane sequence behaviour.

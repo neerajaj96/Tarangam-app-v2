@@ -27,7 +27,7 @@ tags:
 <a id="the-problem"></a>
 ## 1. Start Here: The Problem Before Any Solution (Absolute Beginner)
 
-A washing machine never runs Word or browses the web, yet a computer inside it reads buttons, spins the drum, heats water, and drains — for ten years without crashing. The problem: general computers are too big, hungry, and unreliable for one fixed job. The solution family is **embedded systems**: computers built into a product to do one job repeatedly, cheaply, and dependably.
+A washing machine rarely runs Word or browses the web, yet a computer inside it reads buttons, spins the drum, heats water, and drains — often for a decade without a reboot. The problem: general computers are too big, hungry, and unreliable for one fixed job. The solution family is **embedded systems**: computers built into a product to do one job repeatedly, cheaply, and dependably.
 
 Tiny beginner example. A microwave keypad press "2:00" becomes heat for exactly two minutes then a beep. One chip reads the keypad, times the interval, drives the magnetron relay, and beeps. No screen, no operating system, no fan — one fixed program on one small chip.
 
@@ -41,6 +41,18 @@ Abbreviations defined on first use: Central Processing Unit (CPU), Microcontroll
 | What is firmware? | That fixed program, stored in non-volatile memory |
 | What is real-time? | Must respond before a deadline, not just correctly |
 
+::: toggle What is "firmware" (vs software)?
+Firmware is the program baked into the product's non-volatile memory: it runs automatically at power-up and never changes unless deliberately re-flashed. Phone apps are software (installed, updated, removed casually); the microwave's program is firmware (fixed, always there). Same code idea, different permanence.
+:::
+
+::: toggle What does "real-time" mean here?
+It means *timeliness is correctness*: a brake signal computed perfectly but 2 seconds late is a failure, not a success. "Real-time" never means "fast" — a slow system meeting a generous deadline is real-time; a fast system missing a tight one is not.
+:::
+
+::: toggle What is "non-volatile" memory?
+Memory that keeps its contents with power off (flash, ROM, EEPROM). RAM is volatile (forgets at power-off). Firmware must live in non-volatile memory, or the product would wake up amnesiac every morning.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — Every Term Defined
 
@@ -52,6 +64,14 @@ Abbreviations defined on first use: Central Processing Unit (CPU), Microcontroll
 | **System on Chip (SoC)** | One chip holding CPU plus phone-grade extras (graphics, radio, camera ports) — a microcontroller grown up, or a microprocessor with everything integrated. |
 | **Processor classification by width** | 8-bit (one byte per step: AVR, 8051), 16-bit (MSP430), 32-bit (ARM Cortex-M — this course). Wider usually means faster math, more memory reach, higher cost and hunger. |
 
+::: toggle What does "8-bit / 32-bit" actually count?
+The width of one data chunk the CPU moves and computes per basic step: an 8-bit core adds 8 bits at a time (adding 32-bit numbers takes 4 steps), a 32-bit core does it in one. It does *not* count speed (Megahertz) — width is chunk size, MHz is steps per second.
+:::
+
+::: toggle What is CISC vs RISC in one breath each?
+CISC (Complex): the core understands many powerful instructions (one can copy a whole string). x86 laptops use it. RISC (Reduced): the core understands few simple ones that each finish fast (ARM uses it). Fewer types of instructions — not fewer instructions executed.
+:::
+
 ::: callout-intuition Core Mental Model: The One-Job Computer
 A microcontroller is a kitchen with the chef, pantry, and tools in one room: small, complete, and always cooking the same dish. A microprocessor is just the chef — you must rent the pantry (RAM), recipe book (ROM), and tools (I/O chips) separately before dinner starts. Exam questions exploit exactly this: "which needs external memory?" is answered by the kitchen test.
 :::
@@ -59,7 +79,7 @@ A microcontroller is a kitchen with the chef, pantry, and tools in one room: sma
 <a id="formal-theory"></a>
 ## 3. Formal Theory — MC vs MP and Classifications
 
-**MC vs MP, the five examinable contrasts:** (1) Integration: MC has memory and I/O on-chip; MP needs external chips. (2) Purpose: MC runs one fixed firmware task; MP runs general software under an Operating System (OS). (3) Power and cost: MC sips milliamps and costs cents-to-dollars; MP needs watts, cooling, and dollars-to-hundreds. (4) Speed: MC tens-to-hundreds of Megahertz (MHz); MP Gigahertz (GHz). (5) Boot: MC starts its firmware instantly from flash; MP boots an OS from disk.
+**MC vs MP, the five examinable contrasts:** (1) Integration: MC has memory and I/O on-chip; MP needs external chips. (2) Purpose: MC runs one fixed firmware task; MP runs general software under an Operating System (OS). (3) Power and cost: MC sips milliamps and costs cents-to-dollars; desktop-class MP needs watts, cooling, and dollars-to-hundreds (phone-class processors sip less, but they are SoCs, not bare MPs). (4) Speed: MC tens-to-hundreds of Megahertz (MHz); desktop MP Gigahertz (GHz). (5) Boot: MC starts its firmware in microseconds-to-milliseconds straight from flash (no OS to load); MP boots an OS from disk.
 
 **Processor classifications examiners ask:** by width (8/16/32-bit, above); by instruction set — Complex Instruction Set Computer (CISC: many powerful instructions, e.g. x86) vs Reduced Instruction Set Computer (RISC: few simple fast instructions, e.g. ARM); by use — general-purpose (laptop), embedded (microwave), Digital Signal Processor (DSP: math-heavy audio/video). ARM Cortex-M is 32-bit RISC for embedded use — all three answers in one chip.
 
@@ -118,7 +138,7 @@ Purpose decides, not size: fixed-job plus power/cost limits point to the all-in-
 One chip, three labels: width counts bytes per step, RISC counts instruction philosophy, embedded counts purpose. Examiners award one mark per axis — never merge them into "fast chip."
 :::
 
-::: quiz Why does a microcontroller boot instantly while a laptop takes seconds, and what memory makes it possible?
+::: quiz Why does a microcontroller start so much faster than a laptop, and what memory makes it possible?
 () MCs skip booting by magic; laptops are slower chips
 (*) MC firmware lives in on-chip non-volatile flash/ROM and executes (or shadows to RAM) immediately at power-up; laptops must load an OS from disk into RAM through a bootloader chain — no disk, no wait
 () MCs have no memory at all

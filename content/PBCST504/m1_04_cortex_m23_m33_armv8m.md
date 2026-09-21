@@ -42,6 +42,14 @@ Abbreviations defined on first use: Internet of Things (IoT), TrustZone (ARM har
 | What is the gate? | The few controlled entry points where Non-secure may call Secure |
 | What is attestation? | Proof to a remote server of what firmware is running |
 
+::: toggle What is a "world" (Secure vs Non-secure)?
+A complete execution environment — its own code, data, and peripherals — carrying a hardware security label. The processor checks the label on every access and faults forbidden crossings automatically. Think two separate computers sharing one chip, with the border enforced by silicon rather than by promises in code.
+:::
+
+::: toggle What is a "gate" / veneer, concretely?
+The few designated function entries through which Non-secure code may call into Secure code. Each veneer validates its arguments first (is this PIN-length sane? is this buffer inside Non-secure memory?) and only then serves. Calling any other Secure address faults — the gate is narrow so every crossing can be audited.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — Armv8-M Vocabulary
 

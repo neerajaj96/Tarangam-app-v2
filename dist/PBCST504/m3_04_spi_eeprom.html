@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -271,7 +271,9 @@
 <td>~5 ms internal burn-in after the bus transfer — reads too early lie</td>
 </tr>
 </tbody></table>
-<p><a id="words-first"></a></p>
+<details class="interactive-toggle"><summary>What do WREN, WRITE, READ, RDSR, and WIP each do?</summary><div class="toggle-content"><p>WREN (WRite ENable) = sets the protection latch permitting the next burn (without it, writes are ignored). WRITE = opcode + address + data bytes clocked under one CS (the dictation). READ = opcode + address, then keep clocking to stream bytes out (no burn involved). RDSR (ReaD Status Register) = asks &quot;are you busy?&quot;. WIP (Write-In-Progress bit inside it) = 1 means ink still drying — poll until 0 instead of guessing 5 ms.</p>
+</div></details><details class="interactive-toggle"><summary>What do CPOL and CPHA agree on, and what breaks when they differ?</summary><div class="toggle-content"><p>CPOL (Clock POLarity) = the clock line&#39;s resting level between bytes (0 = rests low, 1 = rests high). CPHA (Clock PHase) = which edge samples data (0 = first edge after CS, 1 = second). Together they pick modes 0–3. If master and slave disagree, every bit is sampled at the wrong instant — total systematic corruption of all bytes, never random noise.</p>
+</div></details><p><a id="words-first"></a></p>
 <h2 id="2-words-first-spi-vocabulary">2. Words First — SPI Vocabulary</h2>
 <p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-formal-theory-transfers-and-pages">3. Formal Theory — Transfers and P… →</a></p>
 <table>

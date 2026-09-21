@@ -79,6 +79,10 @@ $$\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\lvert e_i\rvert, \quad \mathrm{MSE} =
 
 Here $\lvert e_i\rvert$ is absolute miss, $e_i^2$ is squared miss, $SS_{res}$ is unexplained squares, $SS_{tot}$ is baseline squares around the mean. Intuition: MAE treats all lakhs equally; RMSE squares first so one 10-lakh blunder outweighs ten 1-lakh misses; R² $=1$ is perfect, $0$ ties the mean, negative loses to it. Worked micro-example is §1's $[10,12,14]$ vs $[11,12,17]$: MAE $\approx 1.33$, RMSE $\approx 1.83$, and R² on this toy triple is $1 - 10/8 = -0.25$ (worse than predicting the mean $12$ every time — small toys exaggerate, which is why KTU asks R² on real test sets, never three points).
 
+::: toggle Expand every RMSE element: RMSE, n, i, y_i, ŷ_i, −, ², Σ, ÷, √
+RMSE = Root Mean Squared Error (the name lists the operations inside-out: square, mean, root — of errors). $n$ = number of test points (the averaging count). $i$ = the running index (1st point, 2nd, …). $y_i$ = true target of point $i$. $\hat{y}_i$ (y-hat) = model's prediction for point $i$ (hat = estimated). $−$ (subtraction) = signed miss per point ($y_i − \hat{y}_i$; sign kept till squaring). $²$ (square) = miss × miss (kills signs, punishes big misses disproportionately — the outlier sensitivity). $\Sigma$ (summation over $i=1..n$) = total the squared misses. $÷ n$ (division = mean) = average squared miss (MSE — size-independent grade). $\sqrt{}$ (square root) = back to original units (lakhs, not lakhs-squared — RMSE speaks the target's language). Why this structure: squaring prices big misses extra, averaging removes size dependence, rooting restores units. Tiny numbers: misses $[1,0,3]$ → squares $[1,0,9]$ → mean $3.33$ → root $\approx 1.83$.
+:::
+
 | Similar pair | Distinction that earns marks |
 |---|---|
 | MAE vs RMSE | Typical miss vs outlier-weighted miss; report both, never RMSE alone when outliers matter |

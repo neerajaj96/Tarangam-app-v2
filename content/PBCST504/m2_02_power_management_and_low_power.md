@@ -28,7 +28,7 @@ tags:
 <a id="the-problem"></a>
 ## 1. Start Here: The Problem Before Any Solution (Absolute Beginner)
 
-A door sensor must live two years on a coin cell yet answer instantly when the door opens. The problem: running at full speed drains the cell in days; sleeping deeply risks missing the event. Power management is the art of being almost-dead yet instantly-wakeable — sleep 99.9% of the time, sprint 0.1%.
+A door sensor must live two years on a coin cell yet answer quickly when the door opens. The problem: running at full speed drains the cell in days; sleeping deeply risks missing the event. Power management is the art of being almost-dead yet wakeable in microseconds — sleep 99.9% of the time, sprint 0.1%.
 
 Tiny beginner example. Active current 10 mA, deep-sleep current 1 µA (microamp), awake 1 second per hour. Average ≈ (10 mA × 1 + 0.001 mA × 3599)/3600 ≈ 0.0038 mA — the cell lasts years because sleep dominates the average, not because active sipping was optimised.
 
@@ -47,7 +47,7 @@ Abbreviations defined on first use: Microamp (µA), Real-Time Clock (RTC), Low-P
 
 | Mode (deeper downward) | What stays alive | Plain meaning |
 |---|---|---|
-| **Run / Sleep** | CPU paused, peripherals on | Lightest doze; any interrupt wakes instantly; microamps-to-milliamp savings only |
+| **Run / Sleep** | CPU paused, peripherals on | Lightest doze; interrupts wake in a few clock cycles; microamps-to-milliamp savings only |
 | **Stop** | RAM kept, most clocks off | Deep sleep; wake on pin/RTC/comm; tens-of-microamps territory |
 | **Standby** | Minimal retention, RTC optional | Near-off; wake resets much state; sub-microamp |
 | **Shutdown** | Almost nothing (wake pins + reset) | Deepest; nanoamps; wake is near-reboot |
@@ -61,6 +61,14 @@ Chair-doze (Sleep) hears everything but rests little; bunk-sleep with alarm wire
 ## 3. Formal Theory — Average Current and Wake Contracts
 
 **The only formula that matters:** $I_{avg} = (I_{active}T_{active} + I_{sleep}T_{sleep})/(T_{active}+T_{sleep})$. Meaning: charge spent awake plus charge spent asleep, over total time. Variables: $I$ currents, $T$ durations. Intuition: with 0.1% duty cycle, sleep current sets the answer — halving active current barely moves $I_{avg}$; halving sleep current nearly halves it. Worked above: 10 mA × 1 s vs 1 µA × 3599 s gives ≈ 3.8 µA average. Exam move: always compute both terms before declaring a winner.
+
+::: toggle Why is the formula charge divided by time (not just an average of currents)?
+Current × time = charge (the battery's actual currency, milliamp-hours). The formula totals each mode's charge, then divides by total time to get the equivalent steady current. Averaging 10 mA and 1 µA directly (5 mA) would pretend both modes last equally long — weighting by time is what makes the 99.9% sleep dominate honestly.
+:::
+
+::: toggle What do "duty cycle" and "wake-up source" mean in one breath each?
+Duty cycle = fraction of time awake (1 s per hour ≈ 0.03% — the smaller, the more sleep rules). Wake-up source = the peripheral allowed to interrupt sleep (a pin edge, the RTC alarm, a radio packet) — chosen before sleeping, because an unwired event never arrives however light the sleep.
+:::
 
 **Wake contracts per depth:** lighter modes keep clocks and RAM (fast wake, state intact); Stop keeps RAM but kills most clocks (re-init clocks on exit — LP libraries do this); Standby/Shutdown lose most state (design wake as re-entry, save essentials in backup registers/RTC domain first). Peripherals as wake sources must be explicitly enabled pre-sleep; a sleeping UART (Universal Asynchronous Receiver-Transmitter) receives nothing unless its clock stays on — the classic "slept through the message" bug.
 

@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -324,7 +324,9 @@ int main(void) {
 }
 </code></pre>
 <p>Read it as contracts: include (declarations), HAL_Init (tick alive), clock enable (power), descriptor (personality), init (commit), infinite toggle (never return from main, per M1.02). Speed LOW is deliberate: fast edges on a slow LED waste power and spray noise.</p>
-<p><strong>Debugging a dark LED, in order:</strong> (1) probe connected and code actually flashed? (2) correct port/pin (PA5 vs PB5)? (3) clock enable present? (4) mode really output (reset default is analog!)? (5) delay visible (1 ms looks permanently dim-on)? Check in this order and the bug confesses.</p>
+<details class="interactive-toggle"><summary>What does each HAL line do, and what goes in vs comes out?</summary><div class="toggle-content"><p><code>HAL_Init()</code> — starts the SysTick timer and low-level handles; in: nothing; out: a running 1 ms tick (needed by <code>HAL_Delay</code>). <code>__HAL_RCC_GPIOA_CLK_ENABLE()</code> — powers the GPIOA block; in: nothing; out: writes to live registers finally take effect. <code>GPIO_InitTypeDef g = {0}</code> — a zeroed descriptor struct; fields filled next select pin/mode/pull/speed (inputs), and <code>HAL_GPIO_Init(GPIOA, &amp;g)</code> commits them to hardware (output: configured pins). <code>HAL_GPIO_TogglePin</code> flips one pin (in: port + pin; out: changed voltage); <code>HAL_Delay(500)</code> busy-waits 500 ticks (in: milliseconds; out: elapsed time, CPU blocked meanwhile).</p>
+</div></details><details class="interactive-toggle"><summary>What is &quot;push-pull&quot; vs &quot;open-drain&quot; on the actual wire?</summary><div class="toggle-content"><p>Push-pull drives the pin both high (transistor to supply) and low (transistor to ground) — a complete driver for LEDs and logic. Open-drain only pulls low and floats otherwise, needing an external pull-up resistor to ever read high — used for shared lines (like I2C) where several drivers must never fight. Choose push-pull unless sharing the wire.</p>
+</div></details><p><strong>Debugging a dark LED, in order:</strong> (1) probe connected and code actually flashed? (2) correct port/pin (PA5 vs PB5)? (3) clock enable present? (4) mode really output (reset default is analog!)? (5) delay visible (1 ms looks permanently dim-on)? Check in this order and the bug confesses.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Bring-Up Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Toolchain = compile→link→locate→flash→debug · clock before configure before command · reset pin state is analog input · push-pull drives both ways · main never returns · blink rate = 2 × delay.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Analog-Default Trap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Reset leaves pins as analog inputs (lowest power, least noise). Skipping mode setup leaves your &quot;output&quot; an input forever — the single most common dead-LED cause in viva answers.</p>
 </div></details><p><a id="worked-example"></a></p>

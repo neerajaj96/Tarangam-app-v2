@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -232,7 +232,9 @@ print(&quot;lasso a/test:&quot;, lasso.alpha_, round(lasso.score(Pte, yte), 3))
 print(&quot;lasso kept:&quot;, [c for c, w in zip(poly.get_feature_names_out(FEATS), lasso.coef_) if abs(w) &gt; 1e-6])
 </code></pre>
 <p>Line-by-line honesty: <code>logspace</code> sweeps orders of magnitude (strength is logarithmic intuition); <code>RidgeCV/LassoCV</code> internalise the CV (no hand loops, no test peeking); <code>max_iter</code> raised (Lasso must converge — unconverged warnings invalidate the path); survivors listed by name (the selection evidence); standardised inputs mandatory (penalties punish raw magnitudes otherwise).</p>
-<p><strong>Algorithm:</strong> penalised least squares, $\lambda$ at the CV minimum per method.</p>
+<details class="interactive-toggle"><summary>What do `RidgeCV`, `LassoCV`, `alphas`, and the survivor list mean?</summary><div class="toggle-content"><p><code>RidgeCV(alphas=...)</code> = Ridge over a strength grid with internal 5-fold CV (in: expanded train data; out: best <code>alpha_</code> + fitted weights — selection automated, test untouched). <code>LassoCV(...)</code> = same for L1 (plus <code>max_iter</code> raised so the coordinate solver actually converges — heed warnings). <code>alphas=logspace(...)</code> = strengths 10⁻²…10⁴ (logarithmic sweep because strength intuition is multiplicative). Survivor list = features with |w| &gt; tiny threshold (Lasso&#39;s exact zeros dropped — the named selection finding; correlated twins may swap across seeds, reported honestly).</p>
+</div></details><details class="interactive-toggle"><summary>Why expand to degree 2 here if M2.02 already did polynomials?</summary><div class="toggle-content"><p>Deliberate scaffolding: degree-2 expansion manufactures the overfit (many columns, collinear monomials) that penalties are built to cure — watch test sag first, then recover it. Reported as scaffolding, not discovery: the experiment&#39;s point is the cure&#39;s behaviour (shrink vs select), measured against the M2.01 linear baseline.</p>
+</div></details><p><strong>Algorithm:</strong> penalised least squares, $\lambda$ at the CV minimum per method.</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Unpenalised degree-2 sags below baseline; Ridge recovers near baseline (all features, tamed); Lasso matches with a short survivor list (sparse + readable). Result: two CV curves, two test scores, one named survivor set.</p>

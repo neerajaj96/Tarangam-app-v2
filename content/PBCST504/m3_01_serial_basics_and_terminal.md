@@ -53,6 +53,14 @@ Abbreviations defined on first use: Least-Significant Bit first (LSB-first), Uni
 | **Flow control (RTS/CTS)** | "Hold on, my buffer is full" handshake lines — prevents overrun when receivers lag. |
 | **Serial terminal (PuTTY/Tera Term)** | PC program opening a COM port at your baud/frame settings to type at, and read from, the chip — the link's proof of life. |
 
+::: toggle What does "8N1" spell out setting by setting?
+`8` = eight data bits per frame (one byte). `N` = No parity bit (no error-detection flag added). `1` = one stop bit (line rests high for one bit-time after each byte). So 8N1 = 1 start + 8 data + 0 parity + 1 stop = 10 bit-times per byte. Both ends must agree on all three, plus baud, or garbage results.
+:::
+
+::: toggle What is a COM port and what does "TX→RX crossed" mean physically?
+COM port = the PC's name for a serial interface (USB-to-serial adapters appear as COM3, COM4…). Transmit (TX) sends, Receive (RX) listens — so one side's TX wire must meet the other's RX wire (crossed), plus a shared ground wire as the common voltage reference. TX-to-TX connects two mouths with no ears; missing ground leaves voltages unreferenced (floating garbage).
+:::
+
 ::: callout-intuition Core Mental Model: Stamped Single File
 Parallel is eight doors with no tickets (fast, chaotic at distance); serial is one door where every byte shows a stamped ticket (start/stop) or marches to a shared drum (clock). Tickets cost ~20% overhead and buy certainty — the trade the whole module prices per protocol.
 :::

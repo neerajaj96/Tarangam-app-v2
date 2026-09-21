@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -271,7 +271,9 @@
 <td>Delay sleeps one task; timer callback fires for the system on schedule</td>
 </tr>
 </tbody></table>
-<p><a id="words-first"></a></p>
+<details class="interactive-toggle"><summary>When do I use a queue, a mutex, a binary semaphore, or a counting semaphore?</summary><div class="toggle-content"><p>Queue = data must move between tasks safely (sensor readings to radio). Mutex = one hardware/one structure needs one-at-a-time access with ownership (UART, shared buffer) — take and give in the same task. Binary semaphore = an ISR must wake a task (button press flag, no ownership). Counting semaphore = N identical resources or N pending events (three DMA channels, burst counts). Data→queue, hardware→mutex, ISR-event→binary, pool→counting.</p>
+</div></details><details class="interactive-toggle"><summary>What is the difference between `vTaskDelay` and `vTaskDelayUntil`?</summary><div class="toggle-content"><p><code>vTaskDelay(200)</code> sleeps 200 ticks from <em>now</em> — each period starts late by the previous jitter, so error accumulates (drift). <code>vTaskDelayUntil(&amp;last, 200)</code> sleeps until <em>last + 200</em> — each wake re-anchors, shedding jitter (no drift). Naps versus anchors: exact periods need Until (or a timer), never Delay.</p>
+</div></details><p><a id="words-first"></a></p>
 <h2 id="2-words-first-ipc-vocabulary">2. Words First — IPC Vocabulary</h2>
 <p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-formal-theory-ownership-and-time">3. Formal Theory — Ownership and T… →</a></p>
 <table>

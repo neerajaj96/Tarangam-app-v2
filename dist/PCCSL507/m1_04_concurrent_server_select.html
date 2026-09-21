@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -205,7 +205,7 @@
 <p>We prove the stall first (client A sends half a line and sleeps; client B&#39;s full line waits), then fix it: <code>select</code> sleeps until <em>some</em> socket is readable, and the loop serves exactly those — one thread, no starvation, no threads at all.</p>
 <h2 id="2-concept-in-very-simple-language">2. Concept in Very Simple Language</h2>
 <p class="secnav"><a href="#1-what-are-we-doing-and-why">← 1. What Are We Doing, and Why</a><span class="secnav-sep">·</span><a href="#3-code-and-line-by-line-explanation">3. Code and Line-by-Line Explanati… →</a></p>
-<p>Give <code>select</code> three lists (readable-wanted, writable-wanted, exceptions) — it returns the ready subsets. New dial on the listener ⇒ <code>accept</code> it into the watch set. Data on a client ⇒ <code>recv</code> it now (guaranteed non-blocking). Disconnect (<code>recv == b&#39;&#39;</code>) ⇒ close and drop from the set. Rebuild lists every loop (select overwrites them — in C; Python&#39;s wrapper takes fresh lists each call, same discipline).</p>
+<p>Give <code>select</code> three lists (readable-wanted, writable-wanted, exceptions) — it returns the ready subsets. New dial on the listener ⇒ <code>accept</code> it into the watch set. Data on a client ⇒ <code>recv</code> it now (reported-ready, and non-blocking is set, so the call cannot stall). Disconnect (<code>recv == b&#39;&#39;</code>) ⇒ close and drop from the set. Rebuild lists every loop (select overwrites them — in C; Python&#39;s wrapper takes fresh lists each call, same discipline).</p>
 <h2 id="3-code-and-line-by-line-explanation">3. Code and Line-by-Line Explanation</h2>
 <p class="secnav"><a href="#2-concept-in-very-simple-language">← 2. Concept in Very Simple Language</a><span class="secnav-sep">·</span><a href="#4-expected-output-and-how-to-verify">4. Expected Output and How to Veri… →</a></p>
 <pre><code class="language-python"># select_server.py — one thread, many uppercase clients
@@ -233,8 +233,10 @@ while True:
                     line, bufs[s] = bufs[s].split(b&quot;\n&quot;, 1)
                     s.sendall(line.upper() + b&quot;\n&quot;)
 </code></pre>
-<p>Stall demo: client A sends <code>half-</code> (no newline) and sleeps 10 s; client B sends <code>full\n</code> — B answered instantly while A mid-line proves the fix (iterative version would stall B 10 s).</p>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<p>Stall demo: client A sends <code>half-</code> (no newline) and sleeps 10 s; client B sends <code>full\n</code> — B answered within milliseconds while A mid-line proves the fix (iterative version would stall B 10 s).</p>
+<details class="interactive-toggle"><summary>Expand: `select.select(watch, [], [], 5.0)`</summary><div class="toggle-content"><p><code>select</code> = ask the kernel which descriptors are ready (imported from the <code>select</code> module). <code>watch</code> (first list) = sockets to watch for readability. <code>[], []</code> = write/exception lists (empty — we only await arrivals). <code>5.0</code> = timeout seconds (wake empty-handed after 5 s idle so housekeeping could run). Returns <code>(readable, [], [])</code> — touch only listed sockets (readiness permission per call). What changes: thread sleeps in kernel instead of spinning (CPU idle when quiet — verify with <code>top</code>).</p>
+</div></details><details class="interactive-toggle"><summary>What do &quot;blocking&quot; and &quot;non-blocking&quot; mean for these sockets?</summary><div class="toggle-content"><p>Blocking (default) = the call sleeps until done (<code>accept</code> waits for a dial, <code>recv</code> for bytes). Non-blocking (<code>setblocking(False)</code>) = the call returns immediately, raising <code>BlockingIOError</code> when nothing is ready. With <code>select</code> we only touch reported-ready sockets, so non-blocking is a guarantee-backstop (never stall even if readiness raced); without <code>select</code>, non-blocking needs retry loops and blocking needs threads.</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-code-and-line-by-line-explanation">← 3. Code and Line-by-Line Explanati…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p>B&#39;s reply arrives in milliseconds despite A&#39;s open line; A&#39;s reply completes after its newline. Verify: <code>ss -tnp</code> shows 3 ESTABLISHED (listener + 2 clients); server log order shows B served before A finished — scheduling by readiness, not arrival.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Set Amnesia</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Forgetting a new <code>accept</code>ed socket in <code>watch</code> strands that client forever (never reported readable). Every birth joins the watch; every close leaves it — no exceptions.</p>

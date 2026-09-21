@@ -52,6 +52,14 @@ $ sudo wireshark &            # launch with capture rights (or add user to wires
 - Display filter `tcp` then `tcp.flags.syn==1` — narrows the view after capture; mistakes cost nothing, retype and continue.
 - Click packet 1 → expand `Transmission Control Protocol` → read `Source/Destination Port`, `Sequence/Acknowledgment numbers`, `Flags (SYN)`; click the SYN flag → hex pane highlights its byte (field↔bytes binding proved).
 
+::: toggle Packet vs frame vs segment vs datagram — which word when?
+Frame = link-layer unit (Ethernet: MACs + payload). Datagram/packet = network-layer unit (IP: source/destination addresses). Segment = TCP's piece of the stream (sequence numbers); UDP's piece keeps "datagram". Use: frame on the wire, packet/IP in routing, segment for TCP flows. Wireshark's panes show all three stacked — read top (frame) to bottom (TCP/UDP/data) to follow encapsulation outward-in.
+:::
+
+::: toggle What do sequence number, acknowledgment number, SYN, and ACK mean on this capture?
+Sequence number = this segment's first byte position in the stream (SYN consumes one: `Seq=0` synchronises the start). Acknowledgment number = next byte expected (cumulative coffee-stub: everything below arrived). SYN flag = "synchronise with my starting number" (connection birth). ACK flag = "this ack-number is valid" (set on everything after the first SYN). On your capture: SYN `Seq=0` → SYN-ACK `Seq=0 Ack=1` → ACK `Ack=1` = both directions synchronised, zero data yet.
+:::
+
 ## 4. Expected Output and How to Verify
 
 One client run yields ≈ 7 packets: SYN, SYN-ACK, ACK, data→, ACK, data←, ACK (+ FIN teardown). Verify: packet count matches expectation; `tcp.flags.syn==1` shows exactly 1 (client's) — plus `tcp.flags.syn==1 && tcp.flags.ack==1` shows the server's one; follow `tcp.stream eq 0` isolates the conversation.

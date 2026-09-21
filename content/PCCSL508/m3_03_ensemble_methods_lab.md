@@ -50,6 +50,14 @@ print("staged:", [round(s, 3) for s in ada.staged_score(Xte_s, yte)][::40])  # r
 
 Line-by-line honesty: `oob_score` free-validates (37% juries per point — M2.01's juries return); `n_estimators=500` plateaus (check OOB curve, stop paying compute past it); stumps (`depth=1`) force boosting to earn every gain; staged scores reveal over-round decline (quit at the validation peak — rounds are capacity!).
 
+::: toggle What do `oob_score_`, `n_estimators`, `staged_score`, and `n_jobs` mean?
+`oob_score_=True` asks each tree's verdict on points it never saw (~37% left out per bootstrap — free validation jury per point). `n_estimators=500` = committee size (more trees shrink the variance term toward its floor, then plateau — compute bills past it, gains don't). `staged_score(...)` = test score after each boosting round (the rise-then-fall curve: peak ships, endpoints don't). `n_jobs=-1` = use all CPU cores (trees train independently — embarrassingly parallel; wall-time falls, results identical).
+:::
+
+::: toggle Why do forests plateau while boosting sags — in mechanism terms?
+Forest error = bias + correlated-floor + (1−ρ)σ²/B: growing B kills only the last term, so error plateaus at the floor (depth fixed, no new disease). Boosting error = bias − gains + noise-memorisation: early rounds fix bias (rise), late rounds fit noise with apology weights (sag). Plateau = stop paying; peak-then-sag = stop rounding. Different curves, different stop rules.
+:::
+
 **Algorithm:** bootstrap-aggregate vote (forests) vs exponential-reweight staging (AdaBoost).
 
 ## 2. Expected Output and Result

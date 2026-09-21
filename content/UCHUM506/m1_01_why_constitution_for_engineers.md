@@ -46,6 +46,10 @@ S5 carries this MOOC alongside theory, labs, and the microcontroller project: li
 Enrollment in the approved listing, steady progress (not last-week bingeing), and the completion evidence your institution notified (certificate/marks as applicable). Process compliance, documented — that is the whole game here.
 :::
 
+::: toggle What do "MOOC", "approved listing", and "completion evidence" mean?
+MOOC (Massive Open Online Course) = an online course open to large enrollments, with videos, readings, quizzes, and (usually) a proctored final. Approved listing = the specific course session your institution notified for credit (platform + course + session dates — verify yearly, sessions rotate). Completion evidence = whatever the notification names as proof (certificate, score sheet, or both — screenshots alone count only if explicitly accepted).
+:::
+
 **Watch out:** (1) Treating guide pages as study material for constitutional questions — they aren't; the MOOC is. (2) Assuming last year's MOOC link/session still applies — verify the current notification. (3) Leaving it for semester-end — MOOC deadlines are external and unforgiving.
 
 **Active-recall checklist:** Why does S5 require this of engineers? What is Tarangam's role vs the MOOC's? What must you verify with the department first?

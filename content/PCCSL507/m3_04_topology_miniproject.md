@@ -54,6 +54,10 @@ We specify a small campus: two LAN namespaces + router namespace + "internet" na
 - Port-forward (DNAT) is the one new rule: `-t nat -A PREROUTING -i vpub -p tcp --dport 8080 -j DNAT --to 10.0.1.10:5002` + matching FORWARD accept — inbound mapping made explicit (M3.02's lesson applied).
 - Captures are the defence exhibits: blocked scan (unanswered SYNs = DROP), served handshake (SYN-ACK = policy hole working), teardown (clean close).
 
+::: toggle Expand: the DNAT rule piece by piece
+`-t nat` = translation table. `PREROUTING` = chain for packets arriving (first chance to rewrite destination — inbound mirror of POSTROUTING). `-i vpub` = only via input interface vpub (the public face). `-p tcp --dport 8080` = only TCP to port 8080 (narrow hole, not a doorway). `-j DNAT --to 10.0.1.10:5002` = rewrite destination to the private service (the mapping; replies auto-unmapped). Plus the mandatory matching FORWARD accept (translation without permission still dies at the filter). Verify: external `curl` reaches the service; counters on both rules increment together.
+:::
+
 ## 4. Expected Output and How to Verify
 
 LAN browses "internet"; internet reaches only the forwarded service; scans elsewhere time out; counters attribute every flow to its rule; report diagram matches `ip route` dumps. Verify end-to-end the evaluator's way: fresh eyes run `topology.sh` on a clean machine and reproduce every claim (reproducibility is the real grade).

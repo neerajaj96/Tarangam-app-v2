@@ -8221,7 +8221,7 @@
         "Microcontrollers always run a full operating system"
       ],
       "answer": "A microcontroller holds CPU, RAM, ROM and I/O on one chip; a microprocessor holds only the CPU",
-      "explanation": "Integration decides: the all-in-one chip runs fixed firmware jobs; the CPU-only chip needs external support.",
+      "explanation": "Correct: integration decides — the all-in-one chip runs fixed firmware jobs while the CPU-only chip needs external support. The distractors invert the definitions, claim identity, or drag in operating systems that define purpose, not construction.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8232,7 +8232,7 @@
       "type": "true_false",
       "question": "A TV remote uses a microcontroller because it runs one fixed job within tight power and cost limits.",
       "answer": true,
-      "explanation": "Fixed single purpose plus power and cost limits point to the all-in-one chip.",
+      "explanation": "Correct: fixed single purpose plus power and cost limits point to the all-in-one chip. A laptop fails the test on every axis — general software under an OS with external memory.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8249,7 +8249,7 @@
         "REG ^= 0xFF"
       ],
       "answer": "REG |= (1 << 5)",
-      "explanation": "OR pastes a 1 on; assignment wipes the rest, AND reads, XOR flips all ones in the mask.",
+      "explanation": "Correct: OR pastes a 1 on while zeros pass through untouched. Assignment wipes the rest, AND reads rather than writes, and XOR with 0xFF flips everything instead of one pin.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8260,7 +8260,7 @@
       "type": "true_false",
       "question": "Every memory-mapped register and every variable shared with an ISR must be volatile.",
       "answer": true,
-      "explanation": "Hardware and interrupts change memory behind the program's back; volatile forces fresh reads.",
+      "explanation": "Correct: hardware and interrupts change memory behind the program's back, so volatile forces a fresh read every time. Without it, release optimisation caches the first read forever.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8277,7 +8277,7 @@
         "Silicon wafers and packaging services"
       ],
       "answer": "Processor blueprints and core designs under license; licensees build the chips",
-      "explanation": "ARM designs and licenses cores and architectures but fabricates no chips.",
+      "explanation": "Correct: ARM designs and licenses cores and architectures but fabricates no chips — ST builds STM32s around licensed cores. Any option naming ARM as a chip maker collapses licensor into manufacturer.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8288,7 +8288,7 @@
       "type": "true_false",
       "question": "On ARM, arithmetic instructions work only on registers; only LDR and STR touch memory.",
       "answer": true,
-      "explanation": "Load-store law: memory-arithmetic C lines compile to load-add-store triples.",
+      "explanation": "Correct: the load-store law forbids memory operands in arithmetic, so memory-arithmetic C lines compile to load-add-store triples. A single memory-arithmetic instruction cannot exist on ARM.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8305,7 +8305,7 @@
         "A built-in operating system"
       ],
       "answer": "TrustZone worlds, hardware stack-limit checking, improved exception handling, authenticated debug",
-      "explanation": "Generations differ by architecture features: worlds, stack limits, exceptions, debug auth.",
+      "explanation": "Correct: generations differ by architecture features — worlds, stack limits, exceptions, debug auth. Megahertz, price, or logos never appear in a generation comparison answer.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8316,7 +8316,7 @@
       "type": "true_false",
       "question": "Non-secure code calling into the Secure world must enter through Non-secure-Callable veneers; direct calls fault.",
       "answer": true,
-      "explanation": "The narrow gate is the security: skipping it raises SecureFault by design.",
+      "explanation": "Correct: only callable veneers are legal gates, so skipping one faults by design. The fault proves the border holds against exactly this shortcut.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8333,7 +8333,7 @@
         "Addresses are decorative; nothing happens"
       ],
       "answer": "It drives a peripheral register (0x48 is peripheral space), moving hardware, not memory",
-      "explanation": "Load/store is district-blind: the 0x48 prefix means hardware levers, 0x20 means SRAM data.",
+      "explanation": "Correct: load/store is district-blind, so the 0x48 prefix means hardware levers while 0x20 means SRAM data. Treating all addresses as memory misses the map's whole job.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8344,7 +8344,7 @@
       "type": "true_false",
       "question": "On Cortex-M the stack grows toward lower addresses and overflow eats heap and variables below.",
       "answer": true,
-      "explanation": "Descent has no brakes without limits; Armv8-M stack-limit registers fault instead.",
+      "explanation": "Correct: descent has no brakes without limits, and overflow eats heap and variables below. Armv8-M stack limits convert silent corruption into a catchable fault.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8361,7 +8361,7 @@
         "The letter is random marketing"
       ],
       "answer": "Ultra-low-power mission; the U575, which pairs coin-cell sleep currents with a TrustZone-capable M33",
-      "explanation": "Series letter names the mission; power source plus security need cast the vote.",
+      "explanation": "Correct: the series letter names the mission, and battery plus TrustZone pick U5's 575 line. F-series answers mains-powered mainstream jobs, not coin-cell vaults.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8372,7 +8372,7 @@
       "type": "true_false",
       "question": "HAL GPIO code ports across STM32 series for core logic, but clocks, power modes and security setup must be redone per chip.",
       "answer": true,
-      "explanation": "Shared chassis transfers habits; bakery extras differ per reference manual.",
+      "explanation": "Correct: shared chassis transfers habits while clocks, power, and security stay chip-specific. Expecting binary portability ignores the reference-manual halves.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8389,7 +8389,7 @@
         "The LED brightness setting"
       ],
       "answer": "Sleep current, because it rules 99.9% of the time: average is about 3.8 microamps",
-      "explanation": "Charge-weighted mean: the sleep term dominates at low duty cycles.",
+      "explanation": "Correct: the charge-weighted mean is ruled by the 99.9% sleep term. Active-current comparisons without duty cycles compare sprints while batteries die in sleep.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8400,7 +8400,7 @@
       "type": "true_false",
       "question": "Entering Stop mode without enabling a wake-up source leaves the chip unreachable until reset.",
       "answer": true,
-      "explanation": "Deep sleep with no wire is absence: enable the wake source before sleeping.",
+      "explanation": "Correct: deep sleep with no wired wake source is absence until reset. Debugging sleep starts at the wire, never at the depth.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8417,7 +8417,7 @@
         "Replace the microcontroller"
       ],
       "answer": "Enable the port's peripheral clock before configuring pins",
-      "explanation": "Gated-off peripherals ignore writes silently: clock first, configure second, command third.",
+      "explanation": "Correct: gated-off peripherals ignore writes silently, so clock-enable precedes all configuration. Rewriting code or blaming silicon skips the power-physics step.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8428,7 +8428,7 @@
       "type": "true_false",
       "question": "Reset leaves STM32 pins as analog inputs, so every used pin needs an explicit mode setup.",
       "answer": true,
-      "explanation": "Analog default is the most common dead-LED cause.",
+      "explanation": "Correct: reset leaves pins as analog inputs for lowest power. Every used pin needs explicit mode setup — the most common dead-LED cause.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8445,7 +8445,7 @@
         "Slow the loop for stability"
       ],
       "answer": "Total refresh must stay near 8 ms (125 Hz); flicker means slices too long, so quicken each digit slot",
-      "explanation": "Flicker is timing, dimness is budget: 2 ms per digit keeps the frame flicker-free.",
+      "explanation": "Correct: total refresh must stay near 8 ms, so flicker means overlong slices. More digits or slower loops worsen both failure modes instead of fixing them.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8456,7 +8456,7 @@
       "type": "true_false",
       "question": "An LCD prints commands as actions (jumps and clears) instead of text because data was sent with RS=0.",
       "answer": true,
-      "explanation": "RS selects meaning: 0 is command, 1 is data, on the same wires.",
+      "explanation": "Correct: RS selects meaning on shared wires — 0 commands, 1 prints. Rewriting init misses that identical bytes behave differently per RS.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8473,7 +8473,7 @@
         "Zero, because mid-supply is undefined"
       ],
       "answer": "About 2047, since code equals input over reference times 4095",
-      "explanation": "Half voltage gives half scale: LSB is reference over 4096.",
+      "explanation": "Correct: half of reference gives half of 4095. Saturation options ignore the linear ruler; mid-supply is the most defined point, not an edge case.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8484,7 +8484,7 @@
       "type": "true_false",
       "question": "PWM average voltage equals duty share times supply, so duty (not frequency) carries LED and servo meaning.",
       "answer": true,
-      "explanation": "Frequency only needs to exceed perception; duty is the message.",
+      "explanation": "Correct: duty is the message and frequency only needs to exceed perception. Reading frequency as meaning inverts the PWM contract.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8501,7 +8501,7 @@
         "Baud rates are unrelated to byte rates"
       ],
       "answer": "About 11520 bytes/s, because each byte costs 10 frame bits including start and stop",
-      "explanation": "Baud counts framing bits: divide by frame length first, then divide the file.",
+      "explanation": "Correct: baud counts framing bits, so 8N1 divides by 10 first. Equating baud with bytes overstates speed tenfold.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8512,7 +8512,7 @@
       "type": "true_false",
       "question": "A parity bit detects single-bit flips but never corrects errors.",
       "answer": true,
-      "explanation": "Parity is a detection flag; correction needs codes above this layer.",
+      "explanation": "Correct: parity flags single-bit flips and corrects nothing. Correction needs codes above this layer.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8529,7 +8529,7 @@
         "USART peripherals cannot run above 40 MHz"
       ],
       "answer": "The baud divisor went stale: actual baud doubled with the clock, so recompute it",
-      "explanation": "Baud is a ratio with the clock: clock edits invalidate the divisor.",
+      "explanation": "Correct: baud is a ratio with the clock, so doubling the clock doubles actual baud until the divisor is recomputed. Parity, pins, and speed caps are unrelated suspects.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8540,7 +8540,7 @@
       "type": "true_false",
       "question": "Polling suits single bytes while interrupt-driven ring buffers suit streams, because polling holds the whole CPU per byte.",
       "answer": true,
-      "explanation": "Volume decides the architecture: price attention per byte.",
+      "explanation": "Correct: polling rents the whole CPU per byte-time while interrupts rent microseconds. Volume decides the architecture — streams demand buffers.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8557,7 +8557,7 @@
         "The USB cable version"
       ],
       "answer": "Whether any slave owns 0x48, whether it is powered, and whether pull-ups exist",
-      "explanation": "Address-phase NACK means nobody home: identity, power, then physics.",
+      "explanation": "Correct: address-phase NACK reports absence in debug order — identity, power, then physics. Slowing clocks or sending STOPs addresses no cause.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8568,7 +8568,7 @@
       "type": "true_false",
       "question": "I2C lines are open-drain, so missing pull-up resistors leave the whole bus dead.",
       "answer": true,
-      "explanation": "Devices pull low only; resistors restore high.",
+      "explanation": "Correct: open-drain devices pull low only, so resistors restore high. Without them the bus never rises and every transaction fails identically.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8585,7 +8585,7 @@
         "The parity configuration"
       ],
       "answer": "The WREN write-enable latch: transfers clocked fine but cells never burned without it",
-      "explanation": "Bus success reports transfer, never storage: enable, then write, then poll.",
+      "explanation": "Correct: the WREN latch bridges transfer and storage — bus success without it is theatre with correct timing. Speed, polarity, and parity never gate storage.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8596,7 +8596,7 @@
       "type": "true_false",
       "question": "A multi-byte EEPROM write must never cross a page boundary in one operation, because addresses wrap within the page.",
       "answer": true,
-      "explanation": "Fill to the boundary, then whole pages, then remainder.",
+      "explanation": "Correct: addresses wrap within the page, so crossing writes tear head and tail. Page math (fill, wholes, remainder) precedes every multi-byte write.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8613,7 +8613,7 @@
         "A master chip referees the collision"
       ],
       "answer": "0x100 wins at the first bit where it drives dominant 0 against 0x180's recessive 1; the loser backs off and retries",
-      "explanation": "Wired-AND decides mid-bit: lower wins gracefully, the frame survives intact.",
+      "explanation": "Correct: wired-AND decides mid-bit with lower winning gracefully and the frame intact. Seniority, merging, and referee chips misunderstand the mechanism.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8624,7 +8624,7 @@
       "type": "true_false",
       "question": "USB HID lets a sensor gadget work with no custom PC driver by disguising as a keyboard or joystick through report descriptors.",
       "answer": true,
-      "explanation": "Standard class means built-in drivers; the descriptor declares the identity.",
+      "explanation": "Correct: standard classes bring built-in OS drivers, so descriptors declare identity without installs. Custom classes would need the forbidden drivers.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8641,7 +8641,7 @@
         "Brokers are unnecessary overhead"
       ],
       "answer": "Publishers file once to a broker that fans out to all subscribers, instead of thousands of direct query relationships",
-      "explanation": "Streams with many consumers are the newspaper case: decoupling scales.",
+      "explanation": "Correct: one publish fans out to all subscribers, replacing thousands of direct query relationships. Raw sockets or CoAP-per-dashboard rebuild the coupling the broker removes.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8652,7 +8652,7 @@
       "type": "true_false",
       "question": "QoS 0 suits expendable telemetry while QoS 2 suits actuation where duplicates corrupt, because QoS prices duplicate tolerance.",
       "answer": true,
-      "explanation": "Ask what a duplicate costs per flow; promises need connectivity first.",
+      "explanation": "Correct: QoS prices duplicate tolerance per flow — telemetry tolerates loss, actuation cannot tolerate doubles. Maximum-everywhere wastes handshakes; anxiety is not a level.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8669,7 +8669,7 @@
         "Wi-Fi for kilometre penetration"
       ],
       "answer": "LoRa, for kilometre range with byte rates under duty caps that allow years of battery",
-      "explanation": "Environment facts place each radio on the range-rate-power triangle.",
+      "explanation": "Correct: kilometres plus byte rates plus duty-capped battery is LoRa's exact triangle seat. Bluetooth fails range, GSM fails power, Wi-Fi fails both.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8680,7 +8680,7 @@
       "type": "true_false",
       "question": "Recorded unlock commands replayed later are defeated by nonces or monotonic counters, not by encryption alone.",
       "answer": true,
-      "explanation": "Authentication answers identity; freshness answers time.",
+      "explanation": "Correct: authentication answers identity while freshness answers time — encryption without nonces still replays. Each attack row needs its own cure.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8697,7 +8697,7 @@
         "Deadlines do not apply to scheduled systems"
       ],
       "answer": "Loop timing sums all code before each job, while the scheduler preempts by priority, bounding urgent latency",
-      "explanation": "Determinism by ladder, not Megahertz: structure, not speed, is the fix.",
+      "explanation": "Correct: loop latency couples every job to every other while scheduler latency couples each job only to higher priorities. Megahertz never fixes structural coupling.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8708,7 +8708,7 @@
       "type": "true_false",
       "question": "A high task waiting on a mutex held by a low task while a medium task runs long is priority inversion, cured by priority inheritance.",
       "answer": true,
-      "explanation": "Three rungs make the hazard: waiter, holder, and middle spoiler.",
+      "explanation": "Correct: waiter, holder, and middle spoiler make inversion, and inheritance lends urgency to the holder. Raising the medium task or rebooting misdiagnoses the three-rung shape.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8725,7 +8725,7 @@
         "UARTs serialize themselves without guards"
       ],
       "answer": "Only mutexes carry priority inheritance, so an urgent waiter lends urgency to the holder instead of suffering inversion",
-      "explanation": "Guards need ownership: inheritance is the difference, not weight.",
+      "explanation": "Correct: only owned mutexes carry inheritance, defeating the wedge between holder and waiter. Lighter primitives reintroduce the exact cured hazard.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8736,7 +8736,7 @@
       "type": "true_false",
       "question": "ISRs may give semaphores and send to queues with FromISR forms, but must never take mutexes or block.",
       "answer": true,
-      "explanation": "The bell rings but never holds meetings: blocking ISRs freeze everything below.",
+      "explanation": "Correct: bells ring but never hold meetings — blocking ISRs freeze everything below their priority. Mutexes and blocking calls belong to tasks only.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8753,7 +8753,7 @@
         "PIN in Non-secure flash protected by TLS"
       ],
       "answer": "PIN store and checker in Secure; Bluetooth, LED and logs in Non-secure; crossings only via verify veneers",
-      "explanation": "Minimal vault stays auditable: guard secrets, exile the replaceable, narrow the gates.",
+      "explanation": "Correct: minimal vault stays auditable — secrets plus checkers inside, replaceable code outside, yes-or-no veneers between. All-Secure fails auditability; Non-secure PINs fail everything.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8764,7 +8764,7 @@
       "type": "true_false",
       "question": "A two-year battery claim must be proved with duty-cycle average-current math, measured sleep current, and capacity division.",
       "answer": true,
-      "explanation": "Claims without division are wishes: formula, measurement, capacity, margin.",
+      "explanation": "Correct: formula plus measurement plus capacity plus margin, or the claim is decoration. Logos and retrofitted batteries are not evidence.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8781,7 +8781,7 @@
         "The browser installation"
       ],
       "answer": "DNS name resolution, since IPs route fine while names never resolve",
-      "explanation": "Working-IP with dead-name is DNS's signature split: inspect the resolver path.",
+      "explanation": "Correct: working IPs with dead names isolate the resolver path — inspect resolv.conf and the DNS server's reachability. Cables, leases, and browsers are innocent when pings reply.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8792,7 +8792,7 @@
       "type": "true_false",
       "question": "An ss entry of 0.0.0.0:8080 means the program accepts connections on all interfaces, while 127.0.0.1 means loopback only.",
       "answer": true,
-      "explanation": "The address before the colon names the audience.",
+      "explanation": "Correct: the pre-colon address names the audience — all-interfaces serves the LAN, loopback serves self. Rebinding, not firewall lore, fixes reachability asymmetry.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8809,7 +8809,7 @@
         "A loopback policy needing root"
       ],
       "answer": "The old connection in TIME_WAIT holding the port; SO_REUSEADDR permits immediate rebind",
-      "explanation": "TIME_WAIT guards late duplicates; rebind policy is the socket option.",
+      "explanation": "Correct: TIME_WAIT guards late duplicates after close, and the socket option permits immediate rebind. Burnt ports, caches, and privilege theories mistake state for damage.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8820,7 +8820,7 @@
       "type": "true_false",
       "question": "When recv returns empty bytes, the peer has closed its side: it is TCP's hang-up notice, never data.",
       "answer": true,
-      "explanation": "Reads return data, then zero bytes at close.",
+      "explanation": "Correct: reads return data, then zero bytes at orderly close — empty is the hang-up notice. Chasing speed or blaming loopback misses the protocol signal.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8837,7 +8837,7 @@
         "Loopback blocks UDP by policy"
       ],
       "answer": "The server is down or the port is wrong, and the client has no timeout: connectionless failure is silent",
-      "explanation": "No handshake means no refusal signal: timeouts are mandatory, not polite.",
+      "explanation": "Correct: connectionless failure is silent, so prove the server first and armor clients with timeouts. Speed, connect rituals, and loopback policies are non-causes.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8848,7 +8848,7 @@
       "type": "true_false",
       "question": "Blocking recvfrom with no timeout freezes forever on the first lost datagram, so UDP clients must set timeouts and plan retries.",
       "answer": true,
-      "explanation": "Loss is normal; eternity is a bug.",
+      "explanation": "Correct: loss is normal on networks, so unbounded waits turn one drop into eternity. Timeouts plus retries are mandatory, not polite.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8865,7 +8865,7 @@
         "Automatic discovery by select"
       ],
       "answer": "Connect then silence forever, since readable bytes on an unwatched descriptor are never reported",
-      "explanation": "Birth-join and close-leave is the watch invariant.",
+      "explanation": "Correct: the kernel reports only listed descriptors, so unwatched clients stay silent forever. Crashes, speedups, and auto-discovery contradict the watch invariant.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8876,7 +8876,7 @@
       "type": "true_false",
       "question": "Per-client line buffers plus reply-only-on-newline let complete requests jump ahead of a slow client's partial line.",
       "answer": true,
-      "explanation": "Partial work waits, complete work dispatches: fairness by buffering and readiness.",
+      "explanation": "Correct: buffered lines plus readiness dispatch let complete work jump partial work. Threading claims and byte-reordering theories miss the actual fairness mechanism.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8893,7 +8893,7 @@
         "Loopback traffic cannot be captured"
       ],
       "answer": "Wrong interface or an over-narrow capture filter: the working traffic alibis the packets, so the microscope is mispointed",
-      "explanation": "Blame the lens, never the proven packets: interface first, filter second.",
+      "explanation": "Correct: proven traffic alibis the packets, so the fault lies with interface or pre-Start filter. Reinstalls, encryption, and loopback myths blame the wrong layer.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8904,7 +8904,7 @@
       "type": "true_false",
       "question": "Capture filters decide what gets recorded before Start, while display filters decide what is viewed after, and their syntaxes differ.",
       "answer": true,
-      "explanation": "Two boxes, two grammars: record versus view.",
+      "explanation": "Correct: BPF records while display-language views — red means rejected syntax in the current box. Port numbers and colours are innocent; grammar is guilty.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8921,7 +8921,7 @@
         "Retransmissions duplicate the reply text"
       ],
       "answer": "The receiver begged the gap with dup ACKs, the sender repaired it, and reassembly delivered ordered bytes",
-      "explanation": "Dups diagnose, black resends cure, identical bytes certify.",
+      "explanation": "Correct: dups diagnose the gap, black resends cure it, identical bytes certify the repair loop. Luck, Wireshark magic, and duplication theories skip all three phases.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8932,7 +8932,7 @@
       "type": "true_false",
       "question": "A FIN close drains gracefully while an RST close aborts with in-flight data at risk.",
       "answer": true,
-      "explanation": "FIN means done, drain me; RST means destroy now.",
+      "explanation": "Correct: FIN drains gracefully while RST destroys with data at risk — asymmetry tells which side died mid-sentence. Speed and symmetry claims misread close semantics.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8949,7 +8949,7 @@
         "DHCP uses 169.254 as its server address"
       ],
       "answer": "The server never acknowledged, so the client fell back to link-local self-assignment with no gateway",
-      "explanation": "Four letters or no lease: the 169.254 is a confession, not a lease.",
+      "explanation": "Correct: four letters or no lease — 169.254 confesses a missing Ack via link-local fallback. Celebrating it or blaming three-packet sufficiency inverts the protocol.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8960,7 +8960,7 @@
       "type": "true_false",
       "question": "A repeated dig answering in 0 msec proves the answer came from cache, with TTL counting down.",
       "answer": true,
-      "explanation": "Zero query time is the cache's signature.",
+      "explanation": "Correct: zero query time is the cache's signature with TTL counting down. Slow-lookup theories contradict the timing evidence.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8977,7 +8977,7 @@
         "Python is too slow for windows"
       ],
       "answer": "The timeout fires mid-flight every packet, resending healthy goods continuously: set two to four times the RTT",
-      "explanation": "Kindness becomes congestion when patience is shorter than one round trip.",
+      "explanation": "Correct: sub-RTT timeouts resend healthy goods continuously — kindness becomes congestion. Window size, loss levels, and language speed are unrelated suspects.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -8988,7 +8988,7 @@
       "type": "true_false",
       "question": "A Go-Back-N receiver drops post-gap packets and keeps ACKing the gap, forcing the sender to rewind and resend from it.",
       "answer": true,
-      "explanation": "Receiver simplicity costs sender waste: the gap rules until filled.",
+      "explanation": "Correct: GBN receivers drop post-gap data and beg the gap, so senders rewind — simplicity priced as waste. Delivering gaps or manual resends violate the contract.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9005,7 +9005,7 @@
         "veth ends need their own IP addresses"
       ],
       "answer": "IP forwarding in the router: tables name doors but the switch opens them",
-      "explanation": "Tables without forwarding are decoration: check switch, route, link in that order.",
+      "explanation": "Correct: tables name doors but the forwarding switch opens them — perfect tables with a dead switch fail identically to no tables. Cables, ping bans, and veth addressing miss the two-half diagnosis.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9016,7 +9016,7 @@
       "type": "true_false",
       "question": "Routing is per-direction state: a working forward path never implies the return path, so every path needs its mirror route.",
       "answer": true,
-      "explanation": "One working direction proves exactly half the tables.",
+      "explanation": "Correct: requests and replies route independently, so one working direction proves exactly half the tables. One-way forwarding and reply-exempt theories deny per-direction state.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9033,7 +9033,7 @@
         "Private servers cannot exist behind NAT"
       ],
       "answer": "NAT without a port-forward: inbound has no mapping, so nothing delivers; reachability needs an explicit DNAT rule",
-      "explanation": "Invisibility is NAT's default: translation and permission are separate verdicts.",
+      "explanation": "Correct: NAT hides by default with no mapping for inbound, and DROP adds silence — reachability needs explicit DNAT. REJECT, MASQUERADE-blame, and impossibility claims misread both layers.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9044,7 +9044,7 @@
       "type": "true_false",
       "question": "ESTABLISHED rules must come before default DROP so a gate's own answers can re-enter.",
       "answer": true,
-      "explanation": "Your packets obey your rules too: replies are INPUT-path packets.",
+      "explanation": "Correct: replies are INPUT-path packets, so ESTABLISHED-first is self-preservation. New-only DROP theories forget the admin's own traffic obeys the rules.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9061,7 +9061,7 @@
         "DataRate means something else in simulation"
       ],
       "answer": "Measurement accounting: throughput can never exceed the bottleneck, so recheck parsing against DataRate as a ceiling",
-      "explanation": "Physics caps models: impossible numbers indict the measurement first.",
+      "explanation": "Correct: throughput can never exceed the bottleneck, so impossible numbers indict measurement parsing first. Bonuses, optimism, and redefined DataRate deny physics.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9072,7 +9072,7 @@
       "type": "true_false",
       "question": "A sweep must change one parameter per curve with fixed seeds, or blame for any collapse is unassignable.",
       "answer": true,
-      "explanation": "One knob per curve is the causality contract.",
+      "explanation": "Correct: two knobs turned means blame unassignable — one parameter per curve with fixed seeds is the causality contract. Collapse admiration and seed superstition skip experimental design.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9089,7 +9089,7 @@
         "Timeouts indicate success in firewall logic"
       ],
       "answer": "The matching FORWARD accept: translation and permission are separate verdicts, and LAN bypasses both",
-      "explanation": "Two tables, two verdicts: nat decides where, filter decides whether.",
+      "explanation": "Correct: nat decides where while filter decides whether — LAN success bypasses both, isolating the missing filter half. VPNs, direct binding, and timeout-celebration dodge the two-verdict structure.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9100,7 +9100,7 @@
       "type": "true_false",
       "question": "Every report sentence in a mini-project needs an artefact (pcap line, counter, ping log): unexhibited claims score zero.",
       "answer": true,
-      "explanation": "Evaluators mark artefacts, not memories.",
+      "explanation": "Correct: evaluators mark artefacts, so every sentence needs a pcap line, counter, or log. Memory-based claims score zero regardless of confidence.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9117,7 +9117,7 @@
         "x is 22.4, the appended value"
       ],
       "answer": "x is None, because append mutates in place and returns nothing; call append alone, then use temps",
-      "explanation": "Mutators act, they don't answer: separate acting from answering.",
+      "explanation": "Correct: in-place methods return nothing, so x is None — call append alone, then use the list. Broken-append and mean-capacity theories blame the wrong call.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9128,7 +9128,7 @@
       "type": "true_false",
       "question": "Indentation marks blocks in Python, so a stray space can end a block or crash the program.",
       "answer": true,
-      "explanation": "The compiler reads alignment: read tracebacks last line first.",
+      "explanation": "Correct: alignment is syntax, so stray spaces end blocks or crash programs. Tracebacks name lines with the complaint last — read bottom-up.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9145,7 +9145,7 @@
         "Larger float precision"
       ],
       "answer": "axis=0, because axis names the collapsed dimension and bare mean collapses everything",
-      "explanation": "Name the survivor dimension, then pick the axis.",
+      "explanation": "Correct: axis names the collapsed dimension, so per-column means need axis=0. Transposes, loops, and precision theories dodge the one-word fix.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9156,7 +9156,7 @@
       "type": "true_false",
       "question": "Broadcasting (100,5) with (5,) stretches legally across rows, so silent stretches need shape-print verification.",
       "answer": true,
-      "explanation": "Legal stretches corrupt silently; loud errors are gifts.",
+      "explanation": "Correct: trailing-axis stretching is automatic, so legal-but-unintended stretches corrupt silently while mismatches error loudly. Shape-printing converts silence into evidence.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9173,7 +9173,7 @@
         "head hallucinates columns"
       ],
       "answer": "Income became object type from a stray non-numeric, and describe skips non-numerics: dtypes proves it",
-      "explanation": "Silent exclusion is the hazard; type-checking is the ritual.",
+      "explanation": "Correct: a stray non-numeric makes object type, which describe skips silently — dtypes proves it. Broken-describe and delete-the-column reactions skip the type ritual.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9184,7 +9184,7 @@
       "type": "true_false",
       "question": "Median filling suits skewed columns like income because the median resists outliers that drag the mean.",
       "answer": true,
-      "explanation": "describe decides: skewed takes median, symmetric takes mean.",
+      "explanation": "Correct: medians resist the outliers that drag means, so skewed columns take median. Symmetric-only rules and native-NaN myths ignore the describe verdict.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9201,7 +9201,7 @@
         "More same-kind data fixes any curve"
       ],
       "answer": "Systematic underfit from missing bend: add capacity such as polynomial features and confirm flattening on held-out residuals",
-      "explanation": "Curves name bias; funnels name variance: shape is diagnosis.",
+      "explanation": "Correct: U-curves confess missing bend, so capacity (not data volume or regularisation) is the cure, confirmed by flattening held-out residuals. Perfection and overfit readings invert the shape language.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9212,7 +9212,7 @@
       "type": "true_false",
       "question": "A 20k-row scatter renders as one black rectangle unless dots shrink and transparency encodes density.",
       "answer": true,
-      "explanation": "Overplotting lies; small dots plus alpha confess structure.",
+      "explanation": "Correct: finite ink forces small dots plus alpha so overlaps accumulate into visible density. Deletion and bigger-dot fixes destroy the information the blob hides.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9229,7 +9229,7 @@
         "Scaling is unnecessary for regression"
       ],
       "answer": "Test statistics leaked into training features, inflating held-out scores that collapse on truly unseen data",
-      "explanation": "Fit transforms on train only: the gap size measures the sin.",
+      "explanation": "Correct: full-data scaling laundered test statistics into training, inflating scores that collapse on truly unseen distributions. Hardness and arithmetic-error theories skip the leak chain.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9240,7 +9240,7 @@
       "type": "true_false",
       "question": "Pinning random_state makes splits repeatable, so grades reproduce instead of wandering per run.",
       "answer": true,
-      "explanation": "Same code plus same seed equals same evidence.",
+      "explanation": "Correct: pinned shuffles reproduce, so grades become evidence instead of luck. Training-boost and magic-number theories mistake repeatability for performance.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9257,7 +9257,7 @@
         "Python forbids URL fetching by law"
       ],
       "answer": "Offline failure, irreproducibility as remote files change, and wasted minutes per run",
-      "explanation": "Local-first is reliability: no network dependency, byte-identical reruns, instant starts.",
+      "explanation": "Correct: offline failure, remote mutation, and per-run download minutes each independently kill URL fetching. Speed and legalistic objections miss all three engineering reasons.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9268,7 +9268,7 @@
       "type": "true_false",
       "question": "Recording sklearn versions in every report header turns cross-machine score mysteries into one-line diffs.",
       "answer": true,
-      "explanation": "Defaults drift across releases: the stack is evidence.",
+      "explanation": "Correct: defaults drift across releases, so version headers turn cross-machine mysteries into one-line diffs. Random-training and hardware-blame theories skip the hidden input.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9285,7 +9285,7 @@
         "R-squared is meaningless on capped data"
       ],
       "answer": "No: targets are censored at the 5.0 cap, so no model can out-predict the ceiling; report the cap and grade the rest",
-      "explanation": "Censoring is data fact, not model flaw.",
+      "explanation": "Correct: the 5.0 cap censors truth, so no model out-predicts it — report the cap and grade the rest. Feature-chasing and scaler-blame try to fix data facts with model effort.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9296,7 +9296,7 @@
       "type": "true_false",
       "question": "Coefficient importance must be read in standardised units, because raw scales rig apparent sizes.",
       "answer": true,
-      "explanation": "A common ruler makes top-driver claims factual.",
+      "explanation": "Correct: raw scales rig apparent sizes, so importance needs standardised units. Raw-truth and never-measure doctrines defend artefacts as findings.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9313,7 +9313,7 @@
         "Degree 8 for even higher train scores"
       ],
       "answer": "Degree 2, since the wide train-CV gap of degree 5 confesses memorisation while degree 2 generalises",
-      "explanation": "Ship CV minima: train scores are construction, CV is evidence.",
+      "explanation": "Correct: the wide train-CV gap confesses memorisation while the tight one generalises — ship CV minima. Train-maxima worship and averaging dodge the gap arithmetic.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9324,7 +9324,7 @@
       "type": "true_false",
       "question": "PolynomialFeatures belongs inside the pipeline so every CV fold refits transforms on its own train slice.",
       "answer": true,
-      "explanation": "Outside the loop is contamination by convenience.",
+      "explanation": "Correct: outside-the-loop transforms leak across folds, so pipelines enforce per-fold honesty. Speed and illegality theories miss the geography of contamination.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9341,7 +9341,7 @@
         "Silently average the twins into one feature"
       ],
       "answer": "Correlated twins share credit unstably: report the swap as correlation evidence, never crown one twin",
-      "explanation": "Identical scores prove interchangeability: stability findings cut both ways.",
+      "explanation": "Correct: identical scores prove interchangeability, so report the swap as correlation evidence. True-cause crowns and broken-method verdicts overclaim what flips demonstrate.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9352,7 +9352,7 @@
       "type": "true_false",
       "question": "Ridge and Lasso inputs must be standardised because penalties otherwise punish raw magnitudes instead of importance.",
       "answer": true,
-      "explanation": "Fair pricing needs a common ruler.",
+      "explanation": "Correct: penalties price magnitudes, so unscaled inputs rig survival by units. Raw-reality and averaging doctrines launder scale artefacts into importance.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9369,7 +9369,7 @@
         "Variance does not apply to lazy learners"
       ],
       "answer": "k=1 memorises with huge variance while k=15 smooths neighbourhoods: CV ranks generalisation, train ranks memory",
-      "explanation": "Capacity runs backwards in kNN: small k means variance disease.",
+      "explanation": "Correct: k=1 memorises with huge variance while k=15 smooths — CV ranks generalisation, train ranks memory. Universally-larger-k and variance-exemption theories skip the capacity reversal.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9380,7 +9380,7 @@
       "type": "true_false",
       "question": "Comparing classifiers requires identical scaled inputs, splits and seeds, or the ranking is void.",
       "answer": true,
-      "explanation": "Fairness precedes ranking: the protocol is the experiment.",
+      "explanation": "Correct: shared inputs, splits, and seeds make rankings comparable; rigged races are void results. Partial-scaling and protocol-free comparisons skip comparability itself.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9397,7 +9397,7 @@
         "Both equally above 0.90"
       ],
       "answer": "B, because misses kill and A's accuracy is a majority echo while B catches nine of ten sick",
-      "explanation": "Cost picks the column: recall headlines screening.",
+      "explanation": "Correct: misses kill in screening, so recall headlines while majority-echo accuracy footnotes. Accuracy-absolutism and 1.00-or-bust demands ignore cost.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9408,7 +9408,7 @@
       "type": "true_false",
       "question": "AUC grades ranking across thresholds, so the deployed dot still needs its own precision and recall report.",
       "answer": true,
-      "explanation": "Validate-rank by AUC, cost-pick the threshold, compare dots.",
+      "explanation": "Correct: areas rank across thresholds while dots decide deployments — report both, ship the dot. AUC-equals-precision confusions collapse two different grades.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9425,7 +9425,7 @@
         "k must equal the feature count"
       ],
       "answer": "WCSS falls monotonically with k, so minimising it always over-clusters; pick by elbow kink confirmed by silhouette peak",
-      "explanation": "Monotone metrics can't optimise: bend plus peak decide.",
+      "explanation": "Correct: monotone WCSS always over-clusters at the minimum, so elbow kink plus silhouette peak decide. Minimum-worship and feature-count rules misuse the metric.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9436,7 +9436,7 @@
       "type": "true_false",
       "question": "k-means distances must use scaled features, because raw units rig geometry toward large-numbered columns.",
       "answer": true,
-      "explanation": "Preprocessing is half the analysis.",
+      "explanation": "Correct: Euclidean sums eat units, so unscaled geometry reports currency instead of customers. Raw-truth and equal-validity doctrines defend unit-stuffing.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9453,7 +9453,7 @@
         "The data is broken and must be resampled"
       ],
       "answer": "Neither absolutely: linkages favour shapes, so choose by shape hypothesis and report both",
-      "explanation": "Methods are lenses with preferences: findings wear their lens openly.",
+      "explanation": "Correct: linkages favour shapes, so same-data disagreement proves method shapes findings — choose by hypothesis, report both. Always-truer and broken-data verdicts skip the lens effect.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9464,7 +9464,7 @@
       "type": "true_false",
       "question": "Hierarchical clustering defers k because one run records every granularity as dendrogram heights for later cutting.",
       "answer": true,
-      "explanation": "One run holds every resolution; flat runs hold one.",
+      "explanation": "Correct: one agglomerative run records every granularity as heights for later cutting, while flat runs hold one resolution. Auto-k and magic theories skip the structural difference.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9481,7 +9481,7 @@
         "OOB scores should be ignored"
       ],
       "answer": "About 120 rounds, since peaks ship and endpoints don't: over-rounding memorises noise",
-      "explanation": "Plateau means stop paying; peak-then-sag means stop rounding.",
+      "explanation": "Correct: forests plateau (stop paying) while boosting peaks then sags (stop rounding) — ship validation extrema. More-is-more and OOB-dismissal skip both stop rules.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9492,7 +9492,7 @@
       "type": "true_false",
       "question": "Bagging averages variance while boosting chases bias, so committees need the disease matched to the cure.",
       "answer": true,
-      "explanation": "Variance down, bias down, then noise up: read all three deltas.",
+      "explanation": "Correct: variance down, then bias down, then noise up — read all three deltas off the staged curve. Always-boost and forests-fix-bias doctrines compress distinct mechanisms.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9509,7 +9509,7 @@
         "Rerun until it matches, then present"
       ],
       "answer": "The recorded stack versions: same code plus same data must match, and the version log convicts or acquits environment drift in one line",
-      "explanation": "Reproducibility is conditional on the recorded stack.",
+      "explanation": "Correct: same code plus same data must match given the recorded stack, and version logs convict environment drift in one line. Any-difference-voids and rerun-till-match dodge conditional reproducibility.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9520,7 +9520,7 @@
       "type": "true_false",
       "question": "Every report sentence in a mini-project needs an artefact behind it, because evaluators mark artefacts, not memories.",
       "answer": true,
-      "explanation": "Evidence plus limits beats superlatives alone.",
+      "explanation": "Correct: evaluators mark artefacts, so superlatives need slices with numbers. Decimal-adding and optional-limits attitudes replace evidence with adjectives.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -9537,7 +9537,7 @@
         "Guides are banned from citation anywhere"
       ],
       "answer": "The guides teach navigation, not constitutional content: the exam tests the external MOOC's material",
-      "explanation": "Orientation versus content are different artefacts: study each for its own job.",
+      "explanation": "Correct: guides teach navigation while exams test external content — studying the fixture list never prepares the match. Equivalence and exam-free-MOOC theories collapse the boundary.",
       "difficulty": "beginner",
       "examRelevance": "low"
     },
@@ -9548,7 +9548,7 @@
       "type": "true_false",
       "question": "The approved MOOC listing must be verified with the department each session, since sessions rotate.",
       "answer": true,
-      "explanation": "Currency beats inheritance: last year's link may be closed or unapproved.",
+      "explanation": "Correct: sessions rotate listings and timelines, so currency is verified per session. Virus and link-ban theories invent dangers while missing the real one.",
       "difficulty": "beginner",
       "examRelevance": "low"
     },
@@ -9565,7 +9565,7 @@
         "Completion is random and blameless"
       ],
       "answer": "Graded items with deadlines were missed: views alone rarely satisfy completion",
-      "explanation": "Completion means graded artefacts on time, not hours watched.",
+      "explanation": "Correct: completion means graded artefacts on time, not hours watched — bingeing converts watching into regret. Anti-video and randomness theories skip the artefact economy.",
       "difficulty": "beginner",
       "examRelevance": "low"
     },
@@ -9576,7 +9576,7 @@
       "type": "true_false",
       "question": "Posting quiz answers for peers is platform malpractice; concept discussion teaches without copying.",
       "answer": true,
-      "explanation": "Generosity stays inside integrity: explain ideas, solve your own items.",
+      "explanation": "Correct: posted answers are malpractice up to disqualification; concept discussion teaches cleanly. Read-only and nobody-reads excuses dissolve the integrity boundary.",
       "difficulty": "beginner",
       "examRelevance": "low"
     },
@@ -9593,7 +9593,7 @@
         "Departments reject all MOOCs on principle"
       ],
       "answer": "The submission step: credit needs the notified handoff with acknowledgment",
-      "explanation": "Enroll, progress, certificate, submit, record: unfiled evidence is absent evidence.",
+      "explanation": "Correct: enroll, progress, certificate, submit, record — unfiled evidence is absent evidence. Auto-transfer and rejection doctrines skip the handoff link.",
       "difficulty": "beginner",
       "examRelevance": "low"
     },
@@ -9604,7 +9604,7 @@
       "type": "true_false",
       "question": "Certificates must match institutional records character-for-character at enrollment, or verification orphans them.",
       "answer": true,
-      "explanation": "Corrections later are slow or impossible: match names first.",
+      "explanation": "Correct: corrections later are slow or impossible, so records must match character-for-character at enrollment. Hope-based enrollment defers an unfixable failure.",
       "difficulty": "beginner",
       "examRelevance": "low"
     },
@@ -9621,7 +9621,7 @@
         "Both are equally valid"
       ],
       "answer": "The official transcript and the constitutional text it cites: verify-then-memorise",
-      "explanation": "Authority resolves upward: constitution, then official material, then everything else.",
+      "explanation": "Correct: authority resolves upward — constitution, then official material, then everything else. Seniority, novelty, and false-equivalence rules pick the wrong winner.",
       "difficulty": "beginner",
       "examRelevance": "low"
     },
@@ -9632,7 +9632,7 @@
       "type": "true_false",
       "question": "Revision must map to the MOOC's stated week-outcomes because outcomes are the exam's blueprint.",
       "answer": true,
-      "explanation": "Coverage is measured against outcomes, not hours.",
+      "explanation": "Correct: outcomes blueprint what is testable, so mapping converts hours into coverage. Decorative-outcome and rewatch-everything doctrines waste effort blindly.",
       "difficulty": "beginner",
       "examRelevance": "low"
     }

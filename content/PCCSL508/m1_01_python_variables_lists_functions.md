@@ -31,11 +31,11 @@ tags:
 ## 1. Procedure Step by Step
 
 1. Install Python 3 (`python3 --version` proves it) and open any editor/terminal.
-2. Run each block below in order (file or REPL — REPL echoes results instantly).
+2. Run each block below in order (file or REPL — REPL echoes results line by line).
 3. Break one thing per block deliberately (wrong indent, typo) and read the traceback last line first.
 
 ```python
-# variables: names for values (types ride along, never declared)
+# variables: names for values (types ride along with no declarations needed at this level)
 x = 7                 # int: whole count
 price = 12.5          # float: measured quantity
 name = "sensor-A"     # str: label text
@@ -57,6 +57,14 @@ print(mean(temps))
 ```
 
 Line-by-line honesty: `temps[-1]` counts from the end (Python idiom #1); `append` mutates in place (returns nothing — `x = temps.append(v)` stores `None`, classic bug); `mean` divides by `len` (empty list ⇒ crash, guard at call sites).
+
+::: toggle What do `def`, `return`, `for...in`, and `if...else` do here?
+`def mean(values):` = define a function named mean taking one input (values); everything indented below belongs to it. `return a/b` = hand a/b back to the caller and exit (no return ⇒ hands back `None`). `for t in temps:` = repeat the indented body once per item, naming each `t` in turn. `"high" if t > 22 else "ok"` = one-line decision: value-if-true, condition, value-if-false. Inputs: the list; output: one number (or None on empty — the guard's job).
+:::
+
+::: toggle What does `temps[0]`, `temps[-1]`, and `print(...)` do?
+`temps[0]` = first item (counting starts at 0, not 1). `temps[-1]` = last item (negatives count back from the end). `print(a, b)` = display values separated by a space (debugging's cheapest tool — output goes to terminal, nothing is stored). Index beyond range raises `IndexError` (the list's length is law).
+:::
 
 **Input/features/target:** no dataset yet — but notice the shape forming: `temps` is one *feature column* in waiting; `mean` is the first *statistic* of many.
 

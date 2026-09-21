@@ -53,6 +53,18 @@ Abbreviations defined on first use: Light-Emitting Diode (LED), General-Purpose 
 | Test bit `n` | `if (REG & (1 << n))` | Nonzero means bit `n` is 1 |
 | Memory-mapped register | `#define LED (*((volatile uint32_t*)0x48000014))` | Address `0x48000014` behaves as a variable wired to hardware |
 
+::: toggle How do I read `0x48000014`?
+`0x` means hexadecimal (base 16, digits 0–9 plus A–F). So `0x48000014` is just a big number written compactly — hardware manuals use hex because each digit maps exactly 4 bits. You never compute it; you copy it from the manual and treat it as this register's street address.
+:::
+
+::: toggle What does `volatile` force the compiler to do?
+Normally the compiler may read a variable once and reuse the value (fast, and fine for ordinary variables). `volatile` forbids that caching: every mention re-reads actual memory, because hardware or an interrupt may have changed it meanwhile. Without it, the compiler "helpfully" freezes your button input forever.
+:::
+
+::: toggle What is a "read-modify-write" in plain steps?
+Three hidden steps inside one C line: (1) read the whole register, (2) change some bits in the CPU, (3) write the whole register back. The danger lives between (1) and (3): an interrupt changing a bit in between gets overwritten by the stale copy. That is why shared outputs use atomic set/reset registers instead.
+:::
+
 ::: callout-intuition Core Mental Model: The Mailed Photo
 You never touch the switches directly — only whole-register photos travel. OR-ing pastes a 1 on, AND-ing with NOT scrapes one off, XOR flips, AND reads. The mask is your stencil: ones where you act, zeros where the photo passes through untouched.
 :::
@@ -63,6 +75,14 @@ You never touch the switches directly — only whole-register photos travel. OR-
 **`volatile`, the examiner's favourite:** hardware registers change without the program writing them (a timer ticks, a button press arrives). Without `volatile`, the compiler caches the first read in a CPU register and reuses it — your loop never sees the button. Rule: every memory-mapped register and every variable shared with an Interrupt Service Routine (ISR) is `volatile`. Missing `volatile` is the classic "works in debug, fails in release" bug (optimisation off hides it).
 
 **Fixed-width types:** plain `int` is 16 bits on some compilers and 32 on others — fatal when bit 5 must mean pin 5. Embedded code uses `uint8_t/uint16_t/uint32_t` from `stdint.h` so widths are contractual. Exam trap: `1 << 31` on a 16-bit `int` is undefined behaviour; write `1UL << 31`.
+
+::: toggle What does `uint32_t` spell out?
+`u` = unsigned (no negatives, full range for bits), `int` = integer, `32` = exactly 32 bits wide, `_t` = type (naming convention). So `uint32_t` is "an unsigned 32-bit integer on toolchains providing exact-width types (virtually all ARM toolchains do)" — unlike `int`, whose width the compiler chooses.
+:::
+
+::: toggle What does `1UL << 31` mean piece by piece?
+`1` = the value one; `UL` = treat it as Unsigned Long (at least 32 bits, so bit 31 exists); `<< 31` = slide that 1 left 31 positions, producing a single 1 at bit 31. Without `UL`, a 16-bit `int` has no bit 31 and the shift is undefined behaviour (anything may happen).
+:::
 
 **Startup and the main loop:** reset loads the stack pointer, runs SystemInit (clocks), then `main()` — which on bare metal never returns but spins `while(1)`: read inputs, update state, drive outputs. No OS, no `exit`, no return.
 

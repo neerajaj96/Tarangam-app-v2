@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -226,7 +226,8 @@ $ sudo tc qdisc del dev lo root                  # ALWAYS remove the loss rule a
 <li>Dup ACKs: same Ack number repeated — receiver saying &quot;still waiting for X&quot;.</li>
 <li>FIN pair per direction: <code>FIN, ACK</code> each way — orderly close, compare against RST (abort: instant, data at risk).</li>
 </ul>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<details class="interactive-toggle"><summary>What do FIN, RST, &quot;dup ACK&quot;, and black &quot;retransmission&quot; rows prove?</summary><div class="toggle-content"><p>FIN = &quot;I am done sending&quot; (half-close legal — the other direction may continue). RST = abort now, discard unread receive data (kill/crash signature — data at risk). Dup ACK (same Ack number repeated) = &quot;still waiting for byte X&quot; (the begging signal). Black retransmission row = same sequence re-sent after timeout/dup threshold (the repair receipt). On your lossy capture: dups diagnose the gap, black rows cure it, byte-identical output certifies it.</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-procedure-and-line-by-line-reading">← 3. Procedure and Line-by-Line Read…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p>Lossless run: exactly 3 handshake + data/ACKs + 4 teardown packets, zero black lines. 15% run: ≥1 black retransmission + dup ACKs, yet client output byte-identical — reliability proved by identical bytes despite red-black capture. Verify teardown directionality: FINs originate from closer first (client&#39;s <code>close</code>), server&#39;s after.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Forgotten netem</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Leaving the loss rule on poisons every later experiment (mysterious timeouts for weeks). <code>tc qdisc show dev lo</code> before each lab; <code>del</code> after each loss demo — ritual, not reminder.</p>

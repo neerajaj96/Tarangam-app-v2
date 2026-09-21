@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -212,7 +212,9 @@
 <p><strong>Aim:</strong> predict car mileage from engine features where straight lines visibly fail, choosing polynomial degree by validation — never by test.</p>
 <p><strong>Theory (one paragraph):</strong> Polynomial regression is linear regression on expanded features ($x, x^2, \dots, x^d$) — curves in input, still linear in weights (PCCST503 in one line). Auto MPG: ~400 cars, features (cylinders, displacement, horsepower, weight, acceleration…), target mpg. Weight-vs-mpg curves bend; degree is the capacity knob with a U-shaped held-out error (underfit left, overfit right).</p>
 <p><strong>Dataset meaning (<code>mpg.csv</code>, local):</strong> each row = one car model-year; features = engine/body numbers (horsepower has <code>?</code> gaps — M1.03 cleaning applies!); target = miles per gallon.</p>
-<h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
+<details class="interactive-toggle"><summary>Dataset card: mpg.csv row by row</summary><div class="toggle-content"><p>File location: lab folder (<code>mpg.csv</code> — verify with <code>ls</code>; row count ≈ 398 expected for the classic set, variants differ — record yours). One row = one car (model year included as a column). Key columns: <code>mpg</code> = target (miles per US gallon, numeric); <code>cylinders</code> (count 3–8); <code>displacement</code> (engine size, cubic inches); <code>horsepower</code> (numeric but polluted with <code>&quot;?&quot;</code> strings — coerce to NaN, median-fill, logged); <code>weight</code> (pounds — the bending feature vs mpg); <code>acceleration</code> (0–60-ish seconds); <code>model year</code>, <code>origin</code> (categorical codes 1–3: American/European/Japanese — encode or drop deliberately). Missing: horsepower <code>?</code> entries (never zero-fill — median). Train/test: 80/20 pinned; degree chosen on CV, graded once on test.</p>
+</div></details><details class="interactive-toggle"><summary>What do `PolynomialFeatures`, `make_pipeline`, and `cross_val_score` do?</summary><div class="toggle-content"><p><code>PolynomialFeatures(d)</code> = expand each row into all monomials up to degree d (x, x², … plus cross-terms — representation, still linear in weights). <code>make_pipeline(A, B)</code> = chain steps so CV refits A per fold (leak-proof geography: expansion inside, never upfront). <code>cross_val_score(pipe, X, y, cv=5)</code> = split in 5, train on 4, validate on 1, rotate, return 5 scores (mean = the selection evidence; spread = its stability). Degree picked on the mean — test sees the winner once.</p>
+</div></details><h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-expected-output-and-result">2. Expected Output and Result →</a></p>
 <ol>
 <li>Load → clean horsepower <code>?</code> → numeric (M1.03: coerce + median) → scatter weight-vs-mpg (see the bend first).</li>

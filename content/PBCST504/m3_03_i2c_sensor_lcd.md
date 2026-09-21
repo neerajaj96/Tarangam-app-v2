@@ -42,6 +42,14 @@ Abbreviations defined on first use: Serial Data (SDA), Serial Clock (SCL), Ackno
 | What is clock stretching? | Slow slave holds SCL low to pause the master — flow control built into the clock |
 | What ends a read? | Master NACKs the last byte, then STOP — NACK means "no more wanted" |
 
+::: toggle What do "7-bit address", "R/W bit", and "repeated-START" mean on the wire?
+7-bit address = the slave's 7-bit name (e.g. `0x48` = 1001000), sent first after START. R/W bit = one extra bit glued after it: 0 means "master will write next", 1 means "master wants to read". Repeated-START = another START without a STOP before it — keeps bus ownership between the pointer-write and the data-read so no other master can barge in mid-transaction.
+:::
+
+::: toggle Why must SDA/SCL have pull-up resistors (what are "open-drain" lines)?
+Open-drain means each device can only pull the line low (to ground) or let go (float) — nobody actively drives high. The pull-up resistor to supply is what restores high whenever nobody pulls. Without it the line never rises: no START/STOP edges, no highs at all, dead bus. Resistor value balances speed (smaller = faster rise) against power (smaller = more current when pulled low).
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — I2C Vocabulary
 

@@ -53,12 +53,20 @@ $ cat /etc/resolv.conf
 - `/etc/resolv.conf` — the machine's chosen DNS servers (often the DHCP-provided gateway) — wrong entries here break names while IPs still ping (classic split symptom).
 - DORA capture: Discover to broadcast, Offer unicast with proposed IP, Request re-broadcast (claiming publicly so rogues hear), Ack with lease time + gateway + DNS — read all three lease facts from the Ack.
 
+::: toggle Expand: `dig example.com +noall +answer` and `+trace`
+`dig` = DNS lookup tool (asks questions, prints all sections). `example.com` = the query name. `+noall` = print nothing by default (opt-in verbosity). `+answer` = …except the answer section (the IPs). `+comments` (used above) = …plus metadata (query time, server). `+trace` = disable recursion and walk root→TLD→authoritative visibly (educational, slow — never daily use). Output sections: ANSWER (the IPs), AUTHORITY (who knows), ADDITIONAL (helpers); `Query time: 0 msec` = cache hit.
+:::
+
+::: toggle What do Discover, Offer, Request, Ack each carry?
+Discover (broadcast): "any DHCP server here?" + client's MAC (no address yet — broadcast is the only language available). Offer (unicast): "take 192.168.1.20" + lease terms proposed. Request (broadcast): "yes, that one" — public so competing servers withdraw. Ack: confirmed lease time + gateway + DNS (the three facts every host needs). Same transaction ID across all four proves one conversation.
+:::
+
 ## 4. Expected Output and How to Verify
 
 `dig` answers with an `A` record + `Query time` (0 msec = cache hit, tens of ms = real lookup); `+trace` ends at an authoritative server; DORA shows 4 packets with matching transaction IDs and the Ack's lease/gateway/DNS. Verify caching: repeat `dig` → `Query time: 0 msec` (served from cache, TTL counting down).
 
 ::: callout-pitfall Name-Blind Ping
-"Ping 8.8.8.8 works, browser fails" is DNS, not connectivity — always test IPs before names to split the two. Names failing + IPs working = resolver path (`resolv.conf`, DNS server), never routing.
+"Ping 8.8.8.8 works, browser fails" is DNS, not connectivity — test IPs before names first to split the two. Names failing + IPs working = resolver path (`resolv.conf`, DNS server), never routing.
 :::
 
 ## 5. Common Errors and Viva Questions

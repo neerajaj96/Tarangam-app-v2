@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -212,7 +212,9 @@
 <p><strong>Aim:</strong> predict median house value from neighbourhood features with ordinary least squares, and grade honestly on held-out blocks.</p>
 <p><strong>Theory (one paragraph):</strong> Linear regression draws the best straight-line-plus-weights rule (<code>y ≈ Xw</code>) minimising squared error (PCCST503 theory in one line — here we run it). California Housing: ~20k census blocks, 8 features (MedInc, HouseAge, AveRooms, …), target MedHouseVal (median value, capped at 5.0 — a ceiling the residuals will show).</p>
 <p><strong>Dataset meaning (<code>housing.csv</code>, local):</strong> each row = one census block; features = block statistics (income, age, rooms, population…); target = median house value (in $100k, capped 5.0 — remember the cap when residuals flatten at top).</p>
-<h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
+<details class="interactive-toggle"><summary>Dataset card: housing.csv row by row</summary><div class="toggle-content"><p>File location: lab folder beside the script (<code>./housing.csv</code> or <code>./data/housing.csv</code> — verify with <code>ls</code> before running; missing file must error at line one). One row = one US census block (≈600–3000 people). Key columns: <code>MedInc</code> (median income, $10k units, numeric), <code>HouseAge</code> (median house age, years), <code>AveRooms</code>/<code>AveBedrms</code> (averages per household), <code>Population</code>, <code>AveOccup</code> (people per household), <code>Latitude</code>/<code>Longitude</code> (block location, degrees), <code>MedHouseVal</code> = target (median value, $100k units, capped at 5.0 — values above the cap are recorded as exactly 5.0). Missing values: none expected in the canonical file (verify with <code>isna().sum()</code> anyway). Train/test: 80/20 pinned split — the cap affects test grading honestly only if never used for selection.</p>
+</div></details><details class="interactive-toggle"><summary>What do `LinearRegression().fit`, `predict`, `r2_score`, and coefficients mean here?</summary><div class="toggle-content"><p><code>LinearRegression()</code> = ordinary-least-squares model object (no knobs — closed-form solver inside). <code>.fit(Xtr, ytr)</code> = solve normal equations once (in: scaled train features + labels; out: weight vector stored as <code>m.coef_</code> + intercept <code>m.intercept_</code>). <code>.predict(Xte)</code> = apply weights to held-out features (out: one guess per row). <code>r2_score(yte, pred)</code> = 1 − residual-squares/total-squares (fraction of variance explained on unseen data; 1 perfect, 0 mean-level, negative worse). Coefficients read per standardised unit (bigger |w| = more influence per std-dev — unscaled reading lies).</p>
+</div></details><h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-expected-output-and-result">2. Expected Output and Result →</a></p>
 <ol>
 <li>Load local CSV → inspect (M1.03 ritual) → note the 5.0 cap in <code>describe</code> (max exactly 5.00000 = censored, not coincidental).</li>

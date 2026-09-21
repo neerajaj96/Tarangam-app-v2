@@ -42,6 +42,14 @@ Abbreviations defined on first use: Global System for Mobile communications (GSM
 | What decides battery? | Duty cycle × transmit current — same average-current law as M2.02 |
 | What is pairing/bonding? | Bluetooth's trust ceremony (pair) plus remembered keys (bond) — skip it and neighbours drive your bulb |
 
+::: toggle What do "link budget" and "duty cycle" decide, concretely?
+Link budget = transmit power + antenna gains − path/environment losses, in dB: positive margin means the signal arrives readable; walls, rain, and distance spend it. Duty cycle = fraction of time transmitting (LoRa law-caps around ~1% in shared bands): it caps both battery drain and legal airtime. Budget decides reach, duty decides battery and legality.
+:::
+
+::: toggle What is the difference between spoofing, replay, and extraction attacks?
+Spoofing = forging commands from an unauthorised source (fake "unlock"). Replay = re-sending a recorded legitimate command later (yesterday's "unlock" re-played). Extraction = reading secrets out of captured firmware/hardware. Cures differ per row: authentication answers spoofing, freshness (nonces/counters) answers replay, vaulted storage answers extraction.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — Radio Vocabulary
 

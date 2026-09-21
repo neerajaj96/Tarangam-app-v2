@@ -62,6 +62,14 @@ ADC builds stairs beside the ramp and reports the nearest stair number. The metr
 
 **Resolution math (symbol by symbol):** code $= V_{in}/V_{ref} × (2^N − 1)$. Here $V_{in}$ is the scaled sensor volts, $V_{ref}$ the ruler length, $N$ the bit count. LSB $= V_{ref}/2^N$ is the smallest visible change (≈0.8 mV at 12-bit/3.3 V). Doubling bits halves the step but also halves the tolerable noise — 12 honest bits beat 16 noisy ones. Sensor scaling first: divide/amp each source into 0–$V_{ref}$, never beyond (overvoltage damages, under-range wastes steps).
 
+::: toggle Why that formula: subtraction-free, multiply, divide — what does each operation do?
+There is no subtraction because the scale starts at zero (0 V = code 0 by hardware design). Division `Vin/Vref` turns volts into a fraction of the ruler (1.65/3.3 = 0.5 — unit-free position). Multiplication by $(2^N − 1)$ stretches that fraction onto the stair count (0.5 × 4095 ≈ 2047). Minus-one because stairs are numbered 0…4095 (4096 stairs, top index 4095).
+:::
+
+::: toggle What is the difference between a timer, a counter, an interrupt, and the RTC?
+Timer counts clock ticks (measures durations, paces PWM/DAC). Counter counts external events (pulses on a pin — rotations, bottles). Interrupt is the tap that runs handler code when either fires (no polling). RTC is a calendar clock in a battery-backed corner that keeps date/time through sleep and wakes the chip by alarm.
+:::
+
 **PWM thinking:** duty $= T_{on}/(T_{on}+T_{off})$; average volts $=$ duty $× V_{cc}$. LED dimming, motor speed, and servo angles all read duty, not frequency — frequency just must exceed flicker/inertia perception. DAC + timer-DMA plays true waveforms (audio tones from sine tables); PWM + filter fakes slow analog cheaply.
 
 **Timers, interrupts, RTC (numbered practice):** (1) set prescaler + auto-reload for the wanted period; (2) enable compare-match interrupt, keep the ISR tiny (flag, not work); (3) counters count external events (pulses) where timers count clock ticks; (4) RTC alarms wake low-power modes (M2.02's wire!) with calendar stamps. Busy-waiting where an ISR/RTC fits is the viva-flagged sin.

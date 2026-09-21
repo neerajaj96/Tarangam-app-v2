@@ -42,6 +42,14 @@ Abbreviations defined on first use: Controller Area Network (CAN), Human Interfa
 | What wires? | CANH/CANL differential pair + 120 Ω terminators at both ends — noise cancels, ends absorb reflections |
 | What is HID? | USB device class for keyboards/mice/joysticks: OS drivers built-in, no custom driver needed |
 
+::: toggle What do "dominant", "recessive", "DLC", and "CRC" mean in a CAN frame?
+Dominant (0) = the bus state that wins collisions (driven strongly); recessive (1) = the state that yields (overridden by any dominant). DLC (Data Length Code) = 4 bits declaring how many data bytes (0–8) follow — receivers know where data ends. CRC = check bits the transmitter computes over the frame; every receiver recomputes and rejects mismatches (corrupted frames die on the bus, and the ACK slot confirms at least one node accepted).
+:::
+
+::: toggle What is a "report descriptor" in USB HID?
+A data table the device hands the PC at plug-in, declaring "I am a keyboard with these keys" (or sensor pages with these fields). The OS matches it to built-in drivers — no install needed. Change the descriptor and the same hardware appears as a joystick instead: identity is declared, not soldered.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — CAN/USB Vocabulary
 

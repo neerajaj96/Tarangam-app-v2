@@ -35,7 +35,7 @@ We prove the stall first (client A sends half a line and sleeps; client B's full
 
 ## 2. Concept in Very Simple Language
 
-Give `select` three lists (readable-wanted, writable-wanted, exceptions) — it returns the ready subsets. New dial on the listener ⇒ `accept` it into the watch set. Data on a client ⇒ `recv` it now (guaranteed non-blocking). Disconnect (`recv == b''`) ⇒ close and drop from the set. Rebuild lists every loop (select overwrites them — in C; Python's wrapper takes fresh lists each call, same discipline).
+Give `select` three lists (readable-wanted, writable-wanted, exceptions) — it returns the ready subsets. New dial on the listener ⇒ `accept` it into the watch set. Data on a client ⇒ `recv` it now (reported-ready, and non-blocking is set, so the call cannot stall). Disconnect (`recv == b''`) ⇒ close and drop from the set. Rebuild lists every loop (select overwrites them — in C; Python's wrapper takes fresh lists each call, same discipline).
 
 ## 3. Code and Line-by-Line Explanation
 
@@ -66,7 +66,15 @@ while True:
                     s.sendall(line.upper() + b"\n")
 ```
 
-Stall demo: client A sends `half-` (no newline) and sleeps 10 s; client B sends `full\n` — B answered instantly while A mid-line proves the fix (iterative version would stall B 10 s).
+Stall demo: client A sends `half-` (no newline) and sleeps 10 s; client B sends `full\n` — B answered within milliseconds while A mid-line proves the fix (iterative version would stall B 10 s).
+
+::: toggle Expand: `select.select(watch, [], [], 5.0)`
+`select` = ask the kernel which descriptors are ready (imported from the `select` module). `watch` (first list) = sockets to watch for readability. `[], []` = write/exception lists (empty — we only await arrivals). `5.0` = timeout seconds (wake empty-handed after 5 s idle so housekeeping could run). Returns `(readable, [], [])` — touch only listed sockets (readiness permission per call). What changes: thread sleeps in kernel instead of spinning (CPU idle when quiet — verify with `top`).
+:::
+
+::: toggle What do "blocking" and "non-blocking" mean for these sockets?
+Blocking (default) = the call sleeps until done (`accept` waits for a dial, `recv` for bytes). Non-blocking (`setblocking(False)`) = the call returns immediately, raising `BlockingIOError` when nothing is ready. With `select` we only touch reported-ready sockets, so non-blocking is a guarantee-backstop (never stall even if readiness raced); without `select`, non-blocking needs retry loops and blocking needs threads.
+:::
 
 ## 4. Expected Output and How to Verify
 

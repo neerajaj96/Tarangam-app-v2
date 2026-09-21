@@ -54,6 +54,14 @@ sudo ip netns exec r1 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -
 sudo ip netns exec r1 iptables -A FORWARD -i v1r -o vpub -p tcp --dport 80 -j ACCEPT
 # ^ private LAN may open outbound web only; all new inbound dies on default DROP
 sudo ip netns exec r1 iptables -L -v -n       # read counters: which rules actually fire?
+
+::: toggle Expand: `iptables -t nat -A POSTROUTING -o vpub -j MASQUERADE`
+`iptables` = firewall/NAT rule tool (needs root). `-t nat` = the address-translation table (vs `filter` for allow/deny). `-A` = append rule to chain's end (order matters — first match wins). `POSTROUTING` = chain for packets about to leave (last chance to rewrite source). `-o vpub` = only via output interface vpub (the public face). `-j MASQUERADE` = jump to source-rewrite-to-exit-address, remembering the mapping for replies. What changes: private sources become the public IP on exit. Verify: capture on vpub shows source 203.0.113.1, never 10.x. Undo: same line with `-D` instead of `-A`.
+:::
+
+::: toggle Expand: chains, policy `-P`, `-m state`, `-L -v -n`
+Chains = per-path rule lists: INPUT (to this box), FORWARD (through it), OUTPUT (from it) — each packet walks exactly one. `-P INPUT DROP` = chain policy (default verdict when no rule matches) — the deny in default-deny. `-m state --state ESTABLISHED,RELATED` = match reply/associated traffic (answers re-enter; stateless hates must name ports instead). `-L -v -n` = list with verbose counters, numeric (counters prove which rules fire — packet/byte counts per rule; untested rules are wishes).
+:::
 ```
 
 - `-t nat ... POSTROUTING ... MASQUERADE` — source-NAT at exit; return path auto-unmapped by the recorded mapping.

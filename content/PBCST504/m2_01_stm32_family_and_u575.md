@@ -53,6 +53,14 @@ Abbreviations defined on first use: Hardware Abstraction Layer (HAL), Ultra-Low-
 | **Nucleo/eval boards** | Ready-made boards wiring the chip plus debugger and Arduino-style headers — the course's lab vehicle, no custom PCB needed. |
 | **Datasheet vs reference manual** | Datasheet = electrical limits + pinout (what survives); reference manual = every register (how to drive). Both are exam-adjacent reading skills. |
 
+::: toggle How do I read `STM32U575xx` field by field?
+`STM32` = STMicroelectronics 32-bit family. `U` = ultra-low-power mission (the series letter). `5` = performance tier inside that mission. `75` = feature line (here: TrustZone plus rich peripherals). `xx` = package, pin-count, and flash-size variant chosen at ordering. Read any STM32 number the same left-to-right way: family → mission → tier → features → package.
+:::
+
+::: toggle What is the difference between a series, a line, and a part number?
+Series = the mission family (U5 = ultra-low-power, F4 = DSP performance). Line = a feature set inside it (575 = TrustZone-rich). Part number = the exact orderable chip (package + pins + flash filled in). Series answers "what for", line answers "which features", part number answers "which box to buy".
+:::
+
 ::: callout-intuition Core Mental Model: Chassis Plus Trim
 The Cortex-M core plus CMSIS/HAL habits are the chassis every STM32 shares; series letters pick the trim (economy F0, sport F4, hybrid U5). Your driving skill (code) transfers; only the dashboard extras (peripherals, power modes) need relearning per trim.
 :::

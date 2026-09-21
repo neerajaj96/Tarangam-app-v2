@@ -29,6 +29,14 @@ tags:
 
 **Dataset meaning (`hlass.csv`, local — any small labelled CSV: e.g. penguin/survival-style rows):** each row = one case; features = measurements; target = class label (0/1 or named species). Binary-or-few-classes keeps metrics readable (M2.05 grades them).
 
+::: toggle Dataset card: how to read any hlass-style file
+File location: lab folder (`hlass.csv` — verify with `ls`; the name stands for the held labelled set your lab provides — any small labelled CSV works if columns map the same way). One row = one case (patient, animal, part). Feature columns = numeric measurements (verify with `dtypes`; categoricals encoded deliberately). `label` column = target: ints 0/1 or names mapped via `astype("category").cat.codes` (LOG the int↔name mapping — predictions are meaningless without it). Missing values: triage per M1.03 before splitting. Train/test: 75/25 stratified pinned (`stratify=y` preserves class ratios — rare classes survive in both hands).
+:::
+
+::: toggle What do the three classifiers do, mechanistically?
+`LogisticRegression` = fits a linear score + sigmoid, outputting probabilities (eager: learns weights; needs scaling for healthy gradients). `KNeighborsClassifier(5)` = stores all train rows, labels each query by majority of its 5 nearest (lazy: no training phase; distances need scaling for fairness). `DecisionTreeClassifier` = greedily splits on thresholds into axis-aligned boxes (eager; needs no scaling — splits are cuts, not distances). Same inputs + same CV ⇒ comparable; different biases ⇒ different failures.
+:::
+
 ## 1. Procedure Step by Step
 
 1. Load local CSV → encode labels to ints if named (`df["label"].astype("category").cat.codes`, mapping logged).

@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -231,7 +231,9 @@ print(&quot;boost test:&quot;, round(ada.score(Xte_s, yte), 3))
 print(&quot;staged:&quot;, [round(s, 3) for s in ada.staged_score(Xte_s, yte)][::40])  # rise... then watch
 </code></pre>
 <p>Line-by-line honesty: <code>oob_score</code> free-validates (37% juries per point — M2.01&#39;s juries return); <code>n_estimators=500</code> plateaus (check OOB curve, stop paying compute past it); stumps (<code>depth=1</code>) force boosting to earn every gain; staged scores reveal over-round decline (quit at the validation peak — rounds are capacity!).</p>
-<p><strong>Algorithm:</strong> bootstrap-aggregate vote (forests) vs exponential-reweight staging (AdaBoost).</p>
+<details class="interactive-toggle"><summary>What do `oob_score_`, `n_estimators`, `staged_score`, and `n_jobs` mean?</summary><div class="toggle-content"><p><code>oob_score_=True</code> asks each tree&#39;s verdict on points it never saw (~37% left out per bootstrap — free validation jury per point). <code>n_estimators=500</code> = committee size (more trees shrink the variance term toward its floor, then plateau — compute bills past it, gains don&#39;t). <code>staged_score(...)</code> = test score after each boosting round (the rise-then-fall curve: peak ships, endpoints don&#39;t). <code>n_jobs=-1</code> = use all CPU cores (trees train independently — embarrassingly parallel; wall-time falls, results identical).</p>
+</div></details><details class="interactive-toggle"><summary>Why do forests plateau while boosting sags — in mechanism terms?</summary><div class="toggle-content"><p>Forest error = bias + correlated-floor + (1−ρ)σ²/B: growing B kills only the last term, so error plateaus at the floor (depth fixed, no new disease). Boosting error = bias − gains + noise-memorisation: early rounds fix bias (rise), late rounds fit noise with apology weights (sag). Plateau = stop paying; peak-then-sag = stop rounding. Different curves, different stop rules.</p>
+</div></details><p><strong>Algorithm:</strong> bootstrap-aggregate vote (forests) vs exponential-reweight staging (AdaBoost).</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Forest beats lone tree (variance visibly averaged, OOB ≈ test); boosting beats further to a peak then sags if rounded past it; staged list shows rise-then-fall. Result: three test scores + two curves + stopped-at-peak rounds.</p>

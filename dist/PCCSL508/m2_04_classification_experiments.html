@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -212,7 +212,9 @@
 <p><strong>Aim:</strong> predict discrete labels with logistic regression, k-NN, and decision trees on one local dataset — same split, same protocol, honest winner.</p>
 <p><strong>Theory (one paragraph):</strong> classifiers draw boundaries: logistic regression a linear one with probabilities, k-NN a voted neighbourhood (stores everything, lazy), trees axis-aligned boxes (greedy splits). Same data + same validation ⇒ comparable scores; different inductive biases ⇒ different failures (PCCST503 classifiers in three lines — here they compete).</p>
 <p><strong>Dataset meaning (<code>hlass.csv</code>, local — any small labelled CSV: e.g. penguin/survival-style rows):</strong> each row = one case; features = measurements; target = class label (0/1 or named species). Binary-or-few-classes keeps metrics readable (M2.05 grades them).</p>
-<h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
+<details class="interactive-toggle"><summary>Dataset card: how to read any hlass-style file</summary><div class="toggle-content"><p>File location: lab folder (<code>hlass.csv</code> — verify with <code>ls</code>; the name stands for the held labelled set your lab provides — any small labelled CSV works if columns map the same way). One row = one case (patient, animal, part). Feature columns = numeric measurements (verify with <code>dtypes</code>; categoricals encoded deliberately). <code>label</code> column = target: ints 0/1 or names mapped via <code>astype(&quot;category&quot;).cat.codes</code> (LOG the int↔name mapping — predictions are meaningless without it). Missing values: triage per M1.03 before splitting. Train/test: 75/25 stratified pinned (<code>stratify=y</code> preserves class ratios — rare classes survive in both hands).</p>
+</div></details><details class="interactive-toggle"><summary>What do the three classifiers do, mechanistically?</summary><div class="toggle-content"><p><code>LogisticRegression</code> = fits a linear score + sigmoid, outputting probabilities (eager: learns weights; needs scaling for healthy gradients). <code>KNeighborsClassifier(5)</code> = stores all train rows, labels each query by majority of its 5 nearest (lazy: no training phase; distances need scaling for fairness). <code>DecisionTreeClassifier</code> = greedily splits on thresholds into axis-aligned boxes (eager; needs no scaling — splits are cuts, not distances). Same inputs + same CV ⇒ comparable; different biases ⇒ different failures.</p>
+</div></details><h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-expected-output-and-result">2. Expected Output and Result →</a></p>
 <ol>
 <li>Load local CSV → encode labels to ints if named (<code>df[&quot;label&quot;].astype(&quot;category&quot;).cat.codes</code>, mapping logged).</li>

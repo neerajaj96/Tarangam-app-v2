@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -271,7 +271,9 @@
 <td>Master NACKs the last byte, then STOP — NACK means &quot;no more wanted&quot;</td>
 </tr>
 </tbody></table>
-<p><a id="words-first"></a></p>
+<details class="interactive-toggle"><summary>What do &quot;7-bit address&quot;, &quot;R/W bit&quot;, and &quot;repeated-START&quot; mean on the wire?</summary><div class="toggle-content"><p>7-bit address = the slave&#39;s 7-bit name (e.g. <code>0x48</code> = 1001000), sent first after START. R/W bit = one extra bit glued after it: 0 means &quot;master will write next&quot;, 1 means &quot;master wants to read&quot;. Repeated-START = another START without a STOP before it — keeps bus ownership between the pointer-write and the data-read so no other master can barge in mid-transaction.</p>
+</div></details><details class="interactive-toggle"><summary>Why must SDA/SCL have pull-up resistors (what are &quot;open-drain&quot; lines)?</summary><div class="toggle-content"><p>Open-drain means each device can only pull the line low (to ground) or let go (float) — nobody actively drives high. The pull-up resistor to supply is what restores high whenever nobody pulls. Without it the line never rises: no START/STOP edges, no highs at all, dead bus. Resistor value balances speed (smaller = faster rise) against power (smaller = more current when pulled low).</p>
+</div></details><p><a id="words-first"></a></p>
 <h2 id="2-words-first-i2c-vocabulary">2. Words First — I2C Vocabulary</h2>
 <p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-formal-theory-bytes-on-the-bus">3. Formal Theory — Bytes on the Bu… →</a></p>
 <table>

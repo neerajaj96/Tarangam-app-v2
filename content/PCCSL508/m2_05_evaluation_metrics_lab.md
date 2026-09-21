@@ -49,6 +49,14 @@ for name, m in models.items():                       # M2.04's fitted trio, unto
 
 Line-by-line honesty: `ravel()` order is TN,FP,FN,TP (row-major — misreading it swaps precision/recall!); `predict_proba` missing on some models ⇒ `decision_function` fallback (scores need only order, not calibration); curves on shared axes (separate plots per model hide domination); AUC beside operating-point scores (area ranks, dots decide).
 
+::: toggle What do `confusion_matrix().ravel()`, `precision/recall/f1_score`, and `roc_auc_score` compute?
+`confusion_matrix(yte, pred)` = 2×2 counts [[TN, FP],[FN, TP]] (rows = truth, columns = verdict). `.ravel()` flattens row-major → TN, FP, FN, TP (memorise this order — misreading swaps precision with recall). `precision_score` = TP/(TP+FP) (alarm trust); `recall_score` = TP/(TP+FN) (capture completeness); `f1_score` = harmonic compromise (punishes lopsidedness). `roc_auc_score(yte, proba)` = P(positive outscores negative) across all thresholds (ranking grade 0–1, 0.5 = chance). `RocCurveDisplay.from_predictions` draws TPR-vs-FPR sweeping the threshold (the curve whose area AUC integrates).
+:::
+
+::: toggle Why the fallback `decision_function` when `predict_proba` is missing?
+ROC needs *scores with order*, not probabilities: any number ranking positives above negatives draws a curve (SVM margins qualify; trees' `predict_proba` fractions qualify). `hasattr` checks capability per model instead of assuming it — curves compare ranking skill fairly even when calibration differs. Never threshold-then-curve (labels have no sweep left).
+:::
+
 **Algorithm:** counting (cells) → ratios (P/R/F1) → sweep (ROC) → integrate (AUC).
 
 ## 2. Expected Output and Result

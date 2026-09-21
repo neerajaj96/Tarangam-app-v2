@@ -62,6 +62,14 @@ print(cli.recvfrom(1024)[0].decode())  # raises socket.timeout on loss — catch
 
 Loss demo: `sudo tc qdisc add dev lo root netem loss 20%` then run 10 requests — ~2 time out; remove with `tc qdisc del dev lo root`.
 
+::: toggle Expand: `sendto`, `recvfrom`, `settimeout`
+`sendto(bytes, (ip, port))` = one datagram to that destination (address per message — no connection exists to remember it; returns bytes sent). `recvfrom(1024)` = one datagram plus sender address as `(data, addr)` tuple (address per arrival — reply to *that* addr). `settimeout(2.0)` = cap every blocking wait at 2 s, raising `socket.timeout` after (what changes: waits become bounded; why: loss would otherwise freeze forever; verify: request with server down raises instead of hanging).
+:::
+
+::: toggle Expand: `sudo tc qdisc add dev lo root netem loss 20%`
+`sudo` = run as root (kernel packet scheduling needs privilege). `tc` = traffic-control tool. `qdisc` = queueing discipline object (how packets queue on a device). `add dev lo` = attach to loopback interface. `root` = at the root (outermost) hook. `netem` = network emulator. `loss 20%` = drop 1 in 5 randomly. What changes: kernel drops egress datagrams probabilistically. Verify: `tc qdisc show dev lo` lists the rule. Undo (mandatory): `sudo tc qdisc del dev lo root` — forgotten rules poison later labs.
+:::
+
 ## 4. Expected Output and How to Verify
 
 No loss: every request answered, uppercase correct. With 20% netem: some `socket.timeout` exceptions — count ≈ 2/10. Verify no handshake: `ss -unp` shows UDP sockets with no ESTABLISHED state; Wireshark shows lone datagrams, zero SYN.

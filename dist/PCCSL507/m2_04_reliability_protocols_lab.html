@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -232,7 +232,9 @@ print(&quot;done in&quot;, round(time.time() - t0, 2), &quot;s&quot;)
 <li>Cumulative ACK slides <code>base</code> — one number confirms everything below (GBN&#39;s efficiency and its rewinding curse).</li>
 <li>Timeout rewinds <code>nxt = base</code> — resend from the gap; with N=1 that&#39;s exactly one packet (stop-and-wait falls out, not bolted on).</li>
 </ul>
-<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<details class="interactive-toggle"><summary>What do `base`, `nxt`, `N`, cumulative ACK, and timeout each govern?</summary><div class="toggle-content"><p><code>base</code> = oldest unacknowledged packet (window&#39;s left edge — everything below arrived). <code>nxt</code> = next fresh packet to send (window&#39;s right edge grows here). <code>N</code> = window size (max unacked in flight; N=1 degenerates to stop-and-wait). Cumulative ACK (&quot;next wanted&quot;, e.g. 7) = confirms all below + paces the window (one number does both jobs). Timeout = alarm on the oldest unacked (expiry rewinds <code>nxt = base</code> — resend from the gap; GBN resends the whole tail, stop-and-wait resends the one).</p>
+</div></details><details class="interactive-toggle"><summary>Why must the timeout exceed RTT, and how do you set it?</summary><div class="toggle-content"><p>Timeout &lt; RTT fires while healthy packets still fly (needless resends = self-made congestion). Timeout ≫ RTT naps through real loss (throughput bleeds waiting). Rule: measure RTT first, set 2–4× it. Below RTT storms, above wastes — the exam&#39;s favourite &quot;why slow?&quot; diagnosis in one multiplication.</p>
+</div></details><h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
 <p class="secnav"><a href="#3-code-and-line-by-line-explanation">← 3. Code and Line-by-Line Explanati…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
 <p>20 packets over <code>delay 50ms loss 10%</code>: stop-and-wait ≈ 20×RTT+ (≥2 s with resends); GBN-4 ≈ 4–5× fewer RTTs (measure ~4× speedup). Verify: receiver log shows in-order delivery both ways; sender log shows rewind events only under loss; zero-loss control run shows no rewinds (mechanism idle, not broken).</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Timeout Tuning</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Timeout below RTT resends perfectly good packets (congestion from kindness); far above RTT naps through loss. Set ≈ 2–4× measured RTT — the exam&#39;s favourite &quot;why slow?&quot; diagnosis.</p>

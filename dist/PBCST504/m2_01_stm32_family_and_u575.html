@@ -229,7 +229,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -302,7 +302,9 @@
 <td>Datasheet = electrical limits + pinout (what survives); reference manual = every register (how to drive). Both are exam-adjacent reading skills.</td>
 </tr>
 </tbody></table>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Chassis Plus Trim</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The Cortex-M core plus CMSIS/HAL habits are the chassis every STM32 shares; series letters pick the trim (economy F0, sport F4, hybrid U5). Your driving skill (code) transfers; only the dashboard extras (peripherals, power modes) need relearning per trim.</p>
+<details class="interactive-toggle"><summary>How do I read `STM32U575xx` field by field?</summary><div class="toggle-content"><p><code>STM32</code> = STMicroelectronics 32-bit family. <code>U</code> = ultra-low-power mission (the series letter). <code>5</code> = performance tier inside that mission. <code>75</code> = feature line (here: TrustZone plus rich peripherals). <code>xx</code> = package, pin-count, and flash-size variant chosen at ordering. Read any STM32 number the same left-to-right way: family → mission → tier → features → package.</p>
+</div></details><details class="interactive-toggle"><summary>What is the difference between a series, a line, and a part number?</summary><div class="toggle-content"><p>Series = the mission family (U5 = ultra-low-power, F4 = DSP performance). Line = a feature set inside it (575 = TrustZone-rich). Part number = the exact orderable chip (package + pins + flash filled in). Series answers &quot;what for&quot;, line answers &quot;which features&quot;, part number answers &quot;which box to buy&quot;.</p>
+</div></details><details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Chassis Plus Trim</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The Cortex-M core plus CMSIS/HAL habits are the chassis every STM32 shares; series letters pick the trim (economy F0, sport F4, hybrid U5). Your driving skill (code) transfers; only the dashboard extras (peripherals, power modes) need relearning per trim.</p>
 </div></details><p><a id="formal-theory"></a></p>
 <h2 id="3-formal-theory-decoding-and-placement">3. Formal Theory — Decoding and Placement</h2>
 <p class="secnav"><a href="#2-words-first-family-vocabulary">← 2. Words First — Family Vocabulary</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>

@@ -188,7 +188,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -224,6 +224,12 @@ sudo ip netns exec r1 iptables -A FORWARD -m state --state ESTABLISHED,RELATED -
 sudo ip netns exec r1 iptables -A FORWARD -i v1r -o vpub -p tcp --dport 80 -j ACCEPT
 # ^ private LAN may open outbound web only; all new inbound dies on default DROP
 sudo ip netns exec r1 iptables -L -v -n       # read counters: which rules actually fire?
+
+&lt;details class=&quot;interactive-toggle&quot;&gt;&lt;summary&gt;Expand: `iptables -t nat -A POSTROUTING -o vpub -j MASQUERADE`&lt;/summary&gt;&lt;div class=&quot;toggle-content&quot;&gt;&lt;p&gt;&lt;code&gt;iptables&lt;/code&gt; = firewall/NAT rule tool (needs root). &lt;code&gt;-t nat&lt;/code&gt; = the address-translation table (vs &lt;code&gt;filter&lt;/code&gt; for allow/deny). &lt;code&gt;-A&lt;/code&gt; = append rule to chain&amp;#39;s end (order matters — first match wins). &lt;code&gt;POSTROUTING&lt;/code&gt; = chain for packets about to leave (last chance to rewrite source). &lt;code&gt;-o vpub&lt;/code&gt; = only via output interface vpub (the public face). &lt;code&gt;-j MASQUERADE&lt;/code&gt; = jump to source-rewrite-to-exit-address, remembering the mapping for replies. What changes: private sources become the public IP on exit. Verify: capture on vpub shows source 203.0.113.1, never 10.x. Undo: same line with &lt;code&gt;-D&lt;/code&gt; instead of &lt;code&gt;-A&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;&lt;/details&gt;
+
+&lt;details class=&quot;interactive-toggle&quot;&gt;&lt;summary&gt;Expand: chains, policy `-P`, `-m state`, `-L -v -n`&lt;/summary&gt;&lt;div class=&quot;toggle-content&quot;&gt;&lt;p&gt;Chains = per-path rule lists: INPUT (to this box), FORWARD (through it), OUTPUT (from it) — each packet walks exactly one. &lt;code&gt;-P INPUT DROP&lt;/code&gt; = chain policy (default verdict when no rule matches) — the deny in default-deny. &lt;code&gt;-m state --state ESTABLISHED,RELATED&lt;/code&gt; = match reply/associated traffic (answers re-enter; stateless hates must name ports instead). &lt;code&gt;-L -v -n&lt;/code&gt; = list with verbose counters, numeric (counters prove which rules fire — packet/byte counts per rule; untested rules are wishes).&lt;/p&gt;
+&lt;/div&gt;&lt;/details&gt;
 </code></pre>
 <ul>
 <li><code>-t nat ... POSTROUTING ... MASQUERADE</code> — source-NAT at exit; return path auto-unmapped by the recorded mapping.</li>

@@ -48,6 +48,14 @@ print(Xtr_s.shape, Xte_s.shape)     # (16512, 8) (4128, 8): shapes confess the s
 
 Line-by-line honesty: `drop(columns=[target])` defines the question (leak = forgetting this); `random_state` pins the shuffle (unpinned = unrepeatable grades); `fit` on train only (fitting on all = test statistics leaking into training — the #1 silent sin); shapes printed prove the 80/20 actually happened.
 
+::: toggle What do `train_test_split`, `test_size`, `random_state`, and `stratify` do?
+`train_test_split(X, y, ...)` = shuffle rows and deal two hands (features and labels travel together — never split X from y). `test_size=0.2` = deal 20% to test (80% trains — the standard generosity). `random_state=42` = pin the shuffle (same number ⇒ identical deal every rerun; any integer works — fixed is what matters). `stratify=y` = deal preserving class ratios (rare classes survive in both hands — classification honesty; regression usually skips it).
+:::
+
+::: toggle What do `fit`, `transform`, `StandardScaler`, and "leakage" mean here?
+`StandardScaler()` = standardiser (subtract mean, divide by std — common ruler). `.fit(Xtr)` = learn the ruler from train only (means/variances are train knowledge). `.transform(X)` = apply that ruler (train and test alike — test never teaches the ruler). Leakage = test information reaching training (fit-on-all, select-by-test, tune-on-test) — every leak inflates grades and voids conclusions; exactly-0 test means would indict it.
+:::
+
 **Stratification sense:** classification with rare classes → `stratify=y` (keeps ratios in both halves); regression → plain shuffle usually suffices (note it in the report either way).
 
 ## 2. Expected Output and Result

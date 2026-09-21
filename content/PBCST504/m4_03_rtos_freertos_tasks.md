@@ -42,6 +42,14 @@ Abbreviations defined on first use: Real-Time Operating System (RTOS), Time-To-D
 | What is preemption? | Higher-priority readiness suspending lower work mid-execution, resumed later |
 | What is the tick? | The periodic interrupt (e.g. 1 kHz) driving time-slicing and delays |
 
+::: toggle What do Ready, Running, and Blocked mean for a task?
+Ready = wants the CPU and waits its turn. Running = has the CPU right now (exactly one task per core). Blocked = waiting on something (a delay expiring, queue data, a semaphore) and consumes zero CPU meanwhile. The scheduler moves tasks between these: events unblock, priorities preempt, delays re-block.
+:::
+
+::: toggle What does each `xTaskCreate` argument carry?
+Function = the task's code (must loop forever, never return). Name = human label for debuggers. Stack words = its private stack size (worst nesting + ISR use, M1.05 per task). Priority = urgency number (higher preempts lower). Handle = optional ID for later control (suspend, delete, query). Wrong stack size corrupts neighbours; wrong priority starves or inverts.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — RTOS Vocabulary
 

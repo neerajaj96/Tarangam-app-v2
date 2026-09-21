@@ -48,6 +48,10 @@ print("sizes:", {int(k): list(labels).count(k) for k in set(labels)})
 
 Line-by-line honesty: `ward` minimises merged variance (blobs, not chains — method matches data shape); cut chosen after viewing (the deferral advantage — k-means cannot do this); `fcluster` labels from the tree (no refit, no randomness — deterministic given data); single-linkage chaining demo proves methods see different truths.
 
+::: toggle What do `linkage`, `dendrogram`, `fcluster`, and "method" mean?
+`linkage(Xs, method="ward")` = merge history table: each row (merged pair, merge distance, new size) — `ward` merges the pair raising variance least (blob-friendly); `single` uses nearest-point distance (chains); `complete` farthest-point (compact balls). `dendrogram(Z)` = draw the tree (x = samples, y = merge dissimilarity — long bare stems = natural gaps). `fcluster(Z, t=3, criterion="maxclust")` = cut into 3 clusters (t chosen AFTER seeing the tree — the deferral advantage; deterministic, no randomness, no refit).
+:::
+
 **Algorithm:** greedy closest-pair merging with Lance-Williams updates per linkage.
 
 ## 2. Expected Output and Result

@@ -42,6 +42,14 @@ Abbreviations defined on first use: Message Queuing Telemetry Transport (MQTT), 
 | What is QoS? | Delivery promise: 0 fire-and-forget, 1 retry-till-acked (duplicates possible), 2 exactly-once (costliest) |
 | What is CoAP's shape? | HTTP-like GET/POST/PUT/DELETE over UDP, tiny headers, confirmable or not |
 
+::: toggle What do QoS 0, 1, and 2 promise, and what does each cost?
+QoS 0 (at most once): fire and forget — cheapest, loss accepted. QoS 1 (at least once): sender retries till ACKed — duplicates possible (receiver must tolerate repeats). QoS 2 (exactly once): four-way handshake between client and broker — strongest promise, most packets and broker storage. Higher QoS never creates connectivity; it only grades delivery promises on a live link.
+:::
+
+::: toggle What do "retain" and "Last Will" do at the broker?
+Retain: the broker keeps the latest message per topic and hands it to each new subscriber instantly (no waiting for the next publish). Last Will: a death notice the client registers at connect — if the client vanishes ungracefully, the broker publishes it (presence monitoring without polling). One serves latecomers, the other reports disappearances.
+:::
+
 <a id="words-first"></a>
 ## 2. Words First — IoT Vocabulary
 

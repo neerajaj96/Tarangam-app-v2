@@ -200,7 +200,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 5 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -227,7 +227,9 @@ plt.xlabel(&quot;value&quot;); plt.ylabel(&quot;count&quot;); plt.show()
 # residuals come with the first model (M2.01): plt.scatter(predicted, actual - predicted)
 </code></pre>
 <p>Line-by-line honesty: <code>s=5</code> avoids ink-blobs on big data (default dots merge into lies); <code>xlabel/ylabel/title</code> are mandatory (a figure without axes is a Rorschach); <code>bins=50</code> resolves shape (too few hides modes, too many shows noise); <code>show()</code> flushes the figure (forget it in scripts and figures silently stack).</p>
-<p><strong>Input/features/target:</strong> x-axis = feature, y-axis = target — the visual form of &quot;predict y from x&quot; that every experiment repeats.</p>
+<details class="interactive-toggle"><summary>What do `scatter`, `hist`, `s`, `alpha`, and `bins` control?</summary><div class="toggle-content"><p><code>scatter(x, y)</code> = one dot per sample at (feature, target) — relationships live here. <code>hist(values, bins=50)</code> = count values into 50 buckets and bar them — distributions live here (piles, tails, outliers). <code>s</code> = dot size in points (small for big data — overplotting lies). <code>alpha</code> = opacity 0–1 (0.1 lets overlaps accumulate into visible density). <code>bins</code> = bucket count (few hides modes, many shows noise — try several, trust surviving shapes).</p>
+</div></details><details class="interactive-toggle"><summary>How do I read a residual plot (prediction vs error)?</summary><div class="toggle-content"><p>Axes: x = predicted value, y = error (actual − predicted). Healthy = formless cloud around zero (nothing left to learn). U-curve = systematic underfit (missing bend — add capacity). Funnel (spread growing with x) = unstable variance (errors scale with size — transform or weight). Flat top at 5.0 = censored targets (the housing cap — data property, not model sin).</p>
+</div></details><p><strong>Input/features/target:</strong> x-axis = feature, y-axis = target — the visual form of &quot;predict y from x&quot; that every experiment repeats.</p>
 <h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
 <p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
 <p>Scatter rising (noisy line), histogram right-skewed (few mansions), titles legible. Result: visual priors for modelling (linear-ish? skewed target? outliers to handle?).</p>
