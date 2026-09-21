@@ -306,6 +306,18 @@ a:hover { text-decoration: underline; }
   transition: top 0.15s ease;
 }
 .skip-link:focus { top: 12px; text-decoration: none; }
+/* Offline indicator (toggled by assets/pwa-register.js from native
+   online/offline events only — no polling, no state). Hidden unless the
+   browser reports offline; same tokens as the rest of the system. */
+.net-status {
+  position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%);
+  z-index: 300; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--accent); border-radius: var(--radius-full);
+  font-family: var(--font-mono); font-size: 12px; padding: 8px 16px;
+  box-shadow: var(--shadow-md); max-width: calc(100vw - 32px);
+  overflow-wrap: break-word; text-align: center;
+}
+.net-status[hidden] { display: none; }
 .icon-btn {
   width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border);
   background: var(--surface); color: var(--ink); cursor: pointer; display: flex; align-items: center; justify-content: center;

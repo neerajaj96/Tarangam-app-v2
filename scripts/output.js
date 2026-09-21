@@ -13,6 +13,7 @@
  */
 import fs from 'fs';
 import path from 'path';
+import crypto from 'node:crypto';
 import { escapeHtml } from './markdown.js';
 import { renderSubjectDetails } from './pages.js';
 
@@ -140,9 +141,11 @@ export function copyCoursePage(outputDir) {
 }
 
 // Copy the PWA/static-offline assets: web manifest, service worker,
-// offline fallback page, and icons. Byte-identical copies (the worker's
-// relative URLs resolve within the deployment scope, so no path rewrite
-// is needed for domain-root or Pages-subpath hosting).
+// offline fallback page, and icons. Copies are byte-identical except
+// dist/sw.js, which injectServiceWorkerVersion stamps with the
+// deterministic cache version (relative URLs resolve within the
+// deployment scope, so no path rewrite is needed for domain-root or
+// Pages-subpath hosting).
 export function copyPwaAssets(outputDir) {
   if (fs.existsSync('manifest.webmanifest')) {
     fs.copyFileSync('manifest.webmanifest', path.join(outputDir, 'manifest.webmanifest'));
@@ -156,6 +159,65 @@ export function copyPwaAssets(outputDir) {
   if (fs.existsSync('icons')) {
     fs.cpSync('icons', path.join(outputDir, 'icons'), { recursive: true });
   }
+}
+
+export const SERVICE_WORKER_VERSION_TOKEN = '__TARANGAM_VERSION__';
+
+// Deterministic service-worker version: `tarangam-<12 hex>` over every
+// shipped byte the user can observe — the shell file list named in sw.js
+// (resolved against the repo root, sorted), curriculum data, topic
+// Markdown, templates, and entry pages. Same inputs always mint the same
+// version; any visible change rotates caches on the next activation.
+// Exported so tests assert the published worker carries exactly this.
+export function computeServiceWorkerVersion() {
+  const shellBlock = fs.readFileSync('sw.js', 'utf-8').split('SHELL_URLS')[1] || '';
+  const shellFiles = [...new Set(
+    [...shellBlock.matchAll(/'(\.\/[^']+)'/g)]
+      .map((m) => m[1].slice(2))
+      .filter((p) => !p.endsWith('/') && fs.existsSync(p) && fs.statSync(p).isFile())
+  )].sort();
+  const extraInputs = [];
+  const collect = (dir, suffix) => {
+    if (!fs.existsSync(dir)) return;
+    const walk = (d) => {
+      for (const name of fs.readdirSync(d).sort()) {
+        const p = path.join(d, name);
+        if (fs.statSync(p).isDirectory()) walk(p);
+        else if (p.endsWith(suffix)) extraInputs.push(p);
+      }
+    };
+    walk(dir);
+  };
+  collect('content', '.md');
+  collect('templates', '.html');
+  const hash = crypto.createHash('sha256');
+  for (const file of shellFiles) {
+    hash.update(`file:${file}\n`);
+    hash.update(fs.readFileSync(file));
+    hash.update('\n');
+  }
+  for (const file of [
+    ...extraInputs,
+    'data/curriculum.json', 'data/assessments.json', 'manifest.webmanifest', 'offline.html',
+    'index.html', 'dashboard.html', 'explorer.html', 'course.html', 'assessment.html',
+  ].filter((f) => fs.existsSync(f) && fs.statSync(f).isFile()).sort()) {
+    hash.update(`file:${file}\n`);
+    hash.update(fs.readFileSync(file));
+    hash.update('\n');
+  }
+  return `tarangam-${hash.digest('hex').slice(0, 12)}`;
+}
+
+// Stamp the published worker with the deterministic version. The source
+// sw.js keeps the placeholder (development only); dist/sw.js carries the
+// minted version. Idempotent for identical inputs.
+export function injectServiceWorkerVersion(outputDir = OUTPUT_DIR) {
+  const target = path.join(outputDir, 'sw.js');
+  if (!fs.existsSync(target)) return null;
+  const version = computeServiceWorkerVersion();
+  const stamped = fs.readFileSync(target, 'utf-8').split(SERVICE_WORKER_VERSION_TOKEN).join(version);
+  fs.writeFileSync(target, stamped);
+  return version;
 }
 
 // Copy the curriculum explorer page (its topic links resolve client-side

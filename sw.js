@@ -7,26 +7,36 @@
  * and falls back to offline.html for uncached navigations.
  *
  * Deterministic cache-version strategy: TARANGAM_CACHE_VERSION names
- * every cache this worker owns. On activate, any cache NOT carrying the
- * current version is deleted, so obsolete curriculum data can never be
- * served indefinitely — a deploy ships a bumped version and old entries
- * disappear on the next activation. Bump the version whenever the shell
- * file list or the fetch strategy below changes.
+ * every cache this worker owns. At build time scripts/output.js replaces
+ * __TARANGAM_VERSION__ with `tarangam-<12 hex chars>`, a content hash over
+ * the shell file list below plus curriculum data, templates, entry pages,
+ * and topic content (see computeServiceWorkerVersion). Any deploy that
+ * changes what the user sees therefore mints a new version, activates it
+ * immediately via skipWaiting/clients.claim, and purges the previous
+ * generation on activate — obsolete shell or curriculum data can never be
+ * served indefinitely. There is no manual bump step and none is needed:
+ * the version is a pure function of the shipped bytes. Unbuilt checkouts
+ * keep the placeholder (development only; file:// cannot run workers).
  *
  * Learner state is NEVER cached here: progress lives in browser storage,
  * which service workers cannot observe; this worker only stores HTTP
  * responses. No IndexedDB, no backend, no sync, no polling.
  */
 
-const TARANGAM_CACHE_VERSION = 'tarangam-v1';
+const TARANGAM_CACHE_VERSION = '__TARANGAM_VERSION__';
 const SHELL_CACHE = `${TARANGAM_CACHE_VERSION}::shell`;
 const CONTENT_CACHE = `${TARANGAM_CACHE_VERSION}::content`;
 const DATA_CACHE = `${TARANGAM_CACHE_VERSION}::data`;
 const OFFLINE_URL = 'offline.html';
 
-// Application shell pinned at install time. Same-directory relative URLs
-// so the worker installs identically at the domain root (local dev) and
-// under a Pages project subpath.
+// Application shell pinned at install time: every local runtime module
+// reachable from the entry surfaces (dashboard, explorer, course,
+// assessment, topic study context), so an offline first visit after
+// install never faults on a sub-import. Same-directory relative URLs so
+// the worker installs identically at the domain root (local dev) and
+// under a Pages project subpath. The list is the transitive local-import
+// closure of the entry modules; scripts/pwa-offline.test.js enforces that
+// no reachable module is missing here.
 const SHELL_URLS = [
   './',
   'index.html',
@@ -37,16 +47,25 @@ const SHELL_URLS = [
   'offline.html',
   'manifest.webmanifest',
   'style.css',
-  'assets/curriculum-data.js',
-  'assets/learner-state.js',
-  'assets/topic-intelligence.js',
-  'assets/learning-journey.js',
-  'assets/dashboard.js',
-  'assets/explorer.js',
-  'assets/course-page.js',
-  'assets/course-overview.js',
-  'assets/assessment.js',
+  'assets/adaptive-learning.js',
   'assets/assessment-page.js',
+  'assets/assessment.js',
+  'assets/course-overview.js',
+  'assets/course-page.js',
+  'assets/curriculum-data.js',
+  'assets/dashboard.js',
+  'assets/exam-readiness.js',
+  'assets/explorer.js',
+  'assets/learner-path.js',
+  'assets/learner-state.js',
+  'assets/learning-analytics.js',
+  'assets/learning-journey.js',
+  'assets/pwa-register.js',
+  'assets/revision.js',
+  'assets/study-planner.js',
+  'assets/topic-intelligence.js',
+  'assets/topic-study-context.js',
+  'assets/weak-topic-analysis.js',
   'icons/icon-192.png',
   'icons/icon-512.png',
 ];

@@ -3,15 +3,19 @@
  * node:assert only — no test framework). Verifies the web manifest, the
  * versioned service worker, the offline fallback, build publishing to
  * dist/, Pages-relative paths, graceful registration, absence of any
- * backend learner-state mechanism, and that the accessibility and
- * responsive suites remain wired. Static contract checks only — no live
- * service-worker execution is claimed.
+ * backend learner-state mechanism, shell-closure completeness, content-
+ * hash version determinism, the event-driven offline indicator, the
+ * developer doc, and that the accessibility and responsive suites remain
+ * wired. Static contract checks only — no live service-worker execution
+ * and no manual browser walkthrough are claimed.
  *
  * Run: npm test  (node --test scripts/pwa-offline.test.js)
  */
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import path from 'node:path';
+import { computeServiceWorkerVersion, SERVICE_WORKER_VERSION_TOKEN } from './output.js';
 
 const read = (f) => fs.readFileSync(f, 'utf-8');
 
@@ -19,6 +23,20 @@ function pngSize(path) {
   const d = fs.readFileSync(path);
   assert.deepEqual(d.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), `${path} must be a PNG`);
   return { width: d.readUInt32BE(16), height: d.readUInt32BE(20) };
+}
+
+// Transitive local JS imports reachable from a browser entry module.
+function localImports(entry) {
+  const seen = new Set();
+  const walk = (file) => {
+    if (seen.has(file) || !fs.existsSync(file)) return;
+    seen.add(file);
+    for (const m of read(file).matchAll(/from\s+['"](\.\.?\/[^'"]+\.js)['"]/g)) {
+      walk(path.normalize(path.join(path.dirname(file), m[1])));
+    }
+  };
+  walk(entry);
+  return seen;
 }
 
 describe('web app manifest', () => {
@@ -117,10 +135,74 @@ describe('build publishes PWA files to dist/', () => {
       assert.ok(fs.existsSync(f), `${f} must ship to Pages (run npm run build:notes)`);
     }
     assert.equal(read('dist/manifest.webmanifest'), read('manifest.webmanifest'));
-    assert.equal(read('dist/sw.js'), read('sw.js'));
     assert.equal(read('dist/offline.html'), read('offline.html'));
     assert.ok(read('scripts/output.js').includes('copyPwaAssets'));
     assert.ok(read('scripts/build.js').includes('copyPwaAssets'));
+    assert.ok(read('scripts/build.js').includes('injectServiceWorkerVersion'));
+  });
+
+  it('stamps a deterministic content-hash version into the published worker', () => {
+    const source = read('sw.js');
+    assert.ok(source.includes(SERVICE_WORKER_VERSION_TOKEN), 'source keeps the injection token');
+    const dist = read('dist/sw.js');
+    assert.ok(!dist.includes(SERVICE_WORKER_VERSION_TOKEN), 'published worker must carry a minted version');
+    const expected = computeServiceWorkerVersion();
+    assert.match(expected, /^tarangam-[0-9a-f]{12}$/);
+    assert.ok(dist.includes(`'${expected}'`), 'published version must equal the recomputed content hash');
+    assert.equal(dist, source.split(SERVICE_WORKER_VERSION_TOKEN).join(expected));
+    assert.equal(computeServiceWorkerVersion(), computeServiceWorkerVersion());
+  });
+});
+
+describe('shell closure completeness', () => {
+  it('precaches every local runtime module reachable from entry surfaces', () => {
+    const sw = read('sw.js');
+    const shellBlock = sw.split('SHELL_URLS')[1] || '';
+    const pinned = new Set(
+      [...shellBlock.matchAll(/'([^']+)'/g)]
+        .map((m) => (m[1].startsWith('./') ? m[1].slice(2) : m[1]))
+        .filter((p) => p.endsWith('.js') && fs.existsSync(p))
+    );
+    const entries = [
+      'assets/dashboard.js', 'assets/explorer.js', 'assets/course-page.js',
+      'assets/assessment-page.js', 'assets/topic-study-context.js',
+    ];
+    const reachable = new Set();
+    for (const entry of entries) {
+      for (const file of localImports(entry)) {
+        if (file.endsWith('.js')) reachable.add(file);
+      }
+    }
+    const missing = [...reachable].filter((f) => !pinned.has(f));
+    assert.deepEqual(missing, [], `shell must pin every reachable module (missing: ${missing.join(', ')})`);
+    // Representative generated topic pages resolve through cached lanes.
+    assert.ok(sw.includes('CONTENT_CACHE'));
+    assert.ok(sw.includes("request.destination === 'document'"));
+  });
+});
+
+describe('event-driven offline indicator', () => {
+  it('announces offline status without polling or state', () => {
+    const reg = read('assets/pwa-register.js');
+    assert.ok(reg.includes("addEventListener('online'"));
+    assert.ok(reg.includes("addEventListener('offline'"));
+    assert.ok(reg.includes('net-status'));
+    assert.ok(reg.includes("setAttribute('role', 'status')"));
+    assert.ok(!reg.includes('setInterval'));
+    assert.ok(!reg.includes('localStorage'));
+    const css = read('style.css');
+    assert.ok(css.includes('.net-status'));
+    assert.ok(css.includes('.net-status[hidden]'));
+  });
+});
+
+describe('offline reliability documentation', () => {
+  it('documents layers, behavior, versioning, and the manual walkthrough', () => {
+    assert.ok(fs.existsSync('docs/offline-reliability.md'));
+    const doc = read('docs/offline-reliability.md');
+    for (const token of ['cache-first', 'Network-first', 'computeServiceWorkerVersion', 'never cached', 'GitHub Pages', 'walkthrough', 'skipWaiting']) {
+      assert.ok(doc.toLowerCase().includes(token.toLowerCase()), `doc must cover ${token}`);
+    }
   });
 });
 

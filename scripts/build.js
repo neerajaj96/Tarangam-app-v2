@@ -37,6 +37,7 @@ import {
   copyDashboardPage,
   copyCoursePage,
   copyPwaAssets,
+  injectServiceWorkerVersion,
   copyAssetDirs,
 } from './output.js';
 import { buildTopicManifest } from './topic-manifest.js';
@@ -244,6 +245,8 @@ export function buildSite() {
   copyCoursePage(OUTPUT_DIR);
 
   copyPwaAssets(OUTPUT_DIR);
+
+  injectServiceWorkerVersion(OUTPUT_DIR);
 
   copyAssetDirs(OUTPUT_DIR);
 

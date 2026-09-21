@@ -1209,7 +1209,12 @@ if (fs.existsSync('dist')) {
     fail('pwa: expected service worker sw.js — actual: missing');
   } else {
     const sw = fs.readFileSync('sw.js', 'utf-8');
-    if (!/const TARANGAM_CACHE_VERSION = '[^']+'/.test(sw)) fail('pwa: sw.js must pin a deterministic cache version');
+    if (!sw.includes('__TARANGAM_VERSION__')) {
+      fail('pwa: sw.js must carry the __TARANGAM_VERSION__ token for deterministic build stamping');
+    }
+    for (const token of ['SHELL_URLS', 'SHELL_CACHE', 'CONTENT_CACHE', 'DATA_CACHE']) {
+      if (!sw.includes(token)) fail(`pwa: sw.js is missing cache layer "${token}"`);
+    }
     for (const token of ["addEventListener('install'", "addEventListener('activate'", "addEventListener('fetch'", 'skipWaiting', 'clients.claim', 'caches.delete', 'offline.html']) {
       if (!sw.includes(token)) fail(`pwa: sw.js is missing offline wiring "${token}"`);
     }
@@ -1242,14 +1247,38 @@ if (fs.existsSync('dist')) {
     for (const f of ['dist/manifest.webmanifest', 'dist/sw.js', 'dist/offline.html', 'dist/icons/icon-192.png', 'dist/icons/icon-512.png']) {
       if (!fs.existsSync(f)) fail(`pwa: expected published file ${f} — actual: missing (run npm run build:notes)`);
     }
-    if (fs.existsSync('dist/sw.js') && fs.readFileSync('dist/sw.js', 'utf-8') !== fs.readFileSync('sw.js', 'utf-8')) {
-      fail('pwa: dist/sw.js must match sw.js byte-identically');
+    if (fs.existsSync('dist/sw.js') && fs.existsSync('sw.js')) {
+      const stamped = fs.readFileSync('dist/sw.js', 'utf-8');
+      const source = fs.readFileSync('sw.js', 'utf-8');
+      if (stamped.includes('__TARANGAM_VERSION__')) {
+        fail('pwa: dist/sw.js still carries the version placeholder — build stamping did not run');
+      }
+      const minted = stamped.match(/const TARANGAM_CACHE_VERSION = '(tarangam-[0-9a-f]{12})'/) || [];
+      if (!minted[1] || stamped !== source.split('__TARANGAM_VERSION__').join(minted[1])) {
+        fail('pwa: dist/sw.js must equal sw.js with only the deterministic version stamped in');
+      }
     }
   }
   const learnerState = fs.existsSync('assets/learner-state.js') ? fs.readFileSync('assets/learner-state.js', 'utf-8') : '';
   if (learnerState.includes('fetch(') || learnerState.includes('indexedDB')) {
     fail('pwa: learner state must stay local without network mechanisms');
   }
+  // Offline indicator: event-driven only, shared script + styles.
+  const register = fs.existsSync('assets/pwa-register.js') ? fs.readFileSync('assets/pwa-register.js', 'utf-8') : '';
+  for (const token of ["addEventListener('online'", "addEventListener('offline'", 'net-status']) {
+    if (!register.includes(token)) fail(`pwa: offline indicator is missing "${token}"`);
+  }
+  if (register.includes('setInterval') || register.includes('localStorage')) {
+    fail('pwa: offline indicator must not poll or store state');
+  }
+  const sharedCss = fs.existsSync('style.css') ? fs.readFileSync('style.css', 'utf-8') : '';
+  if (!sharedCss.includes('.net-status')) fail('pwa: style.css must style the offline indicator');
+  // Build stamps the published worker deterministically (gated in tests).
+  const output = fs.existsSync('scripts/output.js') ? fs.readFileSync('scripts/output.js', 'utf-8') : '';
+  for (const token of ['computeServiceWorkerVersion', 'injectServiceWorkerVersion']) {
+    if (!output.includes(token)) fail(`pwa: scripts/output.js is missing "${token}"`);
+  }
+  if (!fs.existsSync('docs/offline-reliability.md')) fail('pwa: expected developer doc docs/offline-reliability.md — actual: missing');
 }
 
 for (const w of warnings) console.warn('WARN: ' + w);
