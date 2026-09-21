@@ -144,12 +144,41 @@ function legacyCoursesIn(store) {
 
 // --- Detection ---------------------------------------------------------------
 
+// Every future-version key present in storage: any
+// `tarangam_topic_state_vN` with N > LEARNER_SCHEMA_VERSION, sorted
+// ascending. Best-effort enumeration (_dump, then length/key); stores
+// without enumeration fall back to the direct V2 probe in
+// detectStoredVersion below. Never throws.
+export function futureVersionKeys(store) {
+  const found = new Set();
+  try {
+    for (const key of storageKeys(store)) {
+      const m = typeof key === 'string' && key.match(/^tarangam_topic_state_v(\d+)$/);
+      if (m && Number(m[1]) > LEARNER_SCHEMA_VERSION) found.add(Number(m[1]));
+    }
+  } catch {
+    // enumeration unavailable
+  }
+  // Direct probe: catches v2 even where enumeration is unsupported.
+  try {
+    if (store && typeof store.getItem === 'function' && store.getItem(V2_STATE_KEY) !== null) {
+      found.add(2);
+    }
+  } catch {
+    // unreadable probe
+  }
+  return [...found].sort((a, b) => a - b).filter((n) => n > LEARNER_SCHEMA_VERSION);
+}
+
 // Classify what a store holds without changing a byte. Never throws.
-// Future detection is a direct key probe (no enumeration needed).
+// Future detection recognizes ANY vN above the current version.
 export function detectStoredVersion(store) {
-  const futureRaw = safeGet(store, V2_STATE_KEY);
-  if (futureRaw !== null) {
-    return { kind: VERSION_FUTURE, version: null, hasV1: safeGet(store, V1_STATE_KEY) !== null };
+  const futureVersions = futureVersionKeys(store);
+  if (futureVersions.length) {
+    return {
+      kind: VERSION_FUTURE, version: null, futureVersions,
+      hasV1: safeGet(store, V1_STATE_KEY) !== null,
+    };
   }
   const raw = safeGet(store, V1_STATE_KEY);
   if (raw === null) {

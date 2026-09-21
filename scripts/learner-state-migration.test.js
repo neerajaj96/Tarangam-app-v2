@@ -55,7 +55,8 @@ const dumpOf = (store) => store._dump();
 describe('schema registry', () => {
   it('shares one implementation with a documented version and shapes', () => {
     for (const name of [
-      'detectStoredVersion', 'isFutureVersion', 'validateV1Entry',
+      'detectStoredVersion', 'isFutureVersion', 'futureVersionKeys',
+      'validateV1Entry',
       'validateV1Map', 'validateLegacyVisited', 'validateLegacyStamps',
       'validateStoredState', 'migrateStoredState', 'ensureDefaultState',
       'describeLearnerSchema',
@@ -281,6 +282,91 @@ describe('unknown future schema version', () => {
     assert.equal(report.migrated, false);
     assert.equal(report.readOnly, true);
     assert.equal(JSON.stringify(dumpOf(store)), before);
+  });
+});
+
+describe('generalized future-version detection (any vN)', () => {
+  const v3blob = JSON.stringify({ version: 3, records: {} });
+
+  it('recognizes v2, v3, combined, and double-digit generations', () => {
+    assert.deepEqual(Schema.futureVersionKeys(memoryStorage()), []);
+    assert.deepEqual(
+      Schema.futureVersionKeys(memoryStorage({ [V2_STATE_KEY]: '{}' })), [2]
+    );
+    assert.deepEqual(
+      Schema.futureVersionKeys(memoryStorage({ 'tarangam_topic_state_v3': v3blob })), [3]
+    );
+    assert.deepEqual(
+      Schema.futureVersionKeys(memoryStorage({ [V2_STATE_KEY]: '{}', 'tarangam_topic_state_v3': v3blob })), [2, 3]
+    );
+    assert.deepEqual(
+      Schema.futureVersionKeys(memoryStorage({ 'tarangam_topic_state_v10': '{}' })), [10]
+    );
+    // Current and older generations are never future.
+    assert.deepEqual(Schema.futureVersionKeys(memoryStorage({ [V1_STATE_KEY]: '{}' })), []);
+    assert.deepEqual(
+      Schema.futureVersionKeys(memoryStorage({ 'tarangam_topic_state_v01': '{}' })), []
+    );
+    // Lookalikes without a numeric generation are ignored.
+    assert.deepEqual(
+      Schema.futureVersionKeys(memoryStorage({ 'tarangam_topic_state_vX': '{}' })), []
+    );
+    assert.deepEqual(Schema.detectStoredVersion(memoryStorage({ 'tarangam_topic_state_v3': v3blob })).kind, 'future');
+    assert.deepEqual(
+      Schema.detectStoredVersion(memoryStorage({ 'tarangam_topic_state_v3': v3blob })).futureVersions, [3]
+    );
+  });
+
+  it('enters read-only preservation for v3 without overwriting or downgrading', () => {
+    const legacy = JSON.stringify(['m1_01_a']);
+    const store = memoryStorage({ 'tarangam_topic_state_v3': v3blob, [legacyVisitedKey('C1')]: legacy });
+    const before = JSON.stringify(dumpOf(store));
+    const detected = Schema.detectStoredVersion(store);
+    assert.equal(detected.kind, 'future');
+    const s = createLearnerState({ manifest: fixture, storage: store });
+    assert.equal(s.isReadOnly(), true);
+    // Legacy evidence stays visible through existing readers.
+    assert.equal(s.getTopicState('C1', 'm1_01_a').status, 'completed');
+    // Every writer is a no-op: bytes, future blob, and legacy keys intact.
+    s.markTopicCompleted('C1', 'm1_02_b');
+    s.setTopicState('C1', 'm1_02_b', 'in_progress');
+    s.toggleTopicCompleted('C1', 'm1_01_a');
+    s.clearCourseState('C1');
+    assert.equal(JSON.stringify(dumpOf(store)), before);
+    assert.equal(store.getItem('tarangam_topic_state_v3'), v3blob);
+    assert.equal(store.getItem(legacyVisitedKey('C1')), legacy);
+    const report = Schema.migrateStoredState(store, fixture);
+    assert.equal(report.migrated, false);
+    assert.equal(report.readOnly, true);
+    assert.equal(JSON.stringify(dumpOf(store)), before);
+    // A future key wins even alongside otherwise-current v1 data.
+    const mixed = memoryStorage({
+      [V1_STATE_KEY]: JSON.stringify({ 'C1/m1_01_a': { status: 'completed', updatedAt: 1 } }),
+      'tarangam_topic_state_v3': v3blob,
+    });
+    assert.equal(createLearnerState({ manifest: fixture, storage: mixed }).isReadOnly(), true);
+    assert.equal(Schema.detectStoredVersion(mixed).kind, 'future');
+  });
+
+  it('still probes v2 directly where key enumeration is unavailable', () => {
+    const bare = {
+      data: { [V2_STATE_KEY]: JSON.stringify({ version: 2 }) },
+      getItem(k) { return Object.prototype.hasOwnProperty.call(this.data, k) ? this.data[k] : null; },
+      setItem(k, v) { this.data[k] = String(v); },
+      removeItem(k) { delete this.data[k]; },
+    };
+    assert.deepEqual(Schema.futureVersionKeys(bare), [2]);
+    assert.equal(createLearnerState({ manifest: fixture, storage: bare }).isReadOnly(), true);
+    // Documented limit: without enumeration, higher generations that skip
+    // the direct probe cannot be seen — readers then proceed normally and
+    // per-read validation still applies.
+    const bareV3 = {
+      data: { 'tarangam_topic_state_v3': v3blob },
+      getItem(k) { return Object.prototype.hasOwnProperty.call(this.data, k) ? this.data[k] : null; },
+      setItem(k, v) { this.data[k] = String(v); },
+      removeItem(k) { delete this.data[k]; },
+    };
+    assert.deepEqual(Schema.futureVersionKeys(bareV3), []);
   });
 });
 

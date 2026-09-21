@@ -119,8 +119,7 @@ function writeJson(store, key, value) {
 // to decide whether a missing v1 map means "fresh" (ensure an explicit
 // default) or "legacy-owned" (leave untouched so legacy reads, including
 // their legacy flags, behave exactly as before).
-function hasLegacyEvidence(store) {
-  try {
+function hasLegacyEvidence(store) {  try {
     if (store && typeof store._dump === 'function') {
       return Object.keys(store._dump()).some((k) => typeof k === 'string' && k.startsWith('tarangam_visited_'));
     }
@@ -136,6 +135,47 @@ function hasLegacyEvidence(store) {
     }
   } catch {
     // enumeration unavailable
+  }
+  return false;
+}
+
+// Best-effort check for ANY future-version key (tarangam_topic_state_vN
+// with N above CURRENT_SCHEMA_VERSION): direct v2 probe (no enumeration
+// needed) plus a scan of enumerable keys for higher generations. Kept
+// local — rather than importing the schema registry — to avoid a module
+// cycle; the registry's futureVersionKeys is the canonical, fully-tested
+// implementation of the same rule. Never throws.
+function hasFutureEvidence(store) {
+  // Must always equal LEARNER_SCHEMA_VERSION in
+  // ./learner-state-schema.js (asserted by scripts/check.js §24);
+  // duplicated — not imported — to avoid a module cycle with the registry.
+  const CURRENT_SCHEMA_VERSION = 1;
+  try {
+    if (store && typeof store.getItem === 'function' && store.getItem(V2_STATE_KEY) !== null) {
+      return true;
+    }
+  } catch {
+    // unreadable probe
+  }
+  try {
+    const keys = [];
+    if (store && typeof store._dump === 'function') {
+      keys.push(...Object.keys(store._dump()));
+    } else if (store && typeof store.length === 'number' && typeof store.key === 'function') {
+      for (let i = 0; i < store.length; i += 1) {
+        try {
+          keys.push(store.key(i));
+        } catch {
+          // ignore unreadable slots
+        }
+      }
+    }
+    for (const k of keys) {
+      const m = typeof k === 'string' && k.match(/^tarangam_topic_state_v(\d+)$/);
+      if (m && Number(m[1]) > CURRENT_SCHEMA_VERSION) return true;
+    }
+  } catch {
+    // enumeration unavailable: the direct probe above still applies
   }
   return false;
 }
@@ -161,15 +201,15 @@ export function createLearnerState({ manifest = null, storage = null } = {}) {
 
   // Load-time integrity: detect an unknown future writer first (safe
   // read-only mode — readers keep working, writers become no-ops, and no
-  // byte is ever overwritten or downgraded). Otherwise recover corrupt or
-  // missing v1 state to a valid default (backing corrupt blobs up first).
-  // Valid legacy-only data is left exactly as is: the read fallback below
-  // already interprets it, including its legacy flags.
+  // byte is ever overwritten or downgraded). ANY tarangam_topic_state_vN
+  // with N above the current version counts, found by direct probe plus
+  // best-effort key enumeration (see hasFutureEvidence). Otherwise recover
+  // corrupt or missing v1 state to a valid default (backing corrupt blobs
+  // up first). Valid legacy-only data is left exactly as is: the read
+  // fallback below already interprets it, including its legacy flags.
   let readOnly = false;
   try {
-    if (store.getItem(V2_STATE_KEY) !== null) {
-      readOnly = true;
-    }
+    readOnly = hasFutureEvidence(store);
   } catch {
     // unreadable probe: proceed normally; per-read guards still apply
   }

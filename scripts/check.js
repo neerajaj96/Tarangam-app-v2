@@ -1322,8 +1322,19 @@ if (fs.existsSync('dist')) {
     fail('storage: expected schema registry assets/learner-state-schema.js — actual: missing');
   } else {
     const js = fs.readFileSync('assets/learner-state-schema.js', 'utf-8');
-    for (const token of ['LEARNER_SCHEMA_VERSION', 'describeLearnerSchema', 'detectStoredVersion', 'isFutureVersion', 'validateV1Entry', 'validateV1Map', 'validateLegacyVisited', 'validateLegacyStamps', 'validateStoredState', 'migrateStoredState', 'ensureDefaultState']) {
+    for (const token of ['LEARNER_SCHEMA_VERSION', 'describeLearnerSchema', 'detectStoredVersion', 'isFutureVersion', 'futureVersionKeys', 'validateV1Entry', 'validateV1Map', 'validateLegacyVisited', 'validateLegacyStamps', 'validateStoredState', 'migrateStoredState', 'ensureDefaultState']) {
       if (!js.includes(token)) fail(`storage: assets/learner-state-schema.js is missing "${token}"`);
+    }
+    if (!js.includes('> LEARNER_SCHEMA_VERSION')) {
+      fail('storage: future detection must compare generations against LEARNER_SCHEMA_VERSION (any vN, not one key)');
+    }
+    // The runtime probe in learner-state.js duplicates the current version
+    // constant to avoid a module cycle; both literals must agree.
+    const state = fs.existsSync('assets/learner-state.js') ? fs.readFileSync('assets/learner-state.js', 'utf-8') : '';
+    const schemaVersion = (js.match(/LEARNER_SCHEMA_VERSION\s*=\s*(\d+)/) || [])[1];
+    const runtimeVersion = (state.match(/CURRENT_SCHEMA_VERSION\s*=\s*(\d+)/) || [])[1];
+    if (!schemaVersion || !runtimeVersion || schemaVersion !== runtimeVersion) {
+      fail(`storage: schema version ${schemaVersion ?? '?'} must equal runtime probe version ${runtimeVersion ?? '?'} (module-cycle-safe duplicate)`);
     }
     for (const dep of ["from './learner-state.js'"]) {
       if (!js.includes(dep)) fail(`storage: schema registry must build on the canonical learner-state module (missing ${dep})`);
