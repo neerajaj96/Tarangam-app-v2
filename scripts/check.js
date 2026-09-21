@@ -1447,6 +1447,65 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 26. Privacy boundary: learner progress, assessment attempts, revision
+// state, planner state, and backup/restore data stay browser-local — no
+// network transmission, no backend dependency, no IndexedDB, no cookies,
+// and no service-worker caching of learner data. Mirrors
+// scripts/privacy-boundary.test.js; both gates fail on the same contract.
+{
+  const learnerModules = [
+    'assets/learner-state.js',
+    'assets/learner-state-schema.js',
+    'assets/learner-state-backup.js',
+    'assets/assessment.js',
+    'assets/study-planner.js',
+    'assets/revision.js',
+    'scripts/learner-state-schema.js',
+    'scripts/learner-state-backup.js',
+  ];
+  const bannedTransmission = ['fetch(', 'XMLHttpRequest', 'sendBeacon', 'WebSocket', 'EventSource', 'indexedDB', 'document.cookie', 'firebase', 'supabase', 'openai', 'anthropic'];
+  for (const file of learnerModules) {
+    if (!fs.existsSync(file)) {
+      fail(`privacy: expected learner module ${file} — actual: missing`);
+      continue;
+    }
+    const source = fs.readFileSync(file, 'utf-8');
+    for (const token of bannedTransmission) {
+      const haystack = token === token.toLowerCase() && token !== 'fetch(' ? source.toLowerCase() : source;
+      if (haystack.includes(token)) fail(`privacy: ${file} must stay local-only (found "${token}")`);
+    }
+  }
+  // The service worker caches static bytes only — never learner data.
+  if (fs.existsSync('sw.js')) {
+    const sw = fs.readFileSync('sw.js', 'utf-8');
+    for (const key of ['tarangam_topic_state', 'tarangam_assessments', 'tarangam_study_plan', 'tarangam_visited']) {
+      if (sw.includes(key)) fail(`privacy: sw.js must never cache learner data (found "${key}")`);
+    }
+    for (const token of ['localStorage', 'indexedDB']) {
+      if (sw.includes(token)) fail(`privacy: sw.js must not touch learner storage (found "${token}")`);
+    }
+  }
+  // Static-only server: liveness check only, no learner-data endpoints.
+  if (fs.existsSync('server.ts')) {
+    const server = fs.readFileSync('server.ts', 'utf-8');
+    for (const route of ['app.post(', 'app.put(', 'app.delete(', 'app.patch(']) {
+      if (server.includes(route)) fail(`privacy: server.ts must expose no write endpoints (found "${route}")`);
+    }
+    for (const endpoint of ['/api/progress', '/api/attempt', '/api/state', '/api/sync', '/api/learner']) {
+      if (server.includes(endpoint)) fail(`privacy: server.ts must expose no learner endpoint (found "${endpoint}")`);
+    }
+  }
+  // Static data loading must never reference learner keys.
+  if (fs.existsSync('assets/curriculum-data.js')) {
+    if (/tarangam_/.test(fs.readFileSync('assets/curriculum-data.js', 'utf-8'))) {
+      fail('privacy: assets/curriculum-data.js must never reference learner keys');
+    }
+  }
+  if (!fs.existsSync('docs/privacy-local-data.md')) {
+    fail('privacy: expected developer doc docs/privacy-local-data.md — actual: missing');
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
