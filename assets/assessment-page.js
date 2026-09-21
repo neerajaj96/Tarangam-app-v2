@@ -168,14 +168,14 @@ function questionCard(q, index) {
       <button class="as-opt" data-q="${esc(q.id)}" data-bool="false" type="button">False</button>
     </div>`;
   } else {
-    input = `<input class="as-text" data-q="${esc(q.id)}" type="text" placeholder="Type your answer…" autocomplete="off">`;
+    input = `<input class="as-text" data-q="${esc(q.id)}" type="text" placeholder="Type your answer…" autocomplete="off" aria-label="Type your answer">`;
   }
   return `<div class="as-q" data-card="${esc(q.id)}">
     <p class="as-q-title">${n}. ${esc(q.question)}</p>
     ${meta}${input}
     <div class="xp-path-row">
       <button class="xp-path-btn" data-submit-q="${esc(q.id)}" type="button">Submit answer</button>
-      <span class="as-feedback" data-feedback="${esc(q.id)}"></span>
+      <span class="as-feedback" data-feedback="${esc(q.id)}" role="status"></span>
     </div>
     <div class="as-explain" data-explain="${esc(q.id)}" hidden></div>
   </div>`;

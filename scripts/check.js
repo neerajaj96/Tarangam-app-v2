@@ -1105,6 +1105,78 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 21. Accessibility and keyboard UX: semantic landmarks, skip links,
+// labels, accessible names, native controls, visible focus, correct ARIA,
+// reduced motion, live regions, and real text contrast — without behavior
+// changes, framework moves, or new dependencies.
+{
+  const pages = {
+    'dashboard.html': 'db-app', 'explorer.html': 'xp-app', 'course.html': 'co-app',
+    'assessment.html': 'as-app', 'index.html': 'main-content',
+  };
+  for (const [page, target] of Object.entries(pages)) {
+    if (!fs.existsSync(page)) {
+      fail(`a11y: expected page ${page} — actual: missing`);
+      continue;
+    }
+    const html = fs.readFileSync(page, 'utf-8');
+    if (!html.includes('class="skip-link"') || !html.includes(`href="#${target}"`)) {
+      fail(`a11y: ${page} must link a skip link to ${target}`);
+    }
+    if (!html.includes('<main')) fail(`a11y: ${page} must expose a main landmark`);
+  }
+  const template = fs.existsSync(path.join('templates', 'base.html'))
+    ? fs.readFileSync(path.join('templates', 'base.html'), 'utf-8')
+    : '';
+  if (!template.includes('class="skip-link"')) fail('a11y: topic template must keep its skip link');
+  if (!template.includes('<main')) fail('a11y: topic template must keep its main landmark');
+  for (const id of ['sidebarToggle', 'themeToggleBtn', 'settingsBtn', 'closeSettings']) {
+    if (!new RegExp(`id="${id}"[^>]*aria-label="[^"]+"`).test(template)) {
+      fail(`a11y: icon-only button ${id} needs an accessible name`);
+    }
+  }
+  if (!template.includes('role="status"')) fail('a11y: topic progress updates must announce via a live region');
+  const assessmentPage = fs.existsSync('assets/assessment-page.js') ? fs.readFileSync('assets/assessment-page.js', 'utf-8') : '';
+  if (!assessmentPage.includes('aria-label="Type your answer"')) fail('a11y: free-text answer input needs an accessible name');
+  if (!assessmentPage.includes('role="status"')) fail('a11y: per-question feedback must announce via a live region');
+  const assessmentHtml = fs.existsSync('assessment.html') ? fs.readFileSync('assessment.html', 'utf-8') : '';
+  if (!assessmentHtml.includes('aria-live="polite"')) fail('a11y: assessment result must announce via a live region');
+  const explorer = fs.existsSync('assets/explorer.js') ? fs.readFileSync('assets/explorer.js', 'utf-8') : '';
+  if (!explorer.includes('aria-current="true"')) fail('a11y: explorer must expose the selected card');
+  const css = fs.existsSync('style.css') ? fs.readFileSync('style.css', 'utf-8') : '';
+  if (!css.includes(':focus-visible')) fail('a11y: style.css must keep visible focus styles');
+  if (!css.includes('@media (prefers-reduced-motion: reduce)')) fail('a11y: style.css must keep reduced-motion support');
+  for (const f of ['style.css', 'dashboard.html', 'explorer.html', 'course.html', 'assessment.html', 'index.html', 'templates/base.html']) {
+    const content = fs.existsSync(f) ? fs.readFileSync(f, 'utf-8') : '';
+    if (/tabindex\s*=\s*["']?[1-9]/.test(content)) fail(`a11y: ${f} must not use positive tabindex`);
+    if (/outline:\s*none/.test(content)) fail(`a11y: ${f} must not remove focus outlines`);
+  }
+  // Real contrast computation over shipped theme variables (WCAG AA).
+  const lum = (hex) => {
+    const [r, g, b] = [1, 3, 5].map((i) => {
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  for (const theme of ['dark', 'light', 'reading']) {
+    const start = css.indexOf(`body[data-theme="${theme}"]`);
+    const next = css.indexOf('body[data-theme="', start + 1);
+    const section = start === -1 ? '' : css.slice(start, next === -1 ? css.length : next);
+    const vars = {};
+    for (const m of section.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{6})/g)) vars[m[1]] = m[2];
+    for (const [fg, bg] of [['--ink', '--surface'], ['--ink-dim', '--surface'], ['--ink-faint', '--surface'], ['--ink', '--surface-2'], ['--ink-dim', '--surface-2'], ['--ink-faint', '--surface-2'], ['--accent', '--surface']]) {
+      if (!vars[fg] || !vars[bg]) {
+        fail(`a11y: ${theme} theme must define ${fg} and ${bg}`);
+        continue;
+      }
+      const [x, y] = [lum(vars[fg]), lum(vars[bg])].sort((m, n) => m - n);
+      const ratio = (y + 0.05) / (x + 0.05);
+      if (ratio < 4.5) fail(`a11y: ${theme} ${fg} on ${bg} is ${ratio.toFixed(2)} (needs WCAG AA 4.5)`);
+    }
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);

@@ -705,7 +705,8 @@ function renderList() {
   list.innerHTML = topics.map((t) => {
     const key = `${t.courseCode}/${t.id}`;
     const active = key === state.selectedKey ? ' xp-active' : '';
-    return `<button class="xp-card${active}" data-course="${esc(t.courseCode)}" data-topic="${esc(t.id)}">
+    const current = key === state.selectedKey ? ' aria-current="true"' : '';
+    return `<button class="xp-card${active}"${current} data-course="${esc(t.courseCode)}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
       <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}${attentionChips(t)}${progressionChips(t)}${searchChips(t)}</span>
