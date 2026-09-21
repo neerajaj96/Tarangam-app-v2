@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -323,7 +323,8 @@
 <p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
 <p>Canonical order: problem (compress linearly) → data (centred, standardised $X$) → goal (max variance kept) → method (eigendecompose covariance) → model (top-$k$ orthonormal basis) → training (one eigendecomposition) → example → limitations.</p>
 <h3>3.1 Covariance and Eigen-Structure, Symbol by Symbol</h3>
-<p>Covariance $\Sigma=\frac{1}{n-1}X^TX$ ($d\times d$, symmetric). Eigenvectors $v_i$ (orthonormal) are principal directions; eigenvalues $\lambda_i$ are variances along them. Projection $z=V_k^Tx$ onto top $k$ keeps fraction above. Here $V_k$ holds top eigenvectors as columns; orthonormal means unit length and perpendicular, so variance bookkeeping holds.</p>
+<details class="interactive-toggle"><summary>Expand `Σ = XᵀX/(n−1)`, `vᵢ`, `λᵢ`, `z = Vₖᵀx`</summary><div class="toggle-content"><p>$X$ = centred data ($n$ rows samples, $d$ columns features, per-feature mean subtracted — covariance measures spread around zero). $X^TX$ = all pairwise feature dot products ($d \times d$ — how features vary together). $/(n-1)$ = unbiased averaging (sample covariance; $n$ would bias low). $\Sigma$ = covariance matrix (symmetric: $\Sigma_{ij}$ = co-variation of features $i,j$; diagonal = variances). $v_i$ = eigenvector $i$ (a direction the matrix only stretches, never rotates — principal direction). $\lambda_i$ = eigenvalue (stretch factor = variance along $v_i$). $z = V_k^Tx$ = projection (dot $x$ onto top-$k$ directions — $k$ numbers replacing $d$). Fraction kept $= \sum_{i\le k}\lambda_i/\sum\lambda_i$ (variance share — the compression grade).</p>
+</div></details><p>Covariance $\Sigma=\frac{1}{n-1}X^TX$ ($d\times d$, symmetric). Eigenvectors $v_i$ (orthonormal) are principal directions; eigenvalues $\lambda_i$ are variances along them. Projection $z=V_k^Tx$ onto top $k$ keeps fraction above. Here $V_k$ holds top eigenvectors as columns; orthonormal means unit length and perpendicular, so variance bookkeeping holds.</p>
 <p>Numbered training:</p>
 <ol>
 <li>Centre (and usually standardise) $X$.</li>
@@ -333,7 +334,8 @@
 <li>Project $z=V_k^Tx$.</li>
 </ol>
 <h3>3.2 Practical Discipline</h3>
-<p>PCA is unsupervised (labels never enter) and linear (curved manifolds need kernels or autoencoders). Standardise first across incommensurate axes. Choose $k$ by cumulative share or elbow, same kink instinct as clustering.</p>
+<details class="interactive-toggle"><summary>Centring vs standardising: which does what, and what breaks if skipped?</summary><div class="toggle-content"><p>Centring (subtract per-feature mean) = moves the cloud to the origin (covariance then measures spread, not position — uncentred data&#39;s first component points at the mean instead of the stretch). Standardising (divide by std too) = equalises units (rupees vs years no longer elect winners — variance means shape, not measurement choice). Skipped centring: PC1 chases the centroid. Skipped standardising: PC1 reports unit choices. Both are one line each; both void the analysis when missed.</p>
+</div></details><p>PCA is unsupervised (labels never enter) and linear (curved manifolds need kernels or autoencoders). Standardise first across incommensurate axes. Choose $k$ by cumulative share or elbow, same kink instinct as clustering.</p>
 <table>
 <thead>
 <tr>

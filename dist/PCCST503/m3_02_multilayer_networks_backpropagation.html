@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -324,7 +324,9 @@
 <p>Canonical order: problem (need bends) → data (labelled pairs) → goal (low loss with depth) → method (differentiable layers) → model (stacked $z$, $a$) → training (backprop plus descent) → example → limitations.</p>
 <h3>3.1 Forward Pass, Notation That Pays Off</h3>
 <p>Layer $l$: $z^{(l)} = W^{(l)}a^{(l-1)} + b^{(l)}$, $a^{(l)} = \sigma(z^{(l)})$, with $a^{(0)} = x$. Sigmoid, tanh, and ReLU nonlinearities are load-bearing: stacked <em>linear</em> layers collapse to one matrix (depth without nonlinearity is an expensive no-op).</p>
-<h3>3.2 Backward Pass, One Rule Recursed</h3>
+<details class="interactive-toggle"><summary>What are `layer`, `z`, `a`, `W`, `b`, `σ` — and Sigmoid/ReLU/Tanh?</summary><div class="toggle-content"><p><code>Layer</code> $l$ = one processing stage (input $a^{(0)} = x$, hidden middles, output end). $z^{(l)}$ = pre-activation (weighted sum before squashing: $W^{(l)}a^{(l-1)} + b^{(l)}$). $a^{(l)}$ = activation (after squashing — the layer&#39;s output message). $W^{(l)}$ = weight matrix (connection strengths into layer $l$); $b^{(l)}$ = bias vector (per-unit offsets). $\sigma$ = nonlinearity: Sigmoid $1/(1+e^{-z})$ (0–1 squash, saturates both ends); Tanh ( −1–1 squash, zero-centred, still saturates); ReLU $\max(0,z)$ (identity for positives, dead zero for negatives — no saturation above zero, hence the default). Without $\sigma$: $W_2(W_1x) = (W_2W_1)x$ — one matrix, depth wasted.</p>
+</div></details><details class="interactive-toggle"><summary>What are `δ`, `⊙`, `σ′`, and the chain rule doing here?</summary><div class="toggle-content"><p>$\delta^{(l)}$ = error blame at layer $l$ (how much each unit contributed to the loss — the memo being passed down). $\odot$ = elementwise multiply (pairwise, not matrix product — blame meets local slope unit by unit). $\sigma&#39;(z)$ = activation slope at $z$ (sigmoid $\le 0.25$, tanh $\le 1$, ReLU $1$ or $0$ — steep means blame flows, flat means it starves). Chain rule = blame splits through compositions (output blame × local slopes, layer by layer — one rule recursed, not many rules). Gradients $\nabla_{W} = \delta a^T$ (blame times incoming message — outer product shapes match $W$ exactly).</p>
+</div></details><h3>3.2 Backward Pass, One Rule Recursed</h3>
 <p>Output error $\delta^{(L)} = \nabla_{a}L \odot \sigma&#39;(z^{(L)})$. Here $\odot$ means elementwise multiply, $\sigma&#39;$ is activation slope. Propagate $\delta^{(l)} = (W^{(l+1)T}\delta^{(l+1)}) \odot \sigma&#39;(z^{(l)})$; gradients $\nabla_{W^{(l)}} = \delta^{(l)}a^{(l-1)T}$. Cost: one forward plus one backward is about two forwards for millions of weights, versus one forward per weight for finite differences. That ratio is deep learning&#39;s economic engine.</p>
 <p>Numbered training step:</p>
 <ol>

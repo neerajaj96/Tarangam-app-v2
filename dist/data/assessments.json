@@ -1255,7 +1255,7 @@
         "Infinitely many mistakes, slowly shrinking"
       ],
       "answer": "At most (R/γ)² mistakes, then silence forever",
-      "explanation": "With margin γ inside radius R, finitely many errors regardless of presentation order — big margin means fast peace.",
+      "explanation": "Correct: with margin γ inside radius R the perceptron errs at most (R/γ)² times regardless of presentation order, then falls silent forever on separable data. Exactly-R/γ drops the square (wrong units of the bound); zero-first-pass denies learning entirely; infinite-mistakes contradicts the finiteness the theorem certifies.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -3547,7 +3547,7 @@
         "Temperature with gain 0.029"
       ],
       "answer": "Outlook with gain 0.247",
-      "explanation": "The file computes Outlook gain 0.247 as the largest, ahead of Humidity 0.151, so greedy gain picks Outlook for the root.",
+      "explanation": "Correct: greedy gain picks the max — Outlook 0.247 beats Humidity 0.151, Wind 0.048, Temperature 0.029, so Outlook splits the root. The distractors are the real runner-up gains (each correctly computed, each correctly losing); picking any of them mistakes ranking for threshold.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -3632,7 +3632,7 @@
         "Log of eps only"
       ],
       "answer": "One half log of (1 minus eps) over eps",
-      "explanation": "The file defines alpha as one half log of one minus eps over eps, which mutes coin-flip learners near eps 0.5 and rewards accurate ones.",
+      "explanation": "Correct: α = ½ln((1−ε)/ε) is the log-odds of being right — accurate rounds earn loud voices, ε→0.5 earns whispers near zero. ε/(1−ε) inverts the odds; (1−ε)² is not a log-odds at all; ln(ε) alone rewards wrongness (negative log of small error misranks everything).",
       "difficulty": "beginner",
       "examRelevance": "high"
     },
@@ -6811,7 +6811,7 @@
         "PCA preserves distances while MDS preserves only ranks"
       ],
       "answer": "They are identical up to rotation from the same centered inner product matrix",
-      "explanation": "Double centered squared distances coincide with the PCA Gram matrix. MDS arrives via mileages while PCA comes via features.",
+      "explanation": "Correct: classical MDS on Euclidean distances eigendecomposes the same double-centred inner-product matrix as PCA — identical embedding up to rotation. MDS needs no labels (both are unsupervised); PCA preserves variance while non-metric MDS preserves ranks (the distractor swaps the two methods' contracts).",
       "difficulty": "beginner",
       "examRelevance": "medium"
     },

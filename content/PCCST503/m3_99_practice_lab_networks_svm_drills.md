@@ -34,6 +34,14 @@ tags:
 
 Beginner protocol: problem first, then data and goal, then method. Bounds certify, they never predict typical runs.
 
+::: toggle How do I audit mistakes against the Novikoff bound?
+Three numbers: actual mistakes (4 in Scenario 1 — count from the trace), radius $R$ (farthest point's norm, $\sqrt{18} \approx 4.24$), margin witness $\gamma$ (a unit separator's clearance, $\ge 0.5$ here — any valid witness works, max-margin not required). Bound $(R/\gamma)^2 \approx 72$. Verdict shape: actual ≤ bound (valid) with room to spare (loose is normal — bounds certify finiteness, never efficiency). Report all three numbers plus the relationship; a bound alone diagnoses nothing.
+:::
+
+::: toggle How does the gradient ritual catch bugs, step by step?
+Finite differences approximate each partial as $[L(w+\epsilon) - L(w-\epsilon)]/2\epsilon$ (two forwards per weight — millions of passes, hence ritual-only, never training). Compare against analytic backprop values to ~5 decimals: agreement certifies the implementation. Debug order on mismatch: (1) loss definition (½ factor? $(o-y)$ sign?); (2) activation derivative (forgotten $\sigma'$ = linear passthrough bug); (3) stale forwards (backward on updated weights — recompute first). Nine of ten bugs live in these three; the tenth is a transposed matrix (shape mismatch in $\delta a^T$).
+:::
+
 ### Scenario 1: Perceptron Mistake Audit
 
 Dataset from M3 (separable, boundary $x_1 = 2$ found): the verified trace made exactly **4 mistakes** (C once, then A/C/D) before eternal silence. Now bound it: points inside radius $R = \sqrt{18} \approx 4.24$ (farthest $(3,3)$). A witness separator $x_1 = 1.5$ (unit normal) clears $A$ by $0.5$, $D$ by $0.5$, the rest by more — so max-margin $\gamma^* \ge 0.5$ and $(R/\gamma)^2 \lesssim (4.24/0.5)^2 \approx 72$ mistakes. Actual: 4. The bound is *valid* (4 ≤ 72) and *loose* (typical) — guarantees certify finiteness under separability, never efficiency. Report both numbers and their relationship, never just one.

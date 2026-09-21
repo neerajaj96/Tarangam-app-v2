@@ -79,6 +79,14 @@ Steps numbered:
 
 Add slack $\xi_i\ge 0$ per point and penalise: $\min \tfrac12\|w\|^2+C\sum_i\xi_i$ subject to $y_i(w^Tx_i+b)\ge 1-\xi_i$. Here $\xi_i$ measures margin shortfall, $C$ is strictness. Huge $C$ is near-hard margin (violations nearly forbidden, overfits noise); tiny $C$ is forgiving (wide corridor, underfits signals). Almost every real SVM runs soft; hard-margin is the warm-up.
 
+::: toggle Work the §1 lifting by hand, then read the RBF formula
+Line positions $-2, -0.5, +0.5, +2$ with labels $-, +, +, -$. Square each: $4, 0.25, 0.25, 4$ with labels $-, +, +, -$ — order along the new axis is $+,+,-,-$ (0.25, 0.25, 4, 4): threshold 1 splits perfectly ($+$ below, $-$ above). That reordering-by-squaring is the whole kernel idea in miniature. RBF $K = \exp(-\gamma\|x-z\|^2)$: $\|x-z\|^2$ = squared distance (nearby points score near 1, far ones near 0); $\gamma$ = influence radius knob (large $\gamma$ = spiky local bubbles that memorise; small $\gamma$ = smooth blunt hills); $\exp$ = decay into $(0,1]$ similarity. Infinite Taylor terms = infinite lifted dimensions, computed in one cheap exponential.
+:::
+
+::: toggle What are `slack ξᵢ`, `C`, `dual`, `Mercer/PSD`?
+Slack $\xi_i \ge 0$ = margin shortfall of point $i$ (0 = safely walled, 0–1 = inside corridor, > 1 = misclassified — priced linearly). $C$ = strictness dial (huge = violations nearly forbidden like hard margin; tiny = corridor width matters more than violations — read as strictness, never strength). Dual = the $\alpha_i$-weighted reformulation using only dot products (why kernels plug in: data appears solely as $x_i·x_j$). Mercer/PSD = valid-kernel certificate (every Gram matrix of $K$-values stays positive semidefinite — guarantees some lifted space exists, even RBF's infinite one).
+:::
+
 | Similar pair | Distinction that earns marks |
 |---|---|
 | Kernel lifting vs more data | Re-representation of latent separability vs new information; garbage stays garbage |

@@ -41,6 +41,14 @@ Constraints: (a) 300 labeled medical scans, 2M unlabeled, must ship in a week �
 
 Tiny check: ask "how many labels, who consumes the model?" Labels decide generative versus discriminative; stakeholder decides readable versus black box.
 
+::: toggle How do I pick a classifier in 30 seconds?
+Two questions: (1) How many labels? Few hundred → generative NB (converges in $O(\log n)$ samples, minimal tuning); millions → discriminative logistic/trees (higher ceiling, data pays for it). (2) Who consumes it? Regulator/doctor needing reasons → shallow tree (auditable splits); ranking system → calibrated probabilities (logistic). Fashion never decides; budget plus stakeholder do. Tiny check above is the whole procedure compressed.
+:::
+
+::: toggle Work the veto autopsy numbers: where do 0.5, 0.2, 0.4 come from?
+Spam: prior 0.5; $P(\text{win}|\text{spam}) = (2+1)/(4+1·2) = 3/6 = 0.5$ (2 seen + 1 pseudocount over 4 words + 2 vocab pseudocounts); $P(\text{money}|\text{spam}) = (2+1)/6 = 0.5$. Ham: $P(\text{win}|\text{ham}) = (0+1)/(3+2) = 0.2$ (the veto lifted — unsmoothed this is 0/3 = 0, zeroing ham entirely); $P(\text{money}|\text{ham}) = (1+1)/5 = 0.4$. Products: spam $0.5·0.5·0.5 = 0.125$ vs ham $0.5·0.2·0.4 = 0.04$ → spam at 3:1. Delete smoothing and ham's zero vetoes everything — the autopsy's moral in one division.
+:::
+
 ### Scenario 2: Cross-Entropy Race (Feel the Curve)
 
 True label $y=1$. Model A predicts $0.9$: loss $-\ln 0.9 \approx 0.105$. Model B predicts $0.5$: $0.693$. Model C predicts $0.1$: $2.303$. Same correct *direction* (all $> 0.5$ classify right!), wildly different *losses* (22× spread) — accuracy sees three ties; cross-entropy sees confidence quality. Train on the loss, report the accuracy, and never confuse which game each number scores.

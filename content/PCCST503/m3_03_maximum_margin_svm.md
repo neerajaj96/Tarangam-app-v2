@@ -69,6 +69,14 @@ Canonical order: problem (robust separation) → data (labelled sides) → goal 
 
 $$\min_{w,b}\ \tfrac12\|w\|^2 \quad \text{s.t.}\quad y_i(w^Tx_i + b) \ge 1\ \ \forall i$$
 
+::: toggle Expand the objective: `w`, `b`, `½‖w‖²`, `s.t.`, margin `≥ 1`
+$w$ = normal vector (perpendicular to the road — its length sets corridor width). $b$ = offset (slides the road without rotating — positions it). $\|w\|^2$ = squared length (minimising it widens the corridor: width $= 2/\|w\|$). $\tfrac12$ = convenience factor (cancels the 2 when differentiating — bookkeeping, not geometry). s.t. (subject to) = hard constraints every point must satisfy. $y_i(w^Tx_i+b) \ge 1$ = every point scores at least 1 on its own side (functional margin fixed at 1 — this pins the scale so minimising $\|w\|$ genuinely widens geometry). Tiny check: doubling $(w,b)$ doubles functionals but halves nothing geometric — the constraint re-pins scale, exposing the trick.
+:::
+
+::: toggle What are `hyperplane`, `support vector`, `hinge loss`, `λ`?
+Hyperplane = the flat separator ($w^Tx+b=0$ — a line in 2D, plane in 3D, flat sheet beyond). Support vector = a point exactly on a corridor wall ($y_i(w^Tx_i+b)=1$ — active constraint; only these shape the road, interior points are passengers). Hinge loss $\max(0,1-y·\text{score})$ = zero when confidently right with margin ≥ 1, linear pain otherwise (exact zero at the wall — unlike cross-entropy's eternal polish). $\lambda$ = norm price in the unconstrained twin (bigger $\lambda$ = narrower corridor tolerated less — the regularisation dial).
+:::
+
 This is a convex quadratic program. Corrected qualification: it has a unique optimal weight vector $w^*$ under standard conditions; the offset $b$ can have an interval of optima when support vectors allow a range, and uniqueness of $w$ assumes separable data and a strictly convex norm. Contrast with the perceptron, which stops at any separator; SVM demands the best-placed one under these conditions.
 
 ### 3.2 Support Vectors and Hinge Loss, Symbol by Symbol

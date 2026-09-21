@@ -64,6 +64,10 @@ Canonical order: problem (wiggly trees) → data (bootstraps) → goal (low vari
 
 ### 3.1 Bagging, Step by Step
 
+::: toggle Trace the §1 judges through bootstrap, vote, and OOB
+Truth 12; judges guess 10, 12, 14 (errors −2, 0, +2). Average $(10+12+14)/3 = 12$ exactly — quirks cancel because truth is shared (all centre on 12) while errors differ (spread around it). Bootstrap behind it: each judge trained on a resample (some rows repeated, ~37% omitted); omitted rows are that judge's OOB jury (free validation — aggregate each point over only its non-trainers). Forests add: each split sees only $m$ random features ($\sqrt{d}$ class, $d/3$ regr), forcing different questions per tree (decorrelation — shared strong features would re-correlate mistakes and stall averaging at the $\rho\sigma^2$ floor).
+:::
+
 Numbered steps:
 
 1. Draw $B$ bootstrap datasets of size $n$ with replacement.
@@ -77,6 +81,10 @@ Variance: $B$ predictors with variance $\sigma^2$ and correlation $\rho$ average
 Each point is OOB for about 37% of models. Aggregate each point over only its OOB models for a validation score costing zero held-out data and zero extra training. OOB tracks test error well, with mild optimism when tuned upon repeatedly. Final publication claims still need untouched folds.
 
 ### 3.3 Random Forests: Decorrelating the Judges
+
+::: toggle What are `bootstrap`, `OOB`, `m`, `ρ`, and the variance formula?
+Bootstrap = resample $n$ points with replacement (repeats allowed — each set misses ~37% of rows, those are OOB). OOB (Out-of-Bag) = left-out rows per model (free validation jury — aggregate each point over only its non-trainers; tuned-upon repeatedly it contaminates into selection data). $m$ = random features tried per split ($\sqrt{d}$ classification, $d/3$ regression — forces different questions, decorrelates judges). $\rho$ = pairwise tree correlation (shared mistakes stall voting). Formula $\rho\sigma^2 + (1-\rho)\sigma^2/B$: first term = correlated floor no $B$ breaches (forests attack it via $m$); second term dies with $B$ (bagging attacks it via count). Tiny numbers from §4: $0.3·4 + 0.7·4/200 = 1.214$ vs single $4$ — floor $1.2$ stands.
+:::
 
 Bagged trees still correlate: strong features dominate root splits, so mistakes correlate and $\rho$ stalls averaging. Forests force each split to consider only $m\ll d$ random features (standard $m\approx\sqrt{d}$ classification, $d/3$ regression). Trees must differ, $\rho$ drops, voting bites deeper. Grow until OOB plateaus, then stop paying compute.
 

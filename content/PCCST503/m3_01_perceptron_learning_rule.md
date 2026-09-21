@@ -71,6 +71,14 @@ $$w \leftarrow w + \eta\, y\, x, \qquad b \leftarrow b + \eta\, y$$
 
 Here $\eta=1$ is standard; scaling just rescales the boundary. Correct predictions change nothing. Cost $O(d)$ per step, where $d$ is dimension.
 
+::: toggle Trace the §1 repair step by step
+State: $w = [0,0]$, $b = 0$. Entrant $(2,2)$, $y = +1$: score $0·2+0·2+0 = 0$, sign gives $+1$ (tie rule) — matches $+1$, no change (correct predictions change nothing). Entrant $(0,1)$, $y = -1$: score $0$ → predicts $+1 \ne -1$ — mistake ($y·\text{score} = 0 \le 0$). Repair: $w \leftarrow [0,0] + 1·(-1)·(0,1) = [0,-1]$; $b \leftarrow 0 + 1·(-1) = -1$ (subtract the offender's features once). Recheck: $(0,1)$ now scores $-1$ → $-1$ correct. One mistake, one repair, ledger moved.
+:::
+
+::: toggle What do the `(R/γ)²` symbols mean, and why mistakes (not epochs)?
+$R$ = data radius (all $\|x_i\| \le R$ — bounded inputs). $\gamma$ = margin (some unit separator clears every point by $\ge \gamma$ — separability with room). $(R/\gamma)^2$ = mistake ceiling (big margin/small radius = fast peace; tight margin = long war). Why mistakes: each mistake provably shrinks the angle to a perfect separator, so the count — not epochs or data order — is what the theorem bounds (order affects the path, never finiteness).
+:::
+
 Numbered loop:
 
 1. Initialise $w=0$, $b=0$.

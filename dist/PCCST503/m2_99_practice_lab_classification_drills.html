@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -269,7 +269,9 @@
 <h3>Scenario 1: The Startup Triage (Pick the Classifier, Defend It)</h3>
 <p>Constraints: (a) 300 labeled medical scans, 2M unlabeled, must ship in a week → <strong>Gaussian NB / simple generative</strong>: converges in $O(\log n)$ samples, no tuning marathons, calibrated-enough probabilities for review queues. (b) 10M labeled ad clicks, accuracy is revenue → <strong>logistic regression / trees</strong>: data-rich regime where discriminative ceilings win; NB&#39;s bias would leave money. (c) Credit decisions requiring <em>reasons</em> for regulators → <strong>shallow decision tree</strong>: auditable splits beat black-box points when the examiner is a lawyer. Method follows data budget plus stakeholder, never fashion.</p>
 <p>Tiny check: ask &quot;how many labels, who consumes the model?&quot; Labels decide generative versus discriminative; stakeholder decides readable versus black box.</p>
-<h3>Scenario 2: Cross-Entropy Race (Feel the Curve)</h3>
+<details class="interactive-toggle"><summary>How do I pick a classifier in 30 seconds?</summary><div class="toggle-content"><p>Two questions: (1) How many labels? Few hundred → generative NB (converges in $O(\log n)$ samples, minimal tuning); millions → discriminative logistic/trees (higher ceiling, data pays for it). (2) Who consumes it? Regulator/doctor needing reasons → shallow tree (auditable splits); ranking system → calibrated probabilities (logistic). Fashion never decides; budget plus stakeholder do. Tiny check above is the whole procedure compressed.</p>
+</div></details><details class="interactive-toggle"><summary>Work the veto autopsy numbers: where do 0.5, 0.2, 0.4 come from?</summary><div class="toggle-content"><p>Spam: prior 0.5; $P(\text{win}|\text{spam}) = (2+1)/(4+1·2) = 3/6 = 0.5$ (2 seen + 1 pseudocount over 4 words + 2 vocab pseudocounts); $P(\text{money}|\text{spam}) = (2+1)/6 = 0.5$. Ham: $P(\text{win}|\text{ham}) = (0+1)/(3+2) = 0.2$ (the veto lifted — unsmoothed this is 0/3 = 0, zeroing ham entirely); $P(\text{money}|\text{ham}) = (1+1)/5 = 0.4$. Products: spam $0.5·0.5·0.5 = 0.125$ vs ham $0.5·0.2·0.4 = 0.04$ → spam at 3:1. Delete smoothing and ham&#39;s zero vetoes everything — the autopsy&#39;s moral in one division.</p>
+</div></details><h3>Scenario 2: Cross-Entropy Race (Feel the Curve)</h3>
 <p>True label $y=1$. Model A predicts $0.9$: loss $-\ln 0.9 \approx 0.105$. Model B predicts $0.5$: $0.693$. Model C predicts $0.1$: $2.303$. Same correct <em>direction</em> (all $&gt; 0.5$ classify right!), wildly different <em>losses</em> (22× spread) — accuracy sees three ties; cross-entropy sees confidence quality. Train on the loss, report the accuracy, and never confuse which game each number scores.</p>
 <h3>Scenario 3: The Veto Autopsy</h3>
 <p>Spam {win:2, money:2}/4 words, ham {win:0, money:1}/3 words, priors 50/50, vocabulary size $|V|=2$, $\alpha=1$. Classify &quot;win money&quot;: spam $0.5 \times 0.5 \times 0.5 = 0.125$; ham $0.5 \times 0.2 \times 0.4 = 0.04$ → <strong>spam</strong>, 3:1. Now delete smoothing: $P(\text{win}|\text{ham}) = 0/3 = 0$ — ham&#39;s score zeroes <em>regardless</em>; worse, any <em>unseen-in-both</em> word zeroes <em>both</em> classes and argmax ties on nothing. Autopsy conclusion: unsmoothed NB doesn&#39;t degrade gracefully — it holds vetoes, and vetoes detonate.</p>

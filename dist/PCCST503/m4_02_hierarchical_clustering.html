@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -303,7 +303,8 @@
 <p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
 <p>Canonical order: problem (multi-resolution grouping) → data (distances) → goal (informative tree) → method (merge closest) → model (dendrogram) → training (agglomerative loop) → example → limitations.</p>
 <h3>3.1 Agglomerative Loop and Linkages, Step by Step</h3>
-<p>Numbered loop:</p>
+<details class="interactive-toggle"><summary>Trace the §1 example merger by merger</summary><div class="toggle-content"><p>Points ${1, 2, 10}$ (1D absolute distance). Pairwise: $d(1,2) = 1$, $d(1,10) = 9$, $d(2,10) = 8$. Round 1: closest pair ${1,2}$ marry at height 1 (any linkage agrees on pairs). Round 2: cluster ${1,2}$ vs ${10}$ — single linkage: $\min(9,8) = 8$; complete: $\max(9,8) = 9$; both marry at height 8–9 (one run, heights recorded). Cuts: horizontal line between heights 1 and 8 reads $K = 2$ ({1,2}, {10}); above 8 reads $K = 1$. Same run, both answers — deferral demonstrated on three points.</p>
+</div></details><p>Numbered loop:</p>
 <ol>
 <li>Start with $n$ singleton clusters.</li>
 <li>Compute inter-cluster distances by linkage.</li>
@@ -317,7 +318,8 @@
 <li><strong>Average or centroid linkage:</strong> mean pairwise distance, pragmatic middle.</li>
 </ul>
 <h3>3.2 Dendrograms and Divisive Splitting</h3>
-<p>The merge tree records at what distance each union happened. Long vertical branches mean natural gaps; cut there. <strong>Divisive</strong> top-down (for example DIANA) splits instead: $2^n$ possible splits make naive search hopeless, so practical methods split heuristically (recursive $K=2$ k-means). Rarer in exams; reportable in one line. Cost $O(n^2)$ to $O(n^3)$: no free dendrograms.</p>
+<details class="interactive-toggle"><summary>What are `agglomerative`, `divisive`, `linkage`, `dendrogram`, `height`, `cut`?</summary><div class="toggle-content"><p>Agglomerative = bottom-up merging (singletons → one cluster — the practical default). Divisive = top-down splitting (one cluster → singletons — $2^n$ splits make naive search hopeless, so heuristic). Linkage = cluster-distance rule (single: nearest pair; complete: farthest pair; average: mean pair). Dendrogram = the merge tree drawing (leaves at bottom, unions rising). Height = dissimilarity at a union (taller = more different). Cut = horizontal line at chosen height (clusters below it are the answer — long bare stems mark natural cuts).</p>
+</div></details><p>The merge tree records at what distance each union happened. Long vertical branches mean natural gaps; cut there. <strong>Divisive</strong> top-down (for example DIANA) splits instead: $2^n$ possible splits make naive search hopeless, so practical methods split heuristically (recursive $K=2$ k-means). Rarer in exams; reportable in one line. Cost $O(n^2)$ to $O(n^3)$: no free dendrograms.</p>
 <table>
 <thead>
 <tr>

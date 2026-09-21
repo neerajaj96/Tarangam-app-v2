@@ -84,6 +84,14 @@ $$\mathrm{Accuracy} = \frac{\mathrm{TP}+\mathrm{TN}}{\mathrm{TP}+\mathrm{TN}+\ma
 
 Here $P$ is precision, $R$ is recall in the $F_1$ line. Intuition with the §1 patients: lazy "all healthy" gives TP $= 0$, FN $= 1$, TN $= 9$, FP $= 0$: accuracy $90\%$, recall $0/1 = 0$, precision $0/0$ undefined (no alarms raised — report $0$ with a "no positives predicted" note, never $100\%$). $F_1$ is the harmonic mean: it punishes lopsidedness (precision $1.0$ with recall $0.1$ scores $\approx 0.18$, not $0.55$), which is why KTU rewards it for imbalanced tasks. Accuracy is quoted only with class ratios beside it; alone on $99$-to-$1$ data it is a majority-class echo.
 
+::: toggle Work all four scores on the §1 patients by hand
+Cells: TP $= 0$ (no sick caught), FN $= 1$ (the missed patient), TN $= 9$ (healthy correctly silenced), FP $= 0$ (no false alarms). Accuracy $= (0+9)/10 = 0.90$ (the con). Precision $= 0/(0+0)$ = undefined — no alarms exist to audit (report 0 with the note, never 100%). Recall $= 0/(0+1) = 0$ (nothing caught). $F_1 = 0$ (harmonic with a zero factor collapses — one failed partner fails the compromise). Reading: one metric flatters, three indict — that split is exactly why the matrix precedes every ratio.
+:::
+
+::: toggle What are `sensitivity`, `specificity`, `FPR`, and `threshold`?
+Sensitivity = recall's alias (true-positive rate — exam synonym trap). Specificity = TN/(TN+FP) (true-negative rate — healthy correctly silenced; the metric screening tests hide behind). FPR (False Positive Rate) = FP/(FP+TN) = 1 − specificity (ROC's x-axis — alarm rate on negatives). Threshold $t$ = score cutoff (predict positive iff $s_i \ge t$; lowering $t$ catches more (recall up) while trusting less (precision down) — the tradeoff ROC traces).
+:::
+
 | Similar pair | Distinction that earns marks |
 |---|---|
 | Precision vs accuracy | Column purity (alarms trusted) vs whole-ledger correctness (dominated by majorities) |
@@ -95,6 +103,10 @@ Here $P$ is precision, $R$ is recall in the $F_1$ line. Intuition with the §1 p
 A single threshold is a single operating point; ROC shows all of them. Sweep $t$ from $\infty$ (predict all negative) to $-\infty$ (predict all positive); at each $t$ plot False Positive Rate ($\mathrm{FPR} = \mathrm{FP}/(\mathrm{FP}+\mathrm{TN})$) on $x$ against True Positive Rate ($\mathrm{TPR} = $ recall) on $y$. The curve crawls from $(0,0)$ to $(1,1)$; a perfect scorer hugs the top-left (all positives outscore all negatives); the diagonal is chance.
 
 AUC is the area under that curve, $0$ to $1$ ($0.5$ = chance, $1.0$ = perfect ranking). Its honest reading: the probability that a randomly drawn positive outscores a randomly drawn negative — a ranking grade, not a decision grade. Model selection by AUC on validation, threshold $t$ by cost (recall-heavy $t$ low, precision-heavy $t$ high), final cell counts once on test. Qualified claim: AUC rewards ranking everywhere including irrelevant FPR regions; a higher-AUC model can be worse at the one operating point the application actually uses — always report the chosen point's precision/recall beside AUC, never AUC alone.
+
+::: toggle Trace three ROC dots from one tiny ranking
+Scores: positives at 0.9, 0.6; negatives at 0.55, 0.1. Threshold $t = 0.95$: nothing flagged → (FPR 0, TPR 0) — origin dot. $t = 0.58$: flagged {0.9, 0.6} → TP 2/2, FP 0/2 → (0, 1) — top-left corner (perfect separation visible). $t = 0.05$: everything flagged → (1, 1) — end dot. Curve through (0,0)→(0,1)→(1,1): AUC $= 1.0$ (every positive outscores every negative — check all 2×2 pairs). Move one negative to 0.95: the corner rounds off, AUC drops below 1 — one ranking mistake dents the area exactly by its pair share.
+:::
 
 ::: callout-formula KTU Formula Vault: Classification Facts
 Matrix TP/TN/FP/FN · accuracy $=$ (TP$+$TN)/all · precision $=$ TP/(TP$+$FP) · recall $=$ TP/(TP$+$FN) · $F_1 = 2PR/(P+R)$ (harmonic, imbalance-first) · ROC: TPR vs FPR sweeping $t$ · AUC $=$ P(positive outscores negative), $0.5$ chance.

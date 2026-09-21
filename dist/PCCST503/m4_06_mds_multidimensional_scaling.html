@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -306,7 +306,8 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(lambda) = coordinates
 <p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
 <p>Canonical order: problem (no features, only mileages) → data ($D$) → goal (faithful map) → method (square, centre, eigendecompose) → model (coordinates) → training (one decomposition) → example → limitations.</p>
 <h3>3.1 Double-Centering and the Ledger, Symbol by Symbol</h3>
-<p>For squared matrix $D^2$: $B_{ij}=-\tfrac12(D^2_{ij}-\bar{r}_i-\bar{r}_j+\bar{g})$. Here $\bar{r}_i$ is row mean, $\bar{r}_j$ column mean, $\bar{g}$ grand mean. This converts distances to centred inner products. Eigendecompose $B=V\Lambda V^T$; coordinates $=V_k\Lambda_k^{1/2}$. Certificates: rows of $B$ sum to $0$ (centering, one eigenvalue exactly $0$ for all-ones vector); $\mathrm{tr}(B)=\sum\lambda_i$ (variance ledger, same checksum habit as PCA).</p>
+<details class="interactive-toggle"><summary>Trace the §1 two-city map, then expand `B`, `J`, `stress`</summary><div class="toggle-content"><p>Two cities distance 1: place at $-0.5$, $+0.5$ (distance preserved: $0.5-(-0.5) = 1$; centred at 0 — translation is free, distances are the truth). $B$ = centred inner-product matrix (distances converted to coordinates-ready dot products). $J$ = centering operator (subtract row/column means, add grand mean — removes translation so the origin sits at the cloud&#39;s centre). $B = -\tfrac12 J D^2 J$: square first (identity is quadratic), centre, halve-and-negate (sign convention making inner products). Stress = mismatch price between true and embedded distances (fewer dimensions than rank distorts — stress bills it; 0 = perfect preservation).</p>
+</div></details><p>For squared matrix $D^2$: $B_{ij}=-\tfrac12(D^2_{ij}-\bar{r}_i-\bar{r}_j+\bar{g})$. Here $\bar{r}_i$ is row mean, $\bar{r}_j$ column mean, $\bar{g}$ grand mean. This converts distances to centred inner products. Eigendecompose $B=V\Lambda V^T$; coordinates $=V_k\Lambda_k^{1/2}$. Certificates: rows of $B$ sum to $0$ (centering, one eigenvalue exactly $0$ for all-ones vector); $\mathrm{tr}(B)=\sum\lambda_i$ (variance ledger, same checksum habit as PCA).</p>
 <p>Numbered steps:</p>
 <ol>
 <li>Square $D$ to $D^2$.</li>
@@ -315,7 +316,8 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(lambda) = coordinates
 <li>Eigendecompose; keep top $k$; scale by $\sqrt{\lambda}$.</li>
 </ol>
 <h3>3.2 Stress and the PCA Identity, With Conditions</h3>
-<p>Fewer dimensions than rank means distortion, priced by stress. <strong>Classical MDS on Euclidean distances recovers PCA&#39;s embedding up to rotation</strong> (same centred inner-product matrix eigendecomposed). Qualification: identity holds for Euclidean $D$ with classical scaling; non-metric MDS (rank order only) and non-Euclidean dissimilarities live outside it and can yield negative eigenvalues that truncation must handle. Mileage input, PCA-grade map output, under those conditions.</p>
+<details class="interactive-toggle"><summary>What are `stress`, `classical vs non-metric MDS`, and negative eigenvalues?</summary><div class="toggle-content"><p>Stress = distortion price when kept dimensions &lt; rank (Kruskal&#39;s mismatch measure — 0 means perfect preservation; smaller is better). Classical MDS = eigendecompose double-centred $D^2$ (coordinates from distances, Euclidean assumption). Non-metric MDS = preserve rank order only (monotone fit — weaker input, weaker output). Negative eigenvalues = non-Euclidean dissimilarities breaking positive-semidefiniteness (no exact flat map exists — truncate to top positive ones and bill the rest as stress). PCA identity: classical MDS on Euclidean $D$ eigendecomposes the same centred inner-product matrix as PCA — same embedding up to rotation, under those conditions only.</p>
+</div></details><p>Fewer dimensions than rank means distortion, priced by stress. <strong>Classical MDS on Euclidean distances recovers PCA&#39;s embedding up to rotation</strong> (same centred inner-product matrix eigendecomposed). Qualification: identity holds for Euclidean $D$ with classical scaling; non-metric MDS (rank order only) and non-Euclidean dissimilarities live outside it and can yield negative eigenvalues that truncation must handle. Mileage input, PCA-grade map output, under those conditions.</p>
 <p>MDS needs dissimilarities, not features: gene correlations, survey proximities, road mileages all embed; PCA cannot start there at all.</p>
 <table>
 <thead>

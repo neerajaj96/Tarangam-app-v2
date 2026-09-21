@@ -63,6 +63,10 @@ Canonical order: problem (weak rules, residual errors) → data (weighted pairs)
 
 ### 3.1 AdaBoost Mechanics, Step by Step
 
+::: toggle Work the §4 round-1 numbers: `ε₁`, `α₁`, mass moves
+$\epsilon_1 = 0.25$ (one of four points missed, uniform $D_1 = 1/4$ each). $\alpha_1 = \tfrac12\ln((1-0.25)/0.25) = \tfrac12\ln 3 \approx 0.549$ (vote weight earned — accurate round, loud voice). Reweight: missed point $0.25 \times e^{+0.549} \approx 0.25 \times 1.732 \approx 0.433$; each solved point $0.25 \times e^{-0.549} \approx 0.25 \times 0.577 \approx 0.144$. Renormalise (total $0.433 + 3 \times 0.144 \approx 0.866$): miss $0.433/0.866 = 0.50$, solved $0.144/0.866 \approx 1/6$ each. Matches §1 exactly: miss doubled to half the mass, round two lives in its world. Requires $\epsilon < 0.5$ (worse-than-guessing stumps get sign-flipped first).
+:::
+
 Numbered round:
 
 1. Train weak learner on $D_t$; get $h_t$.
@@ -79,6 +83,10 @@ Here $e^{-\alpha y h}$ means multiply by $e^{-\alpha}$ when correct and $e^{+\al
 - Training error drops exponentially as $\prod_t 2\sqrt{\epsilon_t(1-\epsilon_t)}$: each better-than-guessing round multiplies error by less than $1$.
 
 ### 3.3 Margins, With Correct Qualifications
+
+::: toggle What are `distribution Dₜ`, `weighted error εₜ`, `vote αₜ`, `margin`?
+$D_t$ = weight distribution over training points in round $t$ (starts uniform $1/n$ — attention budget). $\epsilon_t$ = weighted error (missed mass fraction — must stay below 0.5, else the round votes against itself). $\alpha_t = \tfrac12\ln((1-\epsilon_t)/\epsilon_t)$ = vote weight (accurate rounds earn loud voices; $\epsilon \to 0.5$ earns whispers near zero). Margin $y\sum\alpha_t h_t(x)$ = signed vote confidence (large positive = comfortable correct; fattening margins on clean data is why test error keeps improving past zero train error — tendency, not immunity; noise reverses it).
+:::
 
 On clean data, boosting often keeps improving test error after train hits zero because later rounds widen voting margins (confidence), and margin theory bounds generalisation. Corrected qualification: this is a tendency on clean, learnable structure, not immunity. On noisy or mislabelled data, attention compounds on lies and test error can rise; early stopping, gentler learners, or bagging then win. Forests average variance away; boosting optimises confidence relentlessly, for better and worse.
 

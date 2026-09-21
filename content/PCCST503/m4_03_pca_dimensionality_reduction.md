@@ -67,6 +67,10 @@ Canonical order: problem (compress linearly) → data (centred, standardised $X$
 
 ### 3.1 Covariance and Eigen-Structure, Symbol by Symbol
 
+::: toggle Expand `Σ = XᵀX/(n−1)`, `vᵢ`, `λᵢ`, `z = Vₖᵀx`
+$X$ = centred data ($n$ rows samples, $d$ columns features, per-feature mean subtracted — covariance measures spread around zero). $X^TX$ = all pairwise feature dot products ($d \times d$ — how features vary together). $/(n-1)$ = unbiased averaging (sample covariance; $n$ would bias low). $\Sigma$ = covariance matrix (symmetric: $\Sigma_{ij}$ = co-variation of features $i,j$; diagonal = variances). $v_i$ = eigenvector $i$ (a direction the matrix only stretches, never rotates — principal direction). $\lambda_i$ = eigenvalue (stretch factor = variance along $v_i$). $z = V_k^Tx$ = projection (dot $x$ onto top-$k$ directions — $k$ numbers replacing $d$). Fraction kept $= \sum_{i\le k}\lambda_i/\sum\lambda_i$ (variance share — the compression grade).
+:::
+
 Covariance $\Sigma=\frac{1}{n-1}X^TX$ ($d\times d$, symmetric). Eigenvectors $v_i$ (orthonormal) are principal directions; eigenvalues $\lambda_i$ are variances along them. Projection $z=V_k^Tx$ onto top $k$ keeps fraction above. Here $V_k$ holds top eigenvectors as columns; orthonormal means unit length and perpendicular, so variance bookkeeping holds.
 
 Numbered training:
@@ -78,6 +82,10 @@ Numbered training:
 5. Project $z=V_k^Tx$.
 
 ### 3.2 Practical Discipline
+
+::: toggle Centring vs standardising: which does what, and what breaks if skipped?
+Centring (subtract per-feature mean) = moves the cloud to the origin (covariance then measures spread, not position — uncentred data's first component points at the mean instead of the stretch). Standardising (divide by std too) = equalises units (rupees vs years no longer elect winners — variance means shape, not measurement choice). Skipped centring: PC1 chases the centroid. Skipped standardising: PC1 reports unit choices. Both are one line each; both void the analysis when missed.
+:::
 
 PCA is unsupervised (labels never enter) and linear (curved manifolds need kernels or autoencoders). Standardise first across incommensurate axes. Choose $k$ by cumulative share or elbow, same kink instinct as clustering.
 

@@ -70,6 +70,14 @@ Canonical order: problem (need bends) → data (labelled pairs) → goal (low lo
 
 Layer $l$: $z^{(l)} = W^{(l)}a^{(l-1)} + b^{(l)}$, $a^{(l)} = \sigma(z^{(l)})$, with $a^{(0)} = x$. Sigmoid, tanh, and ReLU nonlinearities are load-bearing: stacked *linear* layers collapse to one matrix (depth without nonlinearity is an expensive no-op).
 
+::: toggle What are `layer`, `z`, `a`, `W`, `b`, `σ` — and Sigmoid/ReLU/Tanh?
+`Layer` $l$ = one processing stage (input $a^{(0)} = x$, hidden middles, output end). $z^{(l)}$ = pre-activation (weighted sum before squashing: $W^{(l)}a^{(l-1)} + b^{(l)}$). $a^{(l)}$ = activation (after squashing — the layer's output message). $W^{(l)}$ = weight matrix (connection strengths into layer $l$); $b^{(l)}$ = bias vector (per-unit offsets). $\sigma$ = nonlinearity: Sigmoid $1/(1+e^{-z})$ (0–1 squash, saturates both ends); Tanh ( −1–1 squash, zero-centred, still saturates); ReLU $\max(0,z)$ (identity for positives, dead zero for negatives — no saturation above zero, hence the default). Without $\sigma$: $W_2(W_1x) = (W_2W_1)x$ — one matrix, depth wasted.
+:::
+
+::: toggle What are `δ`, `⊙`, `σ′`, and the chain rule doing here?
+$\delta^{(l)}$ = error blame at layer $l$ (how much each unit contributed to the loss — the memo being passed down). $\odot$ = elementwise multiply (pairwise, not matrix product — blame meets local slope unit by unit). $\sigma'(z)$ = activation slope at $z$ (sigmoid $\le 0.25$, tanh $\le 1$, ReLU $1$ or $0$ — steep means blame flows, flat means it starves). Chain rule = blame splits through compositions (output blame × local slopes, layer by layer — one rule recursed, not many rules). Gradients $\nabla_{W} = \delta a^T$ (blame times incoming message — outer product shapes match $W$ exactly).
+:::
+
 ### 3.2 Backward Pass, One Rule Recursed
 
 Output error $\delta^{(L)} = \nabla_{a}L \odot \sigma'(z^{(L)})$. Here $\odot$ means elementwise multiply, $\sigma'$ is activation slope. Propagate $\delta^{(l)} = (W^{(l+1)T}\delta^{(l+1)}) \odot \sigma'(z^{(l)})$; gradients $\nabla_{W^{(l)}} = \delta^{(l)}a^{(l-1)T}$. Cost: one forward plus one backward is about two forwards for millions of weights, versus one forward per weight for finite differences. That ratio is deep learning's economic engine.

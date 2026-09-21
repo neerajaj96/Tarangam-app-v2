@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -266,7 +266,9 @@
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
 <p>Beginner protocol: problem first, then data and goal, then method. Bounds certify, they never predict typical runs.</p>
-<h3>Scenario 1: Perceptron Mistake Audit</h3>
+<details class="interactive-toggle"><summary>How do I audit mistakes against the Novikoff bound?</summary><div class="toggle-content"><p>Three numbers: actual mistakes (4 in Scenario 1 — count from the trace), radius $R$ (farthest point&#39;s norm, $\sqrt{18} \approx 4.24$), margin witness $\gamma$ (a unit separator&#39;s clearance, $\ge 0.5$ here — any valid witness works, max-margin not required). Bound $(R/\gamma)^2 \approx 72$. Verdict shape: actual ≤ bound (valid) with room to spare (loose is normal — bounds certify finiteness, never efficiency). Report all three numbers plus the relationship; a bound alone diagnoses nothing.</p>
+</div></details><details class="interactive-toggle"><summary>How does the gradient ritual catch bugs, step by step?</summary><div class="toggle-content"><p>Finite differences approximate each partial as $[L(w+\epsilon) - L(w-\epsilon)]/2\epsilon$ (two forwards per weight — millions of passes, hence ritual-only, never training). Compare against analytic backprop values to ~5 decimals: agreement certifies the implementation. Debug order on mismatch: (1) loss definition (½ factor? $(o-y)$ sign?); (2) activation derivative (forgotten $\sigma&#39;$ = linear passthrough bug); (3) stale forwards (backward on updated weights — recompute first). Nine of ten bugs live in these three; the tenth is a transposed matrix (shape mismatch in $\delta a^T$).</p>
+</div></details><h3>Scenario 1: Perceptron Mistake Audit</h3>
 <p>Dataset from M3 (separable, boundary $x_1 = 2$ found): the verified trace made exactly <strong>4 mistakes</strong> (C once, then A/C/D) before eternal silence. Now bound it: points inside radius $R = \sqrt{18} \approx 4.24$ (farthest $(3,3)$). A witness separator $x_1 = 1.5$ (unit normal) clears $A$ by $0.5$, $D$ by $0.5$, the rest by more — so max-margin $\gamma^* \ge 0.5$ and $(R/\gamma)^2 \lesssim (4.24/0.5)^2 \approx 72$ mistakes. Actual: 4. The bound is <em>valid</em> (4 ≤ 72) and <em>loose</em> (typical) — guarantees certify finiteness under separability, never efficiency. Report both numbers and their relationship, never just one.</p>
 <h3>Scenario 2: Gradient Verification Ritual</h3>
 <p>Before trusting any backprop implementation, run the ritual from M3: analytic $[-0.0503, -0.0891, -0.0153, -0.0077, +0.0046, -0.0153]$ vs. finite differences — agreement to 5 decimals <em>is</em> the implementation&#39;s certificate. Drill: a teammate&#39;s $\partial L/\partial w_2$ disagrees in sign. Debug order: (1) loss definition (½ factor? sign of $(o-y)$?); (2) activation derivative ($\sigma&#39;$ vs. forgotten derivative — linear passthrough bug); (3) stale forward values (backward run on <em>updated</em> weights — recompute forward first). Nine of ten gradient bugs live in these three; the tenth is a transposed matrix.</p>

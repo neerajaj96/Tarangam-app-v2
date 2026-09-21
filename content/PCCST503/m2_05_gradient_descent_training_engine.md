@@ -70,6 +70,14 @@ Canonical order: problem (minimise $J$) → data (batches of gradients) → goal
 
 $$w \leftarrow w - \eta\,\nabla_w J(w)$$
 
+::: toggle Trace one step: current point → gradient → direction → rate → update → repeat
+Current point $w = 0$ on $J = (w-3)^2$ (valley at 3). Gradient $\nabla J = 2(w-3) = -6$ (slope: negative means downhill lies toward +w). Direction: minus-gradient $+6$ (flip uphill into downhill). Rate $\eta = 0.1$ scales the stride ($0.1 × 6 = 0.6$). Update $w \leftarrow 0 + 0.6 = 0.6$ (closer to 3). Repeat: new slope $2(0.6-3) = -4.8$, next step smaller (strides shrink near optima automatically). Contrast $\eta = 1.1$: step $6.6$ overshoots to $w = 6.6$ (past the valley — ricochet, then diverge). Same slope, opposite fates: stride decides.
+:::
+
+::: toggle What do `batch`, `SGD`, `mini-batch`, `epoch`, `NaN` mean?
+`Batch` GD = gradients over the whole dataset per step (exact, $O(nd)$, slow steps). SGD = one random sample per step ($O(d)$, jittery, fast, escapes shallows). Mini-batch = $B = 32$–256 samples averaged ($O(Bd)$ — GPU-friendly working default). `Epoch` = one full pass through the data (SGD needs many; batch needs few). NaN (Not-a-Number) = divergence signature (exploded weights poison arithmetic — halve $\eta$ immediately on sight).
+:::
+
 - $\eta$ too small: monotone but glacial; steps shrink near optima anyway, compounding the crawl.
 - $\eta$ too large: overshoot, oscillate, diverge to Not-a-Number (NaN), the most common training-death signature.
 - Diagnostics: smoothly falling loss is good; high plateau means raise $\eta$ or wait; spiking or NaN means halve $\eta$ immediately. Schedules decay $\eta$ over time (step, exponential, cosine): long strides early, careful feet late.

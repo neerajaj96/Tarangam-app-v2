@@ -63,6 +63,10 @@ Canonical order: problem (multi-resolution grouping) → data (distances) → go
 
 ### 3.1 Agglomerative Loop and Linkages, Step by Step
 
+::: toggle Trace the §1 example merger by merger
+Points $\{1, 2, 10\}$ (1D absolute distance). Pairwise: $d(1,2) = 1$, $d(1,10) = 9$, $d(2,10) = 8$. Round 1: closest pair $\{1,2\}$ marry at height 1 (any linkage agrees on pairs). Round 2: cluster $\{1,2\}$ vs $\{10\}$ — single linkage: $\min(9,8) = 8$; complete: $\max(9,8) = 9$; both marry at height 8–9 (one run, heights recorded). Cuts: horizontal line between heights 1 and 8 reads $K = 2$ (\{1,2\}, \{10\}); above 8 reads $K = 1$. Same run, both answers — deferral demonstrated on three points.
+:::
+
 Numbered loop:
 
 1. Start with $n$ singleton clusters.
@@ -77,6 +81,10 @@ Linkage is the personality:
 - **Average or centroid linkage:** mean pairwise distance, pragmatic middle.
 
 ### 3.2 Dendrograms and Divisive Splitting
+
+::: toggle What are `agglomerative`, `divisive`, `linkage`, `dendrogram`, `height`, `cut`?
+Agglomerative = bottom-up merging (singletons → one cluster — the practical default). Divisive = top-down splitting (one cluster → singletons — $2^n$ splits make naive search hopeless, so heuristic). Linkage = cluster-distance rule (single: nearest pair; complete: farthest pair; average: mean pair). Dendrogram = the merge tree drawing (leaves at bottom, unions rising). Height = dissimilarity at a union (taller = more different). Cut = horizontal line at chosen height (clusters below it are the answer — long bare stems mark natural cuts).
+:::
 
 The merge tree records at what distance each union happened. Long vertical branches mean natural gaps; cut there. **Divisive** top-down (for example DIANA) splits instead: $2^n$ possible splits make naive search hopeless, so practical methods split heuristically (recursive $K=2$ k-means). Rarer in exams; reportable in one line. Cost $O(n^2)$ to $O(n^3)$: no free dendrograms.
 

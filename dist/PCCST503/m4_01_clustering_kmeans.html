@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -325,7 +325,8 @@
 <p>Canonical order: problem (flat grouping) → data (bare points) → goal (low WCSS) → method (alternate assign and update) → model ($K$ centroids) → training (Lloyd&#39;s loop) → example → limitations.</p>
 <h3>3.1 Objective and Lloyd&#39;s Algorithm, Step by Step</h3>
 <p>Numbered loop:</p>
-<ol>
+<details class="interactive-toggle"><summary>Trace the §1 example iteration by iteration</summary><div class="toggle-content"><p>Start: centroids $\mu_1 = 1$, $\mu_2 = 11$. Assign: $|1-1| &lt; |1-11|$ and $|2-1| &lt; |2-11|$ → {1,2} join $\mu_1$; $|10-11| &lt; |10-1|$ and $|11-11| &lt; |11-1|$ → {10,11} join $\mu_2$. Update: $\mu_1 = (1+2)/2 = 1.5$; $\mu_2 = (10+11)/2 = 10.5$. Reassign: distances to 1.5 vs 10.5 unchanged in membership ({1,2} nearer 1.5; {10,11} nearer 10.5) → frozen, stop. WCSS fell at the update step (means minimise squared error per group) and never rises — monotone to a local valley in finite steps (finitely many partitions exist).</p>
+</div></details><ol>
 <li>Initialise $K$ centroids (use k-means++ below).</li>
 <li>Assign each $x$ to nearest $\mu_k$.</li>
 <li>Reset each $\mu_k$ to the mean of its $C_k$.</li>
@@ -333,7 +334,8 @@
 </ol>
 <p>Each step monotonically decreases or holds $J$: assignment picks each point&#39;s cheapest centre; the mean is the squared-error minimiser for its group. Corrected qualification: over finitely many partitions this forces termination at a local optimum (nearest valley), not the global optimum. Initialisation decides which valley; restarts and k-means++ mitigate, never guarantee, the best valley.</p>
 <h3>3.2 Initialization and Choosing k</h3>
-<ul>
+<details class="interactive-toggle"><summary>What are `distance/similarity`, `Euclidean`, `k-means++`, `elbow`, `silhouette`?</summary><div class="toggle-content"><p>Distance/similarity = how alike two points are (k-means uses Euclidean $|x-\mu|$ — straight-line ruler; scale features first or large units dominate). k-means++ = spread seeding (first centroid uniform, each next with probability ∝ squared distance to nearest seeded — covers the cloud, expected $O(\log k)$ guarantee, still rerun). Elbow = plot WCSS vs $K$, pick the kink (diminishing returns — visual, informal). Silhouette = per-point cohesion-vs-separation score in $[−1,1]$ (formalises the eyeballing; peak suggests $K$). Neither discovers true $K$ — resolutions, not laws.</p>
+</div></details><ul>
 <li>Random init can strand centroids (empty clusters, poor local minima). <strong>k-means++</strong>: seed first centroid uniformly, each next with probability proportional to squared distance to nearest seeded centroid. Spread-out starts with an expected $O(\log k)$ approximation guarantee. Qualification: expected, not deterministic; still rerun and keep best WCSS.</li>
 <li><strong>Elbow method:</strong> plot $J$ versus $K$; pick the kink where returns diminish. Silhouette scores formalise the eyeballing. Neither discovers true $K$: partitional clustering has no ground truth, only useful resolutions. Hierarchical views (next note) help read $K$ after seeing merges.</li>
 </ul>

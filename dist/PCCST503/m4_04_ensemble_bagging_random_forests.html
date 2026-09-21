@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -303,7 +303,8 @@
 <p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
 <p>Canonical order: problem (wiggly trees) → data (bootstraps) → goal (low variance) → method (resample plus aggregate, then decorrelate) → model (committee) → training (parallel fits) → example → limitations.</p>
 <h3>3.1 Bagging, Step by Step</h3>
-<p>Numbered steps:</p>
+<details class="interactive-toggle"><summary>Trace the §1 judges through bootstrap, vote, and OOB</summary><div class="toggle-content"><p>Truth 12; judges guess 10, 12, 14 (errors −2, 0, +2). Average $(10+12+14)/3 = 12$ exactly — quirks cancel because truth is shared (all centre on 12) while errors differ (spread around it). Bootstrap behind it: each judge trained on a resample (some rows repeated, ~37% omitted); omitted rows are that judge&#39;s OOB jury (free validation — aggregate each point over only its non-trainers). Forests add: each split sees only $m$ random features ($\sqrt{d}$ class, $d/3$ regr), forcing different questions per tree (decorrelation — shared strong features would re-correlate mistakes and stall averaging at the $\rho\sigma^2$ floor).</p>
+</div></details><p>Numbered steps:</p>
 <ol>
 <li>Draw $B$ bootstrap datasets of size $n$ with replacement.</li>
 <li>Train one model per dataset independently.</li>
@@ -313,7 +314,8 @@
 <h3>3.2 Out-of-Bag Validation, With Limits</h3>
 <p>Each point is OOB for about 37% of models. Aggregate each point over only its OOB models for a validation score costing zero held-out data and zero extra training. OOB tracks test error well, with mild optimism when tuned upon repeatedly. Final publication claims still need untouched folds.</p>
 <h3>3.3 Random Forests: Decorrelating the Judges</h3>
-<p>Bagged trees still correlate: strong features dominate root splits, so mistakes correlate and $\rho$ stalls averaging. Forests force each split to consider only $m\ll d$ random features (standard $m\approx\sqrt{d}$ classification, $d/3$ regression). Trees must differ, $\rho$ drops, voting bites deeper. Grow until OOB plateaus, then stop paying compute.</p>
+<details class="interactive-toggle"><summary>What are `bootstrap`, `OOB`, `m`, `ρ`, and the variance formula?</summary><div class="toggle-content"><p>Bootstrap = resample $n$ points with replacement (repeats allowed — each set misses ~37% of rows, those are OOB). OOB (Out-of-Bag) = left-out rows per model (free validation jury — aggregate each point over only its non-trainers; tuned-upon repeatedly it contaminates into selection data). $m$ = random features tried per split ($\sqrt{d}$ classification, $d/3$ regression — forces different questions, decorrelates judges). $\rho$ = pairwise tree correlation (shared mistakes stall voting). Formula $\rho\sigma^2 + (1-\rho)\sigma^2/B$: first term = correlated floor no $B$ breaches (forests attack it via $m$); second term dies with $B$ (bagging attacks it via count). Tiny numbers from §4: $0.3·4 + 0.7·4/200 = 1.214$ vs single $4$ — floor $1.2$ stands.</p>
+</div></details><p>Bagged trees still correlate: strong features dominate root splits, so mistakes correlate and $\rho$ stalls averaging. Forests force each split to consider only $m\ll d$ random features (standard $m\approx\sqrt{d}$ classification, $d/3$ regression). Trees must differ, $\rho$ drops, voting bites deeper. Grow until OOB plateaus, then stop paying compute.</p>
 <table>
 <thead>
 <tr>

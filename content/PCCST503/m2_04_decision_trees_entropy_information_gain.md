@@ -66,6 +66,14 @@ Canonical order: problem (readable classification) → data (labelled rows) → 
 
 $H(S)=-\sum_i p_i\log_2 p_i$. Pure set ($p=1$) gives $0$ bits; 50/50 binary gives $1$ bit maximum. Gain subtracts weighted child entropy from parent entropy. Steps numbered:
 
+::: toggle Expand `H(S) = −Σ pᵢ log₂ pᵢ` piece by piece
+$p_i$ = proportion of class $i$ in $S$ (2 cats of 4 animals → $p=0.5$). $\log_2 p_i$ = bits to encode one such outcome (rare outcomes cost more bits: $\log_2 0.5 = -1$). $p_i \times \log_2 p_i$ = average contribution (common outcomes dominate). $\Sigma$ = total over classes. $−$ = flip sign (logs of fractions are negative; entropy is positive mess). Tiny numbers: 2 cats + 2 dogs → $-(0.5·(-1) + 0.5·(-1)) = 1$ bit (maximum mess); 4 cats → $-(1·0) = 0$ bits (no mess). Why base 2: the unit is bits (yes/no questions) — natural log would give nats, same ranking, different unit.
+:::
+
+::: toggle Expand `Gain(S,A)` with the tennis numbers
+Gain = parent mess minus weighted child mess: $\text{Gain} = H(S) - \sum_v(|S_v|/|S|)H(S_v)$. $|S_v|/|S|$ = fraction of examples falling into value $v$ (big branches weigh more). Parent $H(S) = 0.940$ bits (9 Yes, 5 No of 14). Outlook splits into Sunny/Overcast/Rain subsets; their weighted entropy ≈ 0.693; gain $= 0.940 − 0.693 = 0.247$ (largest of the four attributes — Outlook splits the root). Humidity 0.151, Wind 0.048, Temperature 0.029 trail behind. Why weighted: a pure-but-tiny branch removes little total mess — size matters as well as purity.
+:::
+
 1. Compute parent entropy $H(S)$.
 2. For each attribute, split into value groups $S_v$.
 3. Compute weighted child entropy $\sum(|S_v|/|S|)H(S_v)$.

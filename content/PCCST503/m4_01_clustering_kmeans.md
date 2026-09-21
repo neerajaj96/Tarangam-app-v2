@@ -70,6 +70,10 @@ Canonical order: problem (flat grouping) → data (bare points) → goal (low WC
 
 Numbered loop:
 
+::: toggle Trace the §1 example iteration by iteration
+Start: centroids $\mu_1 = 1$, $\mu_2 = 11$. Assign: $|1-1| < |1-11|$ and $|2-1| < |2-11|$ → {1,2} join $\mu_1$; $|10-11| < |10-1|$ and $|11-11| < |11-1|$ → {10,11} join $\mu_2$. Update: $\mu_1 = (1+2)/2 = 1.5$; $\mu_2 = (10+11)/2 = 10.5$. Reassign: distances to 1.5 vs 10.5 unchanged in membership ({1,2} nearer 1.5; {10,11} nearer 10.5) → frozen, stop. WCSS fell at the update step (means minimise squared error per group) and never rises — monotone to a local valley in finite steps (finitely many partitions exist).
+:::
+
 1. Initialise $K$ centroids (use k-means++ below).
 2. Assign each $x$ to nearest $\mu_k$.
 3. Reset each $\mu_k$ to the mean of its $C_k$.
@@ -78,6 +82,10 @@ Numbered loop:
 Each step monotonically decreases or holds $J$: assignment picks each point's cheapest centre; the mean is the squared-error minimiser for its group. Corrected qualification: over finitely many partitions this forces termination at a local optimum (nearest valley), not the global optimum. Initialisation decides which valley; restarts and k-means++ mitigate, never guarantee, the best valley.
 
 ### 3.2 Initialization and Choosing k
+
+::: toggle What are `distance/similarity`, `Euclidean`, `k-means++`, `elbow`, `silhouette`?
+Distance/similarity = how alike two points are (k-means uses Euclidean $\|x-\mu\|$ — straight-line ruler; scale features first or large units dominate). k-means++ = spread seeding (first centroid uniform, each next with probability ∝ squared distance to nearest seeded — covers the cloud, expected $O(\log k)$ guarantee, still rerun). Elbow = plot WCSS vs $K$, pick the kink (diminishing returns — visual, informal). Silhouette = per-point cohesion-vs-separation score in $[−1,1]$ (formalises the eyeballing; peak suggests $K$). Neither discovers true $K$ — resolutions, not laws.
+:::
 
 - Random init can strand centroids (empty clusters, poor local minima). **k-means++**: seed first centroid uniformly, each next with probability proportional to squared distance to nearest seeded centroid. Spread-out starts with an expected $O(\log k)$ approximation guarantee. Qualification: expected, not deterministic; still rerun and keep best WCSS.
 - **Elbow method:** plot $J$ versus $K$; pick the kink where returns diminish. Silhouette scores formalise the eyeballing. Neither discovers true $K$: partitional clustering has no ground truth, only useful resolutions. Hierarchical views (next note) help read $K$ after seeing merges.

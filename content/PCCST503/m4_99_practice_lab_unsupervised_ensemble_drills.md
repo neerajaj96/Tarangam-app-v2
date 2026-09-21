@@ -35,6 +35,14 @@ tags:
 
 Beginner protocol: problem first, then data and goal, then method. Disagreement between honest methods is geometry talking, not bugs.
 
+::: toggle How do I run the k-wars comparison (one dataset, three answers)?
+Fix the dataset (six blob points), run all three: k-means $K=2$ (flat commitment, WCSS 4), single-linkage dendrogram (chains through bridges), complete-linkage (quarantines bridges). Then poison with one bridge point at 6.5 and rerun all three: k-means absorbs it (means shift slightly), single-linkage chains through it (one progressive cluster), complete holds the split. Readout: same data, three structures — the method is a shape prior. Report all three plus which prior your domain believes, never the single flattering run.
+:::
+
+::: toggle Verify the round-2 arithmetic: `ε₂`, `α₂`, mass moves
+$D_2 = \{1/6,1/6,1/6,1/2\}$ (three light, one heavy). Round-2 stump fixes the heavy point, misses one light: $\epsilon_2 = 1/6 \approx 0.167$ (missed mass only). $\alpha_2 = \tfrac12\ln((1-1/6)/(1/6)) = \tfrac12\ln 5 \approx 0.805$ (louder than round 1's 0.549 — harder distribution solved earns bigger voice). Newly-missed light point: $1/6 \times e^{0.805} \approx 1/6 \times 2.24$ (grows); thrice-correct points shrink by $e^{-0.805}$; renormalise to sum 1. Attention compounds on survivors — curriculum on clean structure, poison-chasing on mislabels.
+:::
+
 ### Scenario 1: The k Wars (One Dataset, Three Answers)
 
 Well-separated blobs (M4's six points): k-Means $K=2$ converges instantly (Within-Cluster Sum of Squares (WCSS) 4); hierarchical single-linkage dendrogram shows the same split with a huge height gap to the final merge; elbow screams $K=2$. Now poison it: add a bridge point at 6.5. k-Means $K=2$ still splits cleanly (means absorb it); single-linkage *chains* through the bridge (one progressive cluster); complete-linkage holds the split. Same data plus one point, three structures — the method *is* a shape prior, and the bridge point is the experiment that reveals yours. Partitional k-means commits flat $K$ upfront; hierarchical defers the cut until gaps are visible.

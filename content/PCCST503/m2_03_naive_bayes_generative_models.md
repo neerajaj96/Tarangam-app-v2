@@ -67,11 +67,23 @@ $$\hat{y} = \arg\max_c\; P(y=c) \prod_{j=1}^d P(x_j \mid y=c)$$
 
 $P(y=c)$ is the prior; each $P(x_j\mid y=c)$ is one feature's evidence; the product is joint evidence under independence; $\arg\max$ picks the winner.
 
+::: toggle Expand Bayes' rule: prior, likelihood, posterior, evidence
+Prior $P(y=c)$ = how common class $c$ is before seeing features (40% spam = 0.4 — base rate). Likelihood $P(x_j\mid y=c)$ = how often feature $j$ appears under class $c$ (80% of spam says "free" — the generator's habit). Posterior $P(y=c\mid x)$ = updated belief after seeing features (what we decide by). Evidence $P(x)$ = total probability of the features (same for all classes — dropped from argmax, restored if calibrated probabilities are needed). Tiny numbers: prior spam 0.4 × likelihood 0.8 = 0.32 vs ham 0.6 × 0.1 = 0.06 → spam wins 0.32 to 0.06.
+:::
+
+::: toggle What does the `naive` independence bet claim, and when does it break?
+Naive claims $P(x_1,x_2\mid c) = P(x_1\mid c)P(x_2\mid c)$: given the class, features carry no extra information about each other (fever tells nothing new about cough once flu is known). Why bet it: $d$ one-dimensional tables need far less data than one $d$-dimensional table (counts stay dense). When it breaks: strongly coupled features double-count evidence (e.g. "New" and "York" as separate words overvote) — usually harmless for ranking, occasionally overconfident; correlated domains (text with phrases) are the honest caveat.
+:::
+
 ### 3.2 Three Flavors, One Per Feature Type
 
 - **Multinomial and Bernoulli NB** (text, discrete counts): likelihoods are frequency tables with Laplace smoothing ($+\alpha$ pseudocounts, usually $\alpha=1$): $P(w\mid c)=(\text{count}(w,c)+\alpha)/(\sum_{w'}\text{count}(w',c)+\alpha|V|)$. Here $|V|$ is vocabulary size. Zero counts would veto entire classes (one unseen word zeroes the product); smoothing is load-bearing, not cosmetic.
 - **Gaussian NB** (continuous features): $P(x_j\mid c)=\mathcal{N}(\mu_{jc},\sigma^2_{jc})$ with per-class MLE means and variances. Closed form, one pass.
 - Training everywhere is counting or averaging: no iteration, no gradients, $O(nd)$ once.
+
+::: toggle Work the Laplace fix with tiny counts
+Vocabulary {free, win} ($|V|=2$), spam counts {free:3, win:0} over 3 words, $\alpha=1$: $P(\text{win}\mid\text{spam}) = (0+1)/(3+1·2) = 1/5$ (not zero — the veto lifted). $P(\text{free}\mid\text{spam}) = (3+1)/5 = 4/5$. Why $|V|$ in the denominator: probabilities over the vocabulary must still sum to 1 (pseudocounts added to every word, denominator grows by $\alpha|V|$ to match). $\alpha=0$ recovers raw frequencies (vetoes return); $\alpha=1$ is Laplace's standard choice (unseen = rare, never impossible).
+:::
 
 Steps numbered:
 

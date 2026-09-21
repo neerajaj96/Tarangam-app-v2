@@ -72,6 +72,14 @@ Canonical order: problem (probabilistic two-class choice) → data (labelled pai
 
 $P(y=1\mid x)=\sigma(w^Tx)$ with $\sigma(z)=1/(1+e^{-z})$. Inverse view: $\log(p/(1-p))=w^Tx$. The model is linear in log-odds, so coefficient $w_j$ reads as log-odds change per unit $x_j$. Decision rule $w^Tx\ge 0$ is a linear boundary, exactly as expressive and limited as a perceptron's. The sigmoid rescales confidence; it never bends the boundary shape.
 
+::: toggle Expand `σ(z) = 1/(1+e^(−z))` piece by piece
+$z = w^Tx$ = linear score (weights dot features — any real number, unbounded). $e \approx 2.718$ = Euler's number (exponential base — growth/decay constant). $e^{-z}$ = flips the score (large $z$ → near 0; large negative $z$ → huge). $1 + e^{-z}$ = shifts so the fraction stays in $(0,1)$. $1/(\cdot)$ = inverts into a probability. Net effect: $z=0 \to 0.5$ exactly; $z=2 \to 1/(1+e^{-2}) \approx 0.88$; $z=-2 \to \approx 0.12$ (matches §1's numbers — verify by calculator). Why this shape: smooth, differentiable everywhere (gradients flow), steepest at the boundary (most sensitive where decisions flip).
+:::
+
+::: toggle What are `logit`, `log-odds`, and `P(y=1|x)`?
+$P(y=1\mid x)$ = probability the label is 1 given features $x$ (what we model — calibrated chance, not just a verdict). Log-odds $\log(p/(1-p))$ = log of the odds ratio (odds = chance-for divided by chance-against; log turns multiplication into addition). Logit = the inverse-sigmoid map $p \mapsto \log(p/(1-p))$ (probability back to unbounded score). The model says log-odds $= w^Tx$ — linear in log-odds is why coefficients read as per-unit log-odds shifts and why the boundary stays flat.
+:::
+
 ### 3.2 Cross-Entropy Loss and Gradient, Symbol by Symbol
 
 For one example: $\ell(w) = -[y\log p + (1-y)\log(1-p)]$ with $p=\sigma(w^Tx)$. Here $y\log p$ prices positive examples, $(1-y)\log(1-p)$ prices negatives, the minus makes loss positive. Gradient:
@@ -79,6 +87,10 @@ For one example: $\ell(w) = -[y\log p + (1-y)\log(1-p)]$ with $p=\sigma(w^Tx)$. 
 $$\nabla_w \ell = (p-y)x = (\text{predicted}-\text{actual})\times\text{features}$$
 
 Error times input, the same shape driving Least Mean Squares (LMS), perceptrons, and generalised backprop. Update: $w\leftarrow w-\eta(p-y)x$ with learning rate $\eta$.
+
+::: toggle Expand the loss and the update with tiny numbers
+Loss per example $\ell = -[y\log p + (1-y)\log(1-p)]$: if $y=1$, only $-\log p$ survives (confident-right $p=0.99$ costs $0.01$; confident-wrong $p=0.01$ costs $4.6$ — confident wrongness priced brutally). If $y=0$, only $-\log(1-p)$ survives (mirror image). The minus makes losses positive (logs of fractions are negative). Gradient $(p-y)x$: predicted-minus-actual times features (error direction scaled by input size). Update $w \leftarrow w - \eta(p-y)x$: step against the error ($\eta$ = learning rate, step size — too big diverges, too small crawls). Tiny numbers: $y=1$, $p=0.7$, $x=[2]$, $\eta=0.5$ → error $-0.3$ → $w \leftarrow w + 0.3$ (weights move to raise $p$ next time).
+:::
 
 **Corrected convexity qualification.** The cross-entropy loss for logistic regression is convex in $w$: one bowl, no bad local minima. With a suitably small learning rate and well-scaled features, gradient descent converges toward the global minimiser. Two qualifications examiners reward: (1) step size still matters — too large $\eta$ diverges even on convex bowls; conditioning sets speed, so standardise features; (2) on linearly separable data the finite minimiser does not exist — weights grow without bound while the boundary keeps improving, so in practice add Regularisation (RIDGE or LASSO) or stop early. Convexity removes local minima, not all optimisation concerns.
 

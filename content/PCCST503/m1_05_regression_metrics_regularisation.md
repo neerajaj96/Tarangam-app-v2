@@ -97,6 +97,10 @@ $$\text{RIDGE: } \min_w \lVert y - Xw\rVert^2 + \lambda\sum_j w_j^2, \qquad \tex
 
 Here $\lambda \ge 0$ is penalty strength ($0$ recovers ordinary least squares; $\infty$ forces all weights to zero). RIDGE (L2, Gaussian prior from M1.02) shrinks smoothly and keeps every feature — always invertible via $(X^TX + \lambda I)^{-1}X^Ty$, the singular-matrix cure from M1.03. LASSO (L1, Laplace prior) has a diamond-shaped constraint whose corners pin weak weights exactly to zero — automatic feature selection, at the cost of no closed form (solved by coordinate descent or subgradient steps) and at most $n$ nonzeros.
 
+::: toggle Expand the penalty formulas: `w`, `λ`, `Σwⱼ²`, `Σ|wⱼ|`
+$w$ = weight vector (one number per feature — what fitting chooses). $\lambda$ (lambda) = penalty strength knob (0 = no penalty, ordinary least squares; larger = simpler model; $\infty$ = all weights zero). $\sum_j w_j^2$ = sum of squared weights (L2: big weights cost quadratically more, so shrinkage spreads smoothly across all features — none hits exactly zero). $\sum_j\lvert w_j\rvert$ = sum of absolute weights (L1: constant marginal price per unit, so weak weights get pinned exactly to zero at the diamond corners — selection). Why two: dense tame-everything (RIDGE) vs sparse keep-or-kill (LASSO). Tiny numbers: weights $[3, 0.1]$, $\lambda=1$ — RIDGE prices $9+0.01=9.01$, LASSO prices $3+0.1=3.1$ (small weight nearly free under L2, full price under L1 — hence LASSO kills it first).
+:::
+
 Steps to use either honestly, numbered:
 
 1. Standardise features (penalties punish raw magnitudes; unscaled "income vs area" mis-prices shrinkage).
@@ -125,6 +129,10 @@ Single train/test splits are lottery tickets: one lucky split flatters, one unlu
 5. Grade the selected procedure once on a held-out test set, or nest (outer loop grades, inner loop selects) when no spare test set exists.
 
 Bootstrapping recap for contrast: bootstrap resamples with replacement for variance estimates and bagging juries (M4.04); CV partitions without replacement for honest grading. Leave-One-Out (LOO) is $k = n$: nearly unbiased, high variance, costly — examinable as the extreme, rarely the default. Nested CV grades selection itself: inner loop picks $\lambda$, outer loop scores the picker on untouched folds. Tuning on test data, reusing test folds for selection, or standardising before splitting (leakage via global mean) all contaminate the grade — standardise inside each fold, select inside inner loops, report once outside.
+
+::: toggle Trace 5-fold CV on 100 homes, then contrast LOO and nested CV
+Split into 5 folds of 20 (shuffle first). Round 1: train on folds 2–5 (80 homes), validate on fold 1 (20) → score $s_1$. Rounds 2–5 rotate the held-out fold → $s_2..s_5$. Report mean ± spread (spread = stability). LOO is the extreme $k = 100$: 100 rounds of train-on-99 (nearly unbiased, high variance, 100 fits — costly). Nested CV adds an outer loop: inner loop selects $\lambda$ per outer-train split, outer loop grades the whole selection procedure on untouched folds (grades the picker, not the pick).
+:::
 
 <a id="worked-example"></a>
 ## 4. KTU Worked Example Step by Step

@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -324,7 +324,9 @@
 <p>Canonical order: problem (robust separation) → data (labelled sides) → goal (wide corridor) → method (norm minimisation) → model ($w$, $b$) → training (convex program or hinge) → example → limitations.</p>
 <h3>3.1 Functional versus Geometric Margin</h3>
 <p>$$\min_{w,b}\ \tfrac12|w|^2 \quad \text{s.t.}\quad y_i(w^Tx_i + b) \ge 1\ \ \forall i$$</p>
-<p>This is a convex quadratic program. Corrected qualification: it has a unique optimal weight vector $w^*$ under standard conditions; the offset $b$ can have an interval of optima when support vectors allow a range, and uniqueness of $w$ assumes separable data and a strictly convex norm. Contrast with the perceptron, which stops at any separator; SVM demands the best-placed one under these conditions.</p>
+<details class="interactive-toggle"><summary>Expand the objective: `w`, `b`, `½‖w‖²`, `s.t.`, margin `≥ 1`</summary><div class="toggle-content"><p>$w$ = normal vector (perpendicular to the road — its length sets corridor width). $b$ = offset (slides the road without rotating — positions it). $|w|^2$ = squared length (minimising it widens the corridor: width $= 2/|w|$). $\tfrac12$ = convenience factor (cancels the 2 when differentiating — bookkeeping, not geometry). s.t. (subject to) = hard constraints every point must satisfy. $y_i(w^Tx_i+b) \ge 1$ = every point scores at least 1 on its own side (functional margin fixed at 1 — this pins the scale so minimising $|w|$ genuinely widens geometry). Tiny check: doubling $(w,b)$ doubles functionals but halves nothing geometric — the constraint re-pins scale, exposing the trick.</p>
+</div></details><details class="interactive-toggle"><summary>What are `hyperplane`, `support vector`, `hinge loss`, `λ`?</summary><div class="toggle-content"><p>Hyperplane = the flat separator ($w^Tx+b=0$ — a line in 2D, plane in 3D, flat sheet beyond). Support vector = a point exactly on a corridor wall ($y_i(w^Tx_i+b)=1$ — active constraint; only these shape the road, interior points are passengers). Hinge loss $\max(0,1-y·\text{score})$ = zero when confidently right with margin ≥ 1, linear pain otherwise (exact zero at the wall — unlike cross-entropy&#39;s eternal polish). $\lambda$ = norm price in the unconstrained twin (bigger $\lambda$ = narrower corridor tolerated less — the regularisation dial).</p>
+</div></details><p>This is a convex quadratic program. Corrected qualification: it has a unique optimal weight vector $w^*$ under standard conditions; the offset $b$ can have an interval of optima when support vectors allow a range, and uniqueness of $w$ assumes separable data and a strictly convex norm. Contrast with the perceptron, which stops at any separator; SVM demands the best-placed one under these conditions.</p>
 <h3>3.2 Support Vectors and Hinge Loss, Symbol by Symbol</h3>
 <p>At the optimum, only points on the walls ($y_i(w^Tx_i+b)=1$) constrain the solution: the support vectors, typically few. Unconstrained twin: minimise $\sum_i\max(0,1-y_i(w^Tx_i+b))+\lambda|w|^2$. Here $\max(0,1-y\cdot\text{score})$ is hinge loss (zero when confidently right with margin at least $1$, linear pain otherwise), $\lambda$ prices norm. Corridor width equals $2/|w|$.</p>
 <p>Numbered use:</p>
