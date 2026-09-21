@@ -5,7 +5,7 @@ module: 2
 sequence: 7
 title: 'CSPs & AC-3: Constrain, Propagate, Then Search'
 difficulty: beginner
-estimatedMinutes: 4
+estimatedMinutes: 6
 learningObjectives:
   - Frame problems as variables, domains and constraints
   - Prune with arc consistency before any guessing starts
@@ -23,88 +23,107 @@ tags:
 ---
 # CSPs & AC-3: Constrain, Propagate, Then Search
 
-**Variables, domains, constraints — node/arc consistency as a pruning engine, one AC-3 trace solved without search, and the triangle that proves propagation is not enough.**
+**Problem: generate-and-test fills whole doomed assignments. Can we delete impossible values before guessing? By the end you can frame any CSP (Constraint Satisfaction Problem), run the AC-3 (Arc Consistency algorithm 3) queue by hand, and prove propagation alone does not solve everything.**
 
-<a id="the-intuition"></a>
-## 1. The Intuition
+<a id="start-zero"></a>
+## 1. Start From Zero: Seating Feuds
+
+Guests (variables) need chairs (domains) with no feud (constraint) sharing a table. **Arc consistency** interrogates each feud direction: every guest must keep some compatible partner across the table — guests with none are unseated before the party. AC-3 repeats until nobody else is ejected; backtracking searches only the survivors.
+
+**Definitions:** variable `X_i` (what to assign); domain `D_i` (allowed values); constraint (allowed combinations; unary on one variable, binary on pairs, global like Alldiff). An **arc** `X -> Y` (directed pair) is consistent iff every `x` in `D_X` has some supporting `y` in `D_Y` satisfying the constraint.
 
 ::: callout-intuition Core Mental Model: Seating Feuds
-A CSP seats guests (variables) into chairs (domains) so no feud (constraint) shares a table. **Arc consistency** interrogates each feud direction: every guest must have *some* compatible partner across the table — guests with none are unseated before the party starts. AC-3 repeats the interrogation until nobody else is ejected; whatever chairs survive, backtracking searches.
+Feel "delete unsupported values first" here, then drop the party; directed arcs plus the re-queue rule below are the technical content.
 :::
 
-Generate-and-test (M2.6) filled whole seatings blindly; propagation deletes impossible chairs *before* guessing — the standard pipeline is constrain, propagate, then search only the residue.
+**Tiny beginner example:** X, Y in {1, 2} with X < Y. Value 2 in X has no partner above it — delete 2 from X before any search. Propagation solves pieces of the puzzle for free.
 
----
+<a id="basics"></a>
+## 2. Basic Layer: CSP Anatomy and the AC-3 Loop
 
-<a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+**Data/state:** current domains per variable. **Goal:** shrink domains to their maximal arc-consistent sets, then search the residue.
 
-### 2.1 CSP anatomy
+**Procedure — AC-3 (steps then trace):** Step 1: queue every directed arc. Step 2: pop arc `X -> Y`, **revise** (delete each `x` with zero supporting `y`). Step 3: if `D_X` shrank, re-queue every neighbour arc `Z -> X` (their supports may have lost witnesses). Step 4: repeat to quiescence (empty queue). Complexity `O(e*d^3)` (e = constraint arcs, d = max domain size) — quoted as the price of full propagation.
 
-Variables $X_i$, domains $D_i$, constraints (unary/binary/global like Alldiff). An **arc** $X \to Y$ is consistent if every $x \in D_X$ has some $y \in D_Y$ satisfying the constraint. **AC-3** queues all arcs, revises (deleting unsupported values), and re-queues neighbours of every shrunk domain — $O(ed^3)$ time, terminating with the maximal arc-consistent domains.
+**Trace on X < Y with D = {1,2} both:** revise X->Y: 1 supported by 2, 2 unsupported — delete 2, D_X = {1}, re-queue neighbours. Revise Y->X: 1 needs x < 1 from {1} — none, delete 1; 2 supported by 1. Fixpoint: X={1}, Y={2} — unique solution with zero search.
 
-### 2.2 Limits
+<a id="formal-model"></a>
+## 3. Formal Layer: Limits and Levels
 
-Arc consistency never invents values and never detects *global* inconsistency alone: the 2-colour triangle (M2.6) is arc-consistent yet unsatisfiable. Propagation prunes; search decides.
+**Meaning, variables, formula:** arc `X -> Y` consistent iff `for every x in D_X there exists y in D_Y with constraint(x,y)`. Revision is existential per value (one witness saves, zero deletes). Arcs are directed: revising `X -> Y` shrinks only X — one pass per undirected pair skips half the work.
+
+**Limit theorem:** arc consistency never invents values and never detects global inconsistency alone. The 2-colour triangle (previous topic) with domains {R,G} everywhere: each value keeps a witness on every arc (R opposite G), so AC-3 deletes nothing — yet globally no solution exists. Propagation prunes; search decides.
 
 ::: callout-formula KTU Formula Vault: CSP + AC-3
-Arc $X \to Y$: each $x$ needs a supporting $y$ · revise deletes unsupported · re-queue neighbours on shrink · $O(ed^3)$ · arc-consistent $\ne$ solvable.
+Arc X->Y: each x needs a supporting y. Revise deletes unsupported. Shrink re-queues neighbours. `O(e*d^3)`. Arc-consistent does not imply solvable.
 :::
-
-Arcs are directed: revising $X \to Y$ can shrink $X$ only — students who "revise once per pair" skip half the queue and leak values that propagation would have caught.
 
 ::: callout-pitfall Consistency-Level Confusion
-Node consistency (unary), arc consistency (binary pairs), path consistency (triples) — each strictly stronger. Claiming AC-3 "solves CSPs" promotes a pruning level to a solver; the triangle counterexample demotes it back in one line.
+Node (unary), arc (binary pairs), path (triples) — strictly stronger in order. "AC-3 solves CSPs" promotes a pruning level to a solver; the triangle counterexample demotes it in one line.
 :::
-
----
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Worked Example, Distinctions, Limitations
 
-::: step [Step 1: Setup] Formulating the Problem
-Variables $X, Y$ with $D_X = D_Y = \{1, 2\}$, constraint $X < Y$. Run AC-3's revisions to fixpoint and state the result.
-:::
+| Similar pair | Distinction |
+|---|---|
+| Propagation vs. search | Deletes impossible values vs. guesses among survivors |
+| Directed vs. undirected arcs | Re-queue neighbours pointing at shrunk domains vs. revisiting nothing |
+| Node vs. arc vs. path consistency | Unary vs. pair vs. triple strength |
 
-::: step [Step 2: Execution] Interrogating Both Arcs
-Revise $X \to Y$: $x = 1$ keeps support ($y = 2 > 1$ ✓); $x = 2$ has no $y > 2$ — delete $2$, so $D_X = \{1\}$ (shrunk → re-queue neighbours). Revise $Y \to X$: $y = 1$ needs $x < 1$ from $\{1\}$ — none, delete $1$; $y = 2$ supported by $x = 1$ ✓. Fixpoint: $D_X = \{1\}$, $D_Y = \{2\}$ — the unique solution, found with zero search.
-:::
+**Watch out:** (1) Revision arithmetic is per-value existential — check every value for at least one witness. (2) Skipping re-queue forfeits cascades (single-pass "AC-1 thinking"). (3) Empty domain means proven local impossibility — backtrack immediately.
 
-::: step [Step 3: Conclusion] Final Result
-$X = 1$, $Y = 2$ by propagation alone. Contrast the M2.6 triangle: there every value keeps arc support (each colour appears opposite), so AC-3 deletes nothing and search must break the symmetry — prune-then-search, each doing its own job.
-:::
-
----
+**Limitations:** `O(e*d^3)` on large domains; arc-consistent-but-unsatisfiable cases need search or stronger (path/global) consistency; global constraints need specialized propagators beyond binary arcs.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz Q1: Revision Arithmetic
-$D_A = \{1, 2, 3\}$, $D_B = \{2\}$, constraint $A > B$. Revise $A \to B$?
+D_A = {1, 2, 3}, D_B = {2}, constraint A > B. Revise A -> B?
 (A) Delete nothing, all supported
-(*B) Delete $1$ and $2$, keeping $\{3\}$ — $1 > 2$ is false, $2 > 2$ is false, only $3 > 2$ holds, and revision keeps a value only if some witness in $D_B$ supports it
-(C) Delete $3$ instead
+(*B) Delete 1 and 2, keeping {3} — 1 > 2 is false, 2 > 2 is false, only 3 > 2 holds, and revision keeps a value only if some witness in D_B supports it
+(C) Delete 3 instead
 (D) Wipe the whole domain
 ::: explanation
-$1 > 2$ false, $2 > 2$ false, $3 > 2$ true — only $3$ has a supporting $b$. Revision is existential per value: one witness saves, zero witnesses deletes. Candidates $\{1, 2\}$ fall together here.
+Existential per value: 1 and 2 find no supporting b, 3 finds b = 2. Only witnessed values survive revision.
 :::
 
 ::: quiz Q2: Queue Discipline
-Revising $X \to Y$ shrinks $D_X$. Which arcs re-queue?
+Revising X -> Y shrinks D_X. Which arcs re-queue?
 (A) None, one pass suffices
-(*B) All arcs $Z \to X$ (neighbours pointing at $X$), because their supports may have just lost their witness — skipping re-queue misses cascading deletions, AC-3's entire power
-(C) Only $X \to Y$ itself
+(*B) All arcs Z -> X (neighbours pointing at X), because their supports may have just lost their witness — skipping re-queue misses cascading deletions, AC-3's entire power
+(C) Only X -> Y itself
 (D) Every arc in the problem
 ::: explanation
-Shrinkage invalidates supports elsewhere; neighbours must re-prove their values against the smaller domain. Chains of such cascades solve whole puzzles — single-pass "AC-1 thinking" forfeits them.
+Shrinkage invalidates supports elsewhere. Neighbours must re-prove values against the smaller domain; chains of cascades solve whole puzzles.
 :::
 
 ::: quiz Q3: Limit Witness
-2-colour triangle, all domains $\{R, G\}$. AC-3 deletes?
+2-colour triangle, all domains {R, G}. AC-3 deletes?
 (A) Everything, inconsistency found
-(*B) Nothing — each value keeps a witness ($R$ opposite $G$ on every arc), yet globally no solution exists: arc-consistent but unsatisfiable, propagation's boundary stone
+(*B) Nothing — each value keeps a witness (R opposite G on every arc), yet globally no solution exists: arc-consistent but unsatisfiable, propagation's boundary stone
 (C) One colour per node
 (D) AC-3 crashes on cycles
 ::: explanation
-Local support $\ne$ global solution: every arc is happy while the whole is impossible. This exact case separates "pruning" from "solving" — search (or stronger consistency) must finish the job.
+Local support differs from global solution. Every arc is happy while the whole is impossible — search or stronger consistency must finish.
+:::
+
+<a id="exam-focus"></a>
+## 6. Exam Recap and Worked Q&A
+
+::: callout-exam KTU University Exam Focus
+3 marks: CSP triple plus arc-consistency definition. 7 marks: full AC-3 trace to fixpoint with queue states, plus the triangle limit.
+:::
+
+**Recap facts examiners reward:** variables/domains/constraints; directed-arc definition; revise-plus-requeue loop; `O(e*d^3)`; X<Y fixpoint {1}/{2}; triangle as arc-consistent-yet-unsatisfiable.
+
+### Sample 3-Mark Question
+**Q: Define CSP and arc consistency.**
+
+**Model Answer:** Variables with domains plus constraints on combinations. Arc X->Y consistent iff each x has a supporting y satisfying the constraint.
+
+### Sample 7-Mark Question
+**Q: Run AC-3 on X<Y with {1,2} and contrast the triangle.**
+
+**Model Answer:** Revisions delete 2 from X then 1 from Y, leaving X=1, Y=2 with zero search. Triangle deletes nothing despite unsatisfiability — local witnesses everywhere, global solution nowhere — so propagate-then-search.
 :::

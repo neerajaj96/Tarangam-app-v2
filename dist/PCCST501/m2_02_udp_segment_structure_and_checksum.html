@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,28 +297,67 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>UDP: Segment Structure &amp; Checksum</h1>
 <p><strong>The 8-byte header, port/length/checksum fields, 1s-complement checksum with pseudoheader, and when unreliable delivery is the right choice.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Postcard</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP is a registered letter: tracked, signed for, re-sent if lost. <strong>UDP is a postcard</strong>: you write the address, drop it in the box, and forget it. No tracking number (no sequence numbers), no delivery promise, no return receipt. Why would anyone choose the postcard? Because sometimes the letter&#39;s overhead costs more than an occasional lost postcard — a 50 ms voice stutter beats a 500 ms guaranteed-but-late replay, and a DNS answer fits in one datagram anyway.</p>
-</div></details><hr>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>A video call stutters for 50 milliseconds — annoying, but the conversation flows on. Now imagine the call instead <em>froze</em> for half a second every time one packet went missing, waiting for a retransmission of audio you no longer need. For live voice, late data is useless data.</p>
+<p>The problem before the solution: some applications would rather lose a packet than wait for it. They need a transport with <strong>no handshake, no retransmission, no congestion throttling</strong> — just &quot;take my bytes and send them.&quot; UDP (User Datagram Protocol) is that transport: an 8-byte header and nothing else.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Postcard</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP (Transmission Control Protocol) is a registered letter: tracked, signed for, re-sent if lost. <strong>UDP is a postcard</strong>: you write the address, drop it in the box, and forget it. No tracking number (no sequence numbers), no delivery promise, no return receipt. Why would anyone choose the postcard? Because sometimes the letter&#39;s overhead costs more than an occasional lost postcard — a 50 ms voice stutter beats a 500 ms guaranteed-but-late replay, and a DNS (Domain Name System) answer fits in one datagram anyway.</p>
+<p>Dropping the post office now: 8-byte header = source port + destination port + length + checksum; no sequence numbers, no acknowledgments, no windows.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-header-fields-then-checksum-symbol-by-symbol">3. Purpose — Header Fields, Then C… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>UDP (User Datagram Protocol)</strong></td>
+<td>Connectionless, unreliable transport: send datagrams immediately, never retransmit.</td>
+</tr>
+<tr>
+<td><strong>Segment / datagram</strong></td>
+<td>UDP&#39;s packaged unit (8-byte header + application data).</td>
+</tr>
+<tr>
+<td><strong>Checksum</strong></td>
+<td>A 16-bit error-detection value covering header + data + pseudoheader.</td>
+</tr>
+<tr>
+<td><strong>1s-complement arithmetic</strong></td>
+<td>Binary addition where overflow carry-out wraps back into the sum (<strong>end-around carry</strong>), and the final result is bit-flipped (<strong>complement</strong>).</td>
+</tr>
+<tr>
+<td><strong>Pseudoheader</strong></td>
+<td>A 12-byte virtual prefix (source IP, destination IP, protocol number, UDP length) included in the checksum math but never transmitted.</td>
+</tr>
+<tr>
+<td><strong>Silent discard</strong></td>
+<td>On checksum failure the receiver drops the datagram with no notification — recovery is the application&#39;s business.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 UDP Segment Structure (exactly 8 bytes of header)</h3>
+<h2 id="3-purpose-header-fields-then-checksum-symbol-by-symbol">3. Purpose — Header Fields, Then Checksum Symbol by Symbol</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Packet Structure: UDP Segment Structure (exactly 8 bytes of header)</h3>
 <table>
 <thead>
 <tr>
@@ -345,32 +388,64 @@
 </tr>
 </tbody></table>
 <p>No sequence numbers, no acknowledgment numbers, no window fields — the header&#39;s tiny size <em>is</em> the entire design philosophy: minimum mechanism, maximum speed.</p>
-<h3>2.2 Checksum: 1s-Complement Sum (+ Pseudoheader)</h3>
+<h3>3.2 Operation Flow: Checksum — 1s-Complement Sum (+ Pseudoheader)</h3>
 <ol>
 <li>Arrange the segment (with checksum field set to 0) as a sequence of 16-bit words, <strong>prefixed by a 12-byte pseudoheader</strong> (source IP, destination IP, protocol number, UDP length).</li>
 <li>Add all words using <strong>1s-complement arithmetic</strong> (end-around carry: overflow bits wrap back into the sum).</li>
 <li>Take the <strong>1s complement</strong> (flip every bit) of the result — that value goes in the checksum field.</li>
 <li>The receiver repeats the sum <em>including</em> the received checksum: a correct segment sums to all-1s (<code>0xFFFF</code>); anything else means corruption → the datagram is <strong>silently discarded</strong> (no notification, no retransmission — the application must cope).</li>
 </ol>
+<p><em>Standard note:</em> the UDP checksum is optional in IPv4 (a zero field means &quot;unchecked&quot;) but mandatory in IPv6 — so &quot;UDP always checksums&quot; needs the version qualifier.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Checksum in 4 Steps</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Zero the field → add pseudoheader + all 16-bit words with <strong>end-around carry</strong> → <strong>complement</strong> into the field → receiver re-sums expecting <strong>all-1s</strong>. Corrupt ⇒ <strong>silent discard</strong>. The favourite numerical: given 3 words <code>0110011001100000</code>, <code>0101010101010101</code>, <code>1000111100001100</code>, sum them (wrap the carry!), complement, and state the receiver&#39;s verdict.</p>
-</div></details><h3>2.3 When UDP Wins (exam framing)</h3>
+</div></details><h3>3.3 When UDP Wins (exam framing)</h3>
 <ul>
 <li><strong>No handshake delay:</strong> data flows immediately (DNS: one query, one reply).</li>
 <li><strong>No congestion throttling:</strong> sends at application rate (live media prefers drops over slowdowns).</li>
-<li><strong>Small header + simple state:</strong> fine for request/response protocols (DNS, SNMP, DHCP) and real-time transport (RTP, gaming).</li>
+<li><strong>Small header + simple state:</strong> fine for request/response protocols (DNS, SNMP — Simple Network Management Protocol, DHCP — Dynamic Host Configuration Protocol) and real-time transport (RTP — Real-time Transport Protocol, gaming).</li>
 </ul>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The UDP-vs-TCP Decision Rule</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Why does DNS use UDP?&quot; — because a query + response each fit one datagram, latency of a handshake would dominate, and a lost query is cheaply retried <em>by the application</em>. Any answer citing only &quot;UDP is faster&quot; without the fit-and-retry reasoning earns partial marks at best.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-header-fields-then-checksum-symbol-by-symbol">← 3. Purpose — Header Fields, Then C…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>One-bit words (to keep the arithmetic visible): add <code>1 + 1</code> in 1s-complement with a 1-bit word. Sum = <code>0</code> with carry-out <code>1</code>; wrap the carry back: <code>0 + 1 = 1</code>; complement → <code>0</code>. That wrap-then-flip round trip is the whole checksum idea — the real version just uses 16-bit words.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A sender builds a UDP segment over data words <code>1010101010101010</code> and <code>1111000011110000</code> (pseudoheader contributions already folded in, checksum field zeroed). Compute the transmitted checksum, then verify it at the receiver.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Summing with End-Around Carry</div><div class="step-content"><p>Add: <code>1010101010101010</code> + <code>1111000011110000</code> = <code>1 1001101101011010</code> — a carry out of bit 15. Wrap it around: <code>1001101101011010</code> + <code>1</code> = <code>1001101101011011</code>. Complement every bit → checksum <code>0110010010100100</code>, placed in the header.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The receiver adds data words + received checksum: the sum returns to <code>1111111111111111</code> (all-1s) → <strong>accept</strong>. Flip any single bit in transit and the re-sum differs from all-1s → <strong>silently discard</strong>, with no error message sent back — UDP&#39;s contract ends at detection.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>UDP vs. TCP header</td>
+<td>8 bytes (ports + length + checksum) vs. 20+ bytes (adds sequence/ack/windows/flags).</td>
+</tr>
+<tr>
+<td>Checksum vs. correction</td>
+<td>Detects corruption (discard) — never locates or repairs bits.</td>
+</tr>
+<tr>
+<td>Pseudoheader sent vs. used</td>
+<td>Never transmitted; reconstructed by the receiver for the math.</td>
+</tr>
+<tr>
+<td>UDP checksum IPv4 vs. IPv6</td>
+<td>Optional (zero = unchecked) vs. mandatory.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Forgetting the end-around carry — the overflow wraps, it is not dropped. (2) Expecting retransmission after a failed check — discard is silent. (3) &quot;UDP is faster, hence DNS&quot; — cite fit-and-retry, not raw speed.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>UDP = 8-byte header (2+2+2+2: ports, length, checksum), no reliability machinery. Checksum = 1s-complement sum over pseudoheader + words, end-around carry, complement into field; receiver expects all-1s else silent discard. Wins when data fits one datagram and the app retries (DNS) or prefers drops to delay (live media).</p>
+</div></details><p><strong>Active-recall checklist:</strong> Recite the four header fields with sizes. What are the four checksum steps? Why does the pseudoheader catch misdelivery? What happens on checksum failure?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why does the UDP checksum include a pseudoheader with IP addresses, even though UDP is a transport-layer protocol?</span>
@@ -555,7 +630,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_02_udp_segment_structure_and_checksum";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

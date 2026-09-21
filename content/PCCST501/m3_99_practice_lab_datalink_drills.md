@@ -5,11 +5,12 @@ module: 3
 sequence: 99
 title: 'Module 3 Practice Lab: Data-Link Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Stuff, check and convict frames in sprint verdicts
   - Triage shared media with Aloha math and carrier discipline
   - Map silent-printer symptoms to ARP and switch behavior
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - data-link scenarios
   - error-control sprint
@@ -31,6 +32,8 @@ tags:
 <a id="the-intuition"></a>
 ## 1. Step-by-Step Scenario Analysis
 
+Each scenario is a sprint verdict: compute, then convict. Abbreviations: CRC (Cyclic Redundancy Check), ARP (Address Resolution Protocol), CSMA/CD (Carrier Sense Multiple Access with Collision Detection), CSMA/CA (… with Collision Avoidance), RTS/CTS (Request to Send / Clear to Send), NAV (Network Allocation Vector), AP (Access Point), BER (Bit Error Rate).
+
 ### Scenario 1: Stuff-and-Check Sprint
 
 Data `11011111110` (11 bits). Bit-stuff it: indices 3–9 hold seven consecutive 1s — insert `0` after the fifth (index 7); indices 8–9 are only two more 1s (no second run). Stuffed: `11011111` + `0` + `110` = `110111110110` (12 bits). Destuff check: strip the 0 after the five-run → original restored. One inserted bit, zero ambiguity.
@@ -41,13 +44,11 @@ Claim: "data `1010001101` with generator `110101` yields CRC `01110`." Verify li
 
 ### Scenario 3: Shared-Medium Triage
 
-Three deployments, one choice each: (a) 50 wired desktops, bursty traffic — **CSMA/CD** (listen+abort wastes only $2\tau$ per collision; partitioning would idle most slots). (b) 3 always-backlogged lab machines needing guarantees — **TDMA** (collision-free shares beat contention odds). (c) warehouse handhelds roaming around shelving (hidden terminals everywhere) — **CSMA/CA with RTS/CTS** (radios can't detect; reservations inform the hidden). Rule: bursty-wired → CD, guaranteed-shares → partition, wireless → CA.
+Three deployments, one choice each: (a) 50 wired desktops, bursty traffic — **CSMA/CD** (listen+abort wastes only $2\tau$ per collision; partitioning would idle most slots). (b) 3 always-backlogged lab machines needing guarantees — **TDMA** (Time Division Multiple Access) (collision-free shares beat contention odds). (c) warehouse handhelds roaming around shelving (hidden terminals everywhere) — **CSMA/CA with RTS/CTS** (radios can't detect; reservations inform the hidden). Rule: bursty-wired → CD, guaranteed-shares → partition, wireless → CA.
 
 ### Scenario 4: The Silent Printer
 
-A printer (known IP) stops responding. ARP table shows no entry; pinging gives "no route"-style silence *within* the LAN. Diagnosis chain: (1) ARP query broadcast heard? Check switch flooding/cabling. (2) Reply sent but table still empty? TTL expiry loop or spoofed replies (poisoning suspect — verify MAC against the asset tag). (3) Reply cached yet ping fails? Problem is above ARP (IP/config, not addressing). Layered elimination: resolve addressing *before* blaming routing.
-
----
+A printer (known IP — Internet Protocol) stops responding. ARP table shows no entry; pinging gives "no route"-style silence *within* the LAN (Local Area Network). Diagnosis chain: (1) ARP query broadcast heard? Check switch flooding/cabling. (2) Reply sent but table still empty? TTL (Time To Live) expiry loop or spoofed replies (poisoning suspect — verify MAC — Media Access Control — against the asset tag). (3) Reply cached yet ping fails? Problem is above ARP (IP/config, not addressing). Layered elimination: resolve addressing *before* blaming routing.
 
 <a id="the-dimensions"></a>
 ## 2. "Do Not Confuse" Cheat Table
@@ -65,7 +66,7 @@ A printer (known IP) stops responding. ARP table shows no entry; pinging gives "
 | Hidden vs. exposed terminals | Unheard colliders at AP (needs CTS echo) vs. needlessly silenced parallel pairs (lost reuse) |
 | Baud vs. bit rate | Symbols/s vs. data/s ($R = S\log_2 N$ — M4 bridge, same confusion family) |
 
----
+**Watch out:** (1) Stuffing flag bits instead of data — scan payload only. (2) Quoting 37% for pure Aloha. (3) "Switches never flood" — unknowns flood once. (4) Blaming routing before ARP resolves — addressing first, always.
 
 <a id="self-check"></a>
 ## 3. Active Recall Quizzes
@@ -106,8 +107,6 @@ One ladder, one mechanism repeated: shrink the collision-vulnerable window (2 fr
 Unknown-unicast flooding is the bootstrap both share; learning is what separates them afterward. First frame: identical behavior. Second frame onward: surgical forwarding vs. eternal shouting. The table is the difference between a device and a repeater.
 :::
 
----
-
 <a id="exam-focus"></a>
 ## 4. High-Yield University Exam Questions
 
@@ -120,7 +119,7 @@ Unknown-unicast flooding is the bootstrap both share; learning is what separates
 ### Essay Question 1 (7 Marks)
 **Q: For D = 1010001101, G = 110101: compute the CRC, form the codeword, and verify at the receiver. State exactly which error classes this CRC catches.**
 
-**Model Answer:** Append 5 zeros; XOR long division yields $R = 01110$ (alignments as in Scenario 2); transmit `1010001101 01110`; receiver division gives `00000` → accept. Catches: all single-bit errors, all odd-count errors ($G$ has $(x+1)$ factor structure... precisely: standard generators catch odd counts), all bursts $< 6$ bits, all but $2^{-5}$ of longer bursts. Detection only — failures mean discard + retransmit.
+**Model Answer:** Append 5 zeros; XOR long division yields $R = 01110$ (alignments as in Scenario 2); transmit `1010001101 01110`; receiver division gives `00000` → accept. Catches: all single-bit errors, all odd-count errors (standard generators carry the $(x+1)$ factor that guarantees this), all bursts $< 6$ bits, all but $2^{-5}$ of longer bursts. Detection only — failures mean discard + retransmit.
 
 ### Essay Question 2 (7 Marks)
 **Q: A wired lab (30 desktops, bursty) and a warehouse Wi-Fi deployment (hidden terminals) need shared-medium access. Choose each method, derive the efficiency argument, and explain why they cannot swap.**

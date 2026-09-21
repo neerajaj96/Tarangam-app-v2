@@ -269,160 +269,88 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Depth-Limited Search (DLS), Iterative Deepening (IDS) &amp; Bidirectional Search</h1>
-<p><strong>Hybrid and advanced blind search strategies: Overcoming the BFS memory bottleneck and DFS incompleteness.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-dilemma-bfs-memory-vs-dfs-incompleteness">1. The Dilemma: BFS Memory vs. DFS Incompleteness</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-depth-limited-search-dls">2. Depth-Limited Search (DLS) →</a></p>
-<p>In Topic 2.1, we examined two classic search extremes:</p>
-<ul>
-<li><strong>Breadth-First Search (BFS):</strong> Explores level-by-level. It is <strong>complete and optimal</strong> (if step costs are equal), but its <strong>space complexity is exponential ($O(b^d)$)</strong>, exhausting RAM on deep trees.</li>
-<li><strong>Depth-First Search (DFS):</strong> Dives deep down a single path. Its <strong>space complexity is linear ($O(bm)$)</strong>, making it memory-safe, but it is <strong>incomplete</strong> in infinite spaces and <strong>suboptimal</strong>.</li>
-</ul>
-<p>Can we achieve the <strong>memory safety of DFS</strong> while preserving the <strong>completeness and optimality of BFS</strong>? Yes! That is the exact purpose of <strong>Iterative Deepening Search</strong>.</p>
-<hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-depth-limited-search-dls">2. Depth-Limited Search (DLS)</h2>
-<p class="secnav"><a href="#1-the-dilemma-bfs-memory-vs-dfs-incompleteness">← 1. The Dilemma: BFS Memory vs. DFS…</a><span class="secnav-sep">·</span><a href="#3-iterative-deepening-depth-first-search-ids-iddfs">3. Iterative Deepening Depth-First… →</a></p>
-<p>Before examining Iterative Deepening, we must look at its core component: <strong>Depth-Limited Search</strong>.</p>
-<ul>
-<li><strong>Definition:</strong> DLS is standard Depth-First Search with a predefined maximum depth limit, $l$.</li>
-<li>Nodes at depth $l$ are treated as if they have <strong>no successors</strong> (leaf boundaries).</li>
-</ul>
-<h3>ASCII Diagram: Depth-Limited Search (Limit $l = 2$)</h3>
-<pre><code class="language-text">           [ Root ]  (Depth 0)
-          /        \
-       [ A ]      [ B ]  (Depth 1)
-      /     \    /     \
-    [ C ]  [ D ][ E ]  [ F ]  (Depth 2 - Cutoff boundary!)
-    /                         \
-  [ X ]                       [ Y ]  (Depth 3 - Cut off / Ignored)
-</code></pre>
-<h3>The Three Possible Outcomes of DLS:</h3>
+<p><strong>Problem: BFS is complete but memory-hungry; DFS is memory-light but incomplete and non-optimal. By the end you can cap depth, iterate limits, and halve exponents — with the exact overhead arithmetic.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-the-dilemma">1. Start From Zero: The Dilemma</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-dls-outcomes-and-ids-loop">2. Basic Layer: DLS Outcomes and I… →</a></p>
+<p>BFS checks every shallow node (safe, thorough) but stores whole tiers: <code>O(b^d)</code> memory. DFS stores one branch: <code>O(b*m)</code> memory, but dives past shallow goals into bottomless paths and may never return. Question: can one method keep DFS memory with BFS guarantees? Yes — iterate depth caps.</p>
+<p><strong>Definitions:</strong> Depth-Limited Search (DLS) is DFS that treats depth <code>l</code> as a wall (nodes at <code>l</code> have no children). Iterative Deepening Search (IDS, also IDDFS) runs DLS for <code>l = 0, 1, 2, ...</code> until the goal appears. Bidirectional search runs two searches (start-forward, goal-backward) until frontiers meet.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Searching in Expanding Radii</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Search 1 metre out; reset; 2 metres; reset; expand until found. Shallow completeness with deep memory. Drop the lost-item story after this; the limit loop is the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> goal at depth 2. DLS with l=1 reports cutoff (wall hit, maybe deeper). IDS tries l=0 (miss), l=1 (miss), l=2 (hit) — three cheap failures buying a guaranteed shallow find.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-dls-outcomes-and-ids-loop">2. Basic Layer: DLS Outcomes and IDS Loop</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-dilemma">← 1. Start From Zero: The Dilemma</a><span class="secnav-sep">·</span><a href="#3-formal-layer-overhead-proof-and-bidirectional-arithmetic">3. Formal Layer: Overhead Proof an… →</a></p>
+<p><strong>Data/state:</strong> same frontier as DFS plus a depth counter. <strong>Goal:</strong> find the shallowest goal with linear memory.</p>
+<p>DLS outcomes (all three must be distinguished):</p>
 <ol>
-<li><strong>Solution Found:</strong> The goal node is discovered within depth $l$.</li>
-<li><strong>Failure:</strong> The search tree is fully explored up to depth $l$ without finding the goal, proving that <strong>no solution exists anywhere within depth $l$</strong>.</li>
-<li><strong>Cutoff (Depth Limit Exceeded):</strong> The algorithm reaches depth $l$ without finding the goal, indicating a solution may exist deeper ($l &lt; d$).</li>
+<li><strong>Solution</strong> — goal within <code>l</code>. 2. <strong>Failure</strong> — tree exhausted within <code>l</code>, provably no solution there. 3. <strong>Cutoff</strong> — wall hit with tree unexhausted; deeper solutions may exist.</li>
 </ol>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Choosing the Wrong Depth Limit $l$</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li>If <strong>$l &lt; d$</strong>, DLS returns a &quot;Cutoff&quot; or &quot;Failure&quot; even if a valid solution exists deeper down.</li>
-<li>If <strong>$l &gt; d$</strong>, DLS risks exploring deep, suboptimal paths like standard DFS before discovering a shallow solution.</li>
-<li><em>Solution:</em> We allow an algorithm to automatically identify the optimal depth limit: <strong>Iterative Deepening Search!</strong></li>
-</ul>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-iterative-deepening-depth-first-search-ids-iddfs">3. Iterative Deepening Depth-First Search (IDS / IDDFS)</h2>
-<p class="secnav"><a href="#2-depth-limited-search-dls">← 2. Depth-Limited Search (DLS)</a><span class="secnav-sep">·</span><a href="#4-mathematical-analysis-of-node-regeneration-overhead">4. Mathematical Analysis of Node R… →</a></p>
-<p><strong>Iterative Deepening Search</strong> repeatedly executes Depth-Limited Search, incrementing the depth limit by one each iteration ($l = 0, 1, 2, 3, \dots$) until the goal is found.</p>
-<h3>ASCII Diagram: Iterative Deepening Successive Iterations</h3>
-<pre><code class="language-text">  Iteration 0 (Limit = 0):  [ Root ]  (Goal not found, try limit 1)
-
-  Iteration 1 (Limit = 1):  [ Root ]
-                           /        \
-                        [ A ]      [ B ]  (Goal not found, try limit 2)
-
-  Iteration 2 (Limit = 2):  [ Root ]
-                           /        \
-                        [ A ]      [ B ]
-                       /     \    /     \
-                     [ C ]  [ D ][ E ]  [ F ] (Goal FOUND at depth 2!)
+<pre><code class="language-text">        [Root] depth 0
+        /        \
+    [A]          [B] depth 1
+    / \          / \
+ [C] [D]      [E] [F] depth 2 = wall; deeper [X],[Y] ignored
 </code></pre>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Searching in Expanding Radii</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine looking for a lost item in the dark. Instead of wandering off into deep woods (DFS) or illuminating the entire forest at once (BFS memory exhaustion), you search in expanding concentric circles:</p>
-<ol>
-<li>Search a 1-meter radius. If not found, reset.</li>
-<li>Search a 2-meter radius. If not found, reset.</li>
-<li>Systematically expand until the item is found.
-This is how IDS balances depth exploration with systematic shallow verification.</li>
-</ol>
-</div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-mathematical-analysis-of-node-regeneration-overhead">4. Mathematical Analysis of Node Regeneration Overhead</h2>
-<p class="secnav"><a href="#3-iterative-deepening-depth-first-search-ids-iddfs">← 3. Iterative Deepening Depth-First…</a><span class="secnav-sep">·</span><a href="#5-bidirectional-search">5. Bidirectional Search →</a></p>
-<p>A common question regarding IDS is whether repeatedly regenerating upper-level nodes degrades time efficiency. The mathematics demonstrates that this overhead is minimal in exponential trees.</p>
-<h3>Why the Bottom Layer Dominates</h3>
-<p>In a search tree with branching factor $b$, the vast majority of nodes reside at the <strong>deepest level</strong>:</p>
-<ul>
-<li>At depth $d$, the bottom layer contains $b^d$ nodes.</li>
-<li>The layer immediately above contains $b^{d-1}$ nodes.</li>
-<li>The sum of all upper layers represents a small fraction of the bottom layer in a geometric series.</li>
-</ul>
-<h3>Time Complexity Derivation</h3>
-<p>For search depth $d$:</p>
-<ul>
-<li>Limit 0 generated: $1$ time</li>
-<li>Limit 1 generated: $2$ times</li>
-<li>Limit 2 generated: $3$ times</li>
-<li>$\dots$</li>
-<li>Limit $d$ (bottom layer) generated: $1$ time</li>
-</ul>
-<p>Total generated nodes:
-$$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
-<p>Because $b^d$ dominates the asymptotic growth, <strong>IDS has the same Time Complexity as BFS: $O(b^d)$</strong>.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: IDS Performance Metrics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^d)$ (Asymptotically equivalent to BFS).</li>
-<li><strong>Space Complexity:</strong> $O(bd)$ (Linear space like DFS, since each DLS iteration operates as depth-first).</li>
-<li><strong>Completeness:</strong> Yes (if $b$ is finite).</li>
-<li><strong>Optimality:</strong> Yes (if step costs are identical; finds shallowest goal).</li>
-</ul>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-bidirectional-search">5. Bidirectional Search</h2>
-<p class="secnav"><a href="#4-mathematical-analysis-of-node-regeneration-overhead">← 4. Mathematical Analysis of Node R…</a><span class="secnav-sep">·</span><a href="#6-master-comparison-matrix">6. Master Comparison Matrix →</a></p>
-<p>When search spaces are extremely large, <strong>Bidirectional Search</strong> provides a method to cut search depth:</p>
-<ul>
-<li><strong>Concept:</strong> Execute <strong>two simultaneous searches</strong>:<ol>
-<li>Forward search from the <strong>Initial State</strong> toward the goal.</li>
-<li>Backward search from the <strong>Goal State</strong> back toward the start.</li>
-</ol>
-</li>
-<li>Search terminates when the two search frontiers intersect.</li>
-</ul>
-<h3>ASCII Diagram: Bidirectional Search</h3>
-<pre><code class="language-text">  Initial State (Start) ---&gt; [Frontier 1] ........ [Frontier 2] &lt;--- Goal State
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Choosing the Wrong Depth Limit l</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>l &lt; d</code> (goal depth) returns cutoff despite solvability. <code>l &gt; d</code> wastes effort on deep detours like raw DFS. IDS removes the guessing by trying every limit in order.</p>
+</div></details><p>IDS loop (procedure): for l in 0,1,2,...: run DLS(l); stop on solution; on cutoff continue; on exhaustive failure stop (unsolvable). Each round is depth-first, so memory stays linear.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-overhead-proof-and-bidirectional-arithmetic">3. Formal Layer: Overhead Proof and Bidirectional Arithmetic</h2>
+<p class="secnav"><a href="#2-basic-layer-dls-outcomes-and-ids-loop">← 2. Basic Layer: DLS Outcomes and I…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Meaning, variables, intuition, formula:</strong> let <code>b</code> = branching, <code>d</code> = goal depth. Round <code>l</code> generates levels 0..l. Level <code>i</code> is generated in rounds i..d, i.e. (d-i+1) times. Total:</p>
+<p>$$N(IDS) = \sum_{i=1}^{d}(d-i+1),b^i = O(b^d)$$</p>
+<p>Intuition: the bottom tier <code>b^d</code> dwarfs all tiers above combined (geometric series: upper sum ~ <code>b^d/(b-1)</code>). Re-walking crumbs costs crumbs. Tiny numbers: b=10, d=5 — BFS builds 111,111 nodes; IDS builds 123,450 — only ~11% more — while memory drops from <code>O(b^d)</code> to <code>O(b*d)</code>.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: IDS Performance, With Qualifications</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Time <code>O(b^d)</code> (same as BFS asymptotically). Space <code>O(b*d)</code> (DFS-like linear). Complete if <code>b</code> finite. Optimal only under identical step costs (shallowest = cheapest only then) — the qualification students drop.</p>
+</div></details><p><strong>Bidirectional method:</strong> forward from start plus backward from goal; stop at intersection. Needs predecessor generation (inverse moves) and a well-defined goal set. Time and space <code>O(b^(d/2))</code> — halved exponent — complete, and optimal only with BFS both sides under uniform costs. Challenges: implicit/multiple goals make backward search hard; at least one frontier stays in memory.</p>
+<p>Comparison matrix:</p>
+<pre><code class="language-text">Method        | Complete?  | Optimal?      | Time      | Space
+BFS           | Yes        | Only uniform  | O(b^d)    | O(b^d)
+DFS           | No         | No            | O(b^m)    | O(b*m)
+DLS           | Only l&gt;=d  | No            | O(b^l)    | O(b*l)
+IDS           | Yes        | Only uniform  | O(b^d)    | O(b*d)
+Bidirectional | Yes        | Only uniform* | O(b^d/2)  | O(b^d/2)
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Bidirectional Search Complexities</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Time Complexity:</strong> $O(b^{d/2})$ (Cutting the exponent in half yields substantial speedup).</li>
-<li><strong>Space Complexity:</strong> $O(b^{d/2})$ (At least one frontier must remain in memory to detect intersections).</li>
-<li><strong>Completeness:</strong> Yes.</li>
-<li><strong>Optimality:</strong> Yes (if implemented with BFS on both sides with uniform step costs).</li>
-</ul>
-</div></details><h3>Challenges of Bidirectional Search:</h3>
-<ol>
-<li><strong>Predecessor Generation:</strong> Backward search requires computing valid preceding states from any given state.</li>
-<li><strong>Multiple Goals:</strong> Problems with many possible goal states or implicit goal descriptions make reverse search complex.</li>
-</ol>
-<hr>
-<h2 id="6-master-comparison-matrix">6. Master Comparison Matrix</h2>
-<p class="secnav"><a href="#5-bidirectional-search">← 5. Bidirectional Search</a><span class="secnav-sep">·</span><a href="#7-active-recall-quizzes">7. Active Recall Quizzes →</a></p>
-<pre><code class="language-text">+-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
-| Criterion         | BFS            | DFS             | DLS             | IDS             | Bidirectional   |
-+===================+================+=================+=================+=================+=================+
-| **Complete?**     | Yes            | No              | If $l \ge d$    | Yes             | Yes             |
-+-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
-| **Optimal?**      | Yes (cost = 1) | No              | No              | Yes (cost = 1)  | Yes (cost = 1)  |
-+-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
-| **Time Comp.**    | $O(b^d)$       | $O(b^m)$        | $O(b^l)$        | $O(b^d)$        | $O(b^{d/2})$    |
-+-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
-| **Space Comp.**   | $O(b^d)$       | $O(bm)$         | $O(bl)$         | $O(bd)$         | $O(b^{d/2})$    |
-+-------------------+----------------+-----------------+-----------------+-----------------+-----------------+
-</code></pre>
-<hr>
+<p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-overhead-proof-and-bidirectional-arithmetic">← 3. Formal Layer: Overhead Proof an…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DLS vs. IDS</td>
+<td>One capped shot (cutoff possible) vs. limit loop to completeness</td>
+</tr>
+<tr>
+<td>IDS overhead vs. BFS memory</td>
+<td>~11% extra nodes (b=10,d=5) buys exponential memory savings</td>
+</tr>
+<tr>
+<td>Forward-only vs. bidirectional</td>
+<td>One <code>b^d</code> search vs. two <code>b^(d/2)</code> searches meeting</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Cutoff is not failure — it means &quot;deeper maybe.&quot; (2) IDS optimality still needs uniform costs. (3) Bidirectional optimality needs uniform costs plus BFS both sides; with heuristics/costs it needs stricter conditions.</p>
+<p><strong>Limitations:</strong> IDS still expands <code>O(b^d)</code> time (only memory is fixed); bidirectional needs reversible moves and explicit goals — useless for &quot;any checkmate&quot; or unknown-goal tasks.</p>
 <p><a id="self-check"></a></p>
-<h2 id="7-active-recall-quizzes">7. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#6-master-comparison-matrix">← 6. Master Comparison Matrix</a><span class="secnav-sep">·</span><a href="#8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What are the two primary algorithmic properties that Iterative Deepening Search (IDS) combines into a single strategy?</span>
@@ -445,7 +373,7 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>IDS executes repeated depth-limited DFS iterations, providing the linear memory footprint of DFS ($O(bd)$) while systematically increasing depth limits to guarantee BFS-like completeness and shallowest-first optimality.</p><pre><code>&lt;/div&gt;
+      <p>Repeated depth-limited DFS gives DFS-like linear memory with BFS-like systematic shallow coverage and uniform-cost optimality.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -470,7 +398,7 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>In exponential search trees, the deepest tier dominates all previous tiers combined. Regenerating upper tiers adds only a constant multiplier to the total work, preserving the $O(b^d)$ asymptotic bound.</p><pre><code>&lt;/div&gt;
+      <p>Geometric domination: level d dwarfs all above combined, so re-paying upper tiers multiplies work by a constant only.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -495,40 +423,21 @@ $$N(\text{IDS}) = (d)b^1 + (d-1)b^2 + (d-2)b^3 + \dots + (1)b^d = O(b^d)$$</p>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Backward search requires computing inverse actions (predecessors). When goal states are implicit or predecessor calculations are complex, backward search becomes difficult to implement.</p><pre><code>&lt;/div&gt;
+      <p>Backward search needs inverse moves plus an enumerable goal set. Implicit goals (&quot;any mate&quot;) or hard predecessors block it.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#7-active-recall-quizzes">← 7. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> State why IDS is preferred over BFS for large state spaces, or list the three outcomes of DLS.</li>
-<li><strong>7 Marks:</strong> Explain the IDS algorithm with mathematical derivation of its time and space complexities.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Why is Iterative Deepening Search (IDS) preferred over Breadth-First Search (BFS) in unweighted search problems with large state spaces?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>BFS Limitation:</strong> BFS is complete and optimal, but its <strong>space complexity is exponential ($O(b^d)$)</strong>, rapidly exhausting system memory on deep trees.</li>
-<li><strong>IDS Advantage:</strong> IDS provides the same completeness and optimality guarantees as BFS while maintaining a <strong>linear space complexity of $O(bd)$</strong> by using DFS traversals at each depth limit.</li>
-</ul>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: why IDS beats BFS on memory, or three DLS outcomes. 7 marks: IDS mechanism plus time/space derivation with the regeneration argument.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> DLS triple outcome; IDS loop; <code>N(IDS)</code> sum and <code>O(b^d)</code>/<code>O(b*d)</code>; 111,111 vs. 123,450 at b=10,d=5; <code>O(b^(d/2))</code> with predecessor caveat.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Why prefer IDS over BFS on large uniform-cost spaces?</strong></p>
+<p><strong>Model Answer:</strong> Same completeness and uniform-cost optimality, but linear <code>O(b*d)</code> memory instead of exponential <code>O(b^d)</code> — depth-first footprint with breadth-first guarantees.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Explain the mechanism of Iterative Deepening Depth-First Search (IDS). Derive its time and space complexities, and explain why node regeneration overhead does not increase its asymptotic time complexity.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Mechanism (2 Marks):</strong> IDS repeatedly invokes Depth-Limited Search (DLS) with increasing depth limits ($l = 0, 1, 2, \dots, d$) until the goal state is found.</li>
-<li><strong>Space Complexity (2 Marks):</strong> Because each iteration is executed as depth-first search, only the current branch and immediate siblings are retained in memory, yielding a linear space complexity of <strong>$O(bd)$</strong>.</li>
-<li><strong>Time Complexity &amp; Overhead Derivation (3 Marks):</strong><ul>
-<li>Nodes at depth $d$ are generated 1 time.</li>
-<li>Nodes at depth $d-1$ are generated 2 times.</li>
-<li>Nodes at depth 1 are generated $d$ times.</li>
-<li>Total nodes generated: $\sum_{i=1}^{d} (d - i + 1) b^i = O(b^d)$.</li>
-<li><em>Conclusion:</em> Because the bottom layer $b^d$ contains the vast majority of nodes in an exponential tree, the regeneration of shallow tiers adds only a constant factor overhead, keeping overall time complexity at <strong>$O(b^d)$</strong>.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: Explain IDS, derive complexities, defuse the regeneration objection.</strong></p>
+<p><strong>Model Answer:</strong> Loop DLS l=0..d (2 marks). Space linear per DFS round: O(b*d) (2 marks). Time sum (d-i+1)b^i = O(b^d) since bottom tier dominates; b=10,d=5 gives 11% overhead for exponential memory savings (3 marks).
+:::</p>
 
     </main>
 

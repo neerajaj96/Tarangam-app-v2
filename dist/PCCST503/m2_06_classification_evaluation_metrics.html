@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 2.6 Classification Evaluation Metrics</title>
+<meta name="description" content="Machine Learning (PCCST503) — 2.6 Classification Evaluation Metrics | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 2.6 Classification Evaluation Metrics">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 2.6 Classification Evaluation Metrics">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Machine Learning</span>
+        <span class="tag">PCCST503</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Foundations &amp; Regression</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_ml_definition_paradigms_and_types.html" class="topic-link " id="topic-m1_01_ml_definition_paradigms_and_types">
+            <span class="topic-dot"></span>
+            <span>1.1 ML Definition Paradigms And Types</span>
+          </a>
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
+            <span class="topic-dot"></span>
+            <span>1.2 Probability MLE MAP Estimation</span>
+          </a>
+          <a href="./m1_03_linear_regression_least_squares.html" class="topic-link " id="topic-m1_03_linear_regression_least_squares">
+            <span class="topic-dot"></span>
+            <span>1.3 Linear Regression Least Squares</span>
+          </a>
+          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link " id="topic-m1_04_multiple_regression_model_assessment">
+            <span class="topic-dot"></span>
+            <span>1.4 Multiple Regression Model Assessment</span>
+          </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
+          <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Foundations Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="2">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Classification &amp; Trees</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_classification_boundaries_knn.html" class="topic-link " id="topic-m2_01_classification_boundaries_knn">
+            <span class="topic-dot"></span>
+            <span>2.1 Classification Boundaries KNN</span>
+          </a>
+          <a href="./m2_02_logistic_regression_sigmoid_loss.html" class="topic-link " id="topic-m2_02_logistic_regression_sigmoid_loss">
+            <span class="topic-dot"></span>
+            <span>2.2 Logistic Regression Sigmoid Loss</span>
+          </a>
+          <a href="./m2_03_naive_bayes_generative_models.html" class="topic-link " id="topic-m2_03_naive_bayes_generative_models">
+            <span class="topic-dot"></span>
+            <span>2.3 Naive Bayes Generative Models</span>
+          </a>
+          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link " id="topic-m2_04_decision_trees_entropy_information_gain">
+            <span class="topic-dot"></span>
+            <span>2.4 Decision Trees Entropy Information Gain</span>
+          </a>
+          <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
+            <span class="topic-dot"></span>
+            <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link active" id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
+          </a>
+          <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M2 Classification Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Neural Nets &amp; SVMs</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_perceptron_learning_rule.html" class="topic-link " id="topic-m3_01_perceptron_learning_rule">
+            <span class="topic-dot"></span>
+            <span>3.1 Perceptron Learning Rule</span>
+          </a>
+          <a href="./m3_02_multilayer_networks_backpropagation.html" class="topic-link " id="topic-m3_02_multilayer_networks_backpropagation">
+            <span class="topic-dot"></span>
+            <span>3.2 Multilayer Networks Backpropagation</span>
+          </a>
+          <a href="./m3_03_maximum_margin_svm.html" class="topic-link " id="topic-m3_03_maximum_margin_svm">
+            <span class="topic-dot"></span>
+            <span>3.3 Maximum Margin SVM</span>
+          </a>
+          <a href="./m3_04_kernels_soft_margins.html" class="topic-link " id="topic-m3_04_kernels_soft_margins">
+            <span class="topic-dot"></span>
+            <span>3.4 Kernels Soft Margins</span>
+          </a>
+          <a href="./m3_99_practice_lab_networks_svm_drills.html" class="topic-link " id="topic-m3_99_practice_lab_networks_svm_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M3 Networks SVM Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>PCA &amp; Ensembles</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_clustering_kmeans.html" class="topic-link " id="topic-m4_01_clustering_kmeans">
+            <span class="topic-dot"></span>
+            <span>4.1 Clustering Kmeans</span>
+          </a>
+          <a href="./m4_02_hierarchical_clustering.html" class="topic-link " id="topic-m4_02_hierarchical_clustering">
+            <span class="topic-dot"></span>
+            <span>4.2 Hierarchical Clustering</span>
+          </a>
+          <a href="./m4_03_pca_dimensionality_reduction.html" class="topic-link " id="topic-m4_03_pca_dimensionality_reduction">
+            <span class="topic-dot"></span>
+            <span>4.3 PCA Dimensionality Reduction</span>
+          </a>
+          <a href="./m4_04_ensemble_bagging_random_forests.html" class="topic-link " id="topic-m4_04_ensemble_bagging_random_forests">
+            <span class="topic-dot"></span>
+            <span>4.4 Ensemble Bagging Random Forests</span>
+          </a>
+          <a href="./m4_05_boosting_adaboost.html" class="topic-link " id="topic-m4_05_boosting_adaboost">
+            <span class="topic-dot"></span>
+            <span>4.5 Boosting Adaboost</span>
+          </a>
+          <a href="./m4_06_mds_multidimensional_scaling.html" class="topic-link " id="topic-m4_06_mds_multidimensional_scaling">
+            <span class="topic-dot"></span>
+            <span>4.6 MDS Multidimensional Scaling</span>
+          </a>
+          <a href="./m4_99_practice_lab_unsupervised_ensemble_drills.html" class="topic-link " id="topic-m4_99_practice_lab_unsupervised_ensemble_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M4 Unsupervised Ensemble Drills</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel" role="status">0 of 25 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" role="status" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <a href="../course.html?course=PCCST503">PCCST503</a>
+        <span class="crumb-sep">/</span>
+        <a href="../course.html?course=PCCST503#module-2">Module 2</a>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">2.6 Classification Evaluation Metrics</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 2</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-problem" class="jump-pill">the-problem</a>
+    <a href="#matrix-data-goal" class="jump-pill">matrix-data-goal</a>
+    <a href="#scores-theory" class="jump-pill">scores-theory</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Classification Evaluation: Confusion, Precision, Recall, F1, ROC-AUC</h1>
+<p><strong>What problem grading a classifier solves beyond training accuracy, what counted outcomes it needs, how the confusion matrix plus accuracy, Precision, Recall, F-measure (F1), Receiver Operating Characteristic (ROC), and Area Under the Curve (AUC) score decisions, and which metric each imbalanced exam scenario demands.</strong></p>
+<p><a id="the-problem"></a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-matrix-and-goal-basic-understanding">2. Data, Matrix and Goal (Basic Un… →</a></p>
+<p>A disease test is &quot;99% accurate&quot; yet every sick patient is told &quot;healthy.&quot; The problem: accuracy counted the easy majority (healthy people) and hid the catastrophic minority (missed cures). Classification grading must separate <em>which</em> mistakes happened, not just <em>how many</em>.</p>
+<p>Tiny beginner example. Ten patients: 1 sick, 9 healthy. A lazy model predicts &quot;healthy&quot; for all ten. Accuracy $= 9/10 = 90%$ — impressive, useless: the one sick patient is missed. Precision, recall, and F1 exist precisely to expose this con: recall asks &quot;of the truly sick, how many did we catch?&quot;, precision asks &quot;of the alarms we raised, how many were real?&quot;.</p>
+<p>Analogy as support, then dropped. Think of a fire alarm: recall is catching every real fire (never sleep through one), precision is never crying wolf (neighbours still trust the bell). From here on we use exact terms only: confusion matrix, True Positive (TP), accuracy, precision, recall, F1, ROC, AUC.</p>
+<p>Abbreviations defined on first use: True Positive (TP), True Negative (TN), False Positive (FP), False Negative (FN), Receiver Operating Characteristic (ROC), Area Under the Curve (AUC). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is TP, TN, FP, FN?</td>
+<td>Right alarm, right silence, false alarm, missed alarm</td>
+</tr>
+<tr>
+<td>What is $P$, $N$?</td>
+<td>Truly positive count (TP $+$ FN), truly negative count (TN $+$ FP)</td>
+</tr>
+<tr>
+<td>What is threshold $t$?</td>
+<td>Score cutoff: predict positive iff score $\ge t$</td>
+</tr>
+</tbody></table>
+<p><a id="matrix-data-goal"></a></p>
+<h2 id="2-data-matrix-and-goal-basic-understanding">2. Data, Matrix and Goal (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Grade decisions on labelled test data the model never trained on, especially when classes imbalance.</p>
+<p><strong>Data.</strong> Labelled pairs $(x_i, y_i)$ with $y_i \in {0, 1}$, plus model scores $s_i$ thresholded at $t$ into predictions $\hat{y}_i$. Here $x_i$ is features, $y_i$ is truth, $\hat{y}_i$ is the verdict at threshold $t$.</p>
+<p><strong>Goal.</strong> A metric matching the cost of mistakes: recall when misses kill (disease, fraud), precision when false alarms bankrupt (spam folder, арестовы), F1 when both bite, AUC when thresholds are still undecided.</p>
+<p>The <strong>confusion matrix</strong> is the $2 \times 2$ ledger every metric below reads:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Predicted 1</th>
+<th>Predicted 0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Actual 1</td>
+<td>TP (hit)</td>
+<td>FN (miss)</td>
+</tr>
+<tr>
+<td>Actual 0</td>
+<td>FP (false alarm)</td>
+<td>TN (correct silence)</td>
+</tr>
+</tbody></table>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Four Ledger Entries</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Every prediction lands in exactly one cell: TP is a deserved arrest, TN a correctly ignored innocent, FP a wrongful arrest (precision pays), FN a freed criminal (recall pays). Accuracy counts the whole ledger; precision audits the &quot;arrested&quot; column; recall audits the &quot;guilty&quot; row. No metric without the matrix — the cells are the facts, the scores are opinions about them.</p>
+</div></details><p><a id="scores-theory"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-matrix-and-goal-basic-understanding">← 2. Data, Matrix and Goal (Basic Un…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (accuracy cons, threshold choices) → data (labelled test, scores) → goal (cost-matching metric) → method (count cells, form ratios, sweep thresholds) → model (thresholded scorer) → training (pick $t$ on validation, grade once on test) → example → limitations.</p>
+<h3>3.1 Accuracy, Precision, Recall, F1 — Symbol by Symbol</h3>
+<p>Meaning first: accuracy is overall correctness; precision is alarm trustworthiness; recall (also Sensitivity) is capture completeness; F1 is their honest compromise.</p>
+<p>Variables: TP, TN, FP, FN from the matrix; $P = $ TP $+$ FN actual positives; predicted positives $=$ TP $+$ FP.</p>
+<p>Formulas:</p>
+<p>$$\mathrm{Accuracy} = \frac{\mathrm{TP}+\mathrm{TN}}{\mathrm{TP}+\mathrm{TN}+\mathrm{FP}+\mathrm{FN}}, \quad \mathrm{Precision} = \frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FP}}, \quad \mathrm{Recall} = \frac{\mathrm{TP}}{\mathrm{TP}+\mathrm{FN}}, \quad F_1 = \frac{2PR}{P+R} = \frac{2\mathrm{TP}}{2\mathrm{TP}+\mathrm{FP}+\mathrm{FN}}.$$</p>
+<p>Here $P$ is precision, $R$ is recall in the $F_1$ line. Intuition with the §1 patients: lazy &quot;all healthy&quot; gives TP $= 0$, FN $= 1$, TN $= 9$, FP $= 0$: accuracy $90%$, recall $0/1 = 0$, precision $0/0$ undefined (no alarms raised — report $0$ with a &quot;no positives predicted&quot; note, never $100%$). $F_1$ is the harmonic mean: it punishes lopsidedness (precision $1.0$ with recall $0.1$ scores $\approx 0.18$, not $0.55$), which is why KTU rewards it for imbalanced tasks. Accuracy is quoted only with class ratios beside it; alone on $99$-to-$1$ data it is a majority-class echo.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Precision vs accuracy</td>
+<td>Column purity (alarms trusted) vs whole-ledger correctness (dominated by majorities)</td>
+</tr>
+<tr>
+<td>Recall vs precision</td>
+<td>Row completeness (none missed) vs column purity (none false); raising threshold $t$ trades recall for precision</td>
+</tr>
+<tr>
+<td>$F_1$ vs accuracy</td>
+<td>Harmonic compromise under imbalance vs majority echo; $F_1$ ignores TN by design (retrieval view)</td>
+</tr>
+</tbody></table>
+<h3>3.2 ROC and AUC — Threshold-Independent Grading</h3>
+<p>A single threshold is a single operating point; ROC shows all of them. Sweep $t$ from $\infty$ (predict all negative) to $-\infty$ (predict all positive); at each $t$ plot False Positive Rate ($\mathrm{FPR} = \mathrm{FP}/(\mathrm{FP}+\mathrm{TN})$) on $x$ against True Positive Rate ($\mathrm{TPR} = $ recall) on $y$. The curve crawls from $(0,0)$ to $(1,1)$; a perfect scorer hugs the top-left (all positives outscore all negatives); the diagonal is chance.</p>
+<p>AUC is the area under that curve, $0$ to $1$ ($0.5$ = chance, $1.0$ = perfect ranking). Its honest reading: the probability that a randomly drawn positive outscores a randomly drawn negative — a ranking grade, not a decision grade. Model selection by AUC on validation, threshold $t$ by cost (recall-heavy $t$ low, precision-heavy $t$ high), final cell counts once on test. Qualified claim: AUC rewards ranking everywhere including irrelevant FPR regions; a higher-AUC model can be worse at the one operating point the application actually uses — always report the chosen point&#39;s precision/recall beside AUC, never AUC alone.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Classification Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Matrix TP/TN/FP/FN · accuracy $=$ (TP$+$TN)/all · precision $=$ TP/(TP$+$FP) · recall $=$ TP/(TP$+$FN) · $F_1 = 2PR/(P+R)$ (harmonic, imbalance-first) · ROC: TPR vs FPR sweeping $t$ · AUC $=$ P(positive outscores negative), $0.5$ chance.</p>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Sweeping the Threshold Trades Errors</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated ROC: curve climbs above the diagonal, higher AUC means better ranking">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="axis" x1="100" y1="30" x2="100" y2="250"/><line class="axis" x1="100" y1="250" x2="540" y2="250"/>
+<text class="axislbl" x="40" y="140">TPR</text><text class="axislbl" x="320" y="278">FPR →</text>
+<line class="eg" x1="100" y1="250" x2="540" y2="30"/>
+<path class="eg a2" d="M100,250 Q200,120 300,90 Q420,60 540,40" style="fill:none"/>
+<g class="nd a1"><circle cx="100" cy="250" r="10"/><text x="100" y="272">0,0</text></g>
+<g class="nd a3"><circle cx="300" cy="90" r="10"/><text x="300" y="70">knee</text></g>
+<g class="nd a4"><circle cx="540" cy="40" r="10"/><text x="540" y="62">1,1</text></g>
+<text class="badge1 a3" x="430" y="150">AUC = area above diagonal</text>
+<text class="animnote a5" x="320" y="15" text-anchor="middle">threshold slides along the curve — recall bought with false alarms</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Sweeping the Threshold Trades Errors</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the operating point slide along the ROC as the threshold falls — recall climbing as precision bleeds, AUC fixed as the curve&#39;s area.</div>
+  </div>
+</div><h3>3.3 Choosing Honestly (and Training the Threshold)</h3>
+<p>Numbered procedure:</p>
+<ol>
+<li>Split honestly: train fits, validation picks metrics and threshold $t$, test grades once.</li>
+<li>Match metric to cost: misses kill → recall; alarms bankrupt → precision; both bite → $F_1$; threshold undecided → AUC for ranking plus a cost-chosen point.</li>
+<li>Sweep $t$ on validation ROC; pick the point meeting the cost (e.g. recall $\ge 0.95$ with best precision).</li>
+<li>Report the full matrix plus chosen scores on test — never test-tuned $t$ as evidence.</li>
+</ol>
+<p>MAE/RMSE/R² recap for contrast (syllabus neighbours in M1.05): regression scores distances, classification scores cells. Never grade probabilities with hard labels alone when KTU asks calibration — cross-entropy (M2.02) prices confidence, the matrix prices verdicts.</p>
+<p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Test set: 100 mails, 20 spam (positive), 80 ham. Model flags 15 as spam: 12 truly spam, 3 ham. Remaining 85 called ham: 77 truly ham, 8 spam missed. Build the matrix and compute accuracy, precision, recall, $F_1$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting Cells Then Ratios</div><div class="step-content"><p>Matrix: TP $= 12$, FP $= 3$, FN $= 8$, TN $= 77$. Accuracy $= (12+77)/100 = 0.89$. Precision $= 12/(12+3) = 0.80$. Recall $= 12/(12+8) = 0.60$. $F_1 = 2(0.8)(0.6)/1.4 \approx 0.686$. (Numbers verified.) Reading: trustworthy alarms ($80%$), leaky net ($40%$ of spam missed) — tune $t$ down for recall or accept $F_1 \approx 0.69$ as the balanced grade.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Accuracy $89%$ flatters (ham majority); precision $0.80$ / recall $0.60$ / $F_1 \approx 0.69$ tell the priced truth. ROC/AUC would then ask the ranking question across all $t$; the reported point $(FPR = 3/80 = 0.0375, TPR = 0.60)$ is one dot on that curve — the dot the spam-folder cost chose.</p>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Quoting accuracy on imbalanced data. $99%$ accuracy with $0%$ recall is failure wearing success&#39;s clothes; always pair accuracy with ratios or $F_1$.</li>
+<li>Averaging precision and recall arithmetically. The compromise is harmonic ($F_1$); arithmetic means forgive lopsidedness.</li>
+<li>Reporting AUC as decision quality. AUC is ranking across thresholds; the deployed threshold&#39;s precision/recall is the decision grade.</li>
+<li>Tuning $t$ on test. Thresholds are validation choices; test sees the chosen $t$ exactly once.</li>
+<li>Dividing by zero silently. Zero predicted positives makes precision $0/0$ — report &quot;undefined (no alarms)&quot; with recall context, never $100%$ or $0%$ without the note.</li>
+</ul>
+<p>Limitations: matrix needs labelled test data from the deployment distribution; costs change optimal $t$ (re-tune on re-cost, not on test); $F_1$ ignores TN (use MCC or balanced accuracy when correct silences carry value).</p>
+<p>Exam recap: matrix cells first; accuracy whole-ledger; precision column, recall row; $F_1$ harmonic for imbalance; ROC sweeps $t$ (TPR vs FPR); AUC $=$ ranking probability with operating-point caveat; threshold on validation, grade once on test.</p>
+<p><a id="self-check"></a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A screening test on 1000 people (10 sick) catches 9 sick and falsely alarms 90 healthy. Compute precision and recall, and explain why accuracy ($909/1000 \approx 91\%$) is the wrong headline.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Precision 90%, recall 90% — accuracy suffices</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>TP $= 9$, FP $= 90$, FN $= 1$: precision $= 9/99 \approx 9.1\%$, recall $= 9/10 = 90\%$; accuracy counts 900 true negatives, hiding that 10 of 11 alarms are false — lead with recall plus precision, not the majority echo</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Precision 9/10, recall 9/99 — swapped</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Accuracy is always the KTU-preferred metric</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Recall audits the sick row ($9/10$ caught — good); precision audits the alarm column ($9/99$ real — noisy). Accuracy&#39;s $91%$ is $900$ easy healthy silences plus $9$ hits over $1000$ — the majority&#39;s applause drowning the minority&#39;s signal. Cost decides the headline: screening leads recall, triage budgets lead precision.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Precision $= 1.0$, recall $= 0.1$. Why does $F_1 \approx 0.18$ punish this far below the arithmetic mean $0.55$, and when is that punishment exactly what KTU wants?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Harmonic means reward extremes</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>$F_1 = 2PR/(P+R) = 0.2/1.1 \approx 0.18$ — harmonics track the weaker partner, so one-sided excellence scores one-sidedly; KTU wants this under imbalance where catching nothing but purely is still failure</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>$F_1$ ignores precision entirely</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Arithmetic mean is the syllabus definition of $F_1$</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Harmonic means are dominated by the minimum: perfect precision cannot rescue $10%$ recall. That is the design — imbalanced tasks fail lopsided classifiers, and $F_1$ refuses to let one strong column hide one empty row.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Model A has AUC $0.92$ but at its deployed threshold shows precision $0.40$; model B has AUC $0.85$ with precision $0.75$ at its operating point. Which ships for a spam folder, and what does this say about AUC?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>A ships — higher AUC always decides</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>B ships: AUC grades ranking across all thresholds, not the deployed dot; the folder pays per false alarm, so the operating point&#39;s precision rules and B&#39;s $0.75$ beats A&#39;s $0.40$ despite worse ranking overall</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — AUC above $0.8$ forbids deployment</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>AUC equals accuracy at the threshold</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>AUC integrates over thresholds the application will never use, including absurd FPR regions. Ship the dot, not the area: validate-rank by AUC, then cost-pick $t$ and compare deployed precision/recall. Higher area with a worse dot loses where it counts.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m2_05_gradient_descent_training_engine.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">2.5 Gradient Descent Training Engine</div>
+      </a>
+      
+      
+      
+      <a href="./m2_99_practice_lab_classification_drills.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">🧪 Practice Lab: M2 Classification Drills</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(25) || 0;
+      var currentId = "m2_06_classification_evaluation_metrics";
+      var courseCode = "PCCST503";
+      if (!totalTopics || !currentId || !courseCode) return;
+
+      var store = createLearnerState({});
+      var COURSE = courseCode;
+
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
+      }
+
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
+      }
+
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST503", topicId: "m2_06_classification_evaluation_metrics" });
+  </script>
+  <script>
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

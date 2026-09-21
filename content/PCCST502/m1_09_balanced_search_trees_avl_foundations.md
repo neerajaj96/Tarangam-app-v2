@@ -5,7 +5,7 @@ module: 1
 sequence: 9
 title: 'Balanced Search Trees: AVL Trees & Balance Factor'
 difficulty: beginner
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Diagnose plain BST collapse to linear search time
   - Enforce the unit balance-factor invariant at every node
@@ -25,24 +25,26 @@ tags:
 **Binary Search Tree properties, AVL invariant (|BF| <= 1), and height bound proof (h < 1.44 log2 n).**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** Binary search on a sorted array is fast ($O(\log n)$) because each comparison kills half the candidates — but inserting into an array's middle means shifting everything after it ($O(n)$). A Binary Search Tree (BST) wants both: array-like search *and* cheap inserts. Catch: a BST is only fast if it actually *branches*. Insert $1, 2, 3, 4, 5$ in order and each node gets one child — a line, not a tree — and search degrades to $O(n)$ linear scanning.
 
 ::: callout-intuition Core Mental Model
-Recall from earlier in this module: binary search on a sorted array is fast ($O(\log n)$) because each comparison eliminates half the remaining possibilities. A **Binary Search Tree (BST)** tries to give you that same "eliminate half each time" speed, but for a data structure that also supports fast insertion and deletion (which a plain sorted array does *not* — inserting into the middle of an array means shifting everything after it).
-
-Here's the catch: a BST's search speed depends entirely on its **height** (how many levels it has) — and if you insert elements in an unlucky order (say, already-sorted order: 1, 2, 3, 4, 5, ...), a plain BST degenerates into what's essentially a straight line — every node has only one child, no branching at all. Searching in that "tree" is no better than linear search through an array: $O(n)$, not $O(\log n)$. All the speed advantage of "eliminate half each time" evaporates, because there's no branching left to eliminate half of anything.
-
-An **AVL tree** (named after its inventors, Adelson-Velsky and Landis) is a BST with an extra rule bolted on: after every insertion or deletion, the tree checks itself and — if needed — rebalances, so that it can *never* degenerate into that bad, line-like shape. This guarantees the height always stays close to $\log n$, no matter what order you insert elements in — turning "fast *if you're lucky*" into "fast, guaranteed, always."
+A BST's speed equals its height (levels to descend). Sorted insertion builds a degenerate line of height $n$ — all "eliminate half" power gone, since nothing branches. An AVL (Adelson-Velsky and Landis) tree bolts on one rule: after every update, rebalance so the line shape can never form. "Fast if lucky" becomes "fast, guaranteed, always" — height pinned near $\log n$ whatever order keys arrive in.
 :::
+
+**Tiny toy example (3 keys).** Insert $1, 2, 3$ into a plain BST: $1 \to 2 \to 3$ line, height 2, finding 3 costs 3 visits. An AVL tree rotates mid-way into $2$ over $1, 3$: height 1, finding anything costs ≤ 2 visits. Same keys, different shape, different bill.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-**Binary Search Tree (BST) property (prerequisite recap):** for every node, all values in its left subtree are smaller than the node's own value, and all values in its right subtree are larger. This property is what makes "go left or go right" a meaningful way to eliminate half the remaining search space at each step — *provided* the tree is reasonably balanced.
+**Symbols and abbreviations:** BST = Binary Search Tree; height of a node = edges on its longest path down to a leaf; height of the tree = height of the root; $n$ = node count; BF = balance factor.
 
-**Height of a tree.** The height of a node is the number of edges on the longest path from that node down to a leaf; the height of the whole tree is the height of its root. For a BST holding $n$ nodes: the *best possible* height is $\Theta(\log n)$ (a perfectly balanced tree), but the *worst possible* height is $\Theta(n)$ (a completely skewed, line-like tree) — this gap is exactly the problem AVL trees solve.
+**BST property (recap):** every node's left subtree holds smaller values, right subtree larger — so "go left or right" halves the candidates, *if* the tree branches.
+
+**Height gap:** best case $\Theta(\log n)$ (balanced), worst case $\Theta(n)$ (skewed line). AVL closes this gap.
 
 ```text
 SKEWED BST (insert 1,2,3,4,5)      AVL TREE (same keys, rebalanced)
@@ -60,37 +62,56 @@ SKEWED BST (insert 1,2,3,4,5)      AVL TREE (same keys, rebalanced)
 height 4: search visits 5 nodes    height 2: search visits at most 3
 ```
 
-**Balance factor.** For any node $x$ in an AVL tree, define:
+**Balance factor.** For node $x$:
 $$BF(x) = \text{height}(\text{left subtree of } x) - \text{height}(\text{right subtree of } x)$$
-**The AVL invariant:** every single node in a valid AVL tree must satisfy $|BF(x)| \le 1$ — i.e. $BF(x) \in \{-1, 0, +1\}$. If an insertion or deletion ever causes some node's balance factor to become $-2$ or $+2$, the tree is no longer a valid AVL tree, and a rebalancing operation (rotation — covered in the next topic) must be performed to restore the invariant.
+**AVL invariant:** every node satisfies $|BF(x)| \le 1$, i.e. $BF(x) \in \{-1, 0, +1\}$. A $\pm2$ anywhere means "invalid AVL — rotate now" (rotations are the next note).
 
-**Why this invariant guarantees $O(\log n)$ height — the proof sketch.** Let $N_h$ be the *minimum* number of nodes possible in an AVL tree of height $h$ (i.e., the "worst allowed" AVL shape — the sparsest tree still satisfying $|BF|\le1$ everywhere). Such a tree's root has one subtree of height $h-1$ and — because the balance factor can differ by at most 1 — the other subtree can be as short as height $h-2$ (not shorter, or the invariant would be violated). This gives the recurrence:
+**Why the invariant forces $O(\log n)$ height (proof sketch).** Let $N_h$ = fewest nodes in any valid AVL tree of height $h$ (the sparsest allowed shape). Its root has one subtree of height $h-1$ and the other as short as $h-2$ (shorter would break $|BF| \le 1$):
 $$N_h = N_{h-1} + N_{h-2} + 1, \qquad N_0 = 1,\ N_{-1} = 0$$
-This is (up to the $+1$ and slightly shifted indices) essentially the **Fibonacci recurrence**. Solving it (via its characteristic equation, related to the golden ratio $\phi \approx 1.618$) shows that $N_h$ grows *exponentially* in $h$, specifically $N_h = \Theta(\phi^h)$. Inverting this relationship — solving for $h$ in terms of $n$ (since a real tree has $n \ge N_h$ nodes for its height $h$) — gives the height bound:
+This is essentially the Fibonacci recurrence: $N_h = \Theta(\phi^h)$ with golden ratio $\phi \approx 1.618$ (exponential in $h$). Since a real tree has $n \ge N_h$, inverting gives:
 $$h < 1.44 \log_2 n$$
-In plain words: even in the *sparsest, most reluctantly-balanced* AVL tree allowed by the invariant, the height can never exceed roughly $1.44 \times \log_2 n$ — a constant multiple of $\log n$, which is exactly the guarantee we wanted. This is what makes every AVL search, insertion, and deletion provably $O(\log n)$ in the worst case, unlike a plain BST's $O(n)$ worst case.
+Even the sparsest legal AVL tree is only ~$1.44\times$ taller than perfect — so search, insertion, deletion are all worst-case $O(\log n)$.
 
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — checking one node's balance factor
 
 ::: step [Step 1: Setup] Formulating the Problem
-Given a BST node $x$ whose left subtree has height $3$ and right subtree has height $1$, determine its balance factor and whether the AVL invariant is satisfied at this node.
+Node $x$ has left-subtree height 3 and right-subtree height 1. Compute $BF(x)$ and judge the AVL invariant at $x$.
 :::
 
 ::: step [Step 2: Execution] Applying Core Algorithm
-By definition, $BF(x) = \text{height(left)} - \text{height(right)} = 3 - 1 = 2$.
+$BF(x) = 3 - 1 = 2$ by definition.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-$BF(x) = 2$ violates the AVL invariant $|BF(x)| \le 1$ — this node is "left-heavy" beyond the allowed tolerance. In a real AVL tree, this situation would trigger a rebalancing rotation (specifically, some form of left-side rotation, detailed in the next topic) immediately after whichever insertion caused this imbalance, restoring $|BF(x)|$ to at most 1 before any further operations proceed.
+$BF = 2$ violates $|BF| \le 1$ — left-heavy beyond tolerance. A real AVL tree would rotate at once (some left-side rotation, next note) to restore $|BF| \le 1$ before proceeding.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Sign convention: $BF = \text{left} - \text{right}$, so $+2$ leans *left*. Negating the convention flips every rotation choice.
+- AVL demands $|BF| \le 1$ *everywhere*, not just at the root — one violator anywhere invalidates the tree.
+- $1.44 \log_2 n$ is a proven *upper* bound on height, not the exact height of your tree.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| BST vs AVL tree | Ordering only vs ordering + balance invariant (worst $O(n)$ vs $O(\log n)$) |
+| $BF = +2$ vs $BF = -2$ | Left-heavy vs right-heavy — mirror-image fixes |
+| Height vs node count | Levels descended (cost) vs keys stored (size) — the proof links them |
+
+**Exam recap (facts an examiner rewards):** BST property in one line; $BF$ formula with $|BF| \le 1$; the recurrence $N_h = N_{h-1} + N_{h-2} + 1$ and the $1.44 \log_2 n$ bound; skewed-insertion $O(n)$ diagnosis.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz Why does a plain (unbalanced) Binary Search Tree degrade to $O(n)$ search time in the worst case?
 () BSTs are inherently slower than arrays for all operations

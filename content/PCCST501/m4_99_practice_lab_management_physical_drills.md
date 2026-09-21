@@ -5,11 +5,12 @@ module: 4
 sequence: 99
 title: 'Module 4 Practice Lab: Management & Physical-Layer Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Run SNMP against midnight link failures end to end
   - Deliver capacity verdicts with both Nyquist and Shannon laws
   - Digitize signals from sampling through quantization exactly
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - SNMP operations
   - capacity verdicts
@@ -30,6 +31,8 @@ tags:
 <a id="the-intuition"></a>
 ## 1. Step-by-Step Scenario Analysis
 
+Each scenario chains one module idea end to end: SNMP idioms (M4.1), both-laws capacity verdicts (M4.2), sample→rate→modem chains (M4.3–M4.4). Abbreviations: SNMP (Simple Network Management Protocol), NMS (Network Management System), OID (Object Identifier), SNR (Signal-to-Noise Ratio), QAM (Quadrature Amplitude Modulation), BER (Basic Encoding Rules — and, separately, Bit Error Rate where radio is discussed).
+
 ### Scenario 1: The Midnight Link Failure (SNMP in Action)
 
 A leased line drops at 2 AM. Reconstruct the management traffic: (1) the router agent fires a **Trap** (linkDown) — arrives in seconds *if* it survives (unacknowledged); (2) the NMS, doubting traps, **polls** interface status via **GetRequest** on the ifOperStatus OID — confirms down; (3) after repair, the NMS **walks** the interface table with **GetNextRequest** to re-inventory all ports (unknown count → walk until the OID prefix changes); (4) it pushes the restored config via **SetRequest** over **SNMPv3** (auth+priv — never v2c cleartext for writes). Trap for speed, poll for truth, walk for discovery, v3 for safety — the four-idiom drill.
@@ -41,8 +44,6 @@ A 5 kHz line, 8-level signaling available, measured SNR 25 dB. Nyquist (noiseles
 ### Scenario 3: Digitize This (End to End)
 
 A 10 kHz instrumentation signal, 10-bit quantization, QAM-16 modem over a 2400-baud line. Sampling floor: $f_s \ge 20{,}000$/s. Bit rate: $20{,}000 \times 10 = 200$ kbps generated. Modem capacity: $2400 \times \log_2 16 = 9600$ bps $\ll 200$ kbps — the digitized stream **cannot** ride this modem live (compress ~21:1, store-and-forward, or upgrade the line). Three M4 formulas chained: sample floor → bit rate → modem check. Miss any link and the design fails silently on paper, loudly in production.
-
----
 
 <a id="the-dimensions"></a>
 ## 2. "Do Not Confuse" Cheat Table
@@ -60,7 +61,7 @@ A 10 kHz instrumentation signal, 10-bit quantization, QAM-16 modem over a 2400-b
 | ASK vs. FSK vs. PSK | Amplitude (fragile) vs. frequency (hungry) vs. phase (toughest) |
 | Baud vs. bit rate | Symbols/s vs. $S\log_2N$ data/s — equal only for binary |
 
----
+**Watch out:** (1) Reporting one capacity law and stopping — either can bind. (2) Trusting traps over polls for current state — events vs. present tense. (3) Answering baud as bit rate — multiply by $\log_2N$ first. (4) Applying the $-2$ host rule outside IPv4 subnets — context matters.
 
 <a id="self-check"></a>
 ## 3. Active Recall Quizzes
@@ -100,8 +101,6 @@ $2400 \times 4 = 9600$ bps is the modem's Shannon-adjacent reality; 200 kbps of 
 ::: explanation
 Uniform steps spend resolution evenly; information isn't even — biosignals live near zero with rare excursions. μ-law concentrates levels at small amplitudes (fine where it matters), exactly like ears do. Match quantizer to signal statistics, not to symmetry aesthetics.
 :::
-
----
 
 <a id="exam-focus"></a>
 ## 4. High-Yield University Exam Questions

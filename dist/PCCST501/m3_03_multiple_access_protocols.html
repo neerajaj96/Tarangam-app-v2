@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,53 +297,128 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Multiple Access: Sharing One Channel</h1>
 <p><strong>Channel partitioning (TDMA/FDMA/CDMA), random access (Aloha, CSMA, CSMA/CD), efficiency math, and why Ethernet listens before and during talking.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Dinner Table</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Six people, one conversation channel. <strong>Partitioning</strong> assigns turns (round-robin), topics (frequency bands), or languages (codes) — orderly, but a lone speaker wastes everyone else&#39;s slots. <strong>Random access</strong> lets anyone blurt out, with etiquette for collisions: Aloha shouts and hopes; CSMA <em>listens first</em>; CSMA/CD keeps listening <em>while</em> talking and stops mid-word on collision (&quot;sorry — you go&quot;). The exam is entirely about which etiquette fits which crowd size and what fraction of airtime survives.</p>
-</div></details><hr>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Six people share one conversation channel; early Ethernet machines shared one wire; café laptops share one radio band. If everyone talks at once, everything collides. Two opposite fixes exist: <strong>partition</strong> the channel in advance (no collisions ever, but idle waste), or let anyone <strong>contend</strong> with etiquette for collisions (no idle waste, but collision overhead).</p>
+<p>The problem before the solution: share one channel among many bursty speakers with minimum waste. Partitioning suits steady, always-busy speakers; random access suits bursty, mostly-idle ones — and sensing/listening upgrades climb an efficiency ladder from 18% to near-wire-speed.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Dinner Table</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Six people, one conversation channel. <strong>Partitioning</strong> assigns turns (round-robin), topics (frequency bands), or languages (codes) — orderly, but a lone speaker wastes everyone else&#39;s slots. <strong>Random access</strong> lets anyone blurt out, with etiquette for collisions: Aloha shouts and hopes; CSMA (Carrier Sense Multiple Access) <em>listens first</em>; CSMA/CD (Collision Detection) keeps listening <em>while</em> talking and stops mid-word on collision (&quot;sorry — you go&quot;). The exam is entirely about which etiquette fits which crowd size and what fraction of airtime survives.</p>
+<p>Dropping the table now: TDMA (Time Division Multiple Access) = time slots; FDMA (Frequency Division Multiple Access) = frequency bands; CDMA (Code Division Multiple Access) = orthogonal codes; Aloha = transmit-and-hope (18% / 37%); CSMA = listen-first; CD = abort-while-talking + backoff.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-partitioning-random-access-efficiency-ladder">3. Purpose — Partitioning, Random … →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>TDMA / FDMA / CDMA</strong></td>
+<td>Partition by time slots / frequency sub-bands / orthogonal spreading codes — collision-free by construction, wasteful when idle.</td>
+</tr>
+<tr>
+<td><strong>Pure Aloha</strong></td>
+<td>Transmit whenever data is ready; maximum efficiency $1/2e \approx 18%$.</td>
+</tr>
+<tr>
+<td><strong>Slotted Aloha</strong></td>
+<td>Transmit only at slot boundaries (needs clock sync); efficiency $1/e \approx 37%$ — the maximum at optimal attempt rate for large populations.</td>
+</tr>
+<tr>
+<td><strong>CSMA (Carrier Sense Multiple Access)</strong></td>
+<td>Listen-before-talk; collisions still possible within one propagation delay.</td>
+</tr>
+<tr>
+<td><strong>CSMA/CD (… with Collision Detection)</strong></td>
+<td>Wired Ethernet&#39;s upgrade: listen <em>while</em> talking; on collision, abort + jam signal + binary exponential backoff (wait uniform random $0..2^k-1$ slot times after $k$th collision).</td>
+</tr>
+<tr>
+<td><strong>Vulnerable window</strong></td>
+<td>The time span in which another transmission destroys yours: 2 frame times (pure Aloha) → 1 (slotted) → propagation delay (CSMA) → $2\tau$ abort gap (CD).</td>
+</tr>
+<tr>
+<td><strong>$2\tau$ rule</strong></td>
+<td>Minimum frame transmission time $\ge$ worst round-trip propagation delay, so the sender is still transmitting when the collision echo returns.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Channel Partitioning: Collision-Free by Construction</h3>
+<h2 id="3-purpose-partitioning-random-access-efficiency-ladder">3. Purpose — Partitioning, Random Access, Efficiency Ladder</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Channel Partitioning: Collision-Free by Construction</h3>
 <ul>
 <li><strong>TDMA:</strong> time sliced into frames → slots; each node owns periodic slots. Wasteful when idle (empty slots), perfect when all busy.</li>
 <li><strong>FDMA:</strong> band split into sub-bands per node. Same trade, frequency-flavored (classic radio/TV).</li>
 <li><strong>CDMA:</strong> all share time <em>and</em> frequency; orthogonal codes separate speakers (each receiver filters by its code). No idle waste from scheduling, but needs code agreement and power control (the near-far problem).</li>
 </ul>
-<h3>2.2 Random Access: Collisions Managed, Not Prevented</h3>
-<ul>
+<h3>3.2 Operation Flow: Random Access — Collisions Managed, Not Prevented</h3>
+<p>Numbered etiquette ladder, each rung shrinking the vulnerable window:</p>
+<ol>
 <li><strong>Pure Aloha:</strong> transmit whenever; frames collide partially → max efficiency only <strong>18%</strong> ($1/2e$).</li>
 <li><strong>Slotted Aloha:</strong> transmit only at slot starts (needs clock sync); collisions are total-or-nothing → efficiency doubles to <strong>37%</strong> ($1/e$) — the price of collision <em>vulnerability windows</em>.</li>
 <li><strong>CSMA:</strong> <strong>listen before talk</strong> — defer while the channel sounds busy. Collisions still happen (propagation delay: two nodes can both hear silence and start together), but far less often.</li>
 <li><strong>CSMA/CD (classic Ethernet):</strong> listen <em>while</em> talking; on collision detection, <strong>abort + jam signal + binary exponential backoff</strong> (wait random $0..2^k-1$ slot times after $k$th collision). Minimum frame size exists precisely so a sender is <em>still transmitting</em> when the collision echo returns ($2\tau$ rule: frame time ≥ worst round-trip propagation).</li>
-</ul>
+</ol>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Efficiency Ladder</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Pure Aloha <strong>18%</strong> ($1/2e$) · slotted Aloha <strong>37%</strong> ($1/e$) · CSMA better (carrier sense shrinks the vulnerable window to propagation delay) · CSMA/CD best on wire (abort + backoff). Binary backoff after $k$ collisions: uniform in $[0, 2^k-1]$ slots. Min-frame rule: transmission time $\ge 2\tau_{max}$.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: CD Needs a Wire (Collision *Detection* ≠ Avoidance)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Detecting your own collision while transmitting works on wires (measure the voltage) but <strong>not on wireless</strong> (your own transmitter deafens your receiver — the hidden-terminal problem). So Ethernet uses CSMA/<strong>CD</strong>, Wi-Fi uses CSMA/<strong>CA</strong> (avoidance: RTS/CTS + backoff, next topics). Swapping the acronyms is the #1 protocol-naming trap.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: CD Needs a Wire (Collision *Detection* ≠ Avoidance)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Detecting your own collision while transmitting works on wires (measure the voltage) but <strong>not on wireless</strong> (your own transmitter deafens your receiver — the hidden-terminal problem). So Ethernet uses CSMA/<strong>CD</strong>, Wi-Fi uses CSMA/<strong>CA</strong> (Collision Avoidance: RTS/CTS — Request to Send / Clear to Send — + backoff, next topics). Swapping the acronyms is the #1 protocol-naming trap.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-partitioning-random-access-efficiency-ladder">← 3. Purpose — Partitioning, Random …</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Two stations, slotted Aloha, each attempts with $p = 0.5$ per slot. Success = exactly one transmits: $2(0.5)(0.5) = 0.5$ — half the slots useful. Drop to optimal $p = 1/2$... precisely: optimum $p = 1/N = 0.5$ here gives $0.5$; with $N = 10$ at $p = 0.1$, success $= 10(0.1)(0.9)^9 \approx 0.387$ — converging toward the $1/e \approx 37%$ ceiling as $N$ grows.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Four stations share a 10 Mbps channel with slotted Aloha, each frame 1 ms, each station attempting with probability $p = 0.25$ per slot. Compute the vulnerable reasoning: success probability per slot, throughput, and how CSMA/CD would change the picture on a short wire.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Crunching Slots</div><div class="step-content"><p>A slot succeeds iff <strong>exactly one</strong> station transmits: $4 \times 0.25 \times 0.75^3 = 0.4219$... but optimal $p = 1/4$ gives the classic $N p (1-p)^{N-1} \approx 1/e \approx 0.37$ at large $N$; here exactly $4(0.25)(0.75)^3 \approx 0.42$ (≈42% slots useful, above the large-$N$ bound since $N=4$ is small). Throughput $\approx 0.42 \times 10$ Mbps $\approx 4.2$ Mbps shared. On a short wire, CSMA/CD&#39;s listen-before-talk plus abort-on-collision would push useful share far higher — collisions cost a $2\tau$ abort instead of a full wasted frame.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Random access without sensing wastes most airtime on collisions (Aloha&#39;s 18–37%); sensing (CSMA) and aborting (CD) convert wasted frames into tiny $2\tau$ gaps — the exact ladder the vault lists, now with numbers attached.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Partition vs. contention</td>
+<td>Pre-assigned slots/bands/codes vs. transmit-and-resolve — steady vs. bursty workloads.</td>
+</tr>
+<tr>
+<td>Pure vs. slotted Aloha</td>
+<td>2-frame vs. 1-frame vulnerable window (18% vs. 37% maxima).</td>
+</tr>
+<tr>
+<td>CD vs. CA</td>
+<td>Wired abort-while-talking vs. wireless reserve-before-talking — physics picks.</td>
+</tr>
+<tr>
+<td>Backoff range after $k$ collisions</td>
+<td>Uniform over $[0, 2^k-1]$ slots — exponential growth, not fixed wait.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Quoting 37% for pure Aloha — that&#39;s the slotted maximum. (2) Assigning CD to Wi-Fi — radios can&#39;t detect while transmitting. (3) Forgetting the $2\tau$ minimum-frame rationale — deaf senders never back off.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Partition (TDMA/FDMA/CDMA): collision-free, idle-wasteful. Random access ladder: pure Aloha 18% → slotted 37% (halved vulnerability) → CSMA (sense shrinks it to propagation delay) → CSMA/CD (abort + jam + backoff in $[0,2^k-1]$, min-frame $2\tau$ rule). CD = wired voltage-sensing; CA = wireless reservation (next topics).</p>
+</div></details><p><strong>Active-recall checklist:</strong> What mechanism doubles Aloha&#39;s efficiency? Why does Ethernet mandate minimum frames? State the backoff range after 3 collisions. Which acronym belongs on radio, and why?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Slotted Aloha doubles pure Aloha&#39;s efficiency (18% → 37%). What single mechanism causes the doubling?</span>
@@ -524,7 +603,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m3_03_multiple_access_protocols";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

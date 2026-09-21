@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,46 +297,170 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Electronic Mail: SMTP, Message Format &amp; Access Protocols</h1>
 <p><strong>Pushing mail across the Internet — SMTP handshakes on port 25, header anatomy, and why reading mail needs different protocols than sending it.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>You press &quot;send&quot; on an email. It does not fly straight to your friend&#39;s phone. Instead it is <em>pushed</em> from your provider to your friend&#39;s provider (possibly through relay machines in between), stored in a mailbox there — and only later <em>pulled</em> down when your friend opens their mail app.</p>
+<p>The problem before the solution: sending mail (worldwide, store-and-forward, sender-driven) and reading mail (personal, multi-device, reader-driven) are different jobs. One protocol cannot serve both well — so email splits them: SMTP (Simple Mail Transfer Protocol) pushes, POP3 (Post Office Protocol v3) and IMAP (Internet Message Access Protocol) pull.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Post Office vs Mailbox Key</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>SMTP</strong> is the postal service: it only <em>pushes</em> letters toward the recipient&#39;s post office (port 25, always the sender speaking first). <strong>POP3/IMAP</strong> are mailbox keys: they <em>pull</em> letters out for reading (ports 110/143). Asking SMTP to fetch your inbox is like asking the postman for a spare key — wrong counter entirely, and the exam&#39;s favourite category error.</p>
+<p>Dropping the post office now: push = SMTP on port 25 between servers; pull = POP3 (port 110) or IMAP (port 143) between your device and your mailbox.</p>
 </div></details><p>Same client-server paradigm as HTTP/FTP (M1.3–M1.5), but store-and-forward through intermediate relays instead of end-to-end sessions.</p>
-<hr>
+<p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-push-dialogue-message-shape-pull-choice">3. Purpose — Push Dialogue, Messag… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SMTP (Simple Mail Transfer Protocol)</strong></td>
+<td>The push protocol: transfers mail from sender toward the recipient&#39;s mail server over TCP port 25.</td>
+</tr>
+<tr>
+<td><strong>POP3 (Post Office Protocol, version 3)</strong></td>
+<td>A pull protocol (port 110): downloads mail to one device, usually deleting the server copy — offline-simple, multi-device-hostile.</td>
+</tr>
+<tr>
+<td><strong>IMAP (Internet Message Access Protocol)</strong></td>
+<td>A pull protocol (port 143): manipulates server-side folders/flags so phone + laptop stay in sync.</td>
+</tr>
+<tr>
+<td><strong>Message envelope</strong></td>
+<td>The SMTP routing commands (<code>MAIL FROM</code>, <code>RCPT TO</code>) — used by servers, then discarded. Distinct from the visible header.</td>
+</tr>
+<tr>
+<td><strong>Message header / body</strong></td>
+<td>Header lines (<code>From:</code>, <code>To:</code>, <code>Subject:</code>) plus the body text — both travel inside the <code>DATA</code> payload.</td>
+</tr>
+<tr>
+<td><strong>MIME (Multipurpose Internet Mail Extensions)</strong></td>
+<td>The extension that lets bodies carry non-text content (attachments, images) beyond SMTP&#39;s original 7-bit text.</td>
+</tr>
+<tr>
+<td><strong>MX (Mail Exchanger) record</strong></td>
+<td>The DNS (Domain Name System) record naming which server accepts mail for a domain.</td>
+</tr>
+<tr>
+<td><strong>Spoofing</strong></td>
+<td>Forging the visible <code>From:</code> header — possible because headers are sender-written text, not authenticated routing.</td>
+</tr>
+<tr>
+<td><strong>SPF/DKIM/DMARC (Sender Policy Framework / DomainKeys Identified Mail / Domain-based Message Authentication)</strong></td>
+<td>Later bolt-on standards that let receivers verify a sender&#39;s legitimacy — patches over SMTP&#39;s trusting origins.</td>
+</tr>
+<tr>
+<td><strong>HELO</strong></td>
+<td>The SMTP greeting command opening the dialogue (&quot;hello, I am …&quot;).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 SMTP dialogue and message shape</h3>
-<p>Sender opens TCP to port 25 and speaks first: <code>HELO</code>, <code>MAIL FROM</code>, <code>RCPT TO</code>, <code>DATA</code> (headers + body, ends with <code>\r\n.\r\n</code>), <code>QUIT</code> — server replies in 3-digit codes ($250$ OK, $550$ no such user). Message anatomy: envelope (SMTP commands, discarded after delivery) vs header (<code>From:</code>, <code>To:</code>, <code>Subject:</code> — <em>part</em> of the DATA payload, hence spoofable) vs body (MIME extends to attachments).</p>
-<h3>2.2 Pull side: POP3 vs IMAP</h3>
-<p>POP3 (110): download-and-(usually)-delete, offline-simple, multi-device-hostile. IMAP (143): server-side folders, flags, partial fetch — the multi-phone default. HTTP webmail is a third skin over the same mailbox.</p>
+<h2 id="3-purpose-push-dialogue-message-shape-pull-choice">3. Purpose — Push Dialogue, Message Shape, Pull Choice</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Operation Flow: SMTP Dialogue and Message Shape</h3>
+<p>The sender opens TCP to port 25 and speaks first. Command sequence, symbol by symbol:</p>
+<ol>
+<li><code>HELO sender-domain</code> — greeting (&quot;I am this machine&quot;).</li>
+<li><code>MAIL FROM:&lt;sender&gt;</code> — envelope sender (routing/bounce address).</li>
+<li><code>RCPT TO:&lt;recipient&gt;</code> — envelope recipient (delivery address).</li>
+<li><code>DATA</code> — &quot;here comes headers + body, ending with a line containing only <code>.</code>&quot;.</li>
+<li><code>QUIT</code> — close the session.</li>
+</ol>
+<p>The server answers each step with 3-digit codes: <code>250</code> = OK/action completed, <code>354</code> = start mail input (after DATA), <code>550</code> = no such user, <code>221</code> = closing.</p>
+<p>Message anatomy has three layers — never confuse the first two:</p>
+<ul>
+<li><strong>Envelope</strong> (SMTP commands, discarded after delivery) — decides routing and bounces.</li>
+<li><strong>Header</strong> (<code>From:</code>, <code>To:</code>, <code>Subject:</code> — <em>part</em> of the DATA payload, hence spoofable) — what humans read.</li>
+<li><strong>Body</strong> (MIME extends it to attachments) — the content.</li>
+</ul>
+<h3>3.2 Pull Side: POP3 vs IMAP</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>POP3 (110)</th>
+<th>IMAP (143)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Model</td>
+<td>Download-and-(usually)-delete</td>
+<td>Server-side folders, flags, partial fetch</td>
+</tr>
+<tr>
+<td>Multi-device</td>
+<td>Hostile (mail lives on one device)</td>
+<td>Native (all devices see the same mailbox)</td>
+</tr>
+<tr>
+<td>Modern default</td>
+<td>Rare</td>
+<td>Standard for phones + laptops</td>
+</tr>
+</tbody></table>
+<p>HTTP webmail is a third skin over the same mailbox (browser → web server → mailbox via HTTP on port 80).</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Email</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>SMTP $= 25$, push only, 7-bit ASCII + MIME · <code>HELO → MAIL → RCPT → DATA → QUIT</code> · envelope $\ne$ header · POP3 $= 110$ (download-delete) · IMAP $= 143$ (server folders).</p>
 </div></details><p>SMTP&#39;s trust-everyone heritage (no authentication in the original) is <em>why</em> spam and spoofing exist — later bolt-ons (SPF/DKIM/DMARC) patch the trust the base protocol never had.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Header vs Envelope</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>From:</code> in the header is sender-asserted text inside DATA; the envelope <code>MAIL FROM</code> is what servers actually route (and bounce to). Spoofing forges the letterhead, not the postmark — any option equating displayed From with authenticated sender is wrong.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-push-dialogue-message-shape-pull-choice">← 3. Purpose — Push Dialogue, Messag…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Ana sends one line (&quot;Hi!&quot;) to Bo. Push: Ana&#39;s server opens TCP to Bo&#39;s domain MX on port 25, says <code>HELO</code>, <code>MAIL FROM:&lt;ana&gt;</code>, <code>RCPT TO:&lt;bo&gt;</code>, <code>DATA</code> (headers + &quot;Hi!&quot; + <code>.</code>), <code>QUIT</code>. Pull: Bo&#39;s phone uses IMAP/143 and sees the message; his laptop, also IMAP, shows it read the moment he opens it on the phone.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Alice (<code>alice@a.com</code>) mails Bob (<code>bob@b.com</code>) one 2-line body with subject &quot;Hi&quot;. List the SMTP command sequence and state which protocol Bob&#39;s phone uses to read it (and its port).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Push Then Pull</div><div class="step-content"><p>Push (Alice&#39;s server → <code>b.com</code> MX, port 25): <code>HELO a.com</code> ($250$), <code>MAIL FROM:&lt;alice@a.com&gt;</code> ($250$), <code>RCPT TO:&lt;bob@b.com&gt;</code> ($250$), <code>DATA</code> ($354$), headers (<code>From:</code>, <code>To:</code>, <code>Subject: Hi</code>) + 2 body lines + <code>.</code> ($250$ queued), <code>QUIT</code> ($221$). That&#39;s $5$ command rounds before DATA. Pull: Bob&#39;s phone uses IMAP on port $143$ (server folders, read-flags sync across devices) — POP3/110 would strand his laptop&#39;s copy.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$5$ command rounds + DATA + QUIT on port $25$; reading via IMAP/$143$. The push/pull split is the whole design: SMTP never touches Bob&#39;s mailbox, IMAP never touches the wire between servers.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SMTP vs. POP3/IMAP</td>
+<td>Push between servers (25) vs. pull by readers (110/143).</td>
+</tr>
+<tr>
+<td>Envelope vs. header</td>
+<td>Routing commands (server truth) vs. displayed text (spoofable).</td>
+</tr>
+<tr>
+<td>POP3 vs. IMAP</td>
+<td>One-device download-delete vs. synced server folders.</td>
+</tr>
+<tr>
+<td>Port numbers</td>
+<td>25 = push, 110 = POP3, 143 = IMAP, 80 = webmail skin.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Assigning SMTP any reading role — it only pushes. (2) Treating displayed <code>From:</code> as authenticated — it is sender-written header text. (3) Recommending POP3 for multi-device users.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>SMTP/25 pushes via <code>HELO → MAIL → RCPT → DATA → QUIT</code> (codes 250/354/550/221); envelope decides routing, header is displayed (spoofable — hence SPF/DKIM/DMARC). Reading: POP3/110 (single-device) vs. IMAP/143 (synced folders, modern default); webmail = HTTP skin on port 80.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Recite the five SMTP commands with their reply codes. Who reads the envelope vs. the header? Which pull protocol keeps two devices in sync, and why? Where does forgery live?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Port Drill</span>
@@ -520,7 +648,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_06_electronic_mail_smtp_pop3_imap";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

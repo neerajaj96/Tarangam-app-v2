@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,23 +297,28 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>DNS: The Internet&#39;s Phone Book</h1>
 <p><strong>Names to numbers through a hierarchy — root, TLD, authoritative servers, the 8-message worst case, caching that deletes round trips, and the four record types.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Phone Book With Branch Offices</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Nobody memorizes numbers; everyone asks directory assistance. DNS is assistance with <strong>branch offices</strong>: your local office (resolver) either knows (cache hit — instant) or climbs the chain — head office (root) names the city office (TLD), which names the street office (authoritative), which finally reads the number. Each office remembers answers for TTL seconds, so popular numbers rarely need the full climb.</p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Nobody types <code>142.250.72.14</code> into a browser — everyone types <code>example.com</code>. Yet routers forward only by numbers (IP — Internet Protocol — addresses). So before anything else can happen, every name must be translated to a number. That translation service is DNS (Domain Name System).</p>
+<p>The problem before the solution: one giant central directory would melt under the world&#39;s queries and become a single point of failure. DNS therefore distributes the directory as a <strong>hierarchy</strong> (root → TLD → authoritative) and lets every answer be <strong>cached</strong> for a while — so the full climb happens rarely and popular names resolve almost instantly.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Phone Book With Branch Offices</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Nobody memorizes numbers; everyone asks directory assistance. DNS is assistance with <strong>branch offices</strong>: your local office (resolver) either knows (cache hit — instant) or climbs the chain — head office (root) names the city office (TLD — Top-Level Domain, e.g. <code>.com</code>), which names the street office (authoritative), which finally reads the number. Each office remembers answers for TTL (Time To Live) seconds, so popular numbers rarely need the full climb.</p>
+<p>Dropping the offices now: resolver = your local asker-and-cacher; root/TLD/authoritative = the three server tiers; TTL = how long a cached answer may be reused.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Climb Only What the Cache Misses</span>
@@ -332,28 +341,109 @@
     <p class="video-caption"><strong>Key Insight:</strong> Climb Only What the Cache Misses</p>
     <div class="video-observations"><strong>What to observe:</strong> Client to local to root to TLD to authoritative — eight messages worst case, collapsing toward two as caches warm.</div>
   </div>
-</div><hr>
+</div><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-hierarchy-message-counting-records-transport">3. Purpose — Hierarchy, Message Co… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>DNS (Domain Name System)</strong></td>
+<td>The distributed directory mapping host names to IP addresses (and more).</td>
+</tr>
+<tr>
+<td><strong>Resolver (local / recursive)</strong></td>
+<td>The server (usually your ISP&#39;s) that asks the hierarchy on your behalf and caches answers.</td>
+</tr>
+<tr>
+<td><strong>Root server</strong></td>
+<td>Top of the hierarchy (13 logical identities, many anycast copies worldwide): knows the addresses of TLD servers.</td>
+</tr>
+<tr>
+<td><strong>TLD (Top-Level Domain) server</strong></td>
+<td>Serves one suffix (<code>.com</code>, <code>.edu</code>, <code>.in</code>): knows the authoritative servers beneath it.</td>
+</tr>
+<tr>
+<td><strong>Authoritative server</strong></td>
+<td>Holds the actual records (the &quot;zone&quot;) for its domain names — the final answerer.</td>
+</tr>
+<tr>
+<td><strong>Resource record (A, AAAA, NS, CNAME, MX)</strong></td>
+<td>One directory entry: A = name→IPv4, AAAA = name→IPv6, NS = zone&#39;s name servers, CNAME = alias→canonical name, MX = mail exchanger.</td>
+</tr>
+<tr>
+<td><strong>TTL (Time To Live)</strong></td>
+<td>Seconds a cached record may be reused — the dial between freshness and query load.</td>
+</tr>
+<tr>
+<td><strong>UDP (User Datagram Protocol) / TCP (Transmission Control Protocol)</strong></td>
+<td>DNS uses UDP on port 53 for ordinary queries (one packet each way); TCP on port 53 for zone transfers and oversized replies.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Hierarchy and resolution math</h3>
-<p>Three server classes: <strong>root</strong> (13 logical identities, knows TLD addresses), <strong>TLD</strong> (<code>.com</code>/<code>.edu</code>/<code>.in</code>, knows authoritative addresses), <strong>authoritative</strong> (holds the zone&#39;s records). Worst-case recursive resolution costs $8$ messages: client↔local ($2$), local↔root ($2$), local↔TLD ($2$), local↔authoritative ($2$). Iterative variant returns referrals instead of answers, shifting work to the requester. Every record carries a <strong>TTL</strong> — cache lifetime, the staleness-vs-load dial.</p>
-<h3>2.2 Records and transport</h3>
-<p><code>A</code> (name→IPv4), <code>AAAA</code> (→IPv6), <code>NS</code> (zone&#39;s servers), <code>CNAME</code> (alias→canonical), <code>MX</code> (mail exchanger — email&#39;s M1.6 reunion). UDP/53 normally, TCP/53 for zone transfers and oversized replies. Single point of failure dodged by replication: $13$ root identities, anycast instances worldwide.</p>
+<h2 id="3-purpose-hierarchy-message-counting-records-transport">3. Purpose — Hierarchy, Message Counting, Records, Transport</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Hierarchy and Resolution Math</h3>
+<p>Three server classes: <strong>root</strong> (13 logical identities, knows TLD addresses), <strong>TLD</strong> (<code>.com</code>/<code>.edu</code>/<code>.in</code>, knows authoritative addresses), <strong>authoritative</strong> (holds the zone&#39;s records). Worst-case recursive resolution costs $8$ messages:</p>
+<p><em>Symbol check:</em> each &quot;message&quot; below is one DNS packet; a query + its response = $2$ messages = $1$ round trip.</p>
+<ol>
+<li>Client ↔ local resolver: query + reply = $2$.</li>
+<li>Local ↔ root: query + referral to TLD = $2$.</li>
+<li>Local ↔ TLD: query + referral to authoritative = $2$.</li>
+<li>Local ↔ authoritative: query + final answer = $2$.</li>
+</ol>
+<p>Total $= 8$. The iterative variant returns referrals instead of answers, shifting work to the requester. Every record carries a <strong>TTL</strong> — cache lifetime, the staleness-vs-load dial.</p>
+<h3>3.2 Records and Transport</h3>
+<p><code>A</code> (name→IPv4), <code>AAAA</code> (→IPv6), <code>NS</code> (zone&#39;s servers), <code>CNAME</code> (alias→canonical), <code>MX</code> (mail exchanger — email&#39;s reunion with the previous note). UDP/53 normally, TCP/53 for zone transfers and oversized replies. Single point of failure dodged by replication: $13$ root identities, anycast instances worldwide.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: DNS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Root → TLD → authoritative · worst case $8$ messages · TTL prices cache life · <code>A/AAAA/NS/CNAME/MX</code> · UDP/$53$ (TCP for bulk).</p>
 </div></details><p>DNS runs over UDP because queries fit one packet and retries are cheap — reliability via timeout-and-retry, not connections.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Resolver vs Authoritative</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The local <strong>resolver</strong> asks on your behalf (recursive, caches); <strong>authoritative</strong> servers answer for their zone only (never recurse for strangers). An option sending end-users straight to the root mistakes the branch office for head office — roots would melt under that load.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-hierarchy-message-counting-records-transport">← 3. Purpose — Hierarchy, Message Co…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Your laptop already cached the <code>.com</code> TLD address (TTL unexpired) but nothing else, and asks for <code>x.example.com</code>. Skipped: the root round trip. Needed: host↔local ($2$) + local↔TLD ($2$) + local↔authoritative ($2$) = $6$ messages. Each cached tier deletes exactly its own $2$-message climb segment.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Cold caches everywhere. Your host resolves <code>mail.ktu.edu</code>. List each query/response pair in order and count total DNS messages; then state which records the mail handoff needs next.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Climbing the Ladder</div><div class="step-content"><p>(1–2) Host → local resolver, miss. (3–4) Local → root: &quot;who knows <code>.edu</code>?&quot; → TLD address. (5–6) Local → TLD: &quot;who knows <code>ktu.edu</code>?&quot; → authoritative address. (7–8) Local → authoritative: &quot;<code>mail.ktu.edu</code>?&quot; → <code>A</code> record (the IPv4). Local caches all three answers (TTL-bounded), replies to host. Total: $8$ messages. Mail handoff then asks the zone&#39;s <code>MX</code> record (M1.6&#39;s port-25 push target) — a second query, usually cache-warm by now.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Climbing the Ladder</div><div class="step-content"><p>(1–2) Host → local resolver, miss. (3–4) Local → root: &quot;who knows <code>.edu</code>?&quot; → TLD address. (5–6) Local → TLD: &quot;who knows <code>ktu.edu</code>?&quot; → authoritative address. (7–8) Local → authoritative: &quot;<code>mail.ktu.edu</code>?&quot; → <code>A</code> record (the IPv4). Local caches all three answers (TTL-bounded), replies to host. Total: $8$ messages. Mail handoff then asks the zone&#39;s <code>MX</code> record (the previous note&#39;s port-25 push target) — a second query, usually cache-warm by now.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$8$ messages cold — $4$ round trips (host–local plus root, TLD, authoritative) × $2$ directions each. Warm caches collapse it toward $2$ — TTL tuning is load engineering, and the <code>A</code>-then-<code>MX</code> pair bridges naming into mailing.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Resolver vs. authoritative</td>
+<td>Asks-and-caches for clients vs. answers only for its own zone.</td>
+</tr>
+<tr>
+<td>Recursive vs. iterative</td>
+<td>Server chases the full answer vs. server returns referrals.</td>
+</tr>
+<tr>
+<td>A vs. CNAME</td>
+<td>Direct address vs. alias-to-canonical (one canonical edit on IP change).</td>
+</tr>
+<tr>
+<td>TTL long vs. short</td>
+<td>Less load, staler answers vs. fresher answers, heavier load.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Counting $8$ messages even with warm caches — subtract $2$ per cached tier. (2) Sending users to the root directly — resolvers climb, users ask resolvers. (3) Saying UDP is &quot;more reliable&quot; — it is cheaper; reliability comes from retry.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>DNS = root → TLD → authoritative; resolvers recurse and cache (TTL). Cold resolution = $8$ messages ($4$ round trips); each cached tier saves $2$. Records: A (v4), AAAA (v6), NS (delegation), CNAME (alias), MX (mail). UDP/53 normal (cheap, retried); TCP/53 for bulk. Roots: 13 logical identities, anycast-replicated.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Which three tiers does a cold query visit, in order? How does one cached tier change the count? Which record does email need after the address? Why is UDP enough for ordinary queries?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Message Counting</span>
@@ -541,7 +631,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_07_domain_name_system_dns";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

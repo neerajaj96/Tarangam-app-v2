@@ -281,47 +281,75 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Solution of Recurrences: Iteration / Expansion Method</h1>
 <p><strong>Repeated substitution, identifying generalized patterns at step k, arithmetic and geometric series summation.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>If the substitution method is &quot;guess the answer, then prove it,&quot; the iteration (expansion) method is &quot;unroll the recursion by hand, a few levels at a time, until you <em>see</em> the pattern yourself — no guessing required.&quot; It&#39;s like pulling apart those nesting dolls one at a time and laying them all out in a row: doll 1 contains doll 2, which contains doll 3, which contains doll 4... After unrolling a few, you notice &quot;oh, doll $k$ is always exactly $2$ centimetres smaller than doll $k-1$&quot; — a pattern you can now write down as a general formula for the $k$-th doll, and from there, figure out exactly how many dolls there are in total (which tells you when the recursion bottoms out).</p>
-<p>Concretely, you take the recurrence $T(n) = T(n-1) + f(n)$, and instead of leaving $T(n-1)$ as a mystery, you <em>substitute its own definition back in</em> — replacing $T(n-1)$ with $T(n-2) + f(n-1)$, then replacing that inner $T(n-2)$ with $T(n-3) + f(n-2)$, and so on. Each substitution &quot;expands&quot; the expression by one more level. After doing this enough times, you spot the general pattern at an arbitrary level $k$, and finally you know exactly when the expansion must stop (usually when the argument hits the base case, like $n-k=1$) — giving you a plain sum to evaluate.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Substitution needs a <em>guess</em> — but where do guesses come from? The iteration (expansion) method finds the answer with no guessing: unroll the recursion by hand a few levels, spot the pattern at a general level $k$, then compute exactly when the unrolling must stop (the base case). The leftover is a plain sum you already know how to evaluate.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>If substitution is &quot;guess, then prove&quot;, iteration is &quot;unroll until you <em>see</em> it&quot;. Lay the nesting dolls in a row: doll 1 holds doll 2 holds doll 3… after a few you notice &quot;doll $k$ is always exactly the same amount smaller&quot; — a formula for the $k$-th doll — and counting the row tells you when it ends. Concretely: replace $T(n-1)$ by its own definition, then replace the new inner term again, and again, until level $k$&#39;s shape is obvious.</p>
+</div></details><p><strong>Tiny toy example.</strong> $T(n) = T(n-1) + 1$, $T(1) = 1$: $T(n) = T(n-2)+1+1 = T(n-3)+1+1+1$. At level $k$: $T(n) = T(n-k) + k$. Stop when $n-k = 1$ ($k = n-1$): $T(n) = 1 + (n-1) = n$. No guess was ever needed.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>The mechanical procedure:</strong></p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-t-n-2t-n-2-n-merge-sort-shape">3. Worked example — $T(n) = 2T(n/2… →</a></p>
+<p><strong>Numbered steps (linear form $T(n) = T(n-k) + f(n)$):</strong></p>
 <ol>
-<li>Write the recurrence: $T(n) = T(n-1) + f(n)$ (or the divide-and-conquer form $T(n) = aT(n/b) + f(n)$).</li>
-<li>Expand one level: substitute the recurrence&#39;s own definition for the recursive term. E.g. $T(n) = [T(n-2) + f(n-1)] + f(n)$.</li>
-<li>Expand again: $T(n) = [T(n-3)+f(n-2)] + f(n-1) + f(n)$.</li>
-<li>Continue for a few more levels until the pattern at a general level $k$ becomes clear: $T(n) = T(n-k) + \sum_{i=0}^{k-1} f(n-i)$.</li>
-<li>Determine the value of $k$ at which the recursion reaches its base case (e.g. $n-k=1 \Rightarrow k=n-1$), and substitute that value of $k$ back in.</li>
-<li>What remains is a plain summation — evaluate it using standard series formulas (arithmetic: $\sum_{i=1}^n i = \frac{n(n+1)}{2}$; geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$ for $r\ne1$), and finally simplify to Big-O/Big-Theta form.</li>
+<li>Write the recurrence.</li>
+<li>Expand one level: $T(n) = [T(n-2) + f(n-1)] + f(n)$.</li>
+<li>Expand again: $T(n) = [T(n-3) + f(n-2)] + f(n-1) + f(n)$.</li>
+<li>Generalise to level $k$: $T(n) = T(n-k) + \sum_{i=0}^{k-1} f(n-i)$.</li>
+<li>Stop at the base case ($n-k = 1 \Rightarrow k = n-1$) and substitute $k$ back.</li>
+<li>Evaluate the remaining sum (arithmetic $\sum i = n(n+1)/2$; geometric $\sum r^i = (r^{k+1}-1)/(r-1)$) and simplify to Big-O/Theta.</li>
 </ol>
-<p><strong>For divide-and-conquer recurrences</strong> $T(n) = aT(n/b) + f(n)$, the same idea applies but the argument shrinks by <em>division</em> rather than subtraction: level $k$ has $a^k$ sub-problems, each of size $n/b^k$, and the total &quot;extra work&quot; summed across levels becomes $\sum_{i=0}^{k-1} a^i f(n/b^i)$, with recursion bottoming out once $n/b^k = 1$, i.e. $k = \log_b n$.</p>
-<p><strong>Why this method is valuable even though the Master Theorem (next topic) often gives shortcuts:</strong> the Master Theorem only applies to recurrences of a specific standard shape, and even then only tells you the <em>answer</em>, not <em>why</em> it&#39;s true. The iteration method works on a wider variety of recurrences (including non-standard ones the Master Theorem can&#39;t handle) and builds genuine intuition for <em>why</em> the final complexity comes out the way it does, because you watch the total work accumulate level by level.</p>
+<p><strong>Divide-and-conquer form</strong> $T(n) = aT(n/b) + f(n)$: the argument shrinks by <em>division</em>. Level $k$ has $a^k$ sub-problems of size $n/b^k$; extra work sums to $\sum_{i=0}^{k-1} a^i f(n/b^i)$; recursion bottoms out at $n/b^k = 1$, i.e. $k = \log_b n$ (logarithm base $b$: the power to which $b$ is raised to get $n$).</p>
+<p><strong>Why learn this when the Master Theorem (next) shortcuts it?</strong> The Master Theorem covers one standard shape and gives only the <em>answer</em>. Iteration handles non-standard recurrences too, and shows <em>why</em> the answer holds — you watch work accumulate level by level.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve $T(n) = 2T(n/2) + n$, with base case $T(1) = 1$, using the iteration method. (This recurrence describes algorithms like Merge Sort: split into 2 halves, recurse on each, then do $O(n)$ work to combine.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Level 0:</strong> $T(n) = 2T(n/2) + n$.
-<strong>Level 1 (expand $T(n/2)$):</strong> $T(n/2) = 2T(n/4) + n/2$, so $T(n) = 2[2T(n/4)+n/2] + n = 4T(n/4) + n + n = 4T(n/4) + 2n$.
-<strong>Level 2 (expand $T(n/4)$):</strong> similarly, $T(n) = 8T(n/8) + 3n$.
-<strong>Spotting the pattern at level $k$:</strong> $T(n) = 2^k T(n/2^k) + kn$ — at each level, the &quot;extra work&quot; contributed is exactly $n$ (not growing, not shrinking — this is the key feature of this particular recurrence), and there are $k$ levels so far.
-<strong>Finding when recursion bottoms out:</strong> the recursion reaches the base case when $n/2^k = 1$, i.e. $2^k = n$, i.e. $k = \log_2 n$.
-<strong>Substituting $k = \log_2 n$:</strong> $T(n) = 2^{\log_2 n} \cdot T(1) + (\log_2 n)\cdot n = n \cdot 1 + n\log_2 n = n + n\log_2 n$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$T(n) = n + n\log_2 n$. As $n$ grows large, $n\log_2 n$ dominates the smaller $n$ term, so the final asymptotic answer is $T(n) = \Theta(n\log n)$ — exactly the well-known complexity of Merge Sort, derived here from first principles by literally watching the recursion unfold level by level, rather than quoting a memorised formula.</p>
+<h2 id="3-worked-example-t-n-2t-n-2-n-merge-sort-shape">3. Worked example — $T(n) = 2T(n/2) + n$ (merge-sort shape)</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve $T(n) = 2T(n/2) + n$, $T(1) = 1$ by iteration. (Split into 2 halves, recurse, do $O(n)$ combine work.)</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Level 0:</strong> $T(n) = 2T(n/2) + n$. <strong>Level 1:</strong> $T(n/2) = 2T(n/4) + n/2$, so $T(n) = 4T(n/4) + n + n = 4T(n/4) + 2n$. <strong>Level 2:</strong> $T(n) = 8T(n/8) + 3n$. <strong>Pattern at level $k$:</strong> $T(n) = 2^k T(n/2^k) + kn$ — every level contributes exactly $n$ extra (halving size cancels doubling count). <strong>Stop:</strong> $n/2^k = 1 \Rightarrow k = \log_2 n$. <strong>Substitute:</strong> $T(n) = n \cdot 1 + n\log_2 n$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$T(n) = n + n\log_2 n = \Theta(n \log n)$ — merge sort&#39;s complexity derived by watching recursion unfold, not by quoting formulas.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-t-n-2t-n-2-n-merge-sort-shape">← 3. Worked example — $T(n) = 2T(n/2…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>The stopping depth $k$ is <em>solved for</em>, not chosen: set the shrunken argument equal to the base case ($n-k = 1$ or $n/b^k = 1$).</li>
+<li>Track <em>both</em> the growing sub-problem count ($a^k$) and the shrinking size ($n/b^k$) — dropping either breaks the level total.</li>
+<li>The final sum still needs the series formulas; unrolling without summing is an unfinished answer.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stopping rule, subtractive vs divisive</td>
+<td>$k = n-1$ (linear) vs $k = \log_b n$ (divide-and-conquer)</td>
+</tr>
+<tr>
+<td>Iteration vs substitution</td>
+<td>Discovers the bound (no guess) vs verifies a guessed bound</td>
+</tr>
+<tr>
+<td>Level total vs grand total</td>
+<td>One row&#39;s work ($n$ here) vs sum over all rows ($n \log n$)</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> level-$k$ pattern $2^kT(n/2^k) + kn$ for the merge-sort recurrence; stopping condition $n/2^k = 1$; final $\Theta(n \log n)$; iteration works beyond the Master Theorem&#39;s shape.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In the iteration/expansion method, what determines the number of levels $k$ you expand before stopping?</span>

@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,42 +281,79 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Bin Packing: Approximation Algorithms</h1>
 <p><strong>NP-hard packing, Next/First/Best-Fit online rules, First-Fit Decreasing, approximation ratios, and lower-bound certificates.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Packing a Moving Truck</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Boxes arrive one by one and must go <em>somewhere now</em> (online) — or you&#39;ve seen them all and can pre-sort (offline). <strong>Next Fit</strong> uses one open box, sealing it forever when the next item won&#39;t fit (amnesiac, wasteful). <strong>First Fit</strong> keeps all open boxes and slots each item into the <em>first</em> that fits (remembers everything). <strong>Best Fit</strong> picks the <em>tightest</em> fit (greedy tidiness). <strong>First-Fit Decreasing</strong> sorts big-to-small first — the tiny items at the end plug gaps like sand filling gravel. Sorting first is the whole superpower: FFD&#39;s worst case (~22% over optimum) crushes online rules (~70% over).</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Items of sizes $s_i \in (0,1]$ arrive; bins hold capacity 1; use as few bins as possible. The decision form is NP-complete (from Partition), the optimization NP-hard — exact optima are off the table for large inputs, so the honest goal is a <em>guaranteed-near</em> packing: never worse than a stated multiple of optimal. Abbreviations: OPT = optimal bin count; NF/FF/BF/FFD = Next/First/Best-Fit/(Decreasing) heuristics; &quot;online&quot; = items arrive one by one, decide-now-forever.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Packing a Moving Truck</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Boxes arrive one by one and must go <em>somewhere now</em> (online) — or you have seen them all and can pre-sort (offline). <strong>Next Fit</strong> uses one open box, sealing it forever on overflow (amnesiac). <strong>First Fit</strong> keeps all boxes open, slotting each item into the <em>first</em> that fits (total recall). <strong>Best Fit</strong> picks the <em>tightest</em> fit (tidiness). <strong>First-Fit Decreasing</strong> sorts big-to-small first — tiny items at the end plug gaps like sand in gravel. Sorting is the superpower: FFD&#39;s worst case (~22% over) crushes online rules (~70% over). Drop the truck now: ratios and lower bounds below are the exact guarantees.</p>
+</div></details><p><strong>Tiny toy example (capacity 10).</strong> Items $[6, 4, 5]$: Next Fit packs {6,4} then {5} → 2 bins (optimal here). Items $[5, 5, 6, 4]$ in that order: NF packs {5,5} then {6,4} → 2 bins — but order $[6, 4, 5, 5]$? Same 2. Online pain needs adversarial orders (covered in quizzes) — the point stands: order decides waste.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Problem and Lower Bounds</h3>
-<p>Items sizes $s_i \in (0,1]$, bins capacity 1, minimize bin count. Decision form is NP-complete (from Partition); optimization is NP-hard — approximation is the honest goal. Universal lower bounds for any instance: $\lceil \sum s_i \rceil$ bins (total size) and at least (#items $&gt; 1/2$) bins (each needs its own).</p>
-<h3>2.2 The Algorithms and Their Guarantees</h3>
-<ul>
-<li><strong>Next Fit (NF):</strong> one open bin; overflow seals it forever. $\le 2\cdot OPT - 1$ (at most ~2× optimal — adjacent bin pairs always sum $&gt; 1$).</li>
-<li><strong>First Fit (FF):</strong> lowest-indexed fitting bin. $\le 1.7 \cdot OPT + 2$ — remembers all open bins, roughly halves the waste.</li>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-first-fit-traced-optimality-certified">3. Worked example — First Fit trac… →</a></p>
+<p><strong>Problem and lower bounds — numbered facts:</strong></p>
+<ol>
+<li>Items $s_i \in (0,1]$, bins capacity 1, minimise bin count.</li>
+<li>Universal lower bounds for any instance: $\lceil \sum s_i \rceil$ bins (total size — bins cannot hold more than 1) and at least (#items $&gt; 1/2$) bins (each needs its own — two never share).</li>
+<li>Matching lower bound + packing certifies <em>optimality</em> without search.</li>
+</ol>
+<p><strong>Algorithms and guarantees — numbered:</strong></p>
+<ol>
+<li><strong>Next Fit (NF):</strong> one open bin; overflow seals it forever. $\le 2\cdot OPT - 1$ (adjacent bin pairs always sum $&gt; 1$ — sealed bins were each overfull with the next item).</li>
+<li><strong>First Fit (FF):</strong> lowest-indexed fitting bin. $\le 1.7 \cdot OPT + 2$ — memory halves the waste.</li>
 <li><strong>Best Fit (BF):</strong> tightest-fitting bin. Same $1.7$ asymptotic family as FF.</li>
-<li><strong>First-Fit Decreasing (FFD):</strong> sort descending, then First Fit. $\le \frac{11}{9} OPT + 1$ ($\approx 22%$ over) — sorting first dominates every online rule; the bound&#39;s proof fills textbook chapters.</li>
-</ul>
+<li><strong>First-Fit Decreasing (FFD):</strong> sort descending, then First Fit. $\le \frac{11}{9} OPT + 1$ ($\approx 22%$ over) — sorting dominates every online rule; the full proof fills textbook chapters.</li>
+</ol>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Packing Ratios</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Lower bounds: <strong>⌈total size⌉</strong>, <strong>count of &gt;1/2 items</strong> · NF <strong>≤ 2·OPT − 1</strong> · FF/BF <strong>≤ 1.7·OPT + 2</strong> · FFD <strong>≤ 11/9·OPT + 1</strong> · mantra: <strong>&quot;sort descending first&quot;</strong> converts online mediocrity into near-optimality.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Ratios Are Worst-Case, Not Report Cards</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$11/9 \cdot OPT + 1$ promises FFD is <em>never worse</em> than that — typical instances land far closer to optimal. Quoting the ratio as <em>expected</em> performance wildly undersells the algorithm; quoting optimal-on-all-inputs oversells it. Bounds bound the worst; practice lives near the best.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Ratios Are Worst-Case, Not Report Cards</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$11/9 \cdot OPT + 1$ promises FFD is <em>never worse</em> than that — typical instances land far closer to optimal. Quoting the ratio as <em>expected</em> performance undersells the algorithm; claiming optimal-on-all-inputs oversells it. Bounds bound the worst; practice lives near the best.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Capacity $10$, items $[6, 5, 5, 4, 4, 3, 2]$ (total $29$ → lower bound $\lceil 2.9 \rceil = 3$ bins). Run First Fit, then First-Fit Decreasing, and certify optimality.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Packing Twice</div><div class="step-content"><p><strong>First Fit (given order):</strong> 6→B1{6}; 5→B1? $11 &gt; 10$ ✗ → B2{5}; 5→B2 ($5+5=10$ ✓); 4→B1 ($6+4=10$ ✓); 4→B3{4}; 3→B3 ($7$ ✓); 2→B3 ($9$ ✓). <strong>FF = 3 bins</strong> (B1:{6,4}, B2:{5,5}, B3:{4,3,2}).
-<strong>FFD (sorted: same order here — already descending):</strong> identical 3 bins. Lower bound was 3 → <strong>OPT = 3, both optimal</strong> on this instance.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Three bins against a floor of three: optimal, certified without search — the lower bound did the proving, the algorithm did the packing. Note the luck: FFD <em>guarantees</em> near-optimal always, but <em>certificates</em> of optimality need a matching lower bound, which only sometimes cooperates.</p>
+<h2 id="3-worked-example-first-fit-traced-optimality-certified">3. Worked example — First Fit traced, optimality certified</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Capacity $10$, items $[6, 5, 5, 4, 4, 3, 2]$ (total $29$ → lower bound $\lceil 2.9 \rceil = 3$ bins). Run First Fit, then First-Fit Decreasing; certify.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Packing Twice</div><div class="step-content"><p><strong>First Fit (given order):</strong> 6→B1{6}; 5→B2{5} (B1 overflows); 5→B2 ($10$ ✓); 4→B1 ($10$ ✓); 4→B3{4}; 3→B3 ($7$ ✓); 2→B3 ($9$ ✓). <strong>FF = 3 bins</strong> (B1:{6,4}, B2:{5,5}, B3:{4,3,2}). <strong>FFD (sorted — already descending):</strong> identical 3 bins. Lower bound was 3 → <strong>OPT = 3, both optimal</strong> here.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Three bins against a floor of three: optimal, certified without search — the bound proved, the algorithm packed. The luck: FFD <em>guarantees</em> near-optimal always, but <em>certificates</em> of optimality need a cooperating lower bound, which only sometimes matches.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-first-fit-traced-optimality-certified">← 3. Worked example — First Fit trac…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>FFD&#39;s sort is banned <em>online</em> — quoting FFD ratios for fixed-order arrivals is a category error; FF/BF is the online answer.</li>
+<li>$\lceil\sum s_i\rceil$ alone rarely matches: combine both lower bounds and take the stronger.</li>
+<li>Packing 8 into a floor-7 instance proves <em>near</em>-optimal (gap ≤ 1), never optimal — closing needs a 7-packing or a stronger floor.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Online vs offline rules</td>
+<td>Decide-now-forever (NF/FF/BF) vs sort-first (FFD) — different ratios</td>
+</tr>
+<tr>
+<td>Ratio vs certificate</td>
+<td>Never-worse-than (always) vs optimal-here (needs matching bound)</td>
+</tr>
+<tr>
+<td>NF vs FF memory</td>
+<td>One open bin (amnesia, 2×) vs all open bins (recall, 1.7×)</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> both lower bounds; all four ratios with the sort-descending mantra; ratio = worst-case, not typical; the 3-bin trace with its matching floor.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Items arrive online (order fixed, no sorting allowed). Which rule, and what worst-case price versus optimal?</span>

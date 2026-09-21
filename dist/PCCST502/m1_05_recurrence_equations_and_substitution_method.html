@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,32 +281,32 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Analysis of Recursive Algorithms: Substitution Method</h1>
 <p><strong>Formulating recurrence relations and mathematical induction proofs for upper/lower bounds.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a recursive algorithm like a set of Russian nesting dolls (matryoshka) — a big doll contains a slightly smaller identical doll, which contains an even smaller one, and so on, until you reach the tiniest doll that doesn&#39;t open any further. A recursive <em>algorithm</em> works the same way: to solve a problem of size $n$, it does a little bit of its own work, and then hands off a smaller version of the <em>same</em> problem to itself (a smaller doll) — until the problem is small enough to solve directly, with no further recursion (the innermost doll).</p>
-<p>A <strong>recurrence relation</strong> is just a mathematical equation that captures this nesting pattern: &quot;the cost to solve a problem of size $n$ equals some cost for the current step, plus the cost of solving the smaller sub-problem(s).&quot; For example, $T(n) = T(n-1) + 1$ says &quot;solving a size-$n$ problem costs 1 unit of work plus whatever it costs to solve a size-$(n-1)$ problem&quot; — this is exactly the pattern for something like finding the maximum of a list recursively (compare the last element to the max of the rest).</p>
-<p>The <strong>substitution method</strong> is one way to solve such a recurrence — turn the abstract equation into a concrete formula like $T(n) = O(n)$. The idea: <em>guess</em> the answer&#39;s general shape first, then <em>prove</em> your guess is correct using mathematical induction, exactly the way you&#39;d verify a claimed pattern by checking it holds for a small case and then holds &quot;one step later&quot; too.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Loops are costed by sums — but what about a function that <em>calls itself</em>? You cannot &quot;sum its loop&quot; because there is no loop: the cost of size $n$ is defined <em>in terms of</em> the cost of a smaller size. We need an equation that captures that self-reference (a <em>recurrence relation</em>), then a method to turn it into a plain bound like $O(n^2)$.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture Russian nesting dolls: each doll contains a smaller identical doll, down to a tiny solid one. A recursive algorithm is the same: solving size $n$ does a little direct work, then hands a smaller copy to itself — until the problem is small enough to solve directly (the base case, the solid doll). A recurrence writes this as an equation: &quot;cost($n$) = work here + cost(smaller)&quot;. The substitution method then <em>guesses</em> the answer&#39;s shape and <em>proves</em> it by mathematical induction.</p>
+</div></details><p><strong>Tiny toy example.</strong> Recursive countdown: $T(n) = T(n-1) + 1$, $T(1) = 1$ (&quot;to count down from $n$, print once, then count down from $n-1$&quot;). Unroll for $n = 3$: $T(3) = T(2)+1 = T(1)+1+1 = 3$. The answer smells like $T(n) = n$ — substitution will prove such guesses airtight.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>What a recurrence relation is.</strong> A recurrence expresses $T(n)$ (the cost of solving a problem of size $n$) in terms of $T$ evaluated at smaller inputs, plus some extra work done at the current level. General form:
-$$T(n) = a \cdot T(n/b) + f(n) \qquad \text{or} \qquad T(n) = T(n-k) + f(n)$$
-depending on whether the problem shrinks by a <em>fraction</em> (divide-and-conquer, e.g. binary search: $T(n) = T(n/2) + O(1)$) or by a <em>fixed amount</em> (linear recursion, e.g. factorial: $T(n) = T(n-1) + O(1)$). A <strong>base case</strong> is also required — e.g. $T(1) = O(1)$ — since without one, the recursion would never terminate, mirroring the Finiteness requirement from earlier in this module.</p>
-<p><strong>The substitution method, step by step:</strong></p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-t-n-t-n-1-n-by-substitution">3. Worked example — $T(n) = T(n-1)… →</a></p>
+<p><strong>Symbols:</strong> $T(n)$ = cost of solving size $n$; $a$ = number of recursive calls; $f(n)$ = non-recursive work at the current level; $c$, $n_0$ = the Big-O witness constants.</p>
+<p><strong>Recurrence shapes.</strong> Divide-and-conquer (shrinks by fraction): $T(n) = a\cdot T(n/b) + f(n)$ (binary search: $T(n) = T(n/2) + O(1)$). Linear recursion (shrinks by fixed amount): $T(n) = T(n-k) + f(n)$ (factorial: $T(n) = T(n-1) + O(1)$). Every recurrence needs a <strong>base case</strong> (e.g. $T(1) = O(1)$) — without one the recursion never bottoms out, violating Finiteness.</p>
+<p><strong>Substitution method, numbered steps:</strong></p>
 <ol>
-<li><strong>Guess</strong> the form of the solution (e.g. &quot;I believe $T(n) = O(n)$,&quot; or more precisely, &quot;$T(n) \le cn$ for some constant $c$ and all $n \ge n_0$&quot;).</li>
-<li><strong>Assume</strong> the guess holds for all values <em>smaller</em> than $n$ (this is the inductive hypothesis).</li>
-<li><strong>Substitute</strong> this assumption into the recurrence&#39;s right-hand side, and simplify algebraically.</li>
-<li><strong>Verify</strong> that the result matches (or is bounded by) the guessed form for $n$ itself — if it does, the guess is proven correct by induction; if it doesn&#39;t quite work, adjust the guess (often by subtracting a lower-order term) and retry.</li>
+<li><strong>Guess</strong> the solution&#39;s form (&quot;$T(n) \le cn$ for some $c$, all $n \ge n_0$&quot;).</li>
+<li><strong>Assume</strong> the guess for all values smaller than $n$ (inductive hypothesis).</li>
+<li><strong>Substitute</strong> into the recurrence&#39;s right-hand side and simplify.</li>
+<li><strong>Verify</strong> the result fits the guessed form at $n$ — success proves it by induction; near-miss means adjust (often subtract a lower-order term) and retry.</li>
 </ol>
-<p>This is mathematical induction applied directly to algorithm analysis: the base case anchors the proof, and the inductive step shows the pattern is self-sustaining — if it holds for all smaller sizes, it holds for size $n$ too, so by induction it holds for every $n$.</p>
+<p>Guesses come from intuition, unrolling a few levels (the iteration method, next), or experience — substitution&#39;s power is confirming or refuting a candidate rigorously.</p>
 <div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Guess, Assume, Substitute, Verify</span>
@@ -328,21 +328,48 @@ depending on whether the problem shrinks by a <em>fraction</em> (divide-and-conq
     <p class="video-caption"><strong>Key Insight:</strong> Guess, Assume, Substitute, Verify</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the four stations light in order — each station&#39;s output feeds the next, and a miss at Verify loops all the way back to a weaker Guess.</div>
   </div>
-</div><p><strong>Why &quot;guess, then prove&quot; and not &quot;just prove directly&quot;?</strong> Recurrences don&#39;t have an obvious closed-form answer sitting in plain sight — you generally need <em>some</em> candidate answer to test before you can verify it algebraically. The guess often comes from intuition, from an unrolled few levels of recursion (a sneak peek at the iteration method, covered next), or from experience with similar recurrences. The substitution method&#39;s power is that once you have a plausible guess, it gives you an airtight, rigorous way to confirm — or refute — it.</p>
-<hr>
+</div><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve the recurrence $T(n) = T(n-1) + n$, with base case $T(1) = 1$, using the substitution method. This recurrence describes, for example, an algorithm that does $n$ units of work at the current call, then recurses on a problem one smaller.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Guess:</strong> based on the pattern (each level adds roughly $n$, $n-1$, $n-2, \dots$ down to 1 — an arithmetic-series shape), guess $T(n) = O(n^2)$, specifically claim $T(n) \le cn^2$ for some constant $c$ and all $n \ge 1$.
-<strong>Inductive hypothesis:</strong> assume $T(n-1) \le c(n-1)^2$ holds for the smaller case.
-<strong>Substitute:</strong> $T(n) = T(n-1) + n \le c(n-1)^2 + n = c(n^2 - 2n + 1) + n = cn^2 - 2cn + c + n$.
-<strong>Simplify toward the goal:</strong> we want to show this is $\le cn^2$. That requires $-2cn + c + n \le 0$, i.e. $n(1-2c) \le -c$, which holds for any $c \ge 1$ and $n \ge 1$ (choosing, say, $c=1$: $-2n+1+n = -n+1 \le 0$ for all $n \ge 1$). So $T(n) \le cn^2$ is confirmed.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The inductive step succeeds with $c=1$, and the base case $T(1)=1 \le c(1)^2=1$ also holds — so by mathematical induction, $T(n) = O(n^2)$ is proven rigorously for all $n \ge 1$. (In fact this recurrence&#39;s exact closed form is $T(n) = \frac{n(n+1)}{2}$, the same arithmetic series seen in the previous topic&#39;s dependent-nested-loop example — confirming that a recursive version and an iterative nested-loop version of &quot;add up 1 through $n$&quot; share the same $\Theta(n^2)$ complexity, as they should, since they&#39;re doing the same underlying work.)</p>
+<h2 id="3-worked-example-t-n-t-n-1-n-by-substitution">3. Worked example — $T(n) = T(n-1) + n$ by substitution</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve $T(n) = T(n-1) + n$, $T(1) = 1$ (each call does $n$ work, then recurses one smaller). Guess, assume, substitute, verify.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Guess:</strong> levels add $n, n-1, \dots, 1$ (arithmetic shape) → claim $T(n) \le cn^2$. <strong>Assume</strong> $T(n-1) \le c(n-1)^2$. <strong>Substitute:</strong> $T(n) \le c(n-1)^2 + n = cn^2 - 2cn + c + n$. Need $-2cn + c + n \le 0$; with $c = 1$: $-n + 1 \le 0$ for all $n \ge 1$. ✓</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Base case $T(1) = 1 \le 1$ holds and the inductive step succeeds with $c = 1$ — so $T(n) = O(n^2)$ for all $n \ge 1$. (Exact form is $\frac{n(n+1)}{2} = \Theta(n^2)$: the recursive and iterative versions of &quot;add 1..$n$&quot; agree, as they must.)</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-t-n-t-n-1-n-by-substitution">← 3. Worked example — $T(n) = T(n-1)…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Proving only the upper bound gives $O$, not $\Theta$ — tight claims need the matching lower-bound induction too.</li>
+<li>A failed verification does not mean the guess&#39;s <em>rate</em> is wrong: often the same rate with a tweaked guess (minus a lower-order term) goes through.</li>
+<li>Never skip the base case in the proof — induction without an anchor proves nothing.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Guess vs proof</td>
+<td>Candidate shape vs inductive certificate — substitution needs both</td>
+</tr>
+<tr>
+<td>$O$ (one induction) vs $\Theta$ (two)</td>
+<td>Upper only vs upper + lower inductions</td>
+</tr>
+<tr>
+<td>Substitution vs iteration method</td>
+<td>Guess-then-verify vs unroll-then-sum</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> the four steps in order (guess, assume, substitute, verify); base case = Finiteness anchor; $T(n) = T(n-1)+n \Rightarrow O(n^2)$ with witness $c = 1$.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In the substitution method, what is the correct order of steps?</span>

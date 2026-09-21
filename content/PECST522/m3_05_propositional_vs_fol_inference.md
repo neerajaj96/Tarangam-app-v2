@@ -5,7 +5,7 @@ module: 3
 sequence: 5
 title: Propositional vs First-Order Inference
 difficulty: beginner
-estimatedMinutes: 4
+estimatedMinutes: 6
 learningObjectives:
   - Quantify grounding blowup against propositional decidability
   - Escape with lifted inference, Datalog limits or Prolog trades
@@ -23,70 +23,71 @@ tags:
 ---
 # Propositional vs First-Order Inference
 
-**Grounding blowup quantified, lifted inference as the escape, decidability contrast stated plainly — the syllabus comparison as its own topic.**
+**Problem: grounding (photocopying every rule for every object) proves FOL can be handled — but can it be afforded? By the end you can price grounding blowup, state the decidability contrast, and choose lifting, restriction, or Prolog's trade.**
 
-<a id="the-intuition"></a>
-## 1. The Intuition
+<a id="start-zero"></a>
+## 1. Start From Zero: Photocopy Shop vs. Master Template
+
+Propositional inference photocopies each first-order rule for every object combo (grounding), then reasons over the paper mountain. Lifted inference reasons from the master template directly — one UNIFY step doing infinitely many photocopies' work. Templates beat mountains whenever objects multiply.
+
+**Definitions:** **grounding** instantiates all variables with all constants. **Lifted inference** binds variables only as proofs demand (generalized Modus Ponens, FOL forward/backward chaining with UNIFY). **Decidable** means an answer always arrives in finite time. **Semi-decidable** means yes-instances are confirmed in finite time but no-instances may loop forever.
 
 ::: callout-intuition Core Mental Model: Photocopy Shop vs Master Template
-Propositional inference **photocopies** every first-order rule for every object combo (grounding), then reasons over the paper mountain. Lifted inference reasons from the **master template** directly — one UNIFY step doing the work of infinitely many photocopies. Templates beat mountains whenever objects multiply; mountains win only when objects are few and templates tangled.
+Feel "mountain versus template" here, then drop the shop; grounding arithmetic plus decidability below are the technical content.
 :::
 
-M3.2–M3.3 built the paper mountain (models, resolution); M3.4 cut the master-template tools (UNIFY, lifted Modus Ponens, FOL chaining) — this topic prices the two against each other.
+**Tiny beginner example:** rule `Cat(x) => Mammal(x)` with 10 cats grounds to 10 copies plus 20 atoms — then fires on Tom. Lifted Modus Ponens unifies once (`x/Tom`) and concludes in one step touching one fact.
 
----
+<a id="basics"></a>
+## 2. Basic Layer: Grounding Arithmetic
 
-<a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+**Data/state:** `p` predicate symbols of max arity `k` over `d` constants. **Goal:** count the mountain.
 
-### 2.1 Grounding arithmetic
+**Meaning, variables, formula:** each `k`-ary predicate spans all ordered `k`-tuples (`d^k` combos); times `p` predicates:
 
-A FOL KB with $p$ predicate symbols of max arity $k$ over $d$ constants grounds to $\approx p \cdot d^k$ atoms: $2$ binary predicates and $10$ constants already yield $200$ atoms and $2^{200}$ models — model checking (M3.2) dies standing, and propositional resolution drowns in clauses it never needed. Lifted rules (generalized Modus Ponens, FOL-FC/BC with UNIFY) sidestep the mountain by binding variables only as the proof demands.
+$$\text{ground atoms} \approx p \cdot d^k$$
 
-### 2.2 Decidability and practice
+Tiny numbers: 2 binary predicates over 10 constants give 200 atoms and `2^200` models — model checking dies standing, propositional resolution drowns in never-needed clauses. With function symbols (e.g. Father(x)), grounding is infinite — photocopies without end — while lifting still takes one step.
 
-Propositional entailment is **decidable** (co-NP-complete — exponential worst case, but an answer always arrives). FOL entailment is only **semi-decidable**: complete procedures confirm entailment eventually, but may loop forever on non-entailed queries. Practice: Datalog-style restricted FOL regains decidability; Prolog's backward chaining trades completeness (depth-first, no occur-check) for speed.
+<a id="formal-model"></a>
+## 3. Formal Layer: Decidability and Practice
+
+**Decidability contrast (qualified):** propositional entailment is **decidable** (co-NP-complete: exponential worst case, but an answer always arrives). FOL entailment is only **semi-decidable**: complete procedures confirm entailed queries eventually but may loop forever on non-entailed ones — no strategy fixes this in general (a theory ceiling, not a bug).
+
+**Practical escapes:** **Datalog-style restricted FOL** (no functions, constrained rules) regains decidability. **Prolog's backward chaining** trades completeness (depth-first search can loop where breadth succeeds) and soundness corners (skipped occur check admits cyclic unifications) for industrial speed. Lifting itself needs factoring, subsumption, and strategy — the mountain shrinks to a hill that still needs climbing gear.
 
 ::: callout-formula KTU Formula Vault: PL vs FOL
-Grounding $\approx p \cdot d^k$ atoms · PL decidable (co-NP-complete) · FOL semi-decidable (loops possible on NO) · lift with UNIFY, restrict (Datalog) or trade (Prolog) to cope.
+Grounding approx `p * d^k` atoms. PL decidable (co-NP-complete). FOL semi-decidable (NO-answers may loop). Cope by lifting with UNIFY, restricting (Datalog), or trading (Prolog).
 :::
-
-Lifting is not free magic: full FOL resolution still needs factoring, subsumption, and strategy — the mountain shrinks to a hill, and hills still need climbing gear.
 
 ::: callout-pitfall Grounding as a "Solution"
-An option proposing "ground then use propositional resolution" as the efficient FOL method mistakes a *reduction proof* for an algorithm. Grounding is the baseline that proves FOL *can* be handled — lifted inference is what handles it affordably.
+"Ground then use propositional resolution" is a reduction proof that FOL can be handled — not an efficient algorithm. Lifted inference is what handles it affordably. Options proposing grounding as the efficient method confuse existence with tractability.
 :::
-
----
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Worked Example, Distinctions, Limitations
 
-::: step [Step 1: Setup] Formulating the Problem
-KB: $\forall x\; (\text{Cat}(x) \Rightarrow \text{Mammal}(x))$, fact $\text{Cat}(\text{Tom})$, query $\text{Mammal}(\text{Tom})$ — with $9$ more cats in the KB ($10$ constants). Count the grounding versus the lifted proof.
-:::
+| Similar pair | Distinction |
+|---|---|
+| Grounding vs. lifting | Exhaustive instantiation (complete, explosive) vs. demand-bound templates (affordable) |
+| Decidable vs. semi-decidable | Both answers guaranteed vs. yes-only guaranteed (no-queries may loop) |
+| Datalog vs. Prolog coping | Restrict the logic (decidability back) vs. trade theory corners (speed now) |
 
-::: step [Step 2: Execution] Mountain vs Template
-Grounding instantiates the rule $10$ times ($\text{Cat}(\text{Tom}) \Rightarrow \text{Mammal}(\text{Tom})$, $\dots$) plus $20$ atoms — then Modus Ponens fires on the Tom instance. Lifted Modus Ponens unifies $\text{Cat}(x)$ with $\text{Cat}(\text{Tom})$, $\theta = \{x/\text{Tom}\}$, and concludes in **one** step touching **one** fact. With function symbols (e.g. $\text{Father}(x)$) grounding is infinite — photocopies without end — while lifting still takes one step.
-:::
+**Watch out:** (1) Arity exponentiates (`d^k`), predicates multiply (`p*`) — linear intuitions miss the square. (2) A looping prover on a NO-query is bumping theory, not buggy. (3) Prolog's dents (DFS loops, missing occur check) are recurring 3-mark material.
 
-::: step [Step 3: Conclusion] Final Result
-$10$ ground instances (finite case) or infinitely many (functions) versus $1$ lifted step. The exam moral: quote $p \cdot d^k$ for the mountain, UNIFY-once for the escape, functions for the kill-shot proving grounding cannot always work.
-:::
-
----
+**Limitations:** lifting does not restore decidability; Datalog restricts expressiveness; Prolog sacrifices guarantees. Choose by workload: few objects tolerate grounding, many objects demand templates, infinite (functional) domains forbid grounding entirely.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz Q1: Grounding Arithmetic
-$3$ binary predicates, $5$ constants. Ground atoms?
-(A) $15$, predicates times constants
-(*B) $3 \times 5^2 = 75$ — each binary predicate spans all ordered pairs, so arity exponentiates, and $2^{75}$ models already bury model checking
-(C) $3^5 = 243$
-(D) $8$, binary means two
+3 binary predicates, 5 constants. Ground atoms?
+(A) 15, predicates times constants
+(*B) 3 × 5^2 = 75 — each binary predicate spans all ordered pairs, so arity exponentiates, and 2^75 models already bury model checking
+(C) 3^5 = 243
+(D) 8, binary means two
 ::: explanation
-Arity is the exponent: $d^k$ combos per predicate ($25$ pairs here), times $p$ predicates. Linear intuitions ($15$) miss the square — arity-driven blowup is the whole argument for lifting.
+Arity is the exponent: d^k combos per predicate (25 pairs), times p predicates. Linear guesses miss the square — the whole argument for lifting.
 :::
 
 ::: quiz Q2: Decidability Sorting
@@ -96,7 +97,7 @@ Arity is the exponent: $d^k$ combos per predicate ($25$ pairs here), times $p$ p
 (C) FOL always terminates faster
 (D) Decidability is about memory, not time
 ::: explanation
-Semi-decidable means one-sided guarantee: proofs arrive, refutations may not. A looping prover on a NO-query is not buggy, it is bumping the theory ceiling — restrict the logic (Datalog) to lower it.
+Semi-decidable is a one-sided guarantee: proofs arrive, refutations may not. Restrict the logic (Datalog) to lower the ceiling.
 :::
 
 ::: quiz Q3: Prolog Bargain
@@ -106,5 +107,25 @@ Prolog drops the occur check and searches depth-first. What did it trade?
 (C) It gained completeness
 (D) Syntax only, semantics untouched
 ::: explanation
-Real systems spend theory to buy speed: DFS risks infinite branches, skipped occur-check risks cyclic bindings. Knowing the dents (and when they bite) is the honest Prolog story — and a recurring 3-marker.
+Real systems spend theory for speed. Knowing the dents and when they bite is the honest Prolog story.
+:::
+
+<a id="exam-focus"></a>
+## 6. Exam Recap and Worked Q&A
+
+::: callout-exam KTU University Exam Focus
+3 marks: grounding count, decidability contrast, or Prolog trade. 7 marks: Cat/Tom mountain-vs-template with functions as the kill-shot.
+:::
+
+**Recap facts examiners reward:** `p*d^k` with one worked power; PL-decidable vs. FOL-semi-decidable with loop direction; UNIFY-once escape; function symbols making grounding infinite.
+
+### Sample 3-Mark Question
+**Q: State the grounding count and decidability contrast.**
+
+**Model Answer:** ~p*d^k atoms (arity exponentiates). PL entailment decidable (answer guaranteed); FOL only semi-decidable (yes confirmed, no may loop).
+
+### Sample 7-Mark Question
+**Q: Contrast grounding with lifting on Cat(x)=>Mammal(x) with 10 cats, plus functions.**
+
+**Model Answer:** Grounding instantiates 10 copies plus atoms then fires on Tom; lifting unifies x/Tom once. With Father(x), grounding is infinite while lifting stays one step — photocopies without end versus one template application.
 :::

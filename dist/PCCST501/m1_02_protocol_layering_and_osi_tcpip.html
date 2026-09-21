@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,29 +297,76 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Protocol Layering &amp; OSI/TCP-IP Models</h1>
 <p><strong>Protocols, the rationale for layered architecture, the 7-layer OSI model, the 5-layer TCP/IP model, and encapsulation/decapsulation.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Sending data across the planet involves dozens of sub-problems: which wire or radio carries the bits, who may speak on a shared channel, which path packets take, how lost data is recovered, and what the application&#39;s message even means. No single mechanism can solve all of that — so network designers split the job into a stack of <strong>layers</strong>, each solving one narrow problem and offering a service to the layer above it.</p>
+<p>The problem before the solution: without layering, every application would need its own wiring, routing, and recovery logic, and changing one technology (say, copper to fiber) would force rewriting everything. Layering contains each change inside one layer.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Flying From New York to London</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>In human conversation, a protocol governs <em>what</em> is said and <em>when</em>. If you ask &quot;What time is it?&quot;, the protocol dictates a reply with the time — not an unrelated song. Network protocols are the same idea, formalized: they define the exact <strong>format</strong> and <strong>order</strong> of messages exchanged, plus the <strong>actions</strong> taken when a message is sent or received.</p>
 <p>Now think about flying internationally. You don&#39;t hand your passport to the pilot or discuss baggage weight with air traffic control — the trip is broken into independent <strong>layers</strong>: buying a ticket, checking bags, boarding at the gate, and the physical act of flying. Each layer only needs to know how to talk to the layer directly above and below it. If the airline switches from human baggage handlers to robots, your ticketing and boarding experience doesn&#39;t change at all. This independence between layers — <strong>modularity</strong> — is exactly why network designers split the impossibly complex job of &quot;send data anywhere in the world&quot; into a stack of layers, each solving one narrow problem.</p>
-</div></details><hr>
+<p>Dropping the airport now: a <strong>protocol</strong> is the formal version of conversational etiquette, and <strong>layering</strong> is the formal version of the ticket/baggage/boarding split — the rest of this note names the actual layers.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-the-two-models-then-what-travels-on-the-wire">3. Purpose — The Two Models, Then … →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Protocol</strong></td>
+<td>The rules for one conversation: message <strong>format</strong>, message <strong>order</strong>, and the <strong>actions</strong> taken on send/receive.</td>
+</tr>
+<tr>
+<td><strong>Layer / layered architecture</strong></td>
+<td>One horizontal slice of the networking job (e.g. routing), implemented independently and talking only to adjacent layers.</td>
+</tr>
+<tr>
+<td><strong>OSI (Open Systems Interconnection) model</strong></td>
+<td>A 7-layer reference framework by the ISO (International Organization for Standardization): vocabulary and design guide, rarely implemented literally.</td>
+</tr>
+<tr>
+<td><strong>TCP/IP (Transmission Control Protocol / Internet Protocol) suite</strong></td>
+<td>The 5-layer practical stack the Internet actually runs on.</td>
+</tr>
+<tr>
+<td><strong>PDU (Protocol Data Unit)</strong></td>
+<td>What a layer calls its packaged data: Message, Segment, Datagram, Frame, Bits.</td>
+</tr>
+<tr>
+<td><strong>Encapsulation</strong></td>
+<td>Each layer wrapping the layer-above payload in its own header as data descends the sender&#39;s stack.</td>
+</tr>
+<tr>
+<td><strong>Decapsulation</strong></td>
+<td>Each layer reading and stripping only its own header as data ascends the receiver&#39;s stack.</td>
+</tr>
+<tr>
+<td><strong>Interface / service</strong></td>
+<td>The boundary contract between adjacent layers: what the lower layer offers, what the upper layer may assume.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The OSI Reference Model (7 Layers)</h3>
+<h2 id="3-purpose-the-two-models-then-what-travels-on-the-wire">3. Purpose — The Two Models, Then What Travels on the Wire</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 The OSI Reference Model (7 Layers)</h3>
 <p>Created by ISO as a conceptual, vendor-neutral framework. Rarely implemented exactly as-is in software, but universally used by engineers as a shared troubleshooting vocabulary.</p>
 <pre><code class="language-mermaid">flowchart TB
     L7[&quot;Layer 7 — Application&lt;br/&gt;(HTTP, FTP, SMTP)&quot;]
@@ -330,7 +381,8 @@
 <blockquote>
 <p><strong>Mnemonic (bottom to top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
 </blockquote>
-<h3>2.2 The TCP/IP Model (5 Layers)</h3>
+<p>SSL/TLS (Secure Sockets Layer / Transport Layer Security) provides encryption; JPEG is an image format handled at the presentation layer; MAC (Media Access Control) addresses name adapters on one link; IP (Internet Protocol) and ICMP (Internet Control Message Protocol) handle global addressing and error reporting; TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) are the two transport personalities.</p>
+<h3>3.2 The TCP/IP Model (5 Layers) — Packet Structure Names</h3>
 <p>The Internet actually runs on the simpler, practical TCP/IP suite, which merges OSI&#39;s top three layers into one:</p>
 <table>
 <thead>
@@ -367,7 +419,7 @@
 </tr>
 </tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PDU Names per Layer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Memorize top-down: <strong>M</strong>essage (Application) → <strong>S</strong>egment (Transport) → <strong>D</strong>atagram (Network) → <strong>F</strong>rame (Link) → <strong>B</strong>its (Physical). The classic 3-mark question gives the five names scrambled and asks you to match each to its layer — rehearse it in both directions.</p>
-</div></details><h3>2.3 Encapsulation and Decapsulation</h3>
+</div></details><h3>3.3 Operation Flow: Encapsulation and Decapsulation</h3>
 <p>As data descends the sender&#39;s stack, each layer wraps the payload from the layer above inside its own header — like nesting a letter inside progressively larger envelopes.</p>
 <pre><code class="language-mermaid">flowchart LR
     subgraph Sender[&quot;Sender: Encapsulation (going down)&quot;]
@@ -386,11 +438,13 @@
     G --&gt; F2
 </code></pre>
 <p>On the receiving side, the process reverses exactly: each layer reads only <em>its own</em> header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.</p>
-<hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A browser sends an HTTP GET request for a web page. Trace what the message is called at each layer of the TCP/IP stack as it travels down the sender&#39;s stack and is transmitted onto the wire.</p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-the-two-models-then-what-travels-on-the-wire">← 3. Purpose — The Two Models, Then …</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>You send the 3-letter message &quot;HI!&quot;. The application layer holds a <strong>Message</strong> (&quot;HI!&quot;). Transport adds its header → <strong>Segment</strong>. Network adds the IP (Internet Protocol) header → <strong>Datagram</strong>. Link adds its header and trailer → <strong>Frame</strong>. Physical sends <strong>bits</strong>. Same three characters, five names — the name tells you how far down the stack the data has travelled.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A browser sends an HTTP (HyperText Transfer Protocol) GET request for a web page. Trace what the message is called at each layer of the TCP/IP stack as it travels down the sender&#39;s stack and is transmitted onto the wire.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Encapsulation Layer by Layer</div><div class="step-content"><ol>
 <li><strong>Application layer:</strong> The browser constructs the HTTP GET request — this is a <strong>Message</strong>.</li>
 <li><strong>Transport layer:</strong> TCP wraps the message with a header (containing source/destination port, sequence numbers) — it is now a <strong>Segment</strong>.</li>
@@ -399,10 +453,39 @@
 <li><strong>Physical layer:</strong> The frame is converted into a stream of <strong>bits</strong> — electrical signals, light pulses, or radio waves — and transmitted onto the medium.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The same logical HTTP request is renamed at every layer (Message → Segment → Datagram → Frame → Bits) as successive headers are added. At the receiving web server, this exact sequence runs in reverse: bits are reassembled into a frame, the frame&#39;s header is stripped to reveal a datagram, the datagram&#39;s header is stripped to reveal a segment, and finally the segment&#39;s header is stripped to reveal the original HTTP Message, which is handed to the server&#39;s application process.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>OSI 7 vs. TCP/IP 5</td>
+<td>OSI is the reference vocabulary (Presentation/Session named separately); TCP/IP is the running code (top three merged into Application).</td>
+</tr>
+<tr>
+<td>Encapsulation vs. decapsulation</td>
+<td>Down the sender (add headers) vs. up the receiver (strip only your own layer&#39;s header).</td>
+</tr>
+<tr>
+<td>Segment vs. datagram vs. frame</td>
+<td>Transport vs. network vs. link PDU — layer identity, not size.</td>
+</tr>
+<tr>
+<td>Protocol vs. interface</td>
+<td>Protocol = rules <em>within</em> a layer across machines; interface = contract <em>between</em> adjacent layers on one machine.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Assigning PDU names to the wrong layer (the #1 scramble question — drill both directions). (2) Saying the receiver &quot;reads all headers at once&quot; — each layer touches only its peer&#39;s header. (3) Calling OSI &quot;the Internet&#39;s stack&quot; — the Internet runs TCP/IP; OSI is the reference model.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Protocol = format + order + actions. Layering buys modularity (change one layer, keep its service). OSI 7 bottom-up: Physical, Data Link, Network, Transport, Session, Presentation, Application. TCP/IP 5: Application, Transport, Network, Link, Physical. PDU order top-down: Message → Segment → Datagram → Frame → Bits. Encapsulation descends (wrap), decapsulation ascends (strip own header only).</p>
+</div></details><p><strong>Active-recall checklist:</strong> What three things does a protocol define? Why does layering let Wi-Fi replace Ethernet transparently? Recite the PDU names top-down and bottom-up. Which header does the network layer strip on receipt?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Foundational Concept</span>
@@ -590,7 +673,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_02_protocol_layering_and_osi_tcpip";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

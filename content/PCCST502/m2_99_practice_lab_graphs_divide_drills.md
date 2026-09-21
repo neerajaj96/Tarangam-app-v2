@@ -5,7 +5,7 @@ module: 2
 sequence: 99
 title: 'Module 2 Practice Lab: Graphs & Divide-and-Conquer Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Operate union-find with ranks on the table exactly
   - Autopsy DFS into four edge species without confusion
@@ -29,7 +29,15 @@ tags:
 **Union-Find pointer traces, DFS edge autopsies, Kosaraju order drills, Strassen-vs-naive decisions, and exam essay models.**
 
 <a id="the-intuition"></a>
-## 1. Step-by-Step Scenario Analysis
+## 1. Start from zero — how to use this lab
+
+**Problem first.** Module 2's exam marks go to traces, not slogans: pointer states after each UNION, edge types with colour evidence, Kosaraju orders that survive direction scrutiny, Strassen verdicts with constants acknowledged. Abbreviations: FIND/UNION = the disjoint-set operations; $d[v]$/$f[v]$ = DFS discovery/finish times; OPT = optimal value.
+
+::: callout-intuition Core Mental Model
+Treat each scenario as a marking scheme: state the setup, show every intermediate state (forest with ranks, colours with times, bounds with arithmetic), then conclude with the certificate (connectivity verdict, cycle proof, ratio verdict). The three scenarios below model exactly that discipline.
+:::
+
+**Tiny warm-up.** UNION(1,2) by rank from singletons: tie $0,0$ → 2 under 1, rank(1) = 1. One line, three facts (parent, rank, tie rule cited).
 
 ### Scenario 1: Union-Find Surgery (Ranks on the Table)
 

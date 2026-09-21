@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,26 +281,30 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Branch &amp; Bound: Control Abstraction</h1>
 <p><strong>Live/E/dead nodes, LC-search vs. FIFO/LIFO, bounding functions, and how cost-bounds generalize backtracking&#39;s feasibility pruning.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Treasure Hunter with a Map Legend</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Backtracking explores caves corridor by corridor, retreating only from dead ends. <strong>Branch &amp; bound</strong> carries one extra instrument: a legend estimating the <em>best treasure any tunnel could possibly hold</em> (<strong>bound</strong>). At each fork it explores the most promising tunnel first (<strong>least-cost search</strong>), and abandons any tunnel whose legend reads worse than treasure already in hand (<strong>prune by bound</strong>). Same caves, far fewer footsteps — the map legend converts blind retreat into informed abandonment.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Backtracking prunes dead ends (infeasible branches) — but optimization problems (cheapest tour, best assignment) need more: abandoning branches that are feasible yet <em>provably worse than a solution already in hand</em>. <strong>Branch &amp; Bound (B&amp;B)</strong> adds exactly this second blade: an optimistic cost estimate (bound) per branch plus a running best (incumbent), killing branches that cannot win.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Treasure Hunter with a Map Legend</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Backtracking explores caves corridor by corridor, retreating only from dead ends. <strong>Branch &amp; bound</strong> carries one extra instrument: a legend estimating the <em>best treasure any tunnel could possibly hold</em> (<strong>bound</strong>). At each fork it explores the most promising tunnel first (<strong>least-cost search</strong>), and abandons any tunnel whose legend reads worse than treasure already in hand (<strong>prune by bound</strong>). Same caves, far fewer footsteps — the legend converts blind retreat into informed abandonment. Drop the caves now: bounds, incumbents, and queue disciplines below are the exact machinery.</p>
+</div></details><p><strong>Tiny toy example (minimize).</strong> Two branches: left promises ≥ 20 (bound), right promises ≥ 40. Explore left first, find a full solution costing 25 (incumbent 25). Right&#39;s bound 40 ≥ 25 → kill it unvisited. One addition saved a whole subtree.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Vocabulary: Live, E, Dead</h3>
-<ul>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-bound-kill-and-choose-the-next-e-node">3. Worked example — bound, kill, a… →</a></p>
+<p><strong>Symbols and abbreviations:</strong> E-node = expansion node (the live node currently being expanded); $\hat{c}(x)$ = bounding function (cheap optimistic estimate of the best cost in $x$&#39;s subtree); incumbent = best complete solution found so far; FIFO = first-in-first-out (queue); LIFO = last-in-first-out (stack); LC = least-cost (priority queue on $\hat{c}$).</p>
+<p><strong>Vocabulary — numbered states:</strong></p>
+<ol>
 <li>The <strong>state-space tree</strong> enumerates partial solutions (level $i$ fixes decision $i$).</li>
-<li>A <strong>live node</strong> is generated but unexplored (waiting in the queue); the <strong>E-node</strong> (expansion node) is the live node currently being expanded; a node becomes <strong>dead</strong> once fully expanded or killed.</li>
-<li><strong>Bounding function</strong> $\hat{c}(x)$: a cheap, optimistic estimate of the best achievable cost in $x$&#39;s subtree (lower bound for minimization). If $\hat{c}(x) \ge$ <strong>incumbent</strong> (best complete solution found so far), kill $x$ — its subtree cannot improve anything.</li>
-</ul>
-<h3>2.2 Search Strategies: Who Becomes E-Node Next?</h3>
+<li>A <strong>live node</strong> is generated but unexplored (waiting); the <strong>E-node</strong> is being expanded now; a node is <strong>dead</strong> once expanded or killed.</li>
+<li><strong>Bounding function</strong> $\hat{c}(x)$: optimistic best cost below $x$ (lower bound for minimization). If $\hat{c}(x) \ge$ <strong>incumbent</strong>, kill $x$ — nothing underneath improves anything.</li>
+</ol>
+<p><strong>Search strategies (who becomes E-node next?):</strong></p>
 <table>
 <thead>
 <tr>
@@ -325,22 +329,52 @@
 <td>Always chase the most promising bound</td>
 </tr>
 </tbody></table>
-<p>LC-search + strong bounds is the flagship combination (TSP next topic); FIFO/LIFO need only a ranking counter, LC needs a priority queue on $\hat{c}$.</p>
-<h3>2.3 B&amp;B vs. Backtracking (Superset, Not Rival)</h3>
-<p>Backtracking prunes on <strong>feasibility</strong> (constraint violation ⇒ dead). Branch &amp; bound prunes on feasibility <strong>plus cost</strong> ($\hat{c}(x)$ worse than incumbent ⇒ dead). Every backtracking search is B&amp;B with the cost machinery idle; every B&amp;B run on a pure satisfaction problem collapses to backtracking. Worst case stays exponential — bounds buy typical-case miracles, never complexity cures (Module 3&#39;s pitfall, inherited).</p>
+<p>LC + strong bounds is the flagship (TSP next); FIFO/LIFO need only a counter, LC needs a priority queue on $\hat{c}$.</p>
+<p><strong>B&amp;B vs backtracking (superset, not rival).</strong> Backtracking prunes on <strong>feasibility</strong> (violation ⇒ dead). B&amp;B prunes on feasibility <strong>plus cost</strong> ($\hat{c}(x)$ worse than incumbent ⇒ dead). Backtracking = B&amp;B with cost machinery idle; B&amp;B on pure satisfaction collapses to backtracking. Worst case stays exponential — bounds buy typical-case miracles, never complexity cures.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: B&amp;B Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Nodes: <strong>live → E-node → dead</strong> · strategies: <strong>FIFO / LIFO / LC</strong> (least-$\hat{c}$) · prune when <strong>$\hat{c}(x) \ge$ incumbent</strong> · bound must be <strong>optimistic</strong> (never overestimate promise for minimization) <strong>and cheap</strong> (a bound slower than search defeats itself).</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Optimistic Bounds Only — Direction Matters</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For minimization, $\hat{c}$ must <strong>underestimate</strong> (admissible, like A* heuristics): an overestimate prunes the optimum and the answer goes wrong <em>silently</em>. For maximization, mirror it (overestimate). A bound erring toward pessimism isn&#39;t &quot;safe&quot; — it&#39;s a correctness bug wearing caution&#39;s clothes.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>4-job assignment-style selection: partial solution $x$ fixes jobs 1–2 costing 12 so far; remaining jobs 3–4 have cheapest-possible completions 9 and 11 (ignoring conflicts — optimistic by construction). Incumbent full solution costs 30. Bound $x$, decide its fate, and state which strategy picks the next E-node under LC vs FIFO.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Bounding and Choosing</div><div class="step-content"><p>$\hat{c}(x) = 12 + 9 + 11 = 32 \ge 30 =$ incumbent → <strong>kill $x$ unexpanded</strong> (no completion through $x$ can beat 30). LC-search would next expand the live node with smallest $\hat{c}$; FIFO would take the oldest regardless of promise — here LC&#39;s priority queue skips straight past $x$&#39;s entire subtree.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One addition ($12+9+11$) pruned an exponentially-sized subtree sight unseen — provided the bound was genuinely optimistic (conflict-ignoring estimates always are: reality can only cost <em>more</em>). That inequality direction is the whole algorithm; everything else is queue discipline.</p>
+<h2 id="3-worked-example-bound-kill-and-choose-the-next-e-node">3. Worked example — bound, kill, and choose the next E-node</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>4-job selection: partial solution $x$ fixes jobs 1–2 costing 12; remaining jobs 3–4 have cheapest-possible completions 9 and 11 (conflicts ignored — optimistic by construction). Incumbent full solution costs 30. Bound $x$, decide its fate; say who LC vs FIFO expands next.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Bounding and Choosing</div><div class="step-content"><p>$\hat{c}(x) = 12 + 9 + 11 = 32 \ge 30 =$ incumbent → <strong>kill $x$ unexpanded</strong> (no completion through $x$ beats 30). LC-search next expands the live node with smallest $\hat{c}$; FIFO takes the oldest regardless of promise — here LC&#39;s queue skips $x$&#39;s entire subtree.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One addition ($12+9+11$) pruned an exponential subtree sight unseen — valid only because the bound was genuinely optimistic (conflict-ignoring estimates always are: reality costs <em>more</em>). Inequality direction is the whole algorithm; the rest is queue discipline.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-bound-kill-and-choose-the-next-e-node">← 3. Worked example — bound, kill, a…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Prune on $\ge$, not $&gt;$: equality means &quot;can at best tie&quot; — ties never improve, so killing on equality is correct (more next note).</li>
+<li>Loose-but-optimistic bounds waste time, never correctness; tight-but-pessimistic bounds destroy correctness silently. Only one direction is safe.</li>
+<li>A bound costlier than the search it saves is self-defeating — &quot;cheap&quot; is a requirement, not a wish.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Live vs E-node vs dead</td>
+<td>Waiting vs expanding vs finished/killed (lifecycle, not priority)</td>
+</tr>
+<tr>
+<td>FIFO vs LIFO vs LC</td>
+<td>Oldest vs newest vs smallest-bound next (LC pairs with bounding)</td>
+</tr>
+<tr>
+<td>Backtracking vs B&amp;B</td>
+<td>Feasibility pruning vs + cost-vs-incumbent pruning</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> the three node states; the three strategies with LC&#39;s promise-chasing; prune rule $\hat{c}(x) \ge$ incumbent; optimistic direction (underestimate for minimization) + cheapness.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A minimization B&amp;B node x has bound ĉ(x) = 32 and the incumbent costs 30. A student argues for expanding x &quot;in case the bound is loose.&quot; What is wrong?</span>

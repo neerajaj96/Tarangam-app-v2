@@ -5,11 +5,12 @@ module: 4
 sequence: 4
 title: 'Modulation: ASK, FSK, PSK & QAM'
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 9
 learningObjectives:
   - Match ASK, FSK, and PSK to their noise trade-offs
   - Pack bits per symbol on QAM constellations
   - Never confuse baud with bit rate except for binary
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - ASK/FSK/PSK
   - QAM
@@ -26,31 +27,48 @@ tags:
 **Why baseband can't travel, amplitude/frequency/phase keying, constellation diagrams, baud vs. bit rate, and QAM arithmetic.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+Digital pulses (baseband) radiate terribly from antennas — efficient radiation needs antennas near the wavelength scale, so kilohertz pulses would want kilometer antennas — and they die quickly on long wired runs. The fix: mount the bits on a rugged high-frequency **carrier wave** built for the medium, varying one of its properties to encode data.
+
+The problem before the solution: choose *which* carrier property to vary (amplitude, frequency, phase — each with a noise/bandwidth price) and how many bits to pack per symbol (constellation density, policed by SNR — Signal-to-Noise Ratio).
 
 ::: callout-intuition Core Mental Model: Semaphore Flags at Night
-Daylight flag signals (baseband digital pulses) work line-of-sight — but you can't wave flags through a storm or across an ocean. Instead you mount a **lantern** (carrier wave) on the tower and modulate *it*: brightness steps (**ASK**), color swaps (**FSK**), or timing shifts of the blink (**PSK**). Combine brightness × timing grids and one blink carries a whole syllable (**QAM**). Modulation is always the same trick: graft fragile digital distinctions onto a rugged analog carrier built for the medium.
+Daylight flag signals (baseband digital pulses) work line-of-sight — but you can't wave flags through a storm or across an ocean. Instead you mount a **lantern** (carrier wave) on the tower and modulate *it*: brightness steps (**ASK** — Amplitude-Shift Keying), color swaps (**FSK** — Frequency-Shift Keying), or timing shifts of the blink (**PSK** — Phase-Shift Keying). Combine brightness × timing grids and one blink carries a whole syllable (**QAM** — Quadrature Amplitude Modulation). Modulation is always the same trick: graft fragile digital distinctions onto a rugged analog carrier built for the medium.
+
+Dropping the lantern now: carrier = high-frequency wave; symbol = one modulated unit; baud = symbols/sec; constellation = the grid of legal symbol states.
 :::
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **Carrier wave** | The high-frequency analog wave whose properties are varied to carry bits. |
+| **ASK (Amplitude-Shift Keying)** | Bit → carrier amplitude (on/off simplest). Cheap, fragile — noise attacks amplitude first. |
+| **FSK (Frequency-Shift Keying)** | Bit → one of two frequencies. Robust to amplitude noise; burns bandwidth. |
+| **PSK (Phase-Shift Keying)** | Bit → carrier phase ($0°/180°$ for BPSK — Binary PSK). Toughest of the three. |
+| **QAM (Quadrature Amplitude Modulation)** | ASK × PSK grid: constellation of $N$ points packing $\log_2 N$ bits per symbol (QAM-16: 4; QAM-64: 6). |
+| **Constellation diagram** | The amplitude–phase grid of legal symbols; denser = more bits per symbol, tighter decision regions. |
+| **Baud ($S$, symbols/sec)** | Signal changes per second — needs bandwidth. Distinct from bit rate $R = S \times \log_2 N$. |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Why Modulate, Three Keyings, Baud Math
 
-### 2.1 Why Modulate at All
+### 3.1 Why Modulate at All
 
 Baseband pulses need a clean wired path and radiate terribly from antennas (efficient radiation needs antennas ~ wavelength scale — kHz digital pulses would want kilometer antennas). Shifting the signal onto a high-frequency carrier solves propagation; *varying* the carrier encodes the bits.
 
-### 2.2 The Three Keyings (+1 Combination)
+### 3.2 The Three Keyings (+1 Combination)
 
 * **ASK** (amplitude-shift keying): bit $\to$ carrier amplitude (on/off simplest). Cheap, fragile — noise attacks amplitude first.
 * **FSK** (frequency-shift keying): bit $\to$ one of two frequencies. Robust to amplitude noise; burns bandwidth (two carriers' worth).
 * **PSK** (phase-shift keying): bit $\to$ carrier phase ($0°/180°$ for BPSK). Best noise immunity of the three — noise must rotate phase, not just nudge height.
 * **QAM** (quadrature amplitude modulation): **ASK × PSK grid** — constellation points spread over amplitude *and* phase. QAM-$N$ packs $\log_2 N$ bits per symbol (QAM-16: 4 bits/baud; QAM-64: 6 bits/baud) at the price of ever-tighter decision regions.
 
-### 2.3 Baud vs. Bit Rate (the Eternal Confusion)
+### 3.3 Baud vs. Bit Rate (the Eternal Confusion), Symbol by Symbol
 
-**Baud** = symbols (signal changes) per second. **Bit rate** = baud × bits-per-symbol:
+**Baud** $S$ = symbols (signal changes) per second. **Bit rate** $R$ = baud × bits-per-symbol, with $N$ = constellation points:
 
 $$R = S \times \log_2 N$$
 
@@ -64,10 +82,14 @@ ASK = **amplitude** (fragile) · FSK = **frequency** (bandwidth-hungry) · PSK =
 "2400 baud = 2400 bps" holds *only* for 2-level signaling (1 bit/symbol). The moment the constellation holds 4+ points, bit rate exceeds baud rate — and the exam's favorite wrong answer is exactly the baud number offered as the bit rate. Multiply by $\log_2 N$ first, answer second.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+1200 baud, QPSK (4 phases): $\log_2 4 = 2$ bits/symbol → $R = 2400$ bps. Same 1200 baud, BPSK ($N = 2$): $R = 1200$ bps — here, and only here, baud equals bit rate.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
 A modem operates at $2400$ baud. (a) Bit rate with QPSK (4 phases)? (b) With QAM-64? (c) Which needs the cleaner line, and how does this relate to the Shannon ceiling?
@@ -83,10 +105,26 @@ A modem operates at $2400$ baud. (a) Bit rate with QPSK (4 phases)? (b) With QAM
 Same wire, same baud, $3\times$ the throughput — bought purely with SNR. Modulation design is the art of spending signal quality on bits, with Shannon auditing every purchase.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| Baud vs. bit rate | Symbols/s vs. $S\log_2N$ data/s — equal only for binary. |
+| ASK vs. FSK vs. PSK | Amplitude (fragile) vs. frequency (hungry) vs. phase (toughest). |
+| Raising baud vs. raising density | Costs bandwidth vs. costs SNR (Shannon polices the second). |
+| Baseband vs. carrier | Raw pulses (short hops) vs. modulated carrier (propagation-grade). |
+
+**Watch out:** (1) Answering the baud number as the bit rate — multiply first. (2) "Denser constellations are free throughput" — density without SNR manufactures errors. (3) Ranking ASK toughest — amplitude is noise's first victim.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+Modulate because baseband can't propagate (antenna/wavelength physics). ASK = amplitude (fragile), FSK = frequency (hungry), PSK = phase (toughest); QAM-$N$ = $\log_2N$ bits/symbol on an ASK×PSK grid. $R = S\log_2N$; baud = symbols/s. Density trades SNR, audited by Shannon.
+:::
+
+**Active-recall checklist:** Why can't baseband cross an ocean? Rank the three keyings with reasons. Compute $R$ for 2400-baud QAM-16. What polices constellation density?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz A line runs at 1200 baud using 8-PSK. What is the bit rate, and why isn't it 1200 bps?
 () 1200 bps — baud always equals bit rate by definition

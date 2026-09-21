@@ -269,57 +269,80 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>CSPs &amp; AC-3: Constrain, Propagate, Then Search</h1>
-<p><strong>Variables, domains, constraints — node/arc consistency as a pruning engine, one AC-3 trace solved without search, and the triangle that proves propagation is not enough.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Seating Feuds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A CSP seats guests (variables) into chairs (domains) so no feud (constraint) shares a table. <strong>Arc consistency</strong> interrogates each feud direction: every guest must have <em>some</em> compatible partner across the table — guests with none are unseated before the party starts. AC-3 repeats the interrogation until nobody else is ejected; whatever chairs survive, backtracking searches.</p>
-</div></details><p>Generate-and-test (M2.6) filled whole seatings blindly; propagation deletes impossible chairs <em>before</em> guessing — the standard pipeline is constrain, propagate, then search only the residue.</p>
-<hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 CSP anatomy</h3>
-<p>Variables $X_i$, domains $D_i$, constraints (unary/binary/global like Alldiff). An <strong>arc</strong> $X \to Y$ is consistent if every $x \in D_X$ has some $y \in D_Y$ satisfying the constraint. <strong>AC-3</strong> queues all arcs, revises (deleting unsupported values), and re-queues neighbours of every shrunk domain — $O(ed^3)$ time, terminating with the maximal arc-consistent domains.</p>
-<h3>2.2 Limits</h3>
-<p>Arc consistency never invents values and never detects <em>global</em> inconsistency alone: the 2-colour triangle (M2.6) is arc-consistent yet unsatisfiable. Propagation prunes; search decides.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: CSP + AC-3</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arc $X \to Y$: each $x$ needs a supporting $y$ · revise deletes unsupported · re-queue neighbours on shrink · $O(ed^3)$ · arc-consistent $\ne$ solvable.</p>
-</div></details><p>Arcs are directed: revising $X \to Y$ can shrink $X$ only — students who &quot;revise once per pair&quot; skip half the queue and leak values that propagation would have caught.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Consistency-Level Confusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Node consistency (unary), arc consistency (binary pairs), path consistency (triples) — each strictly stronger. Claiming AC-3 &quot;solves CSPs&quot; promotes a pruning level to a solver; the triangle counterexample demotes it back in one line.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Variables $X, Y$ with $D_X = D_Y = {1, 2}$, constraint $X &lt; Y$. Run AC-3&#39;s revisions to fixpoint and state the result.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Interrogating Both Arcs</div><div class="step-content"><p>Revise $X \to Y$: $x = 1$ keeps support ($y = 2 &gt; 1$ ✓); $x = 2$ has no $y &gt; 2$ — delete $2$, so $D_X = {1}$ (shrunk → re-queue neighbours). Revise $Y \to X$: $y = 1$ needs $x &lt; 1$ from ${1}$ — none, delete $1$; $y = 2$ supported by $x = 1$ ✓. Fixpoint: $D_X = {1}$, $D_Y = {2}$ — the unique solution, found with zero search.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$X = 1$, $Y = 2$ by propagation alone. Contrast the M2.6 triangle: there every value keeps arc support (each colour appears opposite), so AC-3 deletes nothing and search must break the symmetry — prune-then-search, each doing its own job.</p>
-</div></div><hr>
+<p><strong>Problem: generate-and-test fills whole doomed assignments. Can we delete impossible values before guessing? By the end you can frame any CSP (Constraint Satisfaction Problem), run the AC-3 (Arc Consistency algorithm 3) queue by hand, and prove propagation alone does not solve everything.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-seating-feuds">1. Start From Zero: Seating Feuds</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-csp-anatomy-and-the-ac-3-loop">2. Basic Layer: CSP Anatomy and th… →</a></p>
+<p>Guests (variables) need chairs (domains) with no feud (constraint) sharing a table. <strong>Arc consistency</strong> interrogates each feud direction: every guest must keep some compatible partner across the table — guests with none are unseated before the party. AC-3 repeats until nobody else is ejected; backtracking searches only the survivors.</p>
+<p><strong>Definitions:</strong> variable <code>X_i</code> (what to assign); domain <code>D_i</code> (allowed values); constraint (allowed combinations; unary on one variable, binary on pairs, global like Alldiff). An <strong>arc</strong> <code>X -&gt; Y</code> (directed pair) is consistent iff every <code>x</code> in <code>D_X</code> has some supporting <code>y</code> in <code>D_Y</code> satisfying the constraint.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Seating Feuds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;delete unsupported values first&quot; here, then drop the party; directed arcs plus the re-queue rule below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> X, Y in {1, 2} with X &lt; Y. Value 2 in X has no partner above it — delete 2 from X before any search. Propagation solves pieces of the puzzle for free.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-csp-anatomy-and-the-ac-3-loop">2. Basic Layer: CSP Anatomy and the AC-3 Loop</h2>
+<p class="secnav"><a href="#1-start-from-zero-seating-feuds">← 1. Start From Zero: Seating Feuds</a><span class="secnav-sep">·</span><a href="#3-formal-layer-limits-and-levels">3. Formal Layer: Limits and Levels →</a></p>
+<p><strong>Data/state:</strong> current domains per variable. <strong>Goal:</strong> shrink domains to their maximal arc-consistent sets, then search the residue.</p>
+<p><strong>Procedure — AC-3 (steps then trace):</strong> Step 1: queue every directed arc. Step 2: pop arc <code>X -&gt; Y</code>, <strong>revise</strong> (delete each <code>x</code> with zero supporting <code>y</code>). Step 3: if <code>D_X</code> shrank, re-queue every neighbour arc <code>Z -&gt; X</code> (their supports may have lost witnesses). Step 4: repeat to quiescence (empty queue). Complexity <code>O(e*d^3)</code> (e = constraint arcs, d = max domain size) — quoted as the price of full propagation.</p>
+<p><strong>Trace on X &lt; Y with D = {1,2} both:</strong> revise X-&gt;Y: 1 supported by 2, 2 unsupported — delete 2, D_X = {1}, re-queue neighbours. Revise Y-&gt;X: 1 needs x &lt; 1 from {1} — none, delete 1; 2 supported by 1. Fixpoint: X={1}, Y={2} — unique solution with zero search.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-limits-and-levels">3. Formal Layer: Limits and Levels</h2>
+<p class="secnav"><a href="#2-basic-layer-csp-anatomy-and-the-ac-3-loop">← 2. Basic Layer: CSP Anatomy and th…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Meaning, variables, formula:</strong> arc <code>X -&gt; Y</code> consistent iff <code>for every x in D_X there exists y in D_Y with constraint(x,y)</code>. Revision is existential per value (one witness saves, zero deletes). Arcs are directed: revising <code>X -&gt; Y</code> shrinks only X — one pass per undirected pair skips half the work.</p>
+<p><strong>Limit theorem:</strong> arc consistency never invents values and never detects global inconsistency alone. The 2-colour triangle (previous topic) with domains {R,G} everywhere: each value keeps a witness on every arc (R opposite G), so AC-3 deletes nothing — yet globally no solution exists. Propagation prunes; search decides.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: CSP + AC-3</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arc X-&gt;Y: each x needs a supporting y. Revise deletes unsupported. Shrink re-queues neighbours. <code>O(e*d^3)</code>. Arc-consistent does not imply solvable.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Consistency-Level Confusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Node (unary), arc (binary pairs), path (triples) — strictly stronger in order. &quot;AC-3 solves CSPs&quot; promotes a pruning level to a solver; the triangle counterexample demotes it in one line.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-limits-and-levels">← 3. Formal Layer: Limits and Levels</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Propagation vs. search</td>
+<td>Deletes impossible values vs. guesses among survivors</td>
+</tr>
+<tr>
+<td>Directed vs. undirected arcs</td>
+<td>Re-queue neighbours pointing at shrunk domains vs. revisiting nothing</td>
+</tr>
+<tr>
+<td>Node vs. arc vs. path consistency</td>
+<td>Unary vs. pair vs. triple strength</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Revision arithmetic is per-value existential — check every value for at least one witness. (2) Skipping re-queue forfeits cascades (single-pass &quot;AC-1 thinking&quot;). (3) Empty domain means proven local impossibility — backtrack immediately.</p>
+<p><strong>Limitations:</strong> <code>O(e*d^3)</code> on large domains; arc-consistent-but-unsatisfiable cases need search or stronger (path/global) consistency; global constraints need specialized propagators beyond binary arcs.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Revision Arithmetic</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$D_A = {1, 2, 3}$, $D_B = {2}$, constraint $A &gt; B$. Revise $A \to B$?</p>
+  <div class="quiz-prompt"><p>D_A = {1, 2, 3}, D_B = {2}, constraint A &gt; B. Revise A -&gt; B?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Delete nothing, all supported</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Delete $1$ and $2$, keeping $\{3\}$ — $1 &gt; 2$ is false, $2 &gt; 2$ is false, only $3 &gt; 2$ holds, and revision keeps a value only if some witness in $D_B$ supports it</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Delete $3$ instead</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Delete 1 and 2, keeping {3} — 1 &gt; 2 is false, 2 &gt; 2 is false, only 3 &gt; 2 holds, and revision keeps a value only if some witness in D_B supports it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Delete 3 instead</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Wipe the whole domain</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
@@ -332,7 +355,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$1 &gt; 2$ false, $2 &gt; 2$ false, $3 &gt; 2$ true — only $3$ has a supporting $b$. Revision is existential per value: one witness saves, zero witnesses deletes. Candidates ${1, 2}$ fall together here.</p><pre><code>&lt;/div&gt;
+      <p>Existential per value: 1 and 2 find no supporting b, 3 finds b = 2. Only witnessed values survive revision.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -340,12 +363,12 @@
     <span class="quiz-category">Q2: Queue Discipline</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Revising $X \to Y$ shrinks $D_X$. Which arcs re-queue?</p>
+  <div class="quiz-prompt"><p>Revising X -&gt; Y shrinks D_X. Which arcs re-queue?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>None, one pass suffices</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>All arcs $Z \to X$ (neighbours pointing at $X$), because their supports may have just lost their witness — skipping re-queue misses cascading deletions, AC-3&#39;s entire power</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Only $X \to Y$ itself</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>All arcs Z -&gt; X (neighbours pointing at X), because their supports may have just lost their witness — skipping re-queue misses cascading deletions, AC-3&#39;s entire power</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Only X -&gt; Y itself</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Every arc in the problem</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
@@ -358,7 +381,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Shrinkage invalidates supports elsewhere; neighbours must re-prove their values against the smaller domain. Chains of such cascades solve whole puzzles — single-pass &quot;AC-1 thinking&quot; forfeits them.</p><pre><code>&lt;/div&gt;
+      <p>Shrinkage invalidates supports elsewhere. Neighbours must re-prove values against the smaller domain; chains of cascades solve whole puzzles.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -366,11 +389,11 @@
     <span class="quiz-category">Q3: Limit Witness</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>2-colour triangle, all domains ${R, G}$. AC-3 deletes?</p>
+  <div class="quiz-prompt"><p>2-colour triangle, all domains {R, G}. AC-3 deletes?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Everything, inconsistency found</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Nothing — each value keeps a witness ($R$ opposite $G$ on every arc), yet globally no solution exists: arc-consistent but unsatisfiable, propagation&#39;s boundary stone</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Nothing — each value keeps a witness (R opposite G on every arc), yet globally no solution exists: arc-consistent but unsatisfiable, propagation&#39;s boundary stone</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>One colour per node</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>AC-3 crashes on cycles</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -384,10 +407,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Local support $\ne$ global solution: every arc is happy while the whole is impossible. This exact case separates &quot;pruning&quot; from &quot;solving&quot; — search (or stronger consistency) must finish the job.</p><pre><code>&lt;/div&gt;
+      <p>Local support differs from global solution. Every arc is happy while the whole is impossible — search or stronger consistency must finish.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: CSP triple plus arc-consistency definition. 7 marks: full AC-3 trace to fixpoint with queue states, plus the triangle limit.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> variables/domains/constraints; directed-arc definition; revise-plus-requeue loop; <code>O(e*d^3)</code>; X&lt;Y fixpoint {1}/{2}; triangle as arc-consistent-yet-unsatisfiable.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Define CSP and arc consistency.</strong></p>
+<p><strong>Model Answer:</strong> Variables with domains plus constraints on combinations. Arc X-&gt;Y consistent iff each x has a supporting y satisfying the constraint.</p>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Run AC-3 on X&lt;Y with {1,2} and contrast the triangle.</strong></p>
+<p><strong>Model Answer:</strong> Revisions delete 2 from X then 1 from Y, leaving X=1, Y=2 with zero search. Triangle deletes nothing despite unsatisfiability — local witnesses everywhere, global solution nowhere — so propagate-then-search.
+:::</p>
 
     </main>
 

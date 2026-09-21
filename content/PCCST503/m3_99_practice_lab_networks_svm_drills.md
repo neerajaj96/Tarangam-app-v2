@@ -5,11 +5,12 @@ module: 3
 sequence: 99
 title: 'Module 3 Practice Lab: Networks & SVM Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 14
 learningObjectives:
-  - Audit perceptron mistakes against separability bounds
+  - Audit perceptron mistakes against separability bounds from first principles
   - Verify gradients ritualistically against finite differences
   - Shop margins and prescribe kernels with C honestly
+  - State vanishing, margin and capacity fixes without jargon
 concepts:
   - mistake audit
   - gradient ritual
@@ -26,14 +27,16 @@ tags:
 ---
 # Module 3 Practice Lab: Networks & SVM Drills
 
-**Mistake-counting races, gradient verification, margin comparisons, kernel/C decisions, and exam essay models.**
+**How to use this lab as a beginner: count mistakes against bounds, prove gradients with finite differences, shop separators by norm, and prescribe kernels from geometry plus noise.**
 
 <a id="the-intuition"></a>
 ## 1. Step-by-Step Scenario Analysis
 
+Beginner protocol: problem first, then data and goal, then method. Bounds certify, they never predict typical runs.
+
 ### Scenario 1: Perceptron Mistake Audit
 
-Dataset from M3 (separable, boundary $x_1 = 2$ found): the verified trace made exactly **4 mistakes** (C once, then A/C/D) before eternal silence. Now bound it: points inside radius $R = \sqrt{18} \approx 4.24$ (farthest $(3,3)$). A witness separator $x_1 = 1.5$ (unit normal) clears $A$ by $0.5$, $D$ by $0.5$, the rest by more — so max-margin $\gamma^* \ge 0.5$ and $(R/\gamma)^2 \lesssim (4.24/0.5)^2 \approx 72$ mistakes. Actual: 4. The bound is *valid* (4 ≤ 72) and *loose* (typical) — guarantees certify finiteness, never efficiency. Report both numbers and their relationship, never just one.
+Dataset from M3 (separable, boundary $x_1 = 2$ found): the verified trace made exactly **4 mistakes** (C once, then A/C/D) before eternal silence. Now bound it: points inside radius $R = \sqrt{18} \approx 4.24$ (farthest $(3,3)$). A witness separator $x_1 = 1.5$ (unit normal) clears $A$ by $0.5$, $D$ by $0.5$, the rest by more — so max-margin $\gamma^* \ge 0.5$ and $(R/\gamma)^2 \lesssim (4.24/0.5)^2 \approx 72$ mistakes. Actual: 4. The bound is *valid* (4 ≤ 72) and *loose* (typical) — guarantees certify finiteness under separability, never efficiency. Report both numbers and their relationship, never just one.
 
 ### Scenario 2: Gradient Verification Ritual
 
@@ -41,7 +44,7 @@ Before trusting any backprop implementation, run the ritual from M3: analytic $[
 
 ### Scenario 3: Margin Shopping (P vs. Q, Decided)
 
-Separators P ($\lVert w\rVert = 0.5$) and Q ($\lVert w\rVert = 4$), identical training accuracy. Corridor widths: P $2/0.5 = 4.0$, Q $2/4 = 0.5$. P tolerates $8\times$ the test-time wobble — *and* P's weights likely came from stronger regularization (smaller norm = wider corridor = the same object). Shop by $\lVert w\rVert$ ascending among zero-training-error candidates: minimum norm *is* maximum margin *is* the generalization bet, three names for one number.
+Separators P ($\lVert w\rVert = 0.5$) and Q ($\lVert w\rVert = 4$), identical training accuracy. Corridor widths: P $2/0.5 = 4.0$, Q $2/4 = 0.5$. P tolerates $8\times$ the test-time wobble — *and* P's weights likely came from stronger regularization (smaller norm = wider corridor = the same object). Shop by $\lVert w\rVert$ ascending among zero-training-error candidates: minimum norm *is* maximum margin *is* the generalization bet, three names for one number. Qualification: this bets on robustness under separability; on noisy data add soft margins and validate.
 
 ### Scenario 4: Kernel & C Prescription Desk
 

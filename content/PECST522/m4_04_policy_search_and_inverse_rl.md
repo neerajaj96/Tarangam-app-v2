@@ -5,7 +5,7 @@ module: 4
 sequence: 4
 title: Policy Search & Inverse Reinforcement Learning
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 8
 learningObjectives:
   - Compare value-based and policy-based learning on action spaces
   - Climb policy space where action maximization turns intractable
@@ -23,54 +23,57 @@ tags:
 ---
 # Policy Search & Inverse Reinforcement Learning
 
-**Skipping value functions: parameterized policies, hill-climbing in policy space, and flipping the problem — inferring rewards from expert behavior.**
+**Problem: value methods need `argmax` over actions (impossible for continuous torques) and rewards are rarely written down — experts just behave. By the end you can climb policy space directly and infer objectives from demonstrations.**
 
-<a id="the-intuition"></a>
-## 1. Beyond Value Functions
+<a id="start-zero"></a>
+## 1. Start From Zero: Choreography vs. Physics
+
+Value methods learn the physics (how good every situation is) then derive behaviour. **Policy search** skips physics and choreographs directly: parametrize the dance (`pi_theta` — e.g. a neural net mapping sensors to motor torques with weights theta), perform it, measure applause (total reward), adjust toward applause. Grading every (state, torque-vector) pair is hopeless for a 7-joint arm — tweaking dance parameters by feel works.
 
 ::: callout-intuition Core Mental Model: Choreography vs. Physics
-Value methods learn the *physics* of the world (how good every situation is) and derive behavior from it. **Policy search** skips physics and choreographs directly: parametrize the *dance* ($\pi_\theta$ — e.g. a neural net mapping sensors to motor torques), perform it, measure applause (total reward), and adjust the choreography toward what earned applause. For a robot with continuous joints, grading every (state, torque-vector) pair is hopeless — but tweaking dance parameters by feel works beautifully.
+Feel "tune behaviour, skip value tables" here, then drop the dance; policy gradients plus the inverse-RL ambiguity below are the technical content.
 :::
 
----
+**Tiny beginner example:** a thermostat threshold theta (turn on below theta degrees). Try theta 19 (bill \$80, comfort 7), theta 21 (bill \$95, comfort 9) — hill-climb theta toward the scored trade-off. No value per temperature needed, just dance-parameter scores.
 
-<a id="the-dimensions"></a>
-## 2. Policy Search: Hill-Climbing on Expected Reward
+<a id="basics"></a>
+## 2. Basic Layer: Hill-Climbing Expected Reward
 
-Parametrize the policy by $\theta$ (weights, thresholds, trajectory splines). Define $J(\theta) = \mathbb{E}[\text{total reward following } \pi_\theta]$. Then **optimize directly**:
+**Data/state:** parametrized stochastic policies `pi_theta`. **Goal:** `theta* = argmax J(theta)` where `J(theta) = E[total reward following pi_theta]` (expected return).
 
-* **Finite differences / hill climbing:** jiggle $\theta$, keep jiggles that score higher. Simple, gradient-free — and sample-hungry.
-* **Policy gradients (REINFORCE idea):** $\nabla_\theta J \approx$ average over trials of $(\text{return}) \times \nabla_\theta \log \pi_\theta(\text{actions taken})$ — actions from high-return trials get reinforced *in proportion to their surprise-weighted contribution*. Follows the gradient uphill, trial by trial.
+**Method (two flavours):** **finite differences / hill climbing:** jiggle theta, keep jiggles scoring higher — simple, gradient-free, sample-hungry. **Policy gradients (REINFORCE idea):** estimated gradient `grad J ≈ average over trials of return x grad log pi_theta(actions taken)` — actions from high-return trials get reinforced in proportion to surprise-weighted contribution; follow uphill trial by trial.
 
-Strengths: handles **continuous, high-dimensional actions** (robotics, games) where $\max_a Q(s,a)$ is intractable; learns **stochastic policies** naturally (essential for partially observable and adversarial settings). Weaknesses: high-variance gradients, local optima, and sample hunger — the price of ignoring value structure.
+Strengths: continuous high-dimensional actions (robotics, games) where `max_a Q` is intractable; stochastic policies natively (needed for partial observability and adversarial unpredictability). Weaknesses (qualified): high-variance gradients, local optima (no global-optimality certificate unlike tabular Q's infinitary guarantee), sample hunger — the price of ignoring value structure.
 
 ::: callout-formula Formal Core: The Two Paradigms
-Value-based: learn $Q^*$, act $\arg\max_a Q^*$ (needs discrete/small actions). Policy-based: learn $\theta^* = \arg\max_\theta J(\theta)$ via $\nabla J$ estimates (handles continuous/stochastic). Actor-critic hybrids learn both — the actor dances, the critic (a TD value function) applauds precisely, cutting gradient variance.
+Value-based: learn Q*, act argmax Q (needs tractable action max; deterministic policies). Policy-based: learn theta* = argmax J via gradient estimates (continuous/stochastic native). Actor-critic hybrids learn both — the actor dances, the TD critic applauds precisely, cutting gradient variance.
 :::
 
----
+<a id="formal-model"></a>
+## 3. Formal Layer: Inverse RL and Its Ambiguity
 
-<a id="terminology"></a>
-## 3. Inverse RL: Rewards from Experts
+**Forward RL:** reward given, learn behaviour. **Inverse RL (IRL):** expert demonstrations given, learn the reward the expert seems to optimize. Why invert? Rewards transfer ("stay on road, avoid pedestrians" ports to new cars/cities/bodies); copied steering does not.
 
-**Forward RL:** reward given → learn behavior. **Inverse RL:** behavior (expert demonstrations) given → learn the *reward function* the expert seems to optimize. Why invert? Rewards transfer: the *learned reward* ("stay on road, avoid pedestrians") ports to new cars, cities, and bodies — a copied steering policy does not.
-
-The catch — **reward ambiguity**: infinitely many rewards rationalize any behavior, including the degenerate all-zero reward (under which *everything* is optimal). Resolutions: ** apprenticeship/feature matching** (Abbeel & Ng: match the expert's *feature expectations* — average lane-centering, speed profiles — rather than cloning actions, then optimize the matched reward); **maximum-entropy IRL** (among consistent rewards, prefer the one making the expert's behavior look least surprising, i.e. no extra commitments).
+**Reward ambiguity (the ill-posedness):** infinitely many rewards rationalize any behaviour — including degenerate all-zero (everything optimal, explaining nothing). Fixes: **apprenticeship / feature matching** (Abbeel and Ng: match expert's feature expectations — average lane-centering, speed profiles — not actions, then optimize the matched reward); **maximum-entropy IRL** (among consistent rewards, prefer the one making expert behaviour least surprising — no extra commitments).
 
 ::: callout-pitfall Imitation ≠ Inverse RL
-**Behavioral cloning** (supervised learning on state→action pairs) copies the expert's *moves* — and compounds errors (one drift off-distribution, no recovery skill). **Inverse RL** recovers the expert's *objective* and re-optimizes — the apprentice that understands *why*, and therefore survives situations the master never demonstrated. Exams test exactly this boundary.
+**Behavioural cloning** (supervised state-to-action copying) compounds drift: one off-distribution step, no recovery skill. **IRL** recovers the objective and re-optimizes — the apprentice understanding why survives unseen states the master never showed. Exams test exactly this boundary.
 :::
 
----
+**Apprenticeship trace (two features):** expert averages mu_E = (centering 0.9, speed adherence 0.8). Policy pi0 (crawl centered) gives (1.0, 0.4). Loop: find weights w making the expert look optimal (reward adherence over centering); optimize w-rewarded MDP to pi1 with (0.92, 0.75); compare gap norm vs. tolerance; iterate on residuals. Stopping certifies near-expert performance under the expert's own unknown true reward (the Abbeel-Ng guarantee — qualified: within epsilon under matched features, not exact optimality) without ever writing "good driving" down.
 
 <a id="worked-example"></a>
-## 4. Apprenticeship on Two Features
+## 4. Worked Example, Distinctions, Limitations
 
-Expert taxi demonstrations average features: $\mu_E = (\text{lane-centering } 0.9,\ \text{speed-limit adherence } 0.8)$. Our policy $\pi_0$ (always crawl at half speed, dead center) yields $\mu(\pi_0) = (1.0, 0.4)$.
+| Similar pair | Distinction |
+|---|---|
+| Value vs. policy methods | Q* plus argmax (sample-efficient, needs tractable max) vs. theta hill-climb (continuous/stochastic ok, high variance, local optima) |
+| Cloning vs. apprenticeship IRL | Copy moves (compounds drift off-distribution) vs. recover objective (transfers to novel states) |
+| Apprenticeship vs. max-entropy | Match feature averages vs. least-commitment selection among consistent rewards |
 
-Apprenticeship loop: find weights $w$ making the expert look optimal (here: reward adherence more than centering, since the expert sacrifices some centering for speed); optimize $w$-rewarded MDP → $\pi_1$ with $\mu(\pi_1) = (0.92, 0.75)$; compare $\|\mu_E - \mu(\pi_1)\|$ vs tolerance. Iterate: each round the reward weights shift to explain the *residual* gap, each policy closes it. Termination ($\|\cdot\| < \epsilon$) certifies performance *near the expert's* under the expert's own (unknown) true reward — the Abbeel–Ng guarantee — without ever writing down what "good driving" means.
+**Watch out:** (1) `argmax Q` intractability over R^7 torques is the policy-search trigger — quote it. (2) All-zero reward "explains" everything and nothing — never list it as a solution. (3) Actor-critic stabilizes gradients with TD baselines; it does not restore global optimality.
 
----
+**Limitations:** policy search is local and thirsty; IRL needs quality demos and feature design (wrong features, wrong rewards); recovered rewards still need forward optimization to become behaviour.
 
 <a id="self-check"></a>
 ## 5. Active Recall Quizzes
@@ -81,7 +84,7 @@ Apprenticeship loop: find weights $w$ making the expert look optimal (here: rewa
 () Robots cannot receive numeric rewards at all
 () Policy search needs no trials, unlike Q-learning
 ::: explanation
-Q-learning's decision rule is an *optimization over actions* — trivial for 4 grid moves, impossible over $\mathbb{R}^7$ torques every 10 ms. Policy search replaces the intractable $\arg\max$ with direct gradient ascent on policy parameters, and stochastic policies additionally cover sensor limits and adversarial unpredictability.
+Q-learning decides by optimizing over actions — trivial for grid moves, impossible over R^7 torques every 10 ms. Gradients on parameters replace the intractable argmax and cover sensor/adversarial needs stochastically.
 :::
 
 ::: quiz What is the fundamental ill-posedness of inverse RL, and which fix does maximum-entropy IRL apply?
@@ -90,7 +93,7 @@ Q-learning's decision rule is an *optimization over actions* — trivial for 4 g
 () Inverse RL cannot represent stochastic experts; max-entropy forces determinism
 () There is no ill-posedness; rewards are uniquely determined
 ::: explanation
-Behavior underdetermines objectives: laziness (all-zero reward) "explains" everything and nothing. Max-entropy breaks the tie by the least-commitment principle — matching observed feature statistics while maximizing uncertainty elsewhere — yielding rewards that generalize instead of memorizing.
+Behaviour underdetermines objectives: laziness explains everything and nothing. Least-commitment matching of feature statistics yields generalizing rewards.
 :::
 
 ::: quiz Contrast behavioral cloning with apprenticeship (feature-matching) IRL on a driving task, specifically on unseen situations.
@@ -99,26 +102,25 @@ Behavior underdetermines objectives: laziness (all-zero reward) "explains" every
 () Cloning generalizes better because it uses deeper networks
 () IRL cannot handle unseen situations by definition
 ::: explanation
-Cloning learns *what the master did*; IRL learns *what the master wanted*. Off the demonstration manifold, the cloner has no relevant training pairs and drifts irrecoverably, while the apprentice's recovered reward still scores actions correctly — objectives transfer, trajectories don't.
+Cloning learns what the master did; IRL learns what the master wanted. Objectives transfer, trajectories do not — off-manifold, only the apprentice still scores actions correctly.
 :::
-
----
 
 <a id="exam-focus"></a>
-## 6. Worked University Exam Q&A
+## 6. Exam Recap and Worked Q&A
 
 ::: callout-exam KTU University Exam Focus
-**Target Areas:**
-* **3 Marks:** Policy search idea, IRL definition, or imitation-vs-IRL distinction.
-* **7 Marks:** Value-based vs policy-based comparison, or apprenticeship loop with the performance guarantee.
+3 marks: policy-search idea, IRL definition, or cloning-vs-IRL line. 7 marks: value-vs-policy comparison or the apprenticeship loop with its guarantee.
 :::
 
-### Sample 3-Mark Question
-**Q: Define inverse reinforcement learning and state its core difficulty.**
+**Recap facts examiners reward:** `J(theta)` with gradient idea; intractable-argmax trigger; ambiguity plus all-zero degeneracy; feature-matching vs. max-entropy fixes; cloning-drift vs. objective-transfer; actor-critic variance role.
 
-**Model Answer:** IRL infers the reward function an expert appears to optimize, from demonstrations. Core difficulty: **reward ambiguity** — infinitely many rewards (including degenerate all-zero) are consistent with any behavior; methods like max-entropy or feature matching add principled tie-breaking.
+### Sample 3-Mark Question
+**Q: Define IRL and state its core difficulty.**
+
+**Model Answer:** IRL infers the expert's apparent reward from demonstrations. Difficulty: reward ambiguity — infinitely many rewards (including all-zero) fit any behaviour; max-entropy/feature-matching tie-break principledly.
 
 ### Sample 7-Mark Question
-**Q: Compare value-based and policy-based RL on representation, action spaces, and variance. Where do actor-critic methods fit?**
+**Q: Compare value-based and policy-based RL. Where do actor-critics fit?**
 
-**Model Answer:** Value-based learns $Q^*$ then $\arg\max_a$ — sample-efficient with structure, but needs tractable action maximization (discrete/small actions) and yields deterministic policies. Policy-based learns $\theta^* = \arg\max J(\theta)$ via gradient estimates — handles continuous/stochastic actions natively, at the cost of high-variance, local-optima-prone search. **Actor-critic** hybrids keep both: a TD critic supplies low-variance value baselines that stabilize the actor's gradient steps — the standard architecture behind modern deep RL successes.
+**Model Answer:** Value-based learns Q* then argmax — structured and sample-efficient, needs tractable discrete/small actions, yields deterministic policies. Policy-based learns theta* = argmax J via gradient estimates — continuous/stochastic native, high-variance and local-optima-prone. Actor-critic hybrids keep both: a TD critic supplies low-variance baselines stabilizing actor steps — the standard deep-RL architecture.
+:::

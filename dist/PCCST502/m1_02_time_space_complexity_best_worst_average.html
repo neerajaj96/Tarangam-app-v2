@@ -281,39 +281,70 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Time &amp; Space Complexity: Best, Worst, and Average Cases</h1>
 <p><strong>Primitive operations count, memory allocation overhead, and case sensitivity analysis.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine you&#39;re searching for your friend&#39;s name in a stack of exam papers, sorted alphabetically, by flipping through one page at a time from the top. If your friend&#39;s name starts with &quot;A,&quot; you&#39;ll find it almost immediately — a lucky, best-case scenario. If it starts with &quot;Z,&quot; you&#39;ll have to flip through the <em>entire</em> stack — the worst case. On an average day, your friend&#39;s name could start with any letter, so on average you&#39;ll flip through about half the stack.</p>
-<p>This everyday intuition — &quot;how long does it take <em>depending on which particular input I happen to get</em>&quot; — is exactly what best-case, worst-case, and average-case analysis formalises. The same algorithm, run on different inputs of the <em>same size</em>, can take wildly different amounts of work. This section teaches you to precisely quantify that &quot;amount of work&quot; using <strong>primitive operations</strong> (basic steps the RAM model counts), and then to separately analyse the best, worst, and average scenario, because in real engineering, &quot;worst case&quot; is usually what you actually care about — you want a guarantee that even the unluckiest possible input won&#39;t make your program crawl.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> The same algorithm can be fast or slow depending on <em>which</em> input of a given size it receives. Searching exam papers top-to-bottom for a friend&#39;s name is instant if the name starts with &quot;A&quot; (first page!) and exhausting if it starts with &quot;Z&quot; (whole stack). Reporting a single number like &quot;takes 50 flips&quot; is therefore meaningless unless we say <em>which scenario</em> we mean. This note defines exactly what we count, then splits &quot;how long&quot; into three precise cases.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Best case = luckiest possible input of size $n$. Worst case = unluckiest possible input of size $n$ (the guarantee engineers buy). Average case = expected work over all inputs of size $n$, under an assumed distribution (usually &quot;every input equally likely&quot;). Symbols: $T(n)$ = time (operation count) as a function of input size $n$; $T_{best}$, $T_{worst}$, $T_{avg}$ = the three cases.</p>
+</div></details><p><strong>Tiny toy example (4 papers).</strong> Names [Asha, Bina, Chetan, Divya], searching for each in turn: finding Asha costs 1 flip (best), Divya costs 4 flips (worst), and the average over the four equally-likely targets is $(1+2+3+4)/4 = 2.5$ flips.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>Primitive operations.</strong> These are the fixed-cost building blocks the RAM model counts: assignment, arithmetic operation, comparison, array/pointer access, and a single method call&#39;s overhead. Time complexity is defined as (a function proportional to) the <em>total number of primitive operations</em> executed, as a function of input size $n$.</p>
-<p><strong>Best case</strong> $T_{best}(n)$: the minimum number of operations over <em>all</em> possible inputs of size $n$ — i.e., the most favourable input. Example: searching an unsorted array where the target happens to be the very first element — found in 1 comparison, regardless of $n$.</p>
-<p><strong>Worst case</strong> $T_{worst}(n)$: the maximum number of operations over all possible inputs of size $n$ — the least favourable input. This is by far the most commonly reported and most useful measure in practice, because it gives a <em>guarantee</em>: &quot;this algorithm will never take longer than this, no matter what input you throw at it.&quot; This matters enormously for safety-critical or time-sensitive systems (e.g., an airline booking system can&#39;t tolerate &quot;usually fast, but occasionally very slow&quot;).</p>
-<p><strong>Average case</strong> $T_{avg}(n)$: the <em>expected</em> number of operations, averaged over all possible inputs of size $n$, typically assuming each input is equally likely (a specific probability distribution over inputs). This requires knowing (or assuming) how inputs are distributed, which makes it mathematically harder to derive than the worst case, and its usefulness depends on whether that assumed distribution actually matches real-world usage.</p>
-<p><strong>Space complexity</strong> counts, similarly, the total memory cells used as a function of $n$ — including memory for the input itself, <em>auxiliary</em> memory used by the algorithm (extra variables, temporary arrays, the recursion call stack for recursive algorithms), and any output storage. When people say an algorithm is &quot;$O(1)$ space&quot; or &quot;in-place,&quot; they typically mean the <em>auxiliary</em> space (excluding the input/output, which must exist regardless) is constant.</p>
-<p><strong>Why worst case dominates in practice:</strong> average case requires an input-distribution assumption that may not hold for your actual use case, and best case gives no real guarantee at all (it only tells you what happens on lucky inputs). Worst-case analysis is distribution-free and gives an unconditional upper bound — which is why textbooks, job interviews, and system design almost always default to worst-case unless stated otherwise.</p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-linear-search-all-three-cases">3. Worked example — linear search,… →</a></p>
+<p><strong>Primitive operations.</strong> The fixed-cost building blocks the RAM (Random Access Machine) model counts: assignment, arithmetic operation, comparison, array/pointer access, and one method call&#39;s overhead. Time complexity is (proportional to) the <em>total number of primitive operations</em> executed, as a function of input size $n$.</p>
+<p><strong>Best case</strong> $T_{best}(n)$: minimum operations over <em>all</em> inputs of size $n$ — the most favourable input. Example: target is the first array element — 1 comparison regardless of $n$.</p>
+<p><strong>Worst case</strong> $T_{worst}(n)$: maximum operations over all inputs of size $n$ — the least favourable input. The most reported measure, because it is a <em>guarantee</em>: &quot;never slower than this, no matter the input&quot;. Safety-critical and time-sensitive systems (airline booking, medical devices) need exactly this promise — &quot;usually fast but occasionally very slow&quot; is unacceptable there.</p>
+<p><strong>Average case</strong> $T_{avg}(n)$: <em>expected</em> operations averaged over all inputs of size $n$ under an assumed probability distribution (typically uniform). Mathematically harder (needs the distribution) and only as trustworthy as the assumption — if real inputs skew differently, the average-case number misleads.</p>
+<p><strong>Space complexity</strong> counts memory cells used as a function of $n$: input storage + <em>auxiliary</em> space (extra variables, temporary arrays, recursion call stack) + output storage. &quot;$O(1)$ space&quot; / &quot;in-place&quot; means the <em>auxiliary</em> part is constant — the input itself must exist regardless and is not counted against the algorithm.</p>
+<p><strong>Why worst case dominates:</strong> average case needs a distribution assumption that may not match reality; best case promises nothing about unlucky inputs. Worst case is distribution-free with an unconditional upper bound — the default in textbooks, interviews, and system design unless stated otherwise.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Analyse Linear Search — scanning an array left to right, comparing each element to a target value, and stopping as soon as a match is found (or reaching the end if not found) — on an array of $n$ elements.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Best case:</strong> the target is the very first element. The loop runs once, does 1 comparison, and exits. $T_{best}(n) = O(1)$ — constant, independent of $n$.
-<strong>Worst case:</strong> the target is the last element, or is not present in the array at all. The loop must run through all $n$ elements, doing $n$ comparisons before finishing. $T_{worst}(n) = O(n)$.
-<strong>Average case (assuming the target is present and equally likely at any position):</strong> on average, we expect to check about half the array before finding it — roughly $\frac{n+1}{2}$ comparisons, which is still $O(n)$ — the same growth rate as the worst case, just with a smaller constant factor.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Linear search&#39;s best case is $O(1)$, but both its worst case and average case are $O(n)$ — meaning that as $n$ grows large, linear search&#39;s <em>typical</em> and <em>worst-possible</em> performance both degrade linearly, even though on rare lucky inputs it can be instantaneous. This is exactly why we can&#39;t judge an algorithm&#39;s real-world suitability by its best case alone — a single lucky test run doesn&#39;t tell you what will happen on the input that actually matters.</p>
+<h2 id="3-worked-example-linear-search-all-three-cases">3. Worked example — linear search, all three cases</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Analyse Linear Search — scan left to right, compare each element to the target, stop at the first match (or at the end) — on an array of $n$ elements. Give $T_{best}$, $T_{worst}$, $T_{avg}$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Best case:</strong> target is the first element — 1 comparison, exit. $T_{best}(n) = O(1)$ (constant, the $O(1)$ symbol means &quot;bounded by a constant&quot;). <strong>Worst case:</strong> target is last or absent — all $n$ comparisons. $T_{worst}(n) = O(n)$. <strong>Average case</strong> (target present, equally likely anywhere): about half the array on average, roughly $\frac{n+1}{2}$ comparisons — still $O(n)$, same growth rate as worst case with a smaller constant.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Best $O(1)$, worst and average $O(n)$: typical and worst performance degrade linearly even though lucky inputs are instant. Never judge suitability by the best case alone — one lucky test run says nothing about the input that matters.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-linear-search-all-three-cases">← 3. Worked example — linear search,…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Average case is <em>not</em> &quot;run it once and see&quot;: it is a mathematical expectation over a distribution you must state.</li>
+<li>$O(1)$ space never means &quot;zero memory&quot;: input/output storage always exists; only the <em>extra</em> working memory is constant.</li>
+<li>Worst case $\ne$ &quot;the input I happened to test&quot;: it is the maximum over <em>all</em> inputs of size $n$.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Best vs worst vs average</td>
+<td>Minimum (lucky) vs maximum (guarantee) vs expectation (needs distribution)</td>
+</tr>
+<tr>
+<td>Total vs auxiliary space</td>
+<td>Includes input vs extra working memory only (&quot;in-place&quot; = auxiliary $O(1)$)</td>
+</tr>
+<tr>
+<td>$O(1)$ time vs $O(1)$ space</td>
+<td>Constant operations vs constant extra memory</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> primitive operations are the counted unit; worst case gives the unconditional guarantee and is the default; average case assumes (usually uniform) distribution; linear search is $O(1)$ best, $O(n)$ worst and average.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why do engineers usually prioritise worst-case complexity over average-case complexity when choosing an algorithm for a critical system?</span>

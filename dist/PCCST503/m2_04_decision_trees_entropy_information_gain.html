@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,43 +249,102 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Decision Trees: Entropy &amp; Information Gain</h1>
-<p><strong>Recursive splitting, Shannon entropy, information gain on the PlayTennis data, overfitting control via pruning, and why trees beg to be ensembled.</strong></p>
+<p><strong>What problem trees solve with axis-aligned questions, what labelled data they need, how entropy ranks questions, and how pruning stops memorisation.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>You play Twenty Questions to guess an animal. Each question should remove as much uncertainty as possible. &quot;Is it bigger than a breadbox?&quot; beats &quot;does it like rain?&quot; A decision tree asks the best question, then the next best given the answer, until leaves are pure enough to decide.</p>
+<p>Tiny beginner example. Four animals: two cats, two dogs. Question &quot;barks?&quot; splits into {two dogs} and {two cats}: perfect, uncertainty removed. Question &quot;is brown?&quot; splits into mixed groups: weak. Information gain scores exactly this difference in bits.</p>
+<p>Analogy as support, then dropped. Mess means mixed labels; gain means mess removed. From here on we use exact terms only: entropy, information gain, Iterative Dichotomiser 3 (ID3), pruning.</p>
+<p>Abbreviations defined on first use: Iterative Dichotomiser 3 (ID3), Classification and Regression Trees (CART). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $H(S)$?</td>
+<td>Entropy of set $S$, mess in bits</td>
+</tr>
+<tr>
+<td>What is $p_i$?</td>
+<td>Proportion of class $i$ in $S$</td>
+</tr>
+<tr>
+<td>What is Gain?</td>
+<td>Parent mess minus weighted child mess</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Build readable if-then rules that classify by asking few questions.</p>
+<p><strong>Data.</strong> Labelled rows with discrete or binned features (Outlook, Humidity, Wind, Temperature) and a label (Play Yes or No).</p>
+<p><strong>Goal.</strong> Small tree with high held-out accuracy. Greedy top-down induction picks max gain per node; pruning then trades purity for generalisation.</p>
+<p>Symbols: for class proportions $p_i$, $H(S)=-\sum_i p_i\log_2 p_i$ in bits. Here $\log_2$ means base-2 log so the unit is bits. Gain of attribute $A$ with values $v$: $\text{Gain}(S,A)=H(S)-\sum_v(|S_v|/|S|)H(S_v)$. Here $S_v$ is the subset with value $v$.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Twenty Questions, Optimized</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A decision tree plays Twenty Questions: each node asks the single question slicing remaining possibilities most unevenly (&quot;is it bigger than a breadbox?&quot;). <strong>Entropy</strong> measures the current mess (all-yes/all-no = 0 mess; 50/50 = maximum mess); <strong>information gain</strong> scores each candidate question by <em>mess removed</em>. Ask the biggest-gain question, recurse per answer, stop when leaves are pure (or patience runs out). Overfitting = asking until every training example gets its own private leaf — memorizing the crowd instead of learning the pattern.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Entropy and Information Gain</h3>
-<p>For a set with class proportions $p_i$: $H(S) = -\sum_i p_i \log_2 p_i$ (bits). Gain of attribute $A$ with values $v$: $\text{Gain}(S,A) = H(S) - \sum_v \frac{|S_v|}{|S|} H(S_v)$ — parent mess minus weighted child mess. Greedy top-down induction (ID3/C4.5/CART family): at each node, split on max gain (CART uses Gini $1-\sum p_i^2$ instead — same instinct, cheaper arithmetic).</p>
-<h3>2.2 The PlayTennis Computation (Verified Values)</h3>
-<p>14 days, 9 Play-Yes / 5 No: $H(S) = -(9/14\log_2 9/14 + 5/14\log_2 5/14) \approx \mathbf{0.940}$ bits. Gains: <strong>Outlook 0.247</strong>, Humidity 0.151, Wind 0.048, Temperature 0.029 — so Outlook splits the root (Sunny→? Overcast→Yes-leaf immediately, Rain→?); recurse within Sunny/Rain subsets.</p>
-<h3>2.3 Taming Overfit: Pruning and Honest Cousins</h3>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (readable classification) → data (labelled rows) → goal (compact, generalising tree) → method (gain-guided splits plus pruning) → model (tree of tests) → training (greedy induction) → example → limitations.</p>
+<h3>3.1 Entropy and Information Gain, Symbol by Symbol</h3>
+<p>$H(S)=-\sum_i p_i\log_2 p_i$. Pure set ($p=1$) gives $0$ bits; 50/50 binary gives $1$ bit maximum. Gain subtracts weighted child entropy from parent entropy. Steps numbered:</p>
+<ol>
+<li>Compute parent entropy $H(S)$.</li>
+<li>For each attribute, split into value groups $S_v$.</li>
+<li>Compute weighted child entropy $\sum(|S_v|/|S|)H(S_v)$.</li>
+<li>Pick max gain; recurse per child.</li>
+</ol>
+<p>CART uses Gini impurity $1-\sum p_i^2$ instead: same instinct, cheaper arithmetic.</p>
+<h3>3.2 The PlayTennis Computation</h3>
+<p>14 days, 9 Play-Yes and 5 No: $H(S)=-(9/14\log_2 9/14+5/14\log_2 5/14)\approx\mathbf{0.940}$ bits. Gains: <strong>Outlook 0.247</strong>, Humidity 0.151, Wind 0.048, Temperature 0.029. Outlook splits the root (Sunny branch, Overcast instant Yes-leaf, Rain branch); recurse within Sunny and Rain subsets.</p>
+<h3>3.3 Taming Overfit: Pruning and Honest Cousins</h3>
 <ul>
-<li><strong>Pre-pruning:</strong> stop early (max depth, min samples/leaf, gain threshold) — fast, risks stopping before useful structure.</li>
-<li><strong>Post-pruning:</strong> grow fully, then snip subtrees that don&#39;t pay on <em>validation</em> data (reduced-error pruning, cost-complexity/CART $\alpha$-pruning).</li>
-<li>Gain&#39;s bias footnote: many-valued attributes (dates, IDs) score inflated gains by shattering data — <strong>gain ratio</strong> (C4.5) normalizes by split entropy. A &quot;Date&quot; root with one example per leaf is memorization wearing mathematics.</li>
+<li><strong>Pre-pruning:</strong> stop early (max depth, min samples per leaf, gain threshold). Fast, risks stopping before useful structure.</li>
+<li><strong>Post-pruning:</strong> grow fully, then snip subtrees that do not pay on validation data (reduced-error pruning, cost-complexity or CART $\alpha$-pruning).</li>
+<li>Gain&#39;s bias footnote: many-valued attributes (dates, IDs) score inflated gains by shattering data. <strong>Gain ratio</strong> (C4.5) normalises by split entropy. A Date root with one example per leaf is memorisation wearing mathematics.</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gain vs gain ratio</td>
+<td>Raw mess removed vs normalised; IDs shatter gain, ratio resists</td>
+</tr>
+<tr>
+<td>Pre- vs post-pruning</td>
+<td>Stop early risking under-shoot vs grow then validation-snip costing a split</td>
+</tr>
+<tr>
+<td>Entropy vs Gini</td>
+<td>Log-based bits vs squared-probability shortcut; same ranking instinct</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Tree Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$H = -\sum p\log_2 p$ (0 = pure, 1 = 50/50 binary max) · $\text{Gain} = H(parent) - \sum\frac{|S_v|}{|S|}H(S_v)$ · root = <strong>max gain</strong> (Tennis: Outlook 0.247) · prune <strong>pre</strong> (early stop) or <strong>post</strong> (validation snip) · many-valued attributes need <strong>gain ratio</strong>, not raw gain.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Pure Leaves Memorize Noise (and IDs Memorize Everything)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A tree grown to 100% training purity on noisy data encodes the noise as law — test accuracy collapses while train sits at 1.0 (the k-NN $k=1$ disease, arboreal form). And any near-unique attribute (ID, date) &quot;wins&quot; gain by isolation, not insight. Prune by validation; distrust splits that merely enumerate.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Using the PlayTennis counts, verify $H(S) = 0.940$ and Gain(Wind) $= 0.048$, and decide the root split among Outlook (0.247), Humidity (0.151), Wind (0.048), Temperature (0.029).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Mess Removed</div><div class="step-content"><p>$H(S) = -(0.6429 \times \log_2 0.6429 + 0.3571 \times \log_2 0.3571) = -(-0.4098 - 0.5305) = 0.940$ bits. Wind splits 8 weak ($6{+},2{-}$) / 6 strong ($3{+},3{-}$): $H_{weak} = 0.811$, $H_{strong} = 1.0$; weighted $(8/14)(0.811) + (6/14)(1.0) = 0.892$; gain $= 0.940 - 0.892 = \mathbf{0.048}$. Root = max gain = <strong>Outlook (0.247)</strong> — Sunny and Rain branches recurse; Overcast ($4{+},0$) is an instant Yes-leaf.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One number per attribute ranks the questions; the ranking <em>is</em> the tree&#39;s skeleton. Outlook first because nothing else removes nearly as much mess (0.247 vs runner-up Humidity 0.151) — greedy gain-chasing builds the whole tree one best-question-at-a-time, with pruning (not shown) as the adult supervision.</p>
@@ -305,10 +372,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Outlook Outbids Wind Five to One</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the gain bars rank the questions — Outlook crowned root, Wind a later conditional — with the instant Overcast Yes-leaf as the payoff for asking best-first.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Splitting on CustomerID because gain is highest. Singleton leaves are pure by construction and learn nothing transferable.</li>
+<li>Growing to 100% train purity on noisy data. Train 1.0 with weak test is memorisation.</li>
+<li>Reading low gain as useless. Low-gain attributes can matter deeper, conditionally.</li>
+<li>Confusing pre- and post-pruning costs. Early stop risks underfit; validation snip costs a split.</li>
+</ul>
+<p>Limitations: greedy splits are myopic, axis-aligned cuts struggle on diagonal truth, and deep trees are high-variance until ensembled.</p>
+<p>Exam recap: $H=-\sum p\log_2 p$; gain is parent minus weighted children; Tennis root Outlook 0.247; prune pre or post; IDs need gain ratio.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Gain(Wind) = 0.048 while Gain(Outlook) = 0.247. In plain terms, what do these numbers say about the two attributes?</span>
@@ -493,7 +571,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m2_04_decision_trees_entropy_information_gain";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

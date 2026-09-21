@@ -8,7 +8,7 @@
  * unlocked dependents, completed-topic transitions, all-completed and
  * invalid/empty states, cross-course boundaries, deterministic ordering,
  * browser event synchronization, Dashboard model, Explorer model, Study
- * Context integration, and the full 432-topic repository.
+ * Context integration, and the full 435-topic repository.
  *
  * Run: npm test  (node --test scripts/learning-journey.test.js)
  */
@@ -430,20 +430,20 @@ describe('topic context integration', () => {
   });
 });
 
-describe('live 432-topic repository', () => {
+describe('live 435-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
-  it('covers all 432 topics with a deterministic curriculum-head recommendation', () => {
-    assert.equal(manifest.topics.length, 432);
+  it('covers all 435 topics with a deterministic curriculum-head recommendation', () => {
+    assert.equal(manifest.topics.length, 435);
     const model = Journey.buildJourneyModel(manifest, none);
-    assert.equal(model.totalTopics, 432);
+    assert.equal(model.totalTopics, 435);
     assert.equal(model.isEmpty, true);
     assert.equal(`${model.recommended.courseCode}/${model.recommended.id}`, 'GAMAT301/m1_01_random_variables_pmf_cdf');
     assert.equal(model.recommendationReason, 'unblocks_future_topic');
     assert.ok(model.recommendationExplanation.length > 0);
-    assert.deepEqual(model.overall, { total: 432, completed: 0, inProgress: 0, notStarted: 432, percent: 0 });
+    assert.deepEqual(model.overall, { total: 435, completed: 0, inProgress: 0, notStarted: 435, percent: 0 });
     // Deterministic across runs.
     assert.equal(
       JSON.stringify(Journey.buildJourneyModel(manifest, none).recommended),
@@ -462,7 +462,7 @@ describe('live 432-topic repository', () => {
       assert.ok(journey.nearbyModuleTopics.length > 0);
       checked += 1;
     }
-    assert.equal(checked, 432);
+    assert.equal(checked, 435);
     const all = {};
     for (const t of manifest.topics) all[`${t.courseCode}/${t.id}`] = 'completed';
     const done = Journey.buildJourneyModel(manifest, readerFrom(all));

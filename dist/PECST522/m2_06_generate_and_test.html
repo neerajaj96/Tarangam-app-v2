@@ -269,58 +269,83 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Generate-and-Test: The Weak Method That Frames Them All</h1>
-<p><strong>Propose a complete candidate, test it against every constraint, repeat — exhaustive, honest, and the baseline that makes every smarter method earn its keep.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Keyring in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Generate-and-test is trying <strong>every key on the ring</strong>: propose one full solution, check it against the lock, discard and repeat. No guidance, no memory of <em>why</em> a key failed — the tenth key learns nothing from the first nine. It is the weakest method that still works, which makes it the perfect measuring stick: any clever algorithm must justify itself against trying everything.</p>
-</div></details><p>It is depth-first search stripped of direction (M2.1&#39;s machinery, zero heuristic), and the direct ancestor of backtracking — which adds the one thing missing here: quitting a doomed partial candidate early.</p>
-<hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The loop and its price</h3>
-<p>Repeat: <strong>generate</strong> a complete assignment (systematically, so none repeats and none is skipped), <strong>test</strong> it against all constraints; stop at the first pass. With $d$ values per variable and $n$ variables, worst case $d^n$ full tests — complete (a solution will be found) but exponentially blind. Test order is free leverage: cheap, failure-prone constraints first fail fast.</p>
-<h3>2.2 When it is enough</h3>
-<p>Tiny spaces, or constraint checks so cheap that guidance overhead exceeds brute force. Its real syllabus role is contrast: hill climbing, backtracking, and constraint propagation (M2.7) each fix one of its blindnesses.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Generate-and-Test</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Generate complete → test all → repeat · $d^n$ worst case · complete, unguided · fail-fast constraint order · backtracking adds early exit.</p>
-</div></details><p>Systematic generation matters: random guessing re-tests failures and can miss solutions forever — completeness needs enumeration discipline, not luck.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Partial Credit Illusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Generate-and-test scores candidates pass/fail only; it cannot say &quot;two constraints from done&quot; and steer. An option crediting it with gradient-like guidance confuses testing with hill climbing&#39;s neighbour scoring.</p>
-</div></details><hr>
+<p><strong>Problem: how do we solve constraint tasks with zero guidance — and what baseline must every smarter method beat? By the end you can run generate-and-test by hand, price <code>d^n</code>, and name exactly what backtracking fixes.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-every-key-on-the-ring">1. Start From Zero: Every Key on the Ring</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-the-loop-and-its-price">2. Basic Layer: The Loop and Its P… →</a></p>
+<p>Trying every key on a ring: propose one full solution, test it against the lock, discard, repeat. No memory of <em>why</em> keys failed — the tenth key learns nothing from the first nine. That honesty is its value: the weakest method that still works, hence the measuring stick for everything cleverer.</p>
+<p><strong>Definitions:</strong> <strong>Generate</strong> means systematically enumerate complete assignments (every variable gets a value; systematic means none skipped, none repeated — random guessing is not generate-and-test and loses completeness). <strong>Test</strong> means check the full assignment against all constraints, pass/fail only. Constraint Satisfaction Problems (CSPs — variables, domains, constraints) are its home territory.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Keyring in the Dark</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;complete candidates only, no partial credit&quot; here, then drop the keys; the loop plus the <code>d^n</code> price below is the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> two switches X, Y each {on, off}, constraint &quot;not equal.&quot; Candidates: on/on fail, on/off pass — stop at 2 of 4 tests. Exhaustion proves absence when nothing passes.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-the-loop-and-its-price">2. Basic Layer: The Loop and Its Price</h2>
+<p class="secnav"><a href="#1-start-from-zero-every-key-on-the-ring">← 1. Start From Zero: Every Key on t…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-when-it-suffices-and-what-it-cannot-do">3. Formal Layer: When It Suffices … →</a></p>
+<p><strong>Data/state:</strong> complete candidate assignments. <strong>Goal:</strong> first fully-passing assignment, or proof none exists.</p>
+<p><strong>Procedure (steps):</strong> Step 1: generate the next complete assignment in fixed order. Step 2: test it against every constraint (cheap, failure-prone constraints first — fail fast). Step 3: return it if all pass; else repeat until enumeration ends (then report unsatisfiable).</p>
+<p><strong>Meaning, variables, formula:</strong> with <code>d</code> values per variable and <code>n</code> variables, worst case counts full combinations:</p>
+<p>$$\text{tests} = d^n$$</p>
+<p>Tiny numbers: 4 variables with 3 values need up to 81 tests (3x3x3x3), not 12 — exponentiation, not multiplication. One more variable triples the bill. Complete on finite spaces (systematic enumeration finds solutions and certifies absence), but exponentially blind.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-when-it-suffices-and-what-it-cannot-do">3. Formal Layer: When It Suffices and What It Cannot Do</h2>
+<p class="secnav"><a href="#2-basic-layer-the-loop-and-its-price">← 2. Basic Layer: The Loop and Its P…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>When enough:</strong> tiny spaces, or constraint checks so cheap that guidance overhead exceeds brute force. Its syllabus role is contrast: hill climbing adds neighbour scoring, backtracking adds early exit on partial failure, constraint propagation (next topic) deletes impossible values before guessing.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Generate-and-Test</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Generate complete, test all, repeat. Worst case <code>d^n</code>. Complete but unguided. Order constraints fail-fast. Backtracking adds partial-assignment exit.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Partial Credit Illusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Generate-and-test scores pass/fail only — never &quot;two constraints from done.&quot; Steering by near-misses is hill climbing&#39;s job, not this method&#39;s. Options crediting guidance here confuse testing with neighbour scoring.</p>
+</div></details><p><strong>Full trace — triangle with 2 colours {R, G}, all pairs adjacent:</strong> 8 candidates (RRR, RRG, RGR, RGG, GRR, GRG, GGR, GGG). Each fails at least one equality (X=Y or X=Z or Y=Z). Eight cycles, zero survivors — exhaustive failure <em>proves</em> unsatisfiability, the one thing brute force does better than guidance.</p>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Colour triangle regions $X, Y, Z$ (each adjacent to both others) with $2$ colours ${R, G}$. Enumerate generate-and-test fully and state what the failure proves.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">All Eight Keys</div><div class="step-content"><p>$2^3 = 8$ candidates: $RRR$ fails (3 clashes), $RRG$ fails ($X = Y$), $RGR$ fails ($X = Z$), $RGG$ fails ($Y = Z$), $GRR$ fails ($Y = Z$), $GRG$ fails ($X = Z$), $GGR$ fails ($X = Y$), $GGG$ fails (3 clashes). Every key tried, every key fails — $8$ generate-test cycles, zero survivors.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>No 2-colouring exists — exhaustive failure <em>proves</em> unsatisfiability, the one thing brute force does better than guidance. The repair (a third colour, or backtracking that abandons $X = Y$ after two assignments instead of filling $Z$ six futile times) is M2.7&#39;s story.</p>
-</div></div><hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-when-it-suffices-and-what-it-cannot-do">← 3. Formal Layer: When It Suffices …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Generate-and-test vs. backtracking</td>
+<td>Full candidates only vs. abandon doomed partial prefixes early</td>
+</tr>
+<tr>
+<td>Systematic vs. random guessing</td>
+<td>Enumeration discipline (complete) vs. re-tests and possible eternal misses</td>
+</tr>
+<tr>
+<td>Fail-fast order vs. guidance</td>
+<td>Cheap-tests-first saves checking time vs. scoring steers search</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Filling Z six ways under a dead X=Y=R prefix is the canonical waste backtracking removes. (2) Random sampling is not a completeness-preserving substitute. (3) Pass/fail testing never ranks candidates.</p>
+<p><strong>Limitations:</strong> exponential <code>d^n</code> scaling; zero learning across candidates; no use of constraint structure. Propagation plus search (next topic) keeps completeness while deleting most candidates unseen.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Counting Drill</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$4$ variables, $3$ values each, full generate-and-test. Worst-case tests?</p>
+  <div class="quiz-prompt"><p>4 variables, 3 values each, full generate-and-test. Worst-case tests?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$12$, values times variables</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$81 = 3^4$ complete assignments — exponentiation, not multiplication, prices brute force, which is why one more variable triples the bill</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$7$, values plus variables</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$1$, first guess suffices</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>12, values times variables</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>81 = 3^4 complete assignments — exponentiation, not multiplication, prices brute force, which is why one more variable triples the bill</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>7, values plus variables</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>1, first guess suffices</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -332,7 +357,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$d^n$ counts full combinations: $3 \times 3 \times 3 \times 3 = 81$. Additive intuitions ($12$) underprice search by an order of magnitude — the combinatorial explosion in one line.</p><pre><code>&lt;/div&gt;
+      <p>Full combinations multiply: 3x3x3x3 = 81. Additive intuitions underprice search by an order of magnitude.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -340,7 +365,7 @@
     <span class="quiz-category">Q2: Failure Intelligence</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$X = R$ already clashes with $Y = R$, but generate-and-test fills $Z$ six ways before moving on. Diagnosis?</p>
+  <div class="quiz-prompt"><p>X = R already clashes with Y = R, but generate-and-test fills Z six ways before moving on. Diagnosis?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Sound pruning</span></button>
@@ -358,7 +383,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Six $Z$-fillings under a dead $X = Y = R$ prefix buy nothing. Testing partial assignments and backtracking on first clash is the named repair — generate-and-test&#39;s blindness, localized.</p><pre><code>&lt;/div&gt;
+      <p>Six Z-fillings under a dead prefix buy nothing. Testing partial assignments and backtracking on first clash is the named repair.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -384,10 +409,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Finite enumeration ends; empty survivors means no solution exists. Weak methods still prove negative results — guidance speeds success, exhaustion certifies absence.</p><pre><code>&lt;/div&gt;
+      <p>Finite enumeration ends; empty survivors means no solution exists. Guidance speeds success, exhaustion certifies absence.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: loop plus <code>d^n</code> arithmetic. 7 marks: full 8-candidate triangle enumeration with the unsatisfiability verdict and the backtracking contrast.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> generate-complete/test-all/repeat; systematic-vs-random line; <code>d^n</code> with one worked power; fail-fast ordering; partial-exit as backtracking&#39;s fix.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: State generate-and-test and its worst-case cost.</strong></p>
+<p><strong>Model Answer:</strong> Systematically generate each complete assignment, test against all constraints, repeat to first pass or exhaustion. Cost d^n full tests; complete on finite spaces, unguided.</p>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Enumerate 2-colouring of the triangle and state what failure proves.</strong></p>
+<p><strong>Model Answer:</strong> All 8 assignments fail an adjacency (list each clash); exhaustion proves no 2-colouring exists. Waste note: X=Y clashes refilled Z repeatedly — backtracking would exit on the partial clash instead.
+:::</p>
 
     </main>
 

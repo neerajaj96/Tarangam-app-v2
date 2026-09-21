@@ -274,48 +274,68 @@
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Inference: Resolution, Horn Clauses &amp; Chaining</h1>
-<p><strong>CNF conversion, the resolution rule and refutation proofs, Horn form, and forward vs. backward chaining with the Wumpus agent.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-from-truth-tables-to-proofs">1. From Truth Tables to Proofs</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-cnf-and-the-resolution-rule">2. CNF and the Resolution Rule →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Courtroom vs. Census</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Model checking is a <strong>census</strong>: interrogate every possible world ($2^n$ of them) and count. <strong>Theorem proving</strong> is a <strong>courtroom</strong>: start from admitted evidence (the KB) and apply airtight rules until the verdict falls out — never visiting the worlds at all. Resolution is the courtroom&#39;s single gavel: one rule, applied relentlessly, that can derive <em>any</em> entailed sentence (given the right setup). Chaining is the fast-track court for well-behaved (Horn) evidence.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-cnf-and-the-resolution-rule">2. CNF and the Resolution Rule</h2>
-<p class="secnav"><a href="#1-from-truth-tables-to-proofs">← 1. From Truth Tables to Proofs</a><span class="secnav-sep">·</span><a href="#3-horn-clauses-chaining-territory">3. Horn Clauses: Chaining Territor… →</a></p>
-<p><strong>Conjunctive Normal Form:</strong> a conjunction of <strong>clauses</strong>, each clause a disjunction of <strong>literals</strong> (an atom or its negation): $(A \lor \lnot B) \land (B \lor C) \land (\lnot C)$. Conversion pipeline — <strong>eliminate</strong> $\Leftrightarrow$ ($P \Leftrightarrow Q \to (P \Rightarrow Q) \land (Q \Rightarrow P)$) and $\Rightarrow$ ($P \Rightarrow Q \to \lnot P \lor Q$), <strong>push</strong> $\lnot$ inward (de Morgan + double negation), <strong>distribute</strong> $\lor$ over $\land$.</p>
-<p><strong>The resolution rule</strong> (one rule to derive them all): from $(l_1 \lor \dots \lor l_k)$ and $(m_1 \lor \dots \lor m_n)$ where $l_i$ and $m_j$ are <strong>complementary</strong> ($l_i = \lnot m_j$), infer the <strong>resolvent</strong> — the disjunction of everything <em>except</em> the cancelled pair. Unit-clause special case: from $(P)$ and $(\lnot P \lor Q)$, infer $(Q)$ — Modus Ponens in disguise.</p>
-<p><strong>Refutation proof of $KB \models \alpha$:</strong> convert $KB \land \lnot\alpha$ to CNF, resolve repeatedly — deriving the <strong>empty clause</strong> $\Box$ (a contradiction) <em>proves</em> entailment (recall: $KB \models \alpha \iff KB \land \lnot\alpha$ unsatisfiable). Resolution is <strong>sound</strong> and <strong>refutation-complete</strong>: if entailment holds, the empty clause <em>will</em> appear.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Resolution in 3 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Resolve</strong> complementary literals, keep the rest: $\frac{(l \lor C),; (\lnot l \lor D)}{(C \lor D)}$. <strong>Prove</strong> $\alpha$ by refuting $\lnot\alpha$: CNF($KB \land \lnot\alpha$) $\leadsto \cdots \leadsto \Box$. <strong>Complete</strong> for full propositional logic — the price is worst-case exponential search for the right pairings.</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-horn-clauses-chaining-territory">3. Horn Clauses: Chaining Territory</h2>
-<p class="secnav"><a href="#2-cnf-and-the-resolution-rule">← 2. CNF and the Resolution Rule</a><span class="secnav-sep">·</span><a href="#4-refuting-our-way-to-a-safe-square">4. Refuting Our Way to a Safe Squa… →</a></p>
-<p>A <strong>Horn clause</strong> has <em>at most one positive</em> literal — equivalently, an implication with a conjunction of positive premises: $(P_1 \land \dots \land P_k) \Rightarrow Q$ (a <strong>definite clause</strong> when exactly one positive head exists; a bare fact $Q$ is the $k=0$ case). The Wumpus rule $B_{1,1} \Rightarrow (P_{1,2} \lor P_{2,1})$ is <strong>not</strong> Horn (two positives) — but $P_{1,2} \land P_{2,1} \Rightarrow \text{Danger}$-style rules are, and most practical KBs are written Horn on purpose, because Horn unlocks linear-time chaining:</p>
+<p><strong>Problem: truth tables are exponential — can proofs replace the census? By the end you can convert to CNF (Conjunctive Normal Form), resolve to the empty clause, and trace Horn chaining.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-courtroom-vs-census">1. Start From Zero: Courtroom vs. Census</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-cnf-and-the-resolution-rule">2. Basic Layer: CNF and the Resolu… →</a></p>
+<p>Model checking is a census: visit all <code>2^n</code> worlds and count. Theorem proving is a courtroom: start from admitted evidence and apply airtight rules until the verdict falls out — never visiting the worlds. Resolution is the courtroom&#39;s single gavel: one rule that, with the right setup, derives any entailed sentence. Chaining is the fast-track court for well-behaved (Horn) evidence.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Courtroom vs. Census</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;proofs instead of enumeration&quot; here, then drop the court; CNF plus the resolution rule below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> from <code>(P)</code> and <code>(¬P ∨ Q)</code>, resolve on <code>P/¬P</code> to get <code>(Q)</code> — Modus Ponens in disguise, with zero worlds visited.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-cnf-and-the-resolution-rule">2. Basic Layer: CNF and the Resolution Rule</h2>
+<p class="secnav"><a href="#1-start-from-zero-courtroom-vs-census">← 1. Start From Zero: Courtroom vs. …</a><span class="secnav-sep">·</span><a href="#3-formal-layer-horn-clauses-and-chaining">3. Formal Layer: Horn Clauses and … →</a></p>
+<p><strong>Data/state:</strong> clauses (disjunctions of literals; a <strong>literal</strong> is an atom or its negation). <strong>Goal:</strong> derive contradiction from KB plus negated query.</p>
+<p><strong>CNF (Conjunctive Normal Form)</strong> means a conjunction (AND) of clauses, each clause a disjunction (OR) of literals. Conversion pipeline (steps): Step 1: eliminate <code>&lt;=&gt;</code> (<code>P &lt;=&gt; Q</code> becomes <code>(P =&gt; Q) ∧ (Q =&gt; P)</code>) and <code>=&gt;</code> (<code>P =&gt; Q</code> becomes <code>¬P ∨ Q</code>). Step 2: push <code>¬</code> inward (de Morgan laws plus double negation). Step 3: distribute <code>∨</code> over <code>∧</code>.</p>
+<p><strong>Resolution rule (one rule):</strong> from clauses sharing a complementary pair (<code>l</code> and <code>¬l</code>), infer the <strong>resolvent</strong> — everything except the cancelled pair. Unit special case above is the workhorse.</p>
+<p><strong>Refutation proof of <code>KB |= alpha</code> (steps):</strong> Step 1: convert <code>KB ∧ ¬alpha</code> to CNF. Step 2: resolve repeatedly. Step 3: deriving the <strong>empty clause</strong> (written as a box — a contradiction with nothing left) proves entailment, since <code>KB |= alpha</code> iff <code>KB ∧ ¬alpha</code> is unsatisfiable. Resolution is sound and <strong>refutation-complete</strong> (qualified: if entailment holds, the empty clause will appear — it is not complete for deriving arbitrary non-contradictory sentences directly). Price: worst-case exponential search for pairings.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Resolution in 3 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Resolve complementary literals, keep the rest. Prove alpha by refuting ¬alpha: CNF(KB ∧ ¬alpha) through resolvents to the empty box. Complete for refutation over full propositional logic.</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-horn-clauses-and-chaining">3. Formal Layer: Horn Clauses and Chaining</h2>
+<p class="secnav"><a href="#2-basic-layer-cnf-and-the-resolution-rule">← 2. Basic Layer: CNF and the Resolu…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Meaning, variables, definition:</strong> a <strong>Horn clause</strong> has at most one positive (un-negated) literal — equivalently an implication of positive premises <code>P1 ∧ ... ∧ Pk =&gt; Q</code>. A <strong>definite clause</strong> has exactly one positive head; a bare fact <code>Q</code> is the k=0 case. Counting test: circle un-negated atoms; more than one means non-Horn. The Wumpus <code>B =&gt; (P1 ∨ P2)</code> is non-Horn (two positives) — but danger-style Horn rules dominate practical KBs because they unlock linear-time chaining.</p>
 <ul>
-<li><strong>Forward chaining (data-driven):</strong> fire every rule whose premises are all known; repeat until the query appears or nothing new fires. Complete for Horn KBs, linear in KB size — the honest detective rediscovering <em>everything</em> from the evidence.</li>
-<li><strong>Backward chaining (goal-driven):</strong> start from the query; recursively prove each premise (facts succeed instantly, rules recurse). Touches only relevant rules — the lazy genius working backward from the verdict. Basis of Prolog.</li>
+<li><strong>Forward chaining (data-driven):</strong> fire every rule whose premises are known; repeat until the query appears or nothing new fires. Complete for Horn KBs, linear in KB size — rediscovers everything.</li>
+<li><strong>Backward chaining (goal-driven):</strong> start from the query; recursively prove each premise (facts succeed, rules recurse). Touches only relevant rules — demand-driven. Basis of Prolog (a logic programming language).</li>
 </ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Horn Means ≤1 Positive Literal — Count Carefully</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$(A \lor \lnot B \lor \lnot C)$ is Horn (one positive: $A$); $(A \lor B \lor \lnot C)$ is <strong>not</strong> (two positives). Students miscount under time pressure — circle the <em>un-negated</em> atoms and count those. And neither chaining algorithm is complete for <em>non</em>-Horn KBs: that territory belongs to resolution alone.</p>
-</div></details><hr>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Horn Means ≤1 Positive Literal — Count Carefully</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>(A ∨ ¬B ∨ ¬C)</code> is Horn (one positive: A); <code>(A ∨ B ∨ ¬C)</code> is not (two positives). Neither chaining algorithm is complete outside Horn — that territory belongs to resolution alone.</p>
+</div></details><p><strong>Refutation trace (Wumpus telling with a draft):</strong> clauses C1 <code>(¬B ∨ P12 ∨ P21)</code> (breeze rule), C2 <code>(¬P12)</code> (probed safe), C3 <code>(B)</code> (observed breeze), query <code>P12 ∨ P21</code> (pit neighbours (1,1)). Negated query adds <code>(¬P12)</code> (reused) and <code>(¬P21)</code>. C1 with C3 on B gives <code>(P12 ∨ P21)</code>; with C2 on P12 gives <code>(P21)</code>; with <code>(¬P21)</code> gives the empty box. Contradiction derived — query entailed: a pit must neighbour (1,1), here (2,1).</p>
 <p><a id="worked-example"></a></p>
-<h2 id="4-refuting-our-way-to-a-safe-square">4. Refuting Our Way to a Safe Square</h2>
-<p class="secnav"><a href="#3-horn-clauses-chaining-territory">← 3. Horn Clauses: Chaining Territor…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
-<p>KB (clausal): $C_1: (\lnot B_{1,1} \lor P_{1,2} \lor P_{2,1})$ [breeze rule, $\Rightarrow$-eliminated] · $C_2: (\lnot P_{1,2})$ [probed safe] · $C_3: (B_{1,1})$ [observed breeze at (1,1)... in <em>this</em> telling the agent felt a draft]. Query: is there a pit nearby — $\alpha = (P_{1,2} \lor P_{2,1})$?</p>
-<p>Negate the query: $\lnot\alpha = (\lnot P_{1,2}) \land (\lnot P_{2,1})$ — add $C_4: (\lnot P_{1,2})$ (already $C_2$, reused) and $C_5: (\lnot P_{2,1})$. Resolve $C_1$ with $C_3$ on $B_{1,1}$ → $(P_{1,2} \lor P_{2,1})$; resolve with $C_4$ on $P_{1,2}$ → $(P_{2,1})$; resolve with $C_5$ on $P_{2,1}$ → $\Box$. <strong>Contradiction derived — the query is entailed</strong>: given breeze at (1,1) and a safe (1,2), a pit <em>must</em> neighbor (1,1) somewhere — here, (2,1).</p>
-<hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-horn-clauses-and-chaining">← 3. Formal Layer: Horn Clauses and …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Resolution vs. chaining</td>
+<td>Refutation-complete generally (exponential worst case) vs. linear but Horn-only complete</td>
+</tr>
+<tr>
+<td>Forward vs. backward chaining</td>
+<td>Fire-all (reusable flood) vs. goal-driven (focused slice, Prolog&#39;s engine)</td>
+</tr>
+<tr>
+<td>Horn vs. general clauses</td>
+<td>≤1 positive (chaining-safe) vs. resolution-only territory</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Resolution needs CNF first — implications resolve nothing directly. (2) Chaining on non-Horn silently misses entailed conclusions. (3) The empty box is absence-of-survivors, not another fact.</p>
+<p><strong>Limitations:</strong> resolution proof search explodes worst-case; Horn restriction forbids natural disjunctive rules; chaining still needs the KB in Horn form (conversion can itself blow up).</p>
 <p><a id="self-check"></a></p>
 <h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-refuting-our-way-to-a-safe-square">← 4. Refuting Our Way to a Safe Squa…</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">To prove KB ⊨ α by resolution, what exact set do you convert to CNF and what terminal symbol ends the proof?</span>
@@ -338,7 +358,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Refutation: <em>assume the query false alongside the KB</em> and derive impossibility. CNF-ize $KB \land \lnot\alpha$; resolve until $\Box$ — the contradiction certifies no counter-model exists, i.e. entailment holds. Ending at anything else proves nothing.</p><pre><code>&lt;/div&gt;
+      <p>Assume the query false alongside the KB and derive impossibility. The empty box certifies no counter-model exists — anything else proves nothing.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -363,7 +383,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Horn = at most one un-negated atom; $(A \lor B \lor \lnot C)$ has two. Chaining&#39;s completeness proof assumes Horn form — outside it, the engine may halt without the answer although resolution would find it. Feed non-Horn KBs to resolution instead.</p><pre><code>&lt;/div&gt;
+      <p>Horn allows at most one un-negated atom. Chaining&#39;s completeness proof assumes Horn form; outside it, use resolution.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -388,24 +408,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Forward chaining floods: every derivable fact, relevant or not. Backward chaining is demand-driven — it recursively grounds only the query&#39;s premise tree. On million-rule KBs with focused questions (diagnosis, Prolog queries), that selectivity is the whole game.</p><pre><code>&lt;/div&gt;
+      <p>Forward floods every derivable fact; backward is demand-driven on the query&#39;s premise cone — decisive on million-rule KBs with focused questions.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
 <p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> State the resolution rule, define Horn clause, or contrast forward vs. backward chaining.</li>
-<li><strong>7 Marks:</strong> Full refutation proof on a Wumpus fragment (CNF → resolve → □), or trace chaining to a goal.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: State the resolution rule and the condition for applying it.</strong></p>
-<p><strong>Model Answer:</strong> From clauses $(l_1 \lor \dots \lor l_k)$ and $(m_1 \lor \dots \lor m_n)$ containing a complementary pair $l_i = \lnot m_j$, infer the resolvent: the disjunction of all remaining literals. One complementary pair per step; the empty clause $\Box$ signals contradiction.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: resolution rule, Horn definition, or chaining contrast. 7 marks: full refutation to the box or a chaining trace.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> CNF pipeline; complementary-pair resolvent; <code>KB ∧ ¬alpha</code>-to-box method with refutation-completeness qualification; Horn count test; forward/backward effort shapes.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: State the resolution rule and its application condition.</strong></p>
+<p><strong>Model Answer:</strong> From clauses with a complementary pair l/¬l, infer the disjunction of all remaining literals. One pair per step; the empty box signals contradiction.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Using the KB of §4, prove by resolution that a pit neighbors (1,1).</strong></p>
-<p><strong>Model Answer:</strong> As traced: CNF gives $C_1: (\lnot B_{1,1} \lor P_{1,2} \lor P_{2,1})$, $C_2: (\lnot P_{1,2})$, $C_3: (B_{1,1})$, negated query $C_5: (\lnot P_{2,1})$. $C_1 \otimes C_3 \to (P_{1,2} \lor P_{2,1})$; $\otimes, C_2 \to (P_{2,1})$; $\otimes, C_5 \to \Box$. Refutation complete — entailment proven, and the surviving disjunct history even shows <em>where</em> the pit must be.</p>
+<p><strong>Q: Prove by resolution that a pit neighbours (1,1) on the §3 KB.</strong></p>
+<p><strong>Model Answer:</strong> CNF clauses as listed; C1 with C3 gives (P12 ∨ P21); with (¬P12) gives (P21); with (¬P21) gives the box. Refutation complete, entailment proven, survivor history even locates the pit.
+:::</p>
 
     </main>
 

@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -309,13 +313,13 @@
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Each scenario chains one module idea end to end: SNMP idioms (M4.1), both-laws capacity verdicts (M4.2), sample→rate→modem chains (M4.3–M4.4). Abbreviations: SNMP (Simple Network Management Protocol), NMS (Network Management System), OID (Object Identifier), SNR (Signal-to-Noise Ratio), QAM (Quadrature Amplitude Modulation), BER (Basic Encoding Rules — and, separately, Bit Error Rate where radio is discussed).</p>
 <h3>Scenario 1: The Midnight Link Failure (SNMP in Action)</h3>
 <p>A leased line drops at 2 AM. Reconstruct the management traffic: (1) the router agent fires a <strong>Trap</strong> (linkDown) — arrives in seconds <em>if</em> it survives (unacknowledged); (2) the NMS, doubting traps, <strong>polls</strong> interface status via <strong>GetRequest</strong> on the ifOperStatus OID — confirms down; (3) after repair, the NMS <strong>walks</strong> the interface table with <strong>GetNextRequest</strong> to re-inventory all ports (unknown count → walk until the OID prefix changes); (4) it pushes the restored config via <strong>SetRequest</strong> over <strong>SNMPv3</strong> (auth+priv — never v2c cleartext for writes). Trap for speed, poll for truth, walk for discovery, v3 for safety — the four-idiom drill.</p>
 <h3>Scenario 2: Capacity Court (Both Laws, One Verdict)</h3>
 <p>A 5 kHz line, 8-level signaling available, measured SNR 25 dB. Nyquist (noiseless): $2 \times 5000 \times \log_2 8 = 30{,}000$ bps $= 30$ kbps. Shannon: SNR $= 10^{2.5} \approx 316$; $C = 5000 \times \log_2(317) \approx 5000 \times 8.31 \approx 41{,}547$ bps $\approx 41.5$ kbps. Verdict: 8-level signaling achieves 30 kbps (below Shannon&#39;s roof, so error-free is feasible); nothing on this line exceeds $\approx 41.5$ kbps regardless of cleverness. Note the reversal from the M4 worked example (there Shannon bound tighter at 30) — <em>compute both every time; either can bind</em>.</p>
 <h3>Scenario 3: Digitize This (End to End)</h3>
 <p>A 10 kHz instrumentation signal, 10-bit quantization, QAM-16 modem over a 2400-baud line. Sampling floor: $f_s \ge 20{,}000$/s. Bit rate: $20{,}000 \times 10 = 200$ kbps generated. Modem capacity: $2400 \times \log_2 16 = 9600$ bps $\ll 200$ kbps — the digitized stream <strong>cannot</strong> ride this modem live (compress ~21:1, store-and-forward, or upgrade the line). Three M4 formulas chained: sample floor → bit rate → modem check. Miss any link and the design fails silently on paper, loudly in production.</p>
-<hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
 <p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
@@ -367,7 +371,7 @@
 <td>Symbols/s vs. $S\log_2N$ data/s — equal only for binary</td>
 </tr>
 </tbody></table>
-<hr>
+<p><strong>Watch out:</strong> (1) Reporting one capacity law and stopping — either can bind. (2) Trusting traps over polls for current state — events vs. present tense. (3) Answering baud as bit rate — multiply by $\log_2N$ first. (4) Applying the $-2$ host rule outside IPv4 subnets — context matters.</p>
 <p><a id="self-check"></a></p>
 <h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
@@ -471,8 +475,7 @@
       <p>Uniform steps spend resolution evenly; information isn&#39;t even — biosignals live near zero with rare excursions. μ-law concentrates levels at small amplitudes (fine where it matters), exactly like ears do. Match quantizer to signal statistics, not to symmetry aesthetics.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
+</div><p><a id="exam-focus"></a></p>
 <h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
 <p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
@@ -591,7 +594,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_99_practice_lab_management_physical_drills";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

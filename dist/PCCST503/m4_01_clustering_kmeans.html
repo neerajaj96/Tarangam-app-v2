@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,22 +249,55 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Clustering I: k-Means</h1>
-<p><strong>The Lloyd loop, assignment–update alternation, k-means++ seeding, the elbow method, and a hand-traced convergence.</strong></p>
+<p><strong>What problem grouping without labels solves, what point clouds k-means needs, how Lloyd&#39;s loop trains centroids, and where spherical bias limits it.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Shoppers have no tags, only baskets. The problem: split them into $K$ useful groups so similar baskets share a group, with no teacher and no answer key.</p>
+<p>Tiny beginner example. Points ${1,2,10,11}$ with $K=2$. Guess centroids $1$ and $11$. Points $1,2$ join $1$; $10,11$ join $11$. New means $1.5$ and $10.5$. Reassign: same groups. Frozen. Two clusters found in one update.</p>
+<p>Analogy as support, then dropped. Strangers walking to nearest campfires, fires recentering on crowds until nobody moves. From here on we use exact terms only: partitional clustering, centroid, Within-Cluster Sum of Squares (WCSS).</p>
+<p>Abbreviations defined on first use: Within-Cluster Sum of Squares (WCSS). Symbols are defined before use below.</p>
+<p><strong>Partitional clustering, named explicitly.</strong> k-means <strong>is</strong> partitional clustering: it cuts the dataset into $K$ flat, non-overlapping partitions in one upfront commitment to $K$. Contrast with hierarchical clustering (next note), which builds a nested merge tree and defers $K$ until a dendrogram cut is read. Partitional means one level, $K$ chosen blind upfront, rerun per $K$. Hierarchical means every granularity in one run, $K$ chosen after seeing structure. That contrast is examinable.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $K$?</td>
+<td>Number of flat partitions, chosen upfront here</td>
+</tr>
+<tr>
+<td>What is $\mu_k$?</td>
+<td>Centroid, mean of cluster $k$</td>
+</tr>
+<tr>
+<td>What is $C_k$?</td>
+<td>Set of points assigned to cluster $k$</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Partition $n$ unlabelled points into $K$ compact groups.</p>
+<p><strong>Data.</strong> Bare vectors $x_i$ with no labels. Here distance is usually Euclidean; scale features first or large units dominate.</p>
+<p><strong>Goal.</strong> Minimise $J=\sum_{k=1}^K\sum_{x\in C_k}|x-\mu_k|^2$, the WCSS. Here $|x-\mu_k|^2$ is squared distance to the assigned centre.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Campfire Gathering</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Strangers in a dark field each walk to the nearest campfire, then every campfire <em>relocates to the center of its crowd</em> — which changes nearest-fire assignments, so people re-walk, fires re-center, until nobody moves. <strong>k-Means</strong> is this evening in mathematics: alternate <strong>assign</strong> (every point joins the nearest centroid) and <strong>update</strong> (each centroid becomes its cluster&#39;s mean) until assignments freeze. No labels, no teachers — just the geometry of togetherness, iterated to a standstill.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
@@ -278,31 +319,68 @@
     <p class="video-caption"><strong>Key Insight:</strong> Lloyd Iterations Live</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch assignments flicker as centroids march to cluster centers — boundary points switching sides mid-run, then the freeze of convergence when no point wants to move.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Objective and Lloyd&#39;s Algorithm</h3>
-<p>Minimize within-cluster sum of squares: $J = \sum_{k=1}^{K}\sum_{x \in C_k} |x - \mu_k|^2$. <strong>Lloyd&#39;s loop:</strong> (1) assign each $x$ to nearest $\mu_k$; (2) reset $\mu_k$ = mean of $C_k$; repeat until assignments stop changing. Each step <em>monotonically decreases</em> $J$ (assignment step: every point picks its cheapest center; update step: the mean <em>is</em> the squared-error minimizer) — convergence guaranteed, to a <em>local</em> optimum only.</p>
-<h3>2.2 Initialization and Choosing k</h3>
+</div><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (flat grouping) → data (bare points) → goal (low WCSS) → method (alternate assign and update) → model ($K$ centroids) → training (Lloyd&#39;s loop) → example → limitations.</p>
+<h3>3.1 Objective and Lloyd&#39;s Algorithm, Step by Step</h3>
+<p>Numbered loop:</p>
+<ol>
+<li>Initialise $K$ centroids (use k-means++ below).</li>
+<li>Assign each $x$ to nearest $\mu_k$.</li>
+<li>Reset each $\mu_k$ to the mean of its $C_k$.</li>
+<li>Repeat until assignments stop changing.</li>
+</ol>
+<p>Each step monotonically decreases or holds $J$: assignment picks each point&#39;s cheapest centre; the mean is the squared-error minimiser for its group. Corrected qualification: over finitely many partitions this forces termination at a local optimum (nearest valley), not the global optimum. Initialisation decides which valley; restarts and k-means++ mitigate, never guarantee, the best valley.</p>
+<h3>3.2 Initialization and Choosing k</h3>
 <ul>
-<li>Random init can strand centroids (empty clusters, terrible local minima). <strong>k-means++</strong>: seed first centroid uniformly, each subsequent one with probability $\propto$ squared distance to the nearest seeded centroid — spread-out starts with an $O(\log k)$ approximation guarantee.</li>
-<li><strong>Elbow method:</strong> plot $J$ vs $K$; pick the kink where returns diminish. Silhouette scores formalize the eyeballing. Neither discovers &quot;true&quot; $k$ — clustering has no ground truth, only useful resolutions.</li>
+<li>Random init can strand centroids (empty clusters, poor local minima). <strong>k-means++</strong>: seed first centroid uniformly, each next with probability proportional to squared distance to nearest seeded centroid. Spread-out starts with an expected $O(\log k)$ approximation guarantee. Qualification: expected, not deterministic; still rerun and keep best WCSS.</li>
+<li><strong>Elbow method:</strong> plot $J$ versus $K$; pick the kink where returns diminish. Silhouette scores formalise the eyeballing. Neither discovers true $K$: partitional clustering has no ground truth, only useful resolutions. Hierarchical views (next note) help read $K$ after seeing merges.</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: k-Means Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Objective <strong>WCSS</strong> (within-cluster squares) · loop <strong>assign → update-means</strong> (each step <strong>decreases J</strong>) · converges to <strong>local</strong> optimum · seed with <strong>k-means++</strong> ($d^2$ weighting) · pick $k$ by <strong>elbow/silhouette</strong> · likes <strong>spherical, equal-size</strong> clusters; fails on moons/rings/densities (DBSCAN territory).</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Partitional (k-means) vs hierarchical</td>
+<td>Flat $K$ upfront, rerun per $K$ vs nested tree, cut after seeing; one level vs every granularity</td>
+</tr>
+<tr>
+<td>k-means++ vs uniform seeding</td>
+<td>Spread coverage with expected guarantee vs clumped starts stranding centroids</td>
+</tr>
+<tr>
+<td>Elbow vs silhouette</td>
+<td>Visual kink vs per-point cohesion score; same selection instinct</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: k-Means Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Objective <strong>WCSS</strong> (within-cluster squares) · loop <strong>assign → update-means</strong> (each step <strong>decreases J</strong>) · converges to <strong>local</strong> optimum in finite steps · seed with <strong>k-means++</strong> ($d^2$ weighting, expected guarantee) · pick $k$ by <strong>elbow/silhouette</strong> · likes <strong>spherical, equal-size</strong> clusters; fails on moons/rings/densities · <strong>is partitional</strong>, unlike hierarchical trees.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: k-Means Sees Spheres Everywhere (Even Where None Exist)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Voronoi boundaries + mean-centers bake in a spherical-cluster worldview: elongated, ring-shaped, or mixed-density clusters get shredded into round pieces regardless of truth. Wrong-shape data needs density methods (DBSCAN) or spectral cuts — running k-Means harder (more restarts) never fixes a shape mismatch.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>1D points ${1, 2, 3, 10, 11, 12}$, $K = 2$, initial centroids $\mu = {1, 12}$. Run Lloyd&#39;s to convergence. (Trace verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Assign, Update, Freeze</div><div class="step-content"><p><strong>Iteration 1:</strong> distances — $1,2,3$ nearer $\mu_1 = 1$; $10,11,12$ nearer $\mu_2 = 12$. Clusters ${1,2,3}$, ${10,11,12}$. New means: $2.0$, $11.0$.
 <strong>Iteration 2:</strong> reassign against ${2.0, 11.0}$ — $|1-2| &lt; |1-11|$ ✓ stays; $|3-2| &lt; |3-11|$ ✓; $|10-11| &lt; |10-2|$ ✓ … identical clusters. <strong>Frozen — converged</strong> in one effective update.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Centroids ${2.0, 11.0}$, WCSS $= (1+0+1) + (1+0+1) = 4$. Note what <em>didn&#39;t</em> happen: no point ever crossed the $6.5$ midpoint — well-separated data converges instantly. Tight interleaved data would oscillate assignments for rounds (and different inits could freeze on different answers — the local-optimum fine print, live).</p>
-</div></div><hr>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Calling k-means hierarchical. It is partitional: flat, $K$ upfront. Hierarchical builds trees.</li>
+<li>Expecting global optima from one run. Only local; seed plus restarts manage the risk.</li>
+<li>Running more iterations to fix shape mismatch. Spheres stay spheres; switch families.</li>
+<li>Skipping scaling. Large units hijack Euclidean distances and centroids.</li>
+</ul>
+<p>Limitations: needs $K$, spherical and equal-size bias, outlier-sensitive means, no hierarchy.</p>
+<p>Exam recap: WCSS objective; assign then update-means, monotone to local; k-means++ spread seeding; elbow or silhouette for $K$; partitional versus hierarchical contrast.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why does Lloyd&#39;s loop always terminate, and what kind of answer does it guarantee?</span>
@@ -487,7 +565,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m4_01_clustering_kmeans";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

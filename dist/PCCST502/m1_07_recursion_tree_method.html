@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,54 +281,47 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Solution of Recurrences: Recursion Tree Method</h1>
 <p><strong>Visualizing recursion depth, per-level work computation, leaf level cost, and summing geometric progressions.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine drawing an actual family tree for a recursive algorithm&#39;s calls. The very top (the &quot;root&quot;) is the original call, on the full problem of size $n$. It has some children — the sub-problems it recurses into — each drawn as a node one level below, and each of <em>those</em> has its own children, one level further down, and so on, until you reach the bottom row of the tree: the &quot;leaves,&quot; which are base cases that don&#39;t recurse any further.</p>
-<p>The <strong>recursion tree method</strong> makes this drawing literal, and next to <em>each node</em>, you write down how much work that particular call does — not counting its children&#39;s work, just its own. Then the trick is: add up all the work <em>level by level</em> (every node at depth 0, then every node at depth 1, then depth 2, ...), and finally add up the totals across all levels. This turns an abstract recurrence equation into something you can literally see and count, which is often the most intuitive way to <em>discover</em> what the total complexity should be — even before you formally prove it (with the substitution method, for instance).</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Iteration unrolls recursion as algebra — but many learners <em>see</em> better than they symbol-push. The recursion tree turns the same unrolling into a picture: the root is the original call on size $n$, its children are the sub-calls, and so on down to base-case leaves. Write each node&#39;s own work beside it, total each <em>row</em>, then add the rows.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Draw a family tree of the calls. Root = the size-$n$ call. Children = the sub-problems it spawns; grandchildren = theirs. Leaves = base cases that stop. Next to each node write only <em>its own</em> work (not its children&#39;s). Row totals reveal the pattern instantly: rows shrinking → root rules; rows equal → count the rows; rows growing → leaves rule.</p>
+</div></details><p><strong>Tiny toy example.</strong> $T(n) = 2T(n/2) + 1$ for $n = 4$: root work 1; two children on size 2, work 1 each (row = 2); four leaves on size 1 (row = 4). Total $1 + 2 + 4 = 7$ — rows doubling downward, leaves dominating already visible.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-t-n-3t-n-4-n-2">3. Worked example — $T(n) = 3T(n/4… →</a></p>
+<p><strong>Symbols:</strong> $a$ = children per node (recursive calls); $b$ = shrink factor (size divides by $b$); $f(n)$ = one node&#39;s own work; level $i$ counts from the root ($i = 0$).</p>
 <p><strong>Building the tree for $T(n) = aT(n/b) + f(n)$:</strong></p>
 <ul>
-<li>The <strong>root</strong> represents the original problem, size $n$, doing $f(n)$ work at this level (not counting the recursive calls).</li>
-<li>The root has $a$ children, each representing a sub-problem of size $n/b$ — so <strong>level 1</strong> has $a$ nodes, each contributing $f(n/b)$ work, for a level total of $a \cdot f(n/b)$.</li>
-<li><strong>Level 2</strong> has $a^2$ nodes (each of the $a$ level-1 nodes spawns $a$ children), each of size $n/b^2$, contributing a level total of $a^2 \cdot f(n/b^2)$.</li>
-<li>In general, <strong>level $i$</strong> has $a^i$ nodes, each of size $n/b^i$, contributing a level total of $a^i \cdot f(n/b^i)$.</li>
-<li>The tree <strong>bottoms out</strong> (reaches leaves / base cases) once the sub-problem size shrinks to $1$, i.e. $n/b^i = 1 \Rightarrow i = \log_b n$. So the tree has $\log_b n + 1$ levels (level 0 through level $\log_b n$).</li>
-<li>The <strong>number of leaves</strong> is $a^{\log_b n}$ (using the identity $a^{\log_b n} = n^{\log_b a}$), and since each leaf typically does $\Theta(1)$ work (it&#39;s a base case), the <strong>total leaf-level cost</strong> is $\Theta(n^{\log_b a})$.</li>
+<li>Root: size $n$, work $f(n)$.</li>
+<li>Level 1: $a$ nodes of size $n/b$ → row total $a \cdot f(n/b)$.</li>
+<li>Level 2: $a^2$ nodes of size $n/b^2$ → row total $a^2 \cdot f(n/b^2)$.</li>
+<li>Level $i$: $a^i$ nodes of size $n/b^i$ → row total $a^i \cdot f(n/b^i)$.</li>
+<li>Bottom: size hits 1 when $n/b^i = 1 \Rightarrow i = \log_b n$; total levels $\log_b n + 1$.</li>
+<li>Leaves: $a^{\log_b n} = n^{\log_b a}$ of them (log identity), each $\Theta(1)$ → leaf floor $\Theta(n^{\log_b a})$.</li>
 </ul>
-<p><strong>Total cost = sum of every level&#39;s total, across all levels:</strong>
+<p><strong>Grand total (sum of row totals):</strong>
 $$T(n) = \sum_{i=0}^{\log_b n} a^i \cdot f(n/b^i)$$
-Once you have this sum, you evaluate it as a series (often geometric), and there are three typical outcomes, depending on whether the <em>per-level totals</em> are growing, shrinking, or staying constant as $i$ increases:</p>
-<ul>
-<li>If per-level cost <strong>decreases</strong> geometrically as you go down the tree, the <strong>root&#39;s</strong> cost dominates the whole sum, and $T(n) = \Theta(f(n))$.</li>
-<li>If per-level cost stays <strong>roughly the same</strong> at every level, the total is (number of levels) × (cost per level) $= \Theta(f(n)\log_b n)$.</li>
-<li>If per-level cost <strong>increases</strong> geometrically as you go down, the <strong>leaves</strong> dominate the whole sum, and $T(n) = \Theta(n^{\log_b a})$.</li>
-</ul>
-<p>(Sharp-eyed readers will notice these three outcomes correspond directly to the three cases of the Master Theorem, covered next — the recursion tree method is, in a real sense, exactly <em>why</em> the Master Theorem&#39;s three cases exist and take the form they do.)</p>
+Three typical outcomes: rows <strong>shrink</strong> geometrically → root dominates, $T(n) = \Theta(f(n))$; rows <strong>flat</strong> → levels × row cost $= \Theta(f(n)\log_b n)$; rows <strong>grow</strong> → leaves dominate, $T(n) = \Theta(n^{\log_b a})$. These three are exactly <em>why</em> the Master Theorem (next) has three cases.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve $T(n) = 3T(n/4) + n^2$ using the recursion tree method (here $a=3$, $b=4$, $f(n)=n^2$ — extra work at each level is $n^2$, the sub-problem count multiplies by 3, and sub-problem size divides by 4 at each level).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Level 0 (root):</strong> 1 node of size $n$, cost $n^2$.
-<strong>Level 1:</strong> 3 nodes, each of size $n/4$, each costing $(n/4)^2 = n^2/16$; level total $= 3 \cdot n^2/16$.
-<strong>Level 2:</strong> 9 nodes, each of size $n/16$, each costing $(n/16)^2 = n^2/256$; level total $= 9 \cdot n^2/256 = (3/16)^2 n^2$.
-<strong>Level $i$ (general pattern):</strong> level total $= (3/16)^i \cdot n^2$.
-<strong>Recognising the shape:</strong> since $3/16 &lt; 1$, each successive level&#39;s total is <em>smaller</em> than the one above it — a geometric series that shrinks — meaning the <strong>root&#39;s</strong> contribution ($n^2$) dominates the entire sum, and the sum of the full (infinite, in the limit) geometric series $\sum_{i=0}^{\infty} (3/16)^i$ converges to a constant ($\frac{1}{1-3/16} = \frac{16}{13}$), not growing with $n$.</p>
+<h2 id="3-worked-example-t-n-3t-n-4-n-2">3. Worked example — $T(n) = 3T(n/4) + n^2$</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Solve $T(n) = 3T(n/4) + n^2$ ($a = 3$, $b = 4$, $f(n) = n^2$): count triples each level, size quarters, own-work squares.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p><strong>Level 0:</strong> 1 node, cost $n^2$. <strong>Level 1:</strong> 3 nodes of size $n/4$, each $(n/4)^2 = n^2/16$ → row $3n^2/16$. <strong>Level 2:</strong> 9 nodes of $n^2/256$ → row $(3/16)^2n^2$. <strong>Level $i$:</strong> row $(3/16)^i n^2$. Since $3/16 &lt; 1$, rows shrink geometrically; $\sum_{i\ge0}(3/16)^i = \frac{1}{1-3/16} = \frac{16}{13}$, a constant.</p>
 <pre><code class="language-text">Level 0 (root):              [ cost n^2 ]                    total = n^2
                           /      |      \
 Level 1:          [n^2/16]  [n^2/16]  [n^2/16]               total = 3n^2/16
-                   /|\         ...         ...
+                    /|\         ...         ...
 Level 2:         9 nodes, each n^2/256                      total = 9n^2/256 = (3/16)^2 n^2
-   ...
+    ...
 Level i:         3^i nodes, each (n/4^i)^2                   total = (3/16)^i n^2  --&gt;  shrinking
 </code></pre>
 </div></div><div class="video-studio">
@@ -354,11 +347,42 @@ Level i:         3^i nodes, each (n/4^i)^2                   total = (3/16)^i n^
     <p class="video-caption"><strong>Key Insight:</strong> Tree Growth, Level by Level</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the root sprout 3 children, then 9 grandchildren — level totals printed beside each row, each row (3/16)th the last, the root&#39;s dominance made visible.</div>
   </div>
-</div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Because the level totals shrink geometrically, the sum across all $\log_4 n$ levels is bounded by a constant multiple of the root&#39;s cost alone: $T(n) = \Theta(n^2)$. This matches Master Theorem Case 1 (covered next), where the &quot;extra work&quot; function $f(n)$ grows polynomially faster than $n^{\log_b a} = n^{\log_4 3} \approx n^{0.79}$, so the root dominates.</p>
+</div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Rows shrink, root dominates: $T(n) = \Theta(n^2)$. Matches Master Case 1, since $f(n) = n^2$ outgrows $n^{\log_4 3} \approx n^{0.79}$ polynomially.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-t-n-3t-n-4-n-2">← 3. Worked example — $T(n) = 3T(n/4…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Node count multiplies by $a$ ($a^i$), size divides by $b$ ($n/b^i$) — swapping them is the classic slip.</li>
+<li>The leaf floor ($n^{\log_b a}$ leaves) is a <em>separate</em> term: in growing-row trees it wins; in shrinking ones it is already absorbed.</li>
+<li>Row totals, not node counts, decide: 9 nodes of tiny cost can still total less than 1 big root.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$a^i$ vs $n/b^i$</td>
+<td>Node count (grows) vs sub-problem size (shrinks) at level $i$</td>
+</tr>
+<tr>
+<td>Root-dominated vs leaf-dominated</td>
+<td>Shrinking rows $\Theta(f(n))$ vs growing rows $\Theta(n^{\log_b a})$</td>
+</tr>
+<tr>
+<td>Recursion tree vs iteration method</td>
+<td>Picture with row sums vs algebra with level-$k$ formula — same total</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> level-$i$ row total $a^i f(n/b^i)$; depth $\log_b n$; leaves $n^{\log_b a}$; the three row behaviours prefigure the three Master cases.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In a recursion tree for $T(n) = aT(n/b) + f(n)$, how many nodes exist at level $i$, and what is the size of the sub-problem at each of those nodes?</span>

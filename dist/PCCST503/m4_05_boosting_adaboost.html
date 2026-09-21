@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,45 +249,104 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Ensembles II: Boosting &amp; AdaBoost</h1>
-<p><strong>Sequential error-fixing, exponential weight updates, the α vote formula, margins theory, and a two-round hand trace.</strong></p>
+<p><strong>What problem sequential repair solves, what weighted data Adaptive Boosting (AdaBoost) needs, how exponential reweighting trains a committee, and where noise breaks the bet.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Bagging builds students independently. Boosting runs a study group sequentially: round one attempts the paper; round two drills the missed questions; later tutors earn louder voices by accuracy.</p>
+<p>Tiny beginner example. Four points, one missed in round one. Miss weight doubles from $0.25$ to $0.50$; solved points shrink to $1/6$ each. Round two lives in a world dominated by that miss: fix it or perish. That reweighting is AdaBoost.</p>
+<p>Analogy as support, then dropped. Study group targeting weakness with accuracy-weighted tutors. From here on we use exact terms only: distribution, weighted error, vote weight, margin.</p>
+<p>Abbreviations defined on first use: Adaptive Boosting (AdaBoost). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $D_t$?</td>
+<td>Weight distribution over points in round $t$</td>
+</tr>
+<tr>
+<td>What is $\epsilon_t$?</td>
+<td>Weighted error of round $t$ learner</td>
+</tr>
+<tr>
+<td>What is $\alpha_t$?</td>
+<td>Vote weight earned by round $t$</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Turn barely-better-than-guessing rules into a strong committee by attacking residual errors.</p>
+<p><strong>Data.</strong> Labelled pairs with $y\in{+1,-1}$ plus a distribution $D_t$ that changes per round. Start uniform $D_1(i)=1/n$.</p>
+<p><strong>Goal.</strong> Low training error via $\text{sign}(\sum_t\alpha_t h_t(x))$, plus wide voting margins $y\sum\alpha_t h_t(x)$ where possible on clean data.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Study Group That Targets Weakness</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Bagging builds students independently and averages them. <strong>Boosting</strong> runs a study group <em>sequentially</em>: round 1, everyone attempts the past paper; round 2 drills <em>the questions most students missed</em> (upweighted), round 3 drills what survives — while the final grade weights each round&#39;s tutor by demonstrated accuracy (loud voice for reliable tutors, whisper for shaky ones). Weak learners (barely-better-than-guessing stumps) sequenced this way become a strong committee: each round attacks the <em>residual</em> errors of all previous rounds combined.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 AdaBoost Mechanics (Binary $y \in {+1,-1}$)</h3>
-<p>Maintain distribution $D_t$ over training points (uniform start). Each round: train weak learner on $D_t$ → get hypothesis $h_t$ with weighted error $\epsilon_t = \sum_{h_t(x_i) \neq y_i} D_t(i)$; compute vote weight $\alpha_t = \tfrac12 \ln\frac{1-\epsilon_t}{\epsilon_t}$; reweight $D_{t+1}(i) \propto D_t(i), e^{-\alpha_t y_i h_t(x_i)}$ (correct × shrink, wrong × grow); renormalize. Final classifier: $\text{sign}(\sum_t \alpha_t h_t(x))$.</p>
-<h3>2.2 Why the Formulas (One Line Each)</h3>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (weak rules, residual errors) → data (weighted pairs) → goal (low error, fat margins on clean data) → method (reweight plus vote) → model (weighted vote) → training (sequential rounds) → example → limitations.</p>
+<h3>3.1 AdaBoost Mechanics, Step by Step</h3>
+<p>Numbered round:</p>
+<ol>
+<li>Train weak learner on $D_t$; get $h_t$.</li>
+<li>Compute $\epsilon_t=\sum_{h_t(x_i)\ne y_i}D_t(i)$.</li>
+<li>Compute $\alpha_t=\tfrac12\ln((1-\epsilon_t)/\epsilon_t)$.</li>
+<li>Reweight $D_{t+1}(i)\propto D_t(i)e^{-\alpha_t y_i h_t(x_i)}$ (correct shrinks, wrong grows); renormalise.</li>
+<li>Final vote $\text{sign}(\sum_t\alpha_t h_t(x))$.</li>
+</ol>
+<p>Here $e^{-\alpha y h}$ means multiply by $e^{-\alpha}$ when correct and $e^{+\alpha}$ when wrong; $Z$ normalises to sum $1$.</p>
+<h3>3.2 Why the Formulas</h3>
 <ul>
-<li>$\alpha_t$ minimizes the exponential loss $e^{-yF(x)}$ greedily per round — accurate weak learners earn exponentially louder votes; $\epsilon_t \to 0.5$ earns $\alpha \to 0$ (a coin-flip tutor is muted, never negative while $\epsilon &lt; 0.5$).</li>
-<li>Training error drops <em>exponentially</em>: $\prod_t 2\sqrt{\epsilon_t(1-\epsilon_t)}$ — each better-than-guessing round multiplies error by $&lt; 1$. (Requires every weak learner to beat 50% on its <em>weighted</em> distribution — flip any worse-than-guessing stump&#39;s sign first.)</li>
+<li>$\alpha_t$ greedily minimises exponential loss $e^{-yF(x)}$ per round. Accurate learners earn louder votes; $\epsilon_t\to 0.5$ earns $\alpha\to 0$. Requires $\epsilon_t&lt;0.5$ on the weighted distribution; flip any worse-than-guessing stump&#39;s sign first.</li>
+<li>Training error drops exponentially as $\prod_t 2\sqrt{\epsilon_t(1-\epsilon_t)}$: each better-than-guessing round multiplies error by less than $1$.</li>
 </ul>
-<h3>2.3 Margins, Not Just Votes (Why It Rarely Overfits)</h3>
-<p>Boosting keeps improving <em>test</em> error even after training error hits zero — because later rounds widen the <strong>voting margin</strong> $y\sum\alpha_t h_t(x)$ (confidence), not just the verdict. Same U-curve immunity story as forests, different mechanism: forests average variance away; boosting optimizes confidence relentlessly.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: AdaBoost Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Weights $D_t$ → error $\epsilon_t$ → vote $\alpha_t = \tfrac12\ln\frac{1-\epsilon_t}{\epsilon_t}$ → reweight $e^{\mp\alpha}$ (wrong × grow) → renormalize → decide $\text{sign}(\sum\alpha_t h_t)$ · needs $\epsilon_t &lt; 0.5$ each round · train error falls <strong>exponentially</strong> · test keeps improving via <strong>margins</strong>.</p>
+<h3>3.3 Margins, With Correct Qualifications</h3>
+<p>On clean data, boosting often keeps improving test error after train hits zero because later rounds widen voting margins (confidence), and margin theory bounds generalisation. Corrected qualification: this is a tendency on clean, learnable structure, not immunity. On noisy or mislabelled data, attention compounds on lies and test error can rise; early stopping, gentler learners, or bagging then win. Forests average variance away; boosting optimises confidence relentlessly, for better and worse.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bagging vs boosting</td>
+<td>Parallel variance averaging vs sequential bias and margin attack</td>
+</tr>
+<tr>
+<td>Small vs large $\alpha$</td>
+<td>Quiet weak round vs loud dominant round; earned, never set</td>
+</tr>
+<tr>
+<td>Clean vs noisy boosting</td>
+<td>Margins fattening usefully vs weights exploding on lies</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: AdaBoost Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Weights $D_t$ → error $\epsilon_t$ → vote $\alpha_t = \tfrac12\ln\frac{1-\epsilon_t}{\epsilon_t}$ → reweight $e^{\mp\alpha}$ (wrong × grow) → renormalize → decide $\text{sign}(\sum\alpha_t h_t)$ · needs $\epsilon_t &lt; 0.5$ each round · train error falls <strong>exponentially on clean rounds</strong> · test <strong>often improves via margins on clean data; can overfit noise</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Boosting Magnifies Noise (Bagging Doesn&#39;t)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>AdaBoost <em>concentrates</em> on hard points round after round — if &quot;hard&quot; means <em>mislabeled</em>, weights explode on garbage and the committee learns lies devoutly. Noisy labels ⇒ prefer bagging (averaging dilutes poison) or regularized variants. Boosting assumes hardness = learnable structure; verify before committing.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Four points, uniform $D_1 = 1/4$ each. Round-1 stump misclassifies exactly one point ($\epsilon_1 = 0.25$). Compute $\alpha_1$, the renormalized $D_2$, and state round 2&#39;s incentive. (Arithmetic verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Weighting the Round</div><div class="step-content"><p>$\alpha_1 = \tfrac12\ln(0.75/0.25) = \tfrac12\ln 3 \approx 0.549$. Updates: correct points $\times e^{-0.549} \approx 0.577$ → $0.25 \times 0.577 \approx 0.144$; wrong point $\times e^{+0.549} \approx 1.732$ → $0.25 \times 1.732 \approx 0.433$. Normalizer $Z = 3(0.144) + 0.433 = 0.866$. $D_2$: correct points $0.144/0.866 = 1/6 \approx 0.167$ each, wrong point $0.433/0.866 = 0.5$. Round 2&#39;s stump faces a world where the missed point matches all three solved ones combined — fix <em>it</em> or perish.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One round moved half the probability mass onto a single point ($0.25 \to 0.5$) — attention reallocation, quantified. Final committee vote weights round 1 at $\alpha_1 = 0.549$; later rounds earn their own $\alpha$ by the same formula. Iterate, and training error decays exponentially while margins fatten — boosting&#39;s whole contract in four points.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One round moved half the probability mass onto a single point ($0.25 \to 0.5$) — attention reallocation, quantified. Final committee vote weights round 1 at $\alpha_1 = 0.549$; later rounds earn their own $\alpha$ by the same formula. Iterate, and training error decays exponentially while margins fatten on clean data — boosting&#39;s contract in four points, with noise as the documented exception.</p>
 </div></div><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Half the Mass Moves to One Point</span>
@@ -308,10 +375,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Half the Mass Moves to One Point</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch three weights shrink by 0.577 while the miss grows by 1.732, then divide by Z — half the mass on one point, round 2&#39;s orders cut.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Calling boosting immune to overfit. Clean-data margin gains do not transfer to noisy labels.</li>
+<li>Boosting deep trees on 20% noise. Weights worship lies; bag instead.</li>
+<li>Keeping $\epsilon\ge 0.5$ rounds as is. Flip sign or stop; coin flips earn no voice.</li>
+<li>Reading louder $\alpha$ as overfit proof. It prices difficulty conquered, blind to truth.</li>
+</ul>
+<p>Limitations: sequential (not parallel), noise-sensitive, needs weak learners better than guessing per weighted round.</p>
+<p>Exam recap: $D$, $\epsilon$, $\alpha$ formula, exponential reweight, renormalise, sign vote; exponential train drop; margins help test on clean data, hurt on noise.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In the worked trace, the single misclassified point jumps from weight 0.25 to 0.5 while each correct point falls to 1/6. What mechanism produced exactly these numbers?</span>
@@ -345,7 +423,7 @@
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>It is impossible — the trace must contain measurement errors</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Zero training error ends *verdict* improvement, but later rounds keep widening voting *margins* (confidence gaps) — and margin theory bounds generalization, so fatter margins keep paying test dividends</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Zero training error ends *verdict* improvement, but later rounds can keep widening voting *margins* (confidence gaps) on clean data — and margin theory bounds generalization, so fatter margins can keep paying test dividends until noise dominates</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Boosting secretly adds more training data each round</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Test error falls because the test set leaks into training</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -359,7 +437,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Verdicts saturate; confidence doesn&#39;t. Each round&#39;s $\alpha$-weighted vote thickens correct-side margins, and generalization tracks margins, not just correctness — the celebrated paradox (resolved by Schapire et al.&#39;s margin bounds) that makes boosting eerily resistant to overfitting on clean data.</p><pre><code>&lt;/div&gt;
+      <p>Verdicts saturate; confidence doesn&#39;t. Each round&#39;s $\alpha$-weighted vote can thicken correct-side margins on clean data, and generalization tracks margins, not just correctness — the celebrated paradox (resolved by Schapire et al.&#39;s margin bounds) that makes boosting resistant to overfitting on clean data, with no promise on noisy data.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -496,7 +574,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m4_05_boosting_adaboost";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

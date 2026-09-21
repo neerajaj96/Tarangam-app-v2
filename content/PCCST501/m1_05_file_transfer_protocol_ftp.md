@@ -5,12 +5,13 @@ module: 1
 sequence: 5
 title: File Transfer Protocol (FTP)
 difficulty: beginner
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Separate out-of-band control from in-band data connections
   - Trace an FTP session lifecycle across control and data channels
   - Contrast active and passive modes under firewalls
   - Explain why stateful FTP scales worse than stateless HTTP
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - FTP
   - out-of-band control
@@ -29,20 +30,38 @@ tags:
 **Out-of-band control vs. data connections, the FTP session lifecycle, Active vs. Passive mode, and stateful session tracking.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+HTTP fetches pages brilliantly — but suppose you must *manage* files on a distant machine: log in, browse folders, rename things, upload and download large files. A page-fetching protocol has no notion of "current folder" or "logged-in user." FTP (File Transfer Protocol) was built for exactly this job, and its signature idea is radical: **use two separate connections** — one for conversation, one for cargo.
+
+The problem before the solution: control chatter (commands, logins) is tiny and interactive, while file bytes are huge and one-directional. Mixing them on one channel (as HTTP does) forces the server to stay amnesiac. Splitting them lets the server hold a *session* — remembering who you are and where you stand — while bulk data flows undisturbed on its own channel.
 
 ::: callout-intuition Core Mental Model: Ordering a Refrigerator
 Imagine ordering a refrigerator from a store. You call the store on the telephone to place the order, confirm your identity, and specify what you want — this phone conversation is entirely separate from what happens next: the store dispatches a large delivery truck carrying the actual refrigerator to your house. The conversation and the heavy lifting travel over two completely different channels.
 
-This is exactly how **FTP** works. The **telephone call** is the **Control Connection (Port 21)** — used for login, browsing directories, and issuing commands like "send me this file." The **delivery truck** is the **Data Connection (Port 20)** — used strictly to carry the actual file bytes. Because control information travels on a separate channel from the data, FTP is said to use **out-of-band** control — in sharp contrast to HTTP, which mixes its request headers and payload data into the very same connection (**in-band** control).
+This is exactly how **FTP** works. The **telephone call** is the **Control Connection (Port 21)** — used for login, browsing directories, and issuing commands like "send me this file." The **delivery truck** is the **Data Connection** — used strictly to carry the actual file bytes (in the original active-mode design the server sends it from its Port 20; passive mode uses a negotiated high port instead). Because control information travels on a separate channel from the data, FTP is said to use **out-of-band** control — in sharp contrast to HTTP, which mixes its request headers and payload data into the very same connection (**in-band** control).
+
+Dropping the store now: control connection = Port 21, session-long; data connection = fresh per file; out-of-band = the two never mix.
 :::
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **FTP (File Transfer Protocol)** | The application-layer protocol for interactive file management and transfer between hosts. |
+| **Control connection (TCP port 21)** | The session-long channel carrying logins, directory commands (`CWD` — change working directory), and transfer commands (`STOR` — store/upload, `RETR` — retrieve/download, `QUIT`). |
+| **Data connection** | A short-lived channel carrying only raw file bytes — opened fresh per file, closed after. In **active mode** the server originates it from its port 20; in **passive mode** the client connects to a server-nominated high port. |
+| **Out-of-band control** | Signaling travels on a different connection from the data it governs (FTP). Opposite: **in-band** (HTTP mixes both). |
+| **Active mode** | The server opens the data connection back to the client's address. |
+| **Passive mode (`PASV`)** | The client opens the data connection outbound to a server-provided port — firewall-friendly. |
+| **Stateful session** | The server remembers per-user context (working directory, login) across commands — the opposite of HTTP's amnesia. |
+| **Firewall** | A filter (usually at a network boundary) that blocks unsolicited inbound connections while allowing outbound ones. |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Two Channels, One Session Lifecycle, Two Firewall Modes
 
-### 2.1 The Dual-Connection Architecture
+### 3.1 The Dual-Connection Architecture
 
 ```mermaid
 flowchart LR
@@ -53,17 +72,17 @@ flowchart LR
         S[FTP Server]
     end
     C <-->|"Control Connection<br/>Port 21 — stays open<br/>entire session"| S
-    C <-->|"Data Connection<br/>Port 20 — opened/closed<br/>per file transfer"| S
+    C <-->|"Data Connection<br/>fresh per file transfer<br/>(Port 20 server-side in active mode)"| S
 ```
 
 * **Control Connection (Port 21):** carries login credentials, directory-navigation commands (`CWD`), and transfer commands (`STOR` to upload, `RETR` to download). Remains open for the **entire session**.
-* **Data Connection (Port 20):** carries only raw file bytes. A **new** data connection is opened and closed for **every individual file**.
+* **Data Connection:** carries only raw file bytes. A **new** data connection is opened and closed for **every individual file**. Qualifier: "data = Port 20" is true only of the server's end in **active mode** — in passive mode the server nominates a random high port, and the client's end is always an ephemeral port.
 
 ::: callout-pitfall Two Numbers, Two Rules
-**Port 20 is the *active-mode* data port** — in passive mode the server instead opens a random high port (see §2.3), so never write "data = always 20" without the active-mode qualifier. And the counting rule is fixed: **1 control connection per session, 1 fresh data connection per file** — a 3-file download means 1 + 3, never 3 + 3.
+**Port 20 is the *active-mode* data port** — in passive mode the server instead opens a random high port (see §3.3), so never write "data = always 20" without the active-mode qualifier. And the counting rule is fixed: **1 control connection per session, 1 fresh data connection per file** — a 3-file download means 1 + 3, never 3 + 3.
 :::
 
-### 2.2 The FTP Session Lifecycle
+### 3.2 Operation Flow: The FTP Session Lifecycle
 
 ```mermaid
 sequenceDiagram
@@ -85,7 +104,7 @@ sequenceDiagram
     Note over C,S: Control Connection finally closes
 ```
 
-### 2.3 Active vs. Passive FTP
+### 3.3 Active vs. Passive FTP
 
 Firewalls, by design, block unsolicited incoming connections — which causes trouble for FTP's original design:
 
@@ -94,7 +113,7 @@ Firewalls, by design, block unsolicited incoming connections — which causes tr
 | **Active Mode** | Client opens a random port and tells the server to connect *back* to it | Often **blocked** — client's own firewall rejects the server's inbound connection attempt |
 | **Passive Mode (`PASV`)** | Client asks the server to open a random high port; client then connects *outbound* to that port | Works well — the client always initiates outbound, which firewalls typically allow |
 
-### 2.4 FTP is Stateful
+### 3.4 FTP is Stateful
 
 Unlike HTTP, the FTP server **remembers** things about each connected user throughout the session:
 
@@ -103,10 +122,14 @@ Unlike HTTP, the FTP server **remembers** things about each connected user throu
 
 *Trade-off:* maintaining this per-user state limits how many simultaneous sessions a single FTP server can sustain, compared to a stateless HTTP server that can serve far more clients with the same resources.
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+You download one file. Control connection opens (Port 21), you log in, send `RETR notes.txt`; one data connection opens, carries the bytes, closes; you send `QUIT`, control closes. Tally: 1 control + 1 data. Add a second file before quitting and only the data count grows: 1 + 2.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
 A user connects to an FTP server, changes into a `/videos` directory, downloads two files (`movie.mp4` and `trailer.mp4`), then disconnects. Count how many Control Connections and how many Data Connections are used in total.
@@ -123,10 +146,26 @@ A user connects to an FTP server, changes into a `/videos` directory, downloads 
 The session uses exactly **1 Control Connection** (open for the whole session) and **2 separate Data Connections** (one per file transferred). This demonstrates FTP's defining rule: the control channel is long-lived and shared across the whole session, while a fresh data channel is created and torn down for every single file.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| Out-of-band vs. in-band | FTP splits control (21) from data; HTTP mixes both in one connection. |
+| Active vs. passive | Server dials back (firewall-blocked) vs. client always dials out (firewall-friendly). |
+| Stateful vs. stateless | FTP tracks directory + login per session (costs scale); HTTP remembers nothing (scales). |
+| Port 20 vs. port 21 | Control is always 21; 20 is only the server's active-mode data port. |
+
+**Watch out:** (1) "Data = always Port 20" — add the active-mode qualifier. (2) Counting one control connection per file — it is one per *session*. (3) "Stateful means faster" — state buys continuity, statelessness buys scale; the direction is the reverse of the naive guess.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+FTP = out-of-band (Port-21 control, session-long) + per-file data channels; lifecycle login → navigate → RETR/STOR per file → QUIT. Active (server connects back, firewall-hostile) vs. passive PASV (client dials out, firewall-friendly). Stateful (directory + auth per session) trades scale for continuity — the mirror of HTTP's statelessness.
+:::
+
+**Active-recall checklist:** What travels on Port 21 vs. the data channel? How many of each connection does a 3-file session use? Why does active mode fail behind firewalls, and what is the minimal fix? Why does statefulness bound simultaneous users?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Q1: Foundational Concept
 What does it mean when we say FTP uses "out-of-band" control?

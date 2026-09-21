@@ -5,8 +5,9 @@ module: 2
 sequence: 3
 title: 'Naive Bayes: Generative Classification'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 12
 learningObjectives:
+  - State the generative classification problem in plain words first
   - Classify with Bayes rule under the conditional-independence bet
   - Smooth counts with Laplace correction against zero vetoes
   - Contrast generative and discriminative training stories
@@ -23,36 +24,72 @@ tags:
 ---
 # Naive Bayes: Generative Classification
 
-**Bayes' rule as classifier, the conditional-independence bet, Gaussian vs. multinomial flavors, Laplace smoothing, and discriminative vs. generative framing.**
+**What problem generative classifiers solve, what count data they need, how Naive Bayes (NB) trains by counting with smoothing, and where independence helps or hurts.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start Here: The Problem Before Any Solution (Absolute Beginner)
+
+A patient has fever and cough. Is it flu or cold? Instead of drawing a boundary, model each disease's symptom generator: how often does flu cause fever? Then flip with Bayes' rule to get disease given symptoms.
+
+Tiny beginner example. Prior: 40% spam, 60% ham. Word "free" appears often in spam, rarely in ham. Mail says "free." Multiply prior times likelihood per class; the larger product wins. Two numbers in, one verdict out. That is the whole classifier.
+
+Analogy as support, then dropped. Think of a symptom detective who knows each disease's habits, then reverses the question. From here on we use exact terms only: prior, likelihood, posterior, conditional independence, smoothing.
+
+Abbreviations defined on first use: Naive Bayes (NB). Symbols are defined before use below.
+
+| Question to ask | Meaning |
+|---|---|
+| What is $P(y=c)$? | Prior, how common class $c$ is |
+| What is $P(x_j\mid y=c)$? | Likelihood of feature $j$ under class $c$ |
+| What is naive? | Features independent given the class |
+
+<a id="symbols-data-goal"></a>
+## 2. Data, Goal and Symbols (Basic Understanding)
+
+**Problem.** Classify discrete or continuous features when training data are scarce or features go missing.
+
+**Data.** Labelled pairs with features $x=(x_1,\dots,x_d)$ and class $y=c$. Text uses counts; continuous features use per-class means and variances.
+
+**Goal.** High accuracy via $\hat{y}=\arg\max_c P(y=c)\prod_j P(x_j\mid y=c)$. Here $\arg\max$ means pick the class with the largest score; denominator $P(x)$ is constant across classes and dropped. The naive independence $P(x\mid c)=\prod_j P(x_j\mid c)$ does all the work: it is usually false, usually harmless, always fast.
 
 ::: callout-intuition Core Mental Model: The Symptom Detective
 A patient shows fever + cough. Instead of drawing a flu/no-flu *boundary* (discriminative), the detective models each disease's *symptom generator*: how often does flu produce fever? a cold? Then flips it with Bayes: $P(\text{flu} \mid \text{symptoms}) \propto P(\text{symptoms} \mid \text{flu})\,P(\text{flu})$. **Naive** Bayes makes one sweeping simplification — symptoms independent *given* the disease (fever tells nothing new about cough once flu is known) — usually false, usually harmless, always fast.
 :::
 
----
-
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Method, Model and Training (Formal Theory)
 
-### 2.1 The Classifier Equation
+Canonical order: problem (classify with little data) → data (labelled feature vectors) → goal (correct argmax) → method (model each class generator) → model (prior times product) → training (count or average, one pass) → example → limitations.
+
+### 3.1 The Classifier Equation, Symbol by Symbol
 
 $$\hat{y} = \arg\max_c\; P(y=c) \prod_{j=1}^d P(x_j \mid y=c)$$
 
-— prior × per-feature likelihoods, with the **naive independence** $P(x \mid c) = \prod_j P(x_j \mid c)$ doing all the work. Decide by argmax; the denominator $P(x)$ is constant across classes and dropped.
+$P(y=c)$ is the prior; each $P(x_j\mid y=c)$ is one feature's evidence; the product is joint evidence under independence; $\arg\max$ picks the winner.
 
-### 2.2 Three Flavors (One Per Feature Type)
+### 3.2 Three Flavors, One Per Feature Type
 
-* **Multinomial/Bernoulli NB** (text, discrete counts): likelihoods are frequency tables with **Laplace smoothing** ($+\alpha$ pseudocounts — usually $\alpha=1$): $P(w \mid c) = \frac{\text{count}(w,c) + \alpha}{\sum_{w'}\text{count}(w',c) + \alpha|V|}$. Zero counts would *veto* entire classes (one unseen word zeroes the product) — smoothing is load-bearing, not cosmetic.
-* **Gaussian NB** (continuous features): $P(x_j \mid c) = \mathcal{N}(\mu_{jc}, \sigma^2_{jc})$ with per-class MLE means/variances — closed form, one pass.
-* Training everywhere = counting (or averaging): no iteration, no gradients, $O(nd)$ once.
+- **Multinomial and Bernoulli NB** (text, discrete counts): likelihoods are frequency tables with Laplace smoothing ($+\alpha$ pseudocounts, usually $\alpha=1$): $P(w\mid c)=(\text{count}(w,c)+\alpha)/(\sum_{w'}\text{count}(w',c)+\alpha|V|)$. Here $|V|$ is vocabulary size. Zero counts would veto entire classes (one unseen word zeroes the product); smoothing is load-bearing, not cosmetic.
+- **Gaussian NB** (continuous features): $P(x_j\mid c)=\mathcal{N}(\mu_{jc},\sigma^2_{jc})$ with per-class MLE means and variances. Closed form, one pass.
+- Training everywhere is counting or averaging: no iteration, no gradients, $O(nd)$ once.
 
-### 2.3 Generative vs. Discriminative
+Steps numbered:
 
-* **Generative** (NB, LDA, HMMs): model *how each class generates data* $P(x \mid y)$ (+ prior) — can *sample* new emails, handles missing features by marginalizing, learns fast from little data.
-* **Discriminative** (logistic regression, SVMs, trees): model the *boundary* $P(y \mid x)$ directly — asymptotically *more accurate* with big data (Ng–Jordan: logistic needs $O(n)$ samples to NB's $O(\log n)$ to approach its *higher* ceiling).
+1. Count priors and per-feature likelihoods on train.
+2. Add $\alpha$ smoothing to every count.
+3. For a query, multiply prior times likelihoods per class.
+4. Argmax; optionally normalise for probabilities.
+
+### 3.3 Generative versus Discriminative
+
+- **Generative** (NB, Linear Discriminant Analysis (LDA), Hidden Markov Models (HMMs)): model how each class generates data $P(x\mid y)$ plus prior. Can sample new examples, handles missing features by marginalising, learns fast from little data.
+- **Discriminative** (logistic regression, Support Vector Machines (SVMs), trees): model the boundary $P(y\mid x)$ directly. Asymptotically more accurate with big data (Ng-Jordan: logistic needs $O(n)$ samples to NB's $O(\log n)$ to approach its higher ceiling). Correct qualification: this is an asymptotic sample-complexity comparison under standard assumptions, not a guarantee on every dataset; with enough clean data the discriminative ceiling usually wins, with little data generative often wins sooner.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Generative vs discriminative | Model $P(x\mid y)$ (fast, sampleable) vs $P(y\mid x)$ boundary (higher ceiling, hungrier) |
+| Laplace $\alpha=1$ vs $\alpha=0$ | Priced rarity vs absolute veto; unseen is rare, not impossible |
+| Independence given class vs overall | Only within-class independence assumed; overall correlation remains |
 
 ::: callout-formula KTU Formula Vault: NB Facts
 Decide $\arg\max_c P(c)\prod P(x_j|c)$ · **naive** = features independent *given class* · smooth counts (**+α**, kills zero-vetoes) · Gaussian flavor = **per-class MLE** · generative: **fast to train, can sample**; discriminative: **higher ceiling, needs data**.
@@ -62,10 +99,8 @@ Decide $\arg\max_c P(c)\prod P(x_j|c)$ · **naive** = features independent *give
 "Naive" never claims features are independent *overall* (fever and cough obviously correlate!) — only *within* a class. Correlated-given-class features (repeated synonyms in spam) get double-counted, skewing confidence — yet classifications often survive because only the *argmax order*, not calibrated odds, must be right.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. KTU Worked Example Step by Step
 
 ::: step [Step 1: Setup] Formulating the Problem
 Vocabulary {free, money, lunch}; training word counts — spam {free:4, money:3, lunch:0} over 7 spam-words; ham {free:1, money:0, lunch:3} over 4 ham-words. Priors from 4 spam / 6 ham docs: $P(S)=0.4$, $P(H)=0.6$. Classify "free lunch" with Laplace $\alpha=1$, $|V|=3$. (Arithmetic verified.)
@@ -84,10 +119,22 @@ Without smoothing, $P(\text{lunch}|S)=0$ would zero spam's score *regardless* of
 Watch the two products build factor by factor — 0.020 against 0.098 — with the +1-rescued lunch likelihood doing the heaviest lifting in the smaller bar.
 :::
 
----
+<a id="watch-out-recap"></a>
+## 5. Watch Out, Limitations and Exam Recap
+
+Common mistakes and confusions:
+
+- Dropping the prior. Priors decide close calls; ham won partly on 0.6 versus 0.4.
+- Forgetting smoothing. One zero vetoes a class absolutely.
+- Claiming independence holds in text. It does not; only argmax order survives double-counting.
+- Expecting calibrated probabilities. NB ranks well but skews magnitudes under correlation.
+
+Limitations: correlated-given-class features distort confidence; Gaussian flavour assumes per-class normality; no feature interaction is modelled.
+
+Exam recap: decide argmax prior-times-product; naive means given-class independence; smooth with $+\alpha$; Gaussian flavour uses per-class MLE; generative is fast and sampleable, discriminative has higher asymptotic ceiling given data.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz In the worked example, what exactly would break without Laplace smoothing, and why is the breakage catastrophic rather than mild?
 () Nothing — smoothing only speeds up computation

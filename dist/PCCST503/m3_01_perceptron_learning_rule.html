@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,41 +249,100 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>The Perceptron: Learning Rule &amp; Limits</h1>
-<p><strong>The original neuron, mistake-driven updates, convergence on separable data with a traced run, and the XOR wall that froze the field.</strong></p>
+<p><strong>What problem the original neuron solves, what labelled points it needs, how mistake-driven updates train it, and where separability limits any guarantee.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>A bouncer judges entrants by a weighted checklist: height times weight one plus shoes times weight two, past a threshold? Each mistake triggers one instant tweak: wrongly admitted, lower those traits&#39; weights; wrongly rejected, raise them. No averaging, only repairs.</p>
+<p>Tiny beginner example. Weights $[0,0]$, threshold $0$. Entrant $(2,2)$ labelled plus scores $0$, predicted plus by tie rule, correct, no change. Entrant $(0,1)$ labelled minus scores $0$, predicted plus, wrong, so subtract $(0,1)$: weights become $[0,-1]$. That subtraction is the whole algorithm.</p>
+<p>Analogy as support, then dropped. Stubborn bouncer with a rope line. From here on we use exact terms only: weight vector, bias, margin, separable, Exclusive OR (XOR).</p>
+<p>Abbreviations defined on first use: Exclusive OR (XOR). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $w$, $b$?</td>
+<td>Weights and bias defining the rope line</td>
+</tr>
+<tr>
+<td>What is $y\in{+1,-1}$?</td>
+<td>True side, plus or minus</td>
+</tr>
+<tr>
+<td>What is margin $\gamma$?</td>
+<td>Smallest distance from points to some separator</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Find a straight separator for two classes using only mistake repairs.</p>
+<p><strong>Data.</strong> Labelled points $(x_i,y_i)$ with $y_i\in{+1,-1}$. Here $x_i$ is the feature vector, $y_i$ is its side.</p>
+<p><strong>Goal.</strong> Zero mistakes on train if any straight line can do it; otherwise expose inseparability honestly.</p>
+<p>Prediction $\hat{y}=\text{sign}(w^Tx+b)$. Here $\text{sign}$ returns $+1$ for positive scores and $-1$ otherwise; $w^Tx+b=0$ is the boundary.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Stubborn Bouncer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A bouncer judges entrants by a weighted checklist (height × w₁ + shoes × w₂ ≥ threshold?). Each mistake stings into an instant rule tweak: wrongly admitted → lower the weights of their traits; wrongly rejected → raise them. No patience, no averaging — pure mistake-driven learning. The <strong>perceptron</strong> is this bouncer in mathematics: predict $\text{sign}(w^Tx + b)$, and on every error add (or subtract) the offender&#39;s features once. Repeat until the club admits exactly the right crowd — <em>if</em> any single straight rope-line can separate them.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Model and Update</h3>
-<p>Predict $\hat{y} = \text{sign}(w^Tx + b)$ for $y \in {+1,-1}$. On mistake ($y(w^Tx+b) \le 0$):</p>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (straight separation) → data (labelled sides) → goal (no mistakes if separable) → method (mistake repairs) → model ($\text{sign}(w^Tx+b)$) → training (perceptron loop) → example → limitations.</p>
+<h3>3.1 Model and Update, Step by Step</h3>
+<p>On mistake ($y(w^Tx+b)\le 0$):</p>
 <p>$$w \leftarrow w + \eta, y, x, \qquad b \leftarrow b + \eta, y$$</p>
-<p>($\eta = 1$ standard — scaling just rescales the boundary.) Correct predictions change nothing: the perceptron learns <em>only</em> from errors, in $O(d)$ per step.</p>
-<h3>2.2 Convergence Theorem (Novikoff/Block)</h3>
-<p>If the data are <strong>linearly separable</strong> with margin $\gamma$ (some unit vector separates all points by $\ge \gamma$) inside radius $R$, the perceptron makes at most $(R/\gamma)^2$ mistakes, then stops forever — finite errors <em>regardless</em> of presentation order. Big margin ⇒ fast peace; tiny margin ⇒ long war. No separability ⇒ no promise (it cycles eternally — always cap epochs in practice).</p>
-<h3>2.3 The XOR Wall (Minsky &amp; Papert, 1969)</h3>
-<p>No single line separates ${(0,0){-}, (1,1){-}}$ from ${(0,1){+}, (1,0){+}}$ — XOR needs a <em>bend</em>. One perceptron layer is provably limited to linearly separable concepts (conjunctions, disjunctions, majorities — but not parity/XOR). This single limitation froze neural research for a decade, until hidden layers (next topic) learned the bend themselves.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Perceptron Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Predict <strong>sign(w·x+b)</strong> · mistake update <strong>$w += yx$</strong> · separable ⇒ <strong>≤ (R/γ)² mistakes then silence</strong> · XOR-class concepts <strong>impossible</strong> single-layer · fix = <strong>hidden layers</strong> (next topic) or <strong>kernels</strong> (topic 4).</p>
+<p>Here $\eta=1$ is standard; scaling just rescales the boundary. Correct predictions change nothing. Cost $O(d)$ per step, where $d$ is dimension.</p>
+<p>Numbered loop:</p>
+<ol>
+<li>Initialise $w=0$, $b=0$.</li>
+<li>Cycle through points in fixed order.</li>
+<li>On mistake, add $yx$ to $w$ and $y$ to $b$.</li>
+<li>Repeat epochs until one clean pass or a cap is hit.</li>
+</ol>
+<h3>3.2 Convergence Theorem, With Correct Qualifications</h3>
+<p>If data are linearly separable with margin $\gamma$ (some unit vector separates all points by at least $\gamma$) inside radius $R$ (all $|x_i|\le R$), the perceptron makes at most $(R/\gamma)^2$ mistakes, then stops forever. Big margin means fast peace; tiny margin means long war. Corrected qualification: the bound counts mistakes, not epochs; it assumes separability, bounded data, and unit-norm witness; presentation order affects the constant path but not finiteness. Without separability there is no promise: it can cycle forever, so always cap epochs in practice.</p>
+<h3>3.3 The XOR Wall</h3>
+<p>No single line separates ${(0,0)-,(1,1)-}$ from ${(0,1)+,(1,0)+}$. XOR needs a bend. One layer handles conjunctions, disjunctions, majorities, but not parity or XOR. This limitation paused neural research until hidden layers learned bends.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Separable vs inseparable runs</td>
+<td>Finite mistakes with $(R/\gamma)^2$ ceiling vs possible eternal cycling; cap epochs</td>
+</tr>
+<tr>
+<td>Large vs tiny $\gamma$</td>
+<td>Few mistakes vs vacuous-but-valid huge bound</td>
+</tr>
+<tr>
+<td>Perceptron vs logistic boundary</td>
+<td>Hard mistake repairs vs soft $(p-y)$ steps; same linear expressiveness</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Perceptron Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Predict <strong>sign(w·x+b)</strong> · mistake update <strong>$w += yx$</strong> · separable with margin $\gamma$ in radius $R$ ⇒ <strong>≤ (R/γ)² mistakes then silence</strong> · XOR-class concepts <strong>impossible</strong> single-layer · fix = <strong>hidden layers</strong> (next topic) or <strong>kernels</strong> (topic 4).</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Convergence Needs Separability (and Says Nothing About Speed Otherwise)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The theorem&#39;s fine print <em>is</em> the theorem: inseparable data ⇒ infinite cycling, and separable-but-tight data ⇒ astronomically many mistakes before peace. &quot;Perceptron always converges&quot; without the separability qualifier is the classic half-truth — always state the condition first.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Points $A(2,2){+}$, $B(3,3){+}$, $C(0,1){-}$, $D(1,0){-}$ (separable: $x_1 = 2$ splits them). Run the perceptron ($\eta=1$, order A,B,C,D cycling) from zeros.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Mistakes Only</div><div class="step-content"><p>Start $w=[0,0], b=0$. <strong>Epoch 0:</strong> A: score $0 \to +$ ✓; B: $0 \to +$ ✓; C: $0 \to +$ ✗ (want −) → $w=[0,-1], b=-1$; D: $0-1-0=-1 \to -$ ✓. <strong>Epoch 1:</strong> A: $0-2-1=-3 \to -$ ✗ → $w=[2,1], b=0$; B: $6+3=9 \to +$ ✓; C: $0+1+0=+1 \to +$ ✗ → $w=[2,0], b=-1$; D: $2+0-1=+1 \to +$ ✗ → $w=[1,0], b=-2$. <strong>Epoch 2:</strong> A: $2-2=0 \to +$ ✓; B: $3-2=+1$ ✓; C: $-2 \to -$ ✓; D: $1-2=-1$ ✓ — clean pass, converged.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Final $w=[1,0], b=-2$: boundary $x_1 = 2$ — exactly the human-obvious split, <em>discovered</em> through 4 mistakes and zero calculus. Scoreboard: separable data + mistake-driven updates = finite errors, guaranteed. (Try XOR points through the same procedure and watch it cycle forever — the wall, demonstrated.)</p>
@@ -300,10 +367,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Four Mistakes, Then Silence at x1 = 2</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the rope-line settle at x₁ = 2 through four mistakes and a clean final pass — finite errors, guaranteed, with the XOR wall waiting next door.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Quoting convergence without separability. Always state margin and radius conditions first.</li>
+<li>Reading the bound as a prediction. It is a worst-case ceiling; actual mistakes are often far fewer.</li>
+<li>Expecting speed on tight margins. $(R/\gamma)^2$ explodes as $\gamma$ shrinks.</li>
+<li>Trying XOR on one layer. Needs hidden layer or kernel lifting.</li>
+</ul>
+<p>Limitations: linear only, no probabilities, order affects path, no fix for inseparable except caps and extensions (voted or averaged perceptron, Support Vector Machines (SVMs)).</p>
+<p>Exam recap: predict sign; update $w+=yx$ on mistakes; separable gives $(R/\gamma)^2$ mistakes; XOR impossible single-layer; hidden layers or kernels fix.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">The perceptron update fires only on mistakes (w += yx). Why is &quot;learn only from errors&quot; viable instead of wasteful?</span>
@@ -488,7 +566,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m3_01_perceptron_learning_rule";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

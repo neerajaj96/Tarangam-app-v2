@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,22 +249,73 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Machine Learning: Definition, Paradigms &amp; Problem Types</h1>
-<p><strong>Mitchell&#39;s definition, supervised vs. unsupervised vs. reinforcement learning, regression vs. classification, and how to recognize each in the wild.</strong></p>
+<p><strong>What problem Machine Learning (ML) solves, what data each paradigm needs, what goal each pursues, and how to recognise supervised, unsupervised, and Reinforcement Learning (RL) in the wild.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Suppose your college wants to decide loan approvals. The old way is hand-written rules: &quot;if credit score is above 700 and income is above 50,000, approve.&quot; That is traditional programming: humans write the rule, the computer follows it.</p>
+<p>The problem ML solves is different: nobody knows the correct rule, or the rule is too tangled to write. What you do have is past experience: thousands of old applications plus what happened (repaid or defaulted). The goal is a function that maps a new application to a good decision, learned from that experience rather than dictated.</p>
+<p>Tiny beginner example with toy numbers. Past data:</p>
+<ul>
+<li>Applicant A: score 750, income 60,000, repaid.</li>
+<li>Applicant B: score 580, income 25,000, defaulted.</li>
+<li>Applicant C: score 700, income 55,000, repaid.</li>
+</ul>
+<p>A new applicant D arrives with score 720 and income 58,000. ML says: learn a mapping from the first three rows so D is classified with the repaid group. No one wrote &quot;720 means approve.&quot; The mapping earned that from data.</p>
+<p>Analogy as support, then dropped. Think of recipes versus taste buds: traditional code is a recipe card; ML develops taste from many past meals. From here on we use exact terms only: task, experience, performance, labels, rewards.</p>
+<p>Abbreviations defined on first use: Machine Learning (ML), Reinforcement Learning (RL). Symbols are defined in the next section before they are used.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>If the answer is yes</th>
+<th>Paradigm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Does each training example show the correct answer?</td>
+<td>Yes, input-output pairs</td>
+<td>Supervised learning</td>
+</tr>
+<tr>
+<td>Is there only raw input with no answers?</td>
+<td>Yes, find groups or structure</td>
+<td>Unsupervised learning</td>
+</tr>
+<tr>
+<td>Is there only a score for a whole sequence of actions?</td>
+<td>Yes, no per-step answers</td>
+<td>Reinforcement learning</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p>We now fix meaning, then variables, then intuition, then formula — the mathematics-heavy order.</p>
+<p><strong>Problem.</strong> Given past observations, produce decisions on future observations that score well.</p>
+<p><strong>Data (also called state in RL contexts).</strong> Supervised data are pairs $(x, y)$. Here $x$ means the input features (for example, score and income), and $y$ means the label, the correct answer shown during training (for example, approve or deny). Unsupervised data are bare $x$ values with no $y$. RL data are episodes: a sequence of states, actions, and finally a reward number.</p>
+<p><strong>Goal.</strong> Improve a Performance measure $P$ on a Task $T$ using Experience $E$. Mitchell&#39;s definition, symbol by symbol:</p>
+<ul>
+<li>$T$ is the task: the job to do (classify loan applications).</li>
+<li>$E$ is the experience: what data counts as practice (10,000 past labelled applications).</li>
+<li>$P$ is the performance measure: the grading ruler on future data (accuracy on held-out applicants the system has never seen).</li>
+<li>Learning means $P$ on $T$ goes up as $E$ grows. If the ruler never moves, no learning happened, whatever the training curve claims.</li>
+</ul>
+<p><strong>Method preview.</strong> Choose the paradigm from the feedback type, then choose regression versus classification inside supervised learning, then follow the universal workflow.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Recipes vs. Taste Buds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Traditional programming hands the computer a <strong>recipe</strong> (explicit rules: &quot;if credit score &gt; 700 and income &gt; 50k, approve&quot;). <strong>Machine learning</strong> hands it a <strong>kitchen full of past meals and verdicts</strong> (data + outcomes) and asks it to develop <em>taste</em> — a function mapping new situations to good decisions, without anyone writing the rule down. Mitchell&#39;s formalization: a program <strong>learns</strong> from experience $E$ on task $T$ with performance measure $P$ if its performance on $T$, measured by $P$, <strong>improves with $E$</strong>. Learning = measurable improvement with experience, full stop.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
@@ -278,36 +337,67 @@
     <p class="video-caption"><strong>Key Insight:</strong> Paradigms of Machine Learning</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch how the same dataset splits three ways: labeled pairs flowing into a supervised predictor, raw points clumping into unsupervised clusters, and an agent bouncing against reward signals in reinforcement learning.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Three Paradigms</h3>
+</div><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical Machine Learning (ML) order for this note: problem (decide without known rules) → data (pairs, bare inputs, or rewards) → goal (higher $P$ on $T$ with $E$) → method (pick paradigm) → mathematical model (function $f$) → training and search procedure (fit and validate) → example → limitations.</p>
+<h3>3.1 The Three Paradigms</h3>
 <ul>
-<li><strong>Supervised learning:</strong> training data = $(x, y)$ pairs with <strong>labels</strong>. Learn $f: X \to Y$ minimizing expected loss. Split by output kind below.</li>
-<li><strong>Unsupervised learning:</strong> training data = bare $x$&#39;s. Find <strong>structure</strong>: clusters (k-means), densities, low-dimensional manifolds (PCA), associations.</li>
-<li><strong>Reinforcement learning:</strong> training signal = <strong>rewards</strong> for action sequences (no correct answers shown). Learn a <strong>policy</strong> maximizing long-term return — the AI module&#39;s MDP machinery, reused here with function approximation.</li>
+<li><strong>Supervised learning:</strong> training data are $(x, y)$ pairs with <strong>labels</strong>. Learn a function $f$ that maps each input space element $X$ to output space $Y$, written $f: X \to Y$, that minimises expected loss on future pairs. Split by output kind in Section 3.2.</li>
+<li><strong>Unsupervised learning:</strong> training data are bare $x$ values. Find <strong>structure</strong>: clusters (k-means), densities, low-dimensional manifolds (Principal Component Analysis (PCA)), associations. There is no per-example right answer to copy.</li>
+<li><strong>Reinforcement learning:</strong> training signal is <strong>rewards</strong> for action sequences (no correct answers shown). Learn a <strong>policy</strong>, a rule mapping states to actions, that maximises long-term return. The Artificial Intelligence (AI) module&#39;s Markov Decision Process (MDP) machinery reappears here with function approximation.</li>
 </ul>
-<h3>2.2 Regression vs. Classification (Within Supervised)</h3>
+<h3>3.2 Regression versus Classification (Inside Supervised Learning)</h3>
 <ul>
-<li><strong>Regression:</strong> $Y$ continuous (prices, temperatures) — loss is usually squared error; success = closeness.</li>
-<li><strong>Classification:</strong> $Y$ discrete labels (spam/ham, digit 0–9) — loss is 0/1 or cross-entropy; success = correct bucket. (Same machinery, different output geometry — Modules 1 and 2 respectively.)</li>
+<li><strong>Regression:</strong> output $Y$ is continuous (prices, temperatures). Loss is usually squared error; success means closeness.</li>
+<li><strong>Classification:</strong> output $Y$ is discrete labels (spam or ham, digit 0 to 9). Loss is zero-one loss or cross-entropy; success means the correct bucket.</li>
 </ul>
-<h3>2.3 The Universal Workflow (every ML topic follows it)</h3>
-<p><strong>Data → model class (hypotheses) → loss + training (fit parameters) → evaluation on unseen data (generalization).</strong> Memorize this spine: each coming topic fills one slot (this module: linear models + least squares + optimization; next modules: classifiers, margins, trees, networks, ensembles).</p>
+<p>Same machinery family, different output geometry. Module 1 emphasises regression models; Module 2 builds classifiers.</p>
+<h3>3.3 The Universal Workflow (Every Later Topic Follows It)</h3>
+<p><strong>Data → model class (hypotheses) → loss plus training (fit parameters) → evaluation on unseen data (generalisation).</strong> Memorise this spine: each coming topic fills one slot (this module: linear models plus least squares plus optimisation; next modules: classifiers, margins, trees, networks, ensembles).</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Supervised labels vs. RL rewards</td>
+<td>Labels say &quot;the right answer was 7&quot; per example; rewards say &quot;+10 for that whole episode&quot; with no per-step key</td>
+</tr>
+<tr>
+<td>Regression vs. classification</td>
+<td>Continuous $Y$ judged by closeness vs. discrete $Y$ judged by correct bucket; different losses</td>
+</tr>
+<tr>
+<td>Training error vs. generalisation</td>
+<td>Training error measures memory; held-out error measures learning; only the second certifies $P$</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Paradigm Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Mitchell: <strong>performance on T by P improves with E</strong> · supervised = <strong>labeled pairs</strong> (regression: continuous Y; classification: discrete Y) · unsupervised = <strong>bare X, find structure</strong> · RL = <strong>rewards, learn policy</strong> · workflow: <strong>data → model → loss/train → generalize</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Labels vs. Rewards (the Standard Mix-Up)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Supervised labels say <em>&quot;the right answer was 7&quot;</em> per example; RL rewards say <em>&quot;+10 for that whole episode&quot;</em> with no per-step key. An option describing per-example correct outputs as &quot;reinforcement&quot; (or episode scores as &quot;supervision&quot;) is always wrong — feedback <em>granularity</em> is the discriminator.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Classify three applicant decisions asML paradigms/tasks: (a) historical loan records with approve/deny labels → predict new applicants; (b) group 10,000 unlabeled customers for marketing; (c) teach a warehouse robot to fetch bins with +1 per delivery, −1 per collision.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Identifying Each</div><div class="step-content"><p>(a) Labeled pairs + discrete verdicts → <strong>supervised classification</strong>. $T$ = decide applications, $E$ = historical records, $P$ = accuracy on held-out applicants. (b) No labels, seek groups → <strong>unsupervised clustering</strong>; $P$ = cluster coherence/silhouette on unseen customers. (c) No correct moves shown, only episode scores → <strong>reinforcement learning</strong>; $P$ = expected return per shift.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same ritual every time: name $T$, $E$, $P$ explicitly, then read the paradigm off the feedback type (labels / nothing / rewards). Students who skip the $T$-$E$-$P$ sentence invariably misclassify borderline cases (recommender logs, bandit ads) — write it first, decide second.</p>
-</div></div><hr>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Classify three applicant decisions as ML paradigms and task types: (a) historical loan records with approve or deny labels, predict new applicants; (b) group 10,000 unlabeled customers for marketing; (c) teach a warehouse robot to fetch bins with +1 per delivery and −1 per collision.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Identifying Each</div><div class="step-content"><p>(a) Labeled pairs plus discrete verdicts give <strong>supervised classification</strong>. Here $T$ means decide applications, $E$ means historical records, $P$ means accuracy on held-out applicants. (b) No labels, seek groups, gives <strong>unsupervised clustering</strong>; $P$ means cluster coherence or silhouette on unseen customers. (c) No correct moves shown, only episode scores, gives <strong>reinforcement learning</strong>; $P$ means expected return per shift.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same ritual every time: name $T$, $E$, $P$ explicitly, then read the paradigm off the feedback type (labels, nothing, or rewards). Students who skip the $T$-$E$-$P$ sentence invariably misclassify borderline cases (recommender logs, bandit ads) — write it first, decide second.</p>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Calling episode scores &quot;supervision.&quot; Granularity decides, not the word score.</li>
+<li>Calling clustering &quot;classification.&quot; Without labels there is nothing to classify; there is only structure to find.</li>
+<li>Writing $T$ and $E$ but forgetting $P$. Without $P$, learning is unmeasurable and the definition is incomplete.</li>
+<li>Judging a model on its training data. $P$ must be measured on unseen data.</li>
+</ul>
+<p>Limitations: the paradigm label alone does not pick an algorithm, a loss, or a validation scheme. Recommender logs and contextual bandits mix labels and rewards and need a one-sentence $T$-$E$-$P$ justification rather than a slogan.</p>
+<p>Concise exam-oriented recap: Mitchell equals measurable improvement of $P$ on $T$ with $E$; supervised equals labelled pairs (continuous $Y$ is regression, discrete $Y$ is classification); unsupervised equals bare $X$ seeking structure; RL equals rewards seeking a policy; every topic follows data, model, loss and training, then generalisation.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Which situation is reinforcement learning, and what makes it NOT supervised learning?</span>
@@ -489,7 +579,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m1_01_ml_definition_paradigms_and_types";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

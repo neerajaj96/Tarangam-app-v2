@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -253,18 +261,19 @@
   </div>
 </div>
 <h1>Module 4 Practice Lab: Unsupervised &amp; Ensemble Drills</h1>
-<p><strong>k-selection showdowns, scaling traps, ensemble prescriptions, second-round AdaBoost arithmetic, and exam essay models.</strong></p>
+<p><strong>How to use this lab as a beginner: read method bias before tuning K, ask units before trusting variance, and match ensembles to noise plus stakeholders.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Beginner protocol: problem first, then data and goal, then method. Disagreement between honest methods is geometry talking, not bugs.</p>
 <h3>Scenario 1: The k Wars (One Dataset, Three Answers)</h3>
-<p>Well-separated blobs (M4&#39;s six points): k-Means $K=2$ converges instantly (WCSS 4); hierarchical single-linkage dendrogram shows the same split with a huge height gap to the final merge; elbow screams $K=2$. Now poison it: add a bridge point at 6.5. k-Means $K=2$ still splits cleanly (means absorb it); single-linkage <em>chains</em> through the bridge (one progressive cluster); complete-linkage holds the split. Same data + one point, three structures — the method <em>is</em> a shape prior, and the bridge point is the experiment that reveals yours.</p>
+<p>Well-separated blobs (M4&#39;s six points): k-Means $K=2$ converges instantly (Within-Cluster Sum of Squares (WCSS) 4); hierarchical single-linkage dendrogram shows the same split with a huge height gap to the final merge; elbow screams $K=2$. Now poison it: add a bridge point at 6.5. k-Means $K=2$ still splits cleanly (means absorb it); single-linkage <em>chains</em> through the bridge (one progressive cluster); complete-linkage holds the split. Same data plus one point, three structures — the method <em>is</em> a shape prior, and the bridge point is the experiment that reveals yours. Partitional k-means commits flat $K$ upfront; hierarchical defers the cut until gaps are visible.</p>
 <h3>Scenario 2: The Scaling Trap (Numbers That Bite)</h3>
-<p>Income (₹10k units: values ~3–12) vs. age (20–60): raw PCA crowns income PC1 by unit size alone. Standardize (z-scores): covariance becomes correlation — PC1 now reports <em>joint</em> spread-shape, often an age-income axis the raw run buried. Drill: always ask &quot;in what units is this variance?&quot; before trusting any eigendecomposition — the answer decides whether PC1 is discovery or bookkeeping.</p>
+<p>Income (₹10k units: values ~3–12) vs. age (20–60): raw Principal Component Analysis (PCA) crowns income PC1 by unit size alone. Standardize (z-scores): covariance becomes correlation — PC1 now reports <em>joint</em> spread-shape, often an age-income axis the raw run buried. Drill: always ask &quot;in what units is this variance?&quot; before trusting any eigendecomposition — the answer decides whether PC1 is discovery or bookkeeping.</p>
 <h3>Scenario 3: Ensemble Prescription Desk</h3>
-<p>Three patients: (a) deep trees, noisy labels, accuracy wanted → <strong>random forest</strong> (averaging dilutes poison; boosting would frame it). (b) Clean data, weak linear baseline, need max accuracy → <strong>boosted trees / AdaBoost-style</strong> (bias-killing sequential focus; margins keep fattening past zero train error). (c) Regulator demands reasons → <strong>single shallow tree</strong> (forests vote inscrutably; a depth-4 tree testifies). Prescription = noise regime + bias profile + stakeholder, in that order.</p>
+<p>Three patients: (a) deep trees, noisy labels, accuracy wanted → <strong>random forest</strong> (averaging dilutes poison; boosting would frame it). (b) Clean data, weak linear baseline, need max accuracy → <strong>boosted trees / AdaBoost-style</strong> (bias-killing sequential focus; margins keep fattening past zero train error on clean data, with overfit risk on noise). (c) Regulator demands reasons → <strong>single shallow tree</strong> (forests vote inscrutably; a depth-4 tree testifies). Prescription = noise regime + bias profile + stakeholder, in that order. Qualification: forests plateau rather than U-turn given honest validation; boosting needs early stopping on dirty data.</p>
 <h3>Scenario 4: AdaBoost Round Two (Continuing M4&#39;s Trace)</h3>
-<p>After round 1: $D_2 = {1/6, 1/6, 1/6, 1/2}$ (one heavy miss). Round-2 stump fixes the heavy point but misses one light point: weighted error $\epsilon_2 = 1/6 \approx 0.167$. Vote $\alpha_2 = \tfrac12\ln((5/6)/(1/6)) = \tfrac12\ln 5 \approx 0.805$ — <em>louder</em> than round 1&#39;s $0.549$ (harder distribution solved → bigger voice). Updates: the newly-missed light point $\times e^{0.805} \approx 2.24$; the thrice-correct points shrink again. Attention compounds on whatever survives — boosting&#39;s ruthless curriculum in round two of four points.</p>
+<p>After round 1: $D_2 = {1/6, 1/6, 1/6, 1/2}$ (one heavy miss). Round-2 stump fixes the heavy point but misses one light point: weighted error $\epsilon_2 = 1/6 \approx 0.167$. Vote $\alpha_2 = \tfrac12\ln((5/6)/(1/6)) = \tfrac12\ln 5 \approx 0.805$ — <em>louder</em> than round 1&#39;s $0.549$ (harder distribution solved earns bigger voice). Updates: the newly-missed light point $\times e^{0.805} \approx 2.24$; the thrice-correct points shrink again. Attention compounds on whatever survives — boosting&#39;s curriculum in round two of four points, useful on clean structure and dangerous on mislabels.</p>
 <hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
@@ -277,8 +286,8 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>k-Means vs. hierarchical output</td>
-<td>Fixed-$K$ partition (rerun per $K$) vs. full dendrogram (cut after seeing)</td>
+<td>Partitional k-Means vs. hierarchical output</td>
+<td>Fixed-$K$ flat partition (rerun per $K$) vs. full dendrogram (cut after seeing)</td>
 </tr>
 <tr>
 <td>Single vs. complete linkage</td>
@@ -298,7 +307,7 @@
 </tr>
 <tr>
 <td>Bagging vs. boosting-coated trees</td>
-<td>Parallel variance averaging vs. sequential bias/margin attack</td>
+<td>Parallel variance averaging vs. sequential bias/margin attack with noise limits</td>
 </tr>
 <tr>
 <td>OOB vs. test error</td>
@@ -309,12 +318,12 @@
 <td>Weak round (quiet vote) vs. dominant round (loud vote) — earned, never set</td>
 </tr>
 <tr>
-<td>Train-zero + test-falling (boosting)</td>
-<td>Margins fattening past verdict saturation (theory-backed, not luck)</td>
+<td>Train-zero + test-falling (boosting, clean)</td>
+<td>Margins fattening past verdict saturation on clean data (theory-backed, not luck; noisy data differs)</td>
 </tr>
 <tr>
 <td>More trees (forests) vs. more rounds (boosting)</td>
-<td>Never overfits (variance only shrinks) vs. eventually overfits noise (attention compounds on lies)</td>
+<td>Plateau under honest validation (variance only shrinks) vs. eventually overfits noise (attention compounds on lies)</td>
 </tr>
 </tbody></table>
 <hr>
@@ -398,13 +407,13 @@
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Forests can grow 5000 trees safely while AdaBoost must stop early on noisy data. One mechanism per method explains both — state them.</span>
+    <span class="quiz-category">Forests can grow many trees safely under honest validation while AdaBoost must stop early on noisy data. One mechanism per method explains both — state them.</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Forests use less memory per tree, so more fit</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Forests average independent-ish votes (variance-only effect: more trees strictly smooth, bias untouched — nothing to overfit *toward*); boosting reweights onto residuals each round (on noise, residuals *are* lies, compounded exponentially into memorization)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Forests average independent-ish votes (variance-only effect given honest validation: more trees smooth and plateau, bias untouched — nothing to overfit *toward*); boosting reweights onto residuals each round (on noise, residuals *are* lies, compounded exponentially into memorization)</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>AdaBoost trees are deeper than forest trees by rule</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Forests never look at labels, avoiding the issue</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -418,7 +427,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Averaging can&#39;t invent bias (5000 votes for the same wrong answer is still wrong, never worse); sequential reweighting <em>chases</em> whatever errs — truth on clean data (margins fatten, test improves), lies on noisy data (weights explode on poison). Same rounds, opposite dynamics: smoothing vs. pursuit.</p><pre><code>&lt;/div&gt;
+      <p>Averaging can&#39;t invent bias (many votes for the same wrong answer stay wrong, never worse, under honest validation); sequential reweighting <em>chases</em> whatever errs — truth on clean data (margins fatten, test improves), lies on noisy data (weights explode on poison). Same rounds, opposite dynamics: smoothing vs. pursuit.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>
@@ -541,7 +550,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m4_99_practice_lab_unsupervised_ensemble_drills";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

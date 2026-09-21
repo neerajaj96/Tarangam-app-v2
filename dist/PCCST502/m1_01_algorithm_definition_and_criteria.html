@@ -281,48 +281,75 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Algorithms: Characteristics &amp; Analysis Criteria</h1>
 <p><strong>Finiteness, definiteness, input, output, effectiveness, space vs time efficiency, and RAM model of computation.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of an algorithm like a recipe for making tea. A real recipe has to: (1) actually end — it can&#39;t say &quot;keep stirring forever,&quot; (2) every instruction has to be crystal clear — &quot;add sugar&quot; is vague, &quot;add 2 teaspoons of sugar&quot; is not, (3) it needs ingredients to start with (input) — you can&#39;t make tea from nothing, (4) it needs to produce tea at the end (output) — a recipe that produces nothing is useless, and (5) every step has to be something you can <em>actually do</em> with what you have — &quot;add a pinch of moon dust&quot; fails this, because moon dust isn&#39;t a real, obtainable ingredient.</p>
-<p>An algorithm in computer science is judged by exactly these five properties. If even one is missing, it&#39;s not a valid algorithm — it might be a vague idea, or an infinite process, or a wish list, but not something a computer (or a person) can reliably execute and get a guaranteed result from. This section pins down these five properties precisely, and then introduces the <strong>RAM model</strong> — a simplified, idealised computer we imagine when analysing algorithms, so that our analysis doesn&#39;t depend on which actual physical machine the code runs on.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Before comparing algorithms, we must agree on what counts as one. &quot;Keep guessing until it looks right&quot; is advice, not an algorithm: two people following it do different things, and it might never finish. A computer needs instructions so precise that <em>no interpretation</em> is possible and finishing is <em>guaranteed</em>.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of an algorithm like a recipe for making tea. A real recipe must: (1) actually end — never &quot;keep stirring forever&quot;, (2) make every instruction crystal clear — &quot;add 2 teaspoons of sugar&quot;, not &quot;add sugar&quot;, (3) name its ingredients up front (input) — you cannot make tea from nothing, (4) produce tea at the end (output) — a recipe producing nothing is useless, and (5) use only steps you can <em>actually perform</em> with what you have (effectiveness) — &quot;add a pinch of moon dust&quot; fails because moon dust is not obtainable. Drop the food analogy now: the five technical criteria below are the exact, testable version of this intuition.</p>
+</div></details><p><strong>Tiny toy example.</strong> &quot;To find the biggest of 3 numbers: compare the first two, keep the winner, compare it with the third, return the winner.&quot; Finite (2 comparisons, then stop), definite (every step says exactly what to compare), has input (3 numbers) and output (the biggest), and every step is executable. That is an algorithm. Replace &quot;compare&quot; with &quot;stare at them until the biggest becomes obvious&quot; and it stops being one.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>Definition.</strong> An algorithm is a <em>finite</em> sequence of well-defined, unambiguous instructions to solve a problem or perform a computation.</p>
-<p><strong>The five defining criteria</strong> (all must hold):</p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-testing-a-procedure-step-by-step">3. Worked example — testing a proc… →</a></p>
+<p><strong>Definition.</strong> An algorithm is a <em>finite</em> sequence of well-defined, unambiguous instructions to solve a problem or perform a computation. All five criteria below must hold:</p>
 <ol>
-<li><strong>Finiteness</strong> — the algorithm must terminate after a finite number of steps, for every valid input. A process that can run forever (like an operating system&#39;s main loop) is <em>not</em> an algorithm in this strict sense — it&#39;s sometimes called a &quot;computational procedure&quot; instead.</li>
-<li><strong>Definiteness</strong> — every instruction must be precisely and unambiguously specified. There should be no room for a person or machine to interpret a step in two different ways.</li>
-<li><strong>Input</strong> — an algorithm has zero or more quantities supplied to it externally, before or during execution.</li>
-<li><strong>Output</strong> — an algorithm produces at least one quantity as a result, and this output must have a specified, provable relationship to the inputs (i.e., it must actually solve the stated problem).</li>
-<li><strong>Effectiveness</strong> — every operation used in the algorithm must be basic enough to be done, in principle, exactly and in a finite amount of time, by a person using pencil and paper. &quot;Guess the right answer&quot; is not effective; &quot;add two numbers&quot; is.</li>
+<li><strong>Finiteness</strong> — terminates after finitely many steps, for every valid input. A process that may run forever (like an operating system&#39;s main loop) is a &quot;computational procedure&quot;, not an algorithm in this strict sense.</li>
+<li><strong>Definiteness</strong> — every instruction is precisely specified; nobody can interpret a step two ways.</li>
+<li><strong>Input</strong> — zero or more quantities supplied externally, before or during execution.</li>
+<li><strong>Output</strong> — at least one quantity produced, with a specified, provable relationship to the inputs (it must actually solve the stated problem).</li>
+<li><strong>Effectiveness</strong> — every operation is basic enough to do exactly, in finite time, with pencil and paper. &quot;Guess the answer&quot; is not effective; &quot;add two numbers&quot; is.</li>
 </ol>
-<p><strong>The RAM (Random Access Machine) model.</strong> To analyse algorithms mathematically, we imagine a simplified idealised computer:</p>
-<ul>
-<li>It has an unlimited amount of memory, organised as a sequence of numbered cells, each holding one value, and each cell can be accessed (&quot;randomly accessed,&quot; hence the name) in exactly one unit of time regardless of its address.</li>
-<li>Basic operations — addition, subtraction, comparison, assignment, array indexing — each take exactly one unit of time (&quot;$O(1)$,&quot; a constant amount of work), regardless of the size of the numbers involved.</li>
-<li>Instructions execute one at a time, sequentially (no parallelism).</li>
-</ul>
-<p>This model deliberately ignores real-world complications like CPU cache effects, pipelining, or memory hierarchy, because including them would make analysis depend on a specific physical machine. The RAM model gives every algorithm a fair, hardware-independent playing field.</p>
-<p><strong>Space vs time efficiency — the fundamental trade-off.</strong> <em>Time efficiency</em> asks &quot;how many basic operations does this algorithm perform, as a function of input size $n$?&quot; <em>Space efficiency</em> asks &quot;how much extra memory does it need, beyond the input itself, as a function of $n$?&quot; These two often trade off against each other: e.g., you can speed up a computation by <em>pre-computing and storing</em> results (using more space to save time — &quot;memoization&quot;), or save space by <em>recomputing</em> values instead of storing them (using more time to save space). Neither is &quot;better&quot; in general — the right choice depends on what resource (time or memory) is scarcer for the situation at hand.</p>
+<p><strong>Symbols and abbreviations used here:</strong> $n$ = input size (e.g. number of list elements); $O(1)$ = constant work, independent of $n$ (defined fully in the asymptotics note).</p>
+<p><strong>The RAM (Random Access Machine) model.</strong> To analyse algorithms fairly, we imagine a simplified ideal computer: unlimited memory of numbered cells, each readable in one unit of time (&quot;random access&quot;, hence the name); basic operations — addition, subtraction, comparison, assignment, array indexing — each cost exactly one unit ($O(1)$), regardless of number sizes; instructions run sequentially, with no parallelism. This deliberately ignores caches, pipelining, and memory hierarchy so that analysis does not depend on any physical machine.</p>
+<p><strong>Space vs time efficiency.</strong> <em>Time efficiency</em> asks &quot;how many basic operations, as a function of $n$?&quot; <em>Space efficiency</em> asks &quot;how much extra memory beyond the input, as a function of $n$?&quot; They often trade off: <em>memoization</em> (storing precomputed results) spends space to save time; recomputing on the fly spends time to save space. Neither is always better — it depends on which resource is scarcer.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Consider this pseudo-procedure: &quot;To find the largest number in a list, keep guessing numbers until you feel confident you&#39;ve found the biggest one.&quot; We want to check whether this qualifies as an algorithm.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Check it against all five criteria: Finiteness — &quot;keep guessing until you feel confident&quot; has no guaranteed stopping point; it could run forever if you&#39;re never confident. Definiteness — &quot;feel confident&quot; is not a precise, checkable condition; two different people (or the same person twice) could stop at different points. Input — the list is given input, so this criterion is fine. Output — a number is produced, so this is fine. Effectiveness — &quot;guessing&quot; a number without a rule for which number to guess isn&#39;t a well-defined, mechanically executable operation.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>This procedure fails Finiteness, Definiteness, and Effectiveness — so it is <em>not</em> a valid algorithm. A valid algorithm for the same task: &quot;Set max = first element. For each remaining element, if it is greater than max, set max = that element. Return max.&quot; This version terminates after exactly $n-1$ comparisons (finite), has an unambiguous rule at every step (definite), and every operation (compare, assign) is basic and mechanically executable (effective).</p>
+<h2 id="3-worked-example-testing-a-procedure-step-by-step">3. Worked example — testing a procedure step by step</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Consider: &quot;To find the largest number in a list, keep guessing numbers until you feel confident you have found the biggest one.&quot; Check whether this qualifies as an algorithm.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Finiteness — &quot;until you feel confident&quot; has no guaranteed stopping point. Definiteness — &quot;feel confident&quot; is not checkable; two runs stop differently. Input — the list is given, fine. Output — a number is produced, fine. Effectiveness — &quot;guessing&quot; with no rule is not mechanically executable.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Fails Finiteness, Definiteness, and Effectiveness — <em>not</em> a valid algorithm. A valid version: &quot;Set max = first element. For each remaining element, if it exceeds max, set max to it. Return max.&quot; It terminates after exactly $n-1$ comparisons (finite), is unambiguous at every step (definite), and uses only compare-and-assign (effective).</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-testing-a-procedure-step-by-step">← 3. Worked example — testing a proc…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>&quot;Zero inputs allowed&quot; does not mean &quot;no output allowed&quot;: input may be empty, but at least one output is mandatory.</li>
+<li>Definiteness vs effectiveness: definiteness is about <em>clarity of the instruction</em> (&quot;add 2 teaspoons&quot;); effectiveness is about <em>executability of the operation</em> (&quot;moon dust&quot; is clear but unobtainable — it fails effectiveness, not definiteness).</li>
+<li>The RAM model counts <em>operations</em>, not seconds — never convert &quot;5 operations&quot; into milliseconds.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Definiteness vs effectiveness</td>
+<td>Unambiguous wording vs physically executable operation</td>
+</tr>
+<tr>
+<td>Time vs space efficiency</td>
+<td>Operation count vs extra memory, both as functions of $n$</td>
+</tr>
+<tr>
+<td>Algorithm vs computational procedure</td>
+<td>Must terminate (finite) vs allowed to run forever (OS loop)</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> name all five criteria (finiteness, definiteness, input, output, effectiveness); RAM = one-unit basic operations, random access, sequential execution; time/space trade-off example is memoization versus recomputation.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A set of instructions that includes the step &quot;repeat until the result looks good enough&quot; fails which criterion of a valid algorithm?</span>

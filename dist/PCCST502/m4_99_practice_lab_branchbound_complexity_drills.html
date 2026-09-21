@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -287,8 +287,11 @@
 <h1>Module 4 Practice Lab: Branch &amp; Bound and Complexity Drills</h1>
 <p><strong>Bound races, reduction-direction autopsies, FFD packing traces, amplification arithmetic, and exam essay models.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<h2 id="1-start-from-zero-how-to-use-this-lab">1. Start from zero — how to use this lab</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p><strong>Problem first.</strong> Module 4&#39;s exam marks go to bound races on one matrix (incumbent quality = search cost), reduction autopsies with exact verdicts (arrow direction decides), FFD traces with matching floors, and amplification arithmetic (exponential confidence, linear cost). Abbreviations: B&amp;B = branch &amp; bound; NPC = NP-complete; FFD = First-Fit Decreasing; $k$ = Miller–Rabin rounds.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Every scenario is a marking scheme: state the setup with numbers, show each decision (branch, prune, pack, amplify) with its certificate (bound ≥ incumbent, arrow direction, floor match, $\epsilon^k$), then conclude with what is proven versus what stays open. The four scenarios below model exactly that discipline.</p>
+</div></details><p><strong>Tiny warm-up.</strong> Bound 40 vs incumbent 39: prune (nothing beats 39). Reduction &quot;X → 3-SAT proves X NPC&quot;: wrong arrow, half-proof. FFD into a matching floor: optimal, certified. Miller–Rabin $k=2$: error $\le 4^{-2} = 1/16$.</p>
 <h3>Scenario 1: The Bound Race (TSP, Same Matrix, Three Timings)</h3>
 <p>Instance from M4 (optimum 35, root bound 35, forbid-1→2 bound 39). Three counterfactuals: (a) incumbent starts at 39 (nearest-neighbor): root 35 &lt; 39 → branch; include-side resolves tour 35 (new incumbent); forbid-side bound 39 ≥ 35 → prune; done — 1 branch, 1 prune. (b) Incumbent starts at 35 (lucky heuristic): root bound 35 == incumbent 35 → <strong>optimal proven with zero branching</strong> (nothing can beat what&#39;s already certified). (c) Incumbent starts at 60 (terrible): both branches live longer (forbid-side 39 &lt; 60 survives!), search sprawls until tour 35 surfaces. Moral: incumbent quality <em>is</em> search cost — good heuristics aren&#39;t polish, they&#39;re pruning fuel.</p>
 <h3>Scenario 2: Reduction Autopsy (Three Verdicts, One Autopsy Each)</h3>
@@ -296,11 +299,11 @@
 <h3>Scenario 3: FFD Packing Trace (Capacity 10)</h3>
 <p>Items $[7, 6, 5, 4, 4, 3, 2, 2]$ (already descending — sorting free this once). $7\to$B1; $6\to$B2; $5\to$B3 (fits neither B1 $12 &gt; 10$ nor B2 $11 &gt; 10$); $4\to$B2 ($6+4=10$ ✓); $4\to$B3 ($5+4=9$ ✓); $3\to$B1 ($7+3=10$ ✓); $2\to$B4 (B1/B2/B3 all overflow); $2\to$B4 ($4$ ✓). <strong>4 bins</strong> vs. lower bound $\lceil 33/10 \rceil = 4$ — optimal, certified.</p>
 <h3>Scenario 4: Amplification Checkout</h3>
-<p>Miller–Rabin with $k$ rounds: error $\le 4^{-k}$ per composite. $k = 1$: 25% doubt (toy only). $k = 5$: $\le 1/1024$ (better than hardware glitch rates). $k = 10$: $\le 1/1{,}048{,}576 \approx 10^{-6}$ (production-grade). $k = 40$ (crypto libraries): $\le 2^{-80}$ — fewer failure odds than cosmic-ray bit flips during the computation itself. Each round <em>multiplies</em> confidence; cost grows only linearly in $k$.</p>
+<p>Miller–Rabin with $k$ rounds: error $\le 4^{-k}$ per composite (stated textbook bound for the algorithm&#39;s compositeness error). $k = 1$: 25% doubt (toy only). $k = 5$: $\le 1/1024$ (better than many quoted hardware glitch rates — an illustration, not a measurement). $k = 10$: $\le 1/1{,}048{,}576 \approx 10^{-6}$ (production-grade). $k = 40$ (crypto libraries): $\le 2^{-80}$ — for exam purposes treated as negligible, while remaining strictly non-zero. Each round <em>multiplies</em> confidence; cost grows only linearly in $k$.</p>
 <hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
-<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<p class="secnav"><a href="#1-start-from-zero-how-to-use-this-lab">← 1. Start from zero — how to use th…</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
 <table>
 <thead>
 <tr>
@@ -436,7 +439,7 @@
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>It means zero error, achievable by running deterministically instead</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>It means error below physical noise floors (k=40: ≤2⁻⁸⁰, rarer than hardware faults during the test itself) — bought with linear extra rounds, since error decays exponentially in k</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It means error small enough to treat as negligible for exam and engineering purposes (k=40: ≤2⁻⁸⁰, strictly non-zero) — bought with linear extra rounds, since error decays exponentially in k</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>It means switching to trial division for all inputs</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>More rounds cannot reduce error below 10⁻⁶ by mathematical law</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -450,7 +453,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Certainty&quot; in crypto = error dwarfed by physics (cosmic rays, hardware glitches ~2⁻⁵⁰-ish per operation scale). Exponential decay makes k=40 cost 4× k=10 while dividing doubt by $4^{30}$ — certainty is <em>purchased</em>, linearly priced, and the budget math is the whole argument.</p><pre><code>&lt;/div&gt;
+      <p>&quot;Certainty&quot; in this context means error dwarfed into negligibility — exponential decay makes k=40 cost 4× k=10 while dividing doubt by $4^{30}$. Certainty is <em>purchased</em>, linearly priced — but strictly speaking the error never hits zero, so &quot;negligible&quot; (not &quot;impossible&quot;) is the correct claim.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><hr>

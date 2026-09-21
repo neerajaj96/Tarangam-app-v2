@@ -274,56 +274,77 @@
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Reinforcement Learning: MDPs &amp; Learning from Rewards</h1>
-<p><strong>Markov decision processes, transition models, discounted rewards, Bellman equations, and the passive-vs-active learning split that organizes this module.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-rewards-instead-of-rules">1. Rewards Instead of Rules</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-markov-decision-processes-the-formal-arena">2. Markov Decision Processes: The … →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Training a Puppy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Nobody hands a puppy a rulebook (&quot;Rule 47b: sit precisely 3 cm left of the mat&quot;). You <em>reward</em> sits (+treat) and <em>punish</em> chewing (−scold), and the puppy figures out the policy itself. <strong>Reinforcement learning</strong> is exactly this bargain: no teacher provides correct actions (unlike supervised learning) and no transition manual is guaranteed (unlike classical search) — just a <strong>reward signal</strong> from the environment, and an agent that must discover, by trial and error, the behavior maximizing long-term reward.</p>
-</div></details><p>Supervised learning says <em>&quot;do this here&quot;</em>; RL says <em>&quot;that earned +10 — do more of whatever led there.&quot;</em> Credit assignment across time is the entire difficulty: which of the 40 moves before the goal actually mattered?</p>
-<hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-markov-decision-processes-the-formal-arena">2. Markov Decision Processes: The Formal Arena</h2>
-<p class="secnav"><a href="#1-rewards-instead-of-rules">← 1. Rewards Instead of Rules</a><span class="secnav-sep">·</span><a href="#3-passive-vs-active-the-module-map">3. Passive vs. Active: The Module … →</a></p>
-<p>An <strong>MDP</strong> is a 5-tuple $(S, A, T, R, \gamma)$:</p>
+<p><strong>Problem: no teacher gives correct actions and no manual guarantees transitions — only a reward signal. By the end you can specify any task as a Markov Decision Process (MDP), price delayed credit, and hand-run one Bellman backup.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-rewards-instead-of-rules">1. Start From Zero: Rewards Instead of Rules</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-mdps-the-formal-arena">2. Basic Layer: MDPs — The Formal … →</a></p>
+<p>Nobody hands a puppy a rulebook (&quot;Rule 47b: sit 3 cm left&quot;). You reward sits (+treat) and punish chewing (-scold); the puppy discovers the policy. <strong>Reinforcement learning (RL)</strong> is this bargain: trial-and-error behaviour maximizing long-term reward, with no per-step answers.</p>
+<p><strong>Definitions:</strong> <strong>supervised learning</strong> says &quot;do this here&quot; (labelled correct actions). RL says &quot;that earned +10 — do more of whatever led there.&quot; <strong>Credit assignment</strong> is deciding which of 40 pre-goal moves actually mattered — the entire difficulty, since rewards arrive delayed.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Training a Puppy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;reward signals, not instructions&quot; here, then drop the puppy; MDP slots plus the Bellman equation below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> a grid robot reaches cheese (+10) after 5 moves through empty squares (0 each). Which move earned the cheese? All five share credit through discounted backups — the mechanism below.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-mdps-the-formal-arena">2. Basic Layer: MDPs — The Formal Arena</h2>
+<p class="secnav"><a href="#1-start-from-zero-rewards-instead-of-rules">← 1. Start From Zero: Rewards Instea…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-bellman-equation-and-module-map">3. Formal Layer: Bellman Equation … →</a></p>
+<p><strong>Data/state:</strong> fully observable states (partial observability needs POMDPs — Partially Observable MDPs, beyond syllabus). <strong>Goal:</strong> learn the optimal policy (action choice per state maximizing expected utility).</p>
+<p>An <strong>MDP</strong> is a 5-tuple <code>(S, A, T, R, gamma)</code>:</p>
 <ul>
-<li><strong>States</strong> $S$ (fully observable — for partial observability see POMDPs, beyond syllabus), <strong>actions</strong> $A(s)$ legal per state.</li>
-<li><strong>Transition model</strong> $T = P(s&#39; \mid s, a)$: the <em>Markov</em> assumption — the next state depends only on the <em>current</em> state and action, never the path taken (the future is conditionally independent of the past given the present).</li>
-<li><strong>Reward</strong> $R(s)$ (sometimes $R(s,a,s&#39;)$): immediate numeric feedback on entering states.</li>
-<li><strong>Discount</strong> $0 \le \gamma &lt; 1$: future rewards shrink geometrically — guarantees finite total utility over infinite horizons and encodes &quot;a treat now beats a treat tomorrow.&quot;</li>
+<li><strong>States</strong> <code>S</code>; <strong>actions</strong> <code>A(s)</code> legal per state.</li>
+<li><strong>Transition model</strong> <code>T = P(s&#39; | s, a)</code>: probability of next state <code>s&#39;</code> given current <code>s</code> and action <code>a</code>. The <strong>Markov assumption</strong> means the future depends only on the present state and action — never the path taken (conditional independence of history given the present).</li>
+<li><strong>Reward</strong> <code>R(s)</code> (sometimes <code>R(s,a,s&#39;)</code>): immediate numeric feedback on entering states.</li>
+<li><strong>Discount</strong> <code>0 &lt;= gamma &lt; 1</code>: future rewards shrink geometrically (a treat now beats a treat tomorrow) and keep infinite-horizon totals finite.</li>
 </ul>
-<p><strong>Utility of a state history:</strong> $U([s_0, s_1, \dots]) = \sum_{t=0}^{\infty} \gamma^t R(s_t)$. <strong>Optimal policy</strong> $\pi^*$: the action choice maximizing <em>expected</em> utility from each state.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Bellman Equation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$$U(s) = R(s) + \gamma \max_a \sum_{s&#39;} P(s&#39; \mid s, a); U(s&#39;)$$
-Read it as: <em>the value of here = the reward of here + discounted best-expected value of next.</em> Every planning and learning algorithm in this module is either solving, sampling, or approximating this one equation. Value iteration repeatedly applies it as an update until utilities stop changing; policy iteration alternates evaluation with greedy improvement.</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-passive-vs-active-the-module-map">3. Passive vs. Active: The Module Map</h2>
-<p class="secnav"><a href="#2-markov-decision-processes-the-formal-arena">← 2. Markov Decision Processes: The …</a><span class="secnav-sep">·</span><a href="#4-one-bellman-backup-by-hand">4. One Bellman Backup by Hand →</a></p>
-<ul>
-<li><strong>Passive RL</strong> (topics 2): the agent executes a <em>fixed</em> policy $\pi$ and learns <em>how good it is</em> — estimating $U^\pi(s)$ from experience (direct utility estimation, ADP, TD). No exploration dilemma: the policy never changes.</li>
-<li><strong>Active RL</strong> (topic 3): the agent must learn the <em>optimal</em> policy itself — balancing <strong>exploration</strong> (trying unknown actions to learn) against <strong>exploitation</strong> (milking the best-known action). Explore forever and rewards never accumulate; exploit immediately and a better action stays undiscovered forever.</li>
-<li><strong>Beyond value functions</strong> (topic 4): searching policy space directly (policy search) and flipping the problem — inferring the <em>reward</em> from observed experts (inverse RL).</li>
-</ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Discount &lt; 1 Is Load-Bearing, Not Cosmetic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With $\gamma = 1$ and an infinite horizon, utilities can diverge to infinity and &quot;optimal&quot; becomes undefined (every policy earns ∞). Discounting (or finite horizons, or absorbing goal states with zero onward reward) is what makes the mathematics well-posed. Any derivation assuming infinite undiscounted sums without absorbing states is broken at the foundation.</p>
-</div></details><hr>
+<p><strong>Utility of a history</strong> <code>[s0, s1, ...]</code>:</p>
+<p>$$U([s_0, s_1, \dots]) = \sum_{t=0}^{\infty} \gamma^t R(s_t)$$</p>
+<p>Symbols: <code>gamma^t</code> discounts step <code>t</code>; <code>R(s_t)</code> is its reward; the sum is total desirability. The <strong>optimal policy</strong> <code>pi*</code> (pi-star) maximizes expected utility per state.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-bellman-equation-and-module-map">3. Formal Layer: Bellman Equation and Module Map</h2>
+<p class="secnav"><a href="#2-basic-layer-mdps-the-formal-arena">← 2. Basic Layer: MDPs — The Formal …</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Meaning, variables, intuition, formula — the Bellman optimality equation:</strong></p>
+<p>$$U(s) = R(s) + \gamma \max_a \sum_{s&#39;} P(s&#39; \mid s, a); U(s&#39;)$$</p>
+<p>Read: value of here = reward of here + discounted best-expected value of next. Symbols: <code>U(s)</code> utility of state <code>s</code>; <code>max_a</code> best action&#39;s value; the sum weighs successor utilities by transition odds. Every planning/learning method in this module solves, samples, or approximates this one equation (value iteration applies it repeatedly; policy iteration alternates evaluation with greedy improvement).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Bellman Equation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Immediate reward plus discounted best continuation. Memorize the reading line; numerical backups below are that line in arithmetic.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Discount &lt; 1 Is Load-Bearing, Not Cosmetic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With gamma = 1 over infinite horizons, totals can diverge to infinity and &quot;optimal&quot; becomes undefined (every policy earns infinity). Discounting — or finite horizons, or absorbing goal states with zero onward reward — makes optimization well-posed. Infinite undiscounted sums without absorbers are broken at the foundation.</p>
+</div></details><p><strong>Passive vs. active (module map):</strong> <strong>passive RL</strong> (next topic) fixes a policy and grades it (<code>U^pi</code> — expected return following pi) via averaging, Adaptive Dynamic Programming (ADP — learn the model, then solve), Temporal Difference (TD — per-step sample backups). No exploration dilemma. <strong>Active RL</strong> (topic 3) learns the optimal policy itself — <strong>exploration</strong> (trying unknowns for information) vs. <strong>exploitation</strong> (milking the best-known for reward). <strong>Beyond values</strong> (topic 4): direct policy search plus inverse RL (infer rewards from experts).</p>
+<p><strong>One Bellman backup by hand:</strong> states {A, B}; <code>R(A) = 1</code>, <code>R(B) = 0</code>; gamma 0.9; from A 80% stay, 20% to B; B absorbing. Estimates U(A) = 5, U(B) = 0:</p>
+<p>$$U_{new}(A) = 1 + 0.9,(0.8 \times 5 + 0.2 \times 0) = 1 + 3.6 = 4.6$$</p>
+<p>The guess falls 5 to 4.6 — overshoot corrected toward consistency. True value solves <code>U = 1 + 0.72U</code>, i.e. ~3.57; repeated backups converge there from any start (value iteration as contraction — qualified: given discount &lt; 1 and the stated dynamics).</p>
 <p><a id="worked-example"></a></p>
-<h2 id="4-one-bellman-backup-by-hand">4. One Bellman Backup by Hand</h2>
-<p class="secnav"><a href="#3-passive-vs-active-the-module-map">← 3. Passive vs. Active: The Module …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
-<p>Tiny world: states ${A, B}$, one action, $R(A) = 1$, $R(B) = 0$, $\gamma = 0.9$. From $A$: 80% stay in $A$, 20% move to $B$. From $B$: 100% stay in $B$ (absorbing). Current estimates: $U(A) = 5$, $U(B) = 0$. Apply one Bellman backup to $A$:</p>
-<p>$$U_{new}(A) = R(A) + \gamma,[,0.8 \cdot U(A) + 0.2 \cdot U(B),] = 1 + 0.9 \times (0.8 \times 5 + 0) = 1 + 0.9 \times 4 = 4.6$$</p>
-<p>The estimate <em>falls</em> 5 → 4.6: the old guess overshot what the rewards + dynamics justify, and the backup corrects toward consistency. True utilities satisfy $U(A) = 1 + 0.72,U(A)$, i.e. $U^*(A) = 1/0.28 \approx 3.57$ — repeated backups converge there from any start.</p>
-<hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-bellman-equation-and-module-map">← 3. Formal Layer: Bellman Equation …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Supervised vs. reinforcement</td>
+<td>Correct-action labels vs. reward signals with temporal credit assignment</td>
+</tr>
+<tr>
+<td>Passive vs. active RL</td>
+<td>Grade fixed behaviour (no exploration) vs. improve it (explore/exploit)</td>
+</tr>
+<tr>
+<td>Transition vs. reward model</td>
+<td>Where actions lead (<code>P</code>) vs. what states pay (<code>R</code>)</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Markov simplifies dynamics, not payoffs — delayed rewards remain. (2) <code>U^pi</code> (fixed-policy value) differs from <code>U*</code> (optimal value) — conflating them breaks topic-2 vs. topic-3 answers. (3) Discount encodes impatience and convergence, never processor speed.</p>
+<p><strong>Limitations:</strong> MDPs assume full observability and known rewards; exact Bellman solving needs the model and enumerable states — sampling (TD/Q) and approximation (topic 5) remove those assumptions at the cost of guarantees.</p>
 <p><a id="self-check"></a></p>
 <h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-one-bellman-backup-by-hand">← 4. One Bellman Backup by Hand</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What does the Markov assumption buy the agent, and what does it forbid using?</span>
@@ -346,7 +367,7 @@ Read it as: <em>the value of here = the reward of here + discounted best-expecte
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Markov = conditional independence of future from history given the present. Policies, utilities, and Bellman backups all condition on $s$ alone <em>because</em> the past adds nothing. Delayed rewards (the credit-assignment problem) remain fully in play — Markov simplifies <em>dynamics</em>, not <em>payoffs</em>.</p><pre><code>&lt;/div&gt;
+      <p>Markov is conditional independence of futures from histories given the present. Policies and Bellman backups condition on s alone; delayed payoffs (credit assignment) fully remain.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -371,7 +392,7 @@ Read it as: <em>the value of here = the reward of here + discounted best-expecte
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\sum \gamma^t R$ converges for $\gamma&lt;1$ (geometric series); with $\gamma=1$ over infinite horizons, totals blow up and &quot;maximize utility&quot; stops meaning anything. Finite horizons or absorbing zero-reward states are the only alternatives that restore well-posedness.</p><pre><code>&lt;/div&gt;
+      <p>Geometric sums converge for gamma &lt; 1; with gamma = 1 over infinite horizons, maximization stops meaning anything. Finite horizons or absorbing zero-reward states are the only alternatives.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -396,24 +417,21 @@ Read it as: <em>the value of here = the reward of here + discounted best-expecte
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Passive RL = &quot;grade this fixed behavior&quot; (direct utility, ADP, TD next topic). Improvement machinery — exploration, action-values, greedy updates — belongs to active learning. A fixed policy needs no exploration at all, which is exactly what makes passive methods the clean pedagogical first step.</p><pre><code>&lt;/div&gt;
+      <p>Passive grades fixed behaviour (averaging, ADP, TD next). Improvement machinery — exploration, action-values, greedy updates — is active-only. Fixed policies need no exploration.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
 <p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> MDP 5-tuple, Bellman equation, or passive-vs-active distinction.</li>
-<li><strong>7 Marks:</strong> Bellman backup numericals, or why discounting is necessary.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Define an MDP and state the Bellman optimality equation.</strong></p>
-<p><strong>Model Answer:</strong> MDP $= (S, A, T, R, \gamma)$: states, actions, transition probabilities $P(s&#39;|s,a)$, rewards, discount. Bellman: $U(s) = R(s) + \gamma \max_a \sum_{s&#39;} P(s&#39;|s,a),U(s&#39;)$ — value equals immediate reward plus discounted best-expected continuation.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: MDP 5-tuple, Bellman equation, or passive-vs-active line. 7 marks: Bellman numericals or the discount-necessity argument.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>(S,A,T,R,gamma)</code> expansions; Markov sentence; utility sum with symbols; Bellman reading; passive/active/beyond map; 5-to-4.6 backup with true ~3.57.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Define an MDP and state Bellman optimality.</strong></p>
+<p><strong>Model Answer:</strong> States, actions, transitions P(s&#39;|s,a), rewards, discount gamma. U(s) = R(s) + gamma max_a sum P U(s&#39;) — immediate plus discounted best continuation.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Using the world of §4, compute two Bellman backups from U(A)=5 and show convergence direction toward the true value.</strong></p>
-<p><strong>Model Answer:</strong> Backup 1: $1 + 0.9(0.8\cdot5) = 4.6$ (as shown). Backup 2: $1 + 0.9(0.8\cdot4.6) = 1 + 3.312 = 4.312$. True value $U^* = 1/(1-0.72) \approx 3.57$; estimates 5 → 4.6 → 4.312 descend toward it — value iteration as contraction, each backup shrinking the error.</p>
+<p><strong>Q: Compute two Bellman backups from U(A) = 5 and show convergence direction.</strong></p>
+<p><strong>Model Answer:</strong> Backup 1: 1 + 0.9(0.8x5) = 4.6. Backup 2: 1 + 0.9(0.8x4.6) = 4.312. True ~3.57; estimates 5, 4.6, 4.312 descend toward it — contraction under gamma &lt; 1, each backup shrinking error.
+:::</p>
 
     </main>
 

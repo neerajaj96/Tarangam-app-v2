@@ -269,84 +269,81 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Module 2 Practice Lab: Search Strategy Drills</h1>
-<p><strong>Strategy selection under constraints, cost-trap autopsies, IDS arithmetic, heuristic admissibility trials, and exam essay models.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
-<h3>Scenario 1: The 11% Miracle (IDS vs. BFS, Counted)</h3>
-<p>Branching $b = 10$, goal depth $d = 5$. BFS generates $1 + 10 + 100 + 1000 + 10{,}000 + 100{,}000 = \mathbf{111{,}111}$ nodes. IDS regenerates shallow tiers per iteration: $5\cdot10 + 4\cdot100 + 3\cdot1000 + 2\cdot10{,}000 + 1\cdot100{,}000 = 50 + 400 + 3000 + 20{,}000 + 100{,}000 = \mathbf{123{,}450}$ — just <strong>11% more</strong> for linear memory ($O(bd)$ vs. $O(b^d)$) <em>plus</em> depth-first&#39;s optimality-on-uniform-cost. The &quot;wasteful regeneration&quot; intuition dies on contact with geometric series: upper tiers are exponentially tiny, so re-walking them costs exponentially nothing.</p>
-<h3>Scenario 2: The $100 Shortcut Trap (BFS vs. UCS)</h3>
-<p>Roads: start→goal direct toll $100 (1 step); start→A→goal costs $1 + $1 (2 steps). BFS (step-counting) picks the toll road (shallower); UCS (cost-counting) picks the $2 backroad. Same graph, opposite answers — BFS optimizes <em>depth</em>, UCS optimizes <em>dollars</em>. Whenever statement says &quot;fewest edges&quot; answer BFS; &quot;cheapest&quot; answer UCS; &quot;both&quot; is a trick (they coincide only at uniform cost).</p>
-<h3>Scenario 3: Heuristic Court (Admissible or Out)</h3>
-<p>True cheapest costs: $h^<em>(A) = 8$, $h^</em>(B) = 4$, goal $0$. Candidate $h_1$: $A \to 7$, $B \to 5$. Candidate $h_2$: $A \to 6$, $B \to 3$. Trial: $h_1(B) = 5 &gt; 4$ — <strong>inadmissible</strong> (overestimates once, disqualified everywhere; A* with $h_1$ can return suboptimal paths). $h_2$: $6 \le 8$, $3 \le 4$ — <strong>admissible</strong>. Dominance? Requires <em>both</em> admissible — $h_1$ is out of the running entirely, so no dominance claim exists; among admissible heuristics, higher-never-over is better ($h_2$ beats any lower admissible rival node by node).</p>
-<hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
-<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<p><strong>Problem: turn search theory into exam arithmetic and strategy choice. By the end you can price IDS overhead, spring cost traps, try heuristics, and explain tree-vs-graph gaps.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-three-autopsies">1. Start From Zero: Three Autopsies</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-do-not-confuse-table">2. Basic Layer: Do-Not-Confuse Tab… →</a></p>
+<p><strong>Problem first:</strong> students memorize verdicts without numbers. <strong>Method:</strong> count one case fully per strategy family, then generalize.</p>
+<p><strong>Scenario 1 — The 11% miracle (IDS vs. BFS, counted):</strong> branching b = 10, goal depth d = 5. BFS builds levels 0..5: 1 + 10 + 100 + 1000 + 10,000 + 100,000 = 111,111 nodes. IDS re-walks upper tiers: 5x10 + 4x100 + 3x1000 + 2x10,000 + 1x100,000 = 123,450 — ~11% more — for linear <code>O(b*d)</code> memory instead of <code>O(b^d)</code>, plus uniform-cost optimality. Upper tiers are exponentially tiny, so re-walking crumbs costs crumbs.</p>
+<p><strong>Scenario 2 — The $100 shortcut trap (BFS vs. UCS):</strong> start-goal direct toll $100 (1 step); start-A-goal backroad $1 + $1 (2 steps). BFS (counts steps) takes the toll; UCS (counts dollars) takes the backroad. &quot;Fewest edges&quot; answers BFS; &quot;cheapest&quot; answers UCS; &quot;both&quot; is correct only at uniform cost.</p>
+<p><strong>Scenario 3 — Heuristic court:</strong> true costs h*(A) = 8, h*(B) = 4. Candidate h1: A 7, B 5 — fails at B (5 &gt; 4), hence <strong>inadmissible</strong> everywhere as a license (A* may go suboptimal). Candidate h2: A 6, B 3 — passes both, hence admissible. Dominance needs two admissible rivals, so with h1 disqualified no dominance relation exists; among admissible rivals, higher-never-over wins node by node.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-do-not-confuse-table">2. Basic Layer: Do-Not-Confuse Table</h2>
+<p class="secnav"><a href="#1-start-from-zero-three-autopsies">← 1. Start From Zero: Three Autopsie…</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
 <table>
 <thead>
 <tr>
 <th>Pair</th>
-<th>Distinction that earns marks</th>
+<th>Exam distinction</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>BFS vs. UCS optimum</td>
-<td>Fewest steps vs. cheapest cost (differ exactly when costs vary)</td>
+<td>Fewest steps vs. cheapest cost (split exactly when costs vary)</td>
 </tr>
 <tr>
 <td>DFS vs. IDS memory</td>
-<td>$O(bm)$ deep stack (loops risk) vs. $O(bd)$ with completeness restored</td>
+<td><code>O(b*m)</code> deep stack with loop risk vs. <code>O(b*d)</code> with completeness restored</td>
 </tr>
 <tr>
-<td>DLS vs. IDS purpose</td>
-<td>Depth-capped single shot (incomplete past $l$) vs. deepening loop to completeness</td>
+<td>DLS vs. IDS</td>
+<td>One capped shot (cutoff past l) vs. deepening loop to completeness</td>
 </tr>
 <tr>
 <td>IDS overhead</td>
-<td>~11% extra nodes at $b=10$ (geometric tiers make regeneration cheap)</td>
+<td>~11% extra at b=10 (geometric tiers make regeneration cheap)</td>
 </tr>
 <tr>
 <td>Admissible vs. consistent</td>
-<td>$h \le h^*$ everywhere vs. triangle inequality $h(n) \le c + h(n&#39;)$ (consistent ⇒ admissible, not vice versa)</td>
+<td><code>h &lt;= h*</code> everywhere vs. triangle <code>h(n) &lt;= c + h(n&#39;)</code> (consistent implies admissible)</td>
 </tr>
 <tr>
-<td>Dominance requirements</td>
-<td>Both admissible first, then pointwise ≥ everywhere (inadmissible rivals disqualified)</td>
+<td>Dominance</td>
+<td>Both admissible first, then pointwise &gt;= everywhere</td>
 </tr>
 <tr>
-<td>$g$ vs. $h$ vs. $f$</td>
-<td>Cost-so-far vs. estimated-to-go vs. $g+h$ expansion priority</td>
+<td><code>g</code> vs. <code>h</code> vs. <code>f</code></td>
+<td>Paid-so-far vs. guessed-to-go vs. <code>g+h</code> priority</td>
 </tr>
 <tr>
 <td>Tree vs. graph search</td>
-<td>Repeat-state explosion vs. explored-set pruning (exponential savings where states rejoin)</td>
+<td>Re-expand states via every path vs. explored-set prune (exponential savings where paths rejoin)</td>
 </tr>
 <tr>
 <td>Complete vs. optimal</td>
-<td>Finds <em>a</em> solution vs. finds the <em>cheapest</em> (independent axes — DFS: neither; BFS: complete + optimal-iff-uniform; UCS/A*: both given conditions)</td>
+<td>Finds a solution vs. finds the cheapest (independent axes)</td>
 </tr>
 <tr>
-<td>Step cost vs. path cost</td>
-<td>Single-edge price vs. accumulated total (UCS accumulates, BFS counts)</td>
+<td>Step vs. path cost</td>
+<td>One-edge price vs. accumulated total</td>
 </tr>
 </tbody></table>
-<hr>
+<p><strong>Limitations of drills:</strong> counts assume uniform branching and stated costs; real frontiers vary. Admissibility verdicts assume exact <code>h*</code> knowledge — in exams it is given; in practice it is bounded, not known.</p>
 <p><a id="self-check"></a></p>
 <h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
+<p class="secnav"><a href="#2-basic-layer-do-not-confuse-table">← 2. Basic Layer: Do-Not-Confuse Tab…</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">IDS regenerates the top tiers on every iteration, yet costs only ~11% more nodes than BFS at b=10, d=5. A student calls this &quot;obviously wasteful anyway.&quot; Refute with the series.</span>
@@ -369,7 +366,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Geometric domination: level $i$ dwarfs all levels above <em>combined</em> ($b^d$ vs. $\sum_{i&lt;d}b^i \approx b^d/(b-1)$). Regeneration re-pays only the crumbs while the bottom tier (paid once, mostly) dominates both totals. &quot;Wasteful&quot; intuition prices all levels equally — the series refuses.</p><pre><code>&lt;/div&gt;
+      <p>Level i dwarfs all levels above combined (b^d vs. sum ~ b^d/(b-1)). Regeneration re-pays only crumbs while the bottom tier dominates both totals.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -394,7 +391,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Optimality proofs assume $h \le h^<em>$ <em>everywhere</em> — a single violation breaks the guarantee chain (A</em> can then return suboptimal paths, silently). Dominance compares <em>admissible</em> rivals only. License first, ranking second; no license, no ranking.</p><pre><code>&lt;/div&gt;
+      <p>Optimality proofs need h &lt;= h* everywhere — one violation breaks the chain silently. Dominance compares admissible rivals only. License first, ranking second.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -419,7 +416,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Completeness (find <em>a</em> solution) and optimality (find the <em>cheapest</em>) are independent axes: DFS can miss forever down infinite paths and returns whatever it stumbles on; BFS&#39;s level order certifies both (uniform cost). Pick strategies by required guarantees — depth-first for memory, best-first for optimality.</p><pre><code>&lt;/div&gt;
+      <p>Completeness and optimality are independent: DFS can miss forever and returns whatever it stumbles on; level-order BFS certifies both under uniform cost.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -444,24 +441,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Transpositions (many paths, same state) turn trees exponential while state <em>sets</em> stay put — the explored set converts path-counting into state-counting. Same overlap exploitation as dynamic programming&#39;s memoization (Module DAA-3&#39;s whiteboard, AI-flavored): never solve the same state twice.</p><pre><code>&lt;/div&gt;
+      <p>Many paths sharing states turn trees exponential while state sets stay put. The explored set converts path-counting into state-counting — the dynamic-programming moral in search form.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
+</div><p><a id="exam-focus"></a></p>
 <h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
 <p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> Any cheat-table row (BFS-vs-UCS and admissibility lead); IDS overhead figure with reasoning.</li>
-<li><strong>7 Marks:</strong> Strategy traces with counts, admissibility trials on given heuristics, or complete/optimal verdict tables per strategy.</li>
-</ul>
-</div></details><h3>Essay Question 1 (7 Marks)</h3>
-<p><strong>Q: For b = 10, d = 5, compute BFS and IDS node counts, explain why IDS costs only ~11% more, and state what IDS buys with that 11%.</strong></p>
-<p><strong>Model Answer:</strong> BFS: $\sum_{i=0}^{5}10^i = 111{,}111$. IDS: $\sum$ over iterations $5\cdot10 + 4\cdot100 + 3\cdot1000 + 2\cdot10{,}000 + 1\cdot100{,}000 = 123{,}450$ — ratio $\approx 1.11$. Upper tiers are exponentially small, so regeneration re-pays crumbs. The 11% buys: linear memory $O(bd)$ instead of $O(b^d)$, plus (with uniform step costs) the completeness and optimality BFS enjoys — depth-first&#39;s footprint with breadth-first&#39;s guarantees.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: any table row (BFS-vs-UCS and admissibility lead) or the IDS figure with reasoning. 7 marks: counted traces, admissibility trials, or per-strategy verdict tables.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> 111,111 vs. 123,450 derivation; toll-vs-backroad verdict rule; one-violation disqualification; explored-set mechanism; complete-vs-optimal independence.</p>
+<h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: For b = 10, d = 5, compute BFS and IDS counts, explain the 11%, state what IDS buys.</strong></p>
+<p><strong>Model Answer:</strong> BFS sum = 111,111. IDS weighted sum = 123,450, ratio ~1.11. Upper tiers exponentially small so regeneration costs crumbs. Buys linear O(b*d) memory plus uniform-cost completeness/optimality — depth-first footprint with breadth-first guarantees.</p>
 <h3>Essay Question 2 (7 Marks)</h3>
-<p><em><em>Q: Given h</em> = {A:8, B:4} and candidates h₁ = {A:7, B:5}, h₂ = {A:6, B:3}: judge admissibility of each, judge dominance, and state the consequences for A</em>.**</p>
-<p><strong>Model Answer:</strong> Admissibility ($h \le h^<em>$ everywhere): $h_1$ fails at $B$ ($5 &gt; 4$) → inadmissible (A</em> may return suboptimal paths using it); $h_2$ passes both ($6 \le 8$, $3 \le 4$) → admissible. Dominance needs two admissible rivals — with $h_1$ disqualified, no dominance relation exists (dominance compares the licensed, and $h_1$ holds no license). Consequence: run A* on $h_2$ (optimal, expands a superset... precisely, expands no more than any less-informed admissible rival); $h_1$ is usable only where optimality is waived.</p>
+<p><em><em>Q: Judge h1 = {A:7, B:5} and h2 = {A:6, B:3} against h</em> = {A:8, B:4} for dominance and A</em> consequences.**</p>
+<p><strong>Model Answer:</strong> h1 fails at B (5 &gt; 4): inadmissible, A* may return suboptimal paths. h2 passes both: admissible. No dominance exists (needs two licensed rivals). Run A* on h2 for guaranteed optimality with no more expansions than any weaker admissible rival.
+:::</p>
 
     </main>
 

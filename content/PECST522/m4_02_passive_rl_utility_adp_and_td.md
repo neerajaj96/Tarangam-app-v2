@@ -5,7 +5,7 @@ module: 4
 sequence: 2
 title: 'Passive RL: Direct Utility, ADP & Temporal Differences'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 8
 learningObjectives:
   - Grade fixed policies with direct averaging, ADP and TD updates
   - Define bootstrapping and name exactly which methods do it
@@ -23,53 +23,63 @@ tags:
 ---
 # Passive RL: Direct Utility, ADP & Temporal Differences
 
-**Grading a fixed policy three ways — naive averaging, model-based dynamic programming, and the model-free TD update that powers modern RL.**
+**Problem: a fixed policy is running — how good is it, without a model and without waiting forever? By the end you can run direct averaging, Adaptive Dynamic Programming (ADP), and Temporal-Difference (TD) updates by hand and state exactly which bootstrap.**
 
-<a id="the-intuition"></a>
-## 1. The Critic Who Never Coaches
+<a id="start-zero"></a>
+## 1. Start From Zero: The Critic Who Never Coaches
+
+A sports commentator grades a fixed game plan without suggesting better plays. Three commentators differ: the **naive averager** replays whole seasons and averages final scores per situation; the **model builder (ADP)** learns stadium physics (transition odds) then solves the season on paper; the **TD critic** nudges each situation's score toward the next situation's score plus points just earned — mid-game, every step.
+
+**Definitions:** all three estimate `U^pi(s)` (expected discounted return following fixed policy pi from state s) from trials `(s0, r1, s1, r2, ...)`. **Bootstrapping** means updating an estimate from another (possibly wrong) estimate. **TD error** is the surprise signal (actual one-step return minus current estimate).
 
 ::: callout-intuition Core Mental Model: The Sports Commentator
-A **passive learner** is a commentator, not a coach: it watches a fixed game plan unfold and grades *how good that plan is* — never suggesting better plays. Three commentators differ in method: the **naive averager** replays whole seasons and averages final scores per situation; the **model builder (ADP)** first learns the stadium physics (transition odds), then solves the season on paper; the **TD critic** updates its grade *mid-game*, nudging each situation's score toward the next situation's score plus the points just earned.
+Feel "grade, don't coach" here, then drop the booth; the three updates below are the technical content.
 :::
 
----
+**Tiny beginner example:** policy always moves right; from A the agent banks rewards-to-go of 10, then 6, then 8. Direct estimation averages to 8. TD instead corrects per step toward `r + gamma U(next)` — online, no episode wait.
 
-<a id="the-dimensions"></a>
-## 2. Three Estimators, One Target
+<a id="basics"></a>
+## 2. Basic Layer: Three Estimators, One Target
 
-All three estimate $U^\pi(s)$ — expected discounted return following fixed $\pi$ — from experience trials $(s_0, r_1, s_1, r_2, \dots)$:
+**Data/state:** experience trials under fixed pi. **Goal:** `U^pi` per state.
 
-* **Direct utility estimation:** for each visit to $s$, record the *rewards-to-go* ($\sum \gamma^t r$ from there on); average over visits. Model-free and dead simple — but it **ignores Bellman constraints** between states (each state's estimate learns in isolation, wasting the fact that neighbors constrain each other), so convergence is slow.
-* **Adaptive dynamic programming (ADP):** count transitions to learn $\hat{P}(s'|s,a) = N(s,a,s')/N(s,a)$, learn $\hat{R}$, then *solve* the Bellman equations (value/policy iteration on the learned model). Data-efficient, constraint-respecting — but **model-based**: solving at every step is expensive, and early garbage models give garbage utilities.
-* **Temporal-difference (TD) learning:** the sweet spot — **model-free** like direct estimation, **Bellman-respecting** like ADP. After each transition $s \xrightarrow{r} s'$:
+- **Direct utility estimation:** per visit to s, record rewards-to-go (discounted sum from there on); average over visits. Model-free and simple — but ignores Bellman constraints between neighbours (each state learns in isolation), so convergence is slow and data-hungry.
+- **ADP:** count transitions to learn the model `P-hat(s'|s,a) = N(s,a,s')/N(s,a)` (observed fraction) plus rewards, then solve Bellman equations (value/policy iteration on the learned model). Data-efficient and constraint-respecting — but model-based: solving each step is expensive and early garbage models give garbage utilities.
+- **TD learning:** the sweet spot — model-free like direct, Bellman-respecting like ADP. After each transition `s --r--> s'`:
+
 $$U(s) \leftarrow U(s) + \alpha\,[\,r + \gamma\,U(s') - U(s)\,]$$
-The bracketed **TD error** is the surprise: positive when reality beat the estimate. No model, no waiting for episode end — learn *online*, every step.
+
+Symbol by symbol: `alpha` = learning rate (step size, must decay — below); `r` = reward just received; `gamma U(s')` = discounted next estimate; minus `U(s)` = surprise (TD error `delta`); add `alpha*delta` to the old estimate. No model, no episode wait — learn online every step.
 
 ::: callout-formula Formal Core: The Three Updates Side by Side
-Direct: average full returns per state (ignores neighbors). ADP: learn $\hat{T},\hat{R}$, then iterate $U(s) \leftarrow R(s) + \gamma\sum_{s'}\hat{P}\,U(s')$ to convergence. TD(0): $U(s) \leftarrow U(s) + \alpha\,[r + \gamma U(s') − U(s)]$ — one sample, one backup, zero model. Exam shorthand: *"TD bootstraps (learns a guess from a guess); direct estimation doesn't."*
+Direct: average full returns (no bootstrap). ADP: learn model, iterate `U <- R + gamma sum P-hat U` to convergence (bootstraps via solved values). TD(0): single-sample backup above (bootstraps via U(s')). Exam shorthand: TD bootstraps (guess from guess); direct does not.
 :::
 
----
+<a id="formal-model"></a>
+## 3. Formal Layer: Bootstrapping, Bias, Step Sizes
 
-<a id="terminology"></a>
-## 3. Bootstrapping, Bias, and Step Sizes
+**Meaning, variables, trade:** bootstrapping injects **bias** early (wrong neighbours mislead) but slashes **variance** (one transition vs. whole-trajectory noise) — the bias-variance trade making TD win in practice. Only direct estimation avoids bootstrapping; ADP and TD both bootstrap (solved values and single-sample targets respectively).
 
-**Bootstrapping** = updating an estimate from *another estimate* (TD uses $U(s')$; ADP uses solved values; direct estimation alone does not bootstrap). Bootstrapping injects **bias** early (wrong neighbors mislead) but slashes **variance** (one transition vs. whole-trajectory noise) — the bias-variance trade that makes TD win in practice. The learning rate $\alpha$ must **decay** ($\sum \alpha = \infty$, $\sum \alpha^2 < \infty$, e.g. $\alpha = 1/t$) so updates settle rather than oscillate forever.
+**Step-size contract (qualified convergence):** rate `alpha` must decay with `sum alpha = infinity` (keep moving) and `sum alpha^2 < infinity` (dwindling energy), e.g. `alpha = 1/t` — the stochastic-approximation conditions. Fixed alpha jitters forever around truth without landing. **Visitation contract:** TD(0) converges to `U^pi` only if every state is visited infinitely often under pi — an unvisited east wing teaches nothing however perfect the rule.
 
 ::: callout-pitfall TD Converges to the Truth Only Under Visitation
-TD(0) converges to $U^\pi$ *if every state is visited infinitely often* under $\pi$ — a quiet assumption exams probe. A policy that never visits the east wing teaches nothing about it, however perfect the update rule. Coverage of experience, not cleverness of updates, is the binding constraint.
+Coverage of experience, not cleverness of updates, binds. Exams probe this quiet assumption: infinite visitation plus decaying alpha, or no convergence certificate.
 :::
 
----
+**One TD update by hand:** U(A) = 4.6, U(B) = 0; transition A with r = 1 lands B; alpha 0.5, gamma 0.9. Error `delta = 1 + 0.9x0 - 4.6 = -3.6` (reality undershot). Update: `U(A) <- 4.6 + 0.5(-3.6) = 2.8`. One step dragged the estimate from 4.6 past truth (~3.57) to 2.8 — overshoot that later visits with decaying alpha sand back up. That per-transition correction rhythm is TD.
 
 <a id="worked-example"></a>
-## 4. One TD Update by Hand
+## 4. Worked Example, Distinctions, Limitations
 
-Estimates: $U(A) = 4.6$, $U(B) = 0$. Experience: agent in $A$ receives $r = 1$ and lands in $B$. Parameters $\alpha = 0.5$, $\gamma = 0.9$.
+| Similar pair | Distinction |
+|---|---|
+| Direct vs. TD vs. ADP | Average returns (no bootstrap, slowest) vs. per-step bootstrap (online sweet spot) vs. learn-model-then-solve (most per-sample mileage, most compute) |
+| Bias vs. variance here | Bootstrapped neighbours mislead early (bias) but single steps are steady (low variance) |
+| Value-iteration backup vs. TD update | Full expectation over dynamics (needs model) vs. single-sample correction (model-free) |
 
-TD error: $\delta = r + \gamma U(B) - U(A) = 1 + 0.9 \times 0 - 4.6 = -3.6$ (reality undershot the rosy estimate). Update: $U(A) \leftarrow 4.6 + 0.5 \times (-3.6) = 4.6 - 1.8 = 2.8$. One transition dragged the estimate most of the way from 4.6 toward the true $\approx 3.57$ — overshooting slightly below it (2.8 < 3.57), which later visits with decaying $\alpha$ will sand back up. That single-step correction-per-transition rhythm *is* temporal-difference learning.
+**Watch out:** (1) ADP's early utilities inherit early model errors. (2) Direct estimation wastes neighbour constraints — same trials, least mileage. (3) Fixed alpha never settles; state the decay pair of sums.
 
----
+**Limitations:** all three grade only the behaviour policy (no improvement); need coverage (unvisited states unknown); linear-model solving (ADP) scales poorly; TD needs the decay schedule tuned.
 
 <a id="self-check"></a>
 ## 5. Active Recall Quizzes
@@ -80,7 +90,7 @@ TD error: $\delta = r + \gamma U(B) - U(A) = 1 + 0.9 \times 0 - 4.6 = -3.6$ (rea
 () Sampling only the final reward of each episode
 () Copying the teacher's policy verbatim
 ::: explanation
-Bootstrapping = "a guess built on a guess": TD's $U(s')$ and ADP's solved values are themselves estimates. Direct averaging waits for *actual* full returns — unbiased but high-variance and slow. The bias-for-variance trade is why TD dominates practice.
+Bootstrapping is a guess built on a guess: TD's U(s') and ADP's solved values are estimates. Direct averaging waits for actual full returns — unbiased but slow.
 :::
 
 ::: quiz Direct utility estimation converges slowly despite being simple and model-free. What structural information does it throw away?
@@ -89,7 +99,7 @@ Bootstrapping = "a guess built on a guess": TD's $U(s')$ and ADP's solved values
 () The discount factor γ
 () The action labels on transitions
 ::: explanation
-Neighbors' utilities *must* satisfy Bellman relations; direct estimation ignores them, relearning from scratch per state what the equations give for free. ADP and TD both enforce consistency — via a solved model or per-step backups — and converge far faster on the same experience.
+Neighbours must satisfy Bellman relations; direct estimation relearns per state what the equations give free. ADP and TD enforce consistency via models or per-step backups.
 :::
 
 ::: quiz Why must TD's learning rate α decay over time (e.g. α = 1/t) rather than stay fixed?
@@ -98,26 +108,25 @@ Neighbors' utilities *must* satisfy Bellman relations; direct estimation ignores
 () Decaying α makes early learning slower, which is always safer
 () α is actually required to increase, not decay
 ::: explanation
-Early: large steps escape bad initial guesses fast. Late: near-truth estimates need whispers, not shoves — $\sum\alpha=\infty$ (keep moving) with $\sum\alpha^2<\infty$ (dwindling step energy) is the classical convergence recipe. Fixed $\alpha$ jitters eternally around $U^\pi$ without landing.
+Large early steps escape bad guesses; late whispers settle near truth. Sum-alpha-infinite with sum-alpha-squared-finite is the classical landing recipe.
 :::
-
----
 
 <a id="exam-focus"></a>
-## 6. Worked University Exam Q&A
+## 6. Exam Recap and Worked Q&A
 
 ::: callout-exam KTU University Exam Focus
-**Target Areas:**
-* **3 Marks:** TD update rule, bootstrapping definition, or the three passive methods named with one line each.
-* **7 Marks:** Numerical TD update, or compare direct/ADP/TD on data efficiency and model dependence.
+3 marks: TD rule, bootstrapping definition, or three methods in one line each. 7 marks: numerical TD update or the data-efficiency comparison.
 :::
 
-### Sample 3-Mark Question
-**Q: State the TD(0) update rule and define the TD error.**
+**Recap facts examiners reward:** `U <- U + alpha[r + gamma U(s') - U]` with delta named; bootstrap membership (ADP/TD yes, direct no); bias-variance line; decay sums plus infinite-visitation qualification; 4.6-to-2.8 arithmetic.
 
-**Model Answer:** $U(s) \leftarrow U(s) + \alpha\,[r + \gamma U(s') - U(s)]$. TD error $\delta = r + \gamma U(s') - U(s)$ = actual one-step return minus current estimate — the surprise signal driving all learning.
+### Sample 3-Mark Question
+**Q: State the TD(0) rule and define TD error.**
+
+**Model Answer:** U(s) <- U(s) + alpha[r + gamma U(s') - U(s)]. Delta = r + gamma U(s') - U(s): actual one-step return minus current estimate — the surprise driving learning.
 
 ### Sample 7-Mark Question
-**Q: An agent must evaluate a fixed policy from limited trials in a large stochastic world. Compare direct utility estimation, ADP, and TD learning for this task.**
+**Q: Compare direct, ADP, TD on limited trials in a large stochastic world.**
 
-**Model Answer:** Direct: model-free, unbiased, but ignores Bellman coupling — needs the most trials. ADP: learns $\hat{T},\hat{R}$ then solves — most data-efficient per trial, but model-solving is costly and early models mislead. TD: model-free single-step backups — best practical trade (low variance, online, bootstrapped), converging under infinite visitation with decaying $\alpha$. Recommendation: TD for large stochastic experience streams.
+**Model Answer:** Direct: model-free, unbiased, ignores coupling — most trials needed. ADP: learns model then solves — most per-trial mileage but costly solving and early-model errors. TD: model-free single-step bootstraps — best practical trade (online, low variance), converging under infinite visitation with decaying alpha.
+:::

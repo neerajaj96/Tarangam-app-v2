@@ -5,7 +5,7 @@ module: 2
 sequence: 2
 title: Graph Traversals: BFS & DFS
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 8
 learningObjectives:
   - Layer unweighted shortest paths with queue-driven BFS
   - Classify directed edges with DFS timestamps and colors
@@ -25,20 +25,29 @@ tags:
 **Queues vs. stacks, shortest paths in unweighted graphs, edge classification, timestamps, and the shared O(V+E) skeleton.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** Given a graph (vertices = places, edges = links) and a start vertex, how do we visit everything reachable — and what intelligence do we gain? Two orders exist. BFS (Breadth-First Search) fans out in rings: all 1-hop neighbours, then all 2-hop ones — so it learns *nearest-first distances*. DFS (Depth-First Search) plunges down one path to its end before backtracking — so it learns *structure* (loops, orderings).
 
 ::: callout-intuition Core Mental Model: Exploring a Cave
-**BFS** explores like ripples in a pond: fully sweep everything one step away, then everything two steps away — you always know the *nearest* exit first. **DFS** explores like unrolling string down one tunnel: plunge as deep as possible, backtrack only at dead ends. Same cave, same total footsteps $\Theta(V+E)$ — but ripples find nearest things while string finds deep things (and reveals the cave's loop structure).
+**BFS** spreads like pond ripples: sweep everything one step away, then two — you always meet the *nearest* exit first. **DFS** unrolls string down one tunnel: plunge deep, backtrack only at dead ends. Same cave, same footsteps $\Theta(V+E)$ — ripples measure nearness, string exposes loops. Drop the cave now: queues, colours, and timestamps below are the exact machinery.
 :::
+
+**Tiny toy example (4 vertices).** Line $s-a-b-c$. BFS visits $s, a, b, c$ with distances $0, 1, 2, 3$. DFS from $s$ also visits all four but discovers them by plunging $s \to a \to b \to c$ with no branching — same coverage, different story told.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-### 2.1 BFS: Queue, Layers, Shortest Paths
+**Symbols:** $V$ = vertex count, $E$ = edge count; $d[v]$ = distance (BFS) or discovery time (DFS); $\pi[v]$ = predecessor; colours white (unseen), gray (on the DFS stack), black (finished).
 
-BFS from $s$ uses a **FIFO queue**, paints vertices white/gray/black, and records distance $d[v]$ (edges from $s$) plus predecessor $\pi[v]$.
+**BFS: queue, layers, shortest paths — numbered steps:**
+
+1. Enqueue start $s$ with $d[s] = 0$; mark seen.
+2. Repeatedly dequeue $u$; for each neighbour $v$ unseen, set $d[v] = d[u]+1$, $\pi[v] = u$, enqueue $v$.
+3. Vertices finish in **nondecreasing distance** — so $d[v]$ is the fewest-edges path from $s$ (unweighted graphs only).
+4. Cost: each vertex dequeued once, each edge examined twice (undirected) → time $\Theta(V+E)$, space $\Theta(V)$.
 
 ```text
 BFS layers from s (numbers = distance):
@@ -50,12 +59,7 @@ BFS layers from s (numbers = distance):
  c(2)  d(2)    e(2)
 ```
 
-* Vertices are finished in **nondecreasing distance** — so $d[v]$ is the *shortest-path* distance in edges (unweighted graphs only!).
-* Every edge is examined twice (undirected) → time $\Theta(V+E)$, space $\Theta(V)$.
-
-### 2.2 DFS: Stack/Recursion, Timestamps, Edge Types
-
-DFS stamps each vertex with discovery/finish times ($d[v]$, $f[v]$ — parenthesis structure: intervals nest or disjoint, never partially overlap) and classifies every edge in *directed* graphs:
+**DFS: stack/recursion, timestamps, edge types.** Stamp discovery/finish times ($d[v]$, $f[v]$): intervals nest or stay disjoint, never half-overlap. Classify each directed edge $u \to v$ at exploration:
 
 | Edge $u \to v$ when explored | Condition | Meaning |
 |---|---|---|
@@ -64,8 +68,7 @@ DFS stamps each vertex with discovery/finish times ($d[v]$, $f[v]$ — parenthes
 | Forward | $v$ black, $d[u]<d[v]$ | Shortcut down the same lineage |
 | Cross | $v$ black, otherwise | Jump between branches/subtrees |
 
-* Undirected graphs have **only tree + back edges** (no forward/cross — the edge is seen from both ends).
-* Same $\Theta(V+E)$ skeleton as BFS; recursion depth can hit $V$ (stack overflow on path graphs — the iterative version exists for exactly this reason).
+Undirected graphs have **only tree + back edges** (each edge is seen from both ends, killing forward/cross). Same $\Theta(V+E)$ skeleton; recursion depth can reach $V$ (iterative DFS exists for path-graph stack safety).
 
 ::: anim bfs-layers Ripple Expansion Order
 Watch nodes ignite layer by layer — s, then a and b, then c, d, e, then f and g. No node lights before every node nearer the source: nondecreasing distance, animated.
@@ -76,31 +79,49 @@ BFS = **queue**, layers, **shortest path (unweighted)**. DFS = **stack/recursion
 :::
 
 ::: callout-pitfall BFS "Shortest" Means Fewest Edges, Not Cheapest
-BFS distances count *hops*. On weighted graphs (road lengths, costs) BFS's answer can be wildly non-optimal — that job belongs to Dijkstra/UCS (Module 3). Any option claiming BFS minimizes *weights* is the planted distractor.
+BFS distances count *hops*. On weighted graphs (road lengths, costs) BFS can be wildly non-optimal — that job belongs to Dijkstra/UCS (Module 3). Any option claiming BFS minimizes *weights* is the planted distractor.
 :::
 
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — one directed graph, both traversals
 
 ::: step [Step 1: Setup] Formulating the Problem
-Directed graph: $1 \to 2,\ 1 \to 3,\ 2 \to 3,\ 3 \to 1$. Run DFS from vertex 1 (neighbors in numeric order); then run BFS from 1. Classify each edge in the DFS run and give BFS distances.
+Directed graph: $1 \to 2,\ 1 \to 3,\ 2 \to 3,\ 3 \to 1$. Run DFS from 1 (numeric neighbour order), classify every edge; then BFS from 1 with distances.
 :::
 
 ::: step [Step 2: Execution] Tracing Both Runs
-**DFS:** discover 1 ($d=1$); edge $1\to2$: 2 white → **tree**, discover 2 ($d=2$); edge $2\to3$: 3 white → **tree**, discover 3 ($d=3$); edge $3\to1$: 1 gray (ancestor) → **back** (cycle!); finish 3,2,1. Remaining edge $1\to3$: 3 black with $d[1]<d[3]$ → **forward**.
-**BFS:** queue: 1 ($d=0$) → 2,3 ($d=1$ each) → done. $d = \{1:0,\ 2:1,\ 3:1\}$.
+**DFS:** discover 1 ($d=1$); $1\to2$: 2 white → **tree**, discover 2 ($d=2$); $2\to3$: 3 white → **tree**, discover 3 ($d=3$); $3\to1$: 1 gray (ancestor) → **back** (cycle!); finish 3, 2, 1. Remaining $1\to3$: 3 black with $d[1]<d[3]$ → **forward**. **BFS:** queue 1 ($d=0$) → 2, 3 ($d=1$ each) → done: $d = \{1:0,\ 2:1,\ 3:1\}$.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-One graph, two stories: DFS exposes the $3\to1$ back edge (cycle detected) plus a forward shortcut; BFS certifies both 2 and 3 are one hop from 1. Use DFS to *understand structure* (cycles, ordering — next topic), BFS to *measure unweighted distance*.
+DFS exposes the $3\to1$ back edge (cycle) plus a forward shortcut; BFS certifies 2 and 3 are each one hop away. DFS maps *structure* (cycles, orderings — next notes); BFS measures *unweighted distance*.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Colour decides the edge type — vertex *numbers* never do. A "backward-numbered" edge to a black vertex is cross, not back.
+- BFS on weighted graphs gives hop-optimal, not cost-optimal, paths.
+- Gray = currently on the recursion stack = ancestor. Black = finished. White = unseen.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| BFS vs DFS output | Hop layers/distances vs timestamps/edge types — same cost, different intelligence |
+| Back vs cross edge | Gray ancestor (cycle proof) vs black other-branch (history) |
+| Tree vs forward edge | White target (discovery) vs black descendant (shortcut) |
+
+**Exam recap (facts an examiner rewards):** BFS queue + $\Theta(V+E)$ + unweighted-shortest; DFS colours + four directed types (undirected: two); gray target ⟺ back edge ⟺ directed cycle.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz During DFS of a directed graph, you traverse edge u → v and find v is gray (an ancestor in the current recursion stack). What is this edge, and what does it prove?
 () A cross edge; proves the graph is disconnected

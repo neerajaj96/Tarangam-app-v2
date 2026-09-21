@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,40 +281,42 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Single-Source Shortest Paths: Dijkstra</h1>
 <p><strong>Greedy settling order, relaxation, the non-negative-weight contract, a hand-settled trace, and why one negative edge voids everything.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Expanding Ink Blot</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Drop ink on your start city on a map of roads: the stain spreads along every road simultaneously at equal speed. The moment the ink <em>first</em> touches a city, the path it took is the shortest possible — no later arrival can beat first contact, because all spread moves at the same rate. <strong>Dijkstra&#39;s algorithm</strong> simulates exactly this blot with a priority queue: repeatedly <em>settle</em> the unsettled vertex with the smallest tentative distance (first contact = final answer), then <em>relax</em> its outgoing roads (offer neighbors a possibly shorter route through it).</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Given a start city and road lengths (non-negative weights), find the cheapest route to <em>every</em> city. BFS fails here: fewest <em>hops</em> is not cheapest <em>cost</em> (one highway beats three lanes). Dijkstra&#39;s fix: always finalise the currently closest-looking city — with non-negative roads, no later discovery can undercut it.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Expanding Ink Blot</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Drop ink on the start city: the stain spreads along every road at equal speed. The moment ink <em>first</em> touches a city, its path is the shortest — no later arrival beats first contact at equal spread rates. <strong>Dijkstra&#39;s algorithm</strong> (named after Edsger Dijkstra) simulates the blot with a priority queue: repeatedly <em>settle</em> the unsettled vertex with smallest tentative distance (first contact = final), then <em>relax</em> its outgoing roads (offer neighbours a shorter route through it). Drop the ink now: extract-min and relaxation below are the exact mechanism.</p>
+</div></details><p><strong>Tiny toy example (3 vertices).</strong> $s$–$a$ (4), $s$–$b$ (2), $b$–$a$ (1). Settle $s$ (0) → tentative $a=4$, $b=2$. Settle $b$ (2) → relax $a$ to $\min(4, 2+1) = 3$. Settle $a$ (3): direct edge 4 beaten by the 2-hop 3 — discovery order ($a$ first) lost to distance order ($b$ first).</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Relaxation and Settling</h3>
-<ul>
-<li>Maintain tentative distances $d[v]$ (∞ except $d[s]=0$). Repeatedly extract-min unsettled $u$ (<strong>settle</strong> it: $d[u]$ is final) and <strong>relax</strong> each edge $(u,v,w)$: if $d[u]+w &lt; d[v]$, set $d[v] = d[u]+w$ (and remember predecessor $u$).</li>
-<li>Correctness hinge: extraction order is nondecreasing in final distance — a settled vertex can never be improved later, <em>provided all weights are non-negative</em> (any alternative path to $u$ must extend an unsettled vertex with distance $\ge d[u]$, plus non-negative edges).</li>
-</ul>
-<h3>2.2 The Non-Negative Contract</h3>
-<p>One negative edge can make a <em>settled</em> vertex improvable (arrive cheaply late via the negative edge) — the extraction invariant shatters, and outputs go silently wrong (not merely slow). Negative weights demand Bellman-Ford (slower, detects negative cycles); Dijkstra simply <em>assumes them away</em>. Complexity with binary heap: $\Theta((V+E) \log V)$.</p>
-<h3>2.3 Dijkstra vs. BFS vs. Prim (the Confusion Trio)</h3>
-<ul>
-<li><strong>BFS:</strong> Dijkstra with all weights $=1$ (queue suffices; settles by hops).</li>
-<li><strong>Prim:</strong> same <em>machinery</em> (priority queue, growing frontier) but minimizes <em>attachment cost</em> (cheapest edge to tree), not <em>path distance from source</em> — identical code shape, different key, different problem.</li>
-</ul>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-six-vertices-settled-one-by-one">3. Worked example — six vertices, … →</a></p>
+<p><strong>Symbols:</strong> $d[v]$ = tentative distance (best known so far); $w$ = edge weight; &quot;settle&quot; = extract-min and declare final; &quot;relax $(u,v,w)$&quot; = if $d[u]+w &lt; d[v]$, set $d[v] = d[u]+w$ (remember predecessor $u$).</p>
+<p><strong>Relaxation and settling — numbered steps:</strong></p>
+<ol>
+<li>Set $d[s] = 0$, all others $\infty$.</li>
+<li>Repeatedly extract the unsettled vertex $u$ with smallest $d$ (<strong>settle</strong> it: $d[u]$ is final).</li>
+<li><strong>Relax</strong> every outgoing edge $(u,v,w)$.</li>
+<li>Repeat until all reachable vertices settle.</li>
+</ol>
+<p><strong>Correctness hinge.</strong> Extraction order is nondecreasing in final distance: a settled vertex can never improve later — <em>provided all weights are non-negative</em> (any alternative path to $u$ extends an unsettled vertex of distance $\ge d[u]$ plus non-negative edges).</p>
+<p><strong>The non-negative contract.</strong> One negative edge can let a <em>settled</em> vertex improve late (cheap arrival via the negative edge) — the invariant shatters and outputs go silently wrong (not slow: <em>wrong</em>). Negative weights demand Bellman-Ford (slower, detects negative cycles); Dijkstra simply <em>assumes them away</em>. Heap complexity: $\Theta((V+E) \log V)$.</p>
+<p><strong>Dijkstra vs BFS vs Prim (confusion trio):</strong> BFS = Dijkstra with all weights $1$ (queue suffices; settles by hops). Prim = same <em>machinery</em> (priority queue, growing frontier) but minimises <em>attachment cost</em> (cheapest edge to tree), not <em>path distance from source</em> — identical code shape, different key, different problem.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Dijkstra Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Loop: <strong>extract-min (settle) → relax outgoing</strong> · needs <strong>non-negative weights</strong> (else Bellman-Ford) · $\Theta((V+E)\log V)$ heap · BFS = <strong>unit-weight Dijkstra</strong> · Prim = <strong>same skeleton, edge-key instead of path-key</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Settled Means Final — Only Without Negatives</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Students trace Dijkstra on negative-weight graphs and &quot;get answers&quot; — all of them suspect. The algorithm <em>runs</em> fine (no crash); its <em>guarantee</em> evaporates. If any weight is negative, switch algorithms (Bellman-Ford), don&#39;t switch hope.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Settled Means Final — Only Without Negatives</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Students trace Dijkstra on negative-weight graphs and &quot;get answers&quot; — all suspect. The algorithm <em>runs</em> fine (no crash); its <em>guarantee</em> evaporates. Any negative weight anywhere → switch to Bellman-Ford, don&#39;t switch hope.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Graph: $1!-!2(4), 1!-!3(2), 2!-!3(1), 2!-!4(5), 3!-!4(8), 3!-!5(10), 4!-!5(2), 4!-!6(6), 5!-!6(3)$ (undirected). Run Dijkstra from vertex 1: give the settle order and final distances.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Settling One by One</div><div class="step-content"><p>$d = {1:0}$, rest ∞. Settle <strong>1</strong> (0): relax → $d[2]=4, d[3]=2$. Settle <strong>3</strong> (2): relax → $d[2] = \min(4, 2+1) = 3$ (improved via 3!), $d[4]=10$, $d[5]=12$. Settle <strong>2</strong> (3): relax → $d[4] = \min(10, 3+5) = 8$. Settle <strong>4</strong> (8): relax → $d[5] = \min(12, 8+2) = 10$, $d[6]=14$. Settle <strong>5</strong> (10): relax → $d[6] = \min(14, 10+3) = 13$. Settle <strong>6</strong> (13). Done.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Settle order <strong>1, 3, 2, 4, 5, 6</strong> with distances <strong>{0, 3, 2, 8, 10, 13}</strong> — note vertex 2 settles <em>second</em> at distance 3 via $1\to3\to2$, beating its direct edge (4): settling order is by <em>distance</em>, not by discovery, which is exactly the beginner surprise this trace exists to deliver.</p>
+<h2 id="3-worked-example-six-vertices-settled-one-by-one">3. Worked example — six vertices, settled one by one</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Undirected graph: $1!-!2(4), 1!-!3(2), 2!-!3(1), 2!-!4(5), 3!-!4(8), 3!-!5(10), 4!-!5(2), 4!-!6(6), 5!-!6(3)$. Run Dijkstra from 1: settle order and final distances.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Settling One by One</div><div class="step-content"><p>$d = {1:0}$, rest ∞. Settle <strong>1</strong> (0): $d[2]=4, d[3]=2$. Settle <strong>3</strong> (2): $d[2] = \min(4, 3) = 3$ (improved via 3!), $d[4]=10$, $d[5]=12$. Settle <strong>2</strong> (3): $d[4] = \min(10, 8) = 8$. Settle <strong>4</strong> (8): $d[5] = \min(12, 10) = 10$, $d[6]=14$. Settle <strong>5</strong> (10): $d[6] = \min(14, 13) = 13$. Settle <strong>6</strong> (13).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Settle order <strong>1, 3, 2, 4, 5, 6</strong>; distances <strong>{0, 3, 2, 8, 10, 13}</strong> — vertex 2 settles <em>second</em> at 3 via $1\to3\to2$, beating its direct edge 4. Settling follows <em>distance</em>, not discovery: the beginner surprise this trace exists to deliver.</p>
 </div></div><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Settling in Distance Order</span>
@@ -336,9 +338,40 @@
     <div class="video-observations"><strong>What to observe:</strong> Watch vertices lock in 1 → 3 → 2 → 4 → 5 → 6 with final distances stamped beneath — discovery order ignored, distance order obeyed, exactly as traced above.</div>
   </div>
 </div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-six-vertices-settled-one-by-one">← 3. Worked example — six vertices, …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Discovery $\ne$ finality: tentative values improve until settlement; only settled values are answers.</li>
+<li>&quot;Runs without crashing on negatives&quot; $\ne$ &quot;correct on negatives&quot;: silence is the danger.</li>
+<li>Dijkstra keys <em>paths from source</em>; Prim keys <em>edges to tree</em> — same skeleton, swapped key.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dijkstra vs BFS</td>
+<td>Weighted path costs (heap) vs hop counts (queue)</td>
+</tr>
+<tr>
+<td>Dijkstra vs Prim key</td>
+<td>Source→v path (shortest paths) vs edge-into-tree (MST)</td>
+</tr>
+<tr>
+<td>Relaxation vs settlement</td>
+<td>Tentative improvement vs final extraction</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> extract-min → relax loop; non-negative contract with Bellman-Ford fallback; $\Theta((V+E)\log V)$; BFS = unit-weight special case; vertex 2&#39;s 4→3 improvement as the canonical trace detail.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In the worked trace, vertex 2 is discovered first (distance 4, direct edge) but settles second (distance 3, via vertex 3). What principle does this demonstrate?</span>

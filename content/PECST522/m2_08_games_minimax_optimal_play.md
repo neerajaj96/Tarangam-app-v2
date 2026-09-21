@@ -5,7 +5,7 @@ module: 2
 sequence: 8
 title: 'Games & Minimax: Optimal Play Against an Adversary'
 difficulty: beginner
-estimatedMinutes: 4
+estimatedMinutes: 6
 learningObjectives:
   - Back up MAX and MIN values from terminal utilities
   - Name the winning move on the full 3-versus-2 trace
@@ -23,72 +23,73 @@ tags:
 ---
 # Games & Minimax: Optimal Play Against an Adversary
 
-**Zero-sum games as MAX/MIN trees, optimal decisions by backward backup, and the full 3-vs-2 trace that names the winning move.**
+**Problem: how do we choose moves when an opponent replies to hurt us? By the end you can back up minimax values by hand, name the optimal move, and state exactly what "optimal" assumes.**
 
-<a id="the-intuition"></a>
-## 1. The Intuition
+<a id="start-zero"></a>
+## 1. Start From Zero: The Pessimist's Elevator
+
+MAX rides an elevator where MIN picks the floor: at MIN levels the car drops to the lowest reachable value, at MAX levels it rises to the highest. **Minimax** prices the ride assuming a perfect adversary — optimal play is the ground-floor button (move) with the best guaranteed outcome. Expecting blunders is hope, not strategy.
+
+**Definitions:** a **zero-sum game** means one player's gain is the other's loss (utilities mirrored: +1 for MAX equals -1 for MIN). **Deterministic perfect-information** means no chance nodes and fully visible state (chess-like, not poker-like). **MAX** is the player choosing the move (by convention moves first at the root); **MIN** is the adversary. **Terminal utility** is the game-end score from MAX's viewpoint. The **minimax value** of a node is terminal utility at leaves, max of children at MAX nodes, min of children at MIN nodes.
 
 ::: callout-intuition Core Mental Model: Pessimist's Elevator
-MAX rides an elevator where MIN picks the floor: at MIN levels the car drops to the *lowest* reachable value, at MAX levels it rises to the *highest*. **Minimax** computes what the ride is worth assuming a perfect adversary — optimal play is simply the ground-floor button (move) leading to the best guaranteed outcome. Optimism (expecting MIN to blunder) is not a strategy; guarantees are.
+Feel "floors drop, roof picks" here, then drop the elevator; backed-up max/min with one fixed viewpoint is the technical content.
 :::
 
 ::: anim minimax-backup Floors Drop, Roof Picks
 MIN floors sink to their smallest leaf while the MAX roof rises to the largest floor — watch $3$ and $2$ surface, then the root take $3$.
 :::
 
----
+**Tiny beginner example:** MAX picks left (MIN replies 1 or 9, so MIN forces 1) or right (MIN replies 5 only, so 5). Guarantees: left secures 1, right secures 5 — optimal move is right despite the flashy 9 that MIN will never allow.
 
-<a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+<a id="basics"></a>
+## 2. Basic Layer: Backup Rules and Viewpoint Discipline
 
-### 2.1 Game anatomy and minimax
+**Data/state:** game tree with players, actions, terminal utilities. **Goal:** the root move toward the child whose minimax value equals the root's (best guaranteed outcome).
 
-Zero-sum deterministic perfect-information game: states, players (MAX moves first by convention), actions, terminal utilities (from MAX's viewpoint). Minimax value: terminal → utility; MAX node → $\max$ of children; MIN node → $\min$ of children. The **optimal decision** at the root is the move toward the child with minimax value equal to the root's — backed-up guarantees, not hopes.
+**Procedure (steps):** Step 1: score terminal leaves from MAX's viewpoint. Step 2: at each MIN node take the minimum of children. Step 3: at each MAX node take the maximum of children. Step 4: at the root, move toward the max-valued child.
 
-### 2.2 Price tag
-
-$O(b^m)$ time, $O(bm)$ space depth-first — same exponent as blind search, with $m$ now game length. Full-width backup to terminal ply is infeasible for chess ($b \approx 35$); depth limits plus evaluation functions (cutoff play) approximate it, and alpha-beta (M2.9) prunes it exactly.
-
-::: callout-formula KTU Formula Vault: Minimax
-Terminal $=$ utility · MAX $= \max$ children · MIN $= \min$ children · optimal move $=$ arg toward root value · $O(b^m)$ time, $O(bm)$ space.
-:::
-
-Utilities are zero-sum-mirrored: $+1$ for MAX is $-1$ for MIN — any worked tree mixing viewpoints (some leaves "good for the mover") corrupts every backup above it.
+**Viewpoint rule:** all leaves use one fixed viewpoint (MAX's utility). Mixing "good for the mover" per level corrupts every backup above (plain minimax fed mixed viewpoints computes precise nonsense; mover-relative scoring needs the negamax variant with per-level negation — beyond this note's procedure).
 
 ::: callout-pitfall Averaging Over Adversaries
-Expectimax (chance nodes) averages; minimax **minimizes**. An option backing up a MIN node with the mean of its children models a random opponent, not an adversarial one — MIN picks the floor, never the average room.
+Expectimax (chance nodes) averages over randomness; minimax minimizes over adversaries. Backing up a MIN node with the mean models a random opponent, not a hostile one — MIN picks the floor, never the average room.
 :::
 
----
+<a id="formal-model"></a>
+## 3. Formal Layer: Full Trace and Price Tag
+
+**Full 3-vs-2 trace:** root MAX over MIN A (leaves 3, 12, 8) and MIN B (leaves 2, 4, 6). MIN A = min(3,12,8) = 3 (the 12 tempts only the unwary). MIN B = min(2,4,6) = 2. Root = max(3,2) = 3. Optimal move toward A, securing 3 regardless of reply; B secures only 2. Note the winner (3) was A's smallest leaf — guarantees bank floors, never flashy leaves behind perfect defence.
+
+::: callout-formula KTU Formula Vault: Minimax
+Terminal = utility (MAX viewpoint). MAX = max of children. MIN = min of children. Optimal move = step toward root value. Time `O(b^m)` (branching b, game length m), space `O(b*m)` depth-first.
+:::
+
+**Qualifications (never drop these):** minimax is optimal **only against an optimal (perfectly adversarial) opponent in deterministic perfect-information zero-sum games with correct utilities**. Against blundering opponents it is safe but not exploitative; with wrong utilities or chance/hidden state it needs extensions (expectimax, evaluation cutoffs). Full-width backup to terminal ply is infeasible for chess (b ~ 35, m ~ 80 dwarfs atom counts) — real play uses depth limits plus evaluation functions, and alpha-beta (next topic) prunes exactly.
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Worked Example, Distinctions, Limitations
 
-::: step [Step 1: Setup] Formulating the Problem
-Root MAX with children $A$ (MIN) and $B$ (MIN). $A$'s leaves: $3, 12, 8$. $B$'s leaves: $2, 4, 6$. Compute every backup and name MAX's optimal move.
-:::
+| Similar pair | Distinction |
+|---|---|
+| Minimax vs. expectimax | Minimize over adversaries vs. average over chance |
+| Guarantee vs. hope | Best assured floor vs. best leaf assuming blunders |
+| Full backup vs. cutoff play | Exact terminal proof vs. depth-capped evaluation approximation |
 
-::: step [Step 2: Execution] Backing Up Floors Then Roof
-MIN $A = \min(3, 12, 8) = 3$ (the $12$ tempts only the unwary — MIN chooses). MIN $B = \min(2, 4, 6) = 2$. Root MAX $= \max(3, 2) = 3$. Guarantees: moving to $A$ secures $3$ no matter MIN's reply; moving to $B$ secures only $2$.
-:::
+**Watch out:** (1) Back up floors before roofs — never max over raw leaves across a MIN layer. (2) Utilities must mirror zero-sum (+1/-1), not double-count. (3) `O(b*m)` space never rescues `O(b^m)` time.
 
-::: step [Step 3: Conclusion] Final Result
-Minimax value $3$, optimal move toward $A$. Note the winner ($3$) was $A$'s *smallest* leaf — optimal play banks the guaranteed floor, and the flashy $12$ was never actually available against perfect defence.
-:::
-
----
+**Limitations:** exponential time; perfect-opponent assumption; needs exact game model and terminal utilities; no handling of chance, hiding, or multiple movers without extensions.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz Q1: Backup Drill
-MIN node with leaves $7, 1, 9$; sibling MIN is $5$; parent MAX?
-(A) $9$, MAX takes the max leaf directly
-(*B) MIN backs up $1$, so parent sees $\max(1, 5) = 5$ — floors first, roof second, never roof-over-leaves
-(C) $7$, first leaf wins
-(D) Mean $5.67$ rounded to $6$
+MIN node with leaves 7, 1, 9; sibling MIN is 5; parent MAX?
+(A) 9, MAX takes the max leaf directly
+(*B) MIN backs up 1, so parent sees max(1, 5) = 5 — floors first, roof second, never roof-over-leaves
+(C) 7, first leaf wins
+(D) Mean 5.67 rounded to 6
 ::: explanation
-Backup order is structural: MIN collapses its leaves to $1$ before MAX ever looks. MAX then compares floors ($1$ vs $5$), not leaves — skipping the MIN layer is the standard wrong-answer pattern.
+MIN collapses to 1 before MAX looks. MAX compares floors (1 vs. 5), not leaves — skipping the MIN layer is the standard error.
 :::
 
 ::: quiz Q2: Viewpoint Discipline
@@ -98,15 +99,35 @@ Leaves scored "from the mover's perspective". Status?
 (C) Only affects ties
 (D) Fixes zero-sum issues automatically
 ::: explanation
-$\max$ and $\min$ are viewpoint-locked operations. Negamax re-derives them for mover-relative scores (negating per level); plain minimax fed mixed viewpoints computes beautifully precise nonsense.
+Max and min are viewpoint-locked. Mover-relative scores need per-level negation (negamax); plain minimax on mixed scores misfires everywhere.
 :::
 
 ::: quiz Q3: Complexity Honesty
 Minimax on chess to terminal depth. Feasibility?
 (A) Routine with depth-first order
-(*B) Hopeless — $b^m$ with $b \approx 35$, $m \approx 80$ dwarfs atom counts, so real play needs depth caps, evaluation functions, and pruning (M2.9), not raw backup
-(C) $O(bm)$ space saves it
+(*B) Hopeless — b^m with b approx 35, m approx 80 dwarfs atom counts, so real play needs depth caps, evaluation functions, and pruning (M2.9), not raw backup
+(C) O(bm) space saves it
 (D) Faster with bigger branching
 ::: explanation
-Linear space cannot rescue exponential time: $35^{80}$ is not a number, it is a refusal. Cutoff + evaluation trades guarantees for moves — the applied-games bargain examiners contrast with textbook minimax.
+Linear space cannot rescue exponential time. Cutoff plus evaluation trades guarantees for moves — the applied-games bargain versus textbook backup.
+:::
+
+<a id="exam-focus"></a>
+## 6. Exam Recap and Worked Q&A
+
+::: callout-exam KTU University Exam Focus
+3 marks: MAX/MIN backup rules with the zero-sum viewpoint. 7 marks: full 3-vs-2 trace naming the move plus the feasibility qualification.
+:::
+
+**Recap facts examiners reward:** max/min definitions; fixed-viewpoint rule; 3/2/root-3 trace; `O(b^m)`/`O(b*m)`; optimal-only-against-optimal-opponent qualification; chess infeasibility with cutoff remedy.
+
+### Sample 3-Mark Question
+**Q: State minimax backup and its optimality assumption.**
+
+**Model Answer:** Leaves terminal utilities (MAX view); MIN takes min, MAX takes max; root moves toward root value. Optimal only vs. optimal adversary in deterministic perfect-information zero-sum play.
+
+### Sample 7-Mark Question
+**Q: Compute the 3-vs-2 tree and explain why the 12 never matters.**
+
+**Model Answer:** A = 3, B = 2, root = 3, move to A. The 12 sits under MIN A which minimizes — perfect defence never permits it, so guarantees ignore flashy leaves.
 :::

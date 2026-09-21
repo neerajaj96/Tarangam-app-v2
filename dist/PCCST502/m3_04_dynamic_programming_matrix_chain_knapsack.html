@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,20 +281,23 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Dynamic Programming: Matrix Chain &amp; Knapsack</h1>
 <p><strong>When greed fails, remember: optimal substructure plus overlapping subproblems, memoization vs. tabulation, matrix-chain parenthesization, and 0/1 knapsack.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Forgetful vs. Note-Taking Mathematician</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Two mathematicians compute Fibonacci numbers recursively. The <strong>forgetful</strong> one recomputes $F(10)$ dozens of times from scratch (plain divide-and-conquer on overlapping subproblems — exponential waste). The <strong>note-taking</strong> one writes each $F(k)$ on a whiteboard the first time and just <em>reads</em> it thereafter — same recursion, exponentially less work. <strong>Dynamic programming</strong> is exactly that whiteboard: solve each distinct subproblem <em>once</em>, store it, reuse it. DP applies precisely when subproblems <strong>overlap</strong> (recursion revisits them) and the problem has <strong>optimal substructure</strong> (optima built from optima).</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Greedy fails 0/1 knapsack because whole-item choices <em>interact</em> through shared capacity. Naive recursion on such problems recomputes the same subproblems exponentially often (Fibonacci $F(10)$ re-derived dozens of times). <strong>Dynamic programming (DP)</strong> fixes exactly this: solve each <em>distinct</em> subproblem <em>once</em>, store it, reuse it — a whiteboard next to the recursion.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Forgetful vs. Note-Taking Mathematician</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The <strong>forgetful</strong> mathematician recomputes $F(10)$ from scratch every time (plain recursion on overlapping subproblems — exponential waste). The <strong>note-taking</strong> one writes each $F(k)$ on a whiteboard once and <em>reads</em> it after. Same recursion, exponentially less work. DP applies precisely when subproblems <strong>overlap</strong> (recursion revisits them) and the problem has <strong>optimal substructure</strong> (optima built from optima). Drop the mathematicians now: memo tables and recurrences below are the exact machinery.</p>
+</div></details><p><strong>Tiny toy example (Fibonacci).</strong> Naive $F(5) = F(4)+F(3)$ recomputes $F(3)$ twice, $F(2)$ three times. Note-taking: compute $F(0)..F(5) = 0,1,1,2,3,5$ once each — 6 writes, zero repeats. That gap (exponential vs linear) is DP&#39;s entire value.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 DP vs. Divide-and-Conquer vs. Greedy (the Trichotomy)</h3>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-the-classic-six-matrix-chain">3. Worked example — the classic si… →</a></p>
+<p><strong>DP vs Divide-and-Conquer vs Greedy (the trichotomy):</strong></p>
 <table>
 <thead>
 <tr>
@@ -325,27 +328,56 @@
 </tbody></table>
 <ul>
 <li><strong>Memoization</strong> (top-down): recurse + cache (&quot;remember what you computed&quot;).</li>
-<li><strong>Tabulation</strong> (bottom-up): fill the table smallest-first, no recursion overhead. Same complexity, different direction.</li>
+<li><strong>Tabulation</strong> (bottom-up): fill the table smallest-first, no recursion overhead. Same complexity, opposite direction.</li>
 </ul>
-<h3>2.2 Matrix Chain Multiplication</h3>
-<p>Parenthesize $A_1 \dots A_n$ (dims $p_0 \times p_1, \dots$) to minimize scalar multiplications. Trying all parenthesizations is exponential (Catalan-counted) — but subchains repeat, so DP over intervals:</p>
-<p>$$m[i][j] = \min_{i \le k &lt; j} \big(m[i][k] + m[k+1][j] + p_{i-1},p_k,p_j\big), \quad m[i][i] = 0$$</p>
-<p>Fill by chain length $2 \to n$; split table $s[i][j]$ records the winning $k$ for reconstruction. Time $\Theta(n^3)$, space $\Theta(n^2)$.</p>
-<h3>2.3 0/1 Knapsack (DP Redemption Arc)</h3>
-<p>Capacity $W$, items $(v_i, w_i)$, take/skip each whole item: $dp[i][w] = \max(dp[i-1][w],, v_i + dp[i-1][w-w_i])$. Pseudopolynomial $\Theta(nW)$ — the same greedy-killer from topic 1, now solved exactly by remembering (compare: fractional variant never needed DP at all).</p>
+<p><strong>Matrix chain multiplication.</strong> Parenthesize $A_1 \dots A_n$ (dimensions $p_0 \times p_1, p_1 \times p_2, \dots$ — symbol-by-symbol: $p_{i-1}, p_i$ are the rows/columns of $A_i$) to minimise scalar multiplications. All parenthesizations are exponential (Catalan-counted) — but subchains repeat, so DP over intervals:
+$$m[i][j] = \min_{i \le k &lt; j} \big(m[i][k] + m[k+1][j] + p_{i-1},p_k,p_j\big), \quad m[i][i] = 0$$
+Read: cheapest cost for chain $i..j$ = best split $k$ of (left optimal + right optimal + multiply-the-two-results cost $p_{i-1}p_kp_j$). Fill by chain length $2 \to n$; split table $s[i][j]$ records the winning $k$ for reconstruction. Time $\Theta(n^3)$, space $\Theta(n^2)$.</p>
+<p><strong>0/1 knapsack (DP redemption arc).</strong> Capacity $W$, items $(v_i, w_i)$ ($v$ = value, $w$ = weight), take/skip each whole item: $dp[i][w] = \max(dp[i-1][w],, v_i + dp[i-1][w-w_i])$ — best using first $i$ items at capacity $w$ = max(skip $i$, take $i$ + best of rest). Pseudopolynomial $\Theta(nW)$ — the Module-3 greedy-killer, now solved exactly. (Fractional variant never needed DP.)</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: DP Signatures</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Needs: <strong>overlapping subproblems + optimal substructure</strong> · memoize (top-down) or tabulate (bottom-up) · matrix chain: <strong>$m[i][j] = \min_k$ split + $p_{i-1}p_kp_j$</strong>, $\Theta(n^3)$ · knapsack: <strong>take-or-skip max</strong>, $\Theta(nW)$ · greedy fails where choices <strong>interact</strong> (0/1), DP remembers the interaction.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Overlapping Is the Price of Admission</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Optimal substructure <em>alone</em> does not justify DP — merge sort has it and needs no table (disjoint subproblems never repeat). If recursion never revisits a subproblem, memoization caches write-only entries: correct but pointless overhead. Diagnose overlap <em>first</em>, then reach for the whiteboard.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Chain $A_1(30\times35), A_2(35\times15), A_3(15\times5), A_4(5\times10), A_5(10\times20), A_6(20\times25)$ — the classic CLRS instance. Compute the optimal cost and parenthesization.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Filling by Chain Length</div><div class="step-content"><p>Length-2 winners: $m[1][2] = 30\cdot35\cdot15 = 15{,}750$; $m[2][3] = 35\cdot15\cdot5 = 2{,}625$; $m[3][4] = 15\cdot5\cdot10 = 750$; $m[4][5] = 5\cdot10\cdot20 = 1{,}000$; $m[5][6] = 10\cdot20\cdot25 = 5{,}000$. Length-3+: each $m[i][j]$ tries every split $k$ (cost left + cost right + $p_{i-1}p_kp_j$), keeping the min and its $k$ in $s[i][j]$. Key late decisions: $m[1][6]$ tries $k=1..5$ with split costs $15{,}750+(\dots)$, and the winner is $k=3$: $m[1][3] + m[4][6] + 30\cdot5\cdot25 = 7{,}875 + 3{,}500 + 3{,}750 = \mathbf{15{,}125}$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Optimal <strong>15,125</strong> scalar multiplications with parenthesization $((A_1(A_2A_3))((A_4A_5)A_6))$ — versus $(((\dots)))$ naive left-to-right at $30\cdot35\cdot15 + \dots$ far higher. The $s$-table doesn&#39;t just give the number; it <em>reconstructs the bracketing</em> — DP returns decisions, not just values.</p>
+<h2 id="3-worked-example-the-classic-six-matrix-chain">3. Worked example — the classic six-matrix chain</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Chain $A_1(30\times35), A_2(35\times15), A_3(15\times5), A_4(5\times10), A_5(10\times20), A_6(20\times25)$ (the classic CLRS — Cormen, Leiserson, Rivest, Stein — instance). Compute optimal cost and parenthesization.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Filling by Chain Length</div><div class="step-content"><p>Length-2: $m[1][2] = 30\cdot35\cdot15 = 15{,}750$; $m[2][3] = 2{,}625$; $m[3][4] = 750$; $m[4][5] = 1{,}000$; $m[5][6] = 5{,}000$. Length-3+: each $m[i][j]$ tries every split $k$ (left + right + $p_{i-1}p_kp_j$), keeping the min and its $k$ in $s[i][j]$. Decisive late split: $m[1][6]$ wins at $k=3$: $m[1][3] + m[4][6] + 30\cdot5\cdot25 = 7{,}875 + 3{,}500 + 3{,}750 = \mathbf{15{,}125}$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Optimal <strong>15,125</strong> multiplications, parenthesization $((A_1(A_2A_3))((A_4A_5)A_6))$ — far below naive left-to-right. The $s$-table returns <em>decisions</em>, not just values: it reconstructs the bracketing.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-the-classic-six-matrix-chain">← 3. Worked example — the classic si…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Fill by <em>increasing chain length</em>: $m[i][j]$ reads strictly shorter intervals — any other order reads uninitialised neighbours and corrupts silently.</li>
+<li>$\Theta(nW)$ is pseudopolynomial (depends on $W$&#39;s <em>value</em>, not its bit-length) — still exponential in input <em>size</em> for huge $W$.</li>
+<li>Memoization and tabulation give the same complexity; &quot;which direction&quot; is implementation, not theory.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Overlap vs substructure</td>
+<td>Revisited subproblems (DP&#39;s trigger) vs optima-from-optima (shared with D&amp;C/greedy)</td>
+</tr>
+<tr>
+<td>Memoize vs tabulate</td>
+<td>Top-down cache vs bottom-up order — same bounds, opposite direction</td>
+</tr>
+<tr>
+<td>0/1 vs fractional knapsack</td>
+<td>Coupled whole choices (DP $\Theta(nW)$) vs decoupled slices (greedy)</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> both DP preconditions; the $m[i][j]$ recurrence read symbol-by-symbol; length-order filling; knapsack take-or-skip with $\Theta(nW)$; 15,125 with its bracketing.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Merge sort has optimal substructure but needs no DP table, while matrix chain does. What distinguishes them?</span>

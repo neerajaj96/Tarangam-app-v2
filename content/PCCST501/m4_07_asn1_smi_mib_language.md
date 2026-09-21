@@ -5,11 +5,12 @@ module: 4
 sequence: 7
 title: ASN.1, SMI & MIB: SNMP's Language
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 9
 learningObjectives:
   - Read ASN.1 types with tag-length-value BER stamps
   - Walk OID arcs from root to scalar instances
   - Justify SMI subtraction as compatibility strategy
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - ASN.1 encoding
   - object identifiers
@@ -26,10 +27,16 @@ tags:
 **The grammar behind management — ASN.1 types, BER tag-length-value bytes you will encode by hand, and the OID tree that names every managed object.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+SNMP managers and agents (previous note) run on different machines, vendors, and software stacks — yet every message must parse identically on all of them. A shared **language** (what types exist), a shared **byte stamping** (how values hit the wire), and a shared **catalogue** (which number names which object) make that possible.
+
+The problem before the solution: define types once (ASN.1 — Abstract Syntax Notation One), stamp every value as self-delimiting Tag–Length–Value bytes (BER — Basic Encoding Rules), and name every managed object by its path down a global tree (OID — Object Identifier) — with a deliberately *small* type subset (SMI) so every vendor's parser stays compatible.
 
 ::: callout-intuition Core Mental Model: Customs Forms for Machines
 SNMP managers and agents (M4.1) speak different native tongues, so every message crosses the border on a standard **customs form**: **ASN.1** defines the form's language (INTEGER, OCTET STRING, SEQUENCE…), **BER** stamps the bytes (Tag–Length–Value, machine-readable in any country), and **SMI/MIB** is the catalogue of declarable goods (each object an OID leaf like $1.3.6.1.2.1$). Forms, stamps, catalogue — three jobs, three standards, one interoperable conversation.
+
+Dropping the border now: TLV (Tag–Length–Value) = type byte + length byte(s) + raw value; OID arcs = the dotted path down the tree; SMI = the SNMP-safe ASN.1 subset.
 :::
 
 ```text
@@ -39,16 +46,26 @@ INTEGER 5      =>   02    01       05
 SEQ{INT 5}     =>   30    03       02 01 05
 ```
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **ASN.1 (Abstract Syntax Notation One)** | The type language: INTEGER, OCTET STRING (byte string), OBJECT IDENTIFIER, NULL, constructed SEQUENCE, and more. |
+| **BER (Basic Encoding Rules)** | The wire stamping: every value as Tag–Length–Value bytes (1-B tag, short-form length $< 128$ else long-form, then raw value bytes; nested values recurse). |
+| **TLV (Tag–Length–Value)** | One stamped unit: `02 01 05` = INTEGER tag, length 1, value 5. |
+| **OID (Object Identifier)** | The dotted-arc address of a managed object (`1.3.6.1.2.1…` = iso.org.dod.internet.mgmt.mib…); trailing `.0` = scalar instance, table columns append row indices. |
+| **SMI (Structure of Management Information)** | SNMP's ASN.1 subset — exotic types banned so every vendor parser stays small and compatible. |
+| **MIB (Management Information Base) module** | Declarations of objects under the OID tree, written in SMI. |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Types, Encodings, OID Reading
 
-### 2.1 Types and encodings
+### 3.1 Types and Encodings
 
 ASN.1 primitive types: INTEGER ($02$), OCTET STRING ($04$), OBJECT IDENTIFIER ($06$), NULL ($05$), plus constructed SEQUENCE ($30$). BER TLV: $1$-B tag, length (short form $< 128$, long form otherwise), then raw value bytes — nested values recurse (SEQUENCE wraps complete inner TLVs; its length covers them all). SMI restricts ASN.1 to SNMP's needs (no exotic types); MIB modules declare objects under the OID tree (`iso(1).org(3).dod(6).internet(1).mgmt(2).mib(1)`).
 
-### 2.2 Reading OIDs
+### 3.2 Reading OIDs, Arc by Arc
 
 $1.3.6.1.2.1.1.1.0$ parses arc-by-arc: iso → org → dod → internet → mgmt → mib → system → sysDescr → instance $0$. Trailing $.0$ = scalar instance; table columns append indices instead.
 
@@ -62,10 +79,14 @@ BER's lengths make parsers resynchronize after corruption — self-delimiting by
 SEQUENCE length covers the *entire inner encoding* (tags included), not just leaf values. SEQ$\{$INT $5\}$ is $30\ 03\ \dots$ (inner $3$ bytes), never $30\ 01$ — counting values while forgetting nested tags underprices every constructed type.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+NULL value: tag `05`, length `00` → `05 00` (2 bytes, no value at all). Wrap it: SEQ{NULL} → inner 2 bytes → `30 02 05 00`. Length `02` covers the whole inner TLV — the nesting discipline in miniature.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
 BER-encode (hex bytes): (a) INTEGER $5$; (b) OCTET STRING "HI" ($H = 0$x$48$, $I = 0$x$49$); (c) SEQUENCE containing exactly (a). Count total bytes of (c).
@@ -79,10 +100,26 @@ BER-encode (hex bytes): (a) INTEGER $5$; (b) OCTET STRING "HI" ($H = 0$x$48$, $I
 `02 01 05` ($3$ B), `04 02 48 49` ($4$ B), `30 03 02 01 05` ($5$ B). Lengths telescope correctly ($03$ wraps $3$ inner bytes) — the nesting discipline that makes BER parseable without a schema on the wire.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| ASN.1 vs. BER vs. SMI | Type language vs. wire stamping vs. SNMP-safe subset. |
+| Length scope | Covers the whole inner encoding (tags included), never bare values. |
+| Scalar vs. table OID tails | `.0` instance vs. row-index suffix. |
+| TLV vs. C struct offsets | Self-delimiting (resyncs) vs. fixed offsets (fragile). |
+
+**Watch out:** (1) SEQUENCE length of values-only — include nested tags. (2) Truncating INTEGER 300 to one byte (`2C` = 44, wrong value) — length honesty plus sign awareness. (3) Calling SMI "more types" — it is subtraction for compatibility.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+ASN.1 types (INT `02`, STR `04`, SEQ `30`, OID `06`, NULL `05`) stamped as BER TLV (length covers inner whole; short form $<128$). SMI = compatible subset; MIB = OID-tree declarations (`iso.org.dod.internet.mgmt.mib…`); scalars end `.0`, tables index. Lengths self-delimit → resync after corruption.
+:::
+
+**Active-recall checklist:** Encode INTEGER 5 and SEQ{INT 5} from memory. Parse `1.3.6.1.2.1.1.3.0` arc by arc. Why does SNMP ban full ASN.1? What does `30 03` promise a decoder?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Q1: Encoding Drill
 BER for INTEGER $300$ ($0$x$01$ $0$x$2$C)?

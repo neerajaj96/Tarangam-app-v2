@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,48 +281,87 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Topological Sorting: Linearizing a DAG</h1>
 <p><strong>Prerequisites before courses — Kahn&#39;s queue trace on six vertices, DFS-finish-time method, and why one back edge vetoes everything.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Getting Dressed</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Socks before shoes, shirt before tie — a DAG of prerequisites linearizes into <em>some</em> valid morning order (never unique). <strong>Kahn&#39;s algorithm</strong> dresses greedily: repeatedly wear anything with no remaining prerequisites (indegree $0$), deleting it from everyone&#39;s lists. Leftover clothes with circular demands (a cycle) can never be worn — the queue empties with items remaining, the cycle certificate.</p>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Courses have prerequisites (&quot;take Maths before Algorithms&quot;); dressing has order (socks before shoes). Given such dependency arrows, list everything in <em>some</em> order where every prerequisite precedes its dependent — or report that no such order exists (a dependency cycle). That list is a <strong>topological order</strong>, and it exists <strong>iff</strong> the graph is a DAG (Directed Acyclic Graph: directed, no cycles).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Getting Dressed</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Socks before shoes, shirt before tie — a DAG of prerequisites linearizes into <em>some</em> valid morning order (never unique). <strong>Kahn&#39;s algorithm</strong> (named after A. B. Kahn) dresses greedily: repeatedly wear anything with no remaining prerequisites (indegree $0$ — count of incoming edges), deleting it from everyone&#39;s lists. Leftover clothes with circular demands (a cycle) can never be worn — the queue empties with items remaining: the cycle certificate. Drop the wardrobe now: indegrees and queues below are the exact mechanism.</p>
 </div></details><p>Sibling of BFS/DFS traversals (M2.2) and Kosaraju&#39;s finish-time machinery (M2.3) — same graph toolkit, new question: not &quot;reachable?&quot; but &quot;in what order?&quot;</p>
+<p><strong>Tiny toy example (3 vertices).</strong> Edges $a \to b$, $a \to c$ (no edge between $b$, $c$). Valid orders: $[a, b, c]$ and $[a, c, b]$ — $a$ first forced, the pair free. Non-uniqueness is normal, not suspicious.</p>
 <hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Kahn&#39;s algorithm and guarantees</h3>
-<p>Compute indegrees; enqueue all $0$s; pop, append to order, decrement successors, enqueue new $0$s. Time $O(V + E)$ — every vertex and edge processed once. Valid order exists <strong>iff</strong> the graph is acyclic; leftover vertices prove a cycle (equivalently: DFS finds a back edge). Orders are rarely unique — any $0$-indegree pick is legal, so &quot;the&quot; topological order is a misnomer examiners plant deliberately.</p>
-<h3>2.2 DFS variant</h3>
-<p>Order vertices by <em>decreasing finish time</em> — one DFS, one sort, same $O(V + E)$. Use it when DFS already runs (Kosaraju&#39;s first pass is secretly half a topo-sorter).</p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-kahn-on-six-vertices-fully-traced">3. Worked example — Kahn on six ve… →</a></p>
+<p><strong>Symbols:</strong> indegree = number of incoming edges; DAG = directed graph with no directed cycles; $|order|$ = emitted vertex count.</p>
+<p><strong>Kahn&#39;s algorithm — numbered steps:</strong></p>
+<ol>
+<li>Compute every vertex&#39;s indegree.</li>
+<li>Enqueue all indegree-$0$ vertices.</li>
+<li>Repeatedly: pop $u$, append to order; for each successor $v$, decrement indegree; enqueue $v$ if it hits $0$.</li>
+<li>If $|order| = V$ (vertex count): valid order. Else: <strong>cycle</strong> — leftovers prove impossibility.</li>
+</ol>
+<p>Time $O(V + E)$ — every vertex and edge processed once. Orders are rarely unique: any $0$-indegree pick is legal, so &quot;the&quot; topological order is a deliberate examiner trap.</p>
+<p><strong>DFS variant.</strong> Order vertices by <em>decreasing finish time</em> — one DFS plus one sort, same $O(V + E)$. Free when DFS already ran (Kosaraju&#39;s first pass is secretly half a topo-sorter).</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Topo Sort</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>DAG only · Kahn: $0$-indegree queue, $O(V+E)$ · leftovers ⟺ cycle · DFS finish-time descending works too · orders seldom unique.</p>
-</div></details><p>Topological order is <em>not</em> sorted order — values are irrelevant, only edge directions constrain. Sorting vertex labels increasingly is the classic non-answer.</p>
+</div></details><p>Topological order is <em>not</em> sorted order — vertex values are irrelevant, only edge directions constrain. Sorting labels increasingly is the classic non-answer.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Cycle Denial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Running Kahn on a cyclic graph and presenting the partial order as &quot;the answer&quot; ignores the leftover vertices. Non-empty remainder <em>is</em> the verdict (no linearization exists) — always count the output: $|order| &lt; V$ means cycle, full stop.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>DAG edges: $5 \to 2$, $5 \to 0$, $4 \to 0$, $4 \to 1$, $2 \to 3$, $3 \to 1$. Run Kahn&#39;s algorithm (seed queue $[4, 5]$) and verify the order against every edge.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Draining the Queue</div><div class="step-content"><p>Indegrees: $0{:}2$, $1{:}2$, $2{:}1$, $3{:}1$, $4{:}0$, $5{:}0$. Pop $4$ → $0{:}1$, $1{:}1$; queue $[5]$. Pop $5$ → $2{:}0$ (enqueue), $0{:}0$ (enqueue); queue $[2, 0]$. Pop $2$ → $3{:}0$ (enqueue); queue $[0, 3]$. Pop $0$; queue $[3]$. Pop $3$ → $1{:}0$ (enqueue); queue $[1]$. Pop $1$. Order: $[4, 5, 2, 0, 3, 1]$ — all $6$ emitted, acyclic confirmed.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$[4, 5, 2, 0, 3, 1]$: check $5 \to 2$ ✓, $5 \to 0$ ✓, $4 \to 0$ ✓, $4 \to 1$ ✓, $2 \to 3$ ✓, $3 \to 1$ ✓ — every prerequisite precedes its dependent. Seeding $[5, 4]$ instead would fork a different valid order ($[5, 4, 2, 0, 3, 1]$) — non-uniqueness demonstrated, not feared.</p>
+<h2 id="3-worked-example-kahn-on-six-vertices-fully-traced">3. Worked example — Kahn on six vertices, fully traced</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>DAG edges: $5 \to 2$, $5 \to 0$, $4 \to 0$, $4 \to 1$, $2 \to 3$, $3 \to 1$. Run Kahn (seed queue $[4, 5]$); verify the order against every edge.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Draining the Queue</div><div class="step-content"><p>Indegrees: $0{:}2$, $1{:}2$, $2{:}1$, $3{:}1$, $4{:}0$, $5{:}0$. Pop $4$ → $0{:}1$, $1{:}1$; queue $[5]$. Pop $5$ → $2{:}0$ (enqueue), $0{:}0$ (enqueue); queue $[2, 0]$. Pop $2$ → $3{:}0$ (enqueue); queue $[0, 3]$. Pop $0$; queue $[3]$. Pop $3$ → $1{:}0$ (enqueue); queue $[1]$. Pop $1$. Order $[4, 5, 2, 0, 3, 1]$ — all $6$ emitted, acyclic confirmed.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$[4, 5, 2, 0, 3, 1]$: $5 \to 2$ ✓, $5 \to 0$ ✓, $4 \to 0$ ✓, $4 \to 1$ ✓, $2 \to 3$ ✓, $3 \to 1$ ✓ — every prerequisite precedes its dependent. Seeding $[5, 4]$ forks $[5, 4, 2, 0, 3, 1]$ instead — non-uniqueness demonstrated, not feared.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-kahn-on-six-vertices-fully-traced">← 3. Worked example — Kahn on six ve…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>&quot;Looks different from the model answer&quot; is not &quot;wrong&quot;: verify edge-by-edge, never by feel.</li>
+<li>Partial output on a cyclic graph is a <em>verdict</em> (impossible), never an answer to ship.</li>
+<li>One back edge in DFS vetoes everything: acyclic ⟺ no back edges ⟺ Kahn emits all $V$.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Topological vs sorted order</td>
+<td>Edge-direction-respecting vs label-increasing — unrelated</td>
+</tr>
+<tr>
+<td>Partial vs complete Kahn output</td>
+<td>Cycle certificate ($&lt; V$) vs valid linearization ($= V$)</td>
+</tr>
+<tr>
+<td>Kahn vs DFS-finish method</td>
+<td>Queue discipline vs decreasing finish times — same $O(V+E)$</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> DAG-only precondition; Kahn&#39;s four steps with $O(V+E)$; leftover ⟺ cycle; decreasing-finish alternative; non-uniqueness is expected.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Validity Drill</span>
+    <span class="quiz-category">Validity drill: proposed order $[5, 4, 0, 2, 3, 1]$ for the worked DAG. Verdict?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Proposed order $[5, 4, 0, 2, 3, 1]$ for the worked DAG. Verdict?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Invalid — $0$ appears before $2$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Valid — all six edges check out ($5 \to 2$ ✓, $5 \to 0$ ✓, $4 \to 0$ ✓, $4 \to 1$ ✓, $2 \to 3$ ✓ with $2$ at index $3$ before $3$ at index $4$, $3 \to 1$ ✓); $0$-before-$2$ is unconstrained, so it is legal</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Valid — all six edges check out ($5 \to 2$, $5 \to 0$, $4 \to 0$, $4 \to 1$, $2 \to 3$ with $2$ before $3$, $3 \to 1$); $0$-before-$2$ is unconstrained, so it is legal</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Invalid — $4$ must come last</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Valid only for cyclic graphs</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -341,11 +380,10 @@
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Cycle Certificate</span>
+    <span class="quiz-category">Cycle certificate: Kahn emits $4$ of $7$ vertices, queue empty. Meaning?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Kahn emits $4$ of $7$ vertices, queue empty. Meaning?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Rerun with a bigger queue</span></button>
 <button class="quiz-option-btn" data-correct="true"><span>The remaining $3$ contain a directed cycle — every leftover vertex has indegree $\ge 1$ from within the leftovers, so no $0$ can ever appear; linearization is impossible, and the leftovers localize the cycle</span></button>
@@ -367,11 +405,10 @@
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Method Choice</span>
+    <span class="quiz-category">Method choice: DFS already ran for SCC (M2.3) on a DAG. Cheapest topo order?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>DFS already ran for SCC (M2.3) on a DAG. Cheapest topo order?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Rerun Kahn from scratch</span></button>
 <button class="quiz-option-btn" data-correct="true"><span>Sort by decreasing finish time — the DFS data already encodes a valid linearization for free; recomputing indegrees redoes finished work, and Kosaraju&#39;s pass-one order is exactly this list</span></button>

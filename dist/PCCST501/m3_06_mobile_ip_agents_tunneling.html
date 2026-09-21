@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,23 +297,28 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Mobile IP: Keeping Your Address While Roaming</h1>
 <p><strong>Home agents, foreign agents, care-of addresses — discovery, registration, tunneling, and the triangle-routing tax with its route-optimized refund.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Your phone keeps its IP address identity (connections, logins, sessions bound to it) but physically roams across networks whose addresses belong elsewhere. Routing by the permanent address delivers to the <em>home</em> network — where you no longer are. Changing address on every move breaks every open connection instead.</p>
+<p>The problem before the solution: keep one permanent <strong>identity</strong> while the physical <strong>location</strong> keeps changing. Mobile IP splits the two: the home address names you forever; a temporary care-of address says where you are now; agents at both ends forward between them.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Mail Forwarding on the Move</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Your <strong>home address</strong> (home IP) never changes, but you travel. The <strong>home agent</strong> (family member at home) collects your letters; the <strong>foreign agent</strong> (hotel concierge) receives the forwarded bundle (tunnel) and slips it under your door (<strong>care-of address</strong>). Discovery finds the concierge, registration files the forwarding order, tunneling wraps each letter in a fresh envelope (IP-in-IP) — three legs where one would do, the price of a permanent address.</p>
+<p>Dropping the mail now: home agent = router at your home network; foreign agent = router at the visited network; CoA (Care-of Address) = your temporary location address; tunnel = IP-in-IP encapsulation (+20 B outer header).</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Three Legs by Default, One After Optimization</span>
@@ -334,28 +343,105 @@
     <p class="video-caption"><strong>Key Insight:</strong> Three Legs by Default, One After Optimization</p>
     <div class="video-observations"><strong>What to observe:</strong> Correspondent to home agent to foreign agent to mobile node — then binding updates shortcut the triangle.</div>
   </div>
-</div><hr>
+</div><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-three-phases-then-the-triangle-tax">3. Purpose — Three Phases, Then th… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Home address</strong></td>
+<td>The mobile node&#39;s permanent IP — identity, DNS (Domain Name System)-visible, never changes.</td>
+</tr>
+<tr>
+<td><strong>Home agent</strong></td>
+<td>A router on the home network that intercepts packets for the away node and tunnels them onward.</td>
+</tr>
+<tr>
+<td><strong>Foreign agent</strong></td>
+<td>A router on the visited network that receives tunnels and delivers locally.</td>
+</tr>
+<tr>
+<td><strong>CoA (Care-of Address)</strong></td>
+<td>The temporary, topologically correct address: the foreign agent&#39;s address (or a collocated address — the node&#39;s own temporary IP).</td>
+</tr>
+<tr>
+<td><strong>Tunneling (IP-in-IP encapsulation)</strong></td>
+<td>Wrapping the original datagram in a fresh outer IP header (+20 B) addressed to the tunnel endpoint.</td>
+</tr>
+<tr>
+<td><strong>Triangle routing</strong></td>
+<td>Default 3-leg path: correspondent → home agent → foreign agent → node.</td>
+</tr>
+<tr>
+<td><strong>Route optimization</strong></td>
+<td>Correspondent caches the binding (home→care-of) and tunnels directly — 1 leg.</td>
+</tr>
+<tr>
+<td><strong>Correspondent</strong></td>
+<td>Any host communicating with the mobile node.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The three phases</h3>
-<p><strong>Discovery:</strong> agents broadcast advertisements; the node solicits if impatient; movement detection compares network prefixes. <strong>Registration:</strong> node sends request (home address + care-of address + lifetime) via foreign agent to home agent; reply grants/denies — re-register before expiry (lifetimes, typically minutes–hours). <strong>Tunneling:</strong> home agent intercepts (gratuitous ARP/proxy), encapsulates (IP-in-IP: +20 B outer header, or minimal/generic-routing variants), foreign agent decapsulates and delivers; reverse path usually goes direct (no tunnel needed upstream).</p>
-<h3>2.2 Triangle tax and refund</h3>
+<h2 id="3-purpose-three-phases-then-the-triangle-tax">3. Purpose — Three Phases, Then the Triangle Tax</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Operation Flow: The Three Phases, Step by Step</h3>
+<ol>
+<li><strong>Discovery:</strong> agents broadcast advertisements; the node solicits if impatient; movement detection compares network prefixes.</li>
+<li><strong>Registration:</strong> node sends request (home address + care-of address + lifetime) via foreign agent to home agent; reply grants/denies — re-register before expiry (lifetimes, typically minutes–hours).</li>
+<li><strong>Tunneling:</strong> home agent intercepts (gratuitous ARP — Address Resolution Protocol — /proxy), encapsulates (IP-in-IP: +20 B outer header, or minimal/generic-routing variants), foreign agent decapsulates and delivers; reverse path usually goes direct (no tunnel needed upstream).</li>
+</ol>
+<h3>3.2 Triangle Tax and Refund</h3>
 <p>Default path correspondent → home → foreign → node ($3$ legs even when neighbours roam together). <strong>Route optimization:</strong> correspondent caches bindings (home→care-of), tunnels directly ($1$ leg) — at the cost of binding-update signalling and correspondent-side mobility support.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Mobile IP</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Discover (adverts) → register (request/reply + lifetime) → tunnel (IP-in-IP, $+20$ B) · CoA $=$ foreign-agent or collocated · triangle $3$ legs, optimized $1$ · reverse direct.</p>
 </div></details><p>Collocated care-of addresses (node&#39;s own temporary IP, no foreign agent) trade concierge convenience for registration complexity — same phases, fewer middlemen.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Home Address vs CoA</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The <strong>home address</strong> identifies (permanent, DNS-visible); the <strong>care-of address</strong> locates (temporary, topologically correct). An option routing by home address past the home agent, or exposing the CoA to applications, breaks one half of the split — identity stays home, location travels.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-three-phases-then-the-triangle-tax">← 3. Purpose — Three Phases, Then th…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Home agent A, foreign agent F, node at CoA C, 100-B payload. Default: sender → A (120 B with inner header); A wraps outer 20 B → 140 B to F; F strips, delivers 120 B to the node. Three legs, 20 extra bytes on the tunnel hop. Optimized: sender wraps directly to F — same 140 B, one leg.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Mobile node with home address $H$ roams to a foreign net (care-of $C$, foreign agent $F$, home agent $A$). Correspondent $Y$ sends a $1000$-B payload. Trace default delivery with on-wire sizes, then count legs after route optimization.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Legs and Envelopes</div><div class="step-content"><p>Discovery done, registered (lifetime granted). Default: (1) $Y \to A$ carries inner datagram $1000 + 20 = 1020$ B addressed to $H$. (2) $A$ intercepts, encapsulates IP-in-IP: outer $20$ B to $F$&#39;s address → $1040$ B on wire (overhead $40/1040 \approx 3.85%$). (3) $F$ strips outer, delivers $1020$ B to the node at $C$. Legs: $3$. Optimized: $Y$ caches binding $H \to C$, tunnels directly to $F$ — $1$ leg, same $1040$ B (encapsulation cost stays; only distance shrinks).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Default $3$ legs at $1040$ B on the tunnel hop ($3.85%$ overhead); optimized $1$ leg, identical bytes. Tax quantified two ways: distance (legs) refundable via bindings, bytes (encapsulation) permanent — know which refund buys what.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Home address vs. CoA</td>
+<td>Permanent identity vs. temporary location — applications see the first, tunnels use the second.</td>
+</tr>
+<tr>
+<td>Triangle vs. optimized</td>
+<td>3 legs via home vs. 1 direct tunnel after binding update.</td>
+</tr>
+<tr>
+<td>Foreign-agent vs. collocated CoA</td>
+<td>Tunnel ends at visited router vs. at the node itself.</td>
+</tr>
+<tr>
+<td>Registration vs. discovery</td>
+<td>Filing the forwarding lease vs. finding the agent.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Routing past the home agent by home address — interception <em>is</em> the mechanism. (2) Expecting optimization to shrink bytes — it shrinks legs; the +20 B stays. (3) Letting the lifetime expire — re-register inside it or traffic blackholes.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Phases: discover (adverts) → register (request/reply + lifetime, renew early) → tunnel (IP-in-IP +20 B, reverse direct). Identity (home address) vs. location (CoA). Default triangle 3 legs; route optimization caches bindings → 1 leg, same bytes. Collocated CoA drops the foreign agent.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What does each phase produce? Why three legs by default? What does a binding update buy — legs or bytes? When does traffic blackhole?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Registration Arithmetic</span>
@@ -543,7 +629,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m3_06_mobile_ip_agents_tunneling";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

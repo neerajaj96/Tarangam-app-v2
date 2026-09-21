@@ -5,11 +5,12 @@ module: 1
 sequence: 99
 title: 'Module 1 Practice Lab: Application-Layer Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Trace full web fetches across DNS, TCP, HTTP and sockets
   - Contrast FTP per-file channels against persistent HTTP reuse
   - Decide client-server against peer-to-peer by workload shape
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - application-layer scenarios
   - connection economy
@@ -32,15 +33,17 @@ tags:
 <a id="the-intuition"></a>
 ## 1. Step-by-Step Scenario Analysis
 
+Read each scenario as a chain: name every mechanism (DNS — Domain Name System; TCP — Transmission Control Protocol; HTTP — HyperText Transfer Protocol; FTP — File Transfer Protocol; P2P — peer-to-peer), in order, with the reason each link is needed. If you cannot justify a step aloud, re-read its home note first — this lab assumes the vocabulary of M1.1–M1.8 throughout.
+
 ### Scenario 1: The Full Web Fetch (Everything at Once)
 
 You type `http://example.com/page.html` (one embedded image) into a browser on dorm Wi-Fi and press Enter. Name every M1 mechanism engaged, in order:
 
-1. **DNS** (application, UDP port 53): resolve `example.com` → IP (recursive query outward, cached answer back).
+1. **DNS** (application, UDP — User Datagram Protocol — port 53): resolve `example.com` → IP (recursive query outward, cached answer back).
 2. **TCP handshake** to port 80 (transport): SYN → SYNACK → ACK — reliable channel before a single HTTP byte.
 3. **HTTP GET** (application, persistent): request line + headers over the TCP connection; server responds `200 OK` + HTML; the embedded image reuses the *same* connection (persistent — 1 connection total, not 2).
 4. **Sockets**: browser's ephemeral port ↔ server port 80 (the 4-tuple demultiplexes the reply to the right tab).
-5. **Access**: dorm Wi-Fi (wireless access) → FTTH fiber (guided) → core routers (packet switches) — nuts-and-bolts path hidden by the service view.
+5. **Access**: dorm Wi-Fi (wireless access) → FTTH (Fiber to the Home) fiber (guided) → core routers (packet switches) — nuts-and-bolts path hidden by the service view.
 
 ### Scenario 2: FTP Backup vs. HTTP Upload
 
@@ -49,8 +52,6 @@ Nightly backup of 100 small files to a campus server. FTP: **1 control connectio
 ### Scenario 3: Dorm Movie Night (P2P or Server?)
 
 50 students, one 4 GB movie file, one dorm server with 100 Mbps uplink. Client-server: server streams 4 GB × 50 = 200 GB through its 100 Mbps pipe (~4.4 hours wall-clock for the crowd). P2P: each downloader re-uploads — aggregate capacity *grows* with the crowd (self-scalability); the server seeds once and idles. Decision rule from M1: centralized control/consistency → client-server; bulk distribution to many → P2P.
-
----
 
 <a id="the-dimensions"></a>
 ## 2. "Do Not Confuse" Cheat Table
@@ -63,12 +64,13 @@ Nightly backup of 100 small files to a campus server. FTP: **1 control connectio
 | TCP vs. UDP | 4-tuple reliable streams vs. 2-tuple datagrams; handshake/state vs. fire-and-forget |
 | Non-persistent vs. persistent HTTP | One TCP connection per object vs. one reused (6 vs. 1 in the worked example) |
 | Stateless vs. stateful | HTTP remembers nothing (cookies work around it); FTP tracks directory + login per session |
-| In-band vs. out-of-band | HTTP mixes control+data in one connection; FTP splits Port 21 control from Port 20 data |
+| In-band vs. out-of-band | HTTP mixes control+data in one connection; FTP splits Port 21 control from Port 20 data (active-mode server side) |
 | Active vs. passive FTP | Server connects back (firewall-blocked) vs. client always dials out (firewall-friendly) |
-| PDU names | Message → Segment → Datagram → Frame → Bits, top-down, never scrambled |
+| PDU (Protocol Data Unit) names | Message → Segment → Datagram → Frame → Bits, top-down, never scrambled |
 | OSI 7 vs. TCP/IP 5 | Model vocabulary (Presentation/Session named) vs. running code (top three merged) |
+| HTTP transport versions | Classical HTTP (≤2) over TCP; HTTP/3 over QUIC (UDP-based) — qualify "always TCP" |
 
----
+**Watch out:** (1) Counting data connections while ignoring the control channel (or vice versa) — tally both, every question. (2) Sending DNS straight to the root — users ask resolvers. (3) Recommending POP3-style single-device habits for multi-device scenarios — match state location to the workload.
 
 <a id="self-check"></a>
 ## 3. Active Recall Quizzes
@@ -109,8 +111,6 @@ State is *overhead*: FTP's per-user directory/auth memory grows with connections
 Active's server→client data leg looks exactly like an attack to a stateful firewall. PASV inverts initiation (client always dials out — permitted) while changing nothing semantically: same control connection, same bytes, same commands, zero firewall exceptions needed.
 :::
 
----
-
 <a id="exam-focus"></a>
 ## 4. High-Yield University Exam Questions
 
@@ -123,9 +123,9 @@ Active's server→client data leg looks exactly like an attack to a stateful fir
 ### Essay Question 1 (7 Marks)
 **Q: A browser fetches a page with 3 embedded images over persistent HTTP/1.1 on dorm Wi-Fi. (a) How many TCP connections? Contrast with non-persistent. (b) Name the access networks, the socket 4-tuple roles, and where statelessness matters.**
 
-**Model Answer:** (a) Persistent: **1** connection reused for HTML + 3 images; non-persistent: **4** (one per object) — each extra handshake costs an RTT. (b) Wi-Fi (unguided access) → FTTH (guided) → core packet switches; client ephemeral port + server port 80 demultiplex the reply (4-tuple); statelessness means the server keeps no inter-request memory — cookies would be needed for any login/cart state across the four fetches.
+**Model Answer:** (a) Persistent: **1** connection reused for HTML + 3 images; non-persistent: **4** (one per object) — each extra handshake costs an RTT (Round-Trip Time). (b) Wi-Fi (unguided access) → FTTH (guided) → core packet switches; client ephemeral port + server port 80 demultiplex the reply (4-tuple); statelessness means the server keeps no inter-request memory — cookies would be needed for any login/cart state across the four fetches.
 
 ### Essay Question 2 (7 Marks)
 **Q: "FTP separates control and data; HTTP mixes them." Explain both designs, compare connection counts for downloading 3 files plus browsing, and justify when each design wins.**
 
-**Model Answer:** FTP: Port-21 control (login/CWD/RETR, session-long) + one Port-20 data channel per file → 1 control + 3 data for the task; browsing state (directory, auth) persists server-side. HTTP: each request/response (headers + payload) shares one TCP connection, stateless. FTP wins interactive file management (stateful navigation, separate heavy channel); HTTP wins object fetching (no per-file handshake tax, massive stateless scale). Design follows workload — the module's master lesson.
+**Model Answer:** FTP: Port-21 control (login/CWD — change working directory /RETR — retrieve, session-long) + one data channel per file → 1 control + 3 data for the task; browsing state (directory, auth) persists server-side. HTTP: each request/response (headers + payload) shares one TCP connection, stateless. FTP wins interactive file management (stateful navigation, separate heavy channel); HTTP wins object fetching (no per-file handshake tax, massive stateless scale). Design follows workload — the module's master lesson.

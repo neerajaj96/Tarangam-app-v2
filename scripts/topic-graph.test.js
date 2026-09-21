@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 432 topics with 432 metadata-bearing', () => {
-    assert.equal(built.nodes.size, 432);
-    assert.equal(analysis.coverage.metadata, 432);
+  it('discovers all 435 topics with 435 metadata-bearing', () => {
+    assert.equal(built.nodes.size, 435);
+    assert.equal(analysis.coverage.metadata, 435);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -190,7 +190,7 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('OECST614/m4_05_resampling_bias_variance_tradeoff -> OECST614/m2_03_overfitting_lasso_ridge'), 'internal');
     assert.equal(kinds.get('PCCST501/m4_99_practice_lab_management_physical_drills -> PCCST501/m4_01_network_management_snmp_architecture'), 'internal');
     assert.equal(kinds.get('PCCST502/m1_99_practice_lab_asymptotics_and_recurrences -> PCCST502/m1_08_master_theorem_and_cases'), 'internal');
-    assert.equal(analysis.edgeCount, 605);
+    assert.equal(analysis.edgeCount, 608);
   });
 
   it('computes chain depths', () => {
@@ -233,6 +233,6 @@ describe('live repo graph', () => {
     assert.ok(node && node.hasMetadata && node.module === 1);
     assert.equal(findTopic(built, 'PCCST501', 'm9_99_missing'), null);
     assert.equal(built.byCourse.get('GAMAT301').length, 24);
-    assert.equal(built.byModule.get('PCCST501:M1').length, 9);
+    assert.equal(built.byModule.get('PCCST501:M1').length, 10);
   });
 });

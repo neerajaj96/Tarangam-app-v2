@@ -5,7 +5,7 @@ module: 1
 sequence: 99
 title: 'Module 1 Practice Lab: Asymptotic Proofs & Recurrence Solvers'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Prove bounds with loop sums and substitution discipline
   - Solve recurrences three ways with Master-case shortcuts
@@ -30,52 +30,69 @@ tags:
 **Stepped calculations for Master Theorem cases, recursion tree summations, and AVL insertion rotation sequences.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — how to use this lab
+
+**Problem first.** Reading derivations feels like understanding — until you face a blank page in the exam. This lab converts recognition into reflex: for each drill, cover the answer, write your own full trace (sums with formulas, recurrences with named cases, AVL insertions with per-step balance factors), then compare. Abbreviations below: $T(n)$ = cost function; BF = balance factor; LL/RR/LR/RL = the four rotation shapes.
 
 ::: callout-intuition Core Mental Model
-Every skill in this module — proving a Big-O bound, solving a recurrence three different ways, and rebalancing an AVL tree — is something you only truly own once you've done it yourself, by hand, several times, without a worked example to lean on. Reading a derivation is like watching someone else ride a bicycle: it looks completely obvious right up until *you* get on and have to balance yourself.
-
-This practice lab is a deliberately varied set of drills that force you to apply Module 1's tools in combination — sometimes recognising which Master Theorem case applies, sometimes drawing a small recursion tree from scratch, sometimes tracing through several AVL insertions in a row and catching every rotation as it happens. The goal isn't new theory; it's building the reflex of *pattern recognition* — glancing at a recurrence or a tree and immediately knowing which technique from this module to reach for.
+Technique selection *is* the skill: loop → summation with series formulas; recurrence + claimed bound → substitution (guess, assume, substitute, verify); recurrence + no claim → iteration or tree; standard form $aT(n/b) + f(n)$ with clean $f$ → Master shortcut; key sequence → per-insertion BF checks. The drills below force each choice.
 :::
+
+**Tiny warm-up.** $T(n) = 3T(n/2) + \Theta(n)$: watershed $n^{\log_2 3} \approx n^{1.58}$; $f = n$ is polynomially smaller → Case 1 → $\Theta(n^{1.58})$. Thirty seconds once the reflex exists.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. The technique chooser (formal recap)
 
-This lab deliberately doesn't introduce new formulas — it's a checklist of the tools from this module, and *when* to reach for each one:
+- **Loop (single, nested, logarithmic)** → summation method: sum iterations, apply arithmetic/geometric formulas, keep the dominant term.
+- **Recurrence + claimed bound** → **substitution**: guess, assume for smaller inputs, substitute, verify algebraically.
+- **Recurrence, no claim** → **iteration** (unroll to level $k$, stop at base case) or **recursion tree** (row totals, then sum).
+- **Standard form $T(n) = aT(n/b) + f(n)$, clean $f$** → **Master Theorem**: compare $f$ to $n^{\log_b a}$; gap cases fall back to unrolling.
+- **Key sequence** → after *each* insert/delete, walk up recomputing balance factors; rotate at the first $|BF| > 1$ before the next operation.
 
-- **Given a loop (single, nested, or logarithmic)** → use the summation method from "Complexity Analysis of Iterative Loops": express total iterations as a sum, evaluate using arithmetic/geometric series formulas, extract the dominant term.
-- **Given a recurrence and asked to *prove* a specific bound** → use the **substitution method**: guess the bound, assume it for smaller inputs, substitute into the recurrence, verify algebraically.
-- **Given a recurrence and asked to *find* the bound (with no guess supplied)** → use the **iteration/expansion method** (unroll level by level until the pattern is clear) or the **recursion tree method** (draw it, sum level totals) — whichever you find more visual.
-- **Given a recurrence in the exact form $T(n)=aT(n/b)+f(n)$** → check whether it fits one of the three **Master Theorem** cases by comparing $f(n)$ to $n^{\log_b a}$; if it fits cleanly, this is the fastest route to an answer.
-- **Given a sequence of AVL insertions or deletions** → after each single insertion/deletion, walk from the changed node up toward the root, recomputing balance factors, and apply the correct rotation (LL/RR/LR/RL) the moment any $|BF|>1$ appears, before moving on to the next operation.
-
-**A general debugging habit worth building now:** whenever a derived complexity looks suspicious (e.g., you calculated $O(n)$ for something that clearly does nested work over all pairs of elements), re-derive it a second way — if the loop-based summation and the recursion-tree method (for an equivalent recursive version of the same task) disagree, you've made an arithmetic slip somewhere, and cross-checking is far faster than re-reading your own derivation looking for the mistake.
+**Debugging habit:** if loop-summation and tree/iteration disagree on the same task, one derivation has an arithmetic slip — cross-checking beats re-reading.
 
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — Master case plus AVL insertion run
 
 ::: step [Step 1: Setup] Formulating the Problem
-Mixed drill: (a) solve $T(n) = 4T(n/2) + n^2$ using the Master Theorem; (b) insert the keys $10, 20, 30, 40, 50$ in that order into an initially empty AVL tree, and identify every rotation triggered along the way.
+(a) Solve $T(n) = 4T(n/2) + n^2$ by the Master Theorem. (b) Insert $10, 20, 30, 40, 50$ in order into an empty AVL tree; name every rotation.
 :::
 
 ::: step [Step 2: Execution] Applying Core Algorithm
-**(a)** Here $a=4, b=2$, so $\log_b a = \log_2 4 = 2$, reference function $n^2$. Compare to $f(n)=n^2$: this is an *exact match* ($f(n) = \Theta(n^{\log_b a})$), so **Case 2** applies.
-**(b)** Insert $10$: tree is just $\{10\}$, balanced. Insert $20$: becomes $10$'s right child; $BF(10) = -1$, fine. Insert $30$: goes right of $10$, then right of $20$; check $BF(20)$: left empty ($-1$), right child $30$ (height $0$) gives $-1$ — fine, no rotation. Check $BF(10)$: left height $-1$, right height (subtree rooted at 20, now height 1) $=1$; $BF(10) = -1-1=-2$ — imbalance! This is caused by inserting into the right subtree of the right child (30 went right of 20, which is right of 10) — an **RR** shape. Fix: single left rotation at $10$. Result: $20$ becomes root, $10$ its left child, $30$ its right child — balanced. Insert $40$: goes right of $30$; $BF(30)=-1$, fine; $BF(20)$ recomputed: right subtree (rooted at 30) height is now $1$, left subtree (just node 10) height $0$; $BF(20)=0-1=-1$, still fine, no rotation. Insert $50$: goes right of $40$; check up the chain: $BF(40)=-1$ fine; $BF(30)$: right subtree (rooted at 40) now height $1$, left subtree height $-1$ (empty); $BF(30) = -1-1=-2$ — imbalance, another **RR** shape (50 went right of 40, which is right of 30). Fix: single left rotation at $30$.
+**(a)** $a = 4, b = 2$: watershed $n^{\log_2 4} = n^2$; $f = n^2$ matches exactly → **Case 2**. **(b)** Insert $10$ (root), $20$ (right of 10, $BF(10) = -1$ fine). Insert $30$: right of 20; $BF(10) = -2$ (right-of-right) → **RR**: left-rotate $10$ → root $20$ with $10$, $30$. Insert $40$: right of $30$; $BF(20) = -1$ fine, no rotation. Insert $50$: right of $40$; $BF(30) = -2$ (right-of-right) → **RR**: left-rotate $30$.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-**(a)** By Case 2, $T(n) = \Theta(n^2 \log n)$.
-**(b)** Two rotations were triggered in total — both RR (single left rotations), once at node $10$ (after inserting $30$) and once at node $30$ (after inserting $50$) — leaving a final, fully balanced 5-node AVL tree with root $20$: left child $10$, right child $40$ (whose own children are $30$ and $50$). This kind of "insert several keys in increasing order, watch it self-correct repeatedly" drill is exactly what would otherwise degenerate into a useless straight-line BST — the whole point of Module 1's AVL topics.
+**(a)** Case 2: $T(n) = \Theta(n^2 \log n)$. **(b)** Two RR single-left rotations (at $10$ after inserting $30$; at $30$ after inserting $50$); final tree root $20$: left $10$, right $40$ with $30$, $50$. Sorted input self-corrects repeatedly instead of degenerating into a line.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- $\log_2 4 = 2$, not 1 — miscomputing the watershed picks the wrong case.
+- AVL checks run after *every single* insertion, bottom-up from the new key — batching checks at the end misses intermediate violations.
+- Case 2 needs an *exact* $\Theta$-match; off-by-log is the gap, not Case 2.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Case 2 vs gap | Exact match vs log-factor off (unroll instead) |
+| RR pattern vs no rotation | Straight right line ($BF = -2$) vs $|BF| \le 1$ everywhere |
+| Substitution vs Master | Any recurrence + claim vs standard form + clean $f$ |
+
+**Exam recap (facts an examiner rewards):** $4T(n/2) + n^2 \Rightarrow$ Case 2 $\Theta(n^2 \log n)$; increasing inserts trigger repeated RR rotations; cross-check derivations across methods.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz When a recurrence is given in the exact form $T(n) = aT(n/b) + f(n)$ and you can cleanly classify $f(n)$ against $n^{\log_b a}$, which technique is usually fastest?
 () Always draw a full recursion tree regardless

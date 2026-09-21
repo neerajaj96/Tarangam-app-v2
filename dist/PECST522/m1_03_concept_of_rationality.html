@@ -269,61 +269,87 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>The Concept of Rationality &amp; Omniscience</h1>
-<p><strong>Definition of rational action, the 4 factors of rationality, rationality vs. omniscience/success, exploration, learning, and autonomy.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-what-is-rationality">1. What is Rationality?</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-4-factors-that-determine-rationality">2. The 4 Factors That Determine Ra… →</a></p>
-<p>In Artificial Intelligence, a <strong>Rational Agent</strong> is one that does the &quot;right thing.&quot; Conceptually, every entry in the table for the agent function is filled out correctly to achieve the best possible performance.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Rationality is Not Magic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine crossing a pedestrian crossing on a green light after looking both ways. As you step out, a small meteorite falls from the sky and injures you. </p>
-<ul>
-<li>Was your action <strong>irrational</strong>? <strong>No!</strong> You made the optimal decision based on all available information and human safety rules.</li>
-<li>Did you <strong>fail</strong>? Yes.</li>
-<li>Were you <strong>omniscient</strong>? No, because nobody can predict falling meteorites.</li>
-</ul>
-<p>Rationality is about <strong>sound decision-making under uncertainty</strong>, not clairvoyance or guaranteed perfection.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-the-4-factors-that-determine-rationality">2. The 4 Factors That Determine Rationality</h2>
-<p class="secnav"><a href="#1-what-is-rationality">← 1. What is Rationality?</a><span class="secnav-sep">·</span><a href="#3-rationality-neq-omniscience-perfection-or-success">3. Rationality $\neq$ Omniscience,… →</a></p>
-<p>What is rational at any given moment depends on four specific components:</p>
-<pre><code class="language-text">               +-------------------------------------------+
-               |         THE 4 FACTORS OF RATIONALITY      |
-               +-------------------------------------------+
-                                     |
-         +---------------------------+---------------------------+
-         |                           |                           |
-         v                           v                           v
-+-----------------+         +-----------------+         +-----------------+
-| 1. Performance  |         | 2. Prior        |         | 3. Actions      |
-|    Measure      |         |    Knowledge    |         |    Available    |
-| (Criteria of    |         | (What designer  |         | (What actuators |
-|  success)       |         |  built in)      |         |  can perform)   |
-+-----------------+         +-----------------+         +-----------------+
-                                     |
-                                     v
-                            +-----------------+
-                            | 4. Percept      |
-                            |    Sequence     |
-                            | (Everything it  |
-                            |  has perceived) |
-                            +-----------------+
+<p><strong>Problem: what does it mean to do &quot;the right thing&quot; when the world is uncertain and sensors are limited? By the end you can state the four factors of rationality, separate rationality from omniscience and luck, and explain autonomy.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-rationality-is-not-magic">1. Start From Zero: Rationality Is Not Magic</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-building-blocks-the-four-factors">2. Basic Building Blocks: The Four… →</a></p>
+<p>You look both ways at a green crossing and step out. A freak falling branch injures you. Was stepping out irrational? No — given everything you could perceive, it was the right call. Did you succeed? No — luck intervened. Could you have predicted the branch? No — that would need omniscience (knowing the actual future), which physics forbids.</p>
+<p><strong>Definition:</strong> a <strong>rational agent</strong> selects the action expected to maximize its performance measure, given its percept sequence and built-in knowledge. Rationality judges the <strong>decision process</strong>, not the retrospective outcome.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Rationality Is Not Magic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Crossing carefully and still failing separates three ideas: rational (best expected call), successful (good actual outcome), omniscient (foresaw everything). Drop the story after this; the technical test is always &quot;what did the percept sequence justify at decision time?&quot;</p>
+</div></details><p><strong>Tiny beginner example:</strong> a delivery robot pauses at a blind corner to look (information gathering) even though pausing costs time — because the expected crash cost outweighs the delay. Rationality prices information, not just motion.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-building-blocks-the-four-factors">2. Basic Building Blocks: The Four Factors</h2>
+<p class="secnav"><a href="#1-start-from-zero-rationality-is-not-magic">← 1. Start From Zero: Rationality Is…</a><span class="secnav-sep">·</span><a href="#3-formal-model-expected-maximization-and-its-limits">3. Formal Model: Expected Maximiza… →</a></p>
+<p><strong>Data/state:</strong> the percept sequence (history) plus prior knowledge. <strong>Goal:</strong> maximize expected performance. What is rational right now depends on exactly four factors:</p>
+<ol>
+<li><strong>Performance measure</strong> — the success criteria (what counts as winning).</li>
+<li><strong>Prior knowledge</strong> — what the designer built in (maps, rules, physics).</li>
+<li><strong>Actions available</strong> — what actuators can physically do.</li>
+<li><strong>Percept sequence</strong> — everything sensed so far.</li>
+</ol>
+<pre><code class="language-text">Performance + Prior knowledge + Available actions + Percept history --&gt; rational choice
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition of a Rational Agent</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For each possible percept sequence, a <strong>rational agent</strong> should select an action that is expected to maximize its <strong>performance measure</strong>, given the evidence provided by the <strong>percept sequence</strong> and whatever <strong>built-in prior knowledge</strong> the agent has:
-$$\text{Action}^* = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid \text{percept sequence}, a) \cdot U(s&#39;)$$
-Where $U(s&#39;)$ represents the utility score of reaching state $s&#39;$.</p>
-</div></details><div class="quiz-widget">
+<p><strong>Example trace:</strong> upgrading a gripper changes factor 3 (actions available), not the goal, the map, or the history. Exams test exactly this sorting.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-model-expected-maximization-and-its-limits">3. Formal Model: Expected Maximization and Its Limits</h2>
+<p class="secnav"><a href="#2-basic-building-blocks-the-four-factors">← 2. Basic Building Blocks: The Four…</a><span class="secnav-sep">·</span><a href="#4-worked-example-exploration-learning-autonomy">4. Worked Example: Exploration, Le… →</a></p>
+<p><strong>Meaning, variables, intuition, formula:</strong> let <code>A</code> be the action set, <code>s&#39;</code> a possible resulting state, <code>P(s&#39; | history, a)</code> the probability of reaching <code>s&#39;</code> after action <code>a</code>, and <code>U(s&#39;)</code> the utility (numeric goodness) of <code>s&#39;</code>:</p>
+<p>$$\text{Action}^* = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid \text{percept sequence}, a) \cdot U(s&#39;)$$</p>
+<p>Symbol by symbol: <code>Action*</code> is the winning action; <code>argmax</code> means &quot;the action achieving the largest value&quot;; the sum weighs each future state&#39;s utility by its probability. Intuition: bet on the action whose probability-weighted future is brightest.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition of a Rational Agent</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For each percept sequence, pick the action maximizing expected performance given that sequence plus built-in knowledge. The formula above is that sentence in mathematics — memorize both forms.</p>
+</div></details><p><strong>Rationality versus omniscience versus success:</strong></p>
+<pre><code class="language-text">RATIONALITY: best EXPECTED call on history so far (handles uncertainty)
+OMNISCIENCE: knows ACTUAL outcomes in advance (impossible in real physics)
+SUCCESS: good HISTORICAL outcome (needs luck as well as reason)
+</code></pre>
+<p>Rationality maximizes expected utility; perfection would maximize actual outcome — impossible without omniscience in stochastic (probabilistic) or partially observable worlds.</p>
+<p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-exploration-learning-autonomy">4. Worked Example: Exploration, Learning, Autonomy</h2>
+<p class="secnav"><a href="#3-formal-model-expected-maximization-and-its-limits">← 3. Formal Model: Expected Maximiza…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Procedure:</strong> rational agents must sometimes pay for information. <strong>Information gathering</strong> (looking both ways) changes future percepts. <strong>Exploration</strong> (mapping a new house before cleaning optimally) buys a better model. <strong>Learning</strong> updates the model from experience:</p>
+<pre><code class="language-text">INITIAL PERCEPTS --&gt; EXPLORE AND SENSE --&gt; LEARN DYNAMICS --&gt; RATIONAL ACTS
+</code></pre>
+<p><strong>Autonomy:</strong> an agent is <strong>autonomous</strong> to the extent its behavior comes from its <strong>own experience</strong> rather than only designer assumptions. The <em>Sphex</em> wasp (a digger wasp studied in ethology) repeats one rigid burrow-check ritual even when experimenters move its prey mid-ritual — zero autonomy, pure preprogramming. A delivery robot that revises its map after slips is autonomous: it survives broken designer assumptions.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rational vs. omniscient</td>
+<td>Best expected decision vs. foreknowledge of actual results</td>
+</tr>
+<tr>
+<td>Rational vs. successful</td>
+<td>Good process now vs. good outcome later (luck matters)</td>
+</tr>
+<tr>
+<td>Autonomous vs. preprogrammed</td>
+<td>Learns from own history vs. repeats built-in rules</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) A rational stock-buy can still lose money on unforeseeable news. (2) Stronger actuators change factor 3, not the performance definition. (3) Exploration is rational even when it looks wasteful short-term.</p>
+<p><strong>Limitations:</strong> rationality is only as good as the performance measure (gamed measures give perverse optima) and the percept history (blind agents decide blindly). Autonomy mitigates bad priors but cannot fix a missing sensor.</p>
+<p><a id="self-check"></a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-exploration-learning-autonomy">← 4. Worked Example: Exploration, Le…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
+<div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A designer upgrades a delivery robot with a stronger gripper arm, letting it lift heavier parcels it previously could not move. Which of the four factors of rationality has directly changed?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -345,29 +371,10 @@ Where $U(s&#39;)$ represents the utility score of reaching state $s&#39;$.</p>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The four factors are (1) performance measure, (2) prior knowledge, (3) actions available, (4) percept sequence. A new gripper changes what the agent <em>can do</em> — factor 3. It does not redefine success, rewrite the built-in map, or alter the percepts already received.</p><pre><code>&lt;/div&gt;
+      <p>The four factors are performance, prior knowledge, available actions, and percept history. A new gripper changes what the agent can do, not what counts as success or what it has seen.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-rationality-neq-omniscience-perfection-or-success">3. Rationality $\neq$ Omniscience, Perfection, or Success</h2>
-<p class="secnav"><a href="#2-the-4-factors-that-determine-rationality">← 2. The 4 Factors That Determine Ra…</a><span class="secnav-sep">·</span><a href="#4-information-gathering-exploration-and-learning">4. Information Gathering, Explorat… →</a></p>
-<p>A frequent mistake in AI design and exams is confusing rationality with omniscience or perfection.</p>
-<pre><code class="language-text">+-----------------------+-------------------------------------------------------------+
-| Concept               | Definition &amp; Key Differences                                |
-+=======================+=============================================================+
-| RATIONALITY           | Maximizes *EXPECTED* performance based on the percept       |
-|                       | sequence to date. Deals with incomplete knowledge.          |
-+-----------------------+-------------------------------------------------------------+
-| OMNISCIENCE           | Knows the *ACTUAL* outcome of its actions in advance and    |
-|                       | can act accordingly. (Impossible in real-world physics).    |
-+-----------------------+-------------------------------------------------------------+
-| SUCCESS / PERFECTION  | Evaluates the final *HISTORICAL OUTCOME*. A rational action |
-|                       | can still result in failure due to unexpected events.       |
-+-----------------------+-------------------------------------------------------------+
-</code></pre>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Rationality vs. Success</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Rationality is NOT the same as perfection. Rationality maximizes <strong>expected</strong> utility, while perfection maximizes <strong>actual</strong> outcome. Since environments are often non-deterministic or partially observable, an agent cannot be blamed for rational moves that lead to bad luck.</p>
-</div></details><div class="quiz-widget">
+</div><div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">An AI automated stock trader calculates a 95% probability that stock X will rise, so it buys 1,000 shares. An unpredicted war breaks out overnight, and the market crashes. Was the agent&#39;s action rational?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -389,38 +396,10 @@ Where $U(s&#39;)$ represents the utility score of reaching state $s&#39;$.</p>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Rationality evaluates the decision process at the moment it was executed, using the percepts available at that time. It does not demand impossible foresight into unpredictable future events.</p><pre><code>&lt;/div&gt;
+      <p>Rationality is judged at decision time on available percepts. Unforeseeable shocks affect success, not rationality, and no agent is omniscient.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="self-check"></a></p>
-<h2 id="4-information-gathering-exploration-and-learning">4. Information Gathering, Exploration, and Learning</h2>
-<p class="secnav"><a href="#3-rationality-neq-omniscience-perfection-or-success">← 3. Rationality $\neq$ Omniscience,…</a><span class="secnav-sep">·</span><a href="#5-autonomy-in-intelligent-agents">5. Autonomy in Intelligent Agents →</a></p>
-<p>Doing the &quot;right thing&quot; does not mean always taking immediate greedy actions.</p>
-<ul>
-<li><strong>Information Gathering:</strong> Doing actions to modify future percepts. For example, looking both ways before crossing the road is an action done purely to gather information.</li>
-<li><strong>Exploration:</strong> In an unfamiliar environment, a rational agent must explore rather than exploit immediately. A vacuum cleaner in a new home must first map out the room boundaries before attempting an optimal cleaning pattern.</li>
-<li><strong>Learning from Experience:</strong> A rational agent must not only gather percepts to act, but also update its internal world model to improve future actions.</li>
-</ul>
-<pre><code class="language-text">[ INITIAL PERCEPTS ] ──&gt; [ EXPLORATION &amp; SENSING ] ──&gt; [ LEARN ENVIRONMENT DYNAMICS ] ──&gt; [ OPTIMAL RATIONAL ACTIONS ]
-</code></pre>
-<hr>
-<h2 id="5-autonomy-in-intelligent-agents">5. Autonomy in Intelligent Agents</h2>
-<p class="secnav"><a href="#4-information-gathering-exploration-and-learning">← 4. Information Gathering, Explorat…</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: The Sphex Wasp vs. The Autonomous Agent</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The female <em>Sphex</em> wasp exhibits seemingly intelligent behavior: she drags a paralyzed cricket near her burrow, leaves it outside, goes in to inspect the burrow, comes out, and drags the cricket inside.</p>
-<p>However, if an experimenter moves the cricket just a few inches away while the wasp is inside inspecting, the wasp comes out, finds the cricket, brings it back to the entrance, and <strong>inspects the burrow all over again</strong>. You can repeat this 40 times, and she will never learn! </p>
-<p>The wasp has <strong>zero autonomy</strong>—her behavior is entirely rigid and pre-programmed.</p>
-</div></details><ul>
-<li><strong>Definition of Autonomy:</strong> An agent is <strong>autonomous</strong> to the extent that its behavior is determined by its <strong>own experience</strong> (with the ability to learn and adapt), rather than solely by the prior knowledge of its designer.</li>
-<li><strong>The Evolution of Autonomy:</strong> A truly rational agent should be autonomous. Initially, it may be endowed with some prior knowledge (to ensure survival), but as it experiences the world, it must learn and adjust its strategies independently.</li>
-</ul>
-<pre><code class="language-text">SPECTRUM OF AGENT AUTONOMY:
-
-0% Autonomy                                                             100% Autonomy
-[ Pure Hardcoded Rules ] ─────────&gt; [ Adaptive Reinforcement Agent ] ─────────&gt; [ Self-Evolving General Agent ]
-(e.g., Sphex Wasp / Reflex)          (Learns from environment rewards)            (Full lifelong learning)
-</code></pre>
-<div class="quiz-widget">
+</div><div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What gives an agent &quot;Autonomy&quot; in AI?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -442,43 +421,21 @@ Where $U(s&#39;)$ represents the utility score of reaching state $s&#39;$.</p>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Autonomy means the agent&#39;s behavior is driven by what it learns from its own interaction with the environment, allowing it to adapt to changing or unfamiliar scenarios.</p><pre><code>&lt;/div&gt;
+      <p>Autonomy is learning-driven behavior from own percept history, letting the agent adapt when designer assumptions fail, unlike the rigid Sphex routine.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#5-autonomy-in-intelligent-agents">← 5. Autonomy in Intelligent Agents</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong> </p>
-<ol>
-<li><strong>3 Marks:</strong> State the 4 factors determining rationality, or define Autonomy.</li>
-<li><strong>7 Marks:</strong> Differentiate between Rationality, Omniscience, and Perfection with an illustrative scenario.</li>
-</ol>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: List the four factors that determine rationality in an intelligent agent.</strong></p>
-<p><strong>Model Answer:</strong>
-At any given instant, an agent&#39;s rationality depends on:</p>
-<ol>
-<li>The <strong>Performance Measure</strong> defining success criteria.</li>
-<li>The agent&#39;s <strong>Prior Knowledge</strong> of the environment.</li>
-<li>The <strong>Actions</strong> the agent can perform.</li>
-<li>The agent&#39;s <strong>Percept Sequence</strong> to date.</li>
-</ol>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: list the four factors or define autonomy. 7 marks: justify &quot;rational is not omniscient nor always successful&quot; with a scenario plus autonomy&#39;s role.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> rational-agent definition; four factors verbatim; expected-vs-actual distinction; exploration/learning rationale; autonomy definition with Sphex contrast.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: List the four factors determining rationality.</strong></p>
+<p><strong>Model Answer:</strong> Performance measure, prior knowledge, available actions, percept sequence to date — evaluated at the instant of decision.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: &quot;A rational agent is not an omniscient agent, nor is it always successful.&quot; Justify this statement with a suitable example. What role does autonomy play in rational agents?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Rationality vs. Omniscience &amp; Success (4 Marks):</strong><ul>
-<li><strong>Omniscience</strong> implies knowing the actual outcome of all actions in advance (impossible due to environmental uncertainty and partial observability).</li>
-<li><strong>Rationality</strong> means selecting the action that maximizes <em>expected</em> performance based on the percept sequence history and built-in knowledge.</li>
-<li><strong>Success</strong> is the actual retrospective outcome. An agent can act with 100% rationality (e.g., stopping at a red signal) but still suffer failure (e.g., getting rear-ended by a distracted driver). Rationality evaluates the decision process, not clairvoyance.</li>
-</ul>
-</li>
-<li><strong>Role of Autonomy (3 Marks):</strong><ul>
-<li>An agent lacks autonomy if it relies solely on the designer&#39;s initial built-in rules (inflexible like the <em>Sphex</em> wasp).</li>
-<li>Autonomy enables an agent to learn from its percept history, adapt to environmental changes, and maintain rational decision-making even when designer assumptions prove incomplete.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: &quot;A rational agent is neither omniscient nor always successful.&quot; Justify and state autonomy&#39;s role.</strong></p>
+<p><strong>Model Answer:</strong> Omniscience needs actual-outcome foreknowledge (impossible under uncertainty); rationality picks max expected performance on history plus knowledge; success is retrospective and luck-sensitive (red-light stop plus rear-end crash). Autonomy lets behavior track own experience so rationality survives incomplete designer priors; without it the agent is a rigid Sphex program.
+:::</p>
 
     </main>
 

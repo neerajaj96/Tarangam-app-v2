@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -309,6 +313,7 @@
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Each scenario chains one module idea end to end — demultiplexing keys (M2.1), RTT smoothing with Karn&#39;s rule (M2.3), window traces (M2.4), handshake/teardown and flow windows (M2.5), congestion events (M2.6). Abbreviations: TCP (Transmission Control Protocol), UDP (User Datagram Protocol), RTT (Round-Trip Time), SRTT (Smoothed RTT), GBN (Go-Back-N), SR (Selective Repeat), ISN (Initial Sequence Number), MSL (Maximum Segment Lifetime).</p>
 <h3>Scenario 1: The Startup&#39;s Socket Census</h3>
 <p>A server hosts HTTP (port 80), DNS (53/UDP), and FTP-control (21). At one instant: 200 browser clients hold HTTP connections, 50 DNS queries are in flight, 3 admins hold FTP sessions. Count the server&#39;s sockets and state each one&#39;s demux key: HTTP → 200 connection sockets (4-tuples; clients&#39; source ports differ) + 1 welcoming socket; DNS → 1 socket (2-tuple port 53 shared by all 50 queries); FTP → 3 control sockets + 0 data (idle between transfers). Total: <strong>205 sockets</strong>, three keying disciplines on one machine.</p>
 <h3>Scenario 2: Timeout Arithmetic Under Pressure</h3>
@@ -316,8 +321,7 @@
 <h3>Scenario 3: Loss Showdown (GBN vs. SR, Same Bad Luck)</h3>
 <p>Window $N=5$, packets 0–6 queued, packet 1 lost once. <strong>GBN:</strong> sends 0–4, receiver keeps 0, discards 2,3,4 (re-ACKs 0); timeout on 1 → resends 1,2,3,4,5. Total: 5 + 5 = <strong>10 transmissions</strong>. <strong>SR:</strong> sends 0–4, buffers 2,3,4 with individual ACKs; resends <strong>1 alone</strong>. Total: 5 + 1 = <strong>6 transmissions</strong>. Same loss, 10 vs. 6 — receiver memory and sequence space ($2N$ vs. $N+1$) priced in retransmissions.</p>
 <h3>Scenario 4: Congestion Double Feature</h3>
-<p>Reno flow, cwnd = 30, ssthresh = 40 (congestion avoidance): triple dup-ACKs → ssthresh = 15, cwnd = 15, fast recovery (no slow start). Later at cwnd = 20 the timer expires → ssthresh = 10, cwnd = 1, slow start doubles 1→2→4→8 (crossing 10? no — 8 &lt; 10, continue) → 16 (past ssthresh → additive from here). Moral: dup-ACKs cost half; silence costs everything.</p>
-<hr>
+<p>Reno flow, cwnd (congestion window) = 30, ssthresh (slow-start threshold) = 40 (congestion avoidance): triple dup-ACKs → ssthresh = 15, cwnd = 15, fast recovery (no slow start). Later at cwnd = 20 the timer expires → ssthresh = 10, cwnd = 1, slow start doubles 1→2→4→8 (crossing 10? no — 8 &lt; 10, continue) → 16 (past ssthresh → additive from here). Moral: dup-ACKs cost half; silence costs everything.</p>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
 <p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
@@ -358,10 +362,14 @@
 </tr>
 <tr>
 <td>Slow start vs. avoidance</td>
-<td>Exponential doubling to ssthresh vs. +1 MSS/RTT AIMD probing above it</td>
+<td>Exponential doubling to ssthresh vs. +1 MSS (Maximum Segment Size)/RTT AIMD (Additive Increase Multiplicative Decrease) probing above it</td>
+</tr>
+<tr>
+<td>AIMD fairness scope</td>
+<td>Converges for similar-RTT flows; heterogeneous RTTs skew shares</td>
 </tr>
 </tbody></table>
-<hr>
+<p><strong>Watch out:</strong> (1) Sampling a retransmitted segment &quot;because data is data&quot; — Karn forbids unattributable samples. (2) Resetting cwnd on dup-ACKs under Reno — halve, don&#39;t reset. (3) Calling TCP purely GBN or purely SR — cumulative ACKs/single timer plus buffering and SACK (Selective Acknowledgment).</p>
 <p><a id="self-check"></a></p>
 <h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
@@ -465,8 +473,7 @@
       <p>A measurement needs a known start time; two transmissions give two candidate starts and one ACK. Using it anyway injects fiction into the smoothed estimates — timeouts computed from fiction misfire both ways (premature + sluggish). Discard is data hygiene, not waste.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
+</div><p><a id="exam-focus"></a></p>
 <h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
 <p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
@@ -588,7 +595,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_99_practice_lab_transport_drills";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

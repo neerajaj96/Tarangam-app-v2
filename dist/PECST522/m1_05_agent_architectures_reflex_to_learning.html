@@ -269,217 +269,95 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 12 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Structure of Agents: From Reflex to Learning Agents</h1>
-<p><strong>The anatomy of an intelligent agent: Simple Reflex, Model-Based Reflex, Goal-Based, Utility-Based, and Learning Agent architectures.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-how-is-an-agent-structured">1. How is an Agent Structured?</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-architecture-1-simple-reflex-agents">2. Architecture 1: Simple Reflex A… →</a></p>
-<p>In Artificial Intelligence, every software or robotic agent is defined by a fundamental relationship:
-$$\text{Agent} = \text{Architecture} + \text{Program}$$</p>
-<ul>
-<li><strong>Architecture:</strong> The computing device and physical machinery (sensors, cameras, processors, memory, wheels, and actuators).</li>
-<li><strong>Program:</strong> The software algorithm executing on that hardware that maps percept sequences to concrete actions.</li>
-</ul>
-<h3>The Naive Approach: Table-Driven Agents</h3>
-<p>The simplest conceivable way to build an agent is a giant lookup table storing an explicit action for every possible percept sequence:</p>
-<p>$$\text{Table Size} = |P|^t$$
-Where $|P|$ is the number of possible distinct percepts and $t$ is the operational time horizon. For an autonomous taxi, the number of entries would exceed the number of atoms in the observable universe! </p>
-<p>To overcome this combinatorial explosion, AI systems employ structured <strong>Agent Architectures</strong> that compute actions dynamically.</p>
-<hr>
-<p><a id="terminology"></a></p>
-<h2 id="2-architecture-1-simple-reflex-agents">2. Architecture 1: Simple Reflex Agents</h2>
-<p class="secnav"><a href="#1-how-is-an-agent-structured">← 1. How is an Agent Structured?</a><span class="secnav-sep">·</span><a href="#3-architecture-2-model-based-reflex-agents">3. Architecture 2: Model-Based Ref… →</a></p>
-<p>A <strong>Simple Reflex Agent</strong> selects actions based <em>only</em> on the current percept, completely ignoring historical percept sequences. It operates on <strong>Condition-Action Rules</strong> (<code>IF condition THEN action</code>).</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Basic Thermostat</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Consider a standard room thermostat. It maintains no historical memory of yesterday&#39;s weather or room temperature. It operates on a single direct rule:
-<code>IF current_temperature &lt; 20°C THEN turn_on_heater()</code>
-It triggers an immediate, reactive response to the state right <em>now</em>.</p>
-</div></details><h3>ASCII Architecture Diagram: Simple Reflex Agent</h3>
-<pre><code class="language-text">                  +-----------------------------------+
-                  |              AGENT                |
-                  |                                   |
-                  |   What the world is like NOW      | &lt;--- Sensors
-                  |                 |                 |
-                  |                 v                 |
-                  |   +---------------------------+   |
-                  |   | Select Next Action (Rules)|   |
-                  |   +---------------------------+   |
-                  |                 |                 |
-                  +-----------------|-----------------+
-                                    v
-                                Actuators ---&gt; Environment
-</code></pre>
-<h3>Condition-Action Rule Flow</h3>
+<p><strong>Problem: a giant lookup table of &quot;for every history, do this&quot; would need more entries than atoms in the universe. By the end you can build five architectures that compute actions dynamically and say which handles partial observability, goals, trade-offs, and learning.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-why-tables-fail">1. Start From Zero: Why Tables Fail</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-reflex-agents-no-memory-then-memory">2. Basic Layer: Reflex Agents (No … →</a></p>
+<p><strong>Problem first:</strong> a table-driven agent stores one action per percept history. With <code>|P|</code> possible percepts and horizon <code>t</code>, size is <code>|P|^t</code> (percept count to the power of time steps). Tiny numbers: 10 percepts over 20 steps needs 10^20 rows — physically impossible for a taxi. So agents compute instead of memorizing.</p>
+<p><strong>Foundation:</strong> <code>Agent = Architecture + Program</code>. Architecture is the hardware (sensors, processors, memory, actuators). Program is the software mapping histories to actions. The five architectures below are five program designs of increasing power.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Basic Thermostat</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A thermostat fires <code>IF cold THEN heat</code> on the current reading only — no memory of yesterday. Feel &quot;react now&quot; here, then drop the device; the technical idea is condition-action rules without history.</p>
+</div></details><p><a id="basics"></a></p>
+<h2 id="2-basic-layer-reflex-agents-no-memory-then-memory">2. Basic Layer: Reflex Agents (No Memory, Then Memory)</h2>
+<p class="secnav"><a href="#1-start-from-zero-why-tables-fail">← 1. Start From Zero: Why Tables Fai…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-goals-utilities-learning">3. Formal Layer: Goals, Utilities,… →</a></p>
+<p><strong>Data/state:</strong> current percept only (simple reflex) vs. current percept plus remembered world model (model-based). <strong>Goal:</strong> act correctly despite sensing limits.</p>
+<p><strong>Architecture 1 — Simple Reflex:</strong> <code>IF condition THEN action</code> on the current percept only.</p>
 <pre><code class="language-python">def Simple_Reflex_Agent(percept):
     state = interpret_input(percept)     # What is the world like now?
     rule = match_rule(state, rule_base)  # Match IF condition THEN action
     return rule.action
 </code></pre>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Fatal Flaw: Infinite Loops in Partially Observable Worlds</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Simple reflex agents fail catastrophically in <strong>Partially Observable</strong> environments.
-<em>Example:</em> A robotic vacuum cleaner hits a table leg. Its condition-action rule fires: <code>IF bump == true THEN turn_left()</code>. 
-After turning left, its sensor is <em>still</em> blocked by the wide table leg. On the next cycle, it fires the same rule again, turning left forever in an infinite loop.
-<em>The Fix:</em> The agent requires an <strong>internal state</strong> to remember previous actions.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="3-architecture-2-model-based-reflex-agents">3. Architecture 2: Model-Based Reflex Agents</h2>
-<p class="secnav"><a href="#2-architecture-1-simple-reflex-agents">← 2. Architecture 1: Simple Reflex A…</a><span class="secnav-sep">·</span><a href="#4-architecture-3-goal-based-agents">4. Architecture 3: Goal-Based Agen… →</a></p>
-<p>To operate reliably in partially observable environments, an agent must maintain an <strong>Internal State</strong> that tracks aspects of the world currently unobservable by its sensors.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Driving Through a Mountain Tunnel</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>When an autonomous vehicle enters a dark mountain tunnel, GPS signals drop and cameras are temporarily blinded. 
-A simple reflex agent would freeze or steer blindly. A <strong>Model-Based Agent</strong> uses its internal world model: <em>&quot;I entered at 60 km/h heading straight, so after 3 seconds I am still in the center lane.&quot;</em> It bridges the sensory gap using state memory and physics models.</p>
-</div></details><h3>ASCII Architecture Diagram: Model-Based Reflex Agent</h3>
-<pre><code class="language-text">                  +-------------------------------------------------+
-                  |                     AGENT                       |
-                  |                                                 |
-                  |   Sensors ---&gt; [ What the world is like now ]   |
-                  |                       ^            |            |
-                  |                       |            v            |
-                  |               [ State History ] &lt;----+          |
-                  |                       ^                         |
-                  |                       | (How world evolves)     |
-                  |               [ Transition Model ]              |
-                  |                       ^                         |
-                  |                       | (What my actions do)    |
-                  |               [ What action I do ]              |
-                  |                       |                         |
-                  |                       v                         |
-                  |            [ Condition-Action Rules ]           |
-                  |                       |                         |
-                  +-----------------------|-------------------------+
-                                          v
-                                      Actuators ---&gt; Environment
+<pre><code class="language-text">Sensors --&gt; [What world is like NOW] --&gt; [Condition-Action Rules] --&gt; Actuators
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Internal State Update Equation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The internal state $S_t$ is dynamically updated at each time step using the previous state $S_{t-1}$, the previous action $A_{t-1}$, and the latest percept $P_t$:
-$$S_t = \text{Update}(S_{t-1}, A_{t-1}, P_t)$$</p>
-</div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-architecture-3-goal-based-agents">4. Architecture 3: Goal-Based Agents</h2>
-<p class="secnav"><a href="#3-architecture-2-model-based-reflex-agents">← 3. Architecture 2: Model-Based Ref…</a><span class="secnav-sep">·</span><a href="#5-architecture-4-utility-based-agents">5. Architecture 4: Utility-Based A… →</a></p>
-<p>Knowing the current state of the world is often insufficient to choose an action. The agent needs explicit <strong>Goals</strong>—descriptions of desirable target situations—to guide its search and planning.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The GPS Route Planner</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine standing at a road intersection. A model-based agent knows exactly where it is located. But deciding whether to turn left or right requires a <strong>Goal</strong> (<em>&quot;Navigate to Cochin International Airport&quot;</em>). 
-Instead of triggering hardcoded reflex rules, the agent evaluates future states: <em>&quot;Turning left leads to congested city streets; turning right merges onto the highway toward the airport.&quot;</em></p>
-</div></details><h3>ASCII Architecture Diagram: Goal-Based Agent</h3>
-<pre><code class="language-text">                  +-------------------------------------------------+
-                  |                     AGENT                       |
-                  |                                                 |
-                  |   Sensors ---&gt; [ What the world is like now ]   |
-                  |                       |                         |
-                  |                       v                         |
-                  |               [ Internal State ]                |
-                  |                       |                         |
-                  |                       v                         |
-                  |         [ &quot;What will it be like if I do X?&quot; ]   |
-                  |                       |                         |
-                  |                       v                         |
-                  |                 [ GOALS ] &lt;------------------+  |
-                  |                       |                      |  |
-                  |                       v                      |  |
-                  |              [ Select Action ] --------------+  |
-                  |                       |                         |
-                  +-----------------------|-------------------------+
-                                          v
-                                      Actuators ---&gt; Environment
+<p><strong>Tiny trace:</strong> vacuum senses <code>bump=true</code>, fires <code>IF bump THEN turn_left</code>, moves. If a wide table leg still blocks it, the same percept fires the same rule forever — an infinite loop. That failure in partially observable worlds is the whole lesson.</p>
+<p><strong>Architecture 2 — Model-Based Reflex:</strong> keeps an <strong>internal state</strong> (memory of unobserved aspects) updated by a transition model (how the world evolves) and a sensor model (how actions affect sensing):</p>
+<p>$$S_t = \text{Update}(S_{t-1}, A_{t-1}, P_t)$$</p>
+<p>Symbol by symbol: <code>S_t</code> = current internal state estimate; <code>S_{t-1}</code> = previous estimate; <code>A_{t-1}</code> = last action taken; <code>P_t</code> = newest percept. Intuition: remember where you were, account for what you did, correct with what you now see.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Driving Through a Mountain Tunnel</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>GPS drops in a tunnel, but the car propagates &quot;60 km/h straight for 3 s means still centered&quot; until signals return. Memory bridges blindness. Drop the tunnel after this; the equation above is the examinable content.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Fatal Flaw of Pure Reflex</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Simple reflex fails under partial observability because identical percepts can demand different actions. The fix is internal state, not more rules.</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-goals-utilities-learning">3. Formal Layer: Goals, Utilities, Learning</h2>
+<p class="secnav"><a href="#2-basic-layer-reflex-agents-no-memory-then-memory">← 2. Basic Layer: Reflex Agents (No …</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Architecture 3 — Goal-Based:</strong> adds explicit <strong>goals</strong> (desired situations) and plans by asking &quot;what happens if I do X?&quot; A GPS that knows its position still needs the destination &quot;airport&quot; to choose left vs. right. Method: search/planning over future states to reach the goal.</p>
+<p><strong>Architecture 4 — Utility-Based:</strong> goals are binary (reached/not). Real choices need quality trade-offs, so a <strong>utility function</strong> scores states with real numbers:</p>
+<p>$$U: S \rightarrow \mathbb{R}$$</p>
+<p>meaning function <code>U</code> maps each state <code>S</code> to a real number (its desirability). The agent picks:</p>
+<p>$$a^* = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)$$</p>
+<p>Symbols: <code>a*</code> = best action; <code>A</code> = action set; <code>s&#39;</code> = possible next state; <code>P</code> = transition probability; <code>U(s&#39;)</code> = next-state score. Tiny numbers: Route A (25 min, $30, risky) scores 60; Route B (30 min, $0, safe) scores 85 — goal-based calls both &quot;arrive,&quot; utility-based picks B.</p>
+<p><strong>Architecture 5 — Learning Agent (four parts):</strong> starts with little knowledge and improves. (1) <strong>Performance element</strong> selects actions. (2) <strong>Critic</strong> grades against the external performance standard. (3) <strong>Learning element</strong> rewrites rules/models/utilities from that feedback. (4) <strong>Problem generator</strong> proposes exploratory actions (explore vs. exploit).</p>
+<pre><code class="language-text">Sensors --&gt; PERFORMANCE ELEMENT --&gt; Actuators --&gt; Environment
+              ^    |__ CRITIC --&gt; LEARNING ELEMENT --&gt; PROBLEM GENERATOR __|
 </code></pre>
-<hr>
-<p><a id="history"></a></p>
-<h2 id="5-architecture-4-utility-based-agents">5. Architecture 4: Utility-Based Agents</h2>
-<p class="secnav"><a href="#4-architecture-3-goal-based-agents">← 4. Architecture 3: Goal-Based Agen…</a><span class="secnav-sep">·</span><a href="#6-architecture-5-the-learning-agent">6. Architecture 5: The Learning Ag… →</a></p>
-<p>Goals provide only a binary measure of success (Goal achieved vs. Goal not achieved). In complex environments, multiple valid paths reach the goal, but differ in safety, financial cost, time, and comfort. A <strong>Utility Function</strong> maps states to real numbers to optimize trade-offs.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Route Cost vs. Safety Trade-off</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Consider two navigation options to an airport:</p>
-<ul>
-<li><strong>Route A:</strong> 25 minutes, $30 toll fee, high accident rate.</li>
-<li><strong>Route B:</strong> 30 minutes, $0 toll fee, smooth and scenic.</li>
-</ul>
-<p>A goal-based agent treats both routes as identical because both satisfy the goal. A <strong>Utility-Based Agent</strong> uses a mathematical utility function $U(s)$ weighing time, money, and safety to choose Route B as the optimal trade-off.</p>
-</div></details><h3>ASCII Architecture Diagram: Utility-Based Agent</h3>
-<pre><code class="language-text">                  +-------------------------------------------------+
-                  |                     AGENT                       |
-                  |                                                 |
-                  |   Sensors ---&gt; [ What the world is like now ]   |
-                  |                       |                         |
-                  |                       v                         |
-                  |               [ Internal State ]                |
-                  |                       |                         |
-                  |                       v                         |
-                  |      [ &quot;How happy will I be in state S?&quot; ]      |
-                  |                       |                         |
-                  |                       v                         |
-                  |              [ UTILITY FUNCTION ]               |
-                  |                       |                         |
-                  |                       v                         |
-                  |           [ Maximize Expected Utility ]         |
-                  |                       |                         |
-                  +-----------------------|-------------------------+
-                                          v
-                                      Actuators ---&gt; Environment
+<p>Summary matrix (formal layer kept in full):</p>
+<pre><code class="language-text">Architecture      | Memory        | Decides by         | Partial obs? | Learns?
+Simple reflex     | none          | condition-action   | No           | No
+Model-based reflex| internal state| condition-action   | Yes          | No
+Goal-based        | internal state| search to goal     | Yes          | No
+Utility-based     | internal state| maximize U(s)      | Yes          | No
+Learning agent    | evolves       | adapt via critic   | Yes          | Yes
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Expected Utility Maximization</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A utility function maps a state $s$ to a real-valued score:
-$$U: S \rightarrow \mathbb{R}$$
-The rational utility agent selects the action $a^<em>$ maximizing expected utility:
-$$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)$$</p>
-</div></details><hr>
-<h2 id="6-architecture-5-the-learning-agent">6. Architecture 5: The Learning Agent</h2>
-<p class="secnav"><a href="#5-architecture-4-utility-based-agents">← 5. Architecture 4: Utility-Based A…</a><span class="secnav-sep">·</span><a href="#7-comparative-summary-matrix">7. Comparative Summary Matrix →</a></p>
-<p>While reflex, goal, and utility agents rely on human programmers to hardcode rules and transition models, a <strong>Learning Agent</strong> starts with minimal prior knowledge and autonomously improves its performance through interaction.</p>
-<h3>The 4 Core Components of a Learning Agent:</h3>
-<ol>
-<li><strong>Performance Element:</strong> The active operational agent program responsible for selecting external actions based on percepts (e.g., a reflex, goal, or utility core).</li>
-<li><strong>Critic:</strong> Evaluates the agent&#39;s behavior against an external performance standard and provides evaluative feedback (<em>&quot;That action resulted in a penalty&quot;</em>).</li>
-<li><strong>Learning Element:</strong> Responsible for making improvements. It takes feedback from the critic and updates the internal rules, state models, or utility functions.</li>
-<li><strong>Problem Generator (Learning Goals):</strong> Proactively suggests new exploratory actions that lead to novel experiences, balancing exploration of unknown states against exploitation of known rewards.</li>
-</ol>
-<h3>ASCII Architecture Diagram: Learning Agent</h3>
-<pre><code class="language-text">                  +-------------------------------------------------------------+
-                  |                           AGENT                             |
-                  |                                                             |
-                  |   Sensors                                                   |
-                  |      |                                                      |
-                  |      +------------+                                         |
-                  |      |            v                                         |
-                  |      |    [ PERFORMANCE ELEMENT ] &lt;------- [ LEARNING GOALS ]  |
-                  |      |      (Selects Actions)                 (Problem Gen) |
-                  |      |            |                                   ^     |
-                  |      |            v                                   |     |
-                  |      |      Actuators ---&gt; Environment                |     |
-                  |      |            |                                   |     |
-                  |      v            v                                   |     |
-                  |   [ CRITIC ] -------------&gt; [ LEARNING ELEMENT ] -----+     |
-                  |  (Evaluates)                  (Modifies Program)            |
-                  |                                                             |
-                  +-------------------------------------------------------------+
-</code></pre>
-<hr>
-<h2 id="7-comparative-summary-matrix">7. Comparative Summary Matrix</h2>
-<p class="secnav"><a href="#6-architecture-5-the-learning-agent">← 6. Architecture 5: The Learning Ag…</a><span class="secnav-sep">·</span><a href="#8-active-recall-quizzes">8. Active Recall Quizzes →</a></p>
-<pre><code class="language-text">+----------------------+------------------+---------------------+---------------------+---------------------+
-| Architecture         | Memory / State   | Decision Criterion  | Handles Partial Obs?| Learning Capable?   |
-+======================+==================+================-----+---------------------+---------------------+
-| 1. Simple Reflex     | None             | Condition-Action    | No (Fails)          | No                  |
-+----------------------+------------------+---------------------+---------------------+---------------------+
-| 2. Model-Based Reflex| Internal State   | Condition-Action    | Yes                 | No (Unless upgraded)|
-+----------------------+------------------+---------------------+---------------------+---------------------+
-| 3. Goal-Based        | Internal State   | Search &amp; Planning   | Yes                 | No (Fixed goals)    |
-+----------------------+------------------+---------------------+---------------------+---------------------+
-| 4. Utility-Based     | Internal State   | Maximize Utility    | Yes                 | No (Fixed utility)  |
-+----------------------+------------------+---------------------+---------------------+---------------------+
-| 5. Learning Agent    | Evolves over time| Adapts via Critic   | Yes                 | YES (Core feature)  |
-+----------------------+------------------+---------------------+---------------------+---------------------+
-</code></pre>
-<hr>
+<p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-goals-utilities-learning">← 3. Formal Layer: Goals, Utilities,…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>KTU procedure:</strong> to draw any architecture, show sensors in, state/model boxes, decision box, actuators out; for learning agents add the critic-learning-generator loop explicitly.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Simple vs. model-based reflex</td>
+<td>No memory (loops blind) vs. state memory bridging gaps</td>
+</tr>
+<tr>
+<td>Goal vs. utility</td>
+<td>Binary success vs. scored trade-offs (<code>U(s)</code> real numbers)</td>
+</tr>
+<tr>
+<td>Performance element vs. learning element</td>
+<td>Acts now vs. rewrites future acting rules</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Table size <code>|P|^t</code> is exponential in history length, not linear. (2) Goal agents still need a model to predict futures. (3) Utility functions are fixed unless a learning element updates them.</p>
+<p><strong>Limitations:</strong> reflex/goal/utility designs inherit designer models and cannot fix wrong priors — only the learning agent adapts. Learning costs samples, feedback design, and exploration risk.</p>
 <p><a id="self-check"></a></p>
-<h2 id="8-active-recall-quizzes">8. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#7-comparative-summary-matrix">← 7. Comparative Summary Matrix</a><span class="secnav-sep">·</span><a href="#9-worked-university-exam-q-a">9. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Which agent architecture is required when an environment is Partially Observable and a simple reflex agent gets trapped in an infinite loop?</span>
@@ -502,7 +380,7 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>A Model-Based Reflex Agent maintains an <strong>internal state</strong> to track aspects of the world currently outside sensor range, resolving partial observability traps.</p><pre><code>&lt;/div&gt;
+      <p>Partial observability traps need internal state tracking unobserved aspects. Model-based reflex adds exactly that memory plus transition/sensor models.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -527,7 +405,7 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Goals are binary (did we arrive at the destination?). Utility functions assign real-valued scores to states, allowing the agent to evaluate competing trade-offs such as travel time, monetary cost, and safety.</p><pre><code>&lt;/div&gt;
+      <p>Goals say arrived-or-not; utilities score how good each arrival is (time, cost, safety), enabling optimal trade-offs via expected-utility maximization.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -552,7 +430,7 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Problem Generator suggests non-greedy, exploratory actions that allow the agent to discover superior long-term strategies rather than remaining stuck in suboptimal routines.</p><pre><code>&lt;/div&gt;
+      <p>The problem generator suggests non-greedy probes so the agent discovers better long-term strategies instead of freezing on early rewards.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -577,39 +455,21 @@ $$a^</em> = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The table size $|P|^t$ grows exponentially with the length of the percept history $t$, requiring astronomical memory for even modest time horizons.</p><pre><code>&lt;/div&gt;
+      <p>Rows multiply per percept per step (|P|^t). Even tiny horizons explode beyond any buildable memory, forcing computed architectures.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="9-worked-university-exam-q-a">9. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#8-active-recall-quizzes">← 8. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> State the 4 components of a Learning Agent or explain Condition-Action rules in Simple Reflex Agents.</li>
-<li><strong>7 Marks:</strong> Differentiate between Goal-Based and Utility-Based Agents, or draw and explain the full Learning Agent architecture.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Draw the structural block diagram of a Simple Reflex Agent and explain its core limitation.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>Diagram:</strong> Sensors $\rightarrow$ &quot;What the world is like now&quot; $\rightarrow$ Condition-Action Rules $\rightarrow$ Actuators.</li>
-<li><strong>Core Limitation:</strong> Simple reflex agents make decisions based <em>only</em> on the immediate percept. In partially observable environments, unobserved variables can cause identical percepts to require different actions, trapping the agent in infinite loops.</li>
-</ul>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: four learning-agent parts or simple-reflex limits. 7 marks: goal-vs-utility essay or full learning-agent diagram with parts.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>Agent = Architecture + Program</code>; <code>|P|^t</code> explosion; <code>S_t = Update(S_{t-1}, A_{t-1}, P_t)</code> with symbols; <code>U: S -&gt; R</code> plus argmax rule; four learning parts; five-row comparison matrix.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Draw simple reflex and state its core limit.</strong></p>
+<p><strong>Model Answer:</strong> Sensors -&gt; present-state interpreter -&gt; condition-action rules -&gt; actuators. Limit: current-percept-only decisions loop forever when hidden state makes identical percepts need different actions.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Explain the architecture of a Learning Agent. Describe the function of each of its four primary components with a neat diagram.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Overview (1 Mark):</strong> Unlike static agents with fixed programming, a learning agent separates decision execution from learning, allowing it to adapt to unknown environments.</li>
-<li><strong>Diagram (2 Marks):</strong> Draw the 4-component block diagram showing Sensors $\rightarrow$ Critic $\rightarrow$ Learning Element $\rightarrow$ Problem Generator $\rightarrow$ Performance Element $\rightarrow$ Actuators.</li>
-<li><strong>Component Breakdown (4 Marks):</strong><ul>
-<li><strong>Performance Element:</strong> The active agent program responsible for selecting external actions based on percepts (e.g., reflex, goal, or utility mechanism).</li>
-<li><strong>Critic:</strong> Evaluates the agent&#39;s behavior against an external performance standard and provides scalar reward/penalty feedback.</li>
-<li><strong>Learning Element:</strong> Updates the agent program&#39;s rules, transition models, or utility functions based on feedback from the critic.</li>
-<li><strong>Problem Generator:</strong> Proactively suggests novel, exploratory actions (exploration vs. exploitation) so the agent discovers new strategies.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: Explain the learning agent&#39;s four components with a diagram.</strong></p>
+<p><strong>Model Answer:</strong> Performance element acts; critic grades against external standard; learning element rewrites rules/models/utilities; problem generator explores. Diagram shows sensors feeding performance and critic, critic to learning, learning to performance plus generator loop, performance to actuators.
+:::</p>
 
     </main>
 

@@ -287,8 +287,11 @@
 <h1>Module 2 Practice Lab: Graphs &amp; Divide-and-Conquer Drills</h1>
 <p><strong>Union-Find pointer traces, DFS edge autopsies, Kosaraju order drills, Strassen-vs-naive decisions, and exam essay models.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<h2 id="1-start-from-zero-how-to-use-this-lab">1. Start from zero — how to use this lab</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p><strong>Problem first.</strong> Module 2&#39;s exam marks go to traces, not slogans: pointer states after each UNION, edge types with colour evidence, Kosaraju orders that survive direction scrutiny, Strassen verdicts with constants acknowledged. Abbreviations: FIND/UNION = the disjoint-set operations; $d[v]$/$f[v]$ = DFS discovery/finish times; OPT = optimal value.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Treat each scenario as a marking scheme: state the setup, show every intermediate state (forest with ranks, colours with times, bounds with arithmetic), then conclude with the certificate (connectivity verdict, cycle proof, ratio verdict). The three scenarios below model exactly that discipline.</p>
+</div></details><p><strong>Tiny warm-up.</strong> UNION(1,2) by rank from singletons: tie $0,0$ → 2 under 1, rank(1) = 1. One line, three facts (parent, rank, tie rule cited).</p>
 <h3>Scenario 1: Union-Find Surgery (Ranks on the Table)</h3>
 <p>Singletons ${1..6}$. UNION(1,2): tie → 2 under 1, rank(1)=1. UNION(3,4): 4 under 3, rank(3)=1. UNION(1,3): tie 1 vs 1 → 3 under 1, rank(1)=2. Forest: $1$ roots ${1,2,3,4}$ (children $2,3$; grandchild $4$), ${5}$, ${6}$ untouched. FIND(4): climbs $4 \to 3 \to 1$, rewiring $4$ directly under $1$. Are 2 and 4 connected? FIND both → root 1 each: <strong>yes</strong>, in near-constant time — and the second query on either is a single hop. Ranks used: ${r_1=2, r_3=1, \text{rest } 0}$.</p>
 <h3>Scenario 2: DFS Autopsy (One Graph, Four Edge Species)</h3>
@@ -298,7 +301,7 @@
 <hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
-<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<p class="secnav"><a href="#1-start-from-zero-how-to-use-this-lab">← 1. Start from zero — how to use th…</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
 <table>
 <thead>
 <tr>

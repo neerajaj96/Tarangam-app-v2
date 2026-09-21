@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,50 +297,124 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>PCM Digitization: Sampling &amp; Quantization</h1>
 <p><strong>Nyquist sampling theorem, quantization levels vs. bits, the three PCM steps, bit-rate math, and why your voice is 64 kbps.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Voice, music, sensor readings — all smooth analog waves. Networks carry only bits. Converting wave → bits must preserve the wave faithfully, and two opposite errors threaten: sampling too slowly invents phantom frequencies, rounding too coarsely adds permanent hiss.</p>
+<p>The problem before the solution: freeze the wave often enough (<strong>sampling</strong>), round each freeze finely enough (<strong>quantization</strong>), and encode the rounds as bits (<strong>encoding</strong>) — the three-step PCM (Pulse Code Modulation) pipeline — at a total bit rate the channel can actually carry.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flip-Book</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Analog voice is smooth motion; digital voice is a flip-book — freeze the motion into stills fast enough (<strong>sampling</strong>) and coarsely enough (<strong>quantization</strong>), and the eye (ear) can&#39;t tell. Sample too slowly and fast motion aliases into ghosts (a wagon wheel spinning backward on film); round too coarsely and gradients turn to stair-steps (banding in images, hiss in audio). <strong>PCM</strong> is the three-step flip-book factory: sample → quantize → encode.</p>
-</div></details><hr>
+<p>Dropping the flip-book now: $f_{max}$ = highest frequency present; $f_s$ = samples/sec (floor $2f_{max}$); $L$ = levels, $n = \log_2 L$ bits each; $R = f_s \times n$ = bit rate.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-sampling-floor-quantization-price-pipeline-rate">3. Purpose — Sampling Floor, Quant… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PCM (Pulse Code Modulation)</strong></td>
+<td>The sample → quantize → encode pipeline converting analog to digital.</td>
+</tr>
+<tr>
+<td><strong>Sampling / Nyquist rate</strong></td>
+<td>Measuring amplitude $f_s$ times/sec; perfect reconstruction needs $f_s \ge 2f_{max}$ (a different theorem from the Nyquist <em>bit rate</em> — same Harry Nyquist).</td>
+</tr>
+<tr>
+<td><strong>Aliasing</strong></td>
+<td>Undersampling ghosts: high frequencies fold back as phantom lows, unfixable afterward. Prevented by low-pass prefiltering + $f_s \ge 2f_{max}$.</td>
+</tr>
+<tr>
+<td><strong>Quantization</strong></td>
+<td>Rounding each sample to one of $L$ levels ($n = \log_2 L$ bits); rounding error = quantization noise ($\approx 6$ dB SNR per bit).</td>
+</tr>
+<tr>
+<td><strong>Companding ($\mu$-law/A-law)</strong></td>
+<td>Non-uniform quantization for voice: fine steps near silence (where ears discriminate), coarse at shouts.</td>
+</tr>
+<tr>
+<td><strong>PAM (Pulse Amplitude Modulation)</strong></td>
+<td>The raw sampled pulses before quantization — step one of PCM.</td>
+</tr>
+<tr>
+<td><strong>DS0 (Digital Signal 0)</strong></td>
+<td>The 64 kbps telephony standard rate ($8$k samples × $8$ bits).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Sampling: Nyquist Rate (the Other Nyquist!)</h3>
+<h2 id="3-purpose-sampling-floor-quantization-price-pipeline-rate">3. Purpose — Sampling Floor, Quantization Price, Pipeline Rate</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Sampling: Nyquist Rate (the Other Nyquist!)</h3>
 <p>A signal with maximum frequency $f_{max}$ is perfectly reconstructible from samples taken at</p>
 <p>$$f_s \ge 2 f_{max} \quad \text{(samples/sec)}$$</p>
-<p>— the <strong>Nyquist rate</strong>. Undersample ($f_s &lt; 2f_{max}$) and high frequencies <em>fold back</em> as phantom low frequencies (<strong>aliasing</strong>), unfixable after the fact. Practical systems sample slightly above the minimum and low-pass-filter the input first (anti-aliasing).</p>
-<h3>2.2 Quantization: Levels, Bits, Noise</h3>
-<p>Each sample&#39;s amplitude is rounded to one of $L$ levels, encoded in $n = \log_2 L$ bits. Finer levels = smaller rounding (<strong>quantization</strong>) error = higher SNR ($\approx 6$ dB per added bit — each bit halves the step size, quartering noise power). Uniform steps suit uniform signals; voice uses <strong>non-uniform</strong> companding ($\mu$-law/A-law: fine steps near silence where ears discriminate, coarse steps at shouts).</p>
-<h3>2.3 PCM Pipeline and Bit Rate</h3>
+<p>— the <strong>Nyquist rate</strong>. Symbols: $f_{max}$ = highest frequency in the (prefiltered) signal; $f_s$ = sampling frequency. Undersample ($f_s &lt; 2f_{max}$) and high frequencies <em>fold back</em> as phantom low frequencies (<strong>aliasing</strong>), unfixable after the fact. Practical systems sample slightly above the minimum and low-pass-filter the input first (anti-aliasing).</p>
+<h3>3.2 Quantization: Levels, Bits, Noise</h3>
+<p>Each sample&#39;s amplitude is rounded to one of $L$ levels, encoded in $n = \log_2 L$ bits. Finer levels = smaller rounding (<strong>quantization</strong>) error = higher SNR ($\approx 6$ dB per added bit — each bit halves the step size, quartering noise power: $10\log_{10}4 \approx 6.02$ dB). Uniform steps suit uniform signals; voice uses <strong>non-uniform</strong> companding ($\mu$-law/A-law: fine steps near silence where ears discriminate, coarse steps at shouts).</p>
+<h3>3.3 PCM Pipeline and Bit Rate</h3>
 <p><strong>Sample</strong> (PAM pulses) → <strong>Quantize</strong> (round to levels) → <strong>Encode</strong> (bits). Total bit rate:</p>
 <p>$$R = f_s \times n \quad \text{bits/sec}$$</p>
 <p>Classic: telephone voice $f_{max} = 4$ kHz $\to f_s = 8000$/s, $n = 8$ bits ($L = 256$) $\Rightarrow R = 64$ kbps — the legendary <strong>DS0</strong> rate every phone network is dimensioned around. Audio CD: $44.1$ kHz $\times 16$ bits $\times 2$ channels $= 1.411$ Mbps.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Digitization Math</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Sample at <strong>$\ge 2f_{max}$</strong> · bits $n = \log_2 L$ · rate <strong>$R = f_s \times n$</strong> · voice: $8\text{k} \times 8 = \mathbf{64}$ kbps · SNR $\approx$ <strong>6 dB per bit</strong> · aliasing = undersampling ghosts, prevented by filtering + oversampling.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Two Nyquists, Two Different Claims</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Nyquist rate</strong> ($2f_{max}$ sampling, this topic) reconstructs <em>analog waves</em>; <strong>Nyquist bit rate</strong> ($2B\log_2 L$, last topic) caps <em>digital symbols</em>. Same Harry Nyquist, different theorems — exams deliberately place both in one question to test exactly this split. Name which one before computing.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-sampling-floor-quantization-price-pipeline-rate">← 3. Purpose — Sampling Floor, Quant…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Signal to $1$ kHz, 2-bit quantization ($L = 4$). Floor: $f_s \ge 2000$/s. Rate: $2000 \times 2 = 4$ kbps. Sample at $1500$/s instead and the $750$–$1000$ Hz band folds into $500$–$750$ Hz ghosts (folding around $f_s/2 = 750$ Hz) — wrong audio, not worse audio.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A music signal limited to $15$ kHz must be digitized with 12-bit quantization. (a) Minimum sampling rate? (b) Resulting bit rate? (c) If the channel offers only $200$ kbps, is this quality transmittable live — and what breaks if we sample at $20$ kHz instead?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Sampling, Rating, Checking</div><div class="step-content"><p>(a) $f_s \ge 2 \times 15{,}000 = 30{,}000$ samples/sec. (b) $R = 30{,}000 \times 12 = 360{,}000$ bps $= 360$ kbps. (c) $360 &gt; 200$ kbps — <strong>not</strong> transmittable live at this quality (compress, cut bits, or accept delay). Sampling at $20$ kHz $&lt; 30$ kHz minimum: frequencies $10$–$15$ kHz <strong>alias</strong> into $5$–$10$ kHz ghosts — permanent corruption no filter can undo afterward.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Quality costs rate linearly in <em>both</em> knobs (samples × bits), and the sampling knob has a hard floor — below $2f_{max}$ you don&#39;t get &quot;worse audio,&quot; you get <em>wrong</em> audio. Every digitization question is: floor the rate, multiply the bits, compare with the channel.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nyquist rate vs. Nyquist bit rate</td>
+<td>$2f_{max}$ sampling floor vs. $2B\log_2L$ symbol ceiling.</td>
+</tr>
+<tr>
+<td>Sampling vs. quantization</td>
+<td>Time discretization ($f_s$) vs. amplitude discretization (levels/bits).</td>
+</tr>
+<tr>
+<td>Aliasing vs. quantization noise</td>
+<td>Wrong frequencies (incurable) vs. rounding hiss (finer bits/companding help).</td>
+</tr>
+<tr>
+<td>Uniform vs. companded steps</td>
+<td>Even resolution vs. resolution matched to perception (voice: $\mu$-law).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Sampling at $f_{max}$ &quot;because it exceeds the signal&quot; — the floor is <em>twice</em>. (2) Confusing the two Nyquists mid-question — label before computing. (3) Post-filtering aliased audio — ghosts are inseparable afterward.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>PCM = sample (PAM) → quantize → encode. Floor $f_s \ge 2f_{max}$ (prefilter first); aliasing = fold-around-$f_s/2$ ghosts, incurable. Bits $n = \log_2L$; rate $R = f_s n$ (voice $8$k×$8$ = DS0 64 kbps); $\approx 6$ dB SNR per bit; voice uses $\mu$-law companding (fine near silence).</p>
+</div></details><p><strong>Active-recall checklist:</strong> Derive DS0 from $f_{max}$ and $n$. What folds where at $f_s = 20$ kHz on a 15 kHz signal? Why 6 dB per bit? When is uniform quantization wrong?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Human voice for telephony is band-limited to 4 kHz and quantized at 8 bits. What sampling rate and bit rate result, and why these exact numbers?</span>
@@ -521,7 +599,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_03_pcm_digitization_sampling_quantization";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

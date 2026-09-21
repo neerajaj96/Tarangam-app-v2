@@ -5,11 +5,12 @@ module: 3
 sequence: 3
 title: 'Multiple Access: Sharing One Channel'
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 9
 learningObjectives:
   - Contrast partitioning with random-access etiquette
   - Rank Aloha, slotted Aloha, CSMA, and CSMA/CD by efficiency
   - Assign CD to wire and CA to radio from the physics
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - TDMA
   - Aloha
@@ -25,42 +26,65 @@ tags:
 **Channel partitioning (TDMA/FDMA/CDMA), random access (Aloha, CSMA, CSMA/CD), efficiency math, and why Ethernet listens before and during talking.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+Six people share one conversation channel; early Ethernet machines shared one wire; café laptops share one radio band. If everyone talks at once, everything collides. Two opposite fixes exist: **partition** the channel in advance (no collisions ever, but idle waste), or let anyone **contend** with etiquette for collisions (no idle waste, but collision overhead).
+
+The problem before the solution: share one channel among many bursty speakers with minimum waste. Partitioning suits steady, always-busy speakers; random access suits bursty, mostly-idle ones — and sensing/listening upgrades climb an efficiency ladder from 18% to near-wire-speed.
 
 ::: callout-intuition Core Mental Model: The Dinner Table
-Six people, one conversation channel. **Partitioning** assigns turns (round-robin), topics (frequency bands), or languages (codes) — orderly, but a lone speaker wastes everyone else's slots. **Random access** lets anyone blurt out, with etiquette for collisions: Aloha shouts and hopes; CSMA *listens first*; CSMA/CD keeps listening *while* talking and stops mid-word on collision ("sorry — you go"). The exam is entirely about which etiquette fits which crowd size and what fraction of airtime survives.
+Six people, one conversation channel. **Partitioning** assigns turns (round-robin), topics (frequency bands), or languages (codes) — orderly, but a lone speaker wastes everyone else's slots. **Random access** lets anyone blurt out, with etiquette for collisions: Aloha shouts and hopes; CSMA (Carrier Sense Multiple Access) *listens first*; CSMA/CD (Collision Detection) keeps listening *while* talking and stops mid-word on collision ("sorry — you go"). The exam is entirely about which etiquette fits which crowd size and what fraction of airtime survives.
+
+Dropping the table now: TDMA (Time Division Multiple Access) = time slots; FDMA (Frequency Division Multiple Access) = frequency bands; CDMA (Code Division Multiple Access) = orthogonal codes; Aloha = transmit-and-hope (18% / 37%); CSMA = listen-first; CD = abort-while-talking + backoff.
 :::
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **TDMA / FDMA / CDMA** | Partition by time slots / frequency sub-bands / orthogonal spreading codes — collision-free by construction, wasteful when idle. |
+| **Pure Aloha** | Transmit whenever data is ready; maximum efficiency $1/2e \approx 18\%$. |
+| **Slotted Aloha** | Transmit only at slot boundaries (needs clock sync); efficiency $1/e \approx 37\%$ — the maximum at optimal attempt rate for large populations. |
+| **CSMA (Carrier Sense Multiple Access)** | Listen-before-talk; collisions still possible within one propagation delay. |
+| **CSMA/CD (… with Collision Detection)** | Wired Ethernet's upgrade: listen *while* talking; on collision, abort + jam signal + binary exponential backoff (wait uniform random $0..2^k-1$ slot times after $k$th collision). |
+| **Vulnerable window** | The time span in which another transmission destroys yours: 2 frame times (pure Aloha) → 1 (slotted) → propagation delay (CSMA) → $2\tau$ abort gap (CD). |
+| **$2\tau$ rule** | Minimum frame transmission time $\ge$ worst round-trip propagation delay, so the sender is still transmitting when the collision echo returns. |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Partitioning, Random Access, Efficiency Ladder
 
-### 2.1 Channel Partitioning: Collision-Free by Construction
+### 3.1 Channel Partitioning: Collision-Free by Construction
 
 * **TDMA:** time sliced into frames → slots; each node owns periodic slots. Wasteful when idle (empty slots), perfect when all busy.
 * **FDMA:** band split into sub-bands per node. Same trade, frequency-flavored (classic radio/TV).
 * **CDMA:** all share time *and* frequency; orthogonal codes separate speakers (each receiver filters by its code). No idle waste from scheduling, but needs code agreement and power control (the near-far problem).
 
-### 2.2 Random Access: Collisions Managed, Not Prevented
+### 3.2 Operation Flow: Random Access — Collisions Managed, Not Prevented
 
-* **Pure Aloha:** transmit whenever; frames collide partially → max efficiency only **18%** ($1/2e$).
-* **Slotted Aloha:** transmit only at slot starts (needs clock sync); collisions are total-or-nothing → efficiency doubles to **37%** ($1/e$) — the price of collision *vulnerability windows*.
-* **CSMA:** **listen before talk** — defer while the channel sounds busy. Collisions still happen (propagation delay: two nodes can both hear silence and start together), but far less often.
-* **CSMA/CD (classic Ethernet):** listen *while* talking; on collision detection, **abort + jam signal + binary exponential backoff** (wait random $0..2^k-1$ slot times after $k$th collision). Minimum frame size exists precisely so a sender is *still transmitting* when the collision echo returns ($2\tau$ rule: frame time ≥ worst round-trip propagation).
+Numbered etiquette ladder, each rung shrinking the vulnerable window:
+
+1. **Pure Aloha:** transmit whenever; frames collide partially → max efficiency only **18%** ($1/2e$).
+2. **Slotted Aloha:** transmit only at slot starts (needs clock sync); collisions are total-or-nothing → efficiency doubles to **37%** ($1/e$) — the price of collision *vulnerability windows*.
+3. **CSMA:** **listen before talk** — defer while the channel sounds busy. Collisions still happen (propagation delay: two nodes can both hear silence and start together), but far less often.
+4. **CSMA/CD (classic Ethernet):** listen *while* talking; on collision detection, **abort + jam signal + binary exponential backoff** (wait random $0..2^k-1$ slot times after $k$th collision). Minimum frame size exists precisely so a sender is *still transmitting* when the collision echo returns ($2\tau$ rule: frame time ≥ worst round-trip propagation).
 
 ::: callout-formula KTU Formula Vault: Efficiency Ladder
 Pure Aloha **18%** ($1/2e$) · slotted Aloha **37%** ($1/e$) · CSMA better (carrier sense shrinks the vulnerable window to propagation delay) · CSMA/CD best on wire (abort + backoff). Binary backoff after $k$ collisions: uniform in $[0, 2^k-1]$ slots. Min-frame rule: transmission time $\ge 2\tau_{max}$.
 :::
 
 ::: callout-pitfall CD Needs a Wire (Collision *Detection* ≠ Avoidance)
-Detecting your own collision while transmitting works on wires (measure the voltage) but **not on wireless** (your own transmitter deafens your receiver — the hidden-terminal problem). So Ethernet uses CSMA/**CD**, Wi-Fi uses CSMA/**CA** (avoidance: RTS/CTS + backoff, next topics). Swapping the acronyms is the #1 protocol-naming trap.
+Detecting your own collision while transmitting works on wires (measure the voltage) but **not on wireless** (your own transmitter deafens your receiver — the hidden-terminal problem). So Ethernet uses CSMA/**CD**, Wi-Fi uses CSMA/**CA** (Collision Avoidance: RTS/CTS — Request to Send / Clear to Send — + backoff, next topics). Swapping the acronyms is the #1 protocol-naming trap.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+Two stations, slotted Aloha, each attempts with $p = 0.5$ per slot. Success = exactly one transmits: $2(0.5)(0.5) = 0.5$ — half the slots useful. Drop to optimal $p = 1/2$... precisely: optimum $p = 1/N = 0.5$ here gives $0.5$; with $N = 10$ at $p = 0.1$, success $= 10(0.1)(0.9)^9 \approx 0.387$ — converging toward the $1/e \approx 37\%$ ceiling as $N$ grows.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
 Four stations share a 10 Mbps channel with slotted Aloha, each frame 1 ms, each station attempting with probability $p = 0.25$ per slot. Compute the vulnerable reasoning: success probability per slot, throughput, and how CSMA/CD would change the picture on a short wire.
@@ -74,10 +98,26 @@ A slot succeeds iff **exactly one** station transmits: $4 \times 0.25 \times 0.7
 Random access without sensing wastes most airtime on collisions (Aloha's 18–37%); sensing (CSMA) and aborting (CD) convert wasted frames into tiny $2\tau$ gaps — the exact ladder the vault lists, now with numbers attached.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| Partition vs. contention | Pre-assigned slots/bands/codes vs. transmit-and-resolve — steady vs. bursty workloads. |
+| Pure vs. slotted Aloha | 2-frame vs. 1-frame vulnerable window (18% vs. 37% maxima). |
+| CD vs. CA | Wired abort-while-talking vs. wireless reserve-before-talking — physics picks. |
+| Backoff range after $k$ collisions | Uniform over $[0, 2^k-1]$ slots — exponential growth, not fixed wait. |
+
+**Watch out:** (1) Quoting 37% for pure Aloha — that's the slotted maximum. (2) Assigning CD to Wi-Fi — radios can't detect while transmitting. (3) Forgetting the $2\tau$ minimum-frame rationale — deaf senders never back off.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+Partition (TDMA/FDMA/CDMA): collision-free, idle-wasteful. Random access ladder: pure Aloha 18% → slotted 37% (halved vulnerability) → CSMA (sense shrinks it to propagation delay) → CSMA/CD (abort + jam + backoff in $[0,2^k-1]$, min-frame $2\tau$ rule). CD = wired voltage-sensing; CA = wireless reservation (next topics).
+:::
+
+**Active-recall checklist:** What mechanism doubles Aloha's efficiency? Why does Ethernet mandate minimum frames? State the backoff range after 3 collisions. Which acronym belongs on radio, and why?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Slotted Aloha doubles pure Aloha's efficiency (18% → 37%). What single mechanism causes the doubling?
 () Slots make frames travel faster than light

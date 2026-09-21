@@ -5,11 +5,12 @@ module: 2
 sequence: 99
 title: 'Module 2 Practice Lab: Transport-Layer Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Census sockets with demultiplexing keys exactly
   - Compute timeouts with Karn-corrected RTT smoothing
   - Settle GBN against selective-repeat under identical loss
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - transport scenarios
   - timeout arithmetic
@@ -32,6 +33,8 @@ tags:
 <a id="the-intuition"></a>
 ## 1. Step-by-Step Scenario Analysis
 
+Each scenario chains one module idea end to end — demultiplexing keys (M2.1), RTT smoothing with Karn's rule (M2.3), window traces (M2.4), handshake/teardown and flow windows (M2.5), congestion events (M2.6). Abbreviations: TCP (Transmission Control Protocol), UDP (User Datagram Protocol), RTT (Round-Trip Time), SRTT (Smoothed RTT), GBN (Go-Back-N), SR (Selective Repeat), ISN (Initial Sequence Number), MSL (Maximum Segment Lifetime).
+
 ### Scenario 1: The Startup's Socket Census
 
 A server hosts HTTP (port 80), DNS (53/UDP), and FTP-control (21). At one instant: 200 browser clients hold HTTP connections, 50 DNS queries are in flight, 3 admins hold FTP sessions. Count the server's sockets and state each one's demux key: HTTP → 200 connection sockets (4-tuples; clients' source ports differ) + 1 welcoming socket; DNS → 1 socket (2-tuple port 53 shared by all 50 queries); FTP → 3 control sockets + 0 data (idle between transfers). Total: **205 sockets**, three keying disciplines on one machine.
@@ -46,9 +49,7 @@ Window $N=5$, packets 0–6 queued, packet 1 lost once. **GBN:** sends 0–4, re
 
 ### Scenario 4: Congestion Double Feature
 
-Reno flow, cwnd = 30, ssthresh = 40 (congestion avoidance): triple dup-ACKs → ssthresh = 15, cwnd = 15, fast recovery (no slow start). Later at cwnd = 20 the timer expires → ssthresh = 10, cwnd = 1, slow start doubles 1→2→4→8 (crossing 10? no — 8 < 10, continue) → 16 (past ssthresh → additive from here). Moral: dup-ACKs cost half; silence costs everything.
-
----
+Reno flow, cwnd (congestion window) = 30, ssthresh (slow-start threshold) = 40 (congestion avoidance): triple dup-ACKs → ssthresh = 15, cwnd = 15, fast recovery (no slow start). Later at cwnd = 20 the timer expires → ssthresh = 10, cwnd = 1, slow start doubles 1→2→4→8 (crossing 10? no — 8 < 10, continue) → 16 (past ssthresh → additive from here). Moral: dup-ACKs cost half; silence costs everything.
 
 <a id="the-dimensions"></a>
 ## 2. "Do Not Confuse" Cheat Table
@@ -62,9 +63,10 @@ Reno flow, cwnd = 30, ssthresh = 40 (congestion avoidance): triple dup-ACKs → 
 | rwnd vs. cwnd | Receiver's free buffer (advertised) vs. network-safe flight size (inferred); sender honors min |
 | 3-way vs. 4-step | Setup synchronizes both ISNs (SYN/SYNACK/ACK); teardown closes each direction independently + 2MSL |
 | Tahoe vs. Reno | Any loss → cwnd=1 vs. dup-ACKs halve + fast recovery, timeout resets |
-| Slow start vs. avoidance | Exponential doubling to ssthresh vs. +1 MSS/RTT AIMD probing above it |
+| Slow start vs. avoidance | Exponential doubling to ssthresh vs. +1 MSS (Maximum Segment Size)/RTT AIMD (Additive Increase Multiplicative Decrease) probing above it |
+| AIMD fairness scope | Converges for similar-RTT flows; heterogeneous RTTs skew shares |
 
----
+**Watch out:** (1) Sampling a retransmitted segment "because data is data" — Karn forbids unattributable samples. (2) Resetting cwnd on dup-ACKs under Reno — halve, don't reset. (3) Calling TCP purely GBN or purely SR — cumulative ACKs/single timer plus buffering and SACK (Selective Acknowledgment).
 
 <a id="self-check"></a>
 ## 3. Active Recall Quizzes
@@ -104,8 +106,6 @@ Severity ladder: dup-ACKs prove delivery continues (halve, proceed); timeout pro
 ::: explanation
 A measurement needs a known start time; two transmissions give two candidate starts and one ACK. Using it anyway injects fiction into the smoothed estimates — timeouts computed from fiction misfire both ways (premature + sluggish). Discard is data hygiene, not waste.
 :::
-
----
 
 <a id="exam-focus"></a>
 ## 4. High-Yield University Exam Questions

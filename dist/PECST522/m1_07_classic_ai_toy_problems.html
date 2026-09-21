@@ -269,131 +269,89 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Classic AI Toy Problems &amp; Real-World Formulations</h1>
-<p><strong>Formal problem formulations: Vacuum World, Sliding 8-Puzzle, 8-Queens problem, and real-world search problems.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-toy-problems-vs-real-world-problems">1. Toy Problems vs. Real-World Problems</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-vacuum-world">2. The Vacuum World →</a></p>
-<p>When AI researchers develop and benchmark new search algorithms, they do not test them immediately on complex, massive real-world systems. Instead, they use <strong>Toy Problems</strong>.</p>
-<ul>
-<li><strong>Toy Problem:</strong> A concise, formal, and clearly defined problem with exact mathematical rules and a manageable state space, used to compare and evaluate search algorithms.</li>
-<li><strong>Real-World Problem:</strong> A production problem whose solutions have direct practical, scientific, or financial value (e.g., airline scheduling, autonomous navigation, chip routing).</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flight Simulator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of a toy problem like a flight simulator used in pilot training. It has simplified physics and an artificial cockpit, allowing pilots to master flight principles safely before handling a commercial airliner. In AI, toy problems allow us to verify search algorithms before deploying them to high-stakes applications.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-the-vacuum-world">2. The Vacuum World</h2>
-<p class="secnav"><a href="#1-toy-problems-vs-real-world-problems">← 1. Toy Problems vs. Real-World Pro…</a><span class="secnav-sep">·</span><a href="#3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle →</a></p>
-<p>The <strong>Vacuum World</strong> is a foundational toy problem for single-agent search and reflex planning.</p>
-<h3>Formal Formulation (The 5-Tuple)</h3>
+<p><strong>Problem: new search algorithms need small exact arenas before real deployment. By the end you can formulate Vacuum World, 8-Puzzle, and 8-Queens as 5-tuples, count their states, and lift the pattern to real problems.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-simulators-before-airliners">1. Start From Zero: Simulators Before Airliners</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-vacuum-world-and-8-puzzle">2. Basic Layer: Vacuum World and 8… →</a></p>
+<p>Pilots train in flight simulators (simplified, safe, exact rules) before flying airliners. <strong>Toy problems</strong> are AI&#39;s simulators: concise formal tasks for comparing algorithms. <strong>Real-world problems</strong> (scheduling, navigation, chip layout) carry practical value but huge noisy spaces.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Flight Simulator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Master principles cheaply in simulation, then deploy where mistakes cost money. Drop the cockpit after this; the technical work is 5-tuple formulation plus state counting.</p>
+</div></details><p><strong>Tiny beginner example:</strong> Vacuum World has 2 rooms and 3 actions — you can enumerate everything by hand. That enumerability is exactly what makes it a benchmark.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-vacuum-world-and-8-puzzle">2. Basic Layer: Vacuum World and 8-Puzzle</h2>
+<p class="secnav"><a href="#1-start-from-zero-simulators-before-airliners">← 1. Start From Zero: Simulators Bef…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-8-queens-formulations-and-real-problems">3. Formal Layer: 8-Queens Formulat… →</a></p>
+<p><strong>Data/state, goal, method:</strong> each problem below is given as initial state, actions, transition model, goal test, path cost.</p>
+<p><strong>Vacuum World:</strong> agent in room A or B; dirt in A, B, both, or neither.</p>
 <ol>
-<li><strong>Initial State:</strong> The agent is in location $A$ or $B$. Dirt can be in $A$, in $B$, in both, or in neither.</li>
-<li><strong>Actions:</strong> <code>[Left, Right, Suck]</code></li>
-<li><strong>Transition Model:</strong> Moving <code>Left</code> places the agent in $A$; moving <code>Right</code> places the agent in $B$; <code>Suck</code> cleans the current location if dirty.</li>
-<li><strong>Goal Test:</strong> Are all locations clean?</li>
-<li><strong>Path Cost:</strong> 1 unit per action taken.</li>
+<li>Initial: agent at A or B with a dirt pattern. 2. Actions: Left, Right, Suck. 3. Transitions: moves relocate; Suck cleans current square. 4. Goal test: all squares clean. 5. Path cost: 1 per action.</li>
 </ol>
-<h3>ASCII Diagram: Vacuum World State Transitions</h3>
-<pre><code class="language-text">      +--------------------+                 +--------------------+
-      | State 1:           |                 | State 2:           |
-      | [Agent at A, Dirty]| --(Action: Suck)--&gt; | [Agent at A, Clean]|
-      +--------------------+                 +--------------------+
-               |                                       |
-        (Action: Right)                         (Action: Right)
-               v                                       v
-      +--------------------+                 +--------------------+
-      | State 3:           |                 | State 4:           |
-      | [Agent at B, Dirty]|                 | [Agent at B, Clean]|
-      +--------------------+                 +--------------------+
+<pre><code class="language-text">[Agent A, Dirty] --Suck--&gt; [Agent A, Clean]
+      | Right                    | Right
+      v                          v
+[Agent B, Dirty]           [Agent B, Clean]
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of Vacuum World</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With 2 physical locations, 2 dirt states per location ($\text{Clean}$ or $\text{Dirty}$), and 2 possible agent locations:
-$$\text{Total States} = 2 \times 2 \times 2 = 8 \text{ possible world states}$$</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-the-sliding-8-puzzle">3. The Sliding 8-Puzzle</h2>
-<p class="secnav"><a href="#2-the-vacuum-world">← 2. The Vacuum World</a><span class="secnav-sep">·</span><a href="#4-the-8-queens-problem">4. The 8-Queens Problem →</a></p>
-<p>The <strong>8-Puzzle</strong> is a sliding-tile problem consisting of a $3 \times 3$ board with 8 numbered tiles and one empty space (the blank).</p>
-<h3>Formal Formulation &amp; The &quot;Blank Tile&quot; Standard</h3>
-<ul>
-<li><strong>States:</strong> The positions of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Instead of defining actions by which <em>tile</em> moves (which varies based on position), we formulate actions by <strong>moving the blank space</strong>: <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Given a state and an action, returns the resulting board layout after swapping the blank with the adjacent tile.</li>
-<li><strong>Goal Test:</strong> Matches a target numerical configuration (e.g., tiles 1 through 8 in sequential order).</li>
-<li><strong>Path Cost:</strong> 1 unit per slide.</li>
-</ul>
-<h3>ASCII Diagram: The 8-Puzzle Board</h3>
-<pre><code class="language-text">      +---+---+---+             +---+---+---+
-      | 1 | 2 | 3 |             | 1 | 2 | 3 |
-      +---+---+---+             +---+---+---+
-      | 8 |   | 4 |  --(Move)--&gt;| 8 | 4 |   |
-      +---+---+---+             +---+---+---+
-      | 7 | 6 | 5 |             | 7 | 6 | 5 |
-      +---+---+---+             +---+---+---+
+<p><strong>Meaning, variables, formula:</strong> 2 agent positions times 2 dirt states per room (clean/dirty each):</p>
+<p>$$\text{States} = 2 \times 2 \times 2 = 8$$</p>
+<p><strong>8-Puzzle:</strong> 3x3 board, 8 numbered tiles, one blank.
+States: tile-plus-blank positions. Actions: move the <strong>blank</strong> Up/Down/Left/Right (standardizing on the blank keeps at most 4 uniform choices; tile-based moves vary by position). Transitions: swap blank with neighbour. Goal test: target arrangement. Path cost: 1 per slide.</p>
+<pre><code class="language-text">1 2 3      1 2 3
+8 _ 4  --&gt; 8 4 _
+7 6 5      7 6 5
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: State Space Size of the 8-Puzzle</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The total permutations of 9 elements on a grid is $9! = 362,880$. However, parity constraints (inversions) mean that exactly half of these configurations cannot be reached via legal sliding moves from any starting state:
-$$\text{Reachable States} = \frac{9!}{2} = 181,440$$</p>
-</div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-the-8-queens-problem">4. The 8-Queens Problem</h2>
-<p class="secnav"><a href="#3-the-sliding-8-puzzle">← 3. The Sliding 8-Puzzle</a><span class="secnav-sep">·</span><a href="#5-real-world-search-problems">5. Real-World Search Problems →</a></p>
-<p>The <strong>8-Queens Problem</strong> requires placing 8 queens on an $8 \times 8$ chessboard such that no two queens attack each other (no two share the same row, column, or diagonal).</p>
-<h3>Formulation Strategies: Incremental vs. Complete-State</h3>
-<p>The formulation chosen directly determines the size and shape of the search space.</p>
+<p><strong>State counting with parity:</strong> permutations of 9 items give <code>9! = 362,880</code>. Sliding preserves inversion parity (even/odd count of out-of-order pairs), so only half are mutually reachable:</p>
+<p>$$\text{Reachable} = 9!/2 = 181,440$$</p>
+<p>Intuition: each slide is an even permutation, so odd-parity layouts from the goal are mathematically unreachable, not just hard.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-8-queens-formulations-and-real-problems">3. Formal Layer: 8-Queens Formulations and Real Problems</h2>
+<p class="secnav"><a href="#2-basic-layer-vacuum-world-and-8-puzzle">← 2. Basic Layer: Vacuum World and 8…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Problem:</strong> place 8 queens with none sharing row, column, or diagonal. <strong>Method choice changes the space enormously:</strong></p>
 <ul>
-<li><strong>Strategy 1: Incremental Formulation (Constructive Placement)</strong><ul>
-<li><em>Initial State:</em> An empty chessboard.</li>
-<li><em>Actions:</em> Add a queen to any empty square.</li>
-<li><em>State Space Size:</em>
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3 \times 10^{14} \text{ states}$$</li>
+<li><strong>Incremental (constructive):</strong> start empty, add a queen per empty square. States: <code>64 x 63 x ... x 57 ~ 3 x 10^14</code> (about 300 trillion).</li>
+<li><strong>Complete-state (repair):</strong> start with one queen per column, move queens within columns. Each of 8 queens has 8 rows: <code>8^8 = 16,777,216</code> (about 16.7 million) — roughly ten-million-fold smaller.</li>
 </ul>
-</li>
-<li><strong>Strategy 2: Complete-State Formulation (Heuristic Repair)</strong><ul>
-<li><em>Initial State:</em> All 8 queens placed on the board with <strong>exactly one queen per column</strong>.</li>
-<li><em>Actions:</em> Move a queen vertically within its column to a different row.</li>
-<li><em>State Space Size:</em> Since each queen is restricted to its own column, each has 8 possible rows:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-</ul>
-</li>
-</ul>
-<h3>ASCII Diagram: 8-Queens Formulations</h3>
-<pre><code class="language-text">      INCREMENTAL (Any empty square)       COMPLETE-STATE (1 Queen per column)
-        .  .  Q  .  .  .  .  .                 Q  .  .  .  .  .  .  .
-        .  .  .  .  Q  .  .  .                 .  .  Q  .  .  .  .  .
-        (Searching 300 trillion states)          .  .  .  .  .  Q  .  .
-                                                 (Searching 16.7 million states)
-</code></pre>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: State Space Explosion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A naive problem formulation can inflate your search space by many orders of magnitude. Restricting problem dimensions early (such as 1 queen per column) prunes invalid configurations and makes search computationally feasible.</p>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="5-real-world-search-problems">5. Real-World Search Problems</h2>
-<p class="secnav"><a href="#4-the-8-queens-problem">← 4. The 8-Queens Problem</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
-<p>Unlike toy problems, real-world problems feature massive search spaces, continuous variables, and noisy data:</p>
-<ul>
-<li><strong>Route Finding &amp; Traveling Salesperson Problem (TSP):</strong><ul>
-<li><em>Route Finding:</em> Computing optimal point-to-point driving directions on road networks (Google Maps, GPS navigation).</li>
-<li><em>TSP:</em> Finding the shortest round-trip tour visiting $N$ cities exactly once and returning to the start. It is an <strong>NP-hard</strong> problem with $(N-1)! / 2$ tours for symmetric graphs.</li>
-</ul>
-</li>
-<li><strong>VLSI Layout Design:</strong> Positioning millions of logic transistors and routing interconnecting wires on silicon chips to minimize signal delay and silicon area without wire overlap.</li>
-<li><strong>Robot Navigation &amp; Motion Planning:</strong> Guiding robotic manipulators through complex 3D workspaces around dynamic obstacles.</li>
-</ul>
-<hr>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: State Space Explosion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Naive formulation multiplies the search bill by orders of magnitude. Restricting dimensions early (one queen per column) prunes invalid regions before search starts.</p>
+</div></details><p><strong>Real-world lifts:</strong> Route finding (point-to-point navigation) and the Travelling Salesperson Problem (TSP — shortest tour visiting N cities once and returning; NP-hard, meaning no known polynomial-time exact method, with <code>(N-1)!/2</code> symmetric tours); VLSI (Very Large Scale Integration) layout (place millions of transistors, route wires, minimize delay/area); robot motion planning (3D paths around dynamic obstacles). All inherit toy structure (states, actions, costs) at massive continuous noisy scale.</p>
+<p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-8-queens-formulations-and-real-problems">← 3. Formal Layer: 8-Queens Formulat…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Incremental vs. complete-state</td>
+<td>Build up from empty vs. repair a full placement</td>
+</tr>
+<tr>
+<td>Toy vs. real-world</td>
+<td>Exact small benchmark vs. massive noisy deployment</td>
+</tr>
+<tr>
+<td>Reachable vs. permuted states</td>
+<td>Legally accessible vs. mathematically listable (parity halves puzzle)</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Blank-based actions are uniform; tile-based are not. (2) Parity unreachability is proof, not bad luck. (3) TSP tour counts explode factorially — never promise exact optimality at scale without qualification.</p>
+<p><strong>Limitations:</strong> toy spaces fit in memory; real spaces need heuristics, approximation, and handling of continuous/noisy data. Formulation skill transfers; exact enumeration does not.</p>
 <p><a id="self-check"></a></p>
-<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#5-real-world-search-problems">← 5. Real-World Search Problems</a><span class="secnav-sep">·</span><a href="#7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why do AI engineers formulate the 8-puzzle by moving the blank space rather than moving the numbered tiles?</span>
@@ -416,7 +374,7 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Standardizing actions around the blank space makes the transition model uniform across all states. The blank can always move into adjacent slots, while individual tiles have variable degrees of movement freedom depending on their board position.</p><pre><code>&lt;/div&gt;
+      <p>Blank-centred actions are uniform across states, simplifying the transition model. Tile-centred moves vary with board position.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -441,7 +399,7 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>By restricting each queen to its own column from the outset, we eliminate vast regions of the search tree where multiple queens share columns, cutting the search space by nearly seven orders of magnitude.</p><pre><code>&lt;/div&gt;
+      <p>One-queen-per-column removes all column-sharing regions up front, cutting the space by about seven orders of magnitude for efficient local search.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -466,47 +424,21 @@ $$8^8 = 16,777,216 \text{ states}$$</li>
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Every legal slide corresponds to an even permutation of tiles (preserving the inversion parity). Half of the $9! = 362,880$ permutations have odd parity and are mathematically unreachable from the standard goal state.</p><pre><code>&lt;/div&gt;
+      <p>Legal slides are even permutations preserving inversion parity. Half of 362,880 layouts have opposite parity and are unreachable from the standard goal.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="7-worked-university-exam-q-a">7. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#6-active-recall-quizzes">← 6. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> Define the 5-tuple formulation of the 8-puzzle or calculate the reachable state space of an $N$-puzzle.</li>
-<li><strong>7 Marks:</strong> Compare incremental vs. complete-state formulations for the 8-Queens problem with full state space calculations.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Formulate the Sliding 8-Puzzle as a search problem by specifying its 5-tuple definition.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>States:</strong> Coordinate locations of each of the 8 numbered tiles and the blank space on the $3 \times 3$ grid.</li>
-<li><strong>Actions:</strong> Moving the blank space <code>[Up, Down, Left, Right]</code>.</li>
-<li><strong>Transition Model:</strong> Returns the new board layout resulting from swapping the blank space with an adjacent tile.</li>
-<li><strong>Goal Test:</strong> Checks whether the current tile configuration matches the target goal state (e.g., tiles 1–8 in order).</li>
-<li><strong>Path Cost:</strong> 1 unit per sliding action.</li>
-</ol>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: 5-tuple of 8-puzzle or reachable-state arithmetic. 7 marks: incremental vs. complete-state for 8-Queens with counts.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> Vacuum 8-state derivation; blank-move standard; <code>9!/2 = 181,440</code> with parity reason; <code>64x...x57 ~ 3.1x10^14</code> vs. <code>8^8 = 16,777,216</code>; TSP <code>(N-1)!/2</code> and NP-hard qualification.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Formulate the 8-Puzzle as a 5-tuple.</strong></p>
+<p><strong>Model Answer:</strong> States: positions of 8 tiles plus blank. Actions: move blank Up/Down/Left/Right. Transitions: swap with neighbour. Goal test: matches target layout. Path cost: 1 per slide.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Compare Incremental Formulation and Complete-State Formulation for solving the 8-Queens problem. Calculate and contrast the size of the state space for both approaches.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Introduction (1 Mark):</strong> The 8-queens problem requires placing 8 non-attacking queens on an $8 \times 8$ chessboard. The choice of formulation radically alters search efficiency.</li>
-<li><strong>Incremental Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with an empty board and adds queens one by one.</li>
-<li><em>State Space:</em> Placing queen 1 has 64 choices, queen 2 has 63 choices, $\dots$, queen 8 has 57 choices:
-$$64 \times 63 \times 62 \times 61 \times 60 \times 59 \times 58 \times 57 \approx 3.1 \times 10^{14} \text{ states}$$</li>
-</ul>
-</li>
-<li><strong>Complete-State Formulation (3 Marks):</strong><ul>
-<li><em>Mechanism:</em> Begins with all 8 queens on the board, enforcing <strong>one queen per column</strong>. Actions move queens vertically within their column.</li>
-<li><em>State Space:</em> Each of the 8 queens has 8 possible row positions:
-$$8^8 = 16,777,216 \text{ states}$$</li>
-<li><em>Conclusion:</em> Complete-state formulation reduces the state space by approximately $10^7$ times, enabling efficient local search.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: Compare 8-Queens formulations with state counts.</strong></p>
+<p><strong>Model Answer:</strong> Incremental builds from empty (64 down to 57 choices, ~3.1x10^14 states). Complete-state starts one-per-column with vertical moves (8^8 = 16,777,216). Restriction cuts ~10^7-fold, enabling local search.
+:::</p>
 
     </main>
 

@@ -5,7 +5,7 @@ module: 4
 sequence: 99
 title: 'Module 4 Practice Lab: RL Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 9
 learningObjectives:
   - Race backups across direct, TD and ADP updates
   - Sprint Q-traces with error arithmetic exact
@@ -26,42 +26,36 @@ tags:
 ---
 # Module 4 Practice Lab: RL Drills
 
-**Backup races, estimator showdowns, exploration schedules, paradigm prescriptions, and exam essay models.**
+**Problem: turn RL theory into backup arithmetic and deployment judgment. By the end you can race three estimators on one world, sprint Q-traces, and prescribe exploration by stakes and stationarity.**
 
-<a id="the-intuition"></a>
-## 1. Step-by-Step Scenario Analysis
+<a id="start-zero"></a>
+## 1. Start From Zero: Three Races
 
-### Scenario 1: The Backup Race (Same World, Three Updates)
+**Problem first:** one-step positions prove nothing — procedures converge as trajectories. **Method:** run every estimator on the same two-state world (R(A) = 1, 80/20 dynamics, gamma 0.9, truth U*(A) approx 3.57, current U(A) = 5), then compare philosophies.
 
-World from M4 ($R(A) = 1$, 80/20 dynamics, $\gamma = 0.9$, truth $U^*(A) \approx 3.57$, current $U(A) = 5$). **Value-iteration backup:** $1 + 0.9(0.8\cdot5) = 4.6$. **TD single sample** ($r=1$, land $B$, $U(B)=0$, $\alpha=0.5$): $4.6 + 0.5(1 + 0 - 4.6) = 2.8$. **Direct estimation** after one $A$-episode returning $1$: running average $= 1.0$. Three updates, three philosophies: model-exact (4.6), sample-corrected (2.8, overshooting below truth!), episode-averaged (1.0, hostage to one trajectory). All converge with enough experience; their *first-step* personalities differ completely.
+**Scenario 1 — Backup race:** **value-iteration backup** (model-exact expectation): `1 + 0.9(0.8x5) = 4.6`. **TD single sample** (r = 1, land B with U(B) = 0, alpha 0.5): `4.6 + 0.5(1 - 4.6) = 2.8` — overshooting below truth (sample noise, not failure). **Direct estimation** after one A-episode returning 1: running average 1.0 (single-trajectory hostage). Model-exact contracts downward; samples bounce around truth; episodes anecdotalize. All converge with enough experience (VI deterministically; TD with decaying alpha plus visitation; direct by the Law of Large Numbers — LLN); first-step addresses differ completely.
 
-### Scenario 2: The Q-Trace Sprint
+**Scenario 2 — Q-trace sprint:** Q(A,left) = 2.0 with r = 0 and max Q(B) = 4.0 goes to 2.8 in one update (alpha 0.5). Continue: take left from B (exploratory), r = 0, land C with max Q(C) = 2.0, current Q(B,left) = 1.0. Target `0 + 0.9x2.0 = 1.8`; Q <- `1.0 + 0.5x0.8 = 1.4` — aimed at the max (right-side values) despite taking left. SARSA (on-policy) would target the taken action's value instead. One trace, the whole off-policy distinction.
 
-From M4: $Q(A,\text{left}) = 2.0 \xrightarrow{r=0,\ \max Q(B)=4.0} 2.8$ in one update ($\alpha=0.5$). Now continue: suppose next the agent takes $\text{left}$ from $B$ (exploratory), gets $r=0$, lands $C$ with $\max Q(C)=2.0$, current $Q(B,\text{left}) = 1.0$. Q-update: target $0 + 0.9(2.0) = 1.8$; $Q \leftarrow 1.0 + 0.5(0.8) = 1.4$ — updated toward the *max* (2.0-side values) despite *taking* left. SARSA would instead target the actually-taken next action's value. One line of trace, the whole off-policy distinction.
+**Scenario 3 — Exploration prescription desk:** (a) factory arm, deterministic simulator, 1M offline trials: **Q-learning plus GLIE** (Greedy in the Limit of Infinite Exploration — simulate everything, converge behaviour, deploy frozen greedy). (b) Live trading bot, real money, quarterly regime shifts: **small fixed epsilon forever** (stationarity violated, so GLIE purity is unsafe; perpetual probing tracks shifts). (c) Surgical robot, first-do-no-harm: **no naive exploration** (offline/batch RL from logs or human-gated actions — random moves are malpractice, not learning). Policy follows stakes and stationarity, never habit.
 
-### Scenario 3: Exploration Prescription Desk
+<a id="basics"></a>
+## 2. Basic Layer: Do-Not-Confuse Table
 
-Three agents: (a) factory arm, deterministic simulator, 1M offline trials allowed → **Q-learning + GLIE** (simulate everything, converge behavior, deploy frozen greedy). (b) Live trading bot, real money, regime shifts quarterly → **small fixed $\epsilon$ forever** (never stop probing; GLIE's purity assumes stationarity the market violates). (c) Surgical robot, first do no harm → **no naive exploration at all** (offline/batch RL from logs, or human-gated actions — random moves are malpractice, not learning). Exploration policy follows *stakes and stationarity*, never habit.
-
----
-
-<a id="the-dimensions"></a>
-## 2. "Do Not Confuse" Cheat Table
-
-| Pair | Distinction that earns marks |
+| Pair | Exam distinction |
 |---|---|
-| $U(s)$ vs. $Q(s,a)$ | State goodness (needs model to act) vs. action goodness (argmax acts model-free) |
-| VI backup vs. TD update | Full expectation over dynamics vs. single-sample correction (model vs. model-free) |
+| U(s) vs. Q(s,a) | State goodness (needs model to act) vs. action goodness (argmax acts model-free) |
+| VI backup vs. TD update | Full expectation over dynamics (model) vs. single-sample correction (model-free) |
 | Direct vs. TD vs. ADP | Average returns (no bootstrap) vs. per-step bootstrap vs. learn-model-then-solve |
-| On-policy vs. off-policy | Learn behavior's value (SARSA) vs. learn optimal value regardless (Q max) |
-| $\epsilon$-fixed vs. GLIE | Permanent probing (non-stationary-safe) vs. decaying to pure greed (convergent) |
-| Exploration vs. noise | Information-priced experiments vs. unpriced thrashing (schedules encode the price) |
-| Policy search vs. value methods | Direct $\theta$ hill-climb (continuous/stochastic ok) vs. $Q^*$ + argmax (needs tractable max) |
-| IRL vs. cloning | Recover objective (transfers) vs. copy moves (compounds drift) |
-| Discount roles | Convergence-guarantor + impatience-encoder (never cosmetic) |
-| Passive vs. active data needs | Grade fixed behavior (coverage suffices) vs. improve it (explore + counterfactuals) |
+| On-policy vs. off-policy | Learn behaviour's value (SARSA) vs. optimal value regardless (Q max) |
+| Fixed epsilon vs. GLIE | Permanent probing (non-stationary-safe) vs. decay to pure greed (convergent) |
+| Exploration vs. noise | Information-priced experiments vs. unpriced thrashing |
+| Policy search vs. value methods | Direct theta climb (continuous/stochastic ok) vs. Q* plus argmax (needs tractable max) |
+| IRL vs. cloning | Recover objective (transfers) vs. copy moves (compounds drift); IRL = Inverse RL |
+| Discount roles | Convergence-guarantor plus impatience-encoder (never cosmetic) |
+| Passive vs. active data | Grade fixed behaviour (coverage suffices) vs. improve it (explore plus counterfactuals) |
 
----
+**Limitations of drills:** race numbers assume stated dynamics and one sample; real streams need decay schedules and coverage audits. Prescriptions assume stated stationarity/stakes — misjudge those and the schedule flips.
 
 <a id="self-check"></a>
 ## 3. Active Recall Quizzes
@@ -72,7 +66,7 @@ Three agents: (a) factory arm, deterministic simulator, 1M offline trials allowe
 () Both are wrong; only direct estimation converges
 () The true value must lie between any two consecutive estimates
 ::: explanation
-One-step positions prove nothing about procedures: VI contracts deterministically downward, TD bounces around truth with sample noise (this sample undershot). Convergence is a *trajectory* property (infinite visits, decaying $\alpha$), not a single-step snapshot — judge estimators by their fixed points and conditions, never by one update's address.
+Convergence is a trajectory property (infinite visits, decaying alpha), not a single-step snapshot. VI contracts deterministically; TD bounces with sample noise around the same fixed point.
 :::
 
 ::: quiz In Scenario 2, the agent explored with 'left' from B, yet the Q-update aimed at the max (right-side values). A student calls this "learning from actions it didn't take" and therefore unsound. Refute.
@@ -81,7 +75,7 @@ One-step positions prove nothing about procedures: VI contracts deterministicall
 () SARSA would have updated identically, proving the point moot
 () Exploration must be disabled during Q-learning for soundness
 ::: explanation
-$Q^*$ satisfies Bellman optimality *regardless of who visits what*: the update's target ($\max$) is a property of values, while behavior supplies *coverage* (which $(s,a)$ get updated). Soundness needs infinite visitation, not on-policy behavior — decoupling lets agents behave foolishly while learning wisely (M4's tagline, now as proof sketch).
+Q* satisfies Bellman optimality regardless of visitors: max is a values property, behaviour supplies coverage. Soundness needs infinite visitation, not on-policy behaviour.
 :::
 
 ::: quiz A trading bot faces shifting regimes; a factory arm trains in a perfect simulator. Assign exploration schedules and justify the asymmetry.
@@ -90,7 +84,7 @@ $Q^*$ satisfies Bellman optimality *regardless of who visits what*: the update's
 () Bot: no exploration (money is at stake); arm: fixed ε forever
 () Exploration schedules don't affect deployed behavior
 ::: explanation
-GLIE's convergence promise *assumes* a fixed MDP (eventual greed is safe only if truth stops moving); fixed-$\epsilon$ pays eternal linear regret as regime-change insurance. Stationarity decides: static world ⇒ converge and lock; shifting world ⇒ probe forever. Stakes modulate the *rate*, stationarity picks the *schedule*.
+GLIE assumes a fixed MDP (eventual greed safe only if truth stops moving); fixed-epsilon pays eternal linear regret as regime-change insurance. Stationarity picks the schedule; stakes tune the rate.
 :::
 
 ::: quiz Direct utility estimation, TD, and ADP all evaluate one fixed policy from the same 100 episodes. Rank their data efficiency and name what each wastes.
@@ -99,26 +93,25 @@ GLIE's convergence promise *assumes* a fixed MDP (eventual greed is safe only if
 () Direct estimation is most efficient; models only add overhead
 () TD cannot use episodic data at all
 ::: explanation
-Information reuse ranks them: ADP squeezes transition statistics into a solved model (most per-sample mileage, most compute); TD bootstraps neighbor structure per step (middle); direct averaging treats episodes as independent anecdotes (least mileage, least machinery). Same 100 episodes, three information diets — pick by compute budget and model trust.
+Information reuse ranks them: ADP squeezes statistics into a solved model (most mileage, most compute); TD bootstraps neighbour structure per step; direct treats episodes as independent anecdotes.
 :::
-
----
 
 <a id="exam-focus"></a>
 ## 4. High-Yield University Exam Questions
 
 ::: callout-exam KTU University Exam Focus
-**Target Areas:**
-* **3 Marks:** Any cheat-table row (U-vs-Q and on-vs-off-policy lead); single update arithmetic.
-* **7 Marks:** Multi-estimator comparisons on one world, exploration-schedule prescriptions, or off-policy soundness arguments.
+3 marks: any table row (U-vs-Q and on-vs-off-policy lead) or single-update arithmetic. 7 marks: multi-estimator comparisons, schedule prescriptions, or off-policy soundness.
 :::
 
-### Essay Question 1 (7 Marks)
-**Q: On M4's two-state world (current U(A) = 5, truth ≈ 3.57), apply one value-iteration backup, one TD update (r = 1 → B, α = 0.5), and one direct-estimate step (episode return 1). Compare the three landings and explain what each reveals about its method.**
+**Recap facts examiners reward:** 4.6/2.8/1.0 landings with philosophies; max-vs-taken trace line; stationarity-picks-schedule rule; ADP > TD > direct efficiency order with waste named.
 
-**Model Answer:** VI: $1 + 0.9(4) = 4.6$ (model-exact contraction downward). TD: $4.6 + 0.5(1 - 4.6) = 2.8$ (sample overshoots below truth — noise, not failure). Direct: running average $= 1.0$ (single-trajectory hostage). All converge with infinite experience (VI deterministically, TD with decaying $\alpha$ + visitation, direct by LLN); first-step addresses differ because models contract, samples bounce, and episodes anecdotalize — three philosophies, one fixed point.
+### Essay Question 1 (7 Marks)
+**Q: On the two-state world (U(A) = 5, truth approx 3.57), apply one VI backup, one TD update (r = 1 to B, α = 0.5), and one direct step (return 1). Compare landings.**
+
+**Model Answer:** VI 4.6 (model-exact contraction down). TD 2.8 (sample overshoots below truth — noise, not failure). Direct 1.0 (single-trajectory hostage). All converge with infinite experience (VI deterministically, TD with decaying alpha plus visitation, direct by LLN); addresses differ because models contract, samples bounce, episodes anecdotalize — three philosophies, one fixed point.
 
 ### Essay Question 2 (7 Marks)
-**Q: "Q-learning learns optimal values while behaving randomly." Justify rigorously, contrast SARSA, and state the exact convergence conditions.**
+**Q: "Q-learning learns optimal values while behaving randomly." Justify, contrast SARSA, state exact conditions.**
 
-**Model Answer:** Target $r + \gamma\max_{a'}Q(s',a')$ estimates Bellman-optimality backup independent of behavior policy — visits supply *coverage*, max supplies *optimality* (Scenario-2 trace exhibits it). SARSA backs up the *taken* $a'$ (on-policy: learns behavior's value, optimal only as exploration vanishes). Conditions: infinite $(s,a)$ visitation + decaying $\alpha$ (stochastic approximation) + bounded rewards; GLIE additionally converts value convergence into behavior convergence. Randomness feeds, max aims — the division of labor that defines off-policy learning.
+**Model Answer:** Target r + gamma max Q(s',a') estimates Bellman-optimality backup independent of behaviour — visits supply coverage, max supplies optimality (Scenario-2 trace exhibits it). SARSA backs up the taken a' (on-policy: learns behaviour's value, optimal only as exploration vanishes). Conditions: infinite (s,a) visitation plus decaying alpha plus bounded rewards; GLIE converts value convergence into behaviour convergence. Randomness feeds, max aims — off-policy's division of labour.
+:::

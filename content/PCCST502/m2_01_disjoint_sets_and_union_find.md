@@ -5,7 +5,7 @@ module: 2
 sequence: 1
 title: Disjoint Sets & Union-Find
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 8
 learningObjectives:
   - Serve dynamic connectivity with make-set, find and union
   - Attach by rank with path compression on every climb
@@ -25,22 +25,28 @@ tags:
 **Dynamic connectivity, MAKE-SET/FIND/UNION, union by rank, path compression, and the near-constant inverse-Ackermann bound.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** Given friendships forming over time ("A meets B — merge their groups"; "are C and D in the same group?"), how do we answer connectivity queries fast as merges keep coming? Re-scanning everyone per query is $O(n)$ each — too slow inside Kruskal's algorithm, which asks thousands of such questions. We need a data structure for *dynamic connectivity*: create groups, merge them, test membership — all nearly instantly.
 
 ::: callout-intuition Core Mental Model: Family Trees at a Reunion
-Imagine tracking which guests at a huge reunion belong to the same family. Each family picks one elder as its **representative**. Two operations cover everything: "are these two guests related?" (climb both family trees to the elders and compare) and "these two families just married — merge them" (graft one elder under the other). Two speed tricks make it fly: always graft the **shorter tree under the taller** (union by rank), and whenever you climb, **re-hang everyone you pass directly under the elder** (path compression) — future queries from those guests then finish in a single hop.
+Each family picks one elder as its **representative**. "Are these guests related?" = climb both family trees to the elders and compare. "These families married — merge" = graft one elder under the other. Two speed tricks: graft the **shorter tree under the taller** (union by rank), and whenever you climb, **re-hang everyone you pass directly under the elder** (path compression) — future queries then finish in one hop. Drop the reunion now: parents, ranks, and rewiring below are the exact mechanism.
 :::
+
+**Tiny toy example (3 guests).** Singletons $\{a\}, \{b\}, \{c\}$. UNION(a,b): $b$ under $a$. Query FIND(b): climb $b \to a$ (1 hop). UNION(a,c): $c$ under $a$. Every later query costs 1 hop — the structure flattens itself with use.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-### 2.1 The Three Operations
+**Input and data:** $n$ elements, each with a parent pointer; a root (its own parent) names its set. **Symbols:** rank $\approx$ upper bound on tree height (not node count); $\alpha(n)$ = inverse Ackermann function, $\le 4$ for every conceivable $n$ (effectively constant).
 
-* **MAKE-SET(x):** create a one-node tree; $x$ is its own parent and representative. Cost $O(1)$.
-* **FIND(x):** follow parent pointers to the root (the set's name). *With* path compression, every visited node is rewired to point at the root on the way back.
-* **UNION(x, y):** FIND both roots; attach the root of **smaller rank** under the root of larger rank (union by rank); if tied, pick either and increment its rank. (Rank ≈ upper bound on tree height, *not* exact size — a common exam trap.)
+**Numbered steps — the three operations:**
+
+1. **MAKE-SET(x):** new one-node tree; $x$ is its own parent and representative. Cost $O(1)$.
+2. **FIND(x):** follow parent pointers to the root. *With path compression*, rewire every visited node directly under the root on the way back.
+3. **UNION(x, y):** FIND both roots; attach the **smaller-rank** root under the larger; on ties pick either and increment its rank. Rank increments *only* on ties.
 
 ```text
 UNION(e, b) by rank:          FIND(c) with path compression:
@@ -57,39 +63,56 @@ b   c        e          ==>       b   c    ==>        b c d
 Watch two rank-1 trees merge under one elder, then FIND(d) rewire straight to the root — every future query on that path costs a single hop.
 :::
 
-### 2.2 The Amortized Bound
-
-With **both** heuristics, any sequence of $m$ operations on $n$ elements costs $O(m \cdot \alpha(n))$, where $\alpha$ is the **inverse Ackermann function** — a function growing so slowly that $\alpha(n) \le 4$ for every $n$ up to the number of atoms in the universe. Effectively constant time per operation.
+**Complexity.** With **both** heuristics, any $m$ operations on $n$ elements cost $O(m \cdot \alpha(n))$ amortized — near-constant each. Either heuristic alone degrades (compression alone still grows tall skinny trees; rank alone never flattens paths).
 
 ::: callout-formula KTU Formula Vault: Union-Find in 5 Lines
 MAKE-SET $O(1)$ · FIND climbs to root · UNION attaches **smaller rank under larger** · compression **rewires the whole climb path** to the root · amortized cost $O(\alpha(n))$ ≈ constant **only with both heuristics together**.
 :::
 
 ::: callout-pitfall Rank Is Not Size (and Compression Is Not Free Alone)
-Rank bounds height; it is *not* the node count (that's union-by-*size*, a different variant). And path compression alone — without union by rank — still degrades: tall skinny trees keep forming. The $\alpha(n)$ miracle needs **both**. Any "one heuristic suffices" option is wrong.
+Rank bounds height; it is *not* the node count (that is union-by-*size*, a different variant). And path compression without union by rank still degrades. The $\alpha(n)$ miracle needs **both**. Any "one heuristic suffices" option is wrong.
 :::
 
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — three unions plus a compressing find
 
 ::: step [Step 1: Setup] Formulating the Problem
-Start with singletons $\{a\},\{b\},\{c\},\{d\}$. Execute: UNION(a,b), UNION(c,d), UNION(a,c) — all by rank — then FIND(d) with path compression. Draw the forest after each step and count FIND(d)'s hops before and after a second FIND(d).
+Singletons $\{a\},\{b\},\{c\},\{d\}$. Execute UNION(a,b), UNION(c,d), UNION(a,c) by rank, then FIND(d) with compression. Draw the forest after each step; count FIND(d)'s hops twice.
 :::
 
 ::: step [Step 2: Execution] Tracing Pointers
-UNION(a,b): ranks tie (0,0) → $b$ under $a$, rank($a$)=1. UNION(c,d): $d$ under $c$, rank($c$)=1. UNION(a,c): ranks tie (1,1) → $c$ under $a$, rank($a$)=2. Forest: $a$ with children $b,c$; $c$ with child $d$. FIND(d): climb $d \to c \to a$ (**2 hops**), rewiring $d$ (and confirming $c$) directly under $a$. Second FIND(d): $d \to a$ (**1 hop**).
+UNION(a,b): tie (0,0) → $b$ under $a$, rank($a$) = 1. UNION(c,d): $d$ under $c$, rank($c$) = 1. UNION(a,c): tie (1,1) → $c$ under $a$, rank($a$) = 2. Forest: $a$ with children $b, c$; $c$ with child $d$. FIND(d): climb $d \to c \to a$ (**2 hops**), rewiring $d$ directly under $a$. Second FIND(d): $d \to a$ (**1 hop**).
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-The first query paid 2 hops and flattened the path; every later query on $d$ costs 1. Across Kruskal's algorithm (thousands of UNION/FINDs on graph edges), this self-flattening is what drags the total to near-linear — the data structure literally gets faster the more you use it.
+First query paid 2 hops and flattened the path; every later query costs 1. Across Kruskal's thousands of UNION/FINDs, this self-flattening drags the total to near-linear — the structure gets faster the more you use it.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Rank increments only on ties of equal rank — attaching smaller-under-larger changes no rank.
+- Compression rewires *pointers*, never ranks — ranks stay valid height bounds after any FIND.
+- FIND's path includes both endpoints: count hops as parent-pointer follows ($d \to c \to a$ = 2).
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Rank vs size | Height bound (by-rank) vs node count (by-size variant) |
+| Compression vs union by rank | Flattens climbed paths vs keeps trees shallow — need both |
+| FIND with vs without compression | Future queries 1 hop vs repeated full climbs |
+
+**Exam recap (facts an examiner rewards):** smaller-rank-under-larger with tie-increment; compression rewires the whole climb; $O(m\,\alpha(n))$ needs both; Kruskal's set operations total $O(E\,\alpha(V))$ so sorting dominates.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz During UNION(x, y) by rank, root Rx has rank 3 and root Ry has rank 1. What happens?
 () Ry becomes parent and its rank rises to 4

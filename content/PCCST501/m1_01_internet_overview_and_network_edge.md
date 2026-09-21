@@ -5,13 +5,14 @@ module: 1
 sequence: 1
 title: Internet Overview & The Network Edge
 difficulty: beginner
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Describe the Internet with the nuts-and-bolts and services views
   - Distinguish end systems, communication links, and packet switches
   - Contrast client and server as roles rather than device types
   - Compare home, enterprise, and wireless access networks
   - Classify guided versus unguided physical media
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - end systems
   - hosts
@@ -31,7 +32,11 @@ tags:
 **End systems and hosts, access networks and physical media, and the two complementary ways of defining "the Internet."**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+You tap a video on your phone. A fraction of a second later, it plays. Nothing visibly travels to you — yet a copy of that video's data has just crossed thousands of kilometres of glass, copper, and air, hopping through a dozen or more relay stations on the way.
+
+Here is the problem this note solves: **how is "the Internet" organized so that any two computers on Earth can exchange data?** Engineers answer with two complementary views. The **nuts-and-bolts view** (how is it built?) names the physical parts: computers at the edges, wires and radio links between them, and relay boxes that forward data. The **services view** (what does it do for me?) hides all of that and says: the Internet is a platform that moves bytes between any two programs, anywhere. Both views describe the same system; you need both, because exams test whether you can switch between them.
 
 ::: callout-intuition Core Mental Model: The Global Highway System
 Imagine a global highway network. Cars don't teleport between cities — they travel on physical roads, pass through intersections, and eventually arrive at a driveway belonging to a house or office. The Internet works the same way, except it moves **data** instead of cars.
@@ -40,38 +45,51 @@ Imagine a global highway network. Cars don't teleport between cities — they tr
 * The fiber, copper, or radio link connecting you to the network is the **road** — a *communication link*.
 * A router is an **intersection** — a *packet switch* that looks at an arriving chunk of data and forwards it toward the right road out.
 
-Zoom out far enough, though, and this "nuts and bolts" picture isn't the only useful lens. A software engineer building an app for millions of users doesn't think about copper wire and fiber — they think of the Internet as a **service**: a distributed platform that reliably moves bytes between any two programs, anywhere. Both views are correct; they're just answering different questions ("how is it built?" vs. "what does it do for me?").
+Dropping the highway now: the technical terms above are the ones the exam uses, and the rest of this note defines each of them precisely.
 :::
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **End system / host** | Any computer at the *edge* of the network that runs application programs (laptop, phone, server, smart TV, sensor). "Host" = it *hosts* (runs) applications. |
+| **Packet** | One small chunk of a larger message. Long messages are split so links and switches handle short, uniform pieces. |
+| **Packet switch** | A relay box inside the network (a **router** joins different networks; a **switch** joins devices in one local network) that receives packets on one link and forwards each out of the best next link. |
+| **Communication link** | The physical path bits travel: fiber-optic cable, copper wire, or radio waves — each with a **transmission rate** (bits per second, also called bandwidth). |
+| **Network edge** | The outermost boundary of the Internet: end systems plus the first link and router that attach them. |
+| **Network core** | Everything inside: the mesh of packet switches and high-capacity links connecting edges together. |
+| **Access network** | The link(s) connecting *your* end system to the *first* router of the core. |
+| **ISP (Internet Service Provider)** | The company (e.g. your broadband or mobile operator) that runs that first router and sells you access. |
+| **Guided / unguided media** | Guided = signals travel *along* a solid path (copper, glass fiber). Unguided = signals travel through open air or space (radio, satellite). |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Why Two Views of One Internet
 
-### 2.1 The "Nuts and Bolts" View
+### 3.1 The "Nuts and Bolts" View (how it is built)
 
-| Component | Role | Real-world analogy |
-|---|---|---|
-| **End Systems (Hosts)** | Laptops, smartphones, servers, smart TVs, IoT devices that sit at the *edge* of the network and run applications | Houses and businesses |
-| **Communication Links** | Fiber, copper, radio, satellite — each with its own transmission rate (bandwidth) | Roads of varying width/speed |
-| **Packet Switches** | Routers and switches; take packets arriving on one link and forward them out another | Intersections and roundabouts |
+| Component | Role |
+|---|---|
+| **End Systems (Hosts)** | Laptops, smartphones, servers, smart TVs, Internet-of-Things (IoT) devices at the *edge*; they originate and consume data. |
+| **Communication Links** | Fiber, copper, radio, satellite — each with its own transmission rate. |
+| **Packet Switches** | Routers and switches; take packets arriving on one link and forward them out of another. |
 
-### 2.2 The "Services" View
+### 3.2 The "Services" View (what applications get)
 
-From this angle the Internet is a **distributed application platform**: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between.
+From this angle the Internet is a **distributed application platform**: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between. Your video app never learns which routers carried its frames — and never needs to.
 
-### 2.3 The Network Edge
+### 3.3 The Network Edge: Clients and Servers Are Roles
 
-The network edge is the outermost boundary of the Internet — where end systems physically attach. Hosts here split into two functional roles:
+The network edge is where end systems physically attach. Hosts here split into two functional roles:
 
 * **Clients** — desktops, mobile devices, laptops that *request* information.
 * **Servers** — always-on, powerful machines that *supply* information (web pages, video streams, email), typically housed in large data centers today.
 
 ::: callout-pitfall Client and Server Are Roles, Not Device Types
-Exams love this trap: a "server" is not a special kind of computer — it is a *role* an end system plays. Your laptop is a client when it streams Netflix, but the moment it serves a file to a peer (or runs a local dev server), it is acting as a **server**. Classify by *behavior* (requesting vs. supplying), never by hardware size.
+Exams love this trap: a "server" is not a special kind of computer — it is a *role* an end system plays. Your laptop is a client when it streams video, but the moment it serves a file to a peer (or runs a local development server), it is acting as a **server**. Classify by *behavior* (requesting vs. supplying), never by hardware size.
 :::
 
-### 2.4 Access Networks — Getting From the Edge to the First Router
+### 3.4 Access Networks — Getting From the Edge to the First Router
 
 ```mermaid
 flowchart LR
@@ -87,38 +105,42 @@ flowchart LR
     end
 ```
 
-* **Home Networks:** DSL (over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).
+* **Home Networks:** DSL (Digital Subscriber Line, over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).
 * **Enterprise Networks:** Devices connect via Ethernet switches, which connect to an institutional router — common in companies and universities.
 * **Wireless Access Networks:**
-  * **Wi-Fi (WLAN):** short range, within a building, to a local access point.
+  * **Wi-Fi (Wireless Local Area Network, WLAN):** short range, within a building, to a local access point.
   * **Cellular (4G/5G):** long range, to a cell tower kilometers away.
 
-### 2.5 Physical Media
+### 3.5 Physical Media — What the Bits Ride On
 
 Bits must travel across some physical medium — electromagnetic waves or light pulses.
 
 * **Guided Media** (waves travel along a solid path):
-  * *Twisted-Pair Copper* — cheapest, used in most Ethernet cabling (Cat5/Cat6).
+  * *Twisted-Pair Copper* — cheapest, used in most Ethernet cabling (Cat5/Cat6 categories).
   * *Coaxial Cable* — two concentric copper conductors, supports high download speeds.
-  * *Fiber Optics* — pulses of light through glass fiber; extremely fast, immune to electromagnetic interference, backbone of long-haul transoceanic links.
+  * *Fiber Optics* — pulses of light through glass fiber; extremely fast and unaffected by electromagnetic interference (it carries light, not electric current), though signals still weaken with distance and the glass itself can be cut or damaged. It is the backbone of long-haul transoceanic links.
 * **Unguided Media** (waves propagate through open air/space):
-  * *Terrestrial Radio* — Wi-Fi, AM/FM.
-  * *Satellite Radio* — geosynchronous or Low Earth Orbit (LEO, e.g., Starlink).
-
----
+  * *Terrestrial Radio* — Wi-Fi, AM/FM broadcast.
+  * *Satellite Radio* — geosynchronous satellites or Low Earth Orbit (LEO) constellations.
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+One laptop, one home router, one video server. The laptop (client end system) asks over Wi-Fi (unguided access link); the home router (first packet switch) forwards the request onto fiber (guided link) toward the core; core routers forward it to the server (server end system), which sends video packets back along the reverse chain. Three parts — ends, links, switches — and nothing else is involved.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
-You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP. Identify every "nuts and bolts" component involved in getting one video frame from Netflix's server to your TV screen.
+You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP (Internet Service Provider). Identify every "nuts and bolts" component involved in getting one video frame from the streaming server to your TV screen.
 :::
 
 ::: step [Step 2: Execution] Tracing the Path
-1. **End Systems:** Netflix's server (a host, acting as *server*) and your smart TV (a host, acting as *client*).
-2. **Access Network (server side):** Netflix's server sits in a data center connected via high-capacity enterprise-grade links into the network core.
-3. **Network Core:** A sequence of **packet switches** (routers) forward the video's packets from Netflix's data center, across backbone links, toward your ISP.
-4. **Access Network (your side):** The packets arrive at your ISP and travel over the **FTTH fiber link** (guided medium, physical layer) to your home router.
+1. **End Systems:** The streaming server (a host, acting as *server*) and your smart TV (a host, acting as *client*).
+2. **Access Network (server side):** The server sits in a data center connected via high-capacity enterprise-grade links into the network core.
+3. **Network Core:** A sequence of **packet switches** (routers) forward the video's packets from the data center, across backbone links, toward your ISP.
+4. **Access Network (your side):** The packets arrive at your ISP and travel over the **FTTH fiber link** (guided medium) to your home router.
 5. **Final Hop:** Your router forwards the packets over **Wi-Fi** (unguided medium, terrestrial radio) to the smart TV.
 :::
 
@@ -126,10 +148,27 @@ You stream a movie on a smart TV connected over Wi-Fi to your home router, which
 A single video frame crosses *multiple* communication links (fiber, backbone links, Wi-Fi) and passes through *multiple* packet switches, yet the "services view" hides all of this: your smart TV's app simply sees a continuous stream of video data arriving, as if the underlying nuts-and-bolts complexity didn't exist.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| End system vs. packet switch | Hosts at the edge run applications (originate/consume data); switches inside forward packets (never originate application data). |
+| Client vs. server | Roles (requesting vs. supplying), not device types — one laptop plays both across two apps. |
+| Nuts-and-bolts vs. services view | How it is built (links/switches) vs. what apps get (a byte-moving platform). |
+| Guided vs. unguided | Solid path (copper/coax/fiber) vs. open air/space (radio/satellite). |
+| DSL vs. FTTH | Copper telephone wire vs. fiber to the premises (far higher rate). |
+
+**Watch out:** (1) "Server" as hardware — always test role vs. device. (2) Calling the access link "the Internet" — it is only the first hop; the core lies beyond the edge router. (3) Fiber "immune to everything" — unaffected by electromagnetic interference, but still subject to attenuation and physical damage.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+Internet = end systems at the edge + packet switches and links in the core. Two views: nuts-and-bolts (parts) and services (platform). Edge roles client/server are behavioral. Access: DSL/cable/FTTH (home), Ethernet (enterprise), Wi-Fi/cellular (wireless). Media: guided (twisted pair, coax, fiber) vs. unguided (terrestrial/satellite radio).
+:::
+
+**Active-recall checklist** (answer aloud, then check against the quizzes below): What makes a device an "end system"? What three parts does the nuts-and-bolts view name? Why can a laptop be both client and server? Which access network serves homes vs. enterprises? Which guided medium suits transoceanic links, and with what qualification?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Q1: Foundational Concept
 Why is a smartphone considered an "end system" or "host," even though it isn't a powerful server?

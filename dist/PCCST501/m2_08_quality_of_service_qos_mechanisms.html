@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,23 +297,28 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>QoS: Guarantees Beyond Best Effort</h1>
 <p><strong>Bandwidth, delay, jitter, loss — IntServ reservations vs DiffServ markings, token-bucket math, and the scheduler that divides the link fairly.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Airline Cabins</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Best effort flies everyone standby. <strong>IntServ</strong> sells <strong>reserved seats</strong> per passenger (RSVP signalling, admission control — guaranteed, unscalable). <strong>DiffServ</strong> paints <strong>boarding groups</strong> on tickets (DSCP marks: EF for first-class voice, AF classes for the rest) — no per-passenger state in the core, just priority handling per group. Same plane (link), different promises.</p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>A video call and a file download share your link. The download tolerates any delay; the call dies if voice packets bunch up or arrive late. Default Internet service — <strong>best effort</strong>, every packet equal — treats both identically, so the call stutters whenever the download bursts.</p>
+<p>The problem before the solution: give different flows <em>different promises</em> (rate, delay, smoothness, loss) without rebuilding the Internet. Two architectures answer at opposite price points: per-flow reservations (strong promises, heavy state) and per-class markings (coarser promises, trivial state).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Airline Cabins</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Best effort flies everyone standby. <strong>IntServ (Integrated Services)</strong> sells <strong>reserved seats</strong> per passenger (RSVP — Resource Reservation Protocol — signalling, admission control — guaranteed, unscalable). <strong>DiffServ (Differentiated Services)</strong> paints <strong>boarding groups</strong> on tickets (DSCP — Differentiated Services Code Point — marks: EF — Expedited Forwarding — for first-class voice, AF — Assured Forwarding — classes for the rest) — no per-passenger state in the core, just priority handling per group. Same plane (link), different promises.</p>
+<p>Dropping the airline now: QoS (Quality of Service) knobs = bandwidth, delay, jitter, loss; IntServ = per-flow RSVP state; DiffServ = per-class DSCP marks; token bucket = the rate meter; WFQ (Weighted Fair Queueing) = the fair divider.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Depth Bursts, Rate Meters</span>
@@ -328,28 +337,93 @@
     <p class="video-caption"><strong>Key Insight:</strong> Depth Bursts, Rate Meters</p>
     <div class="video-observations"><strong>What to observe:</strong> Ten packets slam a depth-$6$ bucket at $3$ tokens/s: six ride tokens through, four wait or fall — then the steady flow conforms at exactly the token rate.</div>
   </div>
-</div><hr>
+</div><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-knobs-architectures-meters-schedulers">3. Purpose — Knobs, Architectures,… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>QoS (Quality of Service)</strong></td>
+<td>Differentiated promises per flow: bandwidth (rate), delay (latency), jitter (delay variance — the voice killer), loss (drop fraction).</td>
+</tr>
+<tr>
+<td><strong>IntServ (Integrated Services)</strong></td>
+<td>Per-flow reservations via RSVP signalling + admission control — hard guarantees, per-flow router state.</td>
+</tr>
+<tr>
+<td><strong>DiffServ (Differentiated Services)</strong></td>
+<td>Per-class handling via DSCP marks set at the edge; core applies PHB (Per-Hop Behaviors): EF (expedited, low-delay lane) and AF (assured, tiered drop precedence).</td>
+</tr>
+<tr>
+<td><strong>Token bucket $(r, C)$</strong></td>
+<td>Rate meter: tokens accrue at $r$/s up to depth $C$; each packet spends one. Conformant traffic over window $T$ is bounded by $C + rT$.</td>
+</tr>
+<tr>
+<td><strong>Shaping vs. policing</strong></td>
+<td>Excess delayed into a queue (needs buffers) vs. excess dropped/remarked (no mercy). Same bucket, different furniture.</td>
+</tr>
+<tr>
+<td><strong>WFQ (Weighted Fair Queueing)</strong></td>
+<td>Scheduler dividing link bandwidth in proportion to class weights, with delay bounds. Contrast FIFO (no isolation) and strict priority (starvation risk).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The four knobs and two architectures</h3>
-<p>Flow needs: <strong>bandwidth</strong> (rate), <strong>delay</strong> (one-way latencies), <strong>jitter</strong> (delay variance — the VoIP killer), <strong>loss</strong> (fraction dropped). IntServ: per-flow RSVP reservation + admission control + packet classification/scheduling — guarantees, core-state explosion. DiffServ: edge marks DSCP, core applies per-hop behaviors (EF expedited, AF assured with drop precedences) — scalable, coarser promises.</p>
-<h3>2.2 Shaping, policing, scheduling</h3>
-<p><strong>Token bucket</strong> $(r, C)$: tokens accrue at $r$/s up to depth $C$; each packet spends one — conformant traffic over any window $T$ is bounded by $C + rT$. <strong>Shaping</strong> delays excess (smooths, needs buffers); <strong>policing</strong> drops/remarks excess (no mercy, no buffers). Schedulers split the link: FIFO (no isolation), strict priority (starvation risk), <strong>WFQ</strong> (weighted fair shares — weight-proportional bandwidth with delay bounds).</p>
+<h2 id="3-purpose-knobs-architectures-meters-schedulers">3. Purpose — Knobs, Architectures, Meters, Schedulers</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 The Four Knobs and Two Architectures</h3>
+<p>Flow needs: <strong>bandwidth</strong> (rate), <strong>delay</strong> (one-way latencies), <strong>jitter</strong> (delay variance — the VoIP — Voice over IP — killer), <strong>loss</strong> (fraction dropped). IntServ: per-flow RSVP reservation + admission control + packet classification/scheduling — guarantees, core-state explosion. DiffServ: edge marks DSCP, core applies per-hop behaviors (EF expedited, AF assured with drop precedences) — scalable, coarser promises.</p>
+<h3>3.2 Operation Flow: Shaping, Policing, Scheduling</h3>
+<p><strong>Token bucket</strong> $(r, C)$: tokens accrue at $r$/s up to depth $C$; each packet spends one — conformant traffic over any window $T$ is bounded by $C + rT$. <strong>Shaping</strong> delays excess (smooths, needs buffers); <strong>policing</strong> drops/remarks excess (no mercy, no buffers). Schedulers split the link: FIFO (First-In First-Out, no isolation), strict priority (starvation risk), <strong>WFQ</strong> (weighted fair shares — weight-proportional bandwidth with delay bounds).</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: QoS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Knobs: rate/delay/jitter/loss · IntServ $=$ RSVP per-flow (guaranteed, heavy) · DiffServ $=$ DSCP per-class (scalable, coarse) · conform $\le C + rT$ · WFQ shares $\propto$ weights.</p>
 </div></details><p>Policing vs shaping is <em>where excess goes</em> (floor vs waiting room), not how much is allowed — the bucket parameters are identical, the furniture differs.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Priority Panacea</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Strict priority for voice starves bulk traffic the moment voice saturates its share — guarantees for one class become denial for another. WFQ exists precisely to bound that damage with minimum shares — priority without weights is a loaded promise.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-knobs-architectures-meters-schedulers">← 3. Purpose — Knobs, Architectures,…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Bucket $r = 1$/s, depth $C = 2$, starting full. Three packets arrive instantly: 2 spend tokens (conform), the third finds the bucket empty (excess). One second later one token returns — the next arrival conforms. Depth absorbed the burst head; rate meters the tail.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Token bucket $r = 3$/s, depth $C = 6$, starting full. A burst of $10$ packets arrives instantly; then $50$ packets arrive steadily over the next $10$ s. How many conform in total, and how many are excess?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Spending Then Metering</div><div class="step-content"><p>Burst: $6$ spend the full bucket (conform), $4$ arrive tokenless (excess — shaped into queue or policed away). Next $10$ s: tokens accrue $3 \times 10 = 30$, all spent by the steady arrivals (conform $30$). Total conformant $= 6 + 30 = 36$; total arrivals $= 60$; excess $= 24$. Check against the bound: $C + rT = 6 + 30 = 36$ — exactly at the ceiling, as theory demands.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$36$ conform, $24$ excess of $60$ arrivals. Depth absorbed the burst&#39;s head ($6$), rate metered the rest ($30$) — the bucket&#39;s two parameters visible as two separate numbers, and the $C + rT$ bound tight, not decorative.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IntServ vs. DiffServ</td>
+<td>Per-flow RSVP state (guarantees, unscalable core) vs. per-class DSCP marks ($O(1)$ core state, coarser).</td>
+</tr>
+<tr>
+<td>Shaping vs. policing</td>
+<td>Delay excess (buffers) vs. drop/remark excess — same bucket parameters.</td>
+</tr>
+<tr>
+<td>Jitter vs. delay</td>
+<td>Variance (needs EF + playout buffers) vs. mean (needs bandwidth/priority).</td>
+</tr>
+<tr>
+<td>WFQ vs. strict priority</td>
+<td>Guaranteed weight shares vs. winner-takes-all (starvation risk).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Prescribing IntServ for core routers with hundreds of flows — state explosion kills it. (2) &quot;More bandwidth fixes jitter&quot; — bandwidth shrinks means, not variances. (3) Calling policing &quot;smoothing&quot; — smoothing is shaping&#39;s job.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Four knobs: rate/delay/jitter/loss. IntServ = per-flow RSVP (guaranteed, heavy); DiffServ = DSCP per-class (EF voice lane, AF tiers; scalable). Bucket $(r,C)$: conform $\le C+rT$; shaping queues excess, policing drops it. WFQ splits by weight; strict priority can starve.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Which architecture keeps per-flow state, and where does it break? What does $C$ vs. $r$ absorb? Which tool fixes jitter but not mean delay? How do WFQ shares split a 9 Mbps link at 3:2:1?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: WFQ Shares</span>
@@ -537,7 +611,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_08_quality_of_service_qos_mechanisms";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

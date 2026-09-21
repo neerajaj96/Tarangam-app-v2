@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,46 +297,129 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>IPv6: Bigger Space, Simpler Wires</h1>
 <p><strong>$128$-bit room for every grain of sand — fixed headers, flow labels, compression rules traced by hand, and three bridges off the IPv4 island.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: New City, Wide Streets</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>IPv4 is an old city: cramped numbers (NAT tenements), winding headers (options, checksums recomputed per hop). <strong>IPv6</strong> builds across the river: vast plots ($2^{128}$ addresses — no conservation hacks), straight avenues (fixed $40$-B header, no per-hop checksum, extension chains off the fast path), and colour-coded lanes (<strong>flow labels</strong> marking QoS flows, M2.8&#39;s reunion). Migration is the three bridges back: run both, tunnel through, or translate at the border.</p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>IPv4 has about 4 billion addresses — fewer than the world&#39;s phones, laptops, TVs, and sensors. Workarounds (NAT — Network Address Translation — sharing, reclamation) kept it alive, but the address math is unforgiving: the Internet needs a bigger numbering scheme. IPv6 (Internet Protocol version 6) supplies $2^{128}$ addresses — and uses the redesign to simplify the header routers must process at backbone speed.</p>
+<p>The problem before the solution: expand the address space enormously <em>and</em> make per-packet router work cheaper — while the entire planet still runs IPv4. So IPv6 pairs a cleaner wire format with three migration bridges (run both, tunnel through, translate at the border).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: New City, Wide Streets</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>IPv4 is an old city: cramped numbers (NAT tenements), winding headers (options, checksums recomputed per hop). <strong>IPv6</strong> builds across the river: vast plots ($2^{128}$ addresses — no conservation hacks), straight avenues (fixed $40$-B header, no per-hop checksum, extension chains off the fast path), and colour-coded lanes (<strong>flow labels</strong> marking QoS — Quality of Service — flows, M2.8&#39;s reunion). Migration is the three bridges back: run both, tunnel through, or translate at the border.</p>
+<p>Dropping the city now: hextet = one 16-bit colon-separated group (8 per address); <code>::</code> = one-time compression of the longest zero run; flow label = 20-bit QoS tag; dual-stack/tunneling/translation = the three bridges.</p>
 </div></details><p>Datagram service unchanged (M2.9&#39;s forwarding logic ports over: longest match, now on $128$-bit prefixes) — addressing and plumbing renovated, delivery contract identical.</p>
-<hr>
+<p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-header-addresses-migration-choice">3. Purpose — Header, Addresses, Mi… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IPv6 address</strong></td>
+<td>$128$-bit identifier written as 8 <strong>hextets</strong> (16-bit hex groups), e.g. <code>2001:DB8::FF00:42:8329</code>.</td>
+</tr>
+<tr>
+<td><strong>Hextet</strong></td>
+<td>One colon-separated 16-bit group of an IPv6 address.</td>
+</tr>
+<tr>
+<td><strong><code>::</code> compression</strong></td>
+<td>Replace the <em>longest</em> run of all-zero hextets with one <code>::</code>, exactly once per address.</td>
+</tr>
+<tr>
+<td><strong>Flow label ($20$ bits)</strong></td>
+<td>IPv6 header field tagging packets of one flow for consistent QoS treatment — a pseudo-connection mark.</td>
+</tr>
+<tr>
+<td><strong>Hop limit ($8$ bits)</strong></td>
+<td>IPv6&#39;s heir to IPv4&#39;s TTL (Time To Live): decremented per router, packet dies at zero.</td>
+</tr>
+<tr>
+<td><strong>Extension headers</strong></td>
+<td>Optional chained headers after the fixed $40$ B (fragmentation lives here, source-only) — routers fast-path past them.</td>
+</tr>
+<tr>
+<td><strong>Anycast / multicast / unicast</strong></td>
+<td>Deliver to nearest member / all subscribers (<code>ff00::/8</code>) / one host; link-local (<code>fe80::/10</code>) and unique-local are scoped unicasts.</td>
+</tr>
+<tr>
+<td><strong>Dual-stack / tunneling / translation</strong></td>
+<td>Run both protocols / carry v6 inside v4 packets (e.g. 6to4, Teredo) / statefully rewrite v4↔v6 at borders (NAT64 — Network Address Translation v6-to-v4 — /DNS64).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Header and addresses</h3>
+<h2 id="3-purpose-header-addresses-migration-choice">3. Purpose — Header, Addresses, Migration Choice</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Packet Structure: Header and Addresses</h3>
 <p>Fixed $40$ B: version/traffic-class/<strong>flow-label</strong> ($20$ bits: pseudo-connection marks for labelled QoS treatment), payload-length/next-header/hop-limit ($8$-bit TTL heir), $16$-B source + $16$-B destination. Dropped vs IPv4: header length field (fixed!), checksum (link layers already guard), fragmentation by routers (source-only, via extension headers). Address types: unicast (global/link-local <code>fe80::/10</code>/unique-local), <strong>multicast</strong> (<code>ff00::/8</code> — M2.7&#39;s groups, native here), anycast (nearest-member delivery).</p>
-<h3>2.2 Writing and migrating</h3>
-<p>$8$ hextets: strip leading zeros per group, replace the <em>longest</em> run of all-zero groups with one <code>::</code> (once only — ambiguity guard). Transition: <strong>dual-stack</strong> (both, preferred), <strong>tunneling</strong> (v6-in-v4, e.g. 6to4/Teredo for islands), <strong>translation</strong> (NAT64/DNS64 at borders, last resort).</p>
+<h3>3.2 Operation Flow: Writing and Migrating</h3>
+<p>$8$ hextets — two canonical steps, in order:</p>
+<ol>
+<li>Strip leading zeros in each group (<code>0DB8</code> → <code>DB8</code>, <code>0042</code> → <code>42</code>, <code>0000</code> → <code>0</code>).</li>
+<li>Replace the <em>longest</em> run of all-zero groups with one <code>::</code>, exactly once (ambiguity guard).</li>
+</ol>
+<p>Transition choice follows the overlap: <strong>dual-stack</strong> (both protocols, preferred when both ends can run both), <strong>tunneling</strong> (v6-in-v4, e.g. 6to4/Teredo for v6 islands across a v4 sea), <strong>translation</strong> (NAT64/DNS64 at borders, last resort for disjoint islands).</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: IPv6</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$40$-B fixed · flow label $20$ bits · no router fragmentation/checksum · compress zeros once (<code>::</code>) · space $2^{128} \approx 3.4 \times 10^{38}$ · migrate: both/tunnel/translate.</p>
 </div></details><p>Extension headers chain <em>after</em> the base $40$ B — routers fast-path the fixed part and skip the rest, the simplicity dividend IPv4&#39;s option-strewn headers never paid.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Double-Colon Double-Use</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One <code>::</code> per address — two would make group-count ambiguous ($2001$::$1$::$2$ cannot be re-inflated uniquely). An option compressing twice trades keystrokes for unparseability; longest-run-once is the whole rule.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-header-addresses-migration-choice">← 3. Purpose — Header, Addresses, Mi…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p><code>FE80:0000:0000:0000:0000:0000:0000:0001</code>. Strip zeros → <code>FE80:0:0:0:0:0:0:1</code>. Longest zero run = groups 2–7 (six groups) → <code>FE80::1</code>. (Compare the famous loopback <code>::1</code> — all zeros except the last group.)</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Compress $2001$:$0DB8$:$0000$:$0000$:$0000$:$FF00$:$0042$:$8329$ fully, count characters saved, and state the address-space size versus IPv4.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Squeeze Once</div><div class="step-content"><p>Strip leading zeros: $2001$:$DB8$:$0$:$0$:$0$:$FF00$:$42$:$8329$. Longest zero run: groups $3$–$5$ (three $0$s, the unique longest) → one <code>::</code>: $2001$:$DB8$::$FF00$:$42$:$8329$. Length: original $39$ chars → compressed $22$ ($17$ saved, $\approx 44%$). Space: $2^{128} \approx 3.4 \times 10^{38}$ vs IPv4&#39;s $2^{32} \approx 4.3 \times 10^9$ — roughly $8 \times 10^{28}$ times roomier.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$2001$:$DB8$::$FF00$:$42$:$8329$ ($22$ chars), space $\approx 3.4 \times 10^{38}$. One <code>::</code> at the longest run — any shorter run chosen, or two used, and the form is either non-canonical or illegal.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Strip zeros vs. <code>::</code> collapse</td>
+<td>Per-group keystroke trim vs. one longest-run replacement — both required for canonical form.</td>
+</tr>
+<tr>
+<td>Dual-stack vs. tunnel vs. translate</td>
+<td>Both ends bilingual / v6 islands over v4 sea / disjoint islands (last resort).</td>
+</tr>
+<tr>
+<td>Fragmentation v4 vs. v6</td>
+<td>Routers may fragment vs. source-only via extension headers.</td>
+</tr>
+<tr>
+<td>Checksum v4 vs. v6 header</td>
+<td>Per-hop recomputed vs. dropped (link + transport guards suffice).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Using <code>::</code> twice — illegal, unparseable. (2) Collapsing a shorter zero run while a longer exists — non-canonical. (3) Tunneling without a shared sea — disjoint islands need translation.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>IPv6 = $40$-B fixed header (20-bit flow label, 8-bit hop limit, no checksum, no router fragmentation) + $2^{128}$ space. Canonical form: strip leading zeros, collapse longest zero run once with <code>::</code>. Migration by overlap: dual-stack (both), tunneling (islands over a sea), translation NAT64/DNS64 (disjoint, stateful).</p>
+</div></details><p><strong>Active-recall checklist:</strong> Recite the two canonical steps in order. Why is double-<code>::</code> illegal? Which migration fits a v4-only data centre serving v6-only clients? Why did the checksum go?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Compression Drill</span>
@@ -520,7 +607,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_11_ipv6_next_generation_transition";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

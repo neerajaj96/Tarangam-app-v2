@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,50 +297,120 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>ASN.1, SMI &amp; MIB: SNMP&#39;s Language</h1>
 <p><strong>The grammar behind management — ASN.1 types, BER tag-length-value bytes you will encode by hand, and the OID tree that names every managed object.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>SNMP managers and agents (previous note) run on different machines, vendors, and software stacks — yet every message must parse identically on all of them. A shared <strong>language</strong> (what types exist), a shared <strong>byte stamping</strong> (how values hit the wire), and a shared <strong>catalogue</strong> (which number names which object) make that possible.</p>
+<p>The problem before the solution: define types once (ASN.1 — Abstract Syntax Notation One), stamp every value as self-delimiting Tag–Length–Value bytes (BER — Basic Encoding Rules), and name every managed object by its path down a global tree (OID — Object Identifier) — with a deliberately <em>small</em> type subset (SMI) so every vendor&#39;s parser stays compatible.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Customs Forms for Machines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>SNMP managers and agents (M4.1) speak different native tongues, so every message crosses the border on a standard <strong>customs form</strong>: <strong>ASN.1</strong> defines the form&#39;s language (INTEGER, OCTET STRING, SEQUENCE…), <strong>BER</strong> stamps the bytes (Tag–Length–Value, machine-readable in any country), and <strong>SMI/MIB</strong> is the catalogue of declarable goods (each object an OID leaf like $1.3.6.1.2.1$). Forms, stamps, catalogue — three jobs, three standards, one interoperable conversation.</p>
+<p>Dropping the border now: TLV (Tag–Length–Value) = type byte + length byte(s) + raw value; OID arcs = the dotted path down the tree; SMI = the SNMP-safe ASN.1 subset.</p>
 </div></details><pre><code class="language-text">BER on the wire:   [ Tag | Length | Value ]
 INTEGER 5      =&gt;   02    01       05
 &quot;HI&quot;           =&gt;   04    02       48 49
 SEQ{INT 5}     =&gt;   30    03       02 01 05
 </code></pre>
-<hr>
+<p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-types-encodings-oid-reading">3. Purpose — Types, Encodings, OID… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>ASN.1 (Abstract Syntax Notation One)</strong></td>
+<td>The type language: INTEGER, OCTET STRING (byte string), OBJECT IDENTIFIER, NULL, constructed SEQUENCE, and more.</td>
+</tr>
+<tr>
+<td><strong>BER (Basic Encoding Rules)</strong></td>
+<td>The wire stamping: every value as Tag–Length–Value bytes (1-B tag, short-form length $&lt; 128$ else long-form, then raw value bytes; nested values recurse).</td>
+</tr>
+<tr>
+<td><strong>TLV (Tag–Length–Value)</strong></td>
+<td>One stamped unit: <code>02 01 05</code> = INTEGER tag, length 1, value 5.</td>
+</tr>
+<tr>
+<td><strong>OID (Object Identifier)</strong></td>
+<td>The dotted-arc address of a managed object (<code>1.3.6.1.2.1…</code> = iso.org.dod.internet.mgmt.mib…); trailing <code>.0</code> = scalar instance, table columns append row indices.</td>
+</tr>
+<tr>
+<td><strong>SMI (Structure of Management Information)</strong></td>
+<td>SNMP&#39;s ASN.1 subset — exotic types banned so every vendor parser stays small and compatible.</td>
+</tr>
+<tr>
+<td><strong>MIB (Management Information Base) module</strong></td>
+<td>Declarations of objects under the OID tree, written in SMI.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Types and encodings</h3>
+<h2 id="3-purpose-types-encodings-oid-reading">3. Purpose — Types, Encodings, OID Reading</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Types and Encodings</h3>
 <p>ASN.1 primitive types: INTEGER ($02$), OCTET STRING ($04$), OBJECT IDENTIFIER ($06$), NULL ($05$), plus constructed SEQUENCE ($30$). BER TLV: $1$-B tag, length (short form $&lt; 128$, long form otherwise), then raw value bytes — nested values recurse (SEQUENCE wraps complete inner TLVs; its length covers them all). SMI restricts ASN.1 to SNMP&#39;s needs (no exotic types); MIB modules declare objects under the OID tree (<code>iso(1).org(3).dod(6).internet(1).mgmt(2).mib(1)</code>).</p>
-<h3>2.2 Reading OIDs</h3>
+<h3>3.2 Reading OIDs, Arc by Arc</h3>
 <p>$1.3.6.1.2.1.1.1.0$ parses arc-by-arc: iso → org → dod → internet → mgmt → mib → system → sysDescr → instance $0$. Trailing $.0$ = scalar instance; table columns append indices instead.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: ASN.1</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Tags: INT $02$, STR $04$, SEQ $30$ · TLV nests (length covers inner whole) · SMI $=$ SNMP-safe subset · OID arcs name the path · scalars end $.0$.</p>
 </div></details><p>BER&#39;s lengths make parsers resynchronize after corruption — self-delimiting bytes, the robustness property examiners contrast with fixed-offset C structs.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Length-Scope Error</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>SEQUENCE length covers the <em>entire inner encoding</em> (tags included), not just leaf values. SEQ${$INT $5}$ is $30\ 03\ \dots$ (inner $3$ bytes), never $30\ 01$ — counting values while forgetting nested tags underprices every constructed type.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-types-encodings-oid-reading">← 3. Purpose — Types, Encodings, OID…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>NULL value: tag <code>05</code>, length <code>00</code> → <code>05 00</code> (2 bytes, no value at all). Wrap it: SEQ{NULL} → inner 2 bytes → <code>30 02 05 00</code>. Length <code>02</code> covers the whole inner TLV — the nesting discipline in miniature.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>BER-encode (hex bytes): (a) INTEGER $5$; (b) OCTET STRING &quot;HI&quot; ($H = 0$x$48$, $I = 0$x$49$); (c) SEQUENCE containing exactly (a). Count total bytes of (c).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Stamping the Forms</div><div class="step-content"><p>(a) Tag $02$, length $01$, value $05$ → <code>02 01 05</code> ($3$ bytes). (b) Tag $04$, length $02$, values $48\ 49$ → <code>04 02 48 49</code> ($4$ bytes). (c) Inner is (a)&#39;s full $3$ bytes, so length $= 03$: <code>30 03 02 01 05</code> — $5$ bytes total ($1$ tag + $1$ length + $3$ inner). A decoder reading <code>30 03</code> knows exactly $3$ content bytes follow: resync built in.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p><code>02 01 05</code> ($3$ B), <code>04 02 48 49</code> ($4$ B), <code>30 03 02 01 05</code> ($5$ B). Lengths telescope correctly ($03$ wraps $3$ inner bytes) — the nesting discipline that makes BER parseable without a schema on the wire.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ASN.1 vs. BER vs. SMI</td>
+<td>Type language vs. wire stamping vs. SNMP-safe subset.</td>
+</tr>
+<tr>
+<td>Length scope</td>
+<td>Covers the whole inner encoding (tags included), never bare values.</td>
+</tr>
+<tr>
+<td>Scalar vs. table OID tails</td>
+<td><code>.0</code> instance vs. row-index suffix.</td>
+</tr>
+<tr>
+<td>TLV vs. C struct offsets</td>
+<td>Self-delimiting (resyncs) vs. fixed offsets (fragile).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) SEQUENCE length of values-only — include nested tags. (2) Truncating INTEGER 300 to one byte (<code>2C</code> = 44, wrong value) — length honesty plus sign awareness. (3) Calling SMI &quot;more types&quot; — it is subtraction for compatibility.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>ASN.1 types (INT <code>02</code>, STR <code>04</code>, SEQ <code>30</code>, OID <code>06</code>, NULL <code>05</code>) stamped as BER TLV (length covers inner whole; short form $&lt;128$). SMI = compatible subset; MIB = OID-tree declarations (<code>iso.org.dod.internet.mgmt.mib…</code>); scalars end <code>.0</code>, tables index. Lengths self-delimit → resync after corruption.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Encode INTEGER 5 and SEQ{INT 5} from memory. Parse <code>1.3.6.1.2.1.1.3.0</code> arc by arc. Why does SNMP ban full ASN.1? What does <code>30 03</code> promise a decoder?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Encoding Drill</span>
@@ -524,7 +598,7 @@ SEQ{INT 5}     =&gt;   30    03       02 01 05
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_07_asn1_smi_mib_language";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

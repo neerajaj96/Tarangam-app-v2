@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,47 +249,105 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Naive Bayes: Generative Classification</h1>
-<p><strong>Bayes&#39; rule as classifier, the conditional-independence bet, Gaussian vs. multinomial flavors, Laplace smoothing, and discriminative vs. generative framing.</strong></p>
+<p><strong>What problem generative classifiers solve, what count data they need, how Naive Bayes (NB) trains by counting with smoothing, and where independence helps or hurts.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>A patient has fever and cough. Is it flu or cold? Instead of drawing a boundary, model each disease&#39;s symptom generator: how often does flu cause fever? Then flip with Bayes&#39; rule to get disease given symptoms.</p>
+<p>Tiny beginner example. Prior: 40% spam, 60% ham. Word &quot;free&quot; appears often in spam, rarely in ham. Mail says &quot;free.&quot; Multiply prior times likelihood per class; the larger product wins. Two numbers in, one verdict out. That is the whole classifier.</p>
+<p>Analogy as support, then dropped. Think of a symptom detective who knows each disease&#39;s habits, then reverses the question. From here on we use exact terms only: prior, likelihood, posterior, conditional independence, smoothing.</p>
+<p>Abbreviations defined on first use: Naive Bayes (NB). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $P(y=c)$?</td>
+<td>Prior, how common class $c$ is</td>
+</tr>
+<tr>
+<td>What is $P(x_j\mid y=c)$?</td>
+<td>Likelihood of feature $j$ under class $c$</td>
+</tr>
+<tr>
+<td>What is naive?</td>
+<td>Features independent given the class</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Classify discrete or continuous features when training data are scarce or features go missing.</p>
+<p><strong>Data.</strong> Labelled pairs with features $x=(x_1,\dots,x_d)$ and class $y=c$. Text uses counts; continuous features use per-class means and variances.</p>
+<p><strong>Goal.</strong> High accuracy via $\hat{y}=\arg\max_c P(y=c)\prod_j P(x_j\mid y=c)$. Here $\arg\max$ means pick the class with the largest score; denominator $P(x)$ is constant across classes and dropped. The naive independence $P(x\mid c)=\prod_j P(x_j\mid c)$ does all the work: it is usually false, usually harmless, always fast.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Symptom Detective</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A patient shows fever + cough. Instead of drawing a flu/no-flu <em>boundary</em> (discriminative), the detective models each disease&#39;s <em>symptom generator</em>: how often does flu produce fever? a cold? Then flips it with Bayes: $P(\text{flu} \mid \text{symptoms}) \propto P(\text{symptoms} \mid \text{flu}),P(\text{flu})$. <strong>Naive</strong> Bayes makes one sweeping simplification — symptoms independent <em>given</em> the disease (fever tells nothing new about cough once flu is known) — usually false, usually harmless, always fast.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Classifier Equation</h3>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (classify with little data) → data (labelled feature vectors) → goal (correct argmax) → method (model each class generator) → model (prior times product) → training (count or average, one pass) → example → limitations.</p>
+<h3>3.1 The Classifier Equation, Symbol by Symbol</h3>
 <p>$$\hat{y} = \arg\max_c; P(y=c) \prod_{j=1}^d P(x_j \mid y=c)$$</p>
-<p>— prior × per-feature likelihoods, with the <strong>naive independence</strong> $P(x \mid c) = \prod_j P(x_j \mid c)$ doing all the work. Decide by argmax; the denominator $P(x)$ is constant across classes and dropped.</p>
-<h3>2.2 Three Flavors (One Per Feature Type)</h3>
+<p>$P(y=c)$ is the prior; each $P(x_j\mid y=c)$ is one feature&#39;s evidence; the product is joint evidence under independence; $\arg\max$ picks the winner.</p>
+<h3>3.2 Three Flavors, One Per Feature Type</h3>
 <ul>
-<li><strong>Multinomial/Bernoulli NB</strong> (text, discrete counts): likelihoods are frequency tables with <strong>Laplace smoothing</strong> ($+\alpha$ pseudocounts — usually $\alpha=1$): $P(w \mid c) = \frac{\text{count}(w,c) + \alpha}{\sum_{w&#39;}\text{count}(w&#39;,c) + \alpha|V|}$. Zero counts would <em>veto</em> entire classes (one unseen word zeroes the product) — smoothing is load-bearing, not cosmetic.</li>
-<li><strong>Gaussian NB</strong> (continuous features): $P(x_j \mid c) = \mathcal{N}(\mu_{jc}, \sigma^2_{jc})$ with per-class MLE means/variances — closed form, one pass.</li>
-<li>Training everywhere = counting (or averaging): no iteration, no gradients, $O(nd)$ once.</li>
+<li><strong>Multinomial and Bernoulli NB</strong> (text, discrete counts): likelihoods are frequency tables with Laplace smoothing ($+\alpha$ pseudocounts, usually $\alpha=1$): $P(w\mid c)=(\text{count}(w,c)+\alpha)/(\sum_{w&#39;}\text{count}(w&#39;,c)+\alpha|V|)$. Here $|V|$ is vocabulary size. Zero counts would veto entire classes (one unseen word zeroes the product); smoothing is load-bearing, not cosmetic.</li>
+<li><strong>Gaussian NB</strong> (continuous features): $P(x_j\mid c)=\mathcal{N}(\mu_{jc},\sigma^2_{jc})$ with per-class MLE means and variances. Closed form, one pass.</li>
+<li>Training everywhere is counting or averaging: no iteration, no gradients, $O(nd)$ once.</li>
 </ul>
-<h3>2.3 Generative vs. Discriminative</h3>
+<p>Steps numbered:</p>
+<ol>
+<li>Count priors and per-feature likelihoods on train.</li>
+<li>Add $\alpha$ smoothing to every count.</li>
+<li>For a query, multiply prior times likelihoods per class.</li>
+<li>Argmax; optionally normalise for probabilities.</li>
+</ol>
+<h3>3.3 Generative versus Discriminative</h3>
 <ul>
-<li><strong>Generative</strong> (NB, LDA, HMMs): model <em>how each class generates data</em> $P(x \mid y)$ (+ prior) — can <em>sample</em> new emails, handles missing features by marginalizing, learns fast from little data.</li>
-<li><strong>Discriminative</strong> (logistic regression, SVMs, trees): model the <em>boundary</em> $P(y \mid x)$ directly — asymptotically <em>more accurate</em> with big data (Ng–Jordan: logistic needs $O(n)$ samples to NB&#39;s $O(\log n)$ to approach its <em>higher</em> ceiling).</li>
+<li><strong>Generative</strong> (NB, Linear Discriminant Analysis (LDA), Hidden Markov Models (HMMs)): model how each class generates data $P(x\mid y)$ plus prior. Can sample new examples, handles missing features by marginalising, learns fast from little data.</li>
+<li><strong>Discriminative</strong> (logistic regression, Support Vector Machines (SVMs), trees): model the boundary $P(y\mid x)$ directly. Asymptotically more accurate with big data (Ng-Jordan: logistic needs $O(n)$ samples to NB&#39;s $O(\log n)$ to approach its higher ceiling). Correct qualification: this is an asymptotic sample-complexity comparison under standard assumptions, not a guarantee on every dataset; with enough clean data the discriminative ceiling usually wins, with little data generative often wins sooner.</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Generative vs discriminative</td>
+<td>Model $P(x\mid y)$ (fast, sampleable) vs $P(y\mid x)$ boundary (higher ceiling, hungrier)</td>
+</tr>
+<tr>
+<td>Laplace $\alpha=1$ vs $\alpha=0$</td>
+<td>Priced rarity vs absolute veto; unseen is rare, not impossible</td>
+</tr>
+<tr>
+<td>Independence given class vs overall</td>
+<td>Only within-class independence assumed; overall correlation remains</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: NB Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Decide $\arg\max_c P(c)\prod P(x_j|c)$ · <strong>naive</strong> = features independent <em>given class</em> · smooth counts (<strong>+α</strong>, kills zero-vetoes) · Gaussian flavor = <strong>per-class MLE</strong> · generative: <strong>fast to train, can sample</strong>; discriminative: <strong>higher ceiling, needs data</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Independence Is Assumed of Features Given Class — Nothing Else</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Naive&quot; never claims features are independent <em>overall</em> (fever and cough obviously correlate!) — only <em>within</em> a class. Correlated-given-class features (repeated synonyms in spam) get double-counted, skewing confidence — yet classifications often survive because only the <em>argmax order</em>, not calibrated odds, must be right.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Vocabulary {free, money, lunch}; training word counts — spam {free:4, money:3, lunch:0} over 7 spam-words; ham {free:1, money:0, lunch:3} over 4 ham-words. Priors from 4 spam / 6 ham docs: $P(S)=0.4$, $P(H)=0.6$. Classify &quot;free lunch&quot; with Laplace $\alpha=1$, $|V|=3$. (Arithmetic verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Scoring Both Classes</div><div class="step-content"><p>Likelihoods — spam: $P(\text{free}|S)=(4+1)/(7+3)=0.5$, $P(\text{lunch}|S)=(0+1)/10=0.1$. Ham: $P(\text{free}|H)=(1+1)/(4+3)=2/7\approx0.286$, $P(\text{lunch}|H)=(3+1)/7=4/7\approx0.571$.
 Scores: $S: 0.4 \times 0.5 \times 0.1 = 0.020$; $H: 0.6 \times 0.286 \times 0.571 \approx 0.098$. <strong>Ham wins ~5:1</strong> — &quot;lunch&quot; (unseen in spam training, rescued by smoothing from a zero-veto) plus the ham prior carry the verdict.</p>
@@ -305,10 +371,21 @@ Scores: $S: 0.4 \times 0.5 \times 0.1 = 0.020$; $H: 0.6 \times 0.286 \times 0.57
     <p class="video-caption"><strong>Key Insight:</strong> Ham Wins 5 to 1 on Free Lunch</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the two products build factor by factor — 0.020 against 0.098 — with the +1-rescued lunch likelihood doing the heaviest lifting in the smaller bar.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Dropping the prior. Priors decide close calls; ham won partly on 0.6 versus 0.4.</li>
+<li>Forgetting smoothing. One zero vetoes a class absolutely.</li>
+<li>Claiming independence holds in text. It does not; only argmax order survives double-counting.</li>
+<li>Expecting calibrated probabilities. NB ranks well but skews magnitudes under correlation.</li>
+</ul>
+<p>Limitations: correlated-given-class features distort confidence; Gaussian flavour assumes per-class normality; no feature interaction is modelled.</p>
+<p>Exam recap: decide argmax prior-times-product; naive means given-class independence; smooth with $+\alpha$; Gaussian flavour uses per-class MLE; generative is fast and sampleable, discriminative has higher asymptotic ceiling given data.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In the worked example, what exactly would break without Laplace smoothing, and why is the breakage catastrophic rather than mild?</span>
@@ -493,7 +570,7 @@ Scores: $S: 0.4 \times 0.5 \times 0.1 = 0.020$; $H: 0.6 \times 0.286 \times 0.57
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m2_03_naive_bayes_generative_models";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

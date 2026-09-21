@@ -287,8 +287,11 @@
 <h1>Module 3 Practice Lab: Greedy, DP &amp; Backtracking Drills</h1>
 <p><strong>Knapsack showdowns, chain-split races, activity traces, pruning autopsies, and exam essay models.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
+<h2 id="1-start-from-zero-how-to-use-this-lab">1. Start from zero — how to use this lab</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p><strong>Problem first.</strong> Module 3&#39;s exam marks go to method trios on identical input (same knapsack, three verdicts), full $m$-table races with splits shown, and certificates (exchange arguments, lower bounds) — never bare answers. Abbreviations: DP = dynamic programming; $m[i][j]$ = cheapest cost for subchain $i..j$; OPT = optimal value.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One input, many methods: the knapsack showdown proves <em>divisibility</em> decides the method; the chain race proves <em>length order</em> decides correctness of tabulation; the activity race proves <em>certificates</em> (not luck) decide optimality. Run each scenario with numbers on the table, exactly as modelled below.</p>
+</div></details><p><strong>Tiny warm-up.</strong> Items $(v,w)$ = $(10,5), (9,4)$, capacity $9$: ratio-greedy takes $(10,5)$ then $(9,4)$ fits → 19; DP agrees 19 (both fit — no conflict, no drama). Conflict-free instances hide method differences; the showdown below picks a conflicting one on purpose.</p>
 <h3>Scenario 1: The Knapsack Showdown (Same Items, Three Verdicts)</h3>
 <p>Items $(v,w)$: $(60,10), (100,20), (120,30)$, capacity $50$. <strong>Ratio-greedy</strong>: densities $6, 5, 4$ → take $(60,10)$, then $(100,20)$ fits ($30$ used), then $(120,30)$ doesn&#39;t ($60 &gt; 50$): total <strong>160</strong>. <strong>DP take-or-skip</strong>: $dp$ fills to <strong>220</strong> via ${(100,20),(120,30)}$ (weight exactly 50). <strong>Fractional</strong> (for reference): $60 + 100 + \frac{20}{30}\cdot120 = 240$. Three methods, three answers (160 / 220 / 240) on identical input — divisibility decides which is <em>legal</em>, optimality decides which is <em>right</em>.</p>
 <h3>Scenario 2: Chain-Split Race (4 Matrices, All Splits Shown)</h3>
@@ -298,7 +301,7 @@
 <hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
-<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<p class="secnav"><a href="#1-start-from-zero-how-to-use-this-lab">← 1. Start from zero — how to use th…</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
 <table>
 <thead>
 <tr>

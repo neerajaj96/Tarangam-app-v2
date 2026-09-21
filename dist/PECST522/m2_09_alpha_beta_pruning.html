@@ -269,23 +269,27 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Alpha-Beta Pruning: Same Move, Less Work</h1>
-<p><strong>Bounds that behead branches — $\alpha$/$\beta$ window mechanics, the 4-of-6 trace on the minimax tree, move ordering that doubles the cut rate.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Already-Beaten Escape Hatch</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>While exploring a MIN branch, the moment it proves <em>worse-or-equal</em> to an option MAX already holds ($\beta \le \alpha$), further leaves cannot change the decision — so stop looking. Alpha-beta never alters the move (same minimax value guaranteed); it merely refuses to price branches whose verdict is already sealed. Best ordering (strong moves first) seals verdicts fastest.</p>
+<p><strong>Problem: minimax prices branches whose verdict is already sealed. Can we skip them with zero change to the move? By the end you can run the alpha-beta window by hand, prove exactness, and price ordering.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-the-already-beaten-escape-hatch">1. Start From Zero: The Already-Beaten Escape Hatch</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-window-mechanics">2. Basic Layer: Window Mechanics →</a></p>
+<p>While exploring a MIN branch, the moment it proves worse-or-equal to an option MAX already holds, remaining leaves cannot change the decision — stop looking. Best ordering (strong moves first) seals verdicts fastest.</p>
+<p><strong>Definitions:</strong> <code>alpha</code> = best value MAX is assured so far (only rises along the path). <code>beta</code> = best value MIN is assured so far (only falls). The pair <code>[alpha, beta]</code> is the window. A <strong>beta-cutoff</strong> at a MIN node fires when its running minimum <code>&lt;= alpha</code> (MAX already holds better elsewhere). An <strong>alpha-cutoff</strong> at a MAX node fires when its running maximum <code>&gt;= beta</code>. Bounds come from already-explored siblings, so left-to-right order decides everything.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Already-Beaten Escape Hatch</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;quit proven-losers&quot; here, then drop the image; window updates plus the cutoff inequality below are the technical content.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Two Leaves Never Born</span>
@@ -309,41 +313,61 @@
   </div>
   <div class="video-studio-foot">
     <p class="video-caption"><strong>Key Insight:</strong> Two Leaves Never Born</p>
-    <div class="video-observations"><strong>What to observe:</strong> The left branch sets $\alpha = 3$; the right branch&#39;s first leaf ($2$) falls below it and the remaining two leaves are cut — identical move, one-third less work.</div>
+    <div class="video-observations"><strong>What to observe:</strong> The left branch sets alpha = 3; the right branch&#39;s first leaf (2) falls below it and the remaining two leaves are cut — identical move, one-third less work.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Window mechanics</h3>
-<p>$\alpha$ = best value MAX is assured (rises); $\beta$ = best value MIN is assured (falls). At a MIN node with inherited $\alpha$: any child value $\le \alpha$ triggers a <strong>beta-cutoff</strong> (prune rest); symmetric <strong>alpha-cutoff</strong> at MAX nodes when a child $\ge \beta$. Cutoffs need bounds from <em>already-explored</em> siblings — left-to-right order decides everything.</p>
-<h3>2.2 Ordering economics</h3>
-<p>Random order: $\approx O(b^{3m/4})$ — good. Perfect order (best moves first): $O(b^{m/2})$ — effective depth doubled. Worst order (worst first): $O(b^m)$ — zero cuts, full minimax price. Iterative deepening feeds move ordering almost for free (shallow results sort deep search).</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Alpha-Beta</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$\alpha$ rises (MAX assured) · $\beta$ falls (MIN assured) · cut when $\beta \le \alpha$ · same value as minimax, always · best order $O(b^{m/2})$, worst $O(b^m)$.</p>
-</div></details><p>Cutoff direction is the exam trap: MIN nodes cut on $\beta \le \alpha$ using the <em>inherited</em> $\alpha$ — students who compare against the node&#39;s own running minimum instead of the window prune branches that could still matter.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Pruning the Best Move</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Alpha-beta prunes only branches proven irrelevant to the root decision. An option claiming it &quot;risks missing the optimal move for speed&quot; confuses it with cutoff-and-evaluate approximations — exact pruning never changes the backed-up value, by proof, not by luck.</p>
-</div></details><hr>
+</div><p><strong>Tiny beginner example:</strong> MAX holds 5 from the left branch (alpha = 5). Right MIN branch opens with 4 — already below 5, so its unborn siblings cannot rescue it. Cut.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-window-mechanics">2. Basic Layer: Window Mechanics</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-already-beaten-escape-hatch">← 1. Start From Zero: The Already-Be…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-ordering-economics-and-exactness-proof">3. Formal Layer: Ordering Economic… →</a></p>
+<p><strong>Data/state:</strong> current path&#39;s alpha/beta plus running node value. <strong>Goal:</strong> same minimax value with fewer leaf evaluations.</p>
+<p><strong>Procedure (steps):</strong> Step 1: pass (alpha, beta) down (root starts -infinity, +infinity). Step 2: at MIN, track running min; the moment it &lt;= alpha, prune the rest (beta-cutoff) and return the min. Step 3: at MAX, track running max; the moment it &gt;= beta, prune the rest (alpha-cutoff) and return the max. Step 4: on return, tighten the parent&#39;s window (MAX raises alpha, MIN lowers beta).</p>
+<p><strong>Cutoff direction trap:</strong> MIN nodes cut using the <em>inherited</em> alpha, not their own running minimum alone. Comparing against the wrong bound prunes branches that could still matter.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-ordering-economics-and-exactness-proof">3. Formal Layer: Ordering Economics and Exactness Proof</h2>
+<p class="secnav"><a href="#2-basic-layer-window-mechanics">← 2. Basic Layer: Window Mechanics</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Ordering economics (qualified):</strong> perfect order (best moves first): <code>O(b^(m/2))</code> — effective depth doubled. Random order: about <code>O(b^(3m/4))</code> — good. Worst order (worst first): <code>O(b^m)</code> — zero cuts plus overhead. Iterative deepening feeds ordering almost free (shallow results sort deep search).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Alpha-Beta</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Alpha rises (MAX assured). Beta falls (MIN assured). Cut when beta &lt;= alpha. Same value as minimax on every input, always. Best order <code>O(b^(m/2))</code>, worst <code>O(b^m)</code>.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Pruning the Best Move</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Alpha-beta prunes only branches proven irrelevant to the root decision. &quot;Risks missing the optimum for speed&quot; confuses exact pruning with cutoff-and-evaluate approximations (depth caps). Exactness here is by proof: cutoff inequality certifies irrelevance, not luck.</p>
+</div></details><p><strong>Full trace on the minimax tree (MAX root over MIN A [3,12,8], MIN B [2,4,6], left to right):</strong> A inherits alpha -inf: leaf 3 sets running min 3; 12 and 8 cannot lower it — A returns 3. Root alpha rises to 3. B inherits alpha 3: first leaf 2 sets running min 2 &lt;= 3 — cutoff; leaves 4, 6 never generated. B returns at most 2. Root = max(3,2) = 3. Four leaves evaluated instead of 6. Exploring B first would cut nothing (alpha still -inf) — ordering is half the topic.</p>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Same tree as M2.8: MAX root ($\alpha = -\infty$, $\beta = +\infty$) over MIN $A$ (leaves $3, 12, 8$) and MIN $B$ (leaves $2, 4, 6$), explored left to right. Trace every bound and count evaluated leaves.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Bounds Closing In</div><div class="step-content"><p>Node $A$ (inherits $\alpha = -\infty$): leaf $3$ sets running min $3$; leaves $12$, $8$ cannot lower it — $A$ returns $3$. Root $\alpha$ rises to $3$. Node $B$ (inherits $\alpha = 3$, $\beta = +\infty$): first leaf $2$ sets running min $2 \le \alpha = 3$ — cutoff! Leaves $4$, $6$ are never generated. $B$ returns $2$ (at most $2$, provably no better than $3$). Root $= \max(3, 2) = 3$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same value $3$, same move (toward $A$), but $4$ leaves evaluated instead of $6$ — $2$ pruned. The cut needed the left branch <em>first</em>: exploring $B$ before $A$ would have cut nothing ($\alpha$ still $-\infty$), which is why ordering economics (best-first) is half the topic.</p>
-</div></div><hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-ordering-economics-and-exactness-proof">← 3. Formal Layer: Ordering Economic…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Exact pruning vs. cutoff approximation</td>
+<td>Proven-irrelevant skip (same move) vs. depth-cap guess (move may change)</td>
+</tr>
+<tr>
+<td>Best-first vs. worst-first order</td>
+<td>Tight windows early (max cuts) vs. bounds arrive too late (no cuts, same value)</td>
+</tr>
+<tr>
+<td>Alpha vs. beta</td>
+<td>MAX-assured lower bound vs. MIN-assured upper bound</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Cutoffs need already-explored siblings — first branch never cuts. (2) Returned values of cut branches are bounds (&quot;at most&quot;), not exact — sufficient for the parent, never quoted as node values. (3) Same value on all inputs does not mean same speed.</p>
+<p><strong>Limitations:</strong> worst case still <code>O(b^m)</code>; needs move ordering to pay; exactness assumes exact minimax underneath (with evaluation cutoffs, guarantees become approximate). Transposition tables and quiescence handling (beyond syllabus) address repeats and horizon effects.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Cutoff Arithmetic</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>MIN node, inherited $\alpha = 5$, children evaluated so far: $7$. Next child returns $4$. Action?</p>
+  <div class="quiz-prompt"><p>MIN node, inherited alpha = 5, children evaluated so far: 7. Next child returns 4. Action?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Continue, $4$ may still improve MIN below $7$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Prune the rest — running min is now $4 \le \alpha = 5$, so MAX already holds $5$ elsewhere and this branch cannot be chosen regardless of remaining leaves</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Raise $\alpha$ to $7$</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>Continue, 4 may still improve MIN below 7</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Prune the rest — running min is now 4 &lt;= alpha = 5, so MAX already holds 5 elsewhere and this branch cannot be chosen regardless of remaining leaves</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Raise alpha to 7</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Reorder the evaluated children</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
@@ -356,7 +380,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The window test fires on the <em>running</em> minimum versus inherited $\alpha$: $4 \le 5$ seals it. Waiting for &quot;all children&quot; reverts to minimax — the cutoff exists precisely to skip that labour.</p><pre><code>&lt;/div&gt;
+      <p>The window test fires on running minimum versus inherited alpha. Waiting for all children reverts to minimax — the cutoff exists to skip that labour.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -364,13 +388,13 @@
     <span class="quiz-category">Q2: Ordering Economics</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Same tree, $6$ leaves, worst-first order. Evaluations?</p>
+  <div class="quiz-prompt"><p>Same tree, 6 leaves, worst-first order. Evaluations?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$3$, ordering never matters</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>All $6$ — bounds arrive too late to cut anything (every branch looks best until refuted), so worst order pays full minimax price with alpha-beta overhead added</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$0$, everything prunes</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$6$ but a different move results</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>3, ordering never matters</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>All 6 — bounds arrive too late to cut anything (every branch looks best until refuted), so worst order pays full minimax price with alpha-beta overhead added</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>0, everything prunes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>6 but a different move results</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -382,7 +406,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Cuts need early good news: best-first sets tight windows immediately, worst-first explores doomed branches fully before learning better. Order decides the discount — the value stays $3$ either way.</p><pre><code>&lt;/div&gt;
+      <p>Cuts need early good news. Worst-first explores doomed branches fully before learning better; value stays 3 either way.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -396,7 +420,7 @@
     <button class="quiz-option-btn" data-correct="false"><span>True under time pressure</span></button>
 <button class="quiz-option-btn" data-correct="true"><span>False — pruned branches are proven unable to affect the root value, so the returned move equals minimax&#39;s on every input; speed differs, decisions never</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>True with iterative deepening</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>True past depth $4$</span></button>  </div>
+<button class="quiz-option-btn" data-correct="false"><span>True past depth 4</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -408,10 +432,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Cutoff condition ($\beta \le \alpha$) is a proof of irrelevance, not a heuristic guess. Identical values on all inputs is the theorem — approximations (depth caps, evaluations) live one topic over, in cutoff play.</p><pre><code>&lt;/div&gt;
+      <p>Beta &lt;= alpha is a proof of irrelevance, not a heuristic guess. Identical values on all inputs is the theorem; approximations live in cutoff play, one topic over.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: alpha/beta meanings plus cutoff inequality. 7 marks: full 4-of-6 trace with bound updates plus ordering economics.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> alpha/beta directions; beta &lt;= alpha trigger; 4-vs-6 count; same-move theorem; <code>O(b^(m/2))</code> best / <code>O(b^m)</code> worst with ordering cause.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Define alpha, beta, and the cutoff condition.</strong></p>
+<p><strong>Model Answer:</strong> Alpha: MAX-assured best (rises). Beta: MIN-assured best (falls). Cut remaining children when beta &lt;= alpha at the node — proven irrelevant to the root.</p>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Trace alpha-beta on the 3-vs-2 tree and explain the ordering role.</strong></p>
+<p><strong>Model Answer:</strong> A returns 3 raising root alpha to 3; B&#39;s first leaf 2 triggers cutoff, pruning 4 and 6; root 3 with 4 evaluations. B-first order cuts nothing since alpha starts -inf — best-first ordering doubles effective depth, worst-first pays full price.
+:::</p>
 
     </main>
 

@@ -269,57 +269,77 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Greedy Best-First Search: Chasing the Heuristic</h1>
-<p><strong>Expand whatever looks closest to the goal, ignore the bill so far — fast, memory-light, and provably non-optimal on one small graph you will trace by hand.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Moth to the Closest Lamp</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Greedy best-first is a moth flying toward whichever lamp <strong>looks</strong> nearest, never checking how far it has already flown. Evaluation $f(n) = h(n)$ prices only the guessed remainder. When the heuristic points true, the moth lands in record time; when a wall of optimism hides a ravine, it lands somewhere expensive — or loops forever down a bottomless corridor.</p>
-</div></details><p>It sits between the blind methods of <code>PCCST502</code>-style BFS/DFS (M2.1) and the billed-optimal A* of the next topic: same frontier machinery, different price tags.</p>
-<hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Algorithm and properties</h3>
-<p>Frontier ordered by $h(n)$ alone; expand lowest, push successors, repeat (graph version keeps an explored set against re-expansion loops). Time/space $O(b^m)$ worst case like DFS. <strong>Incomplete</strong> in infinite spaces (endless promising-looking descent), <strong>non-optimal</strong> even with perfect-looking heuristics — the worked graph below convicts it on both value and path.</p>
-<h3>2.2 Reading the failure</h3>
-<p>Greed trusts $h$ absolutely. Any $h$ that underestimates one direction&#39;s remainder while a cheap-looking trap beckons will be obeyed straight into the trap. Optimality needs the $g$-bill added back — that repair is A* (M2.5).</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Greedy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$f(n) = h(n)$ only · expand min-$h$ · $O(b^m)$ time/space · incomplete, non-optimal · explored set still mandatory.</p>
-</div></details><p>Best-first is a family name, not an algorithm: greedy ($h$), A* ($g+h$), and weighted variants all share the frontier but price nodes differently.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Calling Greedy Optimal</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>An option claiming &quot;greedy best-first with an admissible heuristic returns optimal paths&quot; smuggles A*&#39;s theorem onto greedy&#39;s body. Admissibility buys greedy nothing — only $g+h$ ordering plus admissibility yields optimality.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Start $S$ with successors $A$ ($g = 1$, $h = 5$) and $B$ ($g = 4$, $h = 3$). From $A$, goal $G$ costs $2$ more ($h = 0$); from $B$, goal $G$ costs $6$ more ($h = 0$). Run greedy best-first from $S$ and name the returned path cost versus the true optimum.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Following Its Nose</div><div class="step-content"><p>Expand $S$: frontier ${A(h=5), B(h=3)}$. Pop $B$ (smaller $h$), expand to $G$ with $h = 0$ — goal found, path $S \to B \to G$ costing $4 + 6 = 10$. True optimum via $A$ costs $1 + 2 = 3$. The heuristic ($3$ vs $5$) pointed at $B$ while the bills ($4$-vs-$1$ so far) screamed $A$ — greed never listens to bills.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Greedy returns cost $10$; optimum is $3$ — over $3\times$ worse on four nodes. One-line exam moral: $f = h$ picks $B$, $f = g+h$ would have picked $A$ ($f(A) = 6 &lt; f(B) = 10$ at decision time... precisely A*&#39;s repair, next topic).</p>
-</div></div><hr>
+<p><strong>Problem: what if we expand whatever looks closest to the goal and ignore cost paid so far? By the end you can run greedy best-first by hand, prove it non-optimal on four nodes, and state its incompleteness.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-the-moth-and-the-lamp">1. Start From Zero: The Moth and the Lamp</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-algorithm-and-price">2. Basic Layer: Algorithm and Pric… →</a></p>
+<p>A moth flies toward whichever lamp looks nearest, never checking distance already flown. When the guess points true it lands fast; when optimism hides a ravine it lands expensively — or loops down a corridor that always looks promising.</p>
+<p><strong>Definitions:</strong> Greedy best-first search orders its frontier (the set of unexpanded nodes) by the heuristic alone. Evaluation function <code>f(n) = h(n)</code> where <code>h(n)</code> is the estimated remaining cost from node <code>n</code> and <code>f(n)</code> is the expansion priority. <code>g(n)</code> (paid-so-far cost) is ignored. Best-first is a family name: greedy uses <code>h</code>, UCS uses <code>g</code>, A* uses <code>g + h</code>.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Moth to the Closest Lamp</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;guess-only ordering&quot; here, then drop the insect; the formula <code>f = h</code> plus the failure trace below is the examinable content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> from S, road to A looks 5 away, road to B looks 3 away. Greedy picks B sight unseen — never asking what S-to-A vs. S-to-B already cost.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-algorithm-and-price">2. Basic Layer: Algorithm and Price</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-moth-and-the-lamp">← 1. Start From Zero: The Moth and t…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-the-four-node-conviction">3. Formal Layer: The Four-Node Con… →</a></p>
+<p><strong>Data/state:</strong> frontier ordered by <code>h</code>, plus an explored set (visited states) against re-expansion loops. <strong>Goal:</strong> reach a goal quickly, with no optimality promise.</p>
+<p><strong>Procedure (steps):</strong> Step 1: push start with its <code>h</code>. Step 2: pop smallest-<code>h</code> node; if goal, return its path. Step 3: expand it, push successors with their <code>h</code> values. Step 4: repeat. Graph version checks the explored set before re-expanding.</p>
+<p><strong>Meaning, variables, formula:</strong> <code>f(n) = h(n)</code> only. Time and space <code>O(b^m)</code> worst case (branching <code>b</code>, max depth <code>m</code>) — like DFS, since greed can dive. <strong>Incomplete</strong> in infinite spaces (endless promising descent never returns). <strong>Non-optimal</strong> even with admissible-looking heuristics, proven below.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Greedy</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>f(n) = h(n)</code> only. Expand min-h. <code>O(b^m)</code> time/space worst case. Incomplete, non-optimal. Explored set still mandatory.</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-the-four-node-conviction">3. Formal Layer: The Four-Node Conviction</h2>
+<p class="secnav"><a href="#2-basic-layer-algorithm-and-price">← 2. Basic Layer: Algorithm and Pric…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Setup:</strong> start S to A (<code>g = 1</code>, <code>h = 5</code>) and to B (<code>g = 4</code>, <code>h = 3</code>). A-to-goal costs 2 more; B-to-goal costs 6 more. True optimum via A: 3. Greedy path via B: 10.</p>
+<p><strong>Trace:</strong> expand S: frontier {A(h=5), B(h=3)}. Pop B (3 &lt; 5), expand to goal with h = 0 — return S-B-G at cost 4 + 6 = 10. The <code>h</code>-gap (3 vs. 5) decided; the <code>g</code>-gap (4 vs. 1 already paid) was invisible to <code>f = h</code>. Over three times worse on four nodes.</p>
+<p><strong>Reading the failure:</strong> greed trusts <code>h</code> absolutely. Any underestimate pointing at a trap is obeyed. Optimality needs the paid bill added back — that repair is A* (<code>f = g + h</code>, next topic).</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Calling Greedy Optimal</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Greedy with an admissible heuristic is optimal&quot; smuggles A*&#39;s theorem onto greedy&#39;s body. Admissibility buys greedy nothing — only <code>g + h</code> ordering plus admissibility yields optimality. Memorize this trap line.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-the-four-node-conviction">← 3. Formal Layer: The Four-Node Con…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Greedy (<code>h</code>) vs. UCS (<code>g</code>) vs. A* (<code>g+h</code>)</td>
+<td>Future-guess only vs. past-bill only vs. both (fast-fooled vs. optimal-blind vs. optimal-guided)</td>
+</tr>
+<tr>
+<td>Frontier ordering vs. guarantee</td>
+<td>Same machinery, different price tags; guarantees follow the price tag</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Explored set prevents loops but cannot fix wrong choices. (2) Infinite <code>h</code>-descent defeats completeness without depth bounds. (3) Ties need a stated policy; silent tie-breaking hides behaviour.</p>
+<p><strong>Limitations:</strong> no optimality under any standard heuristic contract; no completeness in infinite spaces; worst-case memory equals DFS. Use greedy for speed where suboptimality is acceptable, never where cheapest is contractually required.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Numerical Drill</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$S \to A$ ($g=2$, $h=9$), $S \to B$ ($g=8$, $h=1$), both reach $G$ for $1$ more each. Greedy&#39;s pick and cost?</p>
+  <div class="quiz-prompt"><p>S to A (g=2, h=9), S to B (g=8, h=1), both reach G for 1 more each. Greedy&#39;s pick and cost?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$A$, total $3$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$B$ with total $9$, because $h(B) = 1 &lt; 9 = h(A)$ decides alone — the $g$-gap ($8$ vs $2$) is invisible to $f = h$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$A$, total $11$</span></button>
+    <button class="quiz-option-btn" data-correct="false"><span>A, total 3</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>B with total 9, because h(B) = 1 &lt; 9 = h(A) decides alone — the g-gap (8 vs 2) is invisible to f = h</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>A, total 11</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>It expands both simultaneously</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
@@ -332,7 +352,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Greedy compares $9$ against $1$ and never sees $2$ against $8$. Returned $9$ versus optimal $3$ — the same nose-following conviction as the worked example, different digits.</p><pre><code>&lt;/div&gt;
+      <p>Greedy compares 9 against 1 and never sees 2 against 8. Returned 9 versus optimal 3 — nose-following with different digits.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -340,7 +360,7 @@
     <span class="quiz-category">Q2: Completeness Trap</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Infinite corridor where every node&#39;s $h$ decreases toward a dead end that never arrives. Greedy&#39;s fate?</p>
+  <div class="quiz-prompt"><p>Infinite corridor where every node&#39;s h decreases toward a dead end that never arrives. Greedy&#39;s fate?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Finds the goal anyway</span></button>
@@ -358,7 +378,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Completeness demands eventual success on solvable problems; infinite $h$-descent never returns. Graph search&#39;s explored set cannot save a depth-infinite chase — only depth bounds or $g$-bills do.</p><pre><code>&lt;/div&gt;
+      <p>Completeness needs eventual success on solvable tasks. Infinite h-descent never returns; explored sets cannot save depth-infinite chases.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -366,13 +386,13 @@
     <span class="quiz-category">Q3: Family Sorting</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Greedy ($h$), A* ($g+h$), UCS ($g$). Which uses only the past, only the future, both?</p>
+  <div class="quiz-prompt"><p>Greedy (h), A* (g+h), UCS (g). Which uses only the past, only the future, both?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Greedy past, UCS future</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>UCS past only ($g$), greedy future only ($h$), A\* both ($g+h$) — the three frontier orderings are exactly the three combinations of bill and guess</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>UCS past only (g), greedy future only (h), A* both (g+h) — the three frontier orderings are exactly the three combinations of bill and guess</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>All three use both</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>A\* uses neither</span></button>  </div>
+<button class="quiz-option-btn" data-correct="false"><span>A* uses neither</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -384,10 +404,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$g$ is money spent (past), $h$ is money guessed (future). One line sorts the whole family — and predicts each member&#39;s guarantees: past-only is optimal-but-blind, future-only fast-but-fooled, both optimal-and-guided.</p><pre><code>&lt;/div&gt;
+      <p>g is money spent (past), h is money guessed (future). Past-only is optimal-but-blind, future-only fast-but-fooled, both optimal-and-guided given admissibility.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: <code>f = h</code> rule with complexity and verdicts. 7 marks: hand-trace the S-A-B-G graph, compute 10 vs. 3, explain why admissibility does not save greedy.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>f(n) = h(n)</code>; min-h expansion; <code>O(b^m)</code>; incomplete and non-optimal with qualifications; explored-set necessity; family ordering line.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: State greedy best-first&#39;s rule and guarantees.</strong></p>
+<p><strong>Model Answer:</strong> Expand min-h with f = h. Worst-case O(b^m) time/space. Incomplete in infinite spaces; non-optimal in general — admissibility does not repair it.</p>
+<h3>Sample 7-Mark Question</h3>
+<p><em><em>Q: Trace greedy on S-A/B-G and contrast with A</em>.</em>*</p>
+<p><strong>Model Answer:</strong> Frontier {A:5, B:3} pops B, returns cost 10 vs. optimum 3 via A. Cause: h-only ordering ignores paid g. A* with f = g+h compares 6 vs. 10 at decision time and picks A — the billed repair.
+:::</p>
 
     </main>
 

@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -309,15 +313,15 @@
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Each scenario is a sprint verdict: compute, then convict. Abbreviations: CRC (Cyclic Redundancy Check), ARP (Address Resolution Protocol), CSMA/CD (Carrier Sense Multiple Access with Collision Detection), CSMA/CA (… with Collision Avoidance), RTS/CTS (Request to Send / Clear to Send), NAV (Network Allocation Vector), AP (Access Point), BER (Bit Error Rate).</p>
 <h3>Scenario 1: Stuff-and-Check Sprint</h3>
 <p>Data <code>11011111110</code> (11 bits). Bit-stuff it: indices 3–9 hold seven consecutive 1s — insert <code>0</code> after the fifth (index 7); indices 8–9 are only two more 1s (no second run). Stuffed: <code>11011111</code> + <code>0</code> + <code>110</code> = <code>110111110110</code> (12 bits). Destuff check: strip the 0 after the five-run → original restored. One inserted bit, zero ambiguity.</p>
 <h3>Scenario 2: CRC Courtroom</h3>
 <p>Claim: &quot;data <code>1010001101</code> with generator <code>110101</code> yields CRC <code>01110</code>.&quot; Verify like an examiner: recompute the division (alignments <code>101000</code>→<code>011101</code>→<code>111011</code>→<code>001110</code>→<code>111010</code>→<code>001111</code>→<code>111110</code>→<code>001011</code>→<code>101100</code>→<code>011001</code>→<code>110010</code>→<code>000111</code>, remainder <code>01110</code> ✓), then divide $\langle D, R \rangle$ = <code>101000110101110</code> by the generator → <code>00000</code> ✓. Claim upheld twice — computation plus receiver check, the belt-and-suspenders standard.</p>
 <h3>Scenario 3: Shared-Medium Triage</h3>
-<p>Three deployments, one choice each: (a) 50 wired desktops, bursty traffic — <strong>CSMA/CD</strong> (listen+abort wastes only $2\tau$ per collision; partitioning would idle most slots). (b) 3 always-backlogged lab machines needing guarantees — <strong>TDMA</strong> (collision-free shares beat contention odds). (c) warehouse handhelds roaming around shelving (hidden terminals everywhere) — <strong>CSMA/CA with RTS/CTS</strong> (radios can&#39;t detect; reservations inform the hidden). Rule: bursty-wired → CD, guaranteed-shares → partition, wireless → CA.</p>
+<p>Three deployments, one choice each: (a) 50 wired desktops, bursty traffic — <strong>CSMA/CD</strong> (listen+abort wastes only $2\tau$ per collision; partitioning would idle most slots). (b) 3 always-backlogged lab machines needing guarantees — <strong>TDMA</strong> (Time Division Multiple Access) (collision-free shares beat contention odds). (c) warehouse handhelds roaming around shelving (hidden terminals everywhere) — <strong>CSMA/CA with RTS/CTS</strong> (radios can&#39;t detect; reservations inform the hidden). Rule: bursty-wired → CD, guaranteed-shares → partition, wireless → CA.</p>
 <h3>Scenario 4: The Silent Printer</h3>
-<p>A printer (known IP) stops responding. ARP table shows no entry; pinging gives &quot;no route&quot;-style silence <em>within</em> the LAN. Diagnosis chain: (1) ARP query broadcast heard? Check switch flooding/cabling. (2) Reply sent but table still empty? TTL expiry loop or spoofed replies (poisoning suspect — verify MAC against the asset tag). (3) Reply cached yet ping fails? Problem is above ARP (IP/config, not addressing). Layered elimination: resolve addressing <em>before</em> blaming routing.</p>
-<hr>
+<p>A printer (known IP — Internet Protocol) stops responding. ARP table shows no entry; pinging gives &quot;no route&quot;-style silence <em>within</em> the LAN (Local Area Network). Diagnosis chain: (1) ARP query broadcast heard? Check switch flooding/cabling. (2) Reply sent but table still empty? TTL (Time To Live) expiry loop or spoofed replies (poisoning suspect — verify MAC — Media Access Control — against the asset tag). (3) Reply cached yet ping fails? Problem is above ARP (IP/config, not addressing). Layered elimination: resolve addressing <em>before</em> blaming routing.</p>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
 <p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
@@ -369,7 +373,7 @@
 <td>Symbols/s vs. data/s ($R = S\log_2 N$ — M4 bridge, same confusion family)</td>
 </tr>
 </tbody></table>
-<hr>
+<p><strong>Watch out:</strong> (1) Stuffing flag bits instead of data — scan payload only. (2) Quoting 37% for pure Aloha. (3) &quot;Switches never flood&quot; — unknowns flood once. (4) Blaming routing before ARP resolves — addressing first, always.</p>
 <p><a id="self-check"></a></p>
 <h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
@@ -473,8 +477,7 @@
       <p>Unknown-unicast flooding is the bootstrap both share; learning is what separates them afterward. First frame: identical behavior. Second frame onward: surgical forwarding vs. eternal shouting. The table is the difference between a device and a repeater.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
+</div><p><a id="exam-focus"></a></p>
 <h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
 <p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
@@ -484,7 +487,7 @@
 </ul>
 </div></details><h3>Essay Question 1 (7 Marks)</h3>
 <p><strong>Q: For D = 1010001101, G = 110101: compute the CRC, form the codeword, and verify at the receiver. State exactly which error classes this CRC catches.</strong></p>
-<p><strong>Model Answer:</strong> Append 5 zeros; XOR long division yields $R = 01110$ (alignments as in Scenario 2); transmit <code>1010001101 01110</code>; receiver division gives <code>00000</code> → accept. Catches: all single-bit errors, all odd-count errors ($G$ has $(x+1)$ factor structure... precisely: standard generators catch odd counts), all bursts $&lt; 6$ bits, all but $2^{-5}$ of longer bursts. Detection only — failures mean discard + retransmit.</p>
+<p><strong>Model Answer:</strong> Append 5 zeros; XOR long division yields $R = 01110$ (alignments as in Scenario 2); transmit <code>1010001101 01110</code>; receiver division gives <code>00000</code> → accept. Catches: all single-bit errors, all odd-count errors (standard generators carry the $(x+1)$ factor that guarantees this), all bursts $&lt; 6$ bits, all but $2^{-5}$ of longer bursts. Detection only — failures mean discard + retransmit.</p>
 <h3>Essay Question 2 (7 Marks)</h3>
 <p><strong>Q: A wired lab (30 desktops, bursty) and a warehouse Wi-Fi deployment (hidden terminals) need shared-medium access. Choose each method, derive the efficiency argument, and explain why they cannot swap.</strong></p>
 <p><strong>Model Answer:</strong> Lab: CSMA/CD — sensing + abort keeps waste at $2\tau$ per collision with backoff-spread retries; partitioning would idle bursty slots; CA&#39;s reservations add needless overhead on wire. Warehouse: CSMA/CA + RTS/CTS — radios can&#39;t detect (self-deaf) and hidden pairs collide unheard; CTS echo informs the hidden. Swap fails physically: CD needs measurable wire voltage; CA&#39;s control overhead buys nothing where detection already works. Medium physics picks the protocol.</p>
@@ -596,7 +599,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m3_99_practice_lab_datalink_drills";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

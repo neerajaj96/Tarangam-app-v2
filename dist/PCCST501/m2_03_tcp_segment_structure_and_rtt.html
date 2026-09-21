@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,34 +297,85 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>TCP Segment Structure, Sequence Numbers &amp; RTT Estimation</h1>
 <p><strong>Byte-stream numbering, the 20-byte header that matters, cumulative ACKs, and how TCP learns the network&#39;s round-trip time to set its timer.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Mail a novel one page per envelope through a postal service that sometimes loses, duplicates, or reorders mail. How does the reader reconstruct the book? Number every page, and have the reader confirm &quot;I have everything up to page 40&quot; after each batch. Gaps name exactly what to re-send; duplicates are already-seen numbers; order is restored by sorting.</p>
+<p>The problem before the solution: build <em>reliable, ordered</em> delivery over an unreliable network — without trusting arrival order or assuming nothing is lost. TCP (Transmission Control Protocol) does precisely the page-numbering trick — except the &quot;pages&quot; are <strong>bytes</strong>, and the &quot;confirmation&quot; is the <strong>acknowledgment number</strong>. A second problem rides along: how long should the sender wait before declaring a packet lost? Wait too little and you spam duplicates; too long and you stall. So TCP also <em>learns</em> the round-trip time and sets its timer from the measurement.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Numbered Manuscript</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine mailing a novel one page per envelope through an unreliable postal service that sometimes loses, duplicates, or reorders mail. Your fix: number <strong>every character</strong> (not every envelope), and ask the reader to reply &quot;I&#39;ve received everything up to character 4,000&quot; after each batch. A gap tells you exactly what to re-send; duplicates are spotted instantly (already-seen numbers); order is restored by sorting numbers, not by arrival order. TCP does precisely this — except the &quot;characters&quot; are <strong>bytes</strong>, and the &quot;reply&quot; is the <strong>acknowledgment number</strong>.</p>
-</div></details><hr>
+<p>Dropping the manuscript now: sequence number = first byte&#39;s number in this segment; acknowledgment number = next byte expected (everything before it confirmed); RTT estimators = measured delay smoothed into a timeout.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-numbering-header-timeout-triple">3. Purpose — Numbering, Header, Ti… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Sequence number</strong></td>
+<td>The byte-stream number of the <em>first</em> data byte in this segment (initial ISN — Initial Sequence Number — chosen at handshake, then counting bytes, not segments).</td>
+</tr>
+<tr>
+<td><strong>Acknowledgment (ACK) number</strong></td>
+<td>The <em>next</em> byte the receiver expects — &quot;everything before this has arrived intact.&quot; ACKs are <strong>cumulative</strong>.</td>
+</tr>
+<tr>
+<td><strong>Cumulative ACK</strong></td>
+<td>One ACK for byte 5001 confirms bytes 0–5000, however many segments carried them.</td>
+</tr>
+<tr>
+<td><strong>RTT (Round-Trip Time)</strong></td>
+<td>Send time → acknowledgment arrival for one segment.</td>
+</tr>
+<tr>
+<td><strong>SampleRTT</strong></td>
+<td>One fresh RTT measurement (taken only on segments transmitted exactly once).</td>
+</tr>
+<tr>
+<td><strong>SRTT (Smoothed/Estimated RTT)</strong></td>
+<td>Exponential weighted moving average of samples ($\alpha = 0.125$).</td>
+</tr>
+<tr>
+<td><strong>DevRTT (RTT deviation)</strong></td>
+<td>Smoothed mean deviation of samples ($\beta = 0.25$).</td>
+</tr>
+<tr>
+<td><strong>Fast retransmit</strong></td>
+<td>Re-sending after three duplicate ACKs without waiting for the timer.</td>
+</tr>
+<tr>
+<td><strong>MSS (Maximum Segment Size)</strong></td>
+<td>Largest TCP payload per segment — the unit congestion math counts in.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 TCP Views Data as a Numbered Byte Stream</h3>
+<h2 id="3-purpose-numbering-header-timeout-triple">3. Purpose — Numbering, Header, Timeout Triple</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 TCP Views Data as a Numbered Byte Stream</h3>
 <ul>
 <li><strong>Sequence number:</strong> the byte-stream number of the <em>first</em> data byte in this segment (initial ISN chosen at handshake, then counting bytes, not segments).</li>
 <li><strong>Acknowledgment number:</strong> the <em>next</em> byte the receiver expects — i.e. &quot;everything before this has arrived intact.&quot; ACKs are <strong>cumulative</strong>: one ACK for byte 5001 confirms bytes 0–5000, however many segments carried them.</li>
 </ul>
-<h3>2.2 The Header Fields That Earn Marks (20 bytes minimum)</h3>
-<p>Source/destination ports (multiplexing), <strong>sequence + acknowledgment numbers</strong> (ordering/reliability), header length, flags (<strong>SYN, ACK, FIN, RST</strong> — connection control), <strong>receive window</strong> <code>rwnd</code> (flow control, next topic), <strong>checksum</strong> (mandatory in TCP, unlike UDP&#39;s optional use), urgent pointer.</p>
+<h3>3.2 Packet Structure: The Header Fields That Earn Marks (20 bytes minimum)</h3>
+<p>Source/destination ports (multiplexing), <strong>sequence + acknowledgment numbers</strong> (ordering/reliability), header length, flags (<strong>SYN</strong> — synchronize, <strong>ACK</strong> — acknowledgment, <strong>FIN</strong> — finish, <strong>RST</strong> — reset: connection control), <strong>receive window</strong> <code>rwnd</code> (flow control, next topic), <strong>checksum</strong> (always computed in TCP; contrast UDP, where it is optional in IPv4 and mandatory in IPv6), urgent pointer.</p>
 <pre><code class="language-text"> 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -336,28 +391,59 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
                     20 bytes minimum (options may extend)
 </code></pre>
-<h3>2.3 Learning the RTT: SRTT, DevRTT, Timeout</h3>
-<p>TCP cannot be born knowing the network&#39;s delay — it measures each segment&#39;s <strong>SampleRTT</strong> (send time → ACK arrival, measured only for once-transmitted segments) and smooths it:</p>
+<h3>3.3 Operation Flow: Learning the RTT — SRTT, DevRTT, Timeout, Symbol by Symbol</h3>
+<p>TCP cannot be born knowing the network&#39;s delay — it measures each segment&#39;s <strong>SampleRTT</strong> (send time → ACK arrival, measured only for once-transmitted segments) and smooths it. Symbols: $\alpha = 0.125$ (weight of the new sample), $\beta = 0.25$ (weight of the new deviation):</p>
 <ul>
 <li><strong>EstimatedRTT (SRTT):</strong> exponential weighted moving average, $\text{SRTT} = (1-\alpha)\cdot\text{SRTT} + \alpha\cdot\text{SampleRTT}$, typically $\alpha = 0.125$ — mostly history, slightly present.</li>
 <li><strong>DevRTT:</strong> smoothed mean deviation, $\text{DevRTT} = (1-\beta)\cdot\text{DevRTT} + \beta\cdot|\text{SRTT} - \text{SampleRTT}|$, typically $\beta = 0.25$.</li>
 <li><strong>TimeoutInterval:</strong> $\text{SRTT} + 4 \cdot \text{DevRTT}$ — the safety margin scales with <em>variability</em>, not just delay.</li>
 </ul>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Timeout Triple</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$\text{SRTT}<em>{new} = 0.875\cdot\text{SRTT} + 0.125\cdot\text{Sample}$ · $\text{Dev}</em>{new} = 0.75\cdot\text{Dev} + 0.25\cdot|\text{SRTT}-\text{Sample}|$ · <strong>Timeout = SRTT + 4·DevRTT</strong>. The classic numerical hands you a SampleRTT plus old estimates and asks for the new timeout — apply all three lines in order. Never measure SampleRTT on a <em>retransmitted</em> segment (which transmission is the ACK for? — Karn&#39;s ambiguity).</p>
-</div></details><h3>2.4 Fast Retransmit: Don&#39;t Wait for the Timer</h3>
+</div></details><h3>3.4 Fast Retransmit: Don&#39;t Wait for the Timer</h3>
 <p>Three <strong>duplicate ACKs</strong> for the same byte mean the next segment probably vanished while later ones arrived — TCP re-sends it immediately, well before TimeoutInterval expires. The timer is the safety net; duplicate ACKs are the early-warning radar.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Sequence Numbers Count Bytes, ACKs Confirm Bytes</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The two eternal confusions: (1) sequence numbers increment by <em>payload bytes</em>, so a 1000-byte segment starting at 5000 makes the next sequence 6000 — <em>not</em> 5001; (2) &quot;ACK 6000&quot; means &quot;send from 6000 onward,&quot; i.e. bytes <em>below</em> 6000 are confirmed. Read every ACK as &quot;everything before me is safe.&quot;</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-numbering-header-timeout-triple">← 3. Purpose — Numbering, Header, Ti…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Segment carries bytes 5000–5002 (3 bytes, sequence 5000). Receiver replies ACK 5003 — &quot;send from 5003 onward.&quot; One segment lost, two later ones arrive: receiver repeats ACK 5003 three times → sender fast-retransmits from 5003 without waiting. Numbers count bytes; repeats signal loss.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Current estimates: $\text{SRTT} = 100$ ms, $\text{DevRTT} = 12$ ms. A fresh (never-retransmitted) segment&#39;s ACK arrives after a measured SampleRTT of $140$ ms. Compute the new SRTT, DevRTT, and TimeoutInterval using standard $\alpha=0.125$, $\beta=0.25$.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Triple</div><div class="step-content"><p>New SRTT $= 0.875 \times 100 + 0.125 \times 140 = 87.5 + 17.5 = 105$ ms. Deviation term $= |105 - 140| = 35$ ms; new DevRTT $= 0.75 \times 12 + 0.25 \times 35 = 9 + 8.75 = 17.75$ ms. TimeoutInterval $= 105 + 4 \times 17.75 = 105 + 71 = 176$ ms.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One slow sample nudged the average 100 → 105 ms but nearly doubled the safety margin&#39;s deviation component (12 → 17.75 ms), lifting the timeout to <strong>176 ms</strong> — the estimator reacts to <em>jitter</em> faster than to delay, which is exactly what prevents both premature timeouts and sluggish loss detection.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sequence vs. ACK number</td>
+<td>First byte <em>in</em> this segment vs. next byte <em>expected</em> (cumulative).</td>
+</tr>
+<tr>
+<td>SRTT vs. DevRTT</td>
+<td>Smoothed delay vs. smoothed variability — timeout uses both.</td>
+</tr>
+<tr>
+<td>Timeout vs. fast retransmit</td>
+<td>Timer expiry (silence) vs. 3 duplicate ACKs (isolated loss, early resend).</td>
+</tr>
+<tr>
+<td>TCP vs. UDP checksum</td>
+<td>TCP always checksums; UDP checksum optional in IPv4, mandatory in IPv6.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Numbering segments instead of bytes (5000 + 1000 bytes → 6000, not 5001). (2) Sampling retransmitted segments — Karn&#39;s ambiguity forbids it. (3) Reading &quot;ACK 6000&quot; as confirming byte 6000 — it confirms everything <em>below</em> 6000.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP numbers bytes (sequence = first byte here; ACK = next expected, cumulative). Header 20 B+: ports, seq/ack, flags (SYN/ACK/FIN/RST), rwnd, checksum (mandatory). Timeout triple: SRTT ($0.875/0.125$), DevRTT ($0.75/0.25$), Timeout = SRTT + 4·Dev; sample only once-sent segments. Three duplicate ACKs → fast retransmit.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What does ACK 6000 confirm? Recite the timeout triple with constants. Why are retransmitted segments unsampleable? What do three duplicate ACKs trigger?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A TCP segment carries 1000 bytes starting at sequence number 5000, and all arrive intact. What acknowledgment does the receiver send?</span>
@@ -542,7 +628,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_03_tcp_segment_structure_and_rtt";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

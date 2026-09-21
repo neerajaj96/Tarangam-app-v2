@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,42 +281,76 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Algorithm Analysis — Module 1 Overview</h1>
-<p><strong>A beginner&#39;s map of everything Module 1 covers, and why it&#39;s the foundation for the entire course.</strong></p>
+<p><strong>A beginner&#39;s map of everything Module 1 covers, and why it is the foundation for the entire course.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine you and a friend both write a program to search for a word in a dictionary. Yours checks every single page one by one, starting from page 1. Your friend&#39;s opens the dictionary in the middle, checks if the word comes before or after, and repeats — like you&#39;d actually search a real dictionary. Both programs <em>work</em>. Both eventually find the word. But your friend&#39;s program is obviously smarter, and if the dictionary had a million pages instead of a thousand, the difference would go from &quot;friend finishes a bit sooner&quot; to &quot;friend finishes in the time it takes you to blink, while you&#39;re still flipping pages.&quot;</p>
-<p>That gap — between &quot;it works&quot; and &quot;it works <em>well</em>&quot; — is exactly what Module 1 is about. Before you can compare two solutions to a problem, you need a fair, mathematical way to measure &quot;how much work&quot; each one does, <em>without</em> actually running both on a real computer (whose speed depends on things like processor model, other apps running, etc. — none of which should matter to the comparison). This module builds that measuring stick from the ground up: first defining what an &quot;algorithm&quot; even is precisely, then defining how to count its work (time and space complexity), then giving you a compact notation to describe that work cleanly (Big-O and friends), then teaching you to actually calculate it for loops and for recursive functions, and finally applying all of that machinery to a real, non-trivial data structure — the AVL tree — where keeping the &quot;work&quot; bounded is the entire point of the design.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-what-problem-does-this-module-solve">1. Start from zero — what problem does this module solve?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-roadmap-each-topic-answers-one-question">2. The roadmap — each topic answer… →</a></p>
+<p><strong>Problem first.</strong> You and a friend both write a program that finds a word in a dictionary. Yours checks every page one by one from page 1. Your friend&#39;s opens the middle, asks &quot;does the word come before or after this page?&quot;, and repeats on the correct half — the way you would really search a dictionary. Both programs <em>work</em>. Both eventually find the word. But your friend&#39;s is obviously smarter — and if the dictionary grew from a thousand pages to a million, the gap would explode from &quot;finishes a bit sooner&quot; to &quot;finishes in a blink while you are still flipping pages&quot;.</p>
+<p><strong>The question Module 1 answers:</strong> how do we compare two solutions <em>fairly and mathematically</em>, without running both on a real computer (whose speed depends on processor model, other apps running, programming language — none of which should matter to the comparison)? The answer is a measuring stick built in stages: first define what an &quot;algorithm&quot; even is, then define how to count its work (time and space complexity), then learn a compact notation for that work (Big-O and friends), then calculate it for loops and for recursive functions, and finally apply all of it to a real data structure — the AVL (Adelson-Velsky and Landis) tree — where keeping the work bounded is the entire point of the design.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think &quot;it works&quot; versus &quot;it works <em>well</em>&quot;. Module 1 turns the second phrase from a vague feeling into a provable fact: a number like $O(n)$ (read &quot;order n&quot;: the work grows at most linearly with input size $n$) or $O(\log n)$ (the work grows only logarithmically — doubling the input adds just one more step).</p>
+</div></details><p><strong>Tiny toy example (8 pages).</strong> Linear checking on 8 pages takes up to 8 looks. Halving takes at most 3 looks ($8 \to 4 \to 2 \to 1$). Small gap. Now scale to $n = 1{,}000{,}000$: linear takes up to 1,000,000 looks; halving takes about $\log_2(1{,}000{,}000) \approx 20$ looks. Same two ideas, wildly different scaling — and scaling is what this module measures.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p>Module 1 of PCCST502 (Design and Analysis of Algorithms, KTU 2024 scheme) is built as a chain — each topic depends on the one before it:</p>
+<h2 id="2-the-roadmap-each-topic-answers-one-question">2. The roadmap — each topic answers one question</h2>
+<p class="secnav"><a href="#1-start-from-zero-what-problem-does-this-module-solve">← 1. Start from zero — what problem …</a><span class="secnav-sep">·</span><a href="#3-worked-example-linear-search-versus-binary-search">3. Worked example — linear search … →</a></p>
+<p>Module 1 of PCCST502 (Design and Analysis of Algorithms, KTU — APJ Abdul Kalam Technological University — 2024 scheme) is a chain: each topic depends on the one before it.</p>
 <ol>
-<li><strong>Algorithm definition &amp; criteria</strong> — what qualifies as an algorithm at all (finiteness, definiteness, effectiveness, input, output).</li>
-<li><strong>Time &amp; space complexity, best/worst/average case</strong> — what we&#39;re actually trying to measure.</li>
-<li><strong>Asymptotic notations</strong> (O, Ω, Θ, o, ω) — the mathematical language used to <em>describe</em> that measurement cleanly, ignoring constants and small-input noise.</li>
-<li><strong>Complexity of iterative algorithms</strong> — applying the above to plain loops (the easy case).</li>
-<li><strong>Recurrence relations and three ways to solve them</strong> — substitution, iteration/expansion, and recursion tree — for when an algorithm calls itself (the harder case).</li>
-<li><strong>The Master Theorem</strong> — a shortcut formula that solves a huge chunk of recurrences instantly, once you recognise the pattern.</li>
-<li><strong>AVL trees</strong> — a real data structure whose entire reason for existing is to <em>guarantee</em> good complexity (by staying balanced), used as a concrete, worked case study tying the whole module together.</li>
+<li><strong>Algorithm definition and criteria</strong> — what qualifies as an algorithm at all (finiteness, definiteness, effectiveness, input, output) and the RAM (Random Access Machine) model, our imaginary standard computer.</li>
+<li><strong>Time and space complexity, best/worst/average case</strong> — what we are actually measuring: operation counts and memory use, on lucky, unlucky, and typical inputs.</li>
+<li><strong>Asymptotic notations</strong> ($O$, $\Omega$, $\Theta$, $o$, $\omega$) — the mathematical language for describing measurements cleanly, ignoring constants and small-input noise.</li>
+<li><strong>Complexity of iterative algorithms</strong> — applying the above to plain loops via summation (arithmetic and geometric series).</li>
+<li><strong>Recurrence relations and three ways to solve them</strong> — substitution (guess and prove by induction), iteration/expansion (unroll level by level), and recursion trees (draw and sum levels) — for algorithms that call themselves.</li>
+<li><strong>The Master Theorem</strong> — a shortcut formula solving a huge family of recurrences instantly, once you recognise the pattern (plus honest coverage of where it goes silent).</li>
+<li><strong>AVL trees</strong> — a real data structure whose reason for existing is to <em>guarantee</em> good complexity by staying balanced: the concrete case study tying the whole module together.</li>
 </ol>
-<p>By the end of this module you should be able to look at <em>any</em> piece of code — loop-based or recursive — and state its time complexity with a proof, not a guess.</p>
+<p><strong>Basic understanding to carry forward:</strong> analysis always asks &quot;how does the work grow as input size $n$ grows?&quot; — never &quot;how many seconds on my laptop?&quot;. By the end of this module you should be able to look at <em>any</em> piece of code, loop-based or recursive, and state its time complexity with a proof, not a guess.</p>
 <hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Consider linear search (check every element one by one) versus binary search (repeatedly halve the search space) on a sorted array of $n = 1{,}000{,}000$ elements. We want a way to predict, <em>before running either</em>, roughly how many steps each will take in the worst case.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Linear search&#39;s worst case is &quot;the item is last, or not present&quot; — it must inspect all $n$ elements, so its work grows as $n$. Binary search halves the remaining space each step, so the number of steps is the number of times you can halve $n$ before reaching $1$ — this is exactly $\log_2 n$. For $n=1{,}000{,}000$: linear search does up to 1,000,000 comparisons; binary search does about $\log_2(1{,}000{,}000) \approx 20$ comparisons.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Linear search is $O(n)$; binary search is $O(\log n)$. This single comparison — 1,000,000 steps versus 20 — is the entire motivation for this module: without the tools built here (asymptotic notation, complexity analysis), &quot;which is faster&quot; would be a vague guess instead of a provable fact.</p>
+<h2 id="3-worked-example-linear-search-versus-binary-search">3. Worked example — linear search versus binary search</h2>
+<p class="secnav"><a href="#2-the-roadmap-each-topic-answers-one-question">← 2. The roadmap — each topic answer…</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Consider linear search (check every element one by one) versus binary search (repeatedly halve the search space) on a sorted array of $n = 1{,}000{,}000$ elements. Predict, <em>before running either</em>, roughly how many steps each takes in the worst case.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Linear search&#39;s worst case is &quot;the item is last, or not present&quot; — it inspects all $n$ elements, so work grows as $n$. Binary search halves the remaining space each step, so steps equal the number of halvings of $n$ down to $1$ — exactly $\log_2 n$. For $n = 1{,}000{,}000$: linear search does up to 1,000,000 comparisons; binary search does about $\log_2(1{,}000{,}000) \approx 20$ comparisons.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Linear search is $O(n)$; binary search is $O(\log n)$. One comparison — 1,000,000 steps versus 20 — motivates the whole module: without asymptotic notation and complexity analysis, &quot;which is faster&quot; would be a vague guess instead of a provable fact.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-linear-search-versus-binary-search">← 3. Worked example — linear search …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>A stopwatch measures one run on one machine; Big-O describes growth on <em>every</em> machine. Never answer &quot;which algorithm is better?&quot; with timing stories.</li>
+<li>Best case describes lucky inputs only — it gives no guarantee. Worst case is the default in textbooks, interviews, and exams unless stated otherwise.</li>
+<li>Big-O (upper bound) is not Big-Theta (tight bound): &quot;$O(n^2)$&quot; allows faster, &quot;$\Theta(n^2)$&quot; pins the rate exactly.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stopwatch timing vs asymptotic analysis</td>
+<td>One run on one machine vs growth law for all machines and sizes</td>
+</tr>
+<tr>
+<td>Best vs worst vs average case</td>
+<td>Lucky input vs unluckiest input (guarantee) vs expected over a distribution</td>
+</tr>
+<tr>
+<td>$O$ vs $\Theta$</td>
+<td>&quot;At most this fast-growing&quot; vs &quot;exactly this rate, above and below&quot;</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> Module 1 order is definition → measurement → notation → loops → recurrences (3 methods) → Master Theorem → AVL case study. Linear search $O(n)$ vs binary search $O(\log n)$ is the canonical motivation example. AVL height stays $O(\log n)$ by the balance invariant.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why do we analyse algorithms using abstract notation (like &quot;$O(n)$&quot;) instead of just timing them with a stopwatch on a real computer?</span>

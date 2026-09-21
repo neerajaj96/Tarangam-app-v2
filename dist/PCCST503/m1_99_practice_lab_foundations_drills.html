@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link active" id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -253,17 +261,21 @@
   </div>
 </div>
 <h1>Module 1 Practice Lab: Foundations Drills</h1>
-<p><strong>Paradigm triage under time pressure, estimator selection, regression debugging scenarios, and exam essay models.</strong></p>
+<p><strong>How to use this lab as a beginner: triage paradigms from feedback type, move estimates from MLE to MAP with arithmetic, and reject memorised fits with held-out grades.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Beginner protocol for every scenario below. First name the problem in one sentence. Then name the data (pairs, bare inputs, or rewards). Then name the goal and ruler. Then name the method. Only then compute.</p>
 <h3>Scenario 1: Triage Sprint (60 seconds per case)</h3>
-<p>For each, name paradigm + task type + (T, E, P) skeleton: (a) credit-card fraud flags from labeled histories; (b) segmenting 50k unlabeled support tickets by complaint theme; (c) elevator dispatcher learning from passenger wait-time penalties; (d) predicting delivery ETA in minutes from distance/traffic features.</p>
-<p>Answers: (a) supervised classification (T decide, E labeled transactions, P held-out precision/recall); (b) unsupervised clustering (no labels exist — k-means/LDA territory, Module 4); (c) RL (no correct dispatch shown, only delay penalties; P = expected wait); (d) supervised regression (continuous ETA, squared loss). Anyone answering (b) with &quot;classification&quot; skipped the label check — the lab&#39;s core reflex.</p>
+<p>For each, name paradigm plus task type plus Task, Experience, Performance (T, E, P) skeleton: (a) credit-card fraud flags from labeled histories; (b) segmenting 50,000 unlabeled support tickets by complaint theme; (c) elevator dispatcher learning from passenger wait-time penalties; (d) predicting delivery Estimated Time of Arrival (ETA) in minutes from distance and traffic features.</p>
+<p>Answers: (a) supervised classification (T decide, E labeled transactions, P held-out precision and recall); (b) unsupervised clustering (no labels exist — k-means territory, Module 4); (c) Reinforcement Learning (RL) (no correct dispatch shown, only delay penalties; P is expected wait); (d) supervised regression (continuous ETA, squared loss). Anyone answering (b) with &quot;classification&quot; skipped the label check — the lab&#39;s core reflex.</p>
+<p>Tiny check: cover the answers, ask &quot;does each example show the right answer?&quot; If yes, supervised. If no answers at all, unsupervised. If only episode scores, RL.</p>
 <h3>Scenario 2: The Shifting Estimate</h3>
-<p>A coin shows 7 heads in 10 flips. MLE says 0.7. A skeptic&#39;s prior (fair-ish, strength ≈ 20 flips) pulls MAP toward ~0.55. Now 1000 flips show 630 heads: MLE 0.63, MAP ≈ 0.63 — prior washed out. Moral in numbers: with $n=10$ the prior owns the answer; with $n=1000$ the data does. Exam phrasing: &quot;state how MAP behaves as $n \to \infty$&quot; → converges to MLE (prior weight $\to 0$ relative to data precision).</p>
+<p>A coin shows 7 heads in 10 flips. MLE says 0.7. A skeptic&#39;s prior (fair-ish, strength about 20 flips) pulls MAP toward about 0.55. Now 1,000 flips show 630 heads: MLE 0.63, MAP about 0.63 — prior washed out. Moral in numbers: with $n=10$ the prior owns the answer; with $n=1,000$ the data does. Exam phrasing: &quot;state how MAP behaves as $n \to \infty$&quot; — converges to MLE (prior weight goes to 0 relative to data precision).</p>
+<p>LASSO versus RIDGE in one paragraph: if those coin beliefs were regression weights, a Gaussian prior would give RIDGE shrinkage (all weights small, none zero), while a Laplace prior would give Least Absolute Shrinkage and Selection Operator (LASSO) sparsity (many exact zeros). Same data, different prior shape, different solution texture.</p>
 <h3>Scenario 3: The Too-Good Fit</h3>
-<p>A teammate&#39;s degree-12 polynomial on 15 points reports train $R^2 = 1.0$ and demands deployment. Your audit: held-out $R^2 = -0.4$ (worse than the mean!). Diagnosis: variance disease (memorization); prescription: cut degree, add ridge penalty (Gaussian prior!), or gather data — <em>not</em> more features. The two-grade certificate (train + held-out) from M1 is the entire diagnostic.</p>
+<p>A teammate&#39;s degree-12 polynomial on 15 points reports train R-squared (R²) $= 1.0$ and demands deployment. Your audit: held-out $R^2 = -0.4$ (worse than the mean!). Diagnosis: variance disease (memorisation); prescription: cut degree, add RIDGE penalty (Gaussian prior!), or gather data — not more features. The two-grade certificate (train plus held-out) from M1 is the entire diagnostic.</p>
+<p>Cross-validation mechanics in one paragraph: do not trust one split&#39;s decimals. In k-fold Cross-Validation (CV), rotate the validation fold so each point validates once and average. For final claims after degree or penalty selection, nest: inner loop picks, outer loop grades the picker on untouched data.</p>
 <hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
@@ -288,11 +300,19 @@
 <td>$n-1$ corrects bias; MLE uses $n$ (peak, not fairness)</td>
 </tr>
 <tr>
+<td>LASSO vs. RIDGE</td>
+<td>Laplace prior, sparse zeros vs. Gaussian prior, dense shrinkage; strength chosen by CV</td>
+</tr>
+<tr>
+<td>Single split vs. k-fold vs. nested</td>
+<td>One lucky grade vs. rotated average vs. honest grade of selection</td>
+</tr>
+<tr>
 <td>Regression vs. classification</td>
 <td>Continuous $Y$ (closeness) vs. discrete $Y$ (buckets); different losses, different machinery</td>
 </tr>
 <tr>
-<td>k-NN train vs. test accuracy</td>
+<td>k-Nearest Neighbours (k-NN) train vs. test accuracy</td>
 <td>$k=1$ trains at 100% always (memorization); only held-out counts</td>
 </tr>
 <tr>
@@ -312,8 +332,8 @@
 <td>Rises-by-construction vs. honest grade; report the second</td>
 </tr>
 <tr>
-<td>Batch vs. SGD vs. mini-batch</td>
-<td>$O(nd)$ smooth vs. $O(d)$ noisy-fast vs. GPU default middle</td>
+<td>Batch vs. Stochastic Gradient Descent (SGD) vs. mini-batch</td>
+<td>$O(nd)$ smooth vs. $O(d)$ noisy-fast vs. Graphics Processing Unit (GPU) default middle</td>
 </tr>
 </tbody></table>
 <hr>
@@ -442,9 +462,9 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_04_multiple_regression_model_assessment.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_05_regression_metrics_regularisation.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.4 Multiple Regression Model Assessment</div>
+        <div class="ttl">1.5 Regression Metrics Regularisation</div>
       </a>
       
       
@@ -543,7 +563,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m1_99_practice_lab_foundations_drills";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

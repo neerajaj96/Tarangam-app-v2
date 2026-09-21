@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,46 +297,120 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Bandwidth Utilization: Multiplexing &amp; Spread Spectrum</h1>
 <p><strong>Sharing one fat link — FDM slices frequency, TDM slices time, WDM slices light, spread spectrum hides in plain sight, all priced by hand.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Apartment Sharing</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One link, many tenants. <strong>FDM</strong> gives each tenant fixed rooms (frequency bands + guard walls). <strong>TDM</strong> gives the whole apartment in time shifts (slots in repeating frames). <strong>WDM</strong> is FDM with lasers (colours down one fibre). <strong>Spread spectrum</strong> skips walls entirely — everyone whispers across the whole apartment in private codes (FHSS hops, DSSS chips), collisions becoming background hiss.</p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>One expensive long-distance link, many customers. Giving each a private wire wastes fortunes; letting them collide wastes the link. The middle path: <strong>divide</strong> the link&#39;s capacity into shares (by frequency, time, or wavelength) — or <strong>spread</strong> every signal across the whole band in private codes so sharing degrades gracefully instead of blocking.</p>
+<p>The problem before the solution: share one wire&#39;s bandwidth among many signals with minimum overhead — and know the price of each sharing style (guard bands, framing bits, idle-slice waste) plus the alternative that skips reservation entirely.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Apartment Sharing</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One link, many tenants. <strong>FDM (Frequency Division Multiplexing)</strong> gives each tenant fixed rooms (frequency bands + guard walls). <strong>TDM (Time Division Multiplexing)</strong> gives the whole apartment in time shifts (slots in repeating frames). <strong>WDM (Wavelength Division Multiplexing)</strong> is FDM with lasers (colours down one fibre). <strong>Spread spectrum</strong> skips walls entirely — everyone whispers across the whole apartment in private codes (FHSS — Frequency-Hopping Spread Spectrum — hops, DSSS — Direct-Sequence Spread Spectrum — chips), collisions becoming background hiss.</p>
+<p>Dropping the apartment now: guard band = unused fence between FDM channels; framing bit = TDM sync overhead; chip = one DSSS code unit; processing gain = chips per bit.</p>
 </div></details><p>Transport &quot;multiplexing&quot; (M2.1&#39;s ports) shares <em>endpoints</em>; this topic shares the <em>wire</em> — same word, different layer, classic exam trap.</p>
-<hr>
+<p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-slicers-spreaders-overhead-math">3. Purpose — Slicers, Spreaders, O… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>FDM (Frequency Division Multiplexing)</strong></td>
+<td>Split the band into channels + guard bands (analog heritage: $n$ channels need $n-1$ internal guards).</td>
+</tr>
+<tr>
+<td><strong>TDM (Time Division Multiplexing)</strong></td>
+<td>Split time into repeating frames of slots + framing bits (digital; synchronous = fixed assignment, statistical = dynamic with per-slot addressing overhead).</td>
+</tr>
+<tr>
+<td><strong>WDM (Wavelength Division Multiplexing)</strong></td>
+<td>Many wavelengths (colours) down one fibre — FDM at light, the backbone multiplier.</td>
+</tr>
+<tr>
+<td><strong>FHSS (Frequency-Hopping Spread Spectrum)</strong></td>
+<td>Hop the carrier across frequencies (Bluetooth-style, jam-resistant).</td>
+</tr>
+<tr>
+<td><strong>DSSS (Direct-Sequence Spread Spectrum)</strong></td>
+<td>Multiply each bit by a chip code (CDMA-style); processing gain $=$ chip-rate ÷ bit-rate.</td>
+</tr>
+<tr>
+<td><strong>Guard band</strong></td>
+<td>Unused fence frequency between adjacent FDM bands — pure overhead.</td>
+</tr>
+<tr>
+<td><strong>Processing gain</strong></td>
+<td>Chips per bit (e.g. $11$ → $\approx 10.4$ dB of jam resistance).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The three slicers</h3>
+<h2 id="3-purpose-slicers-spreaders-overhead-math">3. Purpose — Slicers, Spreaders, Overhead Math</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 The Three Slicers</h3>
 <p>FDM: band split + guard bands (analog heritage: $n$ channels need $n - 1$ internal guards); TDM: synchronous slots per frame plus framing bits (digital; rate $=$ sources × slot-rate × frame-overhead factor); WDM: many wavelengths, one fibre (backbone multiplier). All three waste what they reserve: idle tenants still own their slice.</p>
-<h3>2.2 Spread spectrum</h3>
+<h3>3.2 Spread Spectrum</h3>
 <p>FHSS hops carrier across frequencies (Bluetooth-style, jam-resistant); DSSS multiplies each bit by a chip code (CDMA-style, processing gain $=$ chip-rate/bit-rate). Sharing by code, not by reservation — graceful degradation instead of hard blocking.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Sharing</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>FDM: $n$ bands $+ (n-1)$ guards · TDM rate $=$ payload × frame/total · WDM $=$ FDM at light · DSSS gain $=$ chips/bit · reservation wastes idleness, codes degrade gracefully.</p>
 </div></details><p>Statistical TDM (dynamic slot assignment) recovers idle-slice waste at the cost of addressing overhead per slot — reservation vs contention, the eternal multiplexing bargain.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Ports vs Slices</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>M2.1 multiplexing = many sockets, one host (transport demultiplexing by port number). FDM/TDM multiplexing = many signals, one link (physical sharing by band/slot). An option routing &quot;port numbers&quot; into a TDM frame mixes layers two apart.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-slicers-spreaders-overhead-math">← 3. Purpose — Slicers, Spreaders, O…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>FDM: 2 voice channels of 4 kHz, 1 kHz guard between them: total $= 2 \times 4 + 1 \times 1 = 9$ kHz (one internal fence — $n - 1 = 1$). TDM: 2 sources, 4-bit slots, 1 framing bit per frame: frame $= 9$ bits carrying 8 data → line runs $9/8$ hotter than payload.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>(a) FDM: $3$ voice channels of $4$ kHz with $1$ kHz guards between adjacent bands — total bandwidth? (b) TDM: $4$ sources at $2$ Mbps, $8$-bit slots plus $1$ framing bit per frame — line rate?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Bands and Frames</div><div class="step-content"><p>(a) Payload $3 \times 4 = 12$ kHz; internal guards $2 \times 1 = 2$ kHz; total $= 14$ kHz — guards are pure overhead ($2/14 \approx 14.3%$). (b) Frame $= 4 \times 8 + 1 = 33$ bits carrying $32$ data bits; payload rate $4 \times 2 = 8$ Mbps; line rate $= 8 \times 33/32 = 8.25$ Mbps — framing overhead $1/33 \approx 3.03%$.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$14$ kHz FDM ($14.3%$ guard tax), $8.25$ Mbps TDM ($3.03%$ framing tax). Overhead itemized per technique — guards for frequency, framing bits for time — and both taxes shrink as payload blocks grow.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FDM vs. TDM vs. WDM</td>
+<td>Slice frequency (+guards) vs. slice time (+framing) vs. slice light (colours).</td>
+</tr>
+<tr>
+<td>Sync vs. statistical TDM</td>
+<td>Fixed slots (idle waste) vs. dynamic slots (+addressing overhead).</td>
+</tr>
+<tr>
+<td>Reservation vs. spread spectrum</td>
+<td>Own-a-slice (hard blocking when full) vs. share-by-code (graceful degradation).</td>
+</tr>
+<tr>
+<td>Port multiplexing vs. link multiplexing</td>
+<td>Transport endpoints (M2.1) vs. physical wire (this note).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Counting $n$ guards for $n$ bands — fenceposts need $n-1$. (2) Inverting the TDM ratio — line runs <em>hotter</em> than payload (multiply by frame/data $&gt; 1$). (3) Routing port numbers into TDM frames — two layers apart.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>FDM = bands + $(n-1)$ guards; TDM = slots + framing bits (line = payload × frame/data); WDM = colours on fibre. Statistical TDM trades addressing overhead for idle recovery. Spread: FHSS hops, DSSS chips (gain = chips/bit, $\approx 10\log_{10}$ dB). Reservation blocks; codes degrade gracefully.</p>
+</div></details><p><strong>Active-recall checklist:</strong> How many guards for 5 bands? Which way does the TDM ratio point? What does processing gain buy? When does statistical TDM win?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Guard Arithmetic</span>
@@ -520,7 +598,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_06_bandwidth_utilization_multiplexing_spread";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

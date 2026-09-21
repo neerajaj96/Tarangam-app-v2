@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,41 +297,82 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>The World Wide Web and HTTP</h1>
 <p><strong>HTTP request/response structure, non-persistent vs. persistent connections, statelessness, and cookies.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>You click a link. Your browser fetches a page made of a dozen pieces — text, images, style files — and assembles them faster than you can blink. Behind that click is one question answered by a protocol called HTTP (HyperText Transfer Protocol): <strong>how should a browser ask a server for objects, and how should the server reply?</strong></p>
+<p>Two design puzzles dominate. First, should the browser open a fresh transport connection for <em>every</em> object, or reuse one connection for all of them? Second, the server deliberately remembers <em>nothing</em> between requests — so how do logins and shopping carts survive? This note solves both: connection reuse first, memory-outside-the-protocol second.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Amnesiac Waiter</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a waiter with total amnesia — every time you order, they treat you as a brand-new customer, with zero memory of anything you ordered a minute ago. This is exactly how <strong>HTTP</strong> behaves: it is <strong>stateless</strong>. Every request is handled in complete isolation from every previous one, even from the same browser, even seconds apart.</p>
-<p>Now imagine fetching a webpage that has text plus ten embedded images. Should the waiter make a brand-new trip to the kitchen (open a brand-new connection) for <em>every single item</em>, or should they keep one open channel and bring everything back over it? Early HTTP (1.0) did the former — <strong>non-persistent</strong>, closing and reopening a TCP connection per object, wasting time on repeated handshakes. Modern HTTP (1.1) does the latter — <strong>persistent</strong>, reusing one open connection for many objects in a row.</p>
+<p>Now imagine fetching a webpage that has text plus ten embedded images. Should the waiter make a brand-new trip to the kitchen (open a brand-new connection) for <em>every single item</em>, or should they keep one open channel and bring everything back over it? Early HTTP (1.0) did the former — <strong>non-persistent</strong>, closing and reopening a TCP (Transmission Control Protocol) connection per object, wasting time on repeated handshakes. Modern HTTP (1.1) does the latter — <strong>persistent</strong>, reusing one open connection for many objects in a row.</p>
 <p>But if the waiter forgets everything, how does a shopping cart or login session survive? The restaurant hands you a <strong>cookie</strong> — a small claim-check with a unique ID — the moment you first sit down. Every time you order again, you show that claim-check, and the amnesiac waiter looks up your ID in a notebook to instantly recall your entire history, without ever &quot;remembering&quot; anything on their own.</p>
-</div></details><hr>
+<p>Dropping the restaurant now: stateless = server keeps no per-client memory; persistent = one TCP connection reused; cookie = client-held ID the server looks up.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-connection-economy-then-message-structure">3. Purpose — Connection Economy, T… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>HTTP (HyperText Transfer Protocol)</strong></td>
+<td>The Web&#39;s application-layer request/response protocol: browser asks, server answers.</td>
+</tr>
+<tr>
+<td><strong>Web page / object / URL (Uniform Resource Locator)</strong></td>
+<td>A page is a document (usually HTML — HyperText Markup Language) referencing objects (single files: images, style sheets, scripts); a URL is an object&#39;s address (hostname + path).</td>
+</tr>
+<tr>
+<td><strong>Stateless protocol</strong></td>
+<td>The server retains no memory of past requests; each request is processed independently.</td>
+</tr>
+<tr>
+<td><strong>Non-persistent connection</strong></td>
+<td>A new TCP connection per object, closed after each transfer (HTTP/1.0 behavior).</td>
+</tr>
+<tr>
+<td><strong>Persistent connection</strong></td>
+<td>One TCP connection reused for many objects in sequence (HTTP/1.1 default).</td>
+</tr>
+<tr>
+<td><strong>RTT (Round-Trip Time)</strong></td>
+<td>Time for a small message to travel to the server and back; each fresh handshake costs RTTs.</td>
+</tr>
+<tr>
+<td><strong>Cookie</strong></td>
+<td>A small ID the server gives the browser (via the <code>Set-cookie</code> header) that the browser resends on later requests so the server can recover per-client state.</td>
+</tr>
+<tr>
+<td><strong>TCP (Transmission Control Protocol)</strong></td>
+<td>Reliable, ordered, connection-oriented transport service HTTP/1.0, HTTP/1.1, and HTTP/2 run over. (HTTP/3 instead runs over QUIC, a UDP-based protocol — so &quot;HTTP always uses TCP&quot; is true only up to HTTP/2.)</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Web Terminology</h3>
+<h2 id="3-purpose-connection-economy-then-message-structure">3. Purpose — Connection Economy, Then Message Structure</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 HTTP Fundamentals</h3>
 <ul>
-<li><strong>Web Page:</strong> a document, typically HTML, referencing several other <strong>objects</strong> (images, CSS, JS files).</li>
-<li><strong>Object:</strong> any single file — an HTML file, a JPEG, a video clip.</li>
-<li><strong>URL:</strong> the address of an object — a hostname (<code>www.example.com</code>) plus a path (<code>/images/pic.jpg</code>).</li>
-</ul>
-<h3>2.2 HTTP Fundamentals</h3>
-<ul>
-<li><strong>Transport:</strong> HTTP always runs over <strong>TCP</strong>, never UDP, to guarantee reliable, in-order delivery.</li>
+<li><strong>Transport:</strong> HTTP/1.0, HTTP/1.1, and HTTP/2 run over <strong>TCP</strong>, never plain UDP (User Datagram Protocol), to guarantee reliable, in-order delivery. The modern exception is <strong>HTTP/3</strong>, which runs over QUIC (a reliable protocol built on UDP) — so qualify any &quot;HTTP = TCP&quot; claim with the version.</li>
 <li><strong>Statelessness:</strong> the server retains <strong>no memory</strong> of past requests. Identical requests seconds apart are treated as entirely new.</li>
 </ul>
-<h3>2.3 Non-Persistent vs. Persistent Connections</h3>
+<h3>3.2 Operation Flow: Non-Persistent vs. Persistent Connections</h3>
 <pre><code class="language-mermaid">sequenceDiagram
     participant B as Browser
     participant W as Web Server
@@ -383,7 +428,7 @@
 </tr>
 </tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Connection-Count Rule</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For a page with $N$ objects (HTML + embedded): <strong>non-persistent needs $N$ TCP connections</strong> (one per object, each paying a handshake), <strong>persistent needs 1</strong> (reused). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.</p>
-</div></details><h3>2.4 HTTP Message Structure</h3>
+</div></details><h3>3.3 Packet Structure: HTTP Message Structure</h3>
 <p><strong>Request Message:</strong></p>
 <ul>
 <li><strong>Request Line:</strong> method (<code>GET</code>, <code>POST</code>, <code>HEAD</code>, <code>PUT</code>, <code>DELETE</code>) + URL path + version, e.g. <code>GET /index.html HTTP/1.1</code></li>
@@ -396,7 +441,7 @@
 <li><strong>Header Lines:</strong> <code>Date:</code>, <code>Server:</code>, <code>Content-Length:</code>, <code>Content-Type:</code></li>
 <li><strong>Data (Body):</strong> the actual requested object.</li>
 </ul>
-<h3>2.5 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
+<h3>3.4 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
 <pre><code class="language-mermaid">sequenceDiagram
     participant Br as Browser
     participant Sv as Server
@@ -408,18 +453,49 @@
     Sv-&gt;&gt;Sv: Look up 1678 in DB → retrieve state
     Sv-&gt;&gt;Br: Personalized response
 </code></pre>
-<hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-connection-economy-then-message-structure">← 3. Purpose — Connection Economy, T…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>A page has exactly 2 objects: <code>a.html</code> and <code>b.jpg</code>. Non-persistent: open connection, fetch <code>a.html</code>, close; open connection, fetch <code>b.jpg</code>, close — 2 handshakes for 2 objects. Persistent: open once, fetch both, close — 1 handshake. Now scale 2 to any $N$.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An HTML page references 5 embedded images. Compute the total number of TCP connections required to fully load this page under (a) Non-Persistent HTTP and (b) Persistent HTTP.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting Connections</div><div class="step-content"><p><strong>Non-Persistent:</strong> the HTML file itself requires 1 connection. Each of the 5 images then requires its <em>own</em> new connection (opened and closed individually) = 5 more connections. Total = 1 + 5 = <strong>6 separate TCP connections</strong>.
 <strong>Persistent:</strong> a single TCP connection is opened once, and the HTML file plus all 5 images are transferred sequentially over that same connection before it closes. Total = <strong>1 TCP connection</strong>.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Non-Persistent HTTP needs 6× as many TCP connections as Persistent HTTP for this page — each extra connection costs a full TCP three-way handshake&#39;s worth of round-trip latency. This is precisely why HTTP/1.1&#39;s persistent connections became the default: dramatically less overhead for pages with many embedded objects, which describes nearly every modern web page.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Non-persistent vs. persistent</td>
+<td>$N$ connections (one per object) vs. 1 reused connection.</td>
+</tr>
+<tr>
+<td>Stateless vs. stateful</td>
+<td>HTTP server remembers nothing (cookies work around it); contrast FTP, which tracks sessions.</td>
+</tr>
+<tr>
+<td>Cookie vs. session memory</td>
+<td>Cookie = client-held ID; actual state lives in the server&#39;s database, keyed by that ID.</td>
+</tr>
+<tr>
+<td>HTTP/1.1 vs. HTTP/3 transport</td>
+<td>Classical HTTP runs over TCP; HTTP/3 runs over QUIC (UDP-based).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Writing &quot;HTTP never uses UDP&quot; without the HTTP/3 qualification. (2) Counting only embedded images and forgetting the base HTML file ($N$ includes it). (3) Saying cookies &quot;make HTTP stateful&quot; — the protocol stays stateless; cookies store the ID that lets the server <em>look up</em> state.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>HTTP = stateless request/response over TCP (up to HTTP/2; HTTP/3 uses QUIC over UDP). Non-persistent (1.0): one TCP connection per object. Persistent (1.1): one connection reused. Request = request line + headers + body; response = status line + headers + data. Cookies (<code>Set-cookie</code> ID + server-side lookup) restore sessions without changing statelessness.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Why does non-persistent cost $N$ handshakes? What three parts does each message type carry? How does a cookie let an amnesiac server remember you? Which HTTP version breaks the &quot;always TCP&quot; rule?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Foundational Concept</span>
@@ -607,7 +683,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_04_world_wide_web_and_http";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

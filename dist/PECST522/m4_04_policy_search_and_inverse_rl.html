@@ -269,53 +269,69 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Policy Search &amp; Inverse Reinforcement Learning</h1>
-<p><strong>Skipping value functions: parameterized policies, hill-climbing in policy space, and flipping the problem — inferring rewards from expert behavior.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-beyond-value-functions">1. Beyond Value Functions</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-policy-search-hill-climbing-on-expected-reward">2. Policy Search: Hill-Climbing on… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Choreography vs. Physics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Value methods learn the <em>physics</em> of the world (how good every situation is) and derive behavior from it. <strong>Policy search</strong> skips physics and choreographs directly: parametrize the <em>dance</em> ($\pi_\theta$ — e.g. a neural net mapping sensors to motor torques), perform it, measure applause (total reward), and adjust the choreography toward what earned applause. For a robot with continuous joints, grading every (state, torque-vector) pair is hopeless — but tweaking dance parameters by feel works beautifully.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-policy-search-hill-climbing-on-expected-reward">2. Policy Search: Hill-Climbing on Expected Reward</h2>
-<p class="secnav"><a href="#1-beyond-value-functions">← 1. Beyond Value Functions</a><span class="secnav-sep">·</span><a href="#3-inverse-rl-rewards-from-experts">3. Inverse RL: Rewards from Expert… →</a></p>
-<p>Parametrize the policy by $\theta$ (weights, thresholds, trajectory splines). Define $J(\theta) = \mathbb{E}[\text{total reward following } \pi_\theta]$. Then <strong>optimize directly</strong>:</p>
-<ul>
-<li><strong>Finite differences / hill climbing:</strong> jiggle $\theta$, keep jiggles that score higher. Simple, gradient-free — and sample-hungry.</li>
-<li><strong>Policy gradients (REINFORCE idea):</strong> $\nabla_\theta J \approx$ average over trials of $(\text{return}) \times \nabla_\theta \log \pi_\theta(\text{actions taken})$ — actions from high-return trials get reinforced <em>in proportion to their surprise-weighted contribution</em>. Follows the gradient uphill, trial by trial.</li>
-</ul>
-<p>Strengths: handles <strong>continuous, high-dimensional actions</strong> (robotics, games) where $\max_a Q(s,a)$ is intractable; learns <strong>stochastic policies</strong> naturally (essential for partially observable and adversarial settings). Weaknesses: high-variance gradients, local optima, and sample hunger — the price of ignoring value structure.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Two Paradigms</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Value-based: learn $Q^<em>$, act $\arg\max_a Q^</em>$ (needs discrete/small actions). Policy-based: learn $\theta^* = \arg\max_\theta J(\theta)$ via $\nabla J$ estimates (handles continuous/stochastic). Actor-critic hybrids learn both — the actor dances, the critic (a TD value function) applauds precisely, cutting gradient variance.</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-inverse-rl-rewards-from-experts">3. Inverse RL: Rewards from Experts</h2>
-<p class="secnav"><a href="#2-policy-search-hill-climbing-on-expected-reward">← 2. Policy Search: Hill-Climbing on…</a><span class="secnav-sep">·</span><a href="#4-apprenticeship-on-two-features">4. Apprenticeship on Two Features →</a></p>
-<p><strong>Forward RL:</strong> reward given → learn behavior. <strong>Inverse RL:</strong> behavior (expert demonstrations) given → learn the <em>reward function</em> the expert seems to optimize. Why invert? Rewards transfer: the <em>learned reward</em> (&quot;stay on road, avoid pedestrians&quot;) ports to new cars, cities, and bodies — a copied steering policy does not.</p>
-<p>The catch — <strong>reward ambiguity</strong>: infinitely many rewards rationalize any behavior, including the degenerate all-zero reward (under which <em>everything</em> is optimal). Resolutions: ** apprenticeship/feature matching** (Abbeel &amp; Ng: match the expert&#39;s <em>feature expectations</em> — average lane-centering, speed profiles — rather than cloning actions, then optimize the matched reward); <strong>maximum-entropy IRL</strong> (among consistent rewards, prefer the one making the expert&#39;s behavior look least surprising, i.e. no extra commitments).</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Imitation ≠ Inverse RL</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Behavioral cloning</strong> (supervised learning on state→action pairs) copies the expert&#39;s <em>moves</em> — and compounds errors (one drift off-distribution, no recovery skill). <strong>Inverse RL</strong> recovers the expert&#39;s <em>objective</em> and re-optimizes — the apprentice that understands <em>why</em>, and therefore survives situations the master never demonstrated. Exams test exactly this boundary.</p>
-</div></details><hr>
+<p><strong>Problem: value methods need <code>argmax</code> over actions (impossible for continuous torques) and rewards are rarely written down — experts just behave. By the end you can climb policy space directly and infer objectives from demonstrations.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-choreography-vs-physics">1. Start From Zero: Choreography vs. Physics</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-hill-climbing-expected-reward">2. Basic Layer: Hill-Climbing Expe… →</a></p>
+<p>Value methods learn the physics (how good every situation is) then derive behaviour. <strong>Policy search</strong> skips physics and choreographs directly: parametrize the dance (<code>pi_theta</code> — e.g. a neural net mapping sensors to motor torques with weights theta), perform it, measure applause (total reward), adjust toward applause. Grading every (state, torque-vector) pair is hopeless for a 7-joint arm — tweaking dance parameters by feel works.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Choreography vs. Physics</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;tune behaviour, skip value tables&quot; here, then drop the dance; policy gradients plus the inverse-RL ambiguity below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> a thermostat threshold theta (turn on below theta degrees). Try theta 19 (bill $80, comfort 7), theta 21 (bill $95, comfort 9) — hill-climb theta toward the scored trade-off. No value per temperature needed, just dance-parameter scores.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-hill-climbing-expected-reward">2. Basic Layer: Hill-Climbing Expected Reward</h2>
+<p class="secnav"><a href="#1-start-from-zero-choreography-vs-physics">← 1. Start From Zero: Choreography v…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-inverse-rl-and-its-ambiguity">3. Formal Layer: Inverse RL and It… →</a></p>
+<p><strong>Data/state:</strong> parametrized stochastic policies <code>pi_theta</code>. <strong>Goal:</strong> <code>theta* = argmax J(theta)</code> where <code>J(theta) = E[total reward following pi_theta]</code> (expected return).</p>
+<p><strong>Method (two flavours):</strong> <strong>finite differences / hill climbing:</strong> jiggle theta, keep jiggles scoring higher — simple, gradient-free, sample-hungry. <strong>Policy gradients (REINFORCE idea):</strong> estimated gradient <code>grad J ≈ average over trials of return x grad log pi_theta(actions taken)</code> — actions from high-return trials get reinforced in proportion to surprise-weighted contribution; follow uphill trial by trial.</p>
+<p>Strengths: continuous high-dimensional actions (robotics, games) where <code>max_a Q</code> is intractable; stochastic policies natively (needed for partial observability and adversarial unpredictability). Weaknesses (qualified): high-variance gradients, local optima (no global-optimality certificate unlike tabular Q&#39;s infinitary guarantee), sample hunger — the price of ignoring value structure.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Two Paradigms</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Value-based: learn Q*, act argmax Q (needs tractable action max; deterministic policies). Policy-based: learn theta* = argmax J via gradient estimates (continuous/stochastic native). Actor-critic hybrids learn both — the actor dances, the TD critic applauds precisely, cutting gradient variance.</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-inverse-rl-and-its-ambiguity">3. Formal Layer: Inverse RL and Its Ambiguity</h2>
+<p class="secnav"><a href="#2-basic-layer-hill-climbing-expected-reward">← 2. Basic Layer: Hill-Climbing Expe…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Forward RL:</strong> reward given, learn behaviour. <strong>Inverse RL (IRL):</strong> expert demonstrations given, learn the reward the expert seems to optimize. Why invert? Rewards transfer (&quot;stay on road, avoid pedestrians&quot; ports to new cars/cities/bodies); copied steering does not.</p>
+<p><strong>Reward ambiguity (the ill-posedness):</strong> infinitely many rewards rationalize any behaviour — including degenerate all-zero (everything optimal, explaining nothing). Fixes: <strong>apprenticeship / feature matching</strong> (Abbeel and Ng: match expert&#39;s feature expectations — average lane-centering, speed profiles — not actions, then optimize the matched reward); <strong>maximum-entropy IRL</strong> (among consistent rewards, prefer the one making expert behaviour least surprising — no extra commitments).</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Imitation ≠ Inverse RL</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Behavioural cloning</strong> (supervised state-to-action copying) compounds drift: one off-distribution step, no recovery skill. <strong>IRL</strong> recovers the objective and re-optimizes — the apprentice understanding why survives unseen states the master never showed. Exams test exactly this boundary.</p>
+</div></details><p><strong>Apprenticeship trace (two features):</strong> expert averages mu_E = (centering 0.9, speed adherence 0.8). Policy pi0 (crawl centered) gives (1.0, 0.4). Loop: find weights w making the expert look optimal (reward adherence over centering); optimize w-rewarded MDP to pi1 with (0.92, 0.75); compare gap norm vs. tolerance; iterate on residuals. Stopping certifies near-expert performance under the expert&#39;s own unknown true reward (the Abbeel-Ng guarantee — qualified: within epsilon under matched features, not exact optimality) without ever writing &quot;good driving&quot; down.</p>
 <p><a id="worked-example"></a></p>
-<h2 id="4-apprenticeship-on-two-features">4. Apprenticeship on Two Features</h2>
-<p class="secnav"><a href="#3-inverse-rl-rewards-from-experts">← 3. Inverse RL: Rewards from Expert…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
-<p>Expert taxi demonstrations average features: $\mu_E = (\text{lane-centering } 0.9,\ \text{speed-limit adherence } 0.8)$. Our policy $\pi_0$ (always crawl at half speed, dead center) yields $\mu(\pi_0) = (1.0, 0.4)$.</p>
-<p>Apprenticeship loop: find weights $w$ making the expert look optimal (here: reward adherence more than centering, since the expert sacrifices some centering for speed); optimize $w$-rewarded MDP → $\pi_1$ with $\mu(\pi_1) = (0.92, 0.75)$; compare $|\mu_E - \mu(\pi_1)|$ vs tolerance. Iterate: each round the reward weights shift to explain the <em>residual</em> gap, each policy closes it. Termination ($|\cdot| &lt; \epsilon$) certifies performance <em>near the expert&#39;s</em> under the expert&#39;s own (unknown) true reward — the Abbeel–Ng guarantee — without ever writing down what &quot;good driving&quot; means.</p>
-<hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-inverse-rl-and-its-ambiguity">← 3. Formal Layer: Inverse RL and It…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Value vs. policy methods</td>
+<td>Q* plus argmax (sample-efficient, needs tractable max) vs. theta hill-climb (continuous/stochastic ok, high variance, local optima)</td>
+</tr>
+<tr>
+<td>Cloning vs. apprenticeship IRL</td>
+<td>Copy moves (compounds drift off-distribution) vs. recover objective (transfers to novel states)</td>
+</tr>
+<tr>
+<td>Apprenticeship vs. max-entropy</td>
+<td>Match feature averages vs. least-commitment selection among consistent rewards</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) <code>argmax Q</code> intractability over R^7 torques is the policy-search trigger — quote it. (2) All-zero reward &quot;explains&quot; everything and nothing — never list it as a solution. (3) Actor-critic stabilizes gradients with TD baselines; it does not restore global optimality.</p>
+<p><strong>Limitations:</strong> policy search is local and thirsty; IRL needs quality demos and feature design (wrong features, wrong rewards); recovered rewards still need forward optimization to become behaviour.</p>
 <p><a id="self-check"></a></p>
 <h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-apprenticeship-on-two-features">← 4. Apprenticeship on Two Features</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A 7-joint robot arm must learn smooth reaching motions. Why is policy search favored over Q-learning here?</span>
@@ -338,7 +354,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Q-learning&#39;s decision rule is an <em>optimization over actions</em> — trivial for 4 grid moves, impossible over $\mathbb{R}^7$ torques every 10 ms. Policy search replaces the intractable $\arg\max$ with direct gradient ascent on policy parameters, and stochastic policies additionally cover sensor limits and adversarial unpredictability.</p><pre><code>&lt;/div&gt;
+      <p>Q-learning decides by optimizing over actions — trivial for grid moves, impossible over R^7 torques every 10 ms. Gradients on parameters replace the intractable argmax and cover sensor/adversarial needs stochastically.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -363,7 +379,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Behavior underdetermines objectives: laziness (all-zero reward) &quot;explains&quot; everything and nothing. Max-entropy breaks the tie by the least-commitment principle — matching observed feature statistics while maximizing uncertainty elsewhere — yielding rewards that generalize instead of memorizing.</p><pre><code>&lt;/div&gt;
+      <p>Behaviour underdetermines objectives: laziness explains everything and nothing. Least-commitment matching of feature statistics yields generalizing rewards.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -388,24 +404,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Cloning learns <em>what the master did</em>; IRL learns <em>what the master wanted</em>. Off the demonstration manifold, the cloner has no relevant training pairs and drifts irrecoverably, while the apprentice&#39;s recovered reward still scores actions correctly — objectives transfer, trajectories don&#39;t.</p><pre><code>&lt;/div&gt;
+      <p>Cloning learns what the master did; IRL learns what the master wanted. Objectives transfer, trajectories do not — off-manifold, only the apprentice still scores actions correctly.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
 <p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> Policy search idea, IRL definition, or imitation-vs-IRL distinction.</li>
-<li><strong>7 Marks:</strong> Value-based vs policy-based comparison, or apprenticeship loop with the performance guarantee.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Define inverse reinforcement learning and state its core difficulty.</strong></p>
-<p><strong>Model Answer:</strong> IRL infers the reward function an expert appears to optimize, from demonstrations. Core difficulty: <strong>reward ambiguity</strong> — infinitely many rewards (including degenerate all-zero) are consistent with any behavior; methods like max-entropy or feature matching add principled tie-breaking.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: policy-search idea, IRL definition, or cloning-vs-IRL line. 7 marks: value-vs-policy comparison or the apprenticeship loop with its guarantee.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>J(theta)</code> with gradient idea; intractable-argmax trigger; ambiguity plus all-zero degeneracy; feature-matching vs. max-entropy fixes; cloning-drift vs. objective-transfer; actor-critic variance role.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Define IRL and state its core difficulty.</strong></p>
+<p><strong>Model Answer:</strong> IRL infers the expert&#39;s apparent reward from demonstrations. Difficulty: reward ambiguity — infinitely many rewards (including all-zero) fit any behaviour; max-entropy/feature-matching tie-break principledly.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Compare value-based and policy-based RL on representation, action spaces, and variance. Where do actor-critic methods fit?</strong></p>
-<p><strong>Model Answer:</strong> Value-based learns $Q^<em>$ then $\arg\max_a$ — sample-efficient with structure, but needs tractable action maximization (discrete/small actions) and yields deterministic policies. Policy-based learns $\theta^</em> = \arg\max J(\theta)$ via gradient estimates — handles continuous/stochastic actions natively, at the cost of high-variance, local-optima-prone search. <strong>Actor-critic</strong> hybrids keep both: a TD critic supplies low-variance value baselines that stabilize the actor&#39;s gradient steps — the standard architecture behind modern deep RL successes.</p>
+<p><strong>Q: Compare value-based and policy-based RL. Where do actor-critics fit?</strong></p>
+<p><strong>Model Answer:</strong> Value-based learns Q* then argmax — structured and sample-efficient, needs tractable discrete/small actions, yields deterministic policies. Policy-based learns theta* = argmax J via gradient estimates — continuous/stochastic native, high-variance and local-optima-prone. Actor-critic hybrids keep both: a TD critic supplies low-variance baselines stabilizing actor steps — the standard deep-RL architecture.
+:::</p>
 
     </main>
 

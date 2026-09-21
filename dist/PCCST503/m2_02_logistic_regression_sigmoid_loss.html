@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,22 +249,55 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Logistic Regression: Sigmoid &amp; Cross-Entropy</h1>
-<p><strong>Squashing linear scores into probabilities, the logit link, cross-entropy loss, its gradient, and why &quot;regression&quot; is a historical misnomer.</strong></p>
+<p><strong>What problem logistic regression solves for two classes, what labelled data it needs, how sigmoid plus cross-entropy trains linear boundaries, and where convexity does and does not guarantee success.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>You want not just a label but a calibrated chance: &quot;90% spam&quot; versus &quot;51% spam.&quot; The problem: turn an unbounded score into a probability between 0 and 1, then penalise confident wrongness more than cautious wrongness.</p>
+<p>Tiny beginner example. Linear score $z=0$ should mean 50%. Score $z=2$ should mean about 88%. Score $z=-2$ should mean about 12%. The sigmoid converter below does exactly that, steepest at the boundary.</p>
+<p>Analogy as support, then dropped. Think of a betting-odds converter: any real number in, a fair probability out. From here on we use exact terms only: sigmoid, logit, log-odds, cross-entropy, convex.</p>
+<p>Abbreviations defined on first use: no new abbreviations beyond symbols. Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $z$?</td>
+<td>Linear score $w^Tx$, any real number</td>
+</tr>
+<tr>
+<td>What is $p$?</td>
+<td>Predicted probability $\sigma(z)$, in $(0,1)$</td>
+</tr>
+<tr>
+<td>What is $y$?</td>
+<td>True label, 0 or 1</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Map features to $P(y=1\mid x)$ with a linear boundary but probabilistic output.</p>
+<p><strong>Data.</strong> Labelled pairs $(x_i,y_i)$ with $y_i\in{0,1}$. Here $x_i$ is the feature vector, $y_i$ is the class.</p>
+<p><strong>Goal.</strong> Low cross-entropy on future data plus a usable linear boundary. Decision rule: predict 1 iff $p\ge 0.5$, equivalently $w^Tx\ge 0$.</p>
+<p>Symbols: $\sigma(z)=1/(1+e^{-z})$ is the sigmoid; $p=\sigma(w^Tx)$ is the prediction; log-odds $\log(p/(1-p))=w^Tx$ shows linearity in log-odds; loss per example $\ell(w)=-[y\log p+(1-y)\log(1-p)]$ is cross-entropy.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Betting Odds Converter</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A linear score $z = w^Tx$ ranges over $(-\infty, \infty)$ — useless as a probability. The <strong>sigmoid</strong> $\sigma(z) = 1/(1+e^{-z})$ is the odds converter: huge negative → $\approx 0$, zero → exactly $0.5$, huge positive → $\approx 1$, smoothly S-shaped between. <strong>Logistic regression</strong> = linear scoring <em>plus</em> sigmoid squashing <em>plus</em> a loss that punishes confident wrongness brutally (being 99% sure and wrong costs far more than being 60% sure and wrong). Despite the name, it <em>classifies</em> — &quot;regression&quot; survives only because it fits weights by regression-style optimization.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
@@ -278,29 +319,60 @@
     <p class="video-caption"><strong>Key Insight:</strong> The Sigmoid Squash</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the S-curve map every real score into (0,1), its steepest slope at the boundary z=0, and how weight scaling sharpens or softens the transition — the decision boundary living at σ = 0.5.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Model and the Logit Link</h3>
-<p>$P(y=1 \mid x) = \sigma(w^Tx)$, $\sigma(z) = \frac{1}{1+e^{-z}}$. Inverse view: $\log\frac{p}{1-p} = w^Tx$ — the model is <em>linear in log-odds</em> (logit), which is why coefficients read as odds multipliers ($w_j$ = log-odds change per unit $x_j$). Decision rule: predict 1 iff $\sigma \ge 0.5$ ⟺ $w^Tx \ge 0$ — a <strong>linear boundary</strong>, exactly as expressive (and limited) as a perceptron&#39;s.</p>
-<h3>2.2 Cross-Entropy Loss and Gradient</h3>
-<p>For one example: $\ell(w) = -[y\log p + (1-y)\log(1-p)]$, $p = \sigma(w^Tx)$. The loss is <strong>convex</strong> (single global minimum — no bad local optima, unlike neural nets), and its gradient is memorably clean:</p>
-<p>$$\nabla_w \ell = (p - y),x = (\text{predicted} - \text{actual}) \times \text{features}$$</p>
-<p>— <em>error times input</em>, the same shape driving LMS, perceptrons, and (generalized) backprop. Update: $w \leftarrow w - \eta,(p-y)x$.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Logistic Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$p = \sigma(w^Tx)$, $\sigma(0) = 0.5$ · boundary $w^Tx = 0$ (<strong>linear</strong>) · loss $-[y\log p + (1-y)\log(1-p)]$ (<strong>convex</strong>) · gradient <strong>$(p-y)x$</strong> · coefficients = <strong>log-odds</strong> shifts · despite the name: a <strong>classifier</strong>.</p>
+</div><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (probabilistic two-class choice) → data (labelled pairs) → goal (low cross-entropy, linear boundary) → method (sigmoid plus cross-entropy) → model ($p=\sigma(w^Tx)$) → training (gradient descent) → example → limitations.</p>
+<h3>3.1 Model and the Logit Link</h3>
+<p>$P(y=1\mid x)=\sigma(w^Tx)$ with $\sigma(z)=1/(1+e^{-z})$. Inverse view: $\log(p/(1-p))=w^Tx$. The model is linear in log-odds, so coefficient $w_j$ reads as log-odds change per unit $x_j$. Decision rule $w^Tx\ge 0$ is a linear boundary, exactly as expressive and limited as a perceptron&#39;s. The sigmoid rescales confidence; it never bends the boundary shape.</p>
+<h3>3.2 Cross-Entropy Loss and Gradient, Symbol by Symbol</h3>
+<p>For one example: $\ell(w) = -[y\log p + (1-y)\log(1-p)]$ with $p=\sigma(w^Tx)$. Here $y\log p$ prices positive examples, $(1-y)\log(1-p)$ prices negatives, the minus makes loss positive. Gradient:</p>
+<p>$$\nabla_w \ell = (p-y)x = (\text{predicted}-\text{actual})\times\text{features}$$</p>
+<p>Error times input, the same shape driving Least Mean Squares (LMS), perceptrons, and generalised backprop. Update: $w\leftarrow w-\eta(p-y)x$ with learning rate $\eta$.</p>
+<p><strong>Corrected convexity qualification.</strong> The cross-entropy loss for logistic regression is convex in $w$: one bowl, no bad local minima. With a suitably small learning rate and well-scaled features, gradient descent converges toward the global minimiser. Two qualifications examiners reward: (1) step size still matters — too large $\eta$ diverges even on convex bowls; conditioning sets speed, so standardise features; (2) on linearly separable data the finite minimiser does not exist — weights grow without bound while the boundary keeps improving, so in practice add Regularisation (RIDGE or LASSO) or stop early. Convexity removes local minima, not all optimisation concerns.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sigmoid vs boundary</td>
+<td>$\sigma$ rescales confidence; $w^Tx=0$ still cuts linear and flat</td>
+</tr>
+<tr>
+<td>Cross-entropy vs squared error through sigmoid</td>
+<td>Honest $(p-y)$ gradients vs saturated $\sigma&#39;$ slowdown where wrong-but-sure stalls</td>
+</tr>
+<tr>
+<td>Convex logistic vs non-convex nets</td>
+<td>Global-minimum seeking with proper $\eta$ vs crafted local success</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Logistic Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$p = \sigma(w^Tx)$, $\sigma(0) = 0.5$ · boundary $w^Tx = 0$ (<strong>linear</strong>) · loss $-[y\log p + (1-y)\log(1-p)]$ (<strong>convex with qualifications</strong>) · gradient <strong>$(p-y)x$</strong> · coefficients = <strong>log-odds</strong> shifts · despite the name: a <strong>classifier</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Confident Errors Cost Everything (by Design)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Cross-entropy $\to \infty$ as $p \to$ the wrong extreme ($y=1, p=0.001$ costs $\approx 6.9$ vs $0.22$ at $p=0.8$) — the loss <em>deliberately</em> terrorizes overconfidence. Mislabeled training points therefore wield enormous leverage: one flipped label near the boundary can drag the whole fit. Clean labels aren&#39;t hygiene here; they&#39;re load-bearing.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Single feature, current weights give score $z = 2.0$ for a truly-positive example ($y=1$). Take one gradient step with $\eta = 0.5$, $x = 1$. (Numbers verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Squash, Score, Step</div><div class="step-content"><p>$p = \sigma(2.0) = 1/(1+e^{-2}) \approx 0.881$ — fairly confident and correct. Loss $= -\log(0.881) \approx 0.127$. Error $p - y = -0.119$; gradient $= -0.119 \times 1$; update $w \leftarrow w - 0.5\times(-0.119) = w + 0.060$ — weights nudge <em>up</em>, growing confidence in an already-right answer (diminishing returns built in: near-certain correct predictions barely move weights).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One line of arithmetic exhibits the whole algorithm: squash → measure surprise → step against the error, scaled by input. Repeat over the dataset (batch/stochastic next module&#39;s engine topic) and convexity guarantees arrival at the unique optimum — logistic regression&#39;s entire reputation in three lines.</p>
-</div></div><hr>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One line of arithmetic exhibits the whole algorithm: squash → measure surprise → step against the error, scaled by input. Repeat over the dataset with a well-chosen step size; on convex logistic loss this heads toward the global minimiser subject to the separability and conditioning qualifications above — logistic regression&#39;s reputation in three lines.</p>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Expecting the sigmoid to fix Exclusive OR (XOR). Squashing is monotone; the boundary stays linear.</li>
+<li>Training with squared error through the sigmoid. Gradients carry $\sigma&#39;$ and stall where confident-wrong needs large steps.</li>
+<li>Claiming convexity means any $\eta$ works. Too large diverges; too small crawls. Scale features and schedule $\eta$.</li>
+<li>Forgetting separability pathology. Separable data pushes weights to infinity; regularise or bound steps.</li>
+</ul>
+<p>Limitations: linear boundaries only; mislabel-sensitive; needs feature scaling for fast convergence.</p>
+<p>Exam recap: $p=\sigma(w^Tx)$; boundary $w^Tx=0$ linear; loss cross-entropy convex with proper-$\eta$ and non-separable qualifications; gradient $(p-y)x$; coefficients are log-odds.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">The gradient of logistic loss is (p − y)x — &quot;error times input.&quot; A training point with y=1 currently scores p=0.99. How hard does it push the weights, and why is that desirable?</span>
@@ -485,7 +557,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m2_02_logistic_regression_sigmoid_loss";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

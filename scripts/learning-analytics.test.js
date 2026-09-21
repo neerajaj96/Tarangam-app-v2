@@ -310,18 +310,18 @@ describe('topic study context wiring', () => {
   });
 });
 
-describe('live 432-topic repository', () => {
+describe('live 435-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('scores the full curriculum deterministically', () => {
-    assert.equal(manifest.topics.length, 432);
+    assert.equal(manifest.topics.length, 435);
     const a = Analytics.buildLearningAnalytics(manifest, none, null, NOW);
-    assert.equal(a.totals.total, 432);
+    assert.equal(a.totals.total, 435);
     assert.equal(a.courses.length, 16);
     assert.ok(a.studyTime.totalMinutes > 0);
-    assert.ok(a.summary.includes('0 of 432 topics completed'));
+    assert.ok(a.summary.includes('0 of 435 topics completed'));
     assert.equal(
       JSON.stringify(Analytics.buildLearningAnalytics(manifest, none, null, NOW)),
       JSON.stringify(Analytics.buildLearningAnalytics(manifest, none, null, NOW))
@@ -330,6 +330,6 @@ describe('live 432-topic repository', () => {
     manifest.topics.slice(0, 216).forEach((t) => { half[`${t.courseCode}/${t.id}`] = 'completed'; });
     const partial = Analytics.buildLearningAnalytics(manifest, readerFrom(half), null, NOW);
     assert.equal(partial.totals.completed, 216);
-    assert.equal(partial.summary, '216 of 432 topics completed — 50% curriculum coverage.');
+    assert.equal(partial.summary, '216 of 435 topics completed — 49.7% curriculum coverage.');
   });
 });

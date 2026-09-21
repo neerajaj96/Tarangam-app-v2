@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link active" id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -309,20 +313,20 @@
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Read each scenario as a chain: name every mechanism (DNS — Domain Name System; TCP — Transmission Control Protocol; HTTP — HyperText Transfer Protocol; FTP — File Transfer Protocol; P2P — peer-to-peer), in order, with the reason each link is needed. If you cannot justify a step aloud, re-read its home note first — this lab assumes the vocabulary of M1.1–M1.8 throughout.</p>
 <h3>Scenario 1: The Full Web Fetch (Everything at Once)</h3>
 <p>You type <code>http://example.com/page.html</code> (one embedded image) into a browser on dorm Wi-Fi and press Enter. Name every M1 mechanism engaged, in order:</p>
 <ol>
-<li><strong>DNS</strong> (application, UDP port 53): resolve <code>example.com</code> → IP (recursive query outward, cached answer back).</li>
+<li><strong>DNS</strong> (application, UDP — User Datagram Protocol — port 53): resolve <code>example.com</code> → IP (recursive query outward, cached answer back).</li>
 <li><strong>TCP handshake</strong> to port 80 (transport): SYN → SYNACK → ACK — reliable channel before a single HTTP byte.</li>
 <li><strong>HTTP GET</strong> (application, persistent): request line + headers over the TCP connection; server responds <code>200 OK</code> + HTML; the embedded image reuses the <em>same</em> connection (persistent — 1 connection total, not 2).</li>
 <li><strong>Sockets</strong>: browser&#39;s ephemeral port ↔ server port 80 (the 4-tuple demultiplexes the reply to the right tab).</li>
-<li><strong>Access</strong>: dorm Wi-Fi (wireless access) → FTTH fiber (guided) → core routers (packet switches) — nuts-and-bolts path hidden by the service view.</li>
+<li><strong>Access</strong>: dorm Wi-Fi (wireless access) → FTTH (Fiber to the Home) fiber (guided) → core routers (packet switches) — nuts-and-bolts path hidden by the service view.</li>
 </ol>
 <h3>Scenario 2: FTP Backup vs. HTTP Upload</h3>
 <p>Nightly backup of 100 small files to a campus server. FTP: <strong>1 control connection</strong> + <strong>100 data connections</strong> (one per file — connection churn dominates!). HTTP/1.1 persistent POSTs: <strong>1 connection</strong> reused 100 times. Verdict: FTP&#39;s per-file data channel is pure overhead here — HTTP wins on connection economy (though FTP&#39;s out-of-band control + statefulness serve interactive browsing better).</p>
 <h3>Scenario 3: Dorm Movie Night (P2P or Server?)</h3>
 <p>50 students, one 4 GB movie file, one dorm server with 100 Mbps uplink. Client-server: server streams 4 GB × 50 = 200 GB through its 100 Mbps pipe (~4.4 hours wall-clock for the crowd). P2P: each downloader re-uploads — aggregate capacity <em>grows</em> with the crowd (self-scalability); the server seeds once and idles. Decision rule from M1: centralized control/consistency → client-server; bulk distribution to many → P2P.</p>
-<hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
 <p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
@@ -359,22 +363,26 @@
 </tr>
 <tr>
 <td>In-band vs. out-of-band</td>
-<td>HTTP mixes control+data in one connection; FTP splits Port 21 control from Port 20 data</td>
+<td>HTTP mixes control+data in one connection; FTP splits Port 21 control from Port 20 data (active-mode server side)</td>
 </tr>
 <tr>
 <td>Active vs. passive FTP</td>
 <td>Server connects back (firewall-blocked) vs. client always dials out (firewall-friendly)</td>
 </tr>
 <tr>
-<td>PDU names</td>
+<td>PDU (Protocol Data Unit) names</td>
 <td>Message → Segment → Datagram → Frame → Bits, top-down, never scrambled</td>
 </tr>
 <tr>
 <td>OSI 7 vs. TCP/IP 5</td>
 <td>Model vocabulary (Presentation/Session named) vs. running code (top three merged)</td>
 </tr>
+<tr>
+<td>HTTP transport versions</td>
+<td>Classical HTTP (≤2) over TCP; HTTP/3 over QUIC (UDP-based) — qualify &quot;always TCP&quot;</td>
+</tr>
 </tbody></table>
-<hr>
+<p><strong>Watch out:</strong> (1) Counting data connections while ignoring the control channel (or vice versa) — tally both, every question. (2) Sending DNS straight to the root — users ask resolvers. (3) Recommending POP3-style single-device habits for multi-device scenarios — match state location to the workload.</p>
 <p><a id="self-check"></a></p>
 <h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
@@ -478,8 +486,7 @@
       <p>Active&#39;s server→client data leg looks exactly like an attack to a stateful firewall. PASV inverts initiation (client always dials out — permitted) while changing nothing semantically: same control connection, same bytes, same commands, zero firewall exceptions needed.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
+</div><p><a id="exam-focus"></a></p>
 <h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
 <p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
@@ -489,10 +496,10 @@
 </ul>
 </div></details><h3>Essay Question 1 (7 Marks)</h3>
 <p><strong>Q: A browser fetches a page with 3 embedded images over persistent HTTP/1.1 on dorm Wi-Fi. (a) How many TCP connections? Contrast with non-persistent. (b) Name the access networks, the socket 4-tuple roles, and where statelessness matters.</strong></p>
-<p><strong>Model Answer:</strong> (a) Persistent: <strong>1</strong> connection reused for HTML + 3 images; non-persistent: <strong>4</strong> (one per object) — each extra handshake costs an RTT. (b) Wi-Fi (unguided access) → FTTH (guided) → core packet switches; client ephemeral port + server port 80 demultiplex the reply (4-tuple); statelessness means the server keeps no inter-request memory — cookies would be needed for any login/cart state across the four fetches.</p>
+<p><strong>Model Answer:</strong> (a) Persistent: <strong>1</strong> connection reused for HTML + 3 images; non-persistent: <strong>4</strong> (one per object) — each extra handshake costs an RTT (Round-Trip Time). (b) Wi-Fi (unguided access) → FTTH (guided) → core packet switches; client ephemeral port + server port 80 demultiplex the reply (4-tuple); statelessness means the server keeps no inter-request memory — cookies would be needed for any login/cart state across the four fetches.</p>
 <h3>Essay Question 2 (7 Marks)</h3>
 <p><strong>Q: &quot;FTP separates control and data; HTTP mixes them.&quot; Explain both designs, compare connection counts for downloading 3 files plus browsing, and justify when each design wins.</strong></p>
-<p><strong>Model Answer:</strong> FTP: Port-21 control (login/CWD/RETR, session-long) + one Port-20 data channel per file → 1 control + 3 data for the task; browsing state (directory, auth) persists server-side. HTTP: each request/response (headers + payload) shares one TCP connection, stateless. FTP wins interactive file management (stateful navigation, separate heavy channel); HTTP wins object fetching (no per-file handshake tax, massive stateless scale). Design follows workload — the module&#39;s master lesson.</p>
+<p><strong>Model Answer:</strong> FTP: Port-21 control (login/CWD — change working directory /RETR — retrieve, session-long) + one data channel per file → 1 control + 3 data for the task; browsing state (directory, auth) persists server-side. HTTP: each request/response (headers + payload) shares one TCP connection, stateless. FTP wins interactive file management (stateful navigation, separate heavy channel); HTTP wins object fetching (no per-file handshake tax, massive stateless scale). Design follows workload — the module&#39;s master lesson.</p>
 
     </main>
 
@@ -500,9 +507,9 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m1_08_peer_to_peer_bittorrent.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m1_09_socket_programming_select_poll.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">1.8 Peer To Peer Bittorrent</div>
+        <div class="ttl">1.9 Socket Programming Select Poll</div>
       </a>
       
       
@@ -601,7 +608,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_99_practice_lab_application_layer_drills";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

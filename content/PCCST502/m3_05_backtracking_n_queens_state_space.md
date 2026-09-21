@@ -5,7 +5,7 @@ module: 3
 sequence: 5
 title: 'Backtracking: N-Queens & State-Space Search'
 difficulty: beginner
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Search state-space trees DFS-style with intelligent retreat
   - Prune with explicit domain and implicit relational constraints
@@ -25,26 +25,31 @@ tags:
 **Systematic trial with intelligent retreat: state-space trees, bounding functions, explicit vs. implicit constraints, and 4-Queens traced to both solutions.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** Place $n$ queens on an $n \times n$ board so none attack another — or enumerate *all* ways. Trying all $n^n$ placements is hopeless; but most partial placements already show a conflict (two queens sharing a diagonal), making every completion underneath pointless. **Backtracking** exploits exactly this: build row by row, abandon a branch the moment it provably fails, rewind to the last fork, try the next column.
 
 ::: callout-intuition Core Mental Model: The Maze with String
-Brute force explores a maze by walking *every* path to its end. **Backtracking** walks with string tied at the entrance: advance while promising, and the moment a path *provably* can't work (dead end, or a bound worse than your best), rewind the string to the last fork and try the next branch — *pruning* whole subtrees without visiting them. The string (recursion stack) plus the noses for dead ends (**bounding functions**) turn exhaustive search from impossible into merely expensive.
+Brute force walks *every* path to its end. **Backtracking** ties string at the entrance: advance while promising; the moment a path *provably* fails (dead end, or a bound worse than best), rewind to the last fork and try the next branch — *pruning* whole subtrees unvisited. The string (recursion stack) plus dead-end detectors (**bounding functions**) turn exhaustive search from impossible into merely expensive. Drop the maze now: state-space trees and attack tests below are the exact machinery.
 :::
+
+**Tiny toy example (2-Queens).** $2 \times 2$ board: place Q1 at (1,1); row 2 offers columns 1 (same column ✗) and 2 (diagonal $|2-1| = |2-1|$ ✗) — dead end, backtrack. Q1 at (1,2): symmetric dead end. Zero solutions after visiting 2 partial placements instead of $2^2 = 4$ full ones — pruning on a tiny board.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-### 2.1 State-Space Tree and Constraints
+**Symbols and abbreviations:** state-space tree = tree of all candidate vectors $(x_1, \dots, x_n)$, level $i$ fixing $x_i$; DFS = depth-first walk of that tree; $|x_i - x_j|$, $|i - j|$ = column/row gaps in the attack test.
 
-* The **state-space tree** enumerates all candidate vectors $(x_1, \dots, x_n)$ level by level (level $i$ fixes $x_i$); a depth-first walk visits solution and dead-end leaves alike.
-* **Explicit constraints** bound each $x_i$ to a finite set (e.g. queen $i$ sits in some column $1..n$); **implicit constraints** relate variables (no two queens share a row/column/diagonal) — the rules that *prune*.
-* **Bounding function:** at a live node, prove no descendant can beat/improve the goal (or satisfy constraints at all); if so, **kill the subtree** — prune now, never revisit.
+**State-space tree and constraints — numbered ideas:**
 
-### 2.2 N-Queens Formulation
+1. The tree enumerates candidates level by level; DFS visits solution and dead-end leaves alike.
+2. **Explicit constraints** bound each $x_i$ to a finite set (queen $i$ sits in some column $1..n$).
+3. **Implicit constraints** relate variables (no shared row/column/diagonal) — the rules that *prune*.
+4. **Bounding function:** at a live node, prove no descendant is worth finding (infeasible or dominated); kill the subtree unvisited.
 
-Place $n$ queens so none attack another. Fix queen $i$ in row $i$ (rows handled by construction); choose columns $x_i \in \{1..n\}$. Queen $i$ attacks queen $j$ iff $x_i = x_j$ (same column) or $|x_i - x_j| = |i - j|$ (same diagonal — equal rise over run). The killer observation: placing queen $k+1$ needs checking *only against queens $1..k$* (earlier rows), so infeasibility surfaces at the shallowest possible depth.
+**N-Queens formulation.** Fix queen $i$ in row $i$ (rows handled by construction); choose columns $x_i \in \{1..n\}$. Queen $i$ attacks $j$ iff $x_i = x_j$ (column) or $|x_i - x_j| = |i - j|$ (diagonal: equal rise over run). Key economy: queen $k+1$ is checked *only against queens $1..k$* (earlier rows) — future rows are empty, attacks are symmetric, so backward-only checking is complete and cheapest.
 
 ```text
 4-Queens solution [2,4,1,3] (row i -> column):
@@ -56,41 +61,56 @@ Q . . .     row 3: queen at col 1
 (check: no shared column; diagonals |dx|=|dy| never match)
 ```
 
-### 2.3 Backtracking vs. Cousins
-
-* vs. **brute force:** identical worst case (whole tree), wildly better typical case (pruning) — backtracking is brute force *with a brain*.
-* vs. **branch & bound** (Module 4): backtracking prunes by *feasibility*; B&B additionally prunes by *cost bounds* against the best solution so far (backtracking is B&B with the cost machinery switched off).
-* vs. **DP:** no overlapping-subproblem structure is exploited — each live path is explored independently; memoization across branches generally doesn't apply.
+**Backtracking vs cousins:** vs **brute force** — same worst case (whole tree), far better typical case (pruning): brute force *with a brain*. Vs **branch & bound** (Module 4) — backtracking prunes by *feasibility*; B&B adds *cost bounds* vs the incumbent (backtracking = B&B with cost machinery off). Vs **DP** — no overlapping-subproblem structure is exploited; branches explore independently.
 
 ::: callout-formula KTU Formula Vault: Backtracking Facts
 Search a **state-space tree** DFS-style · prune by **explicit** (domain) + **implicit** (relations) constraints · N-Queens attack test: **same column or |Δcol| = |Δrow|** · check new queen **only against earlier rows** · worst case still **exponential** (pruning is typical-case salvation, not a complexity cure).
 :::
 
 ::: callout-pitfall Pruning Cuts Typical Cost, Never Worst-Case Guarantees
-A lucky instance prunes to near-linear; a hostile one (no early contradictions) still walks the whole tree. "Backtracking is exponential" and "backtracking beats brute force" are *both* true — worst-case vs. typical-case, the eternal pair. Never promise exponential escape; never dismiss practical pruning.
+A lucky instance prunes to near-linear; a hostile one (contradictions hidden at maximum depth) still walks the whole tree. "Backtracking is exponential" and "backtracking beats brute force" are *both* true — worst-case vs typical-case. Never promise exponential escape; never dismiss practical pruning.
 :::
 
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — 4-Queens to both solutions
 
 ::: step [Step 1: Setup] Formulating the Problem
-Solve 4-Queens by backtracking (rows fixed 1–4, try columns ascending). Find all solutions, showing prunes.
+Solve 4-Queens by backtracking (rows fixed 1–4, columns ascending). Find all solutions, showing prunes.
 :::
 
 ::: step [Step 2: Execution] Walking the Tree
-$x_1 = 1$: $x_2 \in \{3,4\}$ (col 1 shares a column with $(1,1)$; col 2 sits on its diagonal since $|2-1| = |2-1|$). Try $x_2 = 3$: $x_3$ candidates vs {(1,1),(2,3)}: col 1 shares column ✗; col 2: vs (2,3): $|2-3|=|3-2|$ diagonal ✗; col 3 shares column ✗; col 4: vs (2,3) $|4-3|=|3-2|$ diagonal ✗ → **dead end, backtrack**. Try $x_2 = 4$: $x_3$ vs {(1,1),(2,4)}: col 1 ✗ column; col 2: vs (1,1)? $|2-1|=|3-1|$? $1 \ne 2$ ✓ pass; vs (2,4)? $|2-4|=|3-2|$? $2 \ne 1$ ✓ pass → $x_3 = 2$. $x_4$ vs {(1,1),(2,4),(3,2)}: col 3: column free ✓; diagonals: vs (1,1): $|3-1|=|4-1|$? $2 \ne 3$ ✓; vs (2,4): $|3-4|=|4-2|$? $1 \ne 2$ ✓; vs (3,2): $|3-2|=|4-3|$? $1 = 1$ ✗ attacked! col 1,2,4 also fail (column/diagonal) → **dead end**. Backtrack fully: $x_1 = 2$: symmetric search yields $x = (2,4,1,3)$ ✓ and $(3,1,4,2)$ ✓ — the two solutions (mirror images).
+$x_1 = 1$: $x_2 \in \{3,4\}$ (col 1 shares a column; col 2 is diagonal since $|2-1| = |2-1|$). Try $x_2 = 3$: $x_3$ vs {(1,1),(2,3)} — col 1 shares column ✗; col 2 diagonal vs (2,3) ✗; col 3 shares column ✗; col 4 diagonal vs (2,3) ✗ → **dead end, backtrack**. Try $x_2 = 4$: $x_3$ vs {(1,1),(2,4)} — col 2 passes both tests ($|2-1| \ne |3-1|$, $|2-4| \ne |3-2|$) → $x_3 = 2$. $x_4$ vs {(1,1),(2,4),(3,2)}: col 3 is column-free and diagonal-free vs (1,1) and (2,4), but vs (3,2): $|3-2| = |4-3| = 1$ ✗ attacked; cols 1, 2, 4 fail likewise → **dead end**. Restart $x_1 = 2$: symmetric search yields $(2,4,1,3)$ ✓ and $(3,1,4,2)$ ✓ — mirror images.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-4-Queens has exactly **2 solutions**: $[2,4,1,3]$ and $[3,1,4,2]$. The trace visited a fraction of the $4^4 = 256$ naive vectors — every dead end above pruned 4+ descendants sight unseen. That gap (visited vs. possible) *is* backtracking's entire value proposition.
+4-Queens has exactly **2 solutions**: $[2,4,1,3]$ and $[3,1,4,2]$. The trace visited a fraction of the $4^4 = 256$ naive vectors — every dead end pruned 4+ descendants sight unseen. That gap (visited vs possible) *is* backtracking's value.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Checking against *future* (empty) rows buys nothing and costs comparisons per node — backward-only is already complete.
+- Diagonal test needs *both* gaps: $|x_i - x_j| = |i - j|$, not column equality alone.
+- 4-Queens has exactly 2 solutions (mirrors) — claiming more (or symmetric duplicates as distinct) loses marks unless the question counts symmetries.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Explicit vs implicit constraints | Domain per variable ($1..n$) vs relations between variables (attack rules) |
+| Backtracking vs branch & bound | Feasibility pruning vs + cost-vs-incumbent pruning |
+| Worst-case vs typical-case | Exponential bound stands vs pruning usually collapses the tree |
+
+**Exam recap (facts an examiner rewards):** attack test (column or equal gaps); backward-only checking with symmetry justification; state-space DFS + bounding functions; exponential worst case preserved; the two 4-Queens solutions.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz In N-Queens with queen i fixed in row i, a new queen is placed in row k+1. Against which queens must it be checked, and why is that sufficient?
 () Against all n queens, including unplaced future rows

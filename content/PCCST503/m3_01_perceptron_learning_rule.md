@@ -5,10 +5,11 @@ module: 3
 sequence: 1
 title: 'The Perceptron: Learning Rule & Limits'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 12
 learningObjectives:
+  - State the linear-separator problem in plain words first
   - Update mistake-driven weights with the perceptron rule
-  - Bound mistakes on separable data with the convergence theorem
+  - Bound mistakes on separable data with the convergence theorem and its conditions
   - Hit the XOR wall that demands hidden layers or kernels
 concepts:
   - perceptron update
@@ -23,48 +24,84 @@ tags:
 ---
 # The Perceptron: Learning Rule & Limits
 
-**The original neuron, mistake-driven updates, convergence on separable data with a traced run, and the XOR wall that froze the field.**
+**What problem the original neuron solves, what labelled points it needs, how mistake-driven updates train it, and where separability limits any guarantee.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start Here: The Problem Before Any Solution (Absolute Beginner)
+
+A bouncer judges entrants by a weighted checklist: height times weight one plus shoes times weight two, past a threshold? Each mistake triggers one instant tweak: wrongly admitted, lower those traits' weights; wrongly rejected, raise them. No averaging, only repairs.
+
+Tiny beginner example. Weights $[0,0]$, threshold $0$. Entrant $(2,2)$ labelled plus scores $0$, predicted plus by tie rule, correct, no change. Entrant $(0,1)$ labelled minus scores $0$, predicted plus, wrong, so subtract $(0,1)$: weights become $[0,-1]$. That subtraction is the whole algorithm.
+
+Analogy as support, then dropped. Stubborn bouncer with a rope line. From here on we use exact terms only: weight vector, bias, margin, separable, Exclusive OR (XOR).
+
+Abbreviations defined on first use: Exclusive OR (XOR). Symbols are defined before use below.
+
+| Question to ask | Meaning |
+|---|---|
+| What is $w$, $b$? | Weights and bias defining the rope line |
+| What is $y\in\{+1,-1\}$? | True side, plus or minus |
+| What is margin $\gamma$? | Smallest distance from points to some separator |
+
+<a id="symbols-data-goal"></a>
+## 2. Data, Goal and Symbols (Basic Understanding)
+
+**Problem.** Find a straight separator for two classes using only mistake repairs.
+
+**Data.** Labelled points $(x_i,y_i)$ with $y_i\in\{+1,-1\}$. Here $x_i$ is the feature vector, $y_i$ is its side.
+
+**Goal.** Zero mistakes on train if any straight line can do it; otherwise expose inseparability honestly.
+
+Prediction $\hat{y}=\text{sign}(w^Tx+b)$. Here $\text{sign}$ returns $+1$ for positive scores and $-1$ otherwise; $w^Tx+b=0$ is the boundary.
 
 ::: callout-intuition Core Mental Model: The Stubborn Bouncer
 A bouncer judges entrants by a weighted checklist (height × w₁ + shoes × w₂ ≥ threshold?). Each mistake stings into an instant rule tweak: wrongly admitted → lower the weights of their traits; wrongly rejected → raise them. No patience, no averaging — pure mistake-driven learning. The **perceptron** is this bouncer in mathematics: predict $\text{sign}(w^Tx + b)$, and on every error add (or subtract) the offender's features once. Repeat until the club admits exactly the right crowd — *if* any single straight rope-line can separate them.
 :::
 
----
-
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Method, Model and Training (Formal Theory)
 
-### 2.1 Model and Update
+Canonical order: problem (straight separation) → data (labelled sides) → goal (no mistakes if separable) → method (mistake repairs) → model ($\text{sign}(w^Tx+b)$) → training (perceptron loop) → example → limitations.
 
-Predict $\hat{y} = \text{sign}(w^Tx + b)$ for $y \in \{+1,-1\}$. On mistake ($y(w^Tx+b) \le 0$):
+### 3.1 Model and Update, Step by Step
+
+On mistake ($y(w^Tx+b)\le 0$):
 
 $$w \leftarrow w + \eta\, y\, x, \qquad b \leftarrow b + \eta\, y$$
 
-($\eta = 1$ standard — scaling just rescales the boundary.) Correct predictions change nothing: the perceptron learns *only* from errors, in $O(d)$ per step.
+Here $\eta=1$ is standard; scaling just rescales the boundary. Correct predictions change nothing. Cost $O(d)$ per step, where $d$ is dimension.
 
-### 2.2 Convergence Theorem (Novikoff/Block)
+Numbered loop:
 
-If the data are **linearly separable** with margin $\gamma$ (some unit vector separates all points by $\ge \gamma$) inside radius $R$, the perceptron makes at most $(R/\gamma)^2$ mistakes, then stops forever — finite errors *regardless* of presentation order. Big margin ⇒ fast peace; tiny margin ⇒ long war. No separability ⇒ no promise (it cycles eternally — always cap epochs in practice).
+1. Initialise $w=0$, $b=0$.
+2. Cycle through points in fixed order.
+3. On mistake, add $yx$ to $w$ and $y$ to $b$.
+4. Repeat epochs until one clean pass or a cap is hit.
 
-### 2.3 The XOR Wall (Minsky & Papert, 1969)
+### 3.2 Convergence Theorem, With Correct Qualifications
 
-No single line separates $\{(0,0){-}, (1,1){-}\}$ from $\{(0,1){+}, (1,0){+}\}$ — XOR needs a *bend*. One perceptron layer is provably limited to linearly separable concepts (conjunctions, disjunctions, majorities — but not parity/XOR). This single limitation froze neural research for a decade, until hidden layers (next topic) learned the bend themselves.
+If data are linearly separable with margin $\gamma$ (some unit vector separates all points by at least $\gamma$) inside radius $R$ (all $\|x_i\|\le R$), the perceptron makes at most $(R/\gamma)^2$ mistakes, then stops forever. Big margin means fast peace; tiny margin means long war. Corrected qualification: the bound counts mistakes, not epochs; it assumes separability, bounded data, and unit-norm witness; presentation order affects the constant path but not finiteness. Without separability there is no promise: it can cycle forever, so always cap epochs in practice.
+
+### 3.3 The XOR Wall
+
+No single line separates $\{(0,0)-,(1,1)-\}$ from $\{(0,1)+,(1,0)+\}$. XOR needs a bend. One layer handles conjunctions, disjunctions, majorities, but not parity or XOR. This limitation paused neural research until hidden layers learned bends.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Separable vs inseparable runs | Finite mistakes with $(R/\gamma)^2$ ceiling vs possible eternal cycling; cap epochs |
+| Large vs tiny $\gamma$ | Few mistakes vs vacuous-but-valid huge bound |
+| Perceptron vs logistic boundary | Hard mistake repairs vs soft $(p-y)$ steps; same linear expressiveness |
 
 ::: callout-formula KTU Formula Vault: Perceptron Facts
-Predict **sign(w·x+b)** · mistake update **$w += yx$** · separable ⇒ **≤ (R/γ)² mistakes then silence** · XOR-class concepts **impossible** single-layer · fix = **hidden layers** (next topic) or **kernels** (topic 4).
+Predict **sign(w·x+b)** · mistake update **$w += yx$** · separable with margin $\gamma$ in radius $R$ ⇒ **≤ (R/γ)² mistakes then silence** · XOR-class concepts **impossible** single-layer · fix = **hidden layers** (next topic) or **kernels** (topic 4).
 :::
 
 ::: callout-pitfall Convergence Needs Separability (and Says Nothing About Speed Otherwise)
 The theorem's fine print *is* the theorem: inseparable data ⇒ infinite cycling, and separable-but-tight data ⇒ astronomically many mistakes before peace. "Perceptron always converges" without the separability qualifier is the classic half-truth — always state the condition first.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. KTU Worked Example Step by Step
 
 ::: step [Step 1: Setup] Formulating the Problem
 Points $A(2,2){+}$, $B(3,3){+}$, $C(0,1){-}$, $D(1,0){-}$ (separable: $x_1 = 2$ splits them). Run the perceptron ($\eta=1$, order A,B,C,D cycling) from zeros.
@@ -82,10 +119,22 @@ Final $w=[1,0], b=-2$: boundary $x_1 = 2$ — exactly the human-obvious split, *
 Watch the rope-line settle at x₁ = 2 through four mistakes and a clean final pass — finite errors, guaranteed, with the XOR wall waiting next door.
 :::
 
----
+<a id="watch-out-recap"></a>
+## 5. Watch Out, Limitations and Exam Recap
+
+Common mistakes and confusions:
+
+- Quoting convergence without separability. Always state margin and radius conditions first.
+- Reading the bound as a prediction. It is a worst-case ceiling; actual mistakes are often far fewer.
+- Expecting speed on tight margins. $(R/\gamma)^2$ explodes as $\gamma$ shrinks.
+- Trying XOR on one layer. Needs hidden layer or kernel lifting.
+
+Limitations: linear only, no probabilities, order affects path, no fix for inseparable except caps and extensions (voted or averaged perceptron, Support Vector Machines (SVMs)).
+
+Exam recap: predict sign; update $w+=yx$ on mistakes; separable gives $(R/\gamma)^2$ mistakes; XOR impossible single-layer; hidden layers or kernels fix.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz The perceptron update fires only on mistakes (w += yx). Why is "learn only from errors" viable instead of wasteful?
 () It isn't viable — all practical algorithms update on every example

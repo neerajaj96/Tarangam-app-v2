@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,45 +249,109 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Probability for ML: MLE &amp; MAP Estimation</h1>
-<p><strong>Likelihood vs. probability, maximum likelihood (sample mean/variance derivations), priors and MAP, and regularization as a prior in disguise.</strong></p>
+<p><strong>What problem estimation solves when data are random, what data Maximum Likelihood Estimation (MLE) and Maximum A Posteriori (MAP) need, and how Regularisation with LASSO and RIDGE expresses prior beliefs.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Biased Coin Trial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Someone hands you a coin; 100 flips show 63 heads. <strong>Likelihood</strong> asks: <em>for each candidate bias θ, how probable was this exact evidence?</em> — then <strong>MLE</strong> picks the θ maximizing it (here, $\hat{\theta} = 0.63$). <strong>MAP</strong> adds a prior belief (&quot;coins are usually fair-ish&quot;) and maximizes <em>posterior</em> ∝ likelihood × prior — dragging the estimate toward fairness when evidence is thin, and yielding to evidence when it&#39;s overwhelming. MLE trusts only data; MAP negotiates between data and belief.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Likelihood (Not Probability!)</h3>
-<p>For i.i.d. data $D = {x_i}$ and parameters $\theta$: <strong>likelihood</strong> $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$ — a function <em>of θ</em>, data fixed. Work with <strong>log-likelihood</strong> $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$ (products → sums; maxima coincide since log is monotone).</p>
-<h3>2.2 MLE: Two Canonical Derivations</h3>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Someone hands you a coin. You flip it 10 times and see 7 heads. What is its bias? With only 10 flips you are unsure. With 1,000 flips showing 630 heads you are confident near 0.63. The problem is: turn observed data into a parameter estimate, and say how prior belief should bend that estimate when data are scarce.</p>
+<p>Tiny beginner example. Three coin flips: heads, heads, tails. Candidate bias 0.5 gives probability $0.5 \times 0.5 \times 0.5 = 0.125$ for that exact sequence. Candidate bias 0.7 gives $0.7 \times 0.7 \times 0.3 = 0.147$. The second candidate makes the seen evidence more probable, so likelihood prefers 0.7 here. That comparison is all likelihood ever does.</p>
+<p>Analogy as support, then dropped. Think of a tug of war: data pull toward what was seen, prior anchors toward what was believed. From here on we use exact terms only: likelihood, log-likelihood, prior, posterior, MLE, MAP.</p>
+<p>Abbreviations defined on first use: Maximum Likelihood Estimation (MLE), Maximum A Posteriori (MAP). Symbols are defined before use in the next section.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $P(D \mid \theta)$?</td>
+<td>Probability of the fixed data given a candidate parameter; as a function of $\theta$ it is called likelihood</td>
+</tr>
+<tr>
+<td>What is $P(\theta \mid D)$?</td>
+<td>Posterior belief about $\theta$ after seeing data; needs a prior</td>
+</tr>
+<tr>
+<td>What is MLE vs MAP?</td>
+<td>Data-only peak vs. prior-penalised peak</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Estimate unknown parameters $\theta$ from random observations.</p>
+<p><strong>Data.</strong> Independent and Identically Distributed (i.i.d.) samples $D = {x_1, \dots, x_n}$. Here i.i.d. means each sample comes from the same distribution and does not influence the others. Example: $n=4$ sensor readings with known noise variance.</p>
+<p><strong>Goal.</strong> Pick $\hat{\theta}$ that best explains $D$. MLE explains with data alone. MAP explains with data times prior belief.</p>
+<p>Symbols, each defined before use:</p>
 <ul>
-<li><strong>Gaussian mean</strong> ($\sigma^2$ known): $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$; $\frac{d\ell}{d\mu} = 0 \Rightarrow \hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$ — the sample mean, derived, not assumed.</li>
-<li><strong>Gaussian variance</strong> (μ known): $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (x_i - \mu)^2$ — note the $n$ (biased; Bessel&#39;s $n-1$ corrects it — MLE doesn&#39;t care about unbiasedness, only likelihood).</li>
-<li><strong>Bernoulli/coin:</strong> $\hat{\theta} = k/n$ (heads fraction).</li>
+<li>$\theta$ is the unknown parameter (coin bias, Gaussian mean).</li>
+<li>$L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$ is the likelihood, data fixed, $\theta$ varied.</li>
+<li>$\ell(\theta) = \sum_i \log P(x_i \mid \theta)$ is the log-likelihood. Logarithm (log) is strictly increasing, so maximising $\ell$ gives the same peak as maximising $L$, with sums instead of products.</li>
+<li>$P(\theta)$ is the prior, belief before data.</li>
+<li>$P(\theta \mid D) \propto P(D \mid \theta) P(\theta)$ is the posterior by Bayes&#39; rule.</li>
 </ul>
-<h3>2.3 MAP: Prior × Likelihood, Then Maximize</h3>
-<p>Bayes: $P(\theta \mid D) \propto P(D \mid \theta),P(\theta)$. <strong>MAP</strong> $\hat{\theta} = \arg\max_\theta [\ell(\theta) + \log P(\theta)]$ — the log-prior is a <em>penalty pulling toward belief</em>. Gaussian prior $\mu \sim \mathcal{N}(\mu_0, \tau^2)$ on a Gaussian mean gives closed-form shrinkage:</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Biased Coin Trial</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Someone hands you a coin; 100 flips show 63 heads. <strong>Likelihood</strong> asks: <em>for each candidate bias θ, how probable was this exact evidence?</em> — then <strong>MLE</strong> picks the θ maximizing it (here, $\hat{\theta} = 0.63$). <strong>MAP</strong> adds a prior belief (&quot;coins are usually fair-ish&quot;) and maximizes <em>posterior</em> ∝ likelihood × prior — dragging the estimate toward fairness when evidence is thin, and yielding to evidence when it&#39;s overwhelming. MLE trusts only data; MAP negotiates between data and belief.</p>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (estimate $\theta$) → data (i.i.d. $D$) → goal (explain $D$, with or without prior) → method (maximise likelihood or posterior) → mathematical model (Gaussian or Bernoulli) → training procedure (differentiate and solve) → example → limitations.</p>
+<h3>3.1 Likelihood, Not Probability</h3>
+<p>For i.i.d. data $D = {x_i}$ and parameters $\theta$: <strong>likelihood</strong> $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$, a function of $\theta$ with data fixed. Work with <strong>log-likelihood</strong> $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$. Products become sums; maxima coincide since log is monotone. This also avoids numerical underflow from multiplying many small probabilities.</p>
+<h3>3.2 MLE: Two Canonical Derivations</h3>
+<ul>
+<li><strong>Gaussian mean</strong> with known variance $\sigma^2$: $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$. Here $C$ collects constants not depending on $\mu$. Setting $\frac{d\ell}{d\mu} = 0$ gives $\hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$, the sample mean, derived not assumed. Here $\bar{x}$ means the arithmetic average.</li>
+<li><strong>Gaussian variance</strong> with known mean $\mu$: $\hat{\sigma}^2_{MLE} = \frac{1}{n}\sum (x_i - \mu)^2$. Note the $n$ denominator. It is biased; dividing by $n-1$ (Bessel&#39;s correction) removes the bias, but MLE maximises likelihood, it never promised unbiasedness.</li>
+<li><strong>Bernoulli coin:</strong> $\hat{\theta} = k/n$, the heads fraction, where $k$ counts heads in $n$ flips.</li>
+</ul>
+<h3>3.3 MAP: Prior Times Likelihood, Then Maximise</h3>
+<p>Bayes&#39; rule: $P(\theta \mid D) \propto P(D \mid \theta),P(\theta)$. MAP is $\hat{\theta} = \arg\max_\theta [\ell(\theta) + \log P(\theta)]$. The log-prior is a penalty pulling toward belief. Gaussian prior $\mu \sim \mathcal{N}(\mu_0, \tau^2)$ on a Gaussian mean gives closed-form shrinkage:</p>
 <p>$$\hat{\mu}_{MAP} = \frac{\frac{n\bar{x}}{\sigma^2} + \frac{\mu_0}{\tau^2}}{\frac{n}{\sigma^2} + \frac{1}{\tau^2}}$$</p>
-<p>— a precision-weighted average of data-mean and prior-mean. As $n \to \infty$, data dominates (MAP → MLE); at $n \approx 0$, prior rules. <strong>Regularization preview:</strong> L2-penalized regression <em>is</em> MAP with a Gaussian prior; L1 <em>is</em> MAP with a Laplace prior — Module 2+ penalties are beliefs in mathematical dress.</p>
+<p>Symbol by symbol: $n\bar{x}/\sigma^2$ is data precision times data mean; $\mu_0/\tau^2$ is prior precision times prior mean; the denominator is total precision. It is a precision-weighted average. As $n \to \infty$, data dominates and MAP approaches MLE; near $n \approx 0$, the prior rules.</p>
+<p><strong>Regularisation preview, strengthened.</strong> Least Absolute Shrinkage and Selection Operator (LASSO) with penalty $\lambda\sum |w_j|$ is MAP with a Laplace prior, whose sharp peak at zero expects sparsity and produces exact zeros. RIDGE with penalty $\lambda\sum w_j^2$ is MAP with a Gaussian prior, whose smooth dome expects small but nonzero weights and shrinks without zeroing. Choosing LASSO versus RIDGE states a prior over solutions. A full metrics and regularisation drill continues in the dedicated follow-up topic; here the correspondence is the conceptual anchor.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Likelihood vs. posterior</td>
+<td>$P(D\mid\theta)$ with data fixed vs. $P(\theta\mid D)$ needing a prior</td>
+</tr>
+<tr>
+<td>MLE vs. MAP</td>
+<td>Data-only peak vs. prior-penalised peak; they coincide as $n \to \infty$</td>
+</tr>
+<tr>
+<td>LASSO vs. RIDGE</td>
+<td>Laplace prior giving sparsity vs. Gaussian prior giving shrinkage</td>
+</tr>
+<tr>
+<td>Unbiased ($n-1$) vs. MLE ($n$)</td>
+<td>Fairness correction vs. likelihood peak; different questions</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Estimation Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MLE $= \arg\max \prod P(x_i|\theta)$ (use <strong>log</strong>, monotone) · Gaussian mean MLE $= \bar{x}$ · variance MLE $= \frac{1}{n}\sum(x_i-\mu)^2$ (<strong>biased</strong>) · MAP $= \arg\max[\ell + \log\text{prior}]$ · Gaussian–Gaussian MAP $=$ <strong>precision-weighted average</strong> · L2 $\equiv$ Gaussian prior, L1 $\equiv$ Laplace prior.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Likelihood Is P(data | θ), Never P(θ | data)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$L(\theta)$ plugs <em>varying θ</em> into a function of <em>fixed data</em> — it is not a distribution over θ (doesn&#39;t integrate to 1, needs no prior). Reading &quot;the probability that θ is true&quot; mistakes likelihood for posterior — the confusion Bayes&#39; theorem exists to resolve, via the prior you&#39;re forgetting.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Sensor readings average $\bar{x} = 5.0$ over $n = 4$ samples, known noise $\sigma^2 = 4$. Prior belief: true value near $\mu_0 = 0$ with $\tau^2 = 1$. Compute the MLE and the MAP estimate. (Arithmetic verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Estimating Both Ways</div><div class="step-content"><p><strong>MLE:</strong> $\hat{\mu} = \bar{x} = 5.0$ — data only, no negotiation.
 <strong>MAP:</strong> precisions $n/\sigma^2 = 1$, $1/\tau^2 = 1$ — dead tie, so the answer splits the difference: $\hat{\mu}_{MAP} = \frac{1 \times 5.0 + 1 \times 0}{1 + 1} = \mathbf{2.5}$. The strong prior ($\tau^2 = 1$ vs data precision $1$) drags the estimate halfway home.</p>
@@ -308,10 +380,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Data Pulls to 5, Prior Anchors 0</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the dead-tie precisions split the difference at 2.5 — then n = 400 drag the marker to 4.95, almost home to MLE.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Maximising raw likelihood by multiplying tiny probabilities until numbers underflow. Always take logs first.</li>
+<li>Calling the variance MLE unbiased. It divides by $n$; unbiasedness needs $n-1$ and answers a different question.</li>
+<li>Claiming LASSO always beats RIDGE. Laplace expects sparsity; Gaussian expects dense small weights. Match penalty to belief.</li>
+<li>Treating MAP as always different from MLE. With large $n$, data precision swamps prior precision and they agree.</li>
+</ul>
+<p>Limitations: MLE needs a correct likelihood family and enough data; MAP needs an honest prior. Neither fixes model misspecification.</p>
+<p>Exam recap: log preserves argmax; Gaussian mean MLE is $\bar{x}$; variance MLE uses $n$ and is biased; MAP is precision-weighted average; LASSO is Laplace, RIDGE is Gaussian; MAP approaches MLE as $n$ grows.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why do we maximize log-likelihood instead of raw likelihood, and what justifies the swap?</span>
@@ -496,7 +579,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m1_02_probability_mle_map_estimation";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

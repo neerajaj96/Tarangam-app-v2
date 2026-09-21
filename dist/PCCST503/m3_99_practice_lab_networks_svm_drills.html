@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -253,16 +261,17 @@
   </div>
 </div>
 <h1>Module 3 Practice Lab: Networks &amp; SVM Drills</h1>
-<p><strong>Mistake-counting races, gradient verification, margin comparisons, kernel/C decisions, and exam essay models.</strong></p>
+<p><strong>How to use this lab as a beginner: count mistakes against bounds, prove gradients with finite differences, shop separators by norm, and prescribe kernels from geometry plus noise.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Beginner protocol: problem first, then data and goal, then method. Bounds certify, they never predict typical runs.</p>
 <h3>Scenario 1: Perceptron Mistake Audit</h3>
-<p>Dataset from M3 (separable, boundary $x_1 = 2$ found): the verified trace made exactly <strong>4 mistakes</strong> (C once, then A/C/D) before eternal silence. Now bound it: points inside radius $R = \sqrt{18} \approx 4.24$ (farthest $(3,3)$). A witness separator $x_1 = 1.5$ (unit normal) clears $A$ by $0.5$, $D$ by $0.5$, the rest by more — so max-margin $\gamma^* \ge 0.5$ and $(R/\gamma)^2 \lesssim (4.24/0.5)^2 \approx 72$ mistakes. Actual: 4. The bound is <em>valid</em> (4 ≤ 72) and <em>loose</em> (typical) — guarantees certify finiteness, never efficiency. Report both numbers and their relationship, never just one.</p>
+<p>Dataset from M3 (separable, boundary $x_1 = 2$ found): the verified trace made exactly <strong>4 mistakes</strong> (C once, then A/C/D) before eternal silence. Now bound it: points inside radius $R = \sqrt{18} \approx 4.24$ (farthest $(3,3)$). A witness separator $x_1 = 1.5$ (unit normal) clears $A$ by $0.5$, $D$ by $0.5$, the rest by more — so max-margin $\gamma^* \ge 0.5$ and $(R/\gamma)^2 \lesssim (4.24/0.5)^2 \approx 72$ mistakes. Actual: 4. The bound is <em>valid</em> (4 ≤ 72) and <em>loose</em> (typical) — guarantees certify finiteness under separability, never efficiency. Report both numbers and their relationship, never just one.</p>
 <h3>Scenario 2: Gradient Verification Ritual</h3>
 <p>Before trusting any backprop implementation, run the ritual from M3: analytic $[-0.0503, -0.0891, -0.0153, -0.0077, +0.0046, -0.0153]$ vs. finite differences — agreement to 5 decimals <em>is</em> the implementation&#39;s certificate. Drill: a teammate&#39;s $\partial L/\partial w_2$ disagrees in sign. Debug order: (1) loss definition (½ factor? sign of $(o-y)$?); (2) activation derivative ($\sigma&#39;$ vs. forgotten derivative — linear passthrough bug); (3) stale forward values (backward run on <em>updated</em> weights — recompute forward first). Nine of ten gradient bugs live in these three; the tenth is a transposed matrix.</p>
 <h3>Scenario 3: Margin Shopping (P vs. Q, Decided)</h3>
-<p>Separators P ($\lVert w\rVert = 0.5$) and Q ($\lVert w\rVert = 4$), identical training accuracy. Corridor widths: P $2/0.5 = 4.0$, Q $2/4 = 0.5$. P tolerates $8\times$ the test-time wobble — <em>and</em> P&#39;s weights likely came from stronger regularization (smaller norm = wider corridor = the same object). Shop by $\lVert w\rVert$ ascending among zero-training-error candidates: minimum norm <em>is</em> maximum margin <em>is</em> the generalization bet, three names for one number.</p>
+<p>Separators P ($\lVert w\rVert = 0.5$) and Q ($\lVert w\rVert = 4$), identical training accuracy. Corridor widths: P $2/0.5 = 4.0$, Q $2/4 = 0.5$. P tolerates $8\times$ the test-time wobble — <em>and</em> P&#39;s weights likely came from stronger regularization (smaller norm = wider corridor = the same object). Shop by $\lVert w\rVert$ ascending among zero-training-error candidates: minimum norm <em>is</em> maximum margin <em>is</em> the generalization bet, three names for one number. Qualification: this bets on robustness under separability; on noisy data add soft margins and validate.</p>
 <h3>Scenario 4: Kernel &amp; C Prescription Desk</h3>
 <p>Three patients: (a) 2D moons intertwined → <strong>RBF</strong>, $\gamma$ validated (polynomial of any sane degree wastes capacity on global structure; locality matches the curls). (b) 10k-dimensional sparse text, linearly separable → <strong>linear kernel</strong> (lifting adds nothing; RBF memorizes expensively). (c) Sensor data, 5% mislabeled → <strong>soft margin, small C</strong> first (fit the 95%, forgive the poison — hard margin or huge $C$ frame the lies in support-vector gold). Prescription = data geometry + noise regime, never brand loyalty.</p>
 <hr>
@@ -544,7 +553,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m3_99_practice_lab_networks_svm_drills";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

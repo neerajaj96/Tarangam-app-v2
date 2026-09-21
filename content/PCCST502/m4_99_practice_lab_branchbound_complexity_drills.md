@@ -5,7 +5,7 @@ module: 4
 sequence: 99
 title: 'Module 4 Practice Lab: Branch & Bound and Complexity Drills'
 difficulty: intermediate
-estimatedMinutes: 8
+estimatedMinutes: 11
 learningObjectives:
   - Race bounds on one TSP matrix with three timings
   - Autopsy reductions with one verdict each exactly
@@ -30,7 +30,15 @@ tags:
 **Bound races, reduction-direction autopsies, FFD packing traces, amplification arithmetic, and exam essay models.**
 
 <a id="the-intuition"></a>
-## 1. Step-by-Step Scenario Analysis
+## 1. Start from zero — how to use this lab
+
+**Problem first.** Module 4's exam marks go to bound races on one matrix (incumbent quality = search cost), reduction autopsies with exact verdicts (arrow direction decides), FFD traces with matching floors, and amplification arithmetic (exponential confidence, linear cost). Abbreviations: B&B = branch & bound; NPC = NP-complete; FFD = First-Fit Decreasing; $k$ = Miller–Rabin rounds.
+
+::: callout-intuition Core Mental Model
+Every scenario is a marking scheme: state the setup with numbers, show each decision (branch, prune, pack, amplify) with its certificate (bound ≥ incumbent, arrow direction, floor match, $\epsilon^k$), then conclude with what is proven versus what stays open. The four scenarios below model exactly that discipline.
+:::
+
+**Tiny warm-up.** Bound 40 vs incumbent 39: prune (nothing beats 39). Reduction "X → 3-SAT proves X NPC": wrong arrow, half-proof. FFD into a matching floor: optimal, certified. Miller–Rabin $k=2$: error $\le 4^{-2} = 1/16$.
 
 ### Scenario 1: The Bound Race (TSP, Same Matrix, Three Timings)
 
@@ -46,7 +54,7 @@ Items $[7, 6, 5, 4, 4, 3, 2, 2]$ (already descending — sorting free this once)
 
 ### Scenario 4: Amplification Checkout
 
-Miller–Rabin with $k$ rounds: error $\le 4^{-k}$ per composite. $k = 1$: 25% doubt (toy only). $k = 5$: $\le 1/1024$ (better than hardware glitch rates). $k = 10$: $\le 1/1{,}048{,}576 \approx 10^{-6}$ (production-grade). $k = 40$ (crypto libraries): $\le 2^{-80}$ — fewer failure odds than cosmic-ray bit flips during the computation itself. Each round *multiplies* confidence; cost grows only linearly in $k$.
+Miller–Rabin with $k$ rounds: error $\le 4^{-k}$ per composite (stated textbook bound for the algorithm's compositeness error). $k = 1$: 25% doubt (toy only). $k = 5$: $\le 1/1024$ (better than many quoted hardware glitch rates — an illustration, not a measurement). $k = 10$: $\le 1/1{,}048{,}576 \approx 10^{-6}$ (production-grade). $k = 40$ (crypto libraries): $\le 2^{-80}$ — for exam purposes treated as negligible, while remaining strictly non-zero. Each round *multiplies* confidence; cost grows only linearly in $k$.
 
 ---
 
@@ -100,11 +108,11 @@ $4 \le OPT \le 5$: the sandwich certifies near-optimality (ship it, usually) but
 
 ::: quiz Miller–Rabin with k=10 rounds reports "prime" with error ≤ 10⁻⁶, yet the team wants cryptographic certainty. What does "cryptographic certainty" mean here, and what buys it?
 () It means zero error, achievable by running deterministically instead
-(*) It means error below physical noise floors (k=40: ≤2⁻⁸⁰, rarer than hardware faults during the test itself) — bought with linear extra rounds, since error decays exponentially in k
+(*) It means error small enough to treat as negligible for exam and engineering purposes (k=40: ≤2⁻⁸⁰, strictly non-zero) — bought with linear extra rounds, since error decays exponentially in k
 () It means switching to trial division for all inputs
 () More rounds cannot reduce error below 10⁻⁶ by mathematical law
 ::: explanation
-"Certainty" in crypto = error dwarfed by physics (cosmic rays, hardware glitches ~2⁻⁵⁰-ish per operation scale). Exponential decay makes k=40 cost 4× k=10 while dividing doubt by $4^{30}$ — certainty is *purchased*, linearly priced, and the budget math is the whole argument.
+"Certainty" in this context means error dwarfed into negligibility — exponential decay makes k=40 cost 4× k=10 while dividing doubt by $4^{30}$. Certainty is *purchased*, linearly priced — but strictly speaking the error never hits zero, so "negligible" (not "impossible") is the correct claim.
 :::
 
 ---

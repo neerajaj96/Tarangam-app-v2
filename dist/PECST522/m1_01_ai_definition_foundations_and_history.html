@@ -269,95 +269,99 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
-    <a href="#modern-engineering" class="jump-pill">⚙️ Modern View</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Introduction to AI: Foundations &amp; History</h1>
-<p><strong>The Turing Test, definitions of AI (Thinking/Acting Humanly/Rationally), Dartmouth workshop, and historical AI cycles.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-what-is-artificial-intelligence">1. What is Artificial Intelligence?</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-4-approaches-to-ai-the-dimensions-matrix">2. The 4 Approaches to AI (The Dim… →</a></p>
-<p>Artificial Intelligence (AI) is the branch of computer science dedicated to creating systems capable of performing tasks that typically require human intelligence. At its core, it is the engineering of systems that can autonomously observe their surroundings, make reasoned decisions, and take actions to maximize their chances of success.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Thermostat vs. The Self-Driving Car</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of intelligence as a continuous loop of <strong>Perception $\rightarrow$ Reasoning $\rightarrow$ Action</strong>.</p>
-<p>A basic room thermostat has perception (it measures temperature) and action (it turns on the AC). However, it lacks <em>reasoning</em>; it just follows a hardcoded <code>IF temperature &gt; 24 THEN AC = ON</code> rule. It is automated, but not intelligent.</p>
-<p>A self-driving car, however, takes in millions of camera pixels and LiDAR pulses (perception), calculates the probabilistic intent of a pedestrian crossing the road (reasoning), and smoothly applies the brakes (action). It handles uncertainty and novel situations without explicit line-by-line instructions.</p>
-</div></details><h3>The Agent-Environment Cycle</h3>
-<p>The fundamental architecture of an AI system is the <strong>Agent-Environment Interaction Loop</strong>:</p>
-<pre><code class="language-text">       +------------------------------------------------------+
-       |                    ENVIRONMENT                       |
-       +------------------------------------------------------+
-             |                                          ^
-     Percepts|                                    Action|
-             v                                          |
-       +-----------+                              +-----------+
-       |  SENSORS  |                              | ACTUATORS |
-       +-----------+                              +-----------+
-             |                                          ^
-             v                                          |
-       +------------------------------------------------+
-       |                  AGENT CORE                    |
-       |  (Perception -&gt; State Reasoning -&gt; Decision)   |
-       +------------------------------------------------+
+<p><strong>Problem: how do we build machines that perceive, reason, and act — and how do we even define &quot;intelligence&quot; precisely enough to engineer it? By the end you can place any AI system in the 2x2 definition matrix and trace the history line from Dartmouth to modern AI.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-what-problem-does-ai-solve">1. Start From Zero: What Problem Does AI Solve?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-building-blocks-the-four-definitions">2. Basic Building Blocks: The Four… →</a></p>
+<p>Imagine two machines. A room thermostat measures temperature and flips the air conditioner on. A self-driving car watches video, predicts what a pedestrian will do, and brakes smoothly. Both sense and act — but only the second handles <strong>uncertainty and novelty</strong> without line-by-line instructions. That gap is the problem Artificial Intelligence (AI) exists to close.</p>
+<p><strong>Definition for beginners:</strong> Artificial Intelligence (AI) is the branch of computer science that builds systems which <strong>perceive</strong> their surroundings, <strong>reason</strong> under uncertainty, and <strong>act</strong> to achieve goals.</p>
+<p>The basic loop every AI system follows is:</p>
+<pre><code class="language-text">PERCEIVE (sensors) --&gt; REASON (decide) --&gt; ACT (actuators) --&gt; world changes --&gt; repeat
 </code></pre>
-<hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-the-4-approaches-to-ai-the-dimensions-matrix">2. The 4 Approaches to AI (The Dimensions Matrix)</h2>
-<p class="secnav"><a href="#1-what-is-artificial-intelligence">← 1. What is Artificial Intelligence…</a><span class="secnav-sep">·</span><a href="#3-the-foundations-of-ai">3. The Foundations of AI →</a></p>
-<p>Historically, AI pioneers defined artificial intelligence along two distinct axes:</p>
-<ol>
-<li><strong>Thought vs. Behavior:</strong> Is the AI supposed to <em>think</em> (process internal logical inferences) or <em>act</em> (produce observable external behavior)?</li>
-<li><strong>Humanly vs. Rationally:</strong> Should the AI mimic human flaws, cognitive psychology, and biases, or should it behave with mathematical rationality (doing the optimal thing according to a performance measure)?</li>
-</ol>
-<p>This gives us the standard <strong>Stuart Russell &amp; Peter Norvig 2x2 Matrix</strong>:</p>
-<pre><code class="language-text">+-------------------+-----------------------------------+-----------------------------------+
-|                   | Human-Centric                     | Rational-Centric                  |
-+-------------------+-----------------------------------+-----------------------------------+
-| Thought Processes | 1. Thinking Humanly               | 2. Thinking Rationally            |
-| (Internal)        | (Cognitive Modeling Approach)     | (&quot;Laws of Thought&quot; / Logic)      |
-+-------------------+-----------------------------------+-----------------------------------+
-| Behavior / Action | 3. Acting Humanly                 | 4. Acting Rationally              |
-| (External)        | (The Turing Test Approach)        | (The Rational Agent Approach)     |
-+-------------------+-----------------------------------+-----------------------------------+
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Thermostat vs. Self-Driving Car</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A thermostat follows one hard rule: <code>IF temperature &gt; 24 THEN AC = ON</code>. It has perception and action but almost no reasoning. A self-driving car fuses camera and Light Detection and Ranging (LiDAR — laser distance sensing) data, estimates pedestrian intent probabilistically, and brakes. Use this comparison only to feel the perception-reasoning-action loop; the technical definition is the loop itself, not the vehicles.</p>
+</div></details><p><strong>Tiny beginner example:</strong> a spam filter perceives words in an email, reasons about the probability of spam, and acts by moving the mail. No cognition is copied — the goal is the right action.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-building-blocks-the-four-definitions">2. Basic Building Blocks: The Four Definitions</h2>
+<p class="secnav"><a href="#1-start-from-zero-what-problem-does-ai-solve">← 1. Start From Zero: What Problem D…</a><span class="secnav-sep">·</span><a href="#3-formal-model-expected-utility-and-foundations">3. Formal Model: Expected Utility … →</a></p>
+<p><strong>Data/state here:</strong> the agent&#39;s percepts (sensor snapshots) and the environment it acts in. <strong>Goal:</strong> pick actions that score well on a performance measure.</p>
+<p>Pioneers split definitions along two axes: <strong>thought (internal reasoning) versus behavior (external action)</strong>, and <strong>human-like (copy people, flaws included) versus rational (do the mathematically best thing)</strong>. This gives the Stuart Russell and Peter Norvig 2x2 matrix:</p>
+<pre><code class="language-text">+-------------------+---------------------------+---------------------------+
+|                   | Human-Centric             | Rational-Centric          |
++-------------------+---------------------------+---------------------------+
+| Thought (inside)  | 1. Thinking Humanly       | 2. Thinking Rationally    |
+|                   | (cognitive modelling)     | (laws of thought / logic)|
++-------------------+---------------------------+---------------------------+
+| Action (outside)  | 3. Acting Humanly         | 4. Acting Rationally      |
+|                   | (Turing Test approach)    | (rational-agent approach)|
++-------------------+---------------------------+---------------------------+
 </code></pre>
-<h3>1. Acting Humanly (The Turing Test Approach)</h3>
 <ul>
-<li><strong>Core Philosophy:</strong> A machine is intelligent if its behavior cannot be distinguished from a human.</li>
-<li><strong>Benchmark:</strong> Alan Turing&#39;s 1950 <strong>Imitation Game</strong>. If a human interrogator communicates via text terminal with a computer and a human and cannot reliably tell which is which, the machine passes.</li>
-<li><strong>Key Components Required:</strong> Natural Language Processing (NLP), Knowledge Representation, Automated Reasoning, and Machine Learning (plus Computer Vision and Robotics for the <em>Total Turing Test</em>).</li>
+<li><strong>1. Acting Humanly:</strong> behaviour indistinguishable from a human. Benchmark: Alan Turing&#39;s 1950 <strong>Imitation Game (Turing Test)</strong> — a human interrogator chats by text with a hidden human and a machine; the machine passes if the interrogator cannot reliably tell which is which. Needs Natural Language Processing (NLP — computers handling human language), knowledge representation, reasoning, and learning (plus vision and robotics for the <em>Total</em> Turing Test).</li>
+<li><strong>2. Thinking Humanly:</strong> how humans actually think, studied via introspection, psychology experiments, and brain imaging. Founded cognitive science and inspired Artificial Neural Networks (ANNs — layered computational models loosely inspired by neurons).</li>
+<li><strong>3. Thinking Rationally:</strong> correct inference via formal logic. Example syllogism: &quot;Socrates is a man; all men are mortal; therefore Socrates is mortal.&quot; Limitation: real knowledge is uncertain and hard to encode without explosive computation.</li>
+<li><strong>4. Acting Rationally:</strong> choose the action with the best <strong>expected outcome</strong> given available information. Example: a navigation agent rerouting around traffic. <strong>Modern AI engineering is predominantly built on this rational-agent view</strong> — not because it copies humans, but because it optimizes a performance measure.</li>
 </ul>
-<h3>2. Thinking Humanly (The Cognitive Modeling Approach)</h3>
-<ul>
-<li><strong>Core Philosophy:</strong> To build machines that think like humans, we must first determine how the human brain actually functions.</li>
-<li><strong>Techniques:</strong> Introspection (catching our own thoughts as they go by), psychological experiments (observing a person in action), and brain imaging (fMRI/EEG).</li>
-<li><strong>Connection:</strong> Gave rise to <strong>Cognitive Science</strong> and biologically-inspired Artificial Neural Networks (ANNs).</li>
-</ul>
-<h3>3. Thinking Rationally (The &quot;Laws of Thought&quot; Approach)</h3>
-<ul>
-<li><strong>Core Philosophy:</strong> Codify right thinking through formal mathematical logic (syllogisms).</li>
-<li><strong>Example:</strong> &quot;Socrates is a man; all men are mortal; therefore, Socrates is mortal.&quot;</li>
-<li><strong>Obstacles:</strong> Not all real-world knowledge is 100% certain, and informal knowledge is difficult to translate into formal logical notation without exponential computational complexity.</li>
-</ul>
-<h3>4. Acting Rationally (The Rational Agent Approach)</h3>
-<ul>
-<li><strong>Core Philosophy:</strong> An agent acts rationally if it takes the action expected to yield the best outcome (or highest expected utility) given what it knows.</li>
-<li><strong>Real-world Example:</strong> DeepMind&#39;s AlphaGo or modern autonomous drone navigation. They do not simulate human mistakes; they compute the mathematically optimal move. <strong>Modern AI engineering is predominantly based on this Rational Agent framework.</strong></li>
-</ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Rationality vs. Omniscience</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A classic exam trap is confusing a <strong>Rational Agent</strong> with an <strong>Omniscient Agent</strong>. </p>
-<ul>
-<li><strong>Omniscience</strong> means knowing the actual outcome of all actions in advance (impossible in the real world).</li>
-<li><strong>Rationality</strong> means making the <em>best possible decision</em> based on the <em>percept history and available information</em> to maximize expected performance.</li>
-</ul>
-</div></details><div class="quiz-widget">
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Rationality vs. Omniscience</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Rational</strong> means best decision given available information. <strong>Omniscient</strong> means knowing actual future outcomes in advance (impossible). Examiners love this trap: a rational car that stops at a red light is still rational even if another driver rear-ends it.</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-model-expected-utility-and-foundations">3. Formal Model: Expected Utility and Foundations</h2>
+<p class="secnav"><a href="#2-basic-building-blocks-the-four-definitions">← 2. Basic Building Blocks: The Four…</a><span class="secnav-sep">·</span><a href="#4-worked-example-history-line-weak-vs-strong-limitations">4. Worked Example: History Line, W… →</a></p>
+<p><strong>Method:</strong> the rational agent selects actions maximizing Expected Utility (EU). <strong>Mathematical model:</strong> let <code>a</code> be an action, <code>o</code> a possible outcome, <code>P(o | a)</code> (probability of outcome <code>o</code> given action <code>a</code>), and <code>U(o)</code> (numeric utility, i.e. desirability score, of <code>o</code>):</p>
+<p>$$EU(a) = \sum_{o} P(o \mid a) \cdot U(o)$$</p>
+<p>Symbol by symbol: <code>EU(a)</code> is the score of action <code>a</code>; the sum ranges over all outcomes; each term multiplies likelihood by desirability. The agent picks the <code>a</code> with the largest <code>EU(a)</code>.</p>
+<p><strong>Foundations (each parent discipline defined):</strong> Philosophy (logic, mind, knowledge as justified true belief); Mathematics (Boolean algebra, computability, Bayes&#39; rule for updating probabilities, optimization); Economics (Decision Theory combining probability with utility; Game Theory — Von Neumann and Morgenstern — for multi-agent competition); Neuroscience (how biological neurons fire; inspiration for ANNs); Psychology (cognitive psychology treats the brain as an information processor); Computer Engineering (Central Processing Units (CPUs), Graphics Processing Units (GPUs), Tensor Processing Units (TPUs) that make training feasible); Control Theory and Cybernetics (feedback loops minimizing error); Linguistics (Noam Chomsky&#39;s syntax theory; basis of NLP).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Expected Utility: Symbol Guide</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>a</code> = candidate action. <code>o</code> = one possible outcome. <code>P(o | a)</code> = probability of <code>o</code> if <code>a</code> is taken. <code>U(o)</code> = reward of <code>o</code>. Multiply, sum, maximize. Tiny numbers: rain likely (0.8, utility of carrying umbrella +5) vs. unlikely (0.2): EU(carry) = 0.8<em>5 + 0.2</em>(-1) = 3.8; EU(skip) lower, so carry wins.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-history-line-weak-vs-strong-limitations">4. Worked Example: History Line, Weak vs. Strong, Limitations</h2>
+<p class="secnav"><a href="#3-formal-model-expected-utility-and-foundations">← 3. Formal Model: Expected Utility …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Training/search procedure for this topic:</strong> none to run — the procedure is classification: place each system in the matrix, then on the timeline.</p>
+<pre><code class="language-text">1943 McCulloch-Pitts neuron | 1950 Turing Test | 1956 Dartmouth workshop (John McCarthy coins &quot;Artificial Intelligence&quot;)
+1969 Perceptron limits | 1974-80 FIRST AI WINTER (Lighthill report, funding cuts)
+1980s Expert systems boom | 1987-93 SECOND AI WINTER (Lisp-machine collapse, brittle rules)
+1997 Deep Blue beats Kasparov | 2012 AlexNet wins ImageNet on GPUs
+2017 Transformer (&quot;Attention Is All You Need&quot;) | 2020s generative/foundation models
+</code></pre>
+<p><strong>Why winters happened:</strong> hype promised more than hardware and algorithms could deliver (combinatorial explosion, little data/compute); sponsors cut funding. Lesson: progress claims must be qualified by compute and data assumptions.</p>
+<p><strong>Weak (Narrow) AI versus Strong AI (Artificial General Intelligence — AGI):</strong> Narrow AI does one task well (spam filters, game players, vision stacks) and fails outside it — <strong>all deployed systems today are Narrow AI</strong>. AGI (general human-level ability across domains) is theoretical; no deployed system qualifies.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Thinking Rationally vs. Acting Rationally</td>
+<td>Sound internal logic vs. best external action under uncertainty</td>
+</tr>
+<tr>
+<td>Rational vs. Omniscient</td>
+<td>Best expected call vs. knowing the actual future</td>
+</tr>
+<tr>
+<td>Weak vs. Strong AI</td>
+<td>One-task specialist (real) vs. general mind (theoretical)</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Turing Test measures human-likeness, not rationality. (2) Logic alone cannot handle uncertainty. (3) History dates are evidence, not decoration — cite Dartmouth 1956 and both winters by cause.</p>
+<p><strong>Limitations:</strong> definitions do not tell you how to build anything; the rational-agent view still needs a task specification (Module 1.2&#39;s PEAS), a performance measure, and tractable algorithms.</p>
+<p><a id="self-check"></a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-history-line-weak-vs-strong-limitations">← 4. Worked Example: History Line, W…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
+<div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Which approach to AI focuses on maximizing expected performance measure rather than mimicking human flaws?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -379,82 +383,10 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Acting Rationally focuses on doing the right thing to achieve the best expected outcome based on objective performance metrics, regardless of human cognitive biases.</p><pre><code>&lt;/div&gt;
+      <p>Acting Rationally picks the action with the best expected outcome on an objective performance measure, ignoring whether humans would decide that way.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="foundations"></a></p>
-<h2 id="3-the-foundations-of-ai">3. The Foundations of AI</h2>
-<p class="secnav"><a href="#2-the-4-approaches-to-ai-the-dimensions-matrix">← 2. The 4 Approaches to AI (The Dim…</a><span class="secnav-sep">·</span><a href="#4-history-of-ai-breakthroughs-winters-modern-eras">4. History of AI: Breakthroughs, W… →</a></p>
-<p>AI is the interdisciplinary synthesis of several classical fields:</p>
-<ul>
-<li><p><strong>Philosophy (428 BC – Present):</strong></p>
-<ul>
-<li>Established the foundations of formal logic, dualism vs. materialism, and the philosophy of mind.</li>
-<li>Formulated knowledge as justified true belief and the connection between knowledge and action.</li>
-</ul>
-</li>
-<li><p><strong>Mathematics (c. 800 – Present):</strong></p>
-<ul>
-<li><strong>Logic &amp; Computation:</strong> Boolean algebra, Gödel&#39;s Incompleteness Theorem, and Turing&#39;s computability limits.</li>
-<li><strong>Probability:</strong> Bayes&#39; Rule and probabilistic reasoning to handle real-world uncertainty.</li>
-<li><strong>Optimization:</strong> Linear programming and gradient-based algorithms.</li>
-</ul>
-</li>
-<li><p><strong>Economics (1776 – Present):</strong></p>
-<ul>
-<li>Formalized <strong>Decision Theory</strong> (combining probability with utility theory).</li>
-<li>Developed <strong>Game Theory</strong> (Von Neumann &amp; Morgenstern) for decision-making in multi-agent competitive environments.</li>
-</ul>
-</li>
-<li><p><strong>Neuroscience (1861 – Present):</strong></p>
-<ul>
-<li>Studied the physical brain and how biological neurons transmit action potentials.</li>
-<li>Inspired connectionist architectures and Artificial Neural Networks.</li>
-</ul>
-</li>
-<li><p><strong>Psychology (1879 – Present):</strong></p>
-<ul>
-<li>Shifted from behaviorism to <strong>Cognitive Psychology</strong>, viewing the brain as an information-processing system.</li>
-</ul>
-</li>
-<li><p><strong>Computer Engineering (1940 – Present):</strong></p>
-<ul>
-<li>Provided high-speed CPUs, GPUs, TPUs, and memory architectures that make training complex AI models computationally feasible.</li>
-</ul>
-</li>
-<li><p><strong>Control Theory &amp; Cybernetics (1948 – Present):</strong></p>
-<ul>
-<li>Developed negative feedback loops (e.g., governors, thermostats) that drive systems to minimize error over time.</li>
-</ul>
-</li>
-<li><p><strong>Linguistics (1957 – Present):</strong></p>
-<ul>
-<li>Noam Chomsky&#39;s syntactic structures connected formal language theory with computer science, founding modern Natural Language Processing (NLP).</li>
-</ul>
-</li>
-</ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Expected Utility Theory (Economics + Math)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Modern rational agents make decisions under uncertainty by maximizing Expected Utility ($EU$):
-$$EU(a) = \sum_{o} P(o \mid a) \cdot U(o)$$
-where $P(o \mid a)$ is the probability of outcome $o$ occurring when action $a$ is executed, and $U(o)$ is the numeric reward (utility) of that outcome.</p>
-</div></details><hr>
-<p><a id="history"></a></p>
-<h2 id="4-history-of-ai-breakthroughs-winters-modern-eras">4. History of AI: Breakthroughs, Winters &amp; Modern Eras</h2>
-<p class="secnav"><a href="#3-the-foundations-of-ai">← 3. The Foundations of AI</a><span class="secnav-sep">·</span><a href="#5-ai-in-modern-engineering-weak-vs-strong-ai">5. AI in Modern Engineering: Weak … →</a></p>
-<p>The history of AI is marked by alternating cycles of intense optimism followed by funding droughts known as <strong>AI Winters</strong>.</p>
-<pre><code class="language-text">1943 |── McCulloch &amp; Pitts: First mathematical model of artificial neurons
-1950 |── Alan Turing proposes the &quot;Imitation Game&quot; (Turing Test)
-1956 |── Dartmouth Summer Workshop: John McCarthy coins the term &quot;Artificial Intelligence&quot;
-1969 |── Minsky &amp; Papert publish &quot;Perceptrons&quot;, proving XOR limitations (Single-layer NN)
-1974 |── FIRST AI WINTER (1974–1980): Over-promising fails to deliver; Lighthill Report cuts funding
-1980 |── Expert Systems Boom: Corporate adoption of rule-based systems (e.g., R1/XCON)
-1987 |── SECOND AI WINTER (1987–1993): Collapse of specialized LISP machine market &amp; brittle rules
-1997 |── IBM Deep Blue defeats World Chess Champion Garry Kasparov
-2012 |── Deep Learning Revolution: AlexNet wins ImageNet by a massive margin using GPUs
-2017 |── &quot;Attention Is All You Need&quot; introduces the Transformer architecture
-2020s|── Generative AI &amp; Foundation Models (LLMs, Diffusion Models) achieve widespread adoption
-</code></pre>
-<div class="quiz-widget">
+</div><div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What was the primary cause of the &quot;AI Winters&quot; in the 1970s and late 1980s?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -476,30 +408,10 @@ where $P(o \mid a)$ is the probability of outcome $o$ occurring when action $a$ 
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>AI Winters were triggered by inflated promises colliding with the reality of computational limitations and combinatorial explosions, causing government and corporate sponsors to cut funding.</p><pre><code>&lt;/div&gt;
+      <p>Over-promising plus combinatorial explosion and weak hardware collided with evaluations like the Lighthill report, so sponsors withdrew funding.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="modern-engineering"></a></p>
-<h2 id="5-ai-in-modern-engineering-weak-vs-strong-ai">5. AI in Modern Engineering: Weak vs. Strong AI</h2>
-<p class="secnav"><a href="#4-history-of-ai-breakthroughs-winters-modern-eras">← 4. History of AI: Breakthroughs, W…</a><span class="secnav-sep">·</span><a href="#6-worked-exam-q-a">6. Worked Exam Q&amp;A →</a></p>
-<p>In contemporary engineering practice, AI systems are classified by their operational scope:</p>
-<ul>
-<li><p><strong>Weak AI (Narrow AI / Artificial Narrow Intelligence - ANI):</strong></p>
-<ul>
-<li>Systems designed and trained for one specific task.</li>
-<li>Highly proficient in their domain but completely incapable outside it.</li>
-<li><em>Examples:</em> AlphaGo, spam filters, Tesla Autopilot vision stack, facial recognition systems. <strong>All currently deployed AI systems are Narrow AI.</strong></li>
-</ul>
-</li>
-<li><p><strong>Strong AI (Artificial General Intelligence - AGI):</strong></p>
-<ul>
-<li>A theoretical system possessing generalized human-level cognitive capabilities across arbitrary domains.</li>
-<li>Capable of abstract reasoning, self-reflection, and transferring skills without task-specific retraining.</li>
-</ul>
-</li>
-</ul>
-<div class="quiz-widget">
+</div><div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Which of the following is a primary characteristic of Narrow AI (Weak AI)?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -521,35 +433,21 @@ where $P(o \mid a)$ is the probability of outcome $o$ occurring when action $a$ 
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Narrow AI operates strictly within the boundaries of its specialized task domain.</p><pre><code>&lt;/div&gt;
+      <p>Narrow AI is a one-domain specialist. Transfer across unrelated tasks and consciousness belong to the theoretical Strong AI/AGI category.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="6-worked-exam-q-a">6. Worked Exam Q&amp;A</h2>
-<p class="secnav"><a href="#5-ai-in-modern-engineering-weak-vs-strong-ai">← 5. AI in Modern Engineering: Weak …</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ol>
-<li><strong>3 Marks:</strong> The 2x2 Russell &amp; Norvig definition matrix (Thinking/Acting vs. Human/Rational).</li>
-<li><strong>7 Marks:</strong> Tracing the history of AI with focus on Dartmouth 1956, the two AI Winters, and the distinction between Rationality vs. Omniscience.</li>
-</ol>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Distinguish between &quot;Thinking Rationally&quot; and &quot;Acting Rationally&quot; in AI.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>Thinking Rationally</strong> is based on the <em>Laws of Thought</em> (formal deductive logic). It requires that internal inferences are logically sound deductions from known facts.</li>
-<li><strong>Acting Rationally</strong> is based on the <em>Rational Agent</em> framework. It requires that the agent chooses actions that maximize expected utility given available percepts, even under uncertainty where pure logical deduction is impossible.</li>
-</ul>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: reproduce the 2x2 matrix. 7 marks: trace history with Dartmouth 1956, both winters with causes, plus rationality vs. omniscience.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> matrix axes and four cells; Turing 1950 Imitation Game; Dartmouth 1956 coinage; winter dates and funding-cut mechanism; EU formula with symbols; Narrow AI is all that is deployed.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Distinguish &quot;Thinking Rationally&quot; from &quot;Acting Rationally.&quot;</strong></p>
+<p><strong>Model Answer:</strong> Thinking Rationally demands logically sound internal deductions (laws of thought). Acting Rationally demands actions maximizing expected utility given percepts, even when deduction under uncertainty is impossible.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Trace the historical evolution of Artificial Intelligence. Explain why the &quot;AI Winters&quot; occurred.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Genesis (1943–1956):</strong> McCulloch-Pitts neuron (1943), Turing&#39;s paper (1950), and the 1956 Dartmouth Workshop where McCarthy, Minsky, Rochester, and Shannon founded the field.</li>
-<li><strong>Early Enthusiasm (1952–1969):</strong> Microworld programs (Blocks World, ELIZA, GPS) created unrealistic expectations.</li>
-<li><strong>The First AI Winter (1974–1980):</strong> Triggered by combinatorial explosion, lack of compute, and negative evaluations like the Lighthill Report.</li>
-<li><strong>The Expert Systems Rise &amp; Second Winter (1980–1993):</strong> Commercial success with rule-based systems followed by market collapse due to high maintenance costs and brittleness.</li>
-<li><strong>Modern Deep Learning &amp; AI Era (2012–Present):</strong> Big data, GPU computing, and Transformers catalyzed today&#39;s generative AI breakthroughs.</li>
-</ol>
+<p><strong>Q: Trace AI history and explain the AI Winters.</strong></p>
+<p><strong>Model Answer:</strong> Genesis (1943 neuron, 1950 Turing, 1956 Dartmouth founding by McCarthy, Minsky, Rochester, Shannon); early microworlds bred hype; First Winter (1974-80, combinatorial explosion plus Lighthill cuts); expert-system boom then Second Winter (1987-93, brittle rules plus hardware-market collapse); deep learning revival (2012 GPUs/data, 2017 Transformers) to present generative models.
+:::</p>
 
     </main>
 

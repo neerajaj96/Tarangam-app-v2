@@ -5,8 +5,9 @@ module: 4
 sequence: 3
 title: 'PCA: Principal Component Analysis'
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 12
 learningObjectives:
+  - State the compression problem in plain words first
   - Build covariance eigen-structure from centered data
   - Keep top components with variance-explained arithmetic
   - Standardize first so units cannot hijack the directions
@@ -23,10 +24,33 @@ tags:
 ---
 # PCA: Principal Component Analysis
 
-**Variance as information, covariance eigen-structure, the projection theorem, variance-explained arithmetic, and scaling discipline.**
+**What problem Principal Component Analysis (PCA) solves for wide data, what centred matrix it needs, how eigendecomposition trains the best linear compressor, and where unsupervised variance misleads.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start Here: The Problem Before Any Solution (Absolute Beginner)
+
+A 3D mobile casts 2D shadows on walls. Which wall shows most structure? The one where the shadow sprawls widest. PCA finds that wall mathematically and drops flat directions.
+
+Tiny beginner example. Points $(0,0)$, $(1,1)$, $(2,2)$ lie on diagonal $y=x$. Spread along $(1,1)$ is large; spread perpendicular is zero. Keep one direction $(1,1)$, drop the other, lose nothing. That is PCA on a line.
+
+Analogy as support, then dropped. Shadow gallery with widest sprawl. From here on we use exact terms only: centred data, covariance, eigenvector, eigenvalue.
+
+Abbreviations defined on first use: Principal Component Analysis (PCA). Symbols are defined before use below.
+
+| Question to ask | Meaning |
+|---|---|
+| What is $X$? | Centred data matrix, mean zero per feature |
+| What is $\Sigma$? | Covariance, $X^TX/(n-1)$ |
+| What are $v_i$, $\lambda_i$? | Direction $i$ and variance along it |
+
+<a id="symbols-data-goal"></a>
+## 2. Data, Goal and Symbols (Basic Understanding)
+
+**Problem.** Keep maximum information per kept dimension with linear projections.
+
+**Data.** Centred matrix $X$ with $n$ rows, $d$ columns. Centring means subtract per-feature mean so $\bar{x}=0$. Standardise (zero mean, unit variance) unless units are commensurate; PCA chases raw variance, so metres-versus-millimetres elects winners silently.
+
+**Goal.** Top-$k$ directions keeping fraction $\sum_{i\le k}\lambda_i/\sum\lambda_i$ of variance, with no $k$-dimensional linear projection preserving more (projection theorem).
 
 ::: callout-intuition Core Mental Model: The Shadow Gallery
 A 3D mobile casts shadows on gallery walls — each wall shows a 2D *projection*, and the most informative wall is the one where the shadow sprawls widest (most spread = most structure preserved). **PCA** finds that wall mathematically: the direction (unit vector) along which the data *varies most* is principal component 1; the best perpendicular runner-up is PC2; and so on. Keep the top few directions, drop the flat ones — maximum information per kept dimension, guaranteed by linear algebra rather than luck.
@@ -36,20 +60,32 @@ A 3D mobile casts shadows on gallery walls — each wall shows a 2D *projection*
 Watch the cloud rotate onto its principal axes — spread maximizing along PC1, the flat tail directions collapsing away with barely any information lost.
 :::
 
----
-
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Method, Model and Training (Formal Theory)
 
-### 2.1 Covariance and Eigen-Structure
+Canonical order: problem (compress linearly) → data (centred, standardised $X$) → goal (max variance kept) → method (eigendecompose covariance) → model (top-$k$ orthonormal basis) → training (one eigendecomposition) → example → limitations.
 
-Center the data ($\bar{x} = 0$). Covariance $\Sigma = \frac{1}{n-1}X^TX$ ($d \times d$, symmetric). Its **eigenvectors** $v_i$ (orthonormal) are the principal directions; **eigenvalues** $\lambda_i$ are the variances along them. Projection $z = V_k^Tx$ onto top-$k$ keeps fraction $\sum_{i\le k}\lambda_i / \sum \lambda_i$ of total variance — and among *all* $k$-dimensional linear projections, **none preserves more** (the projection theorem: PCA is the optimal linear compressor by reconstruction error).
+### 3.1 Covariance and Eigen-Structure, Symbol by Symbol
 
-### 2.2 Practical Discipline (Where Exams Probe)
+Covariance $\Sigma=\frac{1}{n-1}X^TX$ ($d\times d$, symmetric). Eigenvectors $v_i$ (orthonormal) are principal directions; eigenvalues $\lambda_i$ are variances along them. Projection $z=V_k^Tx$ onto top $k$ keeps fraction above. Here $V_k$ holds top eigenvectors as columns; orthonormal means unit length and perpendicular, so variance bookkeeping holds.
 
-* **Standardize first** (zero mean, unit variance per feature) unless units are commensurate — PCA chases *raw variance*, so a meters-vs-millimeters feature choice silently elects the winner.
-* **Choose $k$** by cumulative variance (80–95% rules of thumb) or the scree-plot elbow — same spirit as clustering elbows.
-* PCA is **unsupervised** (labels never enter) and **linear** (curved manifolds need kernels/autoencoders, not more components).
+Numbered training:
+
+1. Centre (and usually standardise) $X$.
+2. Form $\Sigma$.
+3. Eigendecompose $\Sigma=V\Lambda V^T$.
+4. Keep top $k$ by cumulative variance (80–95% rules) or scree elbow.
+5. Project $z=V_k^Tx$.
+
+### 3.2 Practical Discipline
+
+PCA is unsupervised (labels never enter) and linear (curved manifolds need kernels or autoencoders). Standardise first across incommensurate axes. Choose $k$ by cumulative share or elbow, same kink instinct as clustering.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Raw vs standardised PCA | Unit-driven artifacts vs shape-driven structure |
+| Variance kept vs signal kept | Reconstruction optimum vs class information; tail can hold labels |
+| PCA vs supervised LDA | Unsupervised spread vs label-guided separation |
 
 ::: callout-formula KTU Formula Vault: PCA Facts
 Center → $\Sigma = X^TX/(n-1)$ · eigenvectors = **directions**, eigenvalues = **variances** · keep top-$k$: fraction $\sum_{i\le k}\lambda_i/\sum\lambda$ · **standardize first** (variance units decide winners) · optimal **linear** compressor · unsupervised (no labels used).
@@ -59,10 +95,8 @@ Center → $\Sigma = X^TX/(n-1)$ · eigenvectors = **directions**, eigenvalues =
 Feeding raw features (income in rupees + age in years) lets the biggest-*unit* feature dominate PC1 regardless of information — a measurement artifact wearing mathematics. Standardization ($z$-scores) is not preprocessing politeness; it *defines what variance means* across incommensurate axes. Skip it and PC1 reports your unit choices.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. KTU Worked Example Step by Step
 
 ::: step [Step 1: Setup] Formulating the Problem
 Points $(1,2), (2,1), (3,4), (4,3)$. Compute the covariance, its eigen-structure, variance kept by PC1, and the PC1 direction. (Arithmetic verified.)
@@ -76,10 +110,22 @@ Mean $(2.5, 2.5)$; centered sums: $\sum dx^2 = 5.0$, $\sum dy^2 = 5.0$, $\sum dx
 One direction ($y=x$) carries 80% of the variance; the perpendicular carries the 20% wobble. Dropping to 1D keeps four-fifths of the information at half the coordinates — and the eigenvector *agrees with visual inspection*, which is how you sanity-check PCA on every new dataset forever: plot, eyeball the stretch, confirm the math found it.
 :::
 
----
+<a id="watch-out-recap"></a>
+## 5. Watch Out, Limitations and Exam Recap
+
+Common mistakes and confusions:
+
+- Skipping standardisation on mixed units. PC1 then reports conventions, not geometry.
+- Reading variance kept as accuracy kept. Low-variance tails can hold class signal.
+- Skipping unit normalisation of hand eigenvectors. Projection and ledger assume orthonormal $V_k$.
+- Using PCA for curved manifolds. Linear only; needs kernels or autoencoders.
+
+Limitations: unsupervised, linear, scale-sensitive; reconstruction optimal, not discrimination optimal.
+
+Exam recap: centre to covariance; eigenvectors directions, eigenvalues variances; top-$k$ share formula; standardise first; optimal linear compressor; unsupervised.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Features: annual income (tens of thousands) and age (years). PCA without standardization puts nearly all PC1 weight on income. What happened, and what is the fix?
 () Income genuinely contains all the information; nothing is wrong

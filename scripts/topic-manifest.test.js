@@ -30,14 +30,14 @@ const curriculumDoc = loadCurriculum();
 const manifest = buildTopicManifest({ curriculumDoc, schema });
 
 describe('manifest contents', () => {
-  it('contains all 432 current topics', () => {
-    assert.equal(manifest.topics.length, 432);
-    assert.equal(manifest.aggregates.totalTopics, 432);
+  it('contains all 435 current topics', () => {
+    assert.equal(manifest.topics.length, 435);
+    assert.equal(manifest.aggregates.totalTopics, 435);
   });
 
-  it('contains exactly 432 metadata topics', () => {
-    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 432);
-    assert.equal(manifest.aggregates.metadataTopics, 432);
+  it('contains exactly 435 metadata topics', () => {
+    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 435);
+    assert.equal(manifest.aggregates.metadataTopics, 435);
   });
 
   it('represents the GAMAT301 prerequisite chain correctly', () => {
@@ -70,7 +70,7 @@ describe('manifest contents', () => {
 
   it('course/module queries return the expected topics', () => {
     assert.equal(getCourseTopics(manifest, 'GAMAT301').length, 24);
-    assert.equal(getModuleTopics(manifest, 'PCCST501', 1).length, 9);
+    assert.equal(getModuleTopics(manifest, 'PCCST501', 1).length, 10);
     assert.deepEqual(getCourseTopics(manifest, 'NOPE'), []);
     assert.deepEqual(getModuleTopics(manifest, 'GAMAT301', 9), []);
   });
@@ -83,7 +83,7 @@ describe('manifest contents', () => {
   });
 
   it('keeps legacy topics readable with hasMetadata: false', () => {
-    // No legacy topics remain in the repo (432/432 migrated), so exercise
+    // No legacy topics remain in the repo (435/435 migrated), so exercise
     // the still-supported legacy shape with a synthetic manifest instead.
     const legacyManifest = {
       topics: [{

@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.5 Regression Metrics Regularisation</title>
+<meta name="description" content="Machine Learning (PCCST503) — 1.5 Regression Metrics Regularisation | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.5 Regression Metrics Regularisation">
+<meta property="og:description" content="Machine Learning (PCCST503) study notes: 1.5 Regression Metrics Regularisation">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Machine Learning</span>
+        <span class="tag">PCCST503</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Foundations &amp; Regression</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_ml_definition_paradigms_and_types.html" class="topic-link " id="topic-m1_01_ml_definition_paradigms_and_types">
+            <span class="topic-dot"></span>
+            <span>1.1 ML Definition Paradigms And Types</span>
+          </a>
+          <a href="./m1_02_probability_mle_map_estimation.html" class="topic-link " id="topic-m1_02_probability_mle_map_estimation">
+            <span class="topic-dot"></span>
+            <span>1.2 Probability MLE MAP Estimation</span>
+          </a>
+          <a href="./m1_03_linear_regression_least_squares.html" class="topic-link " id="topic-m1_03_linear_regression_least_squares">
+            <span class="topic-dot"></span>
+            <span>1.3 Linear Regression Least Squares</span>
+          </a>
+          <a href="./m1_04_multiple_regression_model_assessment.html" class="topic-link " id="topic-m1_04_multiple_regression_model_assessment">
+            <span class="topic-dot"></span>
+            <span>1.4 Multiple Regression Model Assessment</span>
+          </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link active" id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
+          <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Foundations Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Classification &amp; Trees</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_classification_boundaries_knn.html" class="topic-link " id="topic-m2_01_classification_boundaries_knn">
+            <span class="topic-dot"></span>
+            <span>2.1 Classification Boundaries KNN</span>
+          </a>
+          <a href="./m2_02_logistic_regression_sigmoid_loss.html" class="topic-link " id="topic-m2_02_logistic_regression_sigmoid_loss">
+            <span class="topic-dot"></span>
+            <span>2.2 Logistic Regression Sigmoid Loss</span>
+          </a>
+          <a href="./m2_03_naive_bayes_generative_models.html" class="topic-link " id="topic-m2_03_naive_bayes_generative_models">
+            <span class="topic-dot"></span>
+            <span>2.3 Naive Bayes Generative Models</span>
+          </a>
+          <a href="./m2_04_decision_trees_entropy_information_gain.html" class="topic-link " id="topic-m2_04_decision_trees_entropy_information_gain">
+            <span class="topic-dot"></span>
+            <span>2.4 Decision Trees Entropy Information Gain</span>
+          </a>
+          <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
+            <span class="topic-dot"></span>
+            <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
+          </a>
+          <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M2 Classification Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Neural Nets &amp; SVMs</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_perceptron_learning_rule.html" class="topic-link " id="topic-m3_01_perceptron_learning_rule">
+            <span class="topic-dot"></span>
+            <span>3.1 Perceptron Learning Rule</span>
+          </a>
+          <a href="./m3_02_multilayer_networks_backpropagation.html" class="topic-link " id="topic-m3_02_multilayer_networks_backpropagation">
+            <span class="topic-dot"></span>
+            <span>3.2 Multilayer Networks Backpropagation</span>
+          </a>
+          <a href="./m3_03_maximum_margin_svm.html" class="topic-link " id="topic-m3_03_maximum_margin_svm">
+            <span class="topic-dot"></span>
+            <span>3.3 Maximum Margin SVM</span>
+          </a>
+          <a href="./m3_04_kernels_soft_margins.html" class="topic-link " id="topic-m3_04_kernels_soft_margins">
+            <span class="topic-dot"></span>
+            <span>3.4 Kernels Soft Margins</span>
+          </a>
+          <a href="./m3_99_practice_lab_networks_svm_drills.html" class="topic-link " id="topic-m3_99_practice_lab_networks_svm_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M3 Networks SVM Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>PCA &amp; Ensembles</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_clustering_kmeans.html" class="topic-link " id="topic-m4_01_clustering_kmeans">
+            <span class="topic-dot"></span>
+            <span>4.1 Clustering Kmeans</span>
+          </a>
+          <a href="./m4_02_hierarchical_clustering.html" class="topic-link " id="topic-m4_02_hierarchical_clustering">
+            <span class="topic-dot"></span>
+            <span>4.2 Hierarchical Clustering</span>
+          </a>
+          <a href="./m4_03_pca_dimensionality_reduction.html" class="topic-link " id="topic-m4_03_pca_dimensionality_reduction">
+            <span class="topic-dot"></span>
+            <span>4.3 PCA Dimensionality Reduction</span>
+          </a>
+          <a href="./m4_04_ensemble_bagging_random_forests.html" class="topic-link " id="topic-m4_04_ensemble_bagging_random_forests">
+            <span class="topic-dot"></span>
+            <span>4.4 Ensemble Bagging Random Forests</span>
+          </a>
+          <a href="./m4_05_boosting_adaboost.html" class="topic-link " id="topic-m4_05_boosting_adaboost">
+            <span class="topic-dot"></span>
+            <span>4.5 Boosting Adaboost</span>
+          </a>
+          <a href="./m4_06_mds_multidimensional_scaling.html" class="topic-link " id="topic-m4_06_mds_multidimensional_scaling">
+            <span class="topic-dot"></span>
+            <span>4.6 MDS Multidimensional Scaling</span>
+          </a>
+          <a href="./m4_99_practice_lab_unsupervised_ensemble_drills.html" class="topic-link " id="topic-m4_99_practice_lab_unsupervised_ensemble_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M4 Unsupervised Ensemble Drills</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel" role="status">0 of 25 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" role="status" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <a href="../course.html?course=PCCST503">PCCST503</a>
+        <span class="crumb-sep">/</span>
+        <a href="../course.html?course=PCCST503#module-1">Module 1</a>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.5 Regression Metrics Regularisation</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 12 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-problem" class="jump-pill">the-problem</a>
+    <a href="#features-data-goal" class="jump-pill">features-data-goal</a>
+    <a href="#metrics-theory" class="jump-pill">metrics-theory</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Regression Metrics, Regularisation &amp; Cross-Validation</h1>
+<p><strong>What problem honest regression grading solves, what feature representation it assumes, how Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R-squared (R²) score predictions, how Regularised Regression (RIDGE and Least Absolute Shrinkage and Selection Operator (LASSO)) cures overfitting, and how k-fold Cross-Validation (CV) grades the whole procedure without cheating.</strong></p>
+<p><a id="the-problem"></a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-representation-and-goal-basic-understanding">2. Data, Representation and Goal (… →</a></p>
+<p>A model predicts house prices. On training homes it averages 1 lakh off; on new homes it averages 5 lakh off. The problem: the training grade lied. Three sub-problems cause the lie. First, features may be misrepresented (a &quot;3BHK&quot; string fed as a number, or incomes in rupees mixed with areas in square feet so one dominates). Second, the score itself may hide sins (one huge error averaged away among many small ones). Third, the model may have memorised noise (ten predictors for twelve homes), and the grading procedure may have helped it cheat (picking the winner on the same data used for the final grade).</p>
+<p>Tiny beginner example. Truths $[10, 12, 14]$ lakh, predictions $[11, 12, 17]$ lakh. Errors are $[1, 0, 3]$. MAE is $(1+0+3)/3 \approx 1.33$. Squared errors are $[1, 0, 9]$, mean $3.33$, RMSE $\approx 1.83$. RMSE exceeds MAE because squaring punishes the lone $3$ disproportionately. That gap between the two numbers is the whole lesson: MAE reports typical miss, RMSE reports worst-miss sensitivity.</p>
+<p>Analogy as support, then dropped. Think of a school report card with three subjects: average marks (MAE), marks that punish one failed subject extra (RMSE), and rank against the class average (R²). From here on we use exact terms only: feature representation, MAE, RMSE, R², RIDGE, LASSO, k-fold CV.</p>
+<p>Abbreviations defined on first use: Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), R-squared (R²), Cross-Validation (CV), Least Absolute Shrinkage and Selection Operator (LASSO), Regularised (penalised) regression. Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $y_i$, $\hat{y}_i$?</td>
+<td>True target and model prediction for home $i$</td>
+</tr>
+<tr>
+<td>What is $e_i$?</td>
+<td>Residual (error) $y_i - \hat{y}_i$</td>
+</tr>
+<tr>
+<td>What is $w$, $\lambda$?</td>
+<td>Weight vector and penalty strength (regularisation knob)</td>
+</tr>
+<tr>
+<td>What is $k$?</td>
+<td>Number of CV folds (commonly 5 or 10)</td>
+</tr>
+</tbody></table>
+<p><a id="features-data-goal"></a></p>
+<h2 id="2-data-representation-and-goal-basic-understanding">2. Data, Representation and Goal (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Grade regression honestly and cure memorisation without breaking the fit.</p>
+<p><strong>Data and representation.</strong> Supervised pairs $(x_i, y_i)$ with continuous $y_i$. Here $x_i$ is the feature representation: the numeric vector the model actually sees. Representation choices are load-bearing, not bookkeeping. Numeric features usually need scaling (standardise to zero mean, unit variance) because RIDGE, LASSO, and gradient descent all react to raw magnitudes. Categorical features (location, &quot;3BHK&quot;) need encoding (one-hot columns or ordered ordinals), never raw strings-as-numbers. Polynomial expansion $(x, x^2, \dots)$ from last note is also representation: it decides what curves the linear-in-weights model can draw. Garbage representation (unscaled, mis-encoded, leaking future information like &quot;days on market&quot; for price prediction) poisons every metric below no matter how fancy the model.</p>
+<p><strong>Goal.</strong> Small honest test error (low MAE/RMSE, high test R²), a penalty $\lambda$ chosen on validation (never test), and a final grade from data the selection procedure never saw.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Honest Examiner</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A dishonest examiner lets students set the paper, sit it, and mark it. MAE/RMSE/R² are marking schemes; regularisation is the syllabus cap (how elaborate an answer may be); k-fold CV is the external examiner who rotates which section counts as the unseen test. Each piece answers a different cheat: metrics stop vanity grades, penalties stop memorised answers, rotation stops lucky splits.</p>
+</div></details><p><a id="metrics-theory"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-representation-and-goal-basic-understanding">← 2. Data, Representation and Goal (…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (lying grades, memorising fits) → data (represented pairs, folds) → goal (honest test error) → method (score, penalise, rotate validation) → model (linear weights plus penalty) → training (minimise penalised loss, select $\lambda$ by CV) → example → limitations.</p>
+<h3>3.1 Metrics, Symbol by Symbol</h3>
+<p>Meaning first: MAE is the average miss in original units; RMSE is the square-rooted average squared miss (outlier-sensitive); R² is the fraction of variance explained relative to predicting the mean.</p>
+<p>Variables: $n$ points, $y_i$ truth, $\hat{y}_i$ prediction, $e_i = y_i - \hat{y}_i$ residual, $\bar{y}$ mean of $y$.</p>
+<p>Formulas:</p>
+<p>$$\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\lvert e_i\rvert, \quad \mathrm{MSE} = \frac{1}{n}\sum e_i^2, \quad \mathrm{RMSE} = \sqrt{\mathrm{MSE}}, \quad R^2 = 1 - \frac{\sum e_i^2}{\sum (y_i - \bar{y})^2} = 1 - \frac{SS_{res}}{SS_{tot}}.$$</p>
+<p>Here $\lvert e_i\rvert$ is absolute miss, $e_i^2$ is squared miss, $SS_{res}$ is unexplained squares, $SS_{tot}$ is baseline squares around the mean. Intuition: MAE treats all lakhs equally; RMSE squares first so one 10-lakh blunder outweighs ten 1-lakh misses; R² $=1$ is perfect, $0$ ties the mean, negative loses to it. Worked micro-example is §1&#39;s $[10,12,14]$ vs $[11,12,17]$: MAE $\approx 1.33$, RMSE $\approx 1.83$, and R² on this toy triple is $1 - 10/8 = -0.25$ (worse than predicting the mean $12$ every time — small toys exaggerate, which is why KTU asks R² on real test sets, never three points).</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MAE vs RMSE</td>
+<td>Typical miss vs outlier-weighted miss; report both, never RMSE alone when outliers matter</td>
+</tr>
+<tr>
+<td>Train vs test R²</td>
+<td>Construction (rises with predictors) vs evidence (only test or CV counts)</td>
+</tr>
+<tr>
+<td>RMSE vs R²</td>
+<td>Absolute units (lakhs) vs unit-free fraction (comparable across datasets)</td>
+</tr>
+</tbody></table>
+<h3>3.2 RIDGE and LASSO, Step by Step</h3>
+<p>Unpenalised least squares minimises $\lVert y - Xw\rVert^2$ and memorises when columns collinear or $d$ large. Regularisation adds a price on weights:</p>
+<p>$$\text{RIDGE: } \min_w \lVert y - Xw\rVert^2 + \lambda\sum_j w_j^2, \qquad \text{LASSO: } \min_w \lVert y - Xw\rVert^2 + \lambda\sum_j \lvert w_j\rvert.$$</p>
+<p>Here $\lambda \ge 0$ is penalty strength ($0$ recovers ordinary least squares; $\infty$ forces all weights to zero). RIDGE (L2, Gaussian prior from M1.02) shrinks smoothly and keeps every feature — always invertible via $(X^TX + \lambda I)^{-1}X^Ty$, the singular-matrix cure from M1.03. LASSO (L1, Laplace prior) has a diamond-shaped constraint whose corners pin weak weights exactly to zero — automatic feature selection, at the cost of no closed form (solved by coordinate descent or subgradient steps) and at most $n$ nonzeros.</p>
+<p>Steps to use either honestly, numbered:</p>
+<ol>
+<li>Standardise features (penalties punish raw magnitudes; unscaled &quot;income vs area&quot; mis-prices shrinkage).</li>
+<li>Fit a $\lambda$ path on train folds only.</li>
+<li>Select $\lambda$ at the validation (CV) minimum, one-standard-error rule for stability when KTU asks.</li>
+<li>Refit at chosen $\lambda$ on all non-test data; report once on the untouched test set.</li>
+</ol>
+<p>Qualified claim, stated carefully: larger $\lambda$ raises bias and lowers variance along the U-curve; CV picks the bottom. Neither method guarantees the true features (correlated predictors split or swap selection across samples), and LASSO selection is unstable under near-duplicates — report selected sets with that caveat, not as discovered law.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Regression Grading Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MAE $= \frac{1}{n}\sum\lvert e_i\rvert$ · RMSE $= \sqrt{\frac{1}{n}\sum e_i^2}$ (outlier-sensitive) · $R^2 = 1 - SS_{res}/SS_{tot}$ (test only) · RIDGE $+ \lambda\sum w_j^2$ (shrink, closed form, keeps all) · LASSO $+ \lambda\sum\lvert w_j\rvert$ (sparse, no closed form, selects) · $\lambda$ by CV, grade once on test.</p>
+</div></details><div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Paying for Weight Size</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated penalty comparison: LASSO 5.1 versus RIDGE 13.01 on weights 3.0, minus 2.0, 0.1">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="36" text-anchor="middle">w = [3.0, −2.0, 0.1] · λ = 1</text>
+<text class="crcrow a2" x="40" y="120">LASSO |·|: 5.1</text>
+<rect class="a2" x="330" y="102" width="153" height="20" rx="4" fill="var(--accent)"/>
+<text class="crcrow a3" x="40" y="180">RIDGE (·)²: 13.01</text>
+<rect class="a3" x="330" y="162" width="390" height="20" rx="4" fill="var(--accent-warm}"/>
+<text class="animnote a4" x="320" y="240" text-anchor="middle">squaring charges 3.0 ninefold, barely sees 0.1 — temper, not just total</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Paying for Weight Size</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch the penalty price pull weights toward zero as lambda grows — RIDGE shrinking smoothly, LASSO snapping weaklings exactly to zero.</div>
+  </div>
+</div><h3>3.3 k-Fold CV Mechanics, Without Cheating</h3>
+<p>Single train/test splits are lottery tickets: one lucky split flatters, one unlucky split condemns. k-fold CV deals $k$ hands. Numbered procedure:</p>
+<ol>
+<li>Shuffle and split data into $k$ equal folds ($k = 5$ or $10$ standard; stratify for skewed targets).</li>
+<li>For fold $j = 1 \dots k$: train on the other $k-1$ folds, validate on fold $j$.</li>
+<li>Average the $k$ validation scores; also record spread (standard error) as the procedure&#39;s stability.</li>
+<li>Select hyperparameters ($\lambda$, degree, features) at the CV minimum using only these averages.</li>
+<li>Grade the selected procedure once on a held-out test set, or nest (outer loop grades, inner loop selects) when no spare test set exists.</li>
+</ol>
+<p>Bootstrapping recap for contrast: bootstrap resamples with replacement for variance estimates and bagging juries (M4.04); CV partitions without replacement for honest grading. Leave-One-Out (LOO) is $k = n$: nearly unbiased, high variance, costly — examinable as the extreme, rarely the default. Nested CV grades selection itself: inner loop picks $\lambda$, outer loop scores the picker on untouched folds. Tuning on test data, reusing test folds for selection, or standardising before splitting (leakage via global mean) all contaminate the grade — standardise inside each fold, select inside inner loops, report once outside.</p>
+<p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Five validation homes: truths $y = [10, 12, 14, 16, 18]$, model A predicts $\hat{y} = [11, 12, 13, 16, 19]$. Compute MAE, RMSE, and test R². Then state which penalty (RIDGE or LASSO) a follow-up with 40 collinear predictors and a demand for &quot;keep all sensors, just tame them&quot; requires.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Scoring and Prescribing</div><div class="step-content"><p>Residuals $e = [-1, 0, 1, 0, -1]$. MAE $= (1+0+1+0+1)/5 = 0.6$. Squared $= [1,0,1,0,1]$, MSE $= 3/5 = 0.6$, RMSE $= \sqrt{0.6} \approx 0.775$. Mean $\bar{y} = 14$; $SS_{tot} = 16+4+0+4+16 = 40$; $SS_{res} = 3$; $R^2 = 1 - 3/40 = 0.925$. (Numbers verified.) Penalty: RIDGE — dense shrinkage keeps all 40 sensors with $(X^TX+\lambda I)^{-1}$ stability; LASSO would zero some, violating &quot;keep all&quot;.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Model A misses by $0.6$ typically, $0.78$ outlier-weighted, and explains $92.5%$ of test variance. The $\lambda$ that produced it must have been CV-chosen, and the $0.925$ is evidence only because these five homes never selected anything — the honest-examiner contract from §3.3 in one worked number.</p>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Reporting train R² as model quality. Added predictors raise train R² by construction; only test or CV R² is evidence.</li>
+<li>Choosing $\lambda$ on test error. Strength is a validation decision; test is the one-time witness.</li>
+<li>Expecting LASSO to name true causes. Correlated copies split selection arbitrarily across samples; stability needs repeated folds, not one run.</li>
+<li>Standardising before splitting. Global means leak test information into train folds; scale inside each fold.</li>
+<li>Reading RMSE as typical miss. RMSE $\ge$ MAE always (equality only when all $\lvert e_i\rvert$ equal); the gap measures outlier spread, not typicality.</li>
+</ul>
+<p>Limitations: metrics need representative test data (shifted distributions void grades); penalties assume standardised, non-leaking features; CV costs $k$ trainings and still grades only the given distribution.</p>
+<p>Exam recap: represent then scale then encode; MAE typical, RMSE outlier-weighted, R² fraction-vs-mean on test; RIDGE shrinks dense with closed form, LASSO selects sparse without one; $\lambda$ by CV mean, grade once on test; nested loop grades selection; bootstrap resamples, CV partitions.</p>
+<p><a id="self-check"></a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Residuals $[2, -2, 0, 4]$ (lakh). Compute MAE and RMSE, and explain why RMSE is larger and what the gap tells an examiner.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>MAE = 2.0, RMSE = 2.0 — identical always</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>MAE $= (2+2+0+4)/4 = 2.0$; MSE $= (4+4+0+16)/4 = 6$; RMSE $= \sqrt{6} \approx 2.45 &gt; 2.0$ because squaring over-weights the $4$; the gap signals outlier spread beyond typical miss</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MAE = 8.0, RMSE = 6.0 — sums, not means</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>RMSE is smaller because roots shrink numbers</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>MAE averages misses; RMSE averages squares then roots, so one large miss dominates. Gap $&gt; 0$ always unless all misses tie — report both numbers and read the gap as outlier evidence, not as a second opinion on typicality.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A dataset has 12 homes and 30 collinear sensors; the brief demands keeping every sensor with stable weights. RIDGE or LASSO, and what must happen to features first?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>LASSO, raw features — sparsity is mandatory</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>RIDGE with standardised features: L2 keeps all 30 with $(X^TX+\lambda I)^{-1}$ stability; standardisation first so the penalty prices comparable units, and $\lambda$ chosen by CV</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — ordinary least squares works when $d &gt; n$</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>RIDGE without scaling — magnitudes do not matter</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>$d &gt; n$ plus collinearity kills ordinary least squares (singular $X^TX$); LASSO would zero sensors against the brief. RIDGE shrinks densely, but only fairly on standardised scales — unscaled penalties punish rupees more than square feet for no statistical reason.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A student standardises all data, runs 5-fold CV to pick $\lambda$, then reports the best fold&#39;s score as final performance. Name two contaminations and the correct procedure.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>No contamination — best fold is the honest grade</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Contamination 1: scaling before splitting leaks global statistics into every fold; scale inside folds. Contamination 2: reporting the best (selected) fold reuses selection data as grading data; report the CV mean for selection and grade once on untouched test (or nested outer loop)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Folds should be $k = 1$ for honesty</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Standardisation is forbidden in CV</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Leakage has two doors: preprocessing outside folds and grading on selected folds. Close both — fold-local scaling, CV-mean selection, one-time test grading (nested when data is scarce). One clean grade beats five contaminated bests.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m1_04_multiple_regression_model_assessment.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.4 Multiple Regression Model Assessment</div>
+      </a>
+      
+      
+      
+      <a href="./m1_99_practice_lab_foundations_drills.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">🧪 Practice Lab: M1 Foundations Drills</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(25) || 0;
+      var currentId = "m1_05_regression_metrics_regularisation";
+      var courseCode = "PCCST503";
+      if (!totalTopics || !currentId || !courseCode) return;
+
+      var store = createLearnerState({});
+      var COURSE = courseCode;
+
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
+      }
+
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
+      }
+
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST503", topicId: "m1_05_regression_metrics_regularisation" });
+  </script>
+  <script>
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

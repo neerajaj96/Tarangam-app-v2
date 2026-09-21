@@ -269,52 +269,72 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>First-Order Logic: Quantifiers, Unification &amp; Lifting</h1>
-<p><strong>Objects, relations, and functions; ∀/∃ semantics; most general unifiers with the occur check; lifting Modus Ponens and chaining to FOL.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-from-propositions-to-predicates">1. From Propositions to Predicates</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-syntax-and-semantics-in-one-pass">2. Syntax and Semantics in One Pas… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Stamps vs. Stencil Machine</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Propositional logic hand-carves one stamp per fact: $\text{Pit}<em>{1,2}$, $\text{Pit}</em>{1,3}$, $\text{Pit}_{2,1}$ … — a thousand squares need a thousand stamps. <strong>First-order logic owns a stencil machine</strong>: one quantified sentence $\forall x,y; \text{Breeze}(x,y) \Rightarrow \text{AdjacentPit}(x,y)$ stamps the rule onto <em>every</em> square at once. <strong>Objects</strong> (squares, agents, the Wumpus), <strong>relations</strong> ($\text{Adjacent}$, $\text{At}$), and <strong>functions</strong> ($\text{LocationOf}$, $\text{LeftOf}$ — each mapping objects to exactly one object) replace flat atoms; <strong>variables</strong> ($x, y$) plus <strong>quantifiers</strong> ($\forall$ &quot;for all&quot;, $\exists$ &quot;there exists&quot;) supply the generality. One FOL sentence routinely replaces exponentially many propositional ones.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-syntax-and-semantics-in-one-pass">2. Syntax and Semantics in One Pass</h2>
-<p class="secnav"><a href="#1-from-propositions-to-predicates">← 1. From Propositions to Predicates</a><span class="secnav-sep">·</span><a href="#3-lifting-inference-to-fol">3. Lifting Inference to FOL →</a></p>
+<p><strong>Problem: propositional stamps need one symbol per square — a thousand squares need a thousand symbols. By the end you can write quantified sentences, unify with most general unifiers, and lift inference to First-Order Logic (FOL).</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-stamps-vs-stencil-machine">1. Start From Zero: Stamps vs. Stencil Machine</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-syntax-semantics-pairings">2. Basic Layer: Syntax, Semantics,… →</a></p>
+<p>Propositional logic hand-carves one stamp per fact: Pit(1,2), Pit(1,3), ... First-order logic owns a stencil machine: one quantified sentence <code>for all x,y: Breeze(x,y) =&gt; AdjacentPit(x,y)</code> stamps the rule everywhere at once.</p>
+<p><strong>Definitions:</strong> <strong>objects</strong> (squares, agents, the Wumpus); <strong>relations/predicates</strong> (Adjacent, At — truth-valued connections); <strong>functions</strong> (LocationOf, LeftOf — each mapping objects to exactly one object); <strong>variables</strong> (x, y — placeholders); <strong>quantifiers</strong>: <code>∀</code> (&quot;for all&quot;) and <code>∃</code> (&quot;there exists,&quot; at least one). One FOL sentence routinely replaces exponentially many propositional ones.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Stamps vs. Stencil Machine</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;one template, infinite groundings&quot; here, then drop the machine; quantifier-plus-connective discipline below is the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> <code>∀x (At(x,Cave) =&gt; Dark(x))</code> says every cave square is dark. <code>∃x (At(x,Cave) ∧ Glitter(x))</code> says some cave square glitters. Swapping connectives states nonsense (next section) — the most-tested syntax fact.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-syntax-semantics-pairings">2. Basic Layer: Syntax, Semantics, Pairings</h2>
+<p class="secnav"><a href="#1-start-from-zero-stamps-vs-stencil-machine">← 1. Start From Zero: Stamps vs. Ste…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-unification-and-lifted-inference">3. Formal Layer: Unification and L… →</a></p>
+<p><strong>Data/state:</strong> terms (constants like Wumpus, variables like x, functions of terms like LeftOf(x)); atomic sentences (predicate on terms: At(Agent,(1,1))). <strong>Goal:</strong> quantify correctly with scope discipline.</p>
 <ul>
-<li><strong>Terms:</strong> constants (<code>Wumpus</code>, <code>A</code>), variables (<code>x</code>), or functions of terms (<code>LeftOf(x)</code>).</li>
-<li><strong>Atomic sentences:</strong> predicate applied to terms: $\text{At}(\text{Agent}, (1,1))$, $\text{Adjacent}((1,2),(2,2))$.</li>
-<li><strong>Quantified sentences:</strong> $\forall x; P(x)$ (true iff $P$ holds for <em>every</em> object), $\exists x; P(x)$ (true iff $P$ holds for <em>at least one</em>). Order matters: $\forall x, \exists y; \text{Loves}(x,y)$ (&quot;everyone loves someone&quot;) $\neq$ $\exists y, \forall x; \text{Loves}(x,y)$ (&quot;someone is loved by all&quot;) — the classic scope swap examiners adore.</li>
-<li><strong>Standard pitfall shapes:</strong> $\forall x; (\text{At}(x,\text{Cave}) \Rightarrow \text{Dark}(x))$ is the correct &quot;all cave squares are dark&quot; ($\forall$ pairs with $\Rightarrow$); $\exists x; (\text{At}(x,\text{Cave}) \land \text{Glitter}(x))$ is &quot;some cave square glitters&quot; ($\exists$ pairs with $\land$). Swapping the connective ($\forall$+$\land$, $\exists$+$\Rightarrow$) states near-nonsense — the single most-tested FOL syntax fact.</li>
+<li><code>∀x P(x)</code>: true iff P holds for every object. <code>∃x P(x)</code>: true iff P holds for at least one. Order matters: <code>∀x ∃y Loves(x,y)</code> (everyone loves someone) differs from <code>∃y ∀x Loves(x,y)</code> (one universally-loved someone) — the scope swap examiners adore.</li>
+<li><strong>Correct pairings:</strong> <code>∀</code> pairs with <code>=&gt;</code> (all cave squares are dark). <code>∃</code> pairs with <code>∧</code> (some square glitters). Swapped, <code>∀x (At(x) ∧ Dark(x))</code> claims everything in the universe is a dark cave square (absurdly strong), and <code>∃x (At(x) =&gt; Glitter(x))</code> is satisfied by any non-cave object via vacuous truth (uselessly weak).</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Unification (UNIFY)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$\text{UNIFY}(p, q)$ returns the <strong>most general unifier (MGU)</strong> $\theta$ — variable bindings making $p\theta = q\theta$ while committing to <em>nothing extra</em>. Rules: identical constants unify; variable–anything unifies (record $var/term$) and <strong>compose</strong> through all accumulated bindings; two different constants/arity-mismatches <strong>fail</strong>. <strong>Occur check:</strong> $x$ never unifies with a term <em>containing</em> $x$ (else infinite regress: $x = f(x) = f(f(x)) = \dots$). Skipping it (as Prolog does, for speed) risks unsound loops.</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-lifting-inference-to-fol">3. Lifting Inference to FOL</h2>
-<p class="secnav"><a href="#2-syntax-and-semantics-in-one-pass">← 2. Syntax and Semantics in One Pas…</a><span class="secnav-sep">·</span><a href="#4-unifying-to-fire-a-rule">4. Unifying to Fire a Rule →</a></p>
-<p><strong>Lifted Modus Ponens:</strong> from $\forall \vec{v}; (p_1 \land \dots \land p_n \Rightarrow q)$ and premises $p_i&#39;$ with a <em>single</em> $\theta$ unifying every $p_i$ with $p_i&#39;$, infer $q\theta$ — one rule application doing the work of infinitely many propositional groundings. <strong>Forward chaining</strong> (FOL-FC) matches rules against known facts via unification, adding consequents until the query grounds out; <strong>backward chaining</strong> (FOL-BC, Prolog&#39;s engine) recursively unifies the goal with rule heads, proving premises depth-first with backtracking over alternative unifiers.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Standardize Apart Before You Unify</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Two rules sharing a variable name ($x$ in both) will collide during unification — silently merging unrelated bindings. <strong>Standardizing apart</strong> (renaming each rule-use&#39;s variables uniquely, e.g. $x_{17}$) is mandatory hygiene before every UNIFY call. Nearly every &quot;mysterious wrong binding&quot; in tracing questions traces back here.</p>
-</div></details><hr>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-unification-and-lifted-inference">3. Formal Layer: Unification and Lifted Inference</h2>
+<p class="secnav"><a href="#2-basic-layer-syntax-semantics-pairings">← 2. Basic Layer: Syntax, Semantics,…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Meaning, variables, intuition, formula:</strong> <strong>unification</strong> <code>UNIFY(p, q)</code> finds the <strong>most general unifier (MGU)</strong> — variable bindings making <code>p</code> and <code>q</code> identical while committing to nothing extra. Rules: identical constants unify; variable-anything binds (record var/term) and <strong>composes</strong> through accumulated bindings (early bindings rewrite later pairs); different constants or arity mismatches fail. <strong>Occur check:</strong> x never unifies with a term containing x (else infinite regress x = f(x) = f(f(x)) = ...). Prolog skips it for speed, risking unsound loops — a documented trade, not a free optimization.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Unification (UNIFY)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same predicate and arity required. Bind variables minimally, compose substitutions forward, fail on constant/arity clash, refuse self-containing partners via the occur check. Generality preserved by binding-then-composing in order.</p>
+</div></details><p><strong>Lifted Modus Ponens:</strong> from <code>∀v (p1 ∧ ... ∧ pn =&gt; q)</code> plus premises unifiable with every <code>pi</code> under one substitution <code>θ</code>, infer <code>qθ</code> — one step doing infinitely many propositional groundings&#39; work. <strong>FOL forward chaining</strong> matches rules via unification, adding consequents. <strong>FOL backward chaining</strong> (Prolog&#39;s engine) unifies goals with rule heads depth-first with backtracking over unifiers.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Standardize Apart Before You Unify</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Two rules sharing <code>x</code> collide — unrelated bindings fuse silently. <strong>Standardizing apart</strong> (fresh names per use, e.g. x17) before every UNIFY is mandatory hygiene. Most &quot;mysterious wrong bindings&quot; trace here.</p>
+</div></details><p><strong>Worked unification:</strong> rule <code>∀s (Stench(s) =&gt; WumpusNear(s))</code>, fact <code>Stench(S12)</code>. Standardize <code>s</code> to <code>s7</code>. UNIFY <code>Stench(s7)</code> with <code>Stench(S12)</code>: variable-meets-constant gives <code>θ = {s7/S12}</code>. Apply to consequent: <code>WumpusNear(S12)</code> — the neighbourhood disjunction in one lifted step. With <code>Stench(S12, extra)</code> (arity 2 vs. 1), unification fails immediately — arity mismatch is non-negotiable.</p>
 <p><a id="worked-example"></a></p>
-<h2 id="4-unifying-to-fire-a-rule">4. Unifying to Fire a Rule</h2>
-<p class="secnav"><a href="#3-lifting-inference-to-fol">← 3. Lifting Inference to FOL</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
-<p>KB rule: $\forall s; (\text{Stench}(s) \Rightarrow \text{WumpusNear}(s))$. Known fact: $\text{Stench}(S_{12})$ (stench sensed at square (1,2)).</p>
-<p>Standardize apart: the rule&#39;s $s$ becomes $s_7$ (fresh, collision-proof). UNIFY premise $\text{Stench}(s_7)$ with fact $\text{Stench}(S_{12})$: same predicate, same arity; $s_7$ is a variable meeting a constant → $\theta = {s_7/S_{12}}$. Apply $\theta$ to the consequent: $\text{WumpusNear}(S_{12})$ — the Wumpus is constrained to $(1,2)$&#39;s neighborhood, i.e. the $W_{1,3} \lor W_{2,2}$-style disjunction of this module&#39;s first topic, derived by <em>one lifted step</em> instead of a page of propositional clauses. Had the fact instead been $\text{Stench}(S_{12}, \text{extra})$ (arity 2 vs 1), unification would <strong>fail</strong> immediately — arity mismatch is non-negotiable.</p>
-<hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-unification-and-lifted-inference">← 3. Formal Layer: Unification and L…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>∀+=&gt;</code> vs. <code>∃+∧</code></td>
+<td>Correct universal/existential forms vs. swapped nonsense/vacuity</td>
+</tr>
+<tr>
+<td>MGU vs. any unifier</td>
+<td>Least-committing bindings (compose in order) vs. over-bound instances</td>
+</tr>
+<tr>
+<td>Lifted vs. grounded inference</td>
+<td>One template step vs. infinitely many photocopied instances</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Bind-then-compose order is load-bearing when later terms contain earlier variables. (2) Scope order <code>∀∃</code> vs. <code>∃∀</code> changes meaning entirely. (3) Skipped occur checks admit cyclic terms.</p>
+<p><strong>Limitations:</strong> full FOL entailment is only semi-decidable (next topic); unification without indexing is expensive; functions create infinite groundings that only lifting tames.</p>
 <p><a id="self-check"></a></p>
 <h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-unifying-to-fire-a-rule">← 4. Unifying to Fire a Rule</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What is the most general unifier of Knows(John, x) and Knows(y, Mother(y)), and why must y bind before the second argument is compared?</span>
@@ -337,7 +357,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Unify left-to-right, composing as you go: $y$ meets $\text{John}$ → $\theta = {y/\text{John}}$; apply it through the accumulated substitution, so the second pair is $x$ vs. $\text{Mother}(\text{John})$ → add $x/\text{Mother}(\text{John})$. Committing $x$ early (option C) over-binds; self-binding (option D) is exactly what the occur check forbids.</p><pre><code>&lt;/div&gt;
+      <p>Left-to-right with composition: y meets John first, rewriting the second pair to x vs. Mother(John). Early commitment in the wrong order over-binds; self-binding is occur-check-forbidden.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -362,7 +382,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$\forall x; (\text{At}(x) \land \text{Dark}(x))$ asserts <em>every object in the universe</em> is a dark cave square — absurdly strong. $\exists x; (\text{At}(x) \Rightarrow \text{Glitter}(x))$ is satisfied by <em>any</em> non-cave object (false antecedent) — vacuously, uselessly true. Right connective per quantifier, or the sentence means something unintended.</p><pre><code>&lt;/div&gt;
+      <p>∀+∧ over-claims universally; ∃+=&gt; holds vacuously off-target. Right connective per quantifier or the sentence misfires.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -387,24 +407,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Variable scope is per-rule-use; the $x$ in rule A and the $x$ in rule B are unrelated. Unifying without renaming fuses them into one variable, so a binding forced by rule A silently constrains rule B — the classic source of &quot;correct rules, insane derivation.&quot; Fresh names per use ($x_1, x_2, \dots$) cost nothing and prevent everything.</p><pre><code>&lt;/div&gt;
+      <p>Variable scope is per-rule-use. Fresh names per use cost nothing and prevent cross-rule binding leakage.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
 <p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> MGU of two given expressions, ∀/∃ connective pairing, or the occur check.</li>
-<li><strong>7 Marks:</strong> Lifted Modus Ponens trace (standardize apart → UNIFY → apply θ), or FOL forward/backward chaining comparison.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Find the MGU of Knows(John, x) and Knows(y, Mother(y)), showing composition order.</strong></p>
-<p><strong>Model Answer:</strong> Compare argument-wise: first pair $y$ vs. $\text{John}$ gives $\theta_1 = {y/\text{John}}$. Compose $\theta_1$ into the remaining problem: second pair becomes $x$ vs. $\text{Mother}(\text{John})$, giving $\theta_2 = {x/\text{Mother}(\text{John})}$. Final MGU $\theta = {y/\text{John},, x/\text{Mother}(\text{John})}$ — binding $y$ first is load-bearing, since $x$&#39;s partner contains $y$.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: one MGU, pairing rule, or occur check. 7 marks: lifted-Modus-Ponens trace (standardize, UNIFY, apply) or FOL chaining comparison.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> term/atom/quantifier definitions; pairing rule with failure modes; MGU composition order; occur-check regress; standardize-apart hygiene; lifted-MP shape.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Find the MGU of Knows(John, x) and Knows(y, Mother(y)).</strong></p>
+<p><strong>Model Answer:</strong> y vs. John gives {y/John}; composed second pair x vs. Mother(John) gives {x/Mother(John)}. Final {y/John, x/Mother(John)} — y-first is load-bearing.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Explain lifted Modus Ponens with an example. Why is standardizing apart necessary?</strong></p>
-<p><strong>Model Answer:</strong> Lifted MP: from $\forall \vec{v}; (p_1 \land \dots \land p_n \Rightarrow q)$ plus facts $p_i&#39;$ unifiable with every $p_i$ under one $\theta$, infer $q\theta$ — e.g. the §4 Stench derivation in a single step. Standardizing apart renames each rule invocation&#39;s variables ($x \to x_{17}$) so that coincidental name-sharing between rules cannot fuse independent bindings; without it, one rule&#39;s committed substitution corrupts another&#39;s unification and the derivation goes unsound.</p>
+<p><strong>Q: Explain lifted Modus Ponens with the Stench example and the standardize-apart need.</strong></p>
+<p><strong>Model Answer:</strong> From the universal rule plus unifiable premises under one θ infer qθ — here WumpusNear(S12) in one step. Standardizing apart renames each invocation (x to x17) so coincidental sharing cannot fuse independent bindings; without it derivations go unsound.
+:::</p>
 
     </main>
 

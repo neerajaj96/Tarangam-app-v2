@@ -229,16 +229,16 @@ describe('course page wiring', () => {
   });
 });
 
-describe('live 432-topic repository', () => {
+describe('live 435-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('resolves all 16 courses and 64 modules with manifest-matching counts', () => {
-    assert.equal(manifest.topics.length, 432);
+    assert.equal(manifest.topics.length, 435);
     const courses = Course.buildCourseOverviewList(manifest, none, null, undefined, null);
     assert.equal(courses.length, 16);
-    assert.equal(courses.reduce((a, c) => a + c.totalTopics, 0), 432);
+    assert.equal(courses.reduce((a, c) => a + c.totalTopics, 0), 435);
     let moduleCount = 0;
     for (const c of courses) {
       assert.equal(c.modules.length, c.moduleCount);

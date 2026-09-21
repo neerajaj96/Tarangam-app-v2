@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link active" id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,22 +249,54 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Gradient Descent: The Training Engine</h1>
-<p><strong>Following the slope downhill, learning rates that cooperate vs. explode, batch vs. stochastic vs. mini-batch, and convexity&#39;s guarantee.</strong></p>
+<p><strong>What problem optimisation solves, what loss landscape data it walks, how batch versus Stochastic Gradient Descent (SGD) versus mini-batch trade cost and noise, and where convexity guarantees hold.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Loss is a mountainside; weights are your position; the goal valley is the minimum. You feel only the local slope under your boots. Step downhill with stride proportional to steepness. Too timid crawls; too bold leaps over the valley and explodes.</p>
+<p>Tiny beginner example. Minimise $(w-3)^2$ from $w=0$. Slope is $2(w-3)=-6$. Step $0.1$ gives $w=0.6$ (closer). Step $1.1$ gives $w=6.6$ (overshot past 3). Same slope, different stride, opposite fates. That is the entire learning-rate story.</p>
+<p>Analogy as support, then dropped. Foggy mountain with local slope only. From here on we use exact terms only: gradient, learning rate, batch, stochastic, mini-batch, convex.</p>
+<p>Abbreviations defined on first use: Stochastic Gradient Descent (SGD). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $J(w)$?</td>
+<td>Loss as a function of weights</td>
+</tr>
+<tr>
+<td>What is $\nabla_w J$?</td>
+<td>Gradient, steepest-ascent direction</td>
+</tr>
+<tr>
+<td>What is $\eta$?</td>
+<td>Learning rate, stride length</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Find weights minimising loss without a closed form or with too much data for one.</p>
+<p><strong>Data.</strong> Whole dataset (batch), one sample (SGD), or $B$ samples with $B=32$ to $256$ (mini-batch). Here $n$ is dataset size, $d$ is dimension, $B$ is batch size.</p>
+<p><strong>Goal.</strong> Reach low loss with few, stable steps. Update $w\leftarrow w-\eta\nabla_w J(w)$. Here $\eta$ scales the downhill step; $\nabla_w J$ points uphill so minus points downhill.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Foggy Mountain</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>You stand on a foggy mountainside (loss landscape) tasked with reaching the valley (minimum) — you can feel only the <em>local slope</em> under your boots. <strong>Gradient descent</strong> steps downhill, stride proportional to steepness (<strong>learning rate</strong> $\eta$): timid strides crawl (slow, safe), bold strides leap over the valley and ricochet uphill (<strong>divergence</strong>). <strong>Stochastic</strong> descent asks a random local (one sample&#39;s slope) instead of surveying the whole mountain per step — noisy directions, far more steps per second, and noise that usefully rattles out of shallow ditches.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
@@ -278,30 +318,30 @@
     <p class="video-caption"><strong>Key Insight:</strong> Descending the Loss Bowl</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch batch steps march smoothly to the bottom, overshooting strides ping-pong across the valley, and stochastic steps jitter downhill — noisy individually, fastest overall.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Update and the Learning Rate</h3>
+</div><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (minimise $J$) → data (batches of gradients) → goal (stable low loss) → method (slope steps) → model (weights) → training (flavours plus schedules) → example → limitations.</p>
+<h3>3.1 The Update and the Learning Rate, Symbol by Symbol</h3>
 <p>$$w \leftarrow w - \eta,\nabla_w J(w)$$</p>
 <ul>
-<li>$\eta$ too small: monotone but glacial (steps $\propto$ gradient shrink near optima anyway — compounding the crawl).</li>
-<li>$\eta$ too large: overshoot, oscillate, <strong>diverge</strong> (loss explodes to NaN — the most common training-death signature).</li>
-<li>Goldilocks diagnostics: loss falling smoothly (good), plateaued high (raise $\eta$ or wait), spiking/NaN (halve $\eta$ immediately). Schedules decay $\eta$ over time (step, exponential, cosine) — long strides early, careful feet late.</li>
+<li>$\eta$ too small: monotone but glacial; steps shrink near optima anyway, compounding the crawl.</li>
+<li>$\eta$ too large: overshoot, oscillate, diverge to Not-a-Number (NaN), the most common training-death signature.</li>
+<li>Diagnostics: smoothly falling loss is good; high plateau means raise $\eta$ or wait; spiking or NaN means halve $\eta$ immediately. Schedules decay $\eta$ over time (step, exponential, cosine): long strides early, careful feet late.</li>
 </ul>
-<h3>2.2 Three Flavors (One Spectrum)</h3>
+<h3>3.2 Three Flavors, One Spectrum</h3>
 <table>
 <thead>
 <tr>
 <th></th>
 <th>Gradient source</th>
-<th>Cost/step</th>
+<th>Cost per step</th>
 <th>Noise</th>
-<th>Convergence</th>
+<th>Behaviour</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Batch GD</td>
+<td>Batch Gradient Descent (GD)</td>
 <td>full dataset</td>
 <td>$O(nd)$</td>
 <td>none</td>
@@ -319,24 +359,61 @@
 <td>$B$ samples (32–256)</td>
 <td>$O(Bd)$</td>
 <td>moderate</td>
-<td>the working default (GPU-friendly)</td>
+<td>working default (Graphics Processing Unit (GPU)-friendly)</td>
 </tr>
 </tbody></table>
-<h3>2.3 Convexity: When Downhill Can&#39;t Go Wrong</h3>
-<p>Logistic loss is <strong>convex</strong>: one bowl, one minimum — gradient descent with sensible $\eta$ <em>must</em> arrive (rate depends on conditioning; feature scaling/standardization fixes ravines). Neural losses (Module 3) are non-convex: valleys, saddles, plateaus — same update, no guarantees, plenty of craft (momentum, Adam preview).</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Optimization Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Update <strong>$w - \eta\nabla J$</strong> · $\eta$ small = <strong>crawl</strong>, large = <strong>diverge/NaN</strong> · batch <strong>$O(nd)$ smooth</strong>, SGD <strong>$O(d)$ noisy-fast</strong>, mini-batch <strong>default</strong> · convex (logistic) = <strong>one minimum, guaranteed</strong> · non-convex (nets) = <strong>craft needed</strong>.</p>
+<p>Steps numbered for one mini-batch iteration:</p>
+<ol>
+<li>Sample $B$ points.</li>
+<li>Average their gradients.</li>
+<li>Step $w\leftarrow w-\eta$ times that average.</li>
+<li>Optionally decay $\eta$ by schedule.</li>
+</ol>
+<h3>3.3 Convexity: Corrected Guarantee</h3>
+<p>Logistic loss is convex: one bowl, one global minimum region. With a suitably small $\eta$ (below $2/L$ for $L$-smooth loss, with standardised features fixing ravines), gradient descent converges toward the minimiser; conditioning sets speed. Neural losses (Module 3) are non-convex: valleys, saddles, plateaus. Same update, only stationary-point assurances, plenty of craft (momentum, Adam preview). Corrected claim: convexity removes local minima but still needs step-size discipline and does not promise fast arrival on ill-conditioned ravines or a finite minimiser on separable logistic data.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Small vs large $\eta$</td>
+<td>Crawl vs diverge; halve on NaN, raise on high plateau</td>
+</tr>
+<tr>
+<td>Batch vs SGD vs mini-batch</td>
+<td>Exact-costly vs noisy-cheap vs balanced default</td>
+</tr>
+<tr>
+<td>Convex vs non-convex training</td>
+<td>Global seeking with proper $\eta$ vs crafted local success</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Optimization Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Update <strong>$w - \eta\nabla J$</strong> · $\eta$ small = <strong>crawl</strong>, large = <strong>diverge/NaN</strong> · batch <strong>$O(nd)$ smooth</strong>, SGD <strong>$O(d)$ noisy-fast</strong>, mini-batch <strong>default</strong> · convex (logistic) = <strong>global seeking with proper step size</strong> · non-convex (nets) = <strong>craft needed</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: NaN Loss Means η, Not Data (Usually)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exploding/diverging loss with weights racing to ±∞ is the learning-rate-too-high signature — halve $\eta$ (or add gradient clipping) <em>before</em> blaming the dataset, the model, or the framework. Nine of ten &quot;my training broke&quot; stories end at the learning rate.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Minimize $J(w) = (w-3)^2$ from $w_0 = 0$. (a) Two batch steps with $\eta = 0.1$. (b) Same with $\eta = 1.1$. (c) Which $\eta$ regime is each in?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Stepping Twice</div><div class="step-content"><p>$\nabla J = 2(w-3)$. (a) $\eta=0.1$: $w_1 = 0 - 0.1\times(-6) = 0.6$; $\nabla = 2(0.6-3) = -4.8$; $w_2 = 0.6 + 0.48 = 1.08$ — marching toward 3 ($|w-3|$: $3 \to 2.4 \to 1.92$, shrinking geometrically). (b) $\eta=1.1$: $w_1 = 0 + 6.6 = 6.6$ (overshot past 3!); $\nabla = 2(3.6) = 7.2$; $w_2 = 6.6 - 7.92 = -1.32$ (ping-ponged across) — $|w-3|$: $3 \to 3.6 \to 4.32$, <em>growing</em>: divergence.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$\eta = 0.1$ converges geometrically; $\eta = 1.1$ explodes on a <em>perfectly convex quadratic</em> — the stability ceiling here is $\eta &lt; 1$ (curvature 2 ⇒ need $\eta &lt; 2/L$ with $L=2$). If it diverges on a bowl, it diverges anywhere: learning-rate discipline first, architectures second.</p>
-</div></div><hr>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Raising $\eta$ to escape a high plateau that is actually model bias. Raise cheaply first, then add capacity.</li>
+<li>Switching batch modes at fixed $\eta$ and misreading stall as bug. Noise and step count changed, not correctness.</li>
+<li>Claiming convex guarantees arrival for any $\eta$. Stability needs $\eta&lt;2/L$ and reasonable conditioning.</li>
+<li>Ignoring checkpoints. Healthy-then-NaN needs resume from last good weights.</li>
+</ul>
+<p>Limitations: gradients need differentiability; ravines need scaling or adaptive steps; non-convex needs init and schedule craft.</p>
+<p>Exam recap: update $w-\eta\nabla J$; small crawls, large diverges; batch $O(nd)$, SGD $O(d)$, mini-batch default; convex seeks global with proper $\eta$, non-convex needs craft.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Training loss suddenly becomes NaN after 50 healthy epochs (say, right after unfreezing layers or raising η). What is the most likely mechanism and the first fix?</span>
@@ -395,7 +472,7 @@
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>No difference exists; convexity is irrelevant to optimization</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Convex: arrival at the global minimum is guaranteed (conditioning only sets speed). Non-convex: only stationary points are promised — but expressive architectures reach *useful* minima whose modeling power dwarfs the convex model&#39;s ceiling</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Convex: convergence toward the global minimiser with proper step size and conditioning (only speed varies). Non-convex: only stationary points are promised — but expressive architectures reach *useful* minima whose modeling power dwarfs the convex model&#39;s ceiling</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Non-convex losses cannot be differentiated at all</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Convex models always generalize better regardless of data</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -409,7 +486,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Guarantees vs. capacity: convexity buys certainty about a limited model family; depth buys representational power with only local assurances. Practice trades the guarantee for the ceiling — with craft (init, schedules, momentum/Adam) making the trade pay. (Module 3&#39;s entire story, previewed.)</p><pre><code>&lt;/div&gt;
+      <p>Guarantees vs. capacity: convexity buys certainty about a limited model family given step-size discipline; depth buys representational power with only local assurances. Practice trades the guarantee for the ceiling — with craft (init, schedules, momentum/Adam) making the trade pay. (Module 3&#39;s entire story, previewed.)</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -427,9 +504,9 @@
       
       
       
-      <a href="./m2_99_practice_lab_classification_drills.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m2_06_classification_evaluation_metrics.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">🧪 Practice Lab: M2 Classification Drills</div>
+        <div class="ttl">2.6 Classification Evaluation Metrics</div>
       </a>
       
     </footer>
@@ -521,7 +598,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m2_05_gradient_descent_training_engine";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

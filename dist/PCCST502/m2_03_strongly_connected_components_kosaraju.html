@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,25 +281,29 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Strongly Connected Components: Kosaraju&#39;s Algorithm</h1>
 <p><strong>Mutual reachability, the condensation DAG, finishing-time order, the two-pass method on G and transpose, and why the order is load-bearing.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Island Chains in a One-Way Current</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture islands linked by one-way ferry routes. A <strong>strongly connected component (SCC)</strong> is a maximal group where you can sail from <em>any</em> island to <em>any</em> other (round trips everywhere inside). Between groups, travel is one-way — collapse each group to a single dot and the dots form a <strong>DAG</strong> (cycles can&#39;t survive: a cycle of groups would just be one bigger group). Kosaraju&#39;s trick: process islands in the order a first expedition <em>finishes</em> them, then re-explore the <em>reversed</em> map — each re-exploration nets exactly one island group, no mixing.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> In a directed graph, &quot;connected&quot; splits in two: $u$ may reach $v$ while $v$ cannot return. A <strong>strongly connected component (SCC)</strong> is a maximal group with round trips everywhere inside (every member reaches every other). Task: partition all vertices into these groups. Naive pairwise reachability is far too slow; Kosaraju does it in two linear passes.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Island Chains in a One-Way Current</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Islands linked by one-way ferries: an SCC is a group with round trips between every pair. Between groups travel is one-way — collapse each group to a dot and the dots form a DAG (Directed Acyclic Graph: no directed cycles), since a cycle of groups would merge into one. Kosaraju&#39;s trick: record the order a first expedition <em>finishes</em> islands, then re-explore the <em>reversed</em> map in that order — each re-exploration nets exactly one group. Drop the islands now: finish times and the transpose below are the exact mechanism.</p>
+</div></details><p><strong>Tiny toy example (3 vertices).</strong> Edges $a \to b$, $b \to a$ (round trip!), $b \to c$ (one-way out). SCCs: ${a, b}$ (mutual) and ${c}$ (can be reached, never returns). Collapsed: ${a,b} \to {c}$ — a 2-node DAG.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Definitions</h3>
-<ul>
-<li>$u, v$ are <strong>mutually reachable</strong> if paths $u \leadsto v$ AND $v \leadsto u$ both exist. Mutual reachability is an equivalence relation; its classes are the <strong>SCCs</strong>.</li>
-<li>The <strong>condensation</strong> (one node per SCC, edges between SCCs) is always a <strong>DAG</strong> — the proof is one line: a directed cycle among SCCs would merge them into a single SCC.</li>
-</ul>
-<h3>2.2 Kosaraju&#39;s Two Passes</h3>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-triangle-plus-tail">3. Worked example — triangle plus … →</a></p>
+<p><strong>Symbols and abbreviations:</strong> $G$ = original directed graph; $G^T$ = transpose (every edge reversed, nothing added/removed — not the complement); SCC = strongly connected component; $u \leadsto v$ = a directed path from $u$ to $v$.</p>
+<p><strong>Definitions.</strong> $u, v$ are <strong>mutually reachable</strong> if $u \leadsto v$ AND $v \leadsto u$. Mutual reachability is an equivalence relation; its classes are the SCCs. The <strong>condensation</strong> (one node per SCC, edges between SCCs) is always a <strong>DAG</strong> — proof in one line: a directed cycle among SCCs would merge them into a single SCC.</p>
+<p><strong>Kosaraju&#39;s two passes — numbered steps:</strong></p>
+<ol>
+<li><strong>Pass 1:</strong> DFS on $G$; push each vertex onto a stack when it <em>finishes</em>.</li>
+<li><strong>Pass 2:</strong> DFS on the <strong>transpose</strong> $G^T$, visiting vertices by popping the stack (<em>decreasing</em> finish-time order). Each DFS tree grown is exactly one SCC.</li>
+</ol>
 <div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Two Passes, Two Geometries</span>
@@ -322,32 +326,57 @@
     <p class="video-caption"><strong>Key Insight:</strong> Two Passes, Two Geometries</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch pass 1 stamp finish order on G, then the transpose pass peel the triangle {1,2,3} as one SCC while loner 4 falls out alone — the order doing the correctness work.</div>
   </div>
-</div><ol>
-<li><strong>Pass 1:</strong> DFS on $G$; record vertices in order of <em>finishing</em> time (push each vertex onto a stack when it finishes).</li>
-<li><strong>Pass 2:</strong> DFS on the <strong>transpose</strong> $G^T$ (every edge reversed), visiting vertices in <em>decreasing</em> finish-time order (pop the stack). Each DFS tree grown is exactly one SCC.</li>
-</ol>
-<pre><code class="language-text">G:  A --&gt; B --&gt; C          G^T (reversed):  A &lt;-- B &lt;-- C
+</div><pre><code class="language-text">G:  A --&gt; B --&gt; C          G^T (reversed):  A &lt;-- B &lt;-- C
 ^     |   ^                      |     |   |
 |     v   |                      v     |   v
 D &lt;-- E   F                      D --&gt; E   F
 (pass 1 finishes F,C,B,E,A,D?) (pass 2 peels SCCs in that order)
 </code></pre>
-<h3>2.3 Why the Order Works (proof intuition)</h3>
-<p>The vertex finishing <em>last</em> in pass 1 belongs to a <strong>source SCC of the condensation</strong> (nothing outside points... precisely: no path <em>into</em> it from unvisited SCCs remains). Reversing all edges turns that source into a <strong>sink</strong> in $G^T$ — so DFS from it in pass 2 cannot escape its own SCC. Peeling sinks one by one partitions the graph exactly. Run pass 2 in <em>arbitrary</em> order and one DFS bleeds across SCCs — the order is the algorithm.</p>
+<p><strong>Why the order works (proof intuition).</strong> The last-finishing vertex of pass 1 sits in a <strong>source SCC</strong> of the condensation. Reversing edges turns that source into a <strong>sink</strong> in $G^T$ — DFS from it cannot escape its own SCC. Peeling sinks one by one partitions the graph exactly. Pass 2 in <em>arbitrary</em> order bleeds across SCCs — the decreasing-finish order is load-bearing, not bookkeeping. Total: two linear passes → $\Theta(V+E)$.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Kosaraju in 4 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>SCC = <strong>mutual reachability class</strong> · condensation is a <strong>DAG</strong> · pass 1: DFS on <strong>G</strong>, stack by <strong>finish time</strong> · pass 2: DFS on <strong>transpose</strong> in <strong>decreasing finish order</strong>, each tree = one SCC. Time $\Theta(V+E)$ — two linear passes, nothing more.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Transpose, Not Complement — and Order Matters</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$G^T$ flips every edge&#39;s <em>direction</em>; it does not add/remove edges (that&#39;s the complement — instant zero if confused). And pass 2 in <em>increasing</em> finish order re-merges SCCs: the decreasing order is load-bearing, not bookkeeping.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Transpose, Not Complement — and Order Matters</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$G^T$ flips every edge&#39;s <em>direction</em>; it does not add/remove edges (that is the complement — instant zero if confused). And pass 2 in <em>increasing</em> finish order re-merges SCCs: the decreasing order is load-bearing, not bookkeeping.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Directed graph: $1 \to 2,\ 2 \to 3,\ 3 \to 1$ (a triangle) plus $3 \to 4$ (a tail). Find all SCCs with Kosaraju, showing both passes. (Start DFS at vertex 1, numeric neighbor order.)</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Running Both Passes</div><div class="step-content"><p><strong>Pass 1 (DFS on G from 1):</strong> $1 \to 2 \to 3$: from 3, neighbor 1 is gray (back edge, ignore for ordering), neighbor 4 white → discover 4, finish 4 first. Back up: finish 3, then 2, then 1. Finish stack (bottom→top): $[4, 3, 2, 1]$, so decreasing finish order is $1, 2, 3, 4$.
-<strong>Pass 2 (DFS on $G^T$):</strong> transpose edges: $2\to1,\ 3\to2,\ 1\to3,\ 4\to3$. Pop 1: from 1 reach ${1,3,2}$ (via $1\to3\to2\to1$) — 4 unreachable ($4\to3$ points the wrong way) → <strong>SCC ${1,2,3}$</strong>. Next unvisited: 4 → alone → <strong>SCC ${4}$</strong>.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>SCCs: ${1,2,3}$ (the triangle — mutual reachability holds all around) and ${4}$ (reachable <em>from</em> the triangle, but nothing returns — the one-way tail). Note how pass 2&#39;s reversed edge $4\to3$ quarantined 4 instead of merging it: the transpose doing its job.</p>
+<h2 id="3-worked-example-triangle-plus-tail">3. Worked example — triangle plus tail</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Directed graph: $1 \to 2,\ 2 \to 3,\ 3 \to 1$ (triangle) plus $3 \to 4$ (tail). Find all SCCs, showing both passes (DFS from 1, numeric order).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Running Both Passes</div><div class="step-content"><p><strong>Pass 1 (DFS on G from 1):</strong> $1 \to 2 \to 3$: from 3, neighbour 1 is gray (back edge, ordering only), neighbour 4 white → discover 4, finish 4 first. Back up: finish 3, 2, 1. Finish stack bottom→top: $[4, 3, 2, 1]$; decreasing finish order $1, 2, 3, 4$. <strong>Pass 2 (DFS on $G^T$):</strong> transpose edges $2\to1,\ 3\to2,\ 1\to3,\ 4\to3$. Pop 1: reach ${1,3,2}$ ($1\to3\to2\to1$); 4 unreachable ($4\to3$ points away) → <strong>SCC ${1,2,3}$</strong>. Next unvisited 4 → alone → <strong>SCC ${4}$</strong>.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>SCCs ${1,2,3}$ (mutual reachability all around) and ${4}$ (reachable <em>from</em> the triangle, nothing returns — the one-way tail). The reversed $4\to3$ quarantined 4: the transpose doing its job.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-triangle-plus-tail">← 3. Worked example — triangle plus …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Transpose $\ne$ complement: reverse directions only; vertex and edge counts never change.</li>
+<li>Pass 1 records <em>finish</em> order, not discovery order — pushing at discovery breaks the source/sink argument.</li>
+<li>One-way reachability ($u \leadsto v$ alone) never merges vertices; mutuality is mandatory.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Transpose vs complement</td>
+<td>Reverse all arcs vs add/remove arcs — opposite operations</td>
+</tr>
+<tr>
+<td>Decreasing vs increasing finish order</td>
+<td>Sinks-first (exact partition) vs bleed-across (fused, wrong)</td>
+</tr>
+<tr>
+<td>SCC vs connected component</td>
+<td>Mutual directed reachability vs undirected reachability</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> SCC = mutual-reachability class; condensation is a DAG; pass 1 finishes on $G$, pass 2 decreasing on $G^T$, each tree one SCC; $\Theta(V+E)$.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why must pass 2 run on the transpose graph rather than the original?</span>

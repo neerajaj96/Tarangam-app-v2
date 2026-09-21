@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,55 +297,129 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Modulation: ASK, FSK, PSK &amp; QAM</h1>
 <p><strong>Why baseband can&#39;t travel, amplitude/frequency/phase keying, constellation diagrams, baud vs. bit rate, and QAM arithmetic.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Semaphore Flags at Night</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Daylight flag signals (baseband digital pulses) work line-of-sight — but you can&#39;t wave flags through a storm or across an ocean. Instead you mount a <strong>lantern</strong> (carrier wave) on the tower and modulate <em>it</em>: brightness steps (<strong>ASK</strong>), color swaps (<strong>FSK</strong>), or timing shifts of the blink (<strong>PSK</strong>). Combine brightness × timing grids and one blink carries a whole syllable (<strong>QAM</strong>). Modulation is always the same trick: graft fragile digital distinctions onto a rugged analog carrier built for the medium.</p>
-</div></details><hr>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Digital pulses (baseband) radiate terribly from antennas — efficient radiation needs antennas near the wavelength scale, so kilohertz pulses would want kilometer antennas — and they die quickly on long wired runs. The fix: mount the bits on a rugged high-frequency <strong>carrier wave</strong> built for the medium, varying one of its properties to encode data.</p>
+<p>The problem before the solution: choose <em>which</em> carrier property to vary (amplitude, frequency, phase — each with a noise/bandwidth price) and how many bits to pack per symbol (constellation density, policed by SNR — Signal-to-Noise Ratio).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Semaphore Flags at Night</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Daylight flag signals (baseband digital pulses) work line-of-sight — but you can&#39;t wave flags through a storm or across an ocean. Instead you mount a <strong>lantern</strong> (carrier wave) on the tower and modulate <em>it</em>: brightness steps (<strong>ASK</strong> — Amplitude-Shift Keying), color swaps (<strong>FSK</strong> — Frequency-Shift Keying), or timing shifts of the blink (<strong>PSK</strong> — Phase-Shift Keying). Combine brightness × timing grids and one blink carries a whole syllable (<strong>QAM</strong> — Quadrature Amplitude Modulation). Modulation is always the same trick: graft fragile digital distinctions onto a rugged analog carrier built for the medium.</p>
+<p>Dropping the lantern now: carrier = high-frequency wave; symbol = one modulated unit; baud = symbols/sec; constellation = the grid of legal symbol states.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-why-modulate-three-keyings-baud-math">3. Purpose — Why Modulate, Three K… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Carrier wave</strong></td>
+<td>The high-frequency analog wave whose properties are varied to carry bits.</td>
+</tr>
+<tr>
+<td><strong>ASK (Amplitude-Shift Keying)</strong></td>
+<td>Bit → carrier amplitude (on/off simplest). Cheap, fragile — noise attacks amplitude first.</td>
+</tr>
+<tr>
+<td><strong>FSK (Frequency-Shift Keying)</strong></td>
+<td>Bit → one of two frequencies. Robust to amplitude noise; burns bandwidth.</td>
+</tr>
+<tr>
+<td><strong>PSK (Phase-Shift Keying)</strong></td>
+<td>Bit → carrier phase ($0°/180°$ for BPSK — Binary PSK). Toughest of the three.</td>
+</tr>
+<tr>
+<td><strong>QAM (Quadrature Amplitude Modulation)</strong></td>
+<td>ASK × PSK grid: constellation of $N$ points packing $\log_2 N$ bits per symbol (QAM-16: 4; QAM-64: 6).</td>
+</tr>
+<tr>
+<td><strong>Constellation diagram</strong></td>
+<td>The amplitude–phase grid of legal symbols; denser = more bits per symbol, tighter decision regions.</td>
+</tr>
+<tr>
+<td><strong>Baud ($S$, symbols/sec)</strong></td>
+<td>Signal changes per second — needs bandwidth. Distinct from bit rate $R = S \times \log_2 N$.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Why Modulate at All</h3>
+<h2 id="3-purpose-why-modulate-three-keyings-baud-math">3. Purpose — Why Modulate, Three Keyings, Baud Math</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Why Modulate at All</h3>
 <p>Baseband pulses need a clean wired path and radiate terribly from antennas (efficient radiation needs antennas ~ wavelength scale — kHz digital pulses would want kilometer antennas). Shifting the signal onto a high-frequency carrier solves propagation; <em>varying</em> the carrier encodes the bits.</p>
-<h3>2.2 The Three Keyings (+1 Combination)</h3>
+<h3>3.2 The Three Keyings (+1 Combination)</h3>
 <ul>
 <li><strong>ASK</strong> (amplitude-shift keying): bit $\to$ carrier amplitude (on/off simplest). Cheap, fragile — noise attacks amplitude first.</li>
 <li><strong>FSK</strong> (frequency-shift keying): bit $\to$ one of two frequencies. Robust to amplitude noise; burns bandwidth (two carriers&#39; worth).</li>
 <li><strong>PSK</strong> (phase-shift keying): bit $\to$ carrier phase ($0°/180°$ for BPSK). Best noise immunity of the three — noise must rotate phase, not just nudge height.</li>
 <li><strong>QAM</strong> (quadrature amplitude modulation): <strong>ASK × PSK grid</strong> — constellation points spread over amplitude <em>and</em> phase. QAM-$N$ packs $\log_2 N$ bits per symbol (QAM-16: 4 bits/baud; QAM-64: 6 bits/baud) at the price of ever-tighter decision regions.</li>
 </ul>
-<h3>2.3 Baud vs. Bit Rate (the Eternal Confusion)</h3>
-<p><strong>Baud</strong> = symbols (signal changes) per second. <strong>Bit rate</strong> = baud × bits-per-symbol:</p>
+<h3>3.3 Baud vs. Bit Rate (the Eternal Confusion), Symbol by Symbol</h3>
+<p><strong>Baud</strong> $S$ = symbols (signal changes) per second. <strong>Bit rate</strong> $R$ = baud × bits-per-symbol, with $N$ = constellation points:</p>
 <p>$$R = S \times \log_2 N$$</p>
 <p>A 2400-baud QAM-16 line moves $2400 \times 4 = 9600$ bps. Raising <em>baud</em> needs more bandwidth; raising <em>bits-per-symbol</em> needs cleaner SNR (denser constellation, same Nyquist/Shannon ceilings from last topic — everything connects).</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Modulation Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>ASK = <strong>amplitude</strong> (fragile) · FSK = <strong>frequency</strong> (bandwidth-hungry) · PSK = <strong>phase</strong> (toughest) · QAM-$N$ = <strong>$\log_2 N$ bits/symbol</strong> · $R = S \times \log_2 N$ · baud = <strong>symbols/s</strong>, bit rate = <strong>data/s</strong> — different units, different questions.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Baud Is Not Bit Rate (Unless Binary)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;2400 baud = 2400 bps&quot; holds <em>only</em> for 2-level signaling (1 bit/symbol). The moment the constellation holds 4+ points, bit rate exceeds baud rate — and the exam&#39;s favorite wrong answer is exactly the baud number offered as the bit rate. Multiply by $\log_2 N$ first, answer second.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-why-modulate-three-keyings-baud-math">← 3. Purpose — Why Modulate, Three K…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>1200 baud, QPSK (4 phases): $\log_2 4 = 2$ bits/symbol → $R = 2400$ bps. Same 1200 baud, BPSK ($N = 2$): $R = 1200$ bps — here, and only here, baud equals bit rate.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A modem operates at $2400$ baud. (a) Bit rate with QPSK (4 phases)? (b) With QAM-64? (c) Which needs the cleaner line, and how does this relate to the Shannon ceiling?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Multiplying Symbols to Bits</div><div class="step-content"><p>(a) QPSK: $\log_2 4 = 2$ bits/symbol → $R = 2400 \times 2 = 4800$ bps.
 (b) QAM-64: $\log_2 64 = 6$ bits/symbol → $R = 2400 \times 6 = 14{,}400$ bps — triple the data on the identical baud (bandwidth).
 (c) QAM-64&#39;s 64-point constellation has far tighter decision regions — it demands much higher SNR. Shannon caps the exchange: bits/symbol can only rise while $B\log_2(1+\text{SNR})$ keeps up.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same wire, same baud, $3\times$ the throughput — bought purely with SNR. Modulation design is the art of spending signal quality on bits, with Shannon auditing every purchase.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Baud vs. bit rate</td>
+<td>Symbols/s vs. $S\log_2N$ data/s — equal only for binary.</td>
+</tr>
+<tr>
+<td>ASK vs. FSK vs. PSK</td>
+<td>Amplitude (fragile) vs. frequency (hungry) vs. phase (toughest).</td>
+</tr>
+<tr>
+<td>Raising baud vs. raising density</td>
+<td>Costs bandwidth vs. costs SNR (Shannon polices the second).</td>
+</tr>
+<tr>
+<td>Baseband vs. carrier</td>
+<td>Raw pulses (short hops) vs. modulated carrier (propagation-grade).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Answering the baud number as the bit rate — multiply first. (2) &quot;Denser constellations are free throughput&quot; — density without SNR manufactures errors. (3) Ranking ASK toughest — amplitude is noise&#39;s first victim.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Modulate because baseband can&#39;t propagate (antenna/wavelength physics). ASK = amplitude (fragile), FSK = frequency (hungry), PSK = phase (toughest); QAM-$N$ = $\log_2N$ bits/symbol on an ASK×PSK grid. $R = S\log_2N$; baud = symbols/s. Density trades SNR, audited by Shannon.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Why can&#39;t baseband cross an ocean? Rank the three keyings with reasons. Compute $R$ for 2400-baud QAM-16. What polices constellation density?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A line runs at 1200 baud using 8-PSK. What is the bit rate, and why isn&#39;t it 1200 bps?</span>
@@ -526,7 +604,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_04_modulation_ask_fsk_psk_qam";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

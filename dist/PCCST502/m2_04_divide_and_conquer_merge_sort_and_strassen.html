@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,28 +281,30 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Divide &amp; Conquer: Merge Sort &amp; Strassen</h1>
 <p><strong>The divide-conquer-combine skeleton, merge sort&#39;s Θ(n log n) via the recursion tree, and how Strassen multiplies matrices with 7 products instead of 8.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Sorting by Delegation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Sorting 1,000 files alone takes all weekend — so you split the pile in half, hand each half to a friend with the <em>same instructions</em> (&quot;sort your pile the same way&quot;), then merge their two sorted piles by repeatedly taking the smaller front file. Nobody ever sorts more than a handful directly; the magic is all in the <strong>merge</strong>. Strassen&#39;s matrix trick is the same spirit pushed further: reorganize the arithmetic so one of the 8 recursive multiplications <em>cancels out</em> — less delegation, same answer, asymptotically faster.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Sorting 1,000 files alone takes all weekend — so split the pile in half, hand each half to a friend with the <em>same</em> instructions, then merge their sorted piles by repeatedly taking the smaller front file. Nobody sorts more than a handful directly; all the magic is in the merge. Matrix multiplication gets the same treatment pushed further: reorganise the arithmetic so one of 8 recursive multiplications cancels out — same answer, asymptotically faster.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Sorting by Delegation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Divide (split), conquer (recurse on smaller copies), combine (merge results). Merge sort delegates halves and merges linearly; Strassen delegates 7 — not 8 — half-size products after clever additions. The skeleton is identical; only the combine step&#39;s cleverness differs. Drop the delegation story now: recurrences and the $M_1..M_7$ formulas below are the exact content.</p>
+</div></details><p><strong>Tiny toy example (4 numbers).</strong> Sort $[4, 1, 3, 2]$: split $[4,1]$ / $[3,2]$ → sort to $[1,4]$ / $[2,3]$ → merge by front-comparison: 1, 2, 3, 4. Three levels, every level touching all 4 elements once.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The D&amp;C Skeleton (all three steps, always)</h3>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-strassen-on-2-2-verified-against-naive">3. Worked example — Strassen on 2×… →</a></p>
+<p><strong>The D&amp;C skeleton (all three steps, always) — numbered steps:</strong></p>
 <ol>
-<li><strong>Divide</strong> the size-$n$ problem into $a$ subproblems of size $n/b$.</li>
+<li><strong>Divide</strong> size $n$ into $a$ subproblems of size $n/b$.</li>
 <li><strong>Conquer</strong> by solving subproblems recursively (base case: trivially small).</li>
-<li><strong>Combine</strong> the sub-solutions into the full answer — cost $f(n)$.</li>
+<li><strong>Combine</strong> sub-solutions into the answer — cost $f(n)$.</li>
 </ol>
-<p>General recurrence: $T(n) = aT(n/b) + f(n)$ — the exact shape the Master Theorem (Module 1) was built for.</p>
-<h3>2.2 Merge Sort: $T(n) = 2T(n/2) + \Theta(n)$</h3>
-<p>Split the array in half, recursively sort each half, then <strong>merge</strong> two sorted runs in one linear pass (compare front elements, emit the smaller — each element moves exactly once per level).</p>
+<p>General recurrence: $T(n) = aT(n/b) + f(n)$ — the Master Theorem&#39;s home shape ($a, b, f$ as in Module 1).</p>
+<p><strong>Merge sort: $T(n) = 2T(n/2) + \Theta(n)$.</strong> Split in half, sort each half, <strong>merge</strong> two sorted runs in one linear pass (compare fronts, emit smaller — each element moves once per level).</p>
 <pre><code class="language-text">Level 0:              [8 3 9 1 7 2]              merge cost n
                      /            \
 Level 1:        [8 3 9]        [1 7 2]           merge cost n
@@ -310,29 +312,58 @@ Level 1:        [8 3 9]        [1 7 2]           merge cost n
 Level 2:     [8 3]  [9]    [1 7]  [2]           merge cost n
              ... one-element lists: trivially sorted (base case)
 </code></pre>
-<p>Every level costs $\Theta(n)$ total and there are $\log_2 n$ levels → $\Theta(n \log n)$ (Master Case 2: $n^{\log_2 2} = n$ matches $f(n) = \Theta(n)$). Stable, guaranteed — but not in-place (merge needs $\Theta(n)$ auxiliary space).</p>
-<h3>2.3 Strassen: 7 Multiplications Suffice</h3>
-<p>Naive block multiplication needs <strong>8</strong> half-size products: $T(n) = 8T(n/2) + \Theta(n^2) = \Theta(n^3)$ — no better than brute force. Strassen&#39;s 7 clever products (additions/subtractions are $\Theta(n^2)$ and fade into $f(n)$):</p>
+<p>Every level costs $\Theta(n)$; $\log_2 n$ levels → $\Theta(n \log n)$ (Master Case 2: $n^{\log_2 2} = n$ matches $f = \Theta(n)$). Stable and guaranteed — but not in-place (merge needs $\Theta(n)$ auxiliary space).</p>
+<p><strong>Strassen: 7 multiplications suffice.</strong> Naive block multiplication needs <strong>8</strong> half-size products: $T(n) = 8T(n/2) + \Theta(n^2) = \Theta(n^3)$. Strassen&#39;s 7 products (additions are $\Theta(n^2)$, absorbed into $f(n)$):</p>
 <p>$$M_1 = (A_{11}+A_{22})(B_{11}+B_{22}) \qquad M_2 = (A_{21}+A_{22})B_{11}$$
 $$M_3 = A_{11}(B_{12}-B_{22}) \qquad\qquad\qquad M_4 = A_{22}(B_{21}-B_{11})$$
 $$M_5 = (A_{11}+A_{12})B_{22} \qquad\qquad M_6 = (A_{21}-A_{11})(B_{11}+B_{12})$$
 $$M_7 = (A_{12}-A_{22})(B_{21}+B_{22})$$</p>
 <p>$$C_{11} = M_1+M_4-M_5+M_7 \quad C_{12} = M_3+M_5 \quad C_{21} = M_2+M_4 \quad C_{22} = M_1-M_2+M_3+M_6$$</p>
-<p>Recurrence $T(n) = 7T(n/2) + \Theta(n^2)$: $n^{\log_2 7} \approx n^{2.81}$ dominates $f(n) = n^2$ → Master Case 1 gives $\Theta(n^{\log_2 7}) \approx \Theta(n^{2.81})$ — the first crack ever in the $n^3$ wall (constants keep naive winning for small $n$; crossover sits around $n \approx$ hundreds).</p>
+<p>Recurrence $T(n) = 7T(n/2) + \Theta(n^2)$: $n^{\log_2 7} \approx n^{2.81}$ dominates $f = n^2$ → Master Case 1 → $\Theta(n^{2.81})$, the first crack in the $n^3$ wall (constants keep naive winning for small $n$; crossover around the hundreds).</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: D&amp;C Complexities</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Merge: $2T(n/2)+\Theta(n) \to \Theta(n\log n)$ (Case 2). Strassen: $7T(n/2)+\Theta(n^2) \to \Theta(n^{2.81})$ (Case 1, $\log_2 7 \approx 2.81$). Binary search: $T(n/2)+\Theta(1) \to \Theta(\log n)$. Read any D&amp;C recurrence straight into its Master case — that reflex is the exam.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Strassen&#39;s Fine Print</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Strassen needs square matrices with power-of-2 dimensions (pad otherwise), uses <em>more</em> additions, is <strong>not in-place friendly</strong>, and loses numerically on stability for some inputs. &quot;7 &lt; 8 so always faster&quot; ignores constants, padding, and memory traffic — the vault&#39;s crossover warning is the complete answer.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Multiply $A = \begin{pmatrix}1 &amp; 2 \\ 3 &amp; 4\end{pmatrix}$ and $B = \begin{pmatrix}5 &amp; 6 \\ 7 &amp; 8\end{pmatrix}$ with Strassen&#39;s formulas (here each &quot;block&quot; is a single number, so sub-&quot;multiplications&quot; are plain products). Verify against the naive result.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing the 7 Products</div><div class="step-content"><p>$M_1 = (1+4)(5+8) = 5 \times 13 = 65$. $M_2 = (3+4)\times 5 = 35$. $M_3 = 1\times(6-8) = -2$. $M_4 = 4\times(7-5) = 8$. $M_5 = (1+2)\times 8 = 24$. $M_6 = (3-1)(5+6) = 22$. $M_7 = (2-4)(7+8) = -30$.
-$C_{11} = 65+8-24-30 = 19$. $C_{12} = -2+24 = 22$. $C_{21} = 35+8 = 43$. $C_{22} = 65-35-2+22 = 50$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$C = \begin{pmatrix}19 &amp; 22 \\ 43 &amp; 50\end{pmatrix}$ — matches naive multiplication ($1\cdot5+2\cdot7 = 19$, etc.) exactly, using 7 scalar multiplications instead of 8. On $2\times2$ the saving is trivial; applied recursively to $1024\times1024$, one fewer product per level compounds into the $n^{2.81}$ vs $n^3$ gap.</p>
+<h2 id="3-worked-example-strassen-on-2-2-verified-against-naive">3. Worked example — Strassen on 2×2, verified against naive</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Multiply $A = \begin{pmatrix}1 &amp; 2 \\ 3 &amp; 4\end{pmatrix}$, $B = \begin{pmatrix}5 &amp; 6 \\ 7 &amp; 8\end{pmatrix}$ via Strassen (each block is one number, so sub-&quot;multiplications&quot; are scalar products). Verify against naive.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing the 7 Products</div><div class="step-content"><p>$M_1 = (1+4)(5+8) = 65$. $M_2 = (3+4)\times 5 = 35$. $M_3 = 1\times(6-8) = -2$. $M_4 = 4\times(7-5) = 8$. $M_5 = (1+2)\times 8 = 24$. $M_6 = (3-1)(5+6) = 22$. $M_7 = (2-4)(7+8) = -30$. Then $C_{11} = 65+8-24-30 = 19$; $C_{12} = -2+24 = 22$; $C_{21} = 35+8 = 43$; $C_{22} = 65-35-2+22 = 50$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$C = \begin{pmatrix}19 &amp; 22 \\ 43 &amp; 50\end{pmatrix}$ — matches naive ($1\cdot5+2\cdot7 = 19$, etc.) with 7 scalar multiplications instead of 8. Trivial at $2\times2$; compounded recursively to $1024\times1024$ it becomes the $n^{2.81}$ vs $n^3$ gap.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-strassen-on-2-2-verified-against-naive">← 3. Worked example — Strassen on 2×…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Merge&#39;s $\Theta(n)$-per-level holds because one level&#39;s disjoint pieces tile the whole array — shrinking pieces do not mean cheaper levels.</li>
+<li>Strassen&#39;s additions never appear in the exponent: they live in $f(n) = \Theta(n^2)$, dominated by the 7-way branching.</li>
+<li>Padding to powers of 2 is mandatory overhead, not optional polish.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Merge sort vs Strassen recurrence</td>
+<td>$2T(n/2)+\Theta(n)$ (Case 2) vs $7T(n/2)+\Theta(n^2)$ (Case 1)</td>
+</tr>
+<tr>
+<td>Asymptotic win vs practical win</td>
+<td>$n^{2.81}$ eventually vs constants/padding rule small $n$</td>
+</tr>
+<tr>
+<td>Stable vs in-place (merge)</td>
+<td>Equal keys keep order (stable) but merge needs $\Theta(n)$ extra (not in-place)</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> the three-step skeleton; merge $\Theta(n\log n)$ via equal $\Theta(n)$ levels; Strassen&#39;s 7-product recurrence and $\Theta(n^{2.81})$; crossover/padding fine print.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why does merge sort&#39;s merge step cost Θ(n) at every recursion level, and what total does that imply?</span>

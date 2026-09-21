@@ -269,48 +269,44 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Module 3 Practice Lab: Logic Drills</h1>
-<p><strong>Wumpus safety proofs, model-counting races, three-step refutations, unification trials, and exam essay models.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
-<h3>Scenario 1: Safety Proof Under Time Pressure (Wumpus Rules Apply)</h3>
-<p>Visited (1,1): silence (¬B, ¬S). Visited (2,1): breeze, no stench. Prove (1,2) safe, decide (2,2) and (3,1) in 60 seconds: breeze rule at (2,1) gives $P_{1,1} \lor P_{3,1} \lor P_{2,2}$; $\lnot P_{1,1}$ (visited) leaves $P_{3,1} \lor P_{2,2}$ — both suspects, neither provable. At (1,1): $\lnot B_{1,1}$ forces $\lnot P_{2,1} \land \lnot P_{1,2}$; $\lnot S_{1,1}$ forces $\lnot W_{2,1} \land \lnot W_{1,2}$. Verdict: <strong>(1,2) provably safe</strong> (no pit, no Wumpus), (2,2)/(3,1) each possibly mined — probe (1,2). Disjunctions locate <em>suspicion</em>; only negated rules locate <em>safety</em>.</p>
-<h3>Scenario 2: Model-Counting Race (3 Atoms, 8 Rows, 1 Verdict)</h3>
-<p>KB: $A$, $A \Rightarrow B$, $(B \land C) \Rightarrow D$... precisely in clausal spirit: facts ${A, \lnot B \lor C}$ plus query $C$? No — query must <em>follow</em>: KB $= {A,\ A \Rightarrow B}$ (2 atoms relevant, third atom $Z$ free). Rows: 8 total; $A$ kills 4; $A \Rightarrow B$ kills $A$-true-$B$-false rows (2 of the 4); survivors: $(A,B,Z) \in {(T,T,T),(T,T,F)}$ — $B$ true in both: $KB \models B$ proven. The free atom $Z$ doubles rows and changes nothing — model counting prices <em>relevant</em> atoms; vending-machine $2^n$ counts the irrelevant too (the inefficiency, demonstrated).</p>
-<h3>Scenario 3: Three-Step Refutation (No Survivors)</h3>
-<p>Clauses: $(\lnot A \lor B)$, $(\lnot B \lor C)$, $(A)$, plus negated query $(\lnot C)$. Resolve $(A) \otimes (\lnot A \lor B) \to (B)$; $(B) \otimes (\lnot B \lor C) \to (C)$; $(C) \otimes (\lnot C) \to \Box$. Contradiction in three steps — entailment certified without enumerating a single model. Compare Scenario 2&#39;s 8-row census: same verdict class, no census bureau.</p>
-<h3>Scenario 4: Unification Trials (Three Calls, Three Fates)</h3>
-<p>(a) $\text{Loves}(x, y)$ vs. $\text{Loves}(\text{Mary}, z)$ → $\theta = {x/\text{Mary},\ y/z}$ — clean, most general, nothing extra. (b) $\text{Knows}(\text{John}, x)$ vs. $\text{Knows}(y, \text{Mother}(y))$ → bind $y$ first (${y/\text{John}}$), compose through, then $x/\text{Mother}(\text{John})$ — order matters, generality preserved. (c) $P(x, f(x))$ vs. $P(y, y)$ → $x$ meets $y$, then $f(x)$ meets $x$: <strong>occur-check failure</strong> ($x$ inside its own partner) — unify must refuse, or infinite regress $x = f(x) = f(f(x))\dots$ follows. Success, composition, refusal: the complete trial docket.</p>
-<hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
-<p class="secnav"><a href="#1-step-by-step-scenario-analysis">← 1. Step-by-Step Scenario Analysis</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
+<p><strong>Problem: turn logic theory into timed proof skill. By the end you can prove Wumpus safety in a minute, race model counting against refutation, and run unification trials without binding leaks.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-four-timed-scenarios">1. Start From Zero: Four Timed Scenarios</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-do-not-confuse-table">2. Basic Layer: Do-Not-Confuse Tab… →</a></p>
+<p><strong>Problem first:</strong> exams compress Tell/Ask, model sets, refutation, and UNIFY into single questions. <strong>Method:</strong> one worked drill per machinery, then the confusion table.</p>
+<p><strong>Scenario 1 — Safety proof under time pressure:</strong> visited (1,1) silent (<code>¬B</code>, <code>¬S</code>); visited (2,1) breezy without stench. Breeze rule at (2,1) gives <code>P(1,1) ∨ P(3,1) ∨ P(2,2)</code>; <code>¬P(1,1)</code> leaves suspects <code>P(3,1) ∨ P(2,2)</code> — neither provable. Silence at (1,1) forces <code>¬P(2,1) ∧ ¬P(1,2)</code> and <code>¬W(2,1) ∧ ¬W(1,2)</code>. Verdict in 60 seconds: <strong>(1,2) provably safe</strong> (pit-free and Wumpus-free); (2,2)/(3,1) possibly mined — probe (1,2). Disjunctions locate suspicion; only negated rules locate safety.</p>
+<p><strong>Scenario 2 — Model-counting race (3 atoms, 8 rows, 1 verdict):</strong> KB <code>{A, A =&gt; B}</code> over <code>{A, B, Z}</code> (Z free). Rows: 8 total; <code>A</code> kills 4; <code>A =&gt; B</code> kills A-true-B-false rows (2 of the 4); survivors <code>(A,B,Z)</code> in <code>{(T,T,T),(T,T,F)}</code> — B true in both, so <code>KB |= B</code>. Free atom Z doubles rows while changing nothing: model checking prices vocabulary, not content (the inefficiency, demonstrated).</p>
+<p><strong>Scenario 3 — Three-step refutation (no survivors):</strong> clauses <code>(¬A ∨ B)</code>, <code>(¬B ∨ C)</code>, <code>(A)</code>, negated query <code>(¬C)</code>. Resolve <code>(A)</code> with <code>(¬A ∨ B)</code> to <code>(B)</code>; with <code>(¬B ∨ C)</code> to <code>(C)</code>; with <code>(¬C)</code> to the empty box. Same verdict class as Scenario 2 with zero census — the efficiency gap, quantified.</p>
+<p><strong>Scenario 4 — Unification trials (three calls, three fates):</strong> (a) <code>Loves(x,y)</code> vs. <code>Loves(Mary,z)</code> gives <code>{x/Mary, y/z}</code> — clean and most general. (b) <code>Knows(John,x)</code> vs. <code>Knows(y,Mother(y))</code> binds y first (<code>{y/John}</code>), composes through, then <code>x/Mother(John)</code> — order matters. (c) <code>P(x,f(x))</code> vs. <code>P(y,y)</code> reduces (after x/y) to x vs. <code>f(x)</code>: <strong>occur-check failure</strong> — refuse, or infinite regress follows. Success, composition, refusal: the complete docket.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-do-not-confuse-table">2. Basic Layer: Do-Not-Confuse Table</h2>
+<p class="secnav"><a href="#1-start-from-zero-four-timed-scenarios">← 1. Start From Zero: Four Timed Sce…</a><span class="secnav-sep">·</span><a href="#3-active-recall-quizzes">3. Active Recall Quizzes →</a></p>
 <table>
 <thead>
 <tr>
 <th>Pair</th>
-<th>Distinction that earns marks</th>
+<th>Exam distinction</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>Tell vs. Ask</td>
-<td>Add sentences vs. query entailment (KB loop: perceive-Tell, decide-Ask)</td>
+<td>Add sentences vs. query entailment (loop: perceive-Tell, decide-Ask)</td>
 </tr>
 <tr>
 <td>Entailment vs. derivation</td>
-<td>Semantic truth-in-all-models vs. syntactic rule-pushing (soundness + completeness bridge them)</td>
+<td>Semantic all-models truth vs. syntactic rule-pushing (soundness + completeness bridge)</td>
 </tr>
 <tr>
 <td>Valid vs. satisfiable vs. unsat</td>
@@ -318,22 +314,22 @@
 </tr>
 <tr>
 <td>MP vs. MT vs. fallacies</td>
-<td>$P,P\Rightarrow Q\vdash Q$ and contrapositive only — affirming/denying variants invalid</td>
+<td><code>P,P=&gt;Q ⊢ Q</code> and contrapositive only — affirming/denying invalid</td>
 </tr>
 <tr>
 <td>Model checking vs. resolution</td>
-<td>$2^n$ census (complete, hopeless) vs. refutation proofs (complete, directed)</td>
+<td><code>2^n</code> census (complete, hopeless) vs. refutation proofs (complete, directed)</td>
 </tr>
 <tr>
 <td>Horn vs. general clauses</td>
-<td>≤1 positive literal (chaining-complete) vs. resolution-only territory</td>
+<td>At most one positive (chaining-complete) vs. resolution-only territory</td>
 </tr>
 <tr>
 <td>Forward vs. backward chaining</td>
-<td>Fire-all vs. goal-driven (demand-shaped effort on huge KBs)</td>
+<td>Fire-all flood vs. goal-driven slice on huge KBs</td>
 </tr>
 <tr>
-<td>$\forall$+$\Rightarrow$ vs. $\exists$+$\land$</td>
+<td><code>∀+=&gt;</code> vs. <code>∃+∧</code></td>
 <td>Correct pairings; swapped versions state nonsense/vacuities</td>
 </tr>
 <tr>
@@ -342,13 +338,13 @@
 </tr>
 <tr>
 <td>Standardize apart</td>
-<td>Fresh names per rule-use before every UNIFY (no binding leakage)</td>
+<td>Fresh names per rule-use before every UNIFY (no leakage)</td>
 </tr>
 </tbody></table>
-<hr>
+<p><strong>Limitations of drills:</strong> hand proofs use tiny vocabularies; real KBs need indexing, strategies, and subsumption. Timed verdicts assume stated rules — missing rules mean withheld judgment, not guessed safety.</p>
 <p><a id="self-check"></a></p>
 <h2 id="3-active-recall-quizzes">3. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#2-do-not-confuse-cheat-table">← 2. &quot;Do Not Confuse&quot; Cheat Table</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
+<p class="secnav"><a href="#2-basic-layer-do-not-confuse-table">← 2. Basic Layer: Do-Not-Confuse Tab…</a><span class="secnav-sep">·</span><a href="#4-high-yield-university-exam-questions">4. High-Yield University Exam Ques… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">KB = {A, A⇒B} over atoms {A, B, Z}. How many rows survive model checking, and what does the free atom Z teach about the method&#39;s cost?</span>
@@ -371,7 +367,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Filtering keeps only $A \land B$ rows (2 of 8); $Z$&#39;s two values ride along irrelevantly — yet were enumerated and tested. Cost tracks <em>vocabulary</em>, not <em>content</em>: 10 idle atoms cost $1024\times$ for zero information. Resolution (Scenario 3) never names $Z$ at all — the efficiency gap, quantified.</p><pre><code>&lt;/div&gt;
+      <p>Filtering keeps only A-and-B rows (2 of 8); Z rides along irrelevantly yet enumerated. Cost tracks vocabulary, not content — resolution never names Z at all.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -396,7 +392,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>After ${x/y}$, the second pair is $f(x)$ vs. $x$ — a variable against a term <em>containing it</em>. Accepting builds $x = f(x)$, an infinite term no finite structure satisfies. The occur check exists for exactly this shape; Prolog&#39;s skipping it (for speed) is a documented unsoundness, not an optimization free lunch.</p><pre><code>&lt;/div&gt;
+      <p>After {x/y}, the second pair is f(x) vs. x — a variable against its own container. Accepting builds an infinite term; Prolog&#39;s skipping this check is documented unsoundness for speed.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -421,7 +417,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Effort follows relevance: backward chaining&#39;s recursion visits the query&#39;s premise cone only — vast KB regions never load. Forward chaining&#39;s virtue (everything derived, query-agnostic reuse) is exactly its cost when one question needs one corner. Engine choice = workload shape, always.</p><pre><code>&lt;/div&gt;
+      <p>Effort follows relevance: backward recursion visits the query&#39;s premise cone only. Forward&#39;s virtue (everything derived) is its cost for one-corner questions.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -432,7 +428,7 @@
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>The student is right — stench pinpoints uniquely</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Disjunction $W_{1,3} \lor W_{2,2}$ (candidates after eliminating (1,1) and the wall) — certainty about a *set*, ignorance within it; probing must respect the disjunction (retreat to testable squares, never assume a disjunct)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Disjunction W_{1,3} ∨ W_{2,2} (candidates after eliminating (1,1) and the wall) — certainty about a *set*, ignorance within it; probing must respect the disjunction (retreat to testable squares, never assume a disjunct)</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>No conclusion whatsoever follows from stench</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>The Wumpus is certainly at (2,2) by elimination</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -446,24 +442,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>One percept, two surviving candidates — logic delivers <em>disjunctive</em> knowledge honestly instead of guessing. Acting on $W_{1,3}$-certainty risks the $W_{2,2}$ world (death by overconfidence); acting on the disjunction (probe elsewhere, gather more percepts) is rationality under uncertainty — Module 1&#39;s moral, wearing Logic&#39;s clothes.</p><pre><code>&lt;/div&gt;
+      <p>One percept with two survivors yields disjunctive knowledge. Acting on single-disjunct certainty risks death in the other world; acting on the disjunction probes elsewhere.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
+</div><p><a id="exam-focus"></a></p>
 <h2 id="4-high-yield-university-exam-questions">4. High-Yield University Exam Questions</h2>
 <p class="secnav"><a href="#3-active-recall-quizzes">← 3. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> Any cheat-table row (MP/MT and Horn lead); single MGU computations.</li>
-<li><strong>7 Marks:</strong> Wumpus safety proofs with sentences, refutation traces to □, or UNIFY traces with ordering rationale.</li>
-</ul>
-</div></details><h3>Essay Question 1 (7 Marks)</h3>
-<p><strong>Q: From clauses (¬A∨B), (¬B∨C), (A), prove C by resolution, showing each resolvent and the complementary pair used. Why does □ end the proof?</strong></p>
-<p><strong>Model Answer:</strong> $(A) \otimes (\lnot A \lor B)$ on $A$/$\lnot A$ → $(B)$. $(B) \otimes (\lnot B \lor C)$ on $B$/$\lnot B$ → $(C)$. $(C) \otimes (\lnot C)$ [negated query] → $\Box$. The empty clause = derived contradiction under the assumption $\lnot C$ alongside the KB — since $KB \land \lnot C$ is unsatisfiable, $KB \models C$ (deduction theorem). □ isn&#39;t another fact; it&#39;s the <em>absence</em> of survivors — proof by &quot;no counter-model left standing.&quot;</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: any table row (MP/MT and Horn lead) or single MGU. 7 marks: Wumpus safety proof, refutation to the box, or UNIFY trace with ordering.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> disjunction-not-location discipline; 2-of-8 survivor count with Z lesson; three resolvents with pairs named; MGU composition order; occur-check refusal shape.</p>
+<h3>Essay Question 1 (7 Marks)</h3>
+<p><strong>Q: From clauses (¬A∨B), (¬B∨C), (A), prove C by resolution, showing pairs. Why does the box end it?</strong></p>
+<p><strong>Model Answer:</strong> (A) with (¬A∨B) on A gives (B). (B) with (¬B∨C) on B gives (C). (C) with negated query (¬C) gives the box. The box is derived contradiction under ¬C alongside the KB — KB ∧ ¬C unsatisfiable means KB |= C. The box is absence-of-survivors, not another fact.</p>
 <h3>Essay Question 2 (7 Marks)</h3>
-<p><strong>Q: Unify Knows(John, x) with Knows(y, Mother(y)) showing composition order, and explain why binding y first is load-bearing plus what the occur check would catch in P(x,f(x)) vs P(y,y).</strong></p>
-<p><strong>Model Answer:</strong> Left-to-right: $y$ vs. $\text{John}$ → $\theta_1 = {y/\text{John}}$; compose through remaining problem ($x$ vs. $\text{Mother}(\text{John})$) → $\theta_2 = {x/\text{Mother}(\text{John})}$; MGU ${y/\text{John}, x/\text{Mother}(\text{John})}$. Binding $y$ first matters because $x$&#39;s partner <em>contains</em> $y$ — reversed order over-binds or fails to find the most general form. Occur check: $P(x,f(x))$ vs $P(y,y)$ reduces (after $x/y$) to $x$ vs. $f(x)$ — self-containing partner ⇒ refuse, blocking the infinite regress $x = f(x) = f(f(x))\dots$ that naive unifiers construct.</p>
+<p><strong>Q: Unify Knows(John, x) with Knows(y, Mother(y)) with order, plus the occur-check case.</strong></p>
+<p><strong>Model Answer:</strong> y vs. John gives {y/John}; composed second pair x vs. Mother(John) gives {x/Mother(John)}; MGU as shown. y-first is load-bearing since x&#39;s partner contains y. Occur case P(x,f(x)) vs. P(y,y) reduces to x vs. f(x) — self-containing partner, refuse, blocking x = f(x) = ... regress.
+:::</p>
 
     </main>
 

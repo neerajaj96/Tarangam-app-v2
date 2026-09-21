@@ -8123,6 +8123,90 @@
       "explanation": "Raw secret-prefix hashes allow extension forgeries by state continuation. HMAC double-dips with inner and outer pads to kill that class.",
       "difficulty": "intermediate",
       "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m1_09_01",
+      "courseCode": "PCCST501",
+      "topicId": "m1_09_socket_programming_select_poll",
+      "type": "multiple_choice",
+      "question": "In which order do the TCP server calls run for one listening socket?",
+      "options": [
+        "socket, bind, listen, then loop accept, recv, send, close per client",
+        "connect, bind, listen, then accept once for all clients",
+        "socket, connect, sendto, recvfrom with no listen",
+        "bind, socket, accept, then listen after each close"
+      ],
+      "answer": "socket, bind, listen, then loop accept, recv, send, close per client",
+      "explanation": "The listening socket only births connected sockets via accept; each child talks to exactly one client while the parent keeps ringing.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst501_m1_09_02",
+      "courseCode": "PCCST501",
+      "topicId": "m1_09_socket_programming_select_poll",
+      "type": "true_false",
+      "question": "select overwrites its fd_sets, so they must be rebuilt before every call.",
+      "answer": true,
+      "explanation": "The returned sets are results, not reusable watchlists; reuse misreports readiness and stalls the loop.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m1_05_01",
+      "courseCode": "PCCST503",
+      "topicId": "m1_05_regression_metrics_regularisation",
+      "type": "multiple_choice",
+      "question": "Residuals are [2, -2, 0, 4]. What are MAE and RMSE, and why does RMSE exceed MAE?",
+      "options": [
+        "MAE 2.0 and RMSE about 2.45, because squaring over-weights the 4",
+        "MAE 8.0 and RMSE 6.0, because sums beat means",
+        "MAE 2.45 and RMSE 2.0, because roots shrink large misses",
+        "MAE and RMSE are always identical on any residuals"
+      ],
+      "answer": "MAE 2.0 and RMSE about 2.45, because squaring over-weights the 4",
+      "explanation": "MAE averages misses while RMSE averages squares then roots, so the lone large miss dominates and the gap measures outlier spread.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m1_05_02",
+      "courseCode": "PCCST503",
+      "topicId": "m1_05_regression_metrics_regularisation",
+      "type": "true_false",
+      "question": "RIDGE keeps all features with dense shrinkage while LASSO can pin weak weights exactly to zero.",
+      "answer": true,
+      "explanation": "L2 shrinks smoothly with a closed form; L1 corners select sparsely with no closed form.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m2_06_01",
+      "courseCode": "PCCST503",
+      "topicId": "m2_06_classification_evaluation_metrics",
+      "type": "multiple_choice",
+      "question": "TP 12, FP 3, FN 8, TN 77. What are precision, recall, and F1?",
+      "options": [
+        "Precision 0.80, recall 0.60, F1 about 0.69",
+        "Precision 0.60, recall 0.80, F1 about 0.69",
+        "Precision 0.89, recall 0.89, F1 0.89",
+        "Precision 0.12, recall 0.08, F1 about 0.10"
+      ],
+      "answer": "Precision 0.80, recall 0.60, F1 about 0.69",
+      "explanation": "Precision audits the predicted-positive column 12/15; recall audits the actual-positive row 12/20; F1 harmonically compromises at about 0.69.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccst503_m2_06_02",
+      "courseCode": "PCCST503",
+      "topicId": "m2_06_classification_evaluation_metrics",
+      "type": "true_false",
+      "question": "AUC grades ranking across all thresholds, so the deployed threshold still needs its own precision and recall report.",
+      "answer": true,
+      "explanation": "A higher area can hide a worse operating dot; ship the dot the cost chose, ranked by the area.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
     }
   ]
 }

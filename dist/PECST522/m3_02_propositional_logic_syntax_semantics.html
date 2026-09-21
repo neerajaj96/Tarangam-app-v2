@@ -269,52 +269,69 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Propositional Logic: Syntax, Semantics &amp; Entailment</h1>
-<p><strong>Atomic sentences, connectives and precedence, models, entailment vs. validity vs. satisfiability, and why truth tables don&#39;t scale.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-logic-as-legos-and-worlds">1. Logic as Legos and Worlds</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-syntax-atoms-connectives-precedence">2. Syntax: Atoms, Connectives, Pre… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Blueprints vs. Buildings</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Syntax</strong> is the Lego manual: which brick-shapes (sentences) you may snap together and in what orders — pure form, no meaning. <strong>Semantics</strong> is the buildings: each fully-specified way the world <em>could</em> be (a <strong>model</strong>, i.e. a true/false assignment to every atom) either satisfies your construction or collapses it. <strong>Entailment</strong> ($KB \models \alpha$) is the engineer&#39;s guarantee: <em>in every building where your premises stand, the conclusion stands too</em> — no exceptions, no luck.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-syntax-atoms-connectives-precedence">2. Syntax: Atoms, Connectives, Precedence</h2>
-<p class="secnav"><a href="#1-logic-as-legos-and-worlds">← 1. Logic as Legos and Worlds</a><span class="secnav-sep">·</span><a href="#3-model-checking-and-its-wall">3. Model Checking and Its Wall →</a></p>
-<ul>
-<li><strong>Atomic sentences:</strong> single proposition symbols ($P$, $Q$, $P_{1,2}$) — indivisible true/false facts.</li>
-<li><strong>Complex sentences</strong> via connectives: $\lnot$ (not), $\land$ (and), $\lor$ (or), $\Rightarrow$ (implies), $\Leftrightarrow$ (iff).</li>
-<li><strong>Precedence</strong> (tightest first): $\lnot$, then $\land$, then $\lor$, then $\Rightarrow$, then $\Leftrightarrow$. So $P \lor Q \Rightarrow R$ parses as $(P \lor Q) \Rightarrow R$ — and when in doubt, parenthesize: exams punish precedence slips.</li>
-<li><strong>Implication truth table</strong> (the one everyone must memorize): $P \Rightarrow Q$ is false in exactly one row — $P$ true, $Q$ false. True premise with false conclusion is the <em>only</em> broken promise; a false premise implies <em>anything</em> (vacuous truth).</li>
-</ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Entailment, Validity, Satisfiability</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$M(\alpha)$ = the set of models where $\alpha$ is true. <strong>Entailment:</strong> $KB \models \alpha \iff M(KB) \subseteq M(\alpha)$. <strong>Valid</strong> (tautology): true in <em>all</em> models ($M(\alpha) =$ everything). <strong>Satisfiable:</strong> true in <em>at least one</em> model. <strong>Unsatisfiable:</strong> true in <em>none</em>. Deduction theorem bridge: $KB \models \alpha$ <strong>iff</strong> $KB \land \lnot\alpha$ is <strong>unsatisfiable</strong> — the fact resolution (next topic) is built on.</p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-model-checking-and-its-wall">3. Model Checking and Its Wall</h2>
-<p class="secnav"><a href="#2-syntax-atoms-connectives-precedence">← 2. Syntax: Atoms, Connectives, Pre…</a><span class="secnav-sep">·</span><a href="#4-proving-entailment-by-hand-wumpus-fragment">4. Proving Entailment by Hand (Wum… →</a></p>
-<p><strong>Model checking</strong> (TT-ENTAILS?) enumerates all $2^n$ assignments for $n$ atoms and keeps only rows satisfying the KB: $\alpha$ is entailed iff it holds in every surviving row. Sound and complete — and hopeless past toy sizes: 30 atoms means a billion rows. This exponential wall is <em>why</em> inference procedures (resolution, chaining) exist at all: entailment is co-NP-complete, so no general shortcut is believed possible — only smarter proof search.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Implication Is Not Causation (or Equivalence)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$P \Rightarrow Q$ says nothing about $Q \Rightarrow P$ (affirming the consequent: from $Q$, concluding $P$ — <strong>invalid</strong>). Denying the antecedent (from $\lnot P$, concluding $\lnot Q$) is equally invalid. Only <strong>Modus Ponens</strong> (from $P \Rightarrow Q$ and $P$, conclude $Q$) and <strong>Modus Tollens</strong> (from $P \Rightarrow Q$ and $\lnot Q$, conclude $\lnot P$) are licensed moves. Two valid rules; every other &quot;obvious&quot; step is a trap.</p>
-</div></details><hr>
+<p><strong>Problem: how do we write dungeon knowledge so precisely that safety proofs are mechanical? By the end you can build sentences with correct precedence, test entailment by model sets, and price why truth tables cannot scale.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-blueprints-vs-buildings">1. Start From Zero: Blueprints vs. Buildings</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-atoms-connectives-precedence">2. Basic Layer: Atoms, Connectives… →</a></p>
+<p>Lego manuals say which brick shapes snap together (form, no meaning). Buildings are what the shapes become (meaning). In logic: <strong>syntax</strong> is the manual (legal sentences), <strong>semantics</strong> is the buildings (each fully-specified world, called a <strong>model</strong> — a true/false assignment to every atomic symbol — either satisfies your sentences or breaks them). <strong>Entailment</strong> (<code>KB |= alpha</code>) is the engineer&#39;s guarantee: in every KB-satisfying world, the conclusion holds too.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Blueprints vs. Buildings</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;form versus worlds&quot; here, then drop the bricks; connectives plus the model-set definition below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> atoms <code>P</code> (pit at (1,2)), <code>B</code> (breeze at (1,1)). Sentence <code>B =&gt; (P-nearby)</code> is syntax. A model sets <code>B = true, P-nearby = true</code> (satisfies) or <code>B = true, P-nearby = false</code> (violates). Entailment asks about <em>all</em> satisfying models.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-atoms-connectives-precedence">2. Basic Layer: Atoms, Connectives, Precedence</h2>
+<p class="secnav"><a href="#1-start-from-zero-blueprints-vs-buildings">← 1. Start From Zero: Blueprints vs.…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-entailment-validity-and-the-wall">3. Formal Layer: Entailment, Valid… →</a></p>
+<p><strong>Data/state:</strong> proposition symbols (indivisible true/false facts like <code>P</code>, <code>Q</code>, <code>P(1,2)</code>). <strong>Goal:</strong> build complex sentences correctly.</p>
+<p>Complex sentences via connectives: <code>¬</code> (not), <code>∧</code> (and), <code>∨</code> (or), <code>=&gt;</code> (implies), <code>&lt;=&gt;</code> (if-and-only-if). <strong>Precedence</strong> tightest-first: <code>¬</code>, then <code>∧</code>, then <code>∨</code>, then <code>=&gt;</code>, then <code>&lt;=&gt;</code>. So <code>P ∨ Q =&gt; R</code> parses as <code>(P ∨ Q) =&gt; R</code>. When in doubt, parenthesize — exams punish precedence slips.</p>
+<p><strong>Implication truth table (memorize):</strong> <code>P =&gt; Q</code> is false in exactly one row: <code>P</code> true with <code>Q</code> false (the only broken promise). False premise implies anything (vacuous truth): <code>P = false</code> rows are true regardless of <code>Q</code>.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-entailment-validity-and-the-wall">3. Formal Layer: Entailment, Validity, and the Wall</h2>
+<p class="secnav"><a href="#2-basic-layer-atoms-connectives-precedence">← 2. Basic Layer: Atoms, Connectives…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Meaning, variables, formula:</strong> let <code>M(alpha)</code> be the set of models where <code>alpha</code> is true. <strong>Entailment:</strong> <code>KB |= alpha</code> iff <code>M(KB)</code> is a subset of <code>M(alpha)</code> — every KB-world is an alpha-world (no counterexamples). <strong>Valid (tautology):</strong> true in all models. <strong>Satisfiable:</strong> true in at least one. <strong>Unsatisfiable:</strong> true in none. Bridge (deduction theorem): <code>KB |= alpha</code> iff <code>KB ∧ ¬alpha</code> is unsatisfiable — the fact resolution exploits next topic.</p>
+<p><strong>Procedure — model checking (TT-ENTAILS?, steps):</strong> Step 1: enumerate all <code>2^n</code> assignments (<code>n</code> atoms). Step 2: keep rows satisfying every KB sentence. Step 3: entailment holds iff the query holds in every surviving row. Sound and complete — and hopeless past toys: 30 atoms need a billion rows. Entailment is co-NP-complete (a complexity class meaning: counterexamples check fast, but no general fast prover is believed to exist) — hence inference machinery exists.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: Entailment, Validity, Satisfiability</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>M(alpha)</code> = models satisfying alpha. Entailment: <code>M(KB) ⊆ M(alpha)</code>. Valid: all models. Satisfiable: some model. Unsatisfiable: none. Refutation bridge: <code>KB |= alpha</code> iff <code>KB ∧ ¬alpha</code> unsatisfiable.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Implication Is Not Causation (or Equivalence)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>From <code>P =&gt; Q</code> plus <code>Q</code>, concluding <code>P</code> (affirming the consequent) is invalid. From <code>¬P</code>, concluding <code>¬Q</code> (denying the antecedent) is invalid. Only <strong>Modus Ponens</strong> (<code>P =&gt; Q</code>, <code>P</code>, therefore <code>Q</code>) and <strong>Modus Tollens</strong> (<code>P =&gt; Q</code>, <code>¬Q</code>, therefore <code>¬P</code>) are licensed. Two valid moves; every other &quot;obvious&quot; step is a trap.</p>
+</div></details><p><strong>Hand proof (Wumpus fragment):</strong> KB: <code>¬P(1,1)</code>; <code>B(1,1) &lt;=&gt; (P(1,2) ∨ P(2,1))</code>; observed <code>¬B(1,1)</code>. Query <code>¬P(1,2)</code>. Four atoms give 16 rows; KB facts kill all but <code>B = false</code> rows; the biconditional then forces both disjuncts false — query holds in every survivor, so entailed. Four atoms cost 16 rows; a 64-atom dungeon would cost <code>2^64</code> — the wall, demonstrated.</p>
 <p><a id="worked-example"></a></p>
-<h2 id="4-proving-entailment-by-hand-wumpus-fragment">4. Proving Entailment by Hand (Wumpus Fragment)</h2>
-<p class="secnav"><a href="#3-model-checking-and-its-wall">← 3. Model Checking and Its Wall</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
-<p>KB: $R_1: \lnot P_{1,1}$ · $R_2: B_{1,1} \Leftrightarrow (P_{1,2} \lor P_{2,1})$ · $R_3: \lnot B_{1,1}$ (observed). Query: $\alpha = \lnot P_{1,2}$ (square (1,2) is pit-free).</p>
-<p>Relevant atoms: $P_{1,1}, P_{1,2}, P_{2,1}, B_{1,1}$ — 16 rows. $R_1$ kills 8 (fixes $P_{1,1}=$ false); $R_3$ kills all but $B_{1,1}=$ false rows. In every surviving row, $R_2$&#39;s biconditional with $B_{1,1}$ false forces $(P_{1,2} \lor P_{2,1})$ false, i.e. both false — so $\alpha$ holds in <em>all</em> surviving models: $KB \models \lnot P_{1,2}$ proven. Four atoms needed 16 rows; the full $4\times4$ dungeon&#39;s 64+ atoms would need $2^{64}$ — the wall, demonstrated.</p>
-<hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-entailment-validity-and-the-wall">← 3. Formal Layer: Entailment, Valid…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Entailment vs. validity</td>
+<td>Query true in all KB-worlds vs. true in all worlds outright</td>
+</tr>
+<tr>
+<td>Satisfiable vs. valid vs. unsat</td>
+<td>Some model vs. all models vs. no models (refutation needs the third)</td>
+</tr>
+<tr>
+<td>Modus Ponens/Tollens vs. fallacies</td>
+<td><code>P,P=&gt;Q ⊢ Q</code> and contrapositive only — affirming/denying variants invalid</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) <code>¬B</code> observations alone prove nothing about pits under a <code>B =&gt; P</code> rule (denying the antecedent) — valid pit-freedom needs the biconditional plus silence. (2) Precedence errors re-parse exam sentences. (3) Vacuous truth makes <code>∃</code>-with-<code>=&gt;</code> style claims trivially true (next module&#39;s quantifier trap previews here).</p>
+<p><strong>Limitations:</strong> model checking is exponential (<code>2^n</code>); propositional symbols cannot generalize across squares (one stamp per fact) — First-Order Logic (FOL — quantified logic over objects) is the escape.</p>
 <p><a id="self-check"></a></p>
 <h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-proving-entailment-by-hand-wumpus-fragment">← 4. Proving Entailment by Hand (Wum…</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Which row of the truth table makes P ⇒ Q false, and what does that imply about vacuous truth?</span>
@@ -337,7 +354,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Implication is a <em>promise</em>: &quot;if P, then Q.&quot; Only P-true-with-Q-false breaks it. P-false rows (whatever Q) keep the promise vacuously — the single most-tested truth-table fact, and the engine behind half the exam traps on this topic.</p><pre><code>&lt;/div&gt;
+      <p>Only true-premise-with-false-conclusion breaks the promise. False-premise rows hold vacuously — the most-tested truth-table fact.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -362,7 +379,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Entailment means <em>no counterexample</em>: no model satisfying the KB violates $\alpha$. Set-wise, KB-models sit inside $\alpha$-models; equivalently, assuming the KB <em>plus the query&#39;s negation</em> explodes into contradiction. The second phrasing is what resolution mechanizes next topic.</p><pre><code>&lt;/div&gt;
+      <p>No counterexamples: no KB-world violates alpha. The unsatisfiability phrasing is what resolution mechanizes next.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -387,24 +404,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Modus Tollens needs $\lnot Q$ to conclude $\lnot P$ — here the rule&#39;s consequent is &quot;pit nearby,&quot; and the observation is about <em>breeze</em>, the antecedent. Denying the antecedent proves nothing (the rule is silent about calm squares). Contrast the <em>valid</em> twin: breeze-rule contrapositive runs through $\lnot P$-facts, not $\lnot B$-observations.</p><pre><code>&lt;/div&gt;
+      <p>Modus Tollens needs ¬Q to conclude ¬P. Here the observation denies the antecedent, which the rule leaves silent. The valid twin runs through ¬P-facts, not ¬B-observations.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
 <p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> Precedence order, implication truth table, or define entailment/validity/satisfiability.</li>
-<li><strong>7 Marks:</strong> Model-checking proof of a Wumpus entailment (enumerate rows, filter by KB, verdict).</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: State the precedence of propositional connectives and the condition under which P ⇒ Q is false.</strong></p>
-<p><strong>Model Answer:</strong> Tightest first: $\lnot$, $\land$, $\lor$, $\Rightarrow$, $\Leftrightarrow$. $P \Rightarrow Q$ is false in exactly one case: $P$ true and $Q$ false; all three other rows are true (vacuous truth when $P$ is false).</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: precedence, implication table, or entailment/validity/satisfiability definitions. 7 marks: model-checking proof on a Wumpus fragment with the scaling verdict.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>¬ ∧ ∨ =&gt; &lt;=&gt;</code> order; one falsifying row; <code>M(KB) ⊆ M(alpha)</code>; <code>2^n</code> wall with a 16-row hand proof.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: State connective precedence and when P =&gt; Q is false.</strong></p>
+<p><strong>Model Answer:</strong> Tightest: ¬, ∧, ∨, =&gt;, &lt;=&gt;. False exactly when P true and Q false; other three rows true.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: With the KB of §4, prove by model checking that square (1,2) is pit-free. Why is this method impractical in general?</strong></p>
-<p><strong>Model Answer:</strong> List the 16 assignments over ${P_{1,1}, P_{1,2}, P_{2,1}, B_{1,1}}$; discard rows violating $R_1$ ($P_{1,1}$ true), $R_3$ ($B_{1,1}$ true), or $R_2$ (biconditional mismatch); observe $\lnot P_{1,2}$ in every survivor — hence entailment. Impractical because rows double per atom ($2^n$): a 64-atom dungeon needs $\sim 10^{19}$ rows — sound, complete, and unusable, motivating resolution.</p>
+<p><strong>Q: Prove (1,2) pit-free by model checking. Why impractical generally?</strong></p>
+<p><strong>Model Answer:</strong> 16 assignments over four atoms; discard rows violating each KB sentence; ¬P(1,2) in every survivor gives entailment. Impractical since rows double per atom (2^n): 64 atoms need ~10^19 rows — sound, complete, unusable, motivating resolution.
+:::</p>
 
     </main>
 

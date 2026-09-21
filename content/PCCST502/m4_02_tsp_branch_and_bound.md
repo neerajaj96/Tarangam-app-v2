@@ -5,7 +5,7 @@ module: 4
 sequence: 2
 title: 'TSP Branch & Bound: Reduced Matrices'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 9
 learningObjectives:
   - Lower-bound tours with row-plus-column reduction totals
   - Branch include-versus-exclude with used-row and diagonal infinities
@@ -26,27 +26,31 @@ tags:
 **Tour cost, assignment-style lower bounds by row/column reduction, include/exclude branching, incumbent pruning, and a fully traced 4-city optimum.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** The Travelling Salesperson Problem (TSP): visit each of $n$ cities once and return to the start, minimising total road cost. Brute force tries $(n-1)!/2$ tours (symmetric distances) — dead by $n = 20$. B&B instead computes a cheap **price floor** (no tour costs less), then kills every partial route whose floor already exceeds the best complete tour in hand.
 
 ::: callout-intuition Core Mental Model: The Salesperson's Price Floor
-A salesperson must visit 4 cities and return. Before planning any route, a clever assistant computes a **price floor**: "every city must be *left* (≥ cheapest outgoing road) and *entered* (≥ cheapest incoming road) — sum those minima and no tour on Earth costs less." That floor (≈ assignment bound via row+column reduction) then judges every partial route: any branch whose floor already exceeds the best complete tour found is abandoned unbuilt. Floors first, tours second, pruning always.
+Before planning any route, an assistant computes a floor: "every city must be *left* (≥ cheapest outgoing road) and *entered* (≥ cheapest incoming road) — sum those minima and no tour on Earth costs less." That floor (row+column reduction) then judges every partial route: branches floored above the best known tour are abandoned unbuilt. Floors first, tours second, pruning always. Drop the assistant now: reduction totals and infinities below are the exact mechanism.
 :::
+
+**Tiny toy example (3 cities).** Costs: $1\to2$ (5), $2\to3$ (5), $3\to1$ (5), all returns (50). Row minima $5,5,5$ → floor 15. The tour $1\to2\to3\to1$ costs exactly 15 = floor → optimal proven with zero search. Floors certify; tours cash in.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-### 2.1 Problem and Bound Machinery
+**Symbols:** cost matrix $M$ ($M[i][j]$ = road $i \to j$); $\infty$ = forbidden (never the minimum — reductions skip infinities); incumbent = best complete tour so far; bound = reduction-total floor.
 
-* Tour $1 \to \dots \to 1$ visiting each city once; cost = edge sum. $(n-1)!/2$ tours (symmetric) — brute force dies early.
-* **Row reduction:** subtract each row's minimum from that row (every tour uses exactly one entry per row — cost drops by exactly the subtracted total, so the reduction total is a valid lower bound).
-* **Column reduction** on the result (every tour uses exactly one entry per column). **Bound = row total + column total.** Forbid used edges/self-loops with $\infty$ (never the minimum — reductions skip infinities).
-* **Branch:** pick an edge $e$: *include* it (delete its row/column, ban the return edge to forbid subtours) vs. *exclude* it (set cost $\infty$), recompute bounds, prune branches $\ge$ incumbent (start incumbent = any heuristic tour, e.g. nearest-neighbor).
+**Bound machinery — numbered steps:**
 
-### 2.2 The Worked Instance
+1. **Row reduction:** subtract each row's minimum from that row. Every tour uses exactly one entry per row, so every tour's cost drops by exactly the subtracted total — the running total is a valid lower bound.
+2. **Column reduction** on the result (every tour uses exactly one entry per column). **Bound = row total + column total.**
+3. Forbid used edges/self-loops with $\infty$.
+4. **Branch** on an edge $e$: *include* it (delete its row/column, ban the return edge to forbid subtours) vs. *exclude* it (set cost $\infty$); recompute bounds; prune branches with bound $\ge$ incumbent (start from any heuristic tour, e.g. nearest-neighbour: always go to the closest unvisited city).
 
-Cost matrix (row $i$ → column $j$):
+**The worked instance.** Cost matrix (row $i$ → column $j$):
 
 ```text
        1    2    3    4
@@ -56,7 +60,7 @@ Cost matrix (row $i$ → column $j$):
   4  [ 8    8    9    - ]
 ```
 
-Row minima (off-diagonal): $10, 5, 6, 8$ → reduce total $29$. Column minima of the row-reduced matrix: $0, 0, 1, 5$ → reduce total $6$. **Root bound $= 29 + 6 = 35$.** Nearest-neighbor tour from 1: $1 \to 2\ (10) \to 3\ (9) \to 4\ (12) \to 1\ (8) = 39$ — incumbent $39$.
+Row minima (off-diagonal): $10, 5, 6, 8$ → total $29$. Column minima of the row-reduced matrix: $0, 0, 1, 5$ → total $6$. **Root bound $= 29 + 6 = 35$.** Nearest-neighbour from 1: $1 \to 2\ (10) \to 3\ (9) \to 4\ (12) \to 1\ (8) = 39$ — incumbent $39$.
 
 ::: callout-formula KTU Formula Vault: TSP B&B Facts
 Bound = **row-reduction + column-reduction totals** (assignment relaxation) · branch **include vs exclude** an edge · prune when **bound ≥ incumbent** · infinities for **used rows/columns, diagonal, return edges** (subtour killer) · optimal proven when **bound == incumbent**.
@@ -69,25 +73,43 @@ Row+column reduction solves the *assignment* problem (each city one in-edge + on
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — branching on edge 1→2 to certified optimum
 
 ::: step [Step 1: Setup] Formulating the Problem
-Using the matrix above (root bound 35, incumbent 39): branch on edge $1 \to 2$. Compute the exclude-branch bound (edge banned) and resolve the include side down to a tour.
+Matrix above (root bound 35, incumbent 39): branch on edge $1 \to 2$. Bound the exclude side; resolve the include side to a tour.
 :::
 
 ::: step [Step 2: Execution] Branching
-**Exclude $1 \to 2$:** set $M[1][2] = \infty$, re-reduce — bound rises to **39**, equal to the incumbent: nothing down this branch can *beat* 39, so prune it unexpanded (it can only tie, never improve).
-**Include $1 \to 2$:** delete row 1 / column 2, ban return $2 \to 1$ (subtour guard), continue branching — the surviving line resolves to tour $1 \to 2 \to 4 \to 3 \to 1$ costing $10 + 10 + 9 + 6 = \mathbf{35}$. New incumbent 35 **equals the root bound** — optimality proven, search over.
+**Exclude $1 \to 2$:** set $M[1][2] = \infty$, re-reduce — bound rises to **39** = incumbent: nothing here *beats* 39, prune unexpanded (at best ties). **Include $1 \to 2$:** delete row 1 / column 2, ban return $2 \to 1$ (subtour guard), continue branching — the surviving line resolves to $1 \to 2 \to 4 \to 3 \to 1$ costing $10 + 10 + 9 + 6 = \mathbf{35}$. New incumbent 35 **equals the root bound** — optimality proven, search over.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-Optimum **35** ($1 \to 2 \to 4 \to 3 \to 1$), certified by the root floor: no tour exists below 35 (bound), one exists at 35 (tour) — squeeze complete. One exclusion-prune + one inclusion-descent solved a 3-tour problem with barely any search — bounds doing the exponential heavy lifting.
+Optimum **35** ($1 \to 2 \to 4 \to 3 \to 1$), certified by the floor: nothing below 35 exists (bound), one tour at 35 exists (tour) — squeeze complete. One exclusion-prune + one inclusion-descent; bounds did the exponential heavy lifting.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Pruning needs "cannot *beat*" ($\ge$), not "strictly worse" ($>$): equality prunes are where B&B saves the most time.
+- Forgetting the return-edge ban lets the relaxation "complete" a 2-cycle and report a fake low bound.
+- A heuristic incumbent is a starting ceiling, not a floor — better heuristics only prune more, never less.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Include vs exclude branch | Fix edge (delete row/col, ban return) vs ban edge ($\infty$) and re-reduce |
+| Bound vs incumbent | Certified floor (optimistic) vs best tour in hand (achieved) |
+| Assignment vs tour | Subtours allowed (bound) vs single cycle required (answer) |
+
+**Exam recap (facts an examiner rewards):** bound = row + column totals; include/exclude mechanics with infinities; prune on $\ge$; optimum certified when bound == incumbent; trace numbers 29 + 6 = 35, NN 39, optimum 35.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz Row reduction subtracts each row's minimum and adds it to a running total claimed as part of the lower bound. Why is this total valid (never overestimating)?
 () Subtraction makes all entries non-negative, which is sufficient

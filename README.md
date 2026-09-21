@@ -22,11 +22,11 @@ content/<COURSE>/m{mod}_{seq}_{slug}.md
   seq 99 = practice lab (optional, one per module, sorts last)
 ```
 
-Current truth (2026-09-18) — full syllabus complete, 432 topics:
-- `PCCST501` Computer Networks: M1–M4 complete (36 topics)
+Current truth (2026-09-21) — full syllabus complete, 435 topics:
+- `PCCST501` Computer Networks: M1–M4 complete (37 topics, incl. socket programming/select/poll)
 - `PCCST502` DAA: M1–M4 complete (31 topics, incl. `m1_00` overview + `m1_99` lab)
 - `PECST522` AI: M1–M4 complete (30 topics, incl. `m1_99` lab; M2 now covers greedy, A*, generate-and-test, CSP/AC-3, minimax, alpha-beta)
-- `PCCST503` Machine Learning: M1–M4 complete (23 topics, 12 animated SVG scenes)
+- `PCCST503` Machine Learning: M1–M4 complete (25 topics, incl. regression metrics/regularisation + classification evaluation)
 - `GZPHT121` Physics for Physical Science and Life Science (S1/S2, Groups C & D): M1–M4 theory complete (26 topics, no lab, 14 animated SVG scenes + graphs + tables — fully enriched)
 - `GAMAT301` Mathematics for Information Science-3 (S3, Group A): M1–M4 complete (24 topics, no lab, 14 animated SVG scenes + graphs so far — fully enriched)
 - `PCCST303` Data Structures and Algorithms (S3): M1–M4 theory complete (27 topics, no lab, 10 animated SVG scenes)
@@ -47,7 +47,7 @@ Current truth (2026-09-18) — full syllabus complete, 432 topics:
 
 ## Features already built
 
-- **Topic-by-topic breakdown** — Module → smallest topic (432 `.md` files: 16 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
+- **Topic-by-topic breakdown** — Module → smallest topic (435 `.md` files: 16 complete courses), each a self-contained unit (intuition, framework, worked steps, quiz).
 - **Worked problems** via `::: step [badge] title` cards where the syllabus has a computational method.
 - **Dropdown / accordion sections** (`::: callout-*`, `::: toggle`) for extra depth so the main page stays uncluttered.
 - **Self-check quizzes** on most topics — instant right/wrong feedback + markdown-rendered pedagogical explanation. No score persistence yet (only per-course visited-topic checkmarks in `localStorage` + progress bar).

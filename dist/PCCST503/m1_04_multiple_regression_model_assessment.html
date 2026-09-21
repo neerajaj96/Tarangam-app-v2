@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,22 +249,55 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Multiple Regression &amp; Model Assessment</h1>
-<p><strong>Many predictors, polynomial expansion, train/test discipline, R², and the bias–variance lens that previews all of Module 3.</strong></p>
+<p><strong>What problem multiple predictors solve, what data splits honest assessment needs, how R-squared (R²) and Cross-Validation (CV) grade generalisation, and how bias versus variance guides cures.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>One feature rarely suffices. House price depends on size and bedrooms and age together. The problem: combine many predictors without memorising noise.</p>
+<p>Tiny beginner example. Two homes with same size 1,000 square feet sell for 12 and 14 lakh because one has two bedrooms and the other three. Size alone cannot explain the gap. A second predictor (bedrooms) is needed, with each coefficient read holding others fixed.</p>
+<p>Analogy as support, then dropped. Think of a panel of witnesses: each testifies holding others fixed, but too many witnesses can fabricate agreement on noise. From here on we use exact terms only: multiple regression, train-test split, R-squared, bias, variance.</p>
+<p>Abbreviations defined on first use: R-squared (R²), Cross-Validation (CV), Leave-One-Out (LOO). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $SS_{res}$?</td>
+<td>Sum of squared residuals, what the model left unexplained</td>
+</tr>
+<tr>
+<td>What is $SS_{tot}$?</td>
+<td>Total sum of squares around the mean, baseline to beat</td>
+</tr>
+<tr>
+<td>What is bias vs variance?</td>
+<td>Rigidity error vs. wiggle error</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Fit and honestly grade a model with $d$ predictors.</p>
+<p><strong>Data.</strong> Training split for fitting, validation split for choices, test split for final grading. Fitting and grading on the same data contaminates the grade. k-fold CV strengthens this: split data into $k$ equal folds (commonly $k=5$ or $10$), train on $k-1$ folds, validate on the held-out fold, rotate so each fold validates once, and average. LOO is the extreme $k=n$. Nested validation adds an outer loop: the inner loop selects degree or features, the outer loop grades the whole procedure on untouched data.</p>
+<p><strong>Goal.</strong> High test $R^2$, low test error, with train and test grades agreeing.</p>
+<p>Symbols: $R^2 = 1 - \sum(y_i-\hat{y}<em>i)^2/\sum(y_i-\bar{y})^2 = 1-SS</em>{res}/SS_{tot}$. Here $\hat{y}_i$ is prediction, $\bar{y}$ is test mean. Value $1$ is perfect, $0$ matches the mean baseline, negative is worse than guessing the mean. Expected test error equals bias-squared plus variance plus irreducible noise.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Panel of Witnesses</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One predictor is one witness — useful, limited. <strong>Multiple regression</strong> convenes the panel: price explained jointly by size <em>and</em> bedrooms <em>and</em> age, each coefficient testifying <em>holding the others fixed</em>. But panels overfit: with enough witnesses you can &quot;explain&quot; anything, including noise — memorizing the training lineup instead of learning the law. <strong>Assessment</strong> (held-out testing, R², bias–variance) is the cross-examination separating genuine understanding from expensive memorization.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
@@ -278,25 +319,57 @@
     <p class="video-caption"><strong>Key Insight:</strong> Multiple Regression Geometry</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the fitted plane tilt through a 3D point cloud as predictors join, then see training error keep falling while test error bottoms out and rises — the overfitting signature every later module fights.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Multiple and Polynomial Regression</h3>
-<p>Same normal equations, wider $X$: $w = (X^TX)^{-1}X^Ty$ with $d$ predictors; $w_j$ = effect of $x_j$ <em>ceteris paribus</em>. <strong>Polynomial regression</strong> is linear regression in disguise — expand features $(x, x^2, \dots, x^p)$ and fit linearly in the expanded space (linear in <em>weights</em>, curved in <em>x</em>; degree is a hyperparameter, not a fitted weight).</p>
-<h3>2.2 Assessment: R² and Held-Out Testing</h3>
+</div><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (many predictors) → data (train, validation, test folds) → goal (generalise) → method (expand features, penalise, validate) → model (linear in weights) → training (normal equations plus selection) → example → limitations.</p>
+<h3>3.1 Multiple and Polynomial Regression</h3>
+<p>Same normal equations, wider $X$: $w=(X^TX)^{-1}X^Ty$ with $d$ predictors; $w_j$ is the effect of $x_j$ holding others fixed. <strong>Polynomial regression</strong> is linear regression in disguise: expand features $(x,x^2,\dots,x^p)$ and fit linearly in the expanded space. It is linear in weights, curved in $x$; degree is a hyperparameter, not a fitted weight.</p>
+<p>Steps to choose complexity honestly, numbered:</p>
+<ol>
+<li>Fit candidate degrees on train only.</li>
+<li>Score each on validation folds (k-fold average, not train error).</li>
+<li>Select the degree at the validation minimum.</li>
+<li>Report final $R^2$ once on the untouched test fold.</li>
+</ol>
+<h3>3.2 Assessment: R², Splits and CV Mechanics</h3>
 <ul>
-<li><strong>Train/test split</strong> (or cross-validation): fit on train, judge on unseen test — test error estimates <em>generalization</em>, train error does not.</li>
-<li><strong>R²</strong> $= 1 - \frac{\sum(y_i-\hat{y}_i)^2}{\sum(y_i-\bar{y})^2}$: fraction of variance explained ($1$ = perfect, $0$ = mean-baseline, negative = worse than guessing the mean). Rises <em>by construction</em> with added predictors on train — judge it on test only.</li>
+<li><strong>Train-test split (or CV):</strong> fit on train, judge on unseen test. Test error estimates generalisation; train error does not.</li>
+<li><strong>R²:</strong> fraction of variance explained. Rises by construction with added predictors on train, so judge it on test only.</li>
+<li><strong>k-fold mechanics, strengthened:</strong> each point validates exactly once; averaging over folds cuts the luck of one split. Use stratified folds for classification so class ratios survive. Repeat or nest when selection itself must be graded.</li>
+<li><strong>RIDGE and LASSO reminder:</strong> when predictors collinear or $d$ large, add a penalty. RIDGE ($\lambda\sum w_j^2$, Gaussian prior) shrinks smoothly and keeps all features; LASSO ($\lambda\sum|w_j|$, Laplace prior) can zero features and select. The penalty strength is itself chosen by CV, never by train error.</li>
 </ul>
-<h3>2.3 Bias–Variance Preview</h3>
-<p>Expected test error $=$ <strong>bias²</strong> (rigidity: wrong model family) $+$ <strong>variance</strong> (wiggliness: sensitivity to the sample) $+$ irreducible noise. Simple models starve on bias; flexible ones drown in variance; test error bottoms at the sweet spot — the master tradeoff behind regularization, trees-vs-forests, and neural sizing across Modules 2–4.</p>
+<h3>3.3 Bias-Variance Preview</h3>
+<p>Expected test error equals bias-squared (rigidity: wrong family) plus variance (wiggliness: sample sensitivity) plus irreducible noise. Simple models starve on bias; flexible ones drown in variance; test error bottoms at the sweet spot. This tradeoff reappears in regularisation, trees versus forests, and neural sizing.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Train $R^2$ vs test $R^2$</td>
+<td>Rises by construction vs honest grade; report the second</td>
+</tr>
+<tr>
+<td>k-fold vs nested CV</td>
+<td>Honest validation of one model vs honest grading of a selection procedure</td>
+</tr>
+<tr>
+<td>RIDGE vs LASSO</td>
+<td>Dense shrinkage vs sparse selection</td>
+</tr>
+<tr>
+<td>Bias vs variance</td>
+<td>Rigid-wrong vs wiggly-unstable; U-curve finds the middle</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Regression Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same equations, wider $X$ · polynomial = <strong>linear in weights</strong> · assess on <strong>held-out data</strong> · $R^2 = 1 - SS_{res}/SS_{tot}$ (test only!) · error $=$ <strong>bias² + variance + noise</strong> · train error <strong>falls</strong> with complexity, test error <strong>U-turns</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: R² Worship (and Train-Error Theater)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Adding <em>any</em> predictor — even random noise — never lowers train $R^2$ (least squares exploits it), so train-$R^2 \approx 1$ advertises overfitting, not quality. Report test $R^2$; distrust any model selected <em>and</em> graded on the same data (selection contaminates the grade — nested validation exists for exactly this).</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Six house sales: sizes (1000 sqft units) $x = [1, 2, 3, 4, 5, 6]$, prices (lakh) $y = [12, 20, 25, 34, 41, 48]$. Fit a line, compute train $R^2$, then leave-one-out test the last point (fit on first five, predict $x=6$).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Fitting and Splitting</div><div class="step-content"><p>Means $\bar{x} = 3.5$, $\bar{y} = 30$. Slope $= \sum(x-\bar{x})(y-\bar{y})/\sum(x-\bar{x})^2 = 126/17.5 = 7.2$; intercept $= 30 - 7.2\times3.5 = 4.8$. Model $\hat{y} = 4.8 + 7.2x$; residuals $(0, +0.8, -1.4, +0.4, +0.2, 0)$ give $SS_{res} = 2.8$ against $SS_{tot} = 910$ → train $R^2 = 1 - 2.8/910 \approx 0.997$. Leave-one-out: fitting the first five points gives the same line $\hat{y} = 4.8 + 7.2x$ (slope $72/10 = 7.2$, intercept $26.4 - 21.6 = 4.8$), predicting $x=6 \to 48.0$ vs truth $48$ — error $\approx 0$ on unseen data.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Train $R^2 \approx 0.997$ <em>and</em> held-out error $\approx 0$ — both grades agree, so the fit is genuine, not memorized. Had the left-out error been $15$ with $R^2$ still $0.997$, that divergence <em>would be</em> the overfitting diagnosis — agreement between the two grades is the certificate.</p>
@@ -324,10 +397,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Train Falls, Test U-Turns</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch train error fall while test error bottoms and rises — the file&#39;s own verdict (R² 0.997 with LOO ≈ 0) sits at the sweet spot, not the right wall.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Adding polynomial features to fix high train plus bad test. That moves right on the U-curve; the cure is left: less complexity, RIDGE or LASSO, or more data.</li>
+<li>Selecting degree on the test set, then reporting that test score. Use nested splits so the grade stays honest.</li>
+<li>Reading $R^2$ without a split label. Train $R^2$ is construction; test or CV $R^2$ is evidence.</li>
+<li>Tuning LASSO or RIDGE strength on train error. Strength is chosen by CV.</li>
+</ul>
+<p>Limitations: $R^2$ needs variance to explain and misleads on non-linear truth; k-fold costs $k$ fits; LOO is nearly unbiased but high-variance and costly on large $n$.</p>
+<p>Exam recap: polynomial is linear in weights; $R^2=1-SS_{res}/SS_{tot}$ on test only; error equals bias-squared plus variance plus noise; k-fold rotates validation once per point; nested loop grades selection; RIDGE shrinks, LASSO selects.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Train R² = 0.99 but held-out error is terrible. A student proposes adding more polynomial features to fix it. What is wrong?</span>
@@ -418,9 +502,9 @@
       
       
       
-      <a href="./m1_99_practice_lab_foundations_drills.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m1_05_regression_metrics_regularisation.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">🧪 Practice Lab: M1 Foundations Drills</div>
+        <div class="ttl">1.5 Regression Metrics Regularisation</div>
       </a>
       
     </footer>
@@ -512,7 +596,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m1_04_multiple_regression_model_assessment";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

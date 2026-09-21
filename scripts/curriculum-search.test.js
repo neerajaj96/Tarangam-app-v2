@@ -5,7 +5,7 @@
  * (via scripts/topic-intelligence.js) and its Curriculum Explorer
  * integration: empty queries, exact ID/title, partial titles, concept/tag/
  * objective/course/module matches, facet composition, deterministic tier +
- * manifest-order tie-breaking, unknown queries, all-432 discoverability,
+ * manifest-order tie-breaking, unknown queries, all-435 discoverability,
  * static path generation for local and Pages hosting, byte-identical
  * repeated ordering, and proof that searching alters no other layer
  * (recommendations, graph, readiness, revision, attention, learner state,
@@ -332,13 +332,13 @@ describe('search alters no other layer', () => {
   });
 });
 
-describe('live 432-topic repository', () => {
+describe('live 435-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
-  it('keeps all 432 topics discoverable with deterministic ranked order', () => {
-    assert.equal(manifest.topics.length, 432);
+  it('keeps all 435 topics discoverable with deterministic ranked order', () => {
+    assert.equal(manifest.topics.length, 435);
     const byCourse = new Map();
     for (const t of manifest.topics) {
       if (!byCourse.has(t.courseCode)) byCourse.set(t.courseCode, []);
@@ -356,7 +356,7 @@ describe('live 432-topic repository', () => {
       const global = Intel.searchCurriculum(manifest, `${t.courseCode} ${t.id}`);
       assert.ok(global.some((e) => e.topic.courseCode === t.courseCode && e.topic.id === t.id));
     }
-    assert.equal(exactFirst, 432);
+    assert.equal(exactFirst, 435);
     // A broad query ranks deterministically and byte-identically.
     const first = JSON.stringify(Intel.searchCurriculum(manifest, 'introduction').map((e) => `${e.topic.courseCode}/${e.topic.id}/${e.matchKind}`));
     const second = JSON.stringify(Intel.searchCurriculum(manifest, 'introduction').map((e) => `${e.topic.courseCode}/${e.topic.id}/${e.matchKind}`));

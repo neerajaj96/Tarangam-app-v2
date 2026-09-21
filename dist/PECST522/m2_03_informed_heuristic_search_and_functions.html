@@ -269,115 +269,80 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
-    <a href="#foundations" class="jump-pill">🏛️ Foundations</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Informed (Heuristic) Search &amp; Designing Heuristic Functions</h1>
-<p><strong>Heuristic search fundamentals: Evaluation functions, admissibility, consistency, relaxed problems, and heuristic dominance.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-what-is-informed-heuristic-search">1. What is Informed (Heuristic) Search?</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-heuristic-function-h-n">2. The Heuristic Function $h(n)$ →</a></p>
-<p>In contrast to <strong>uninformed (blind) search</strong> algorithms (BFS, DFS, IDS) that explore states without directional feedback:</p>
+<p><strong>Problem: blind search expands far too much. Can domain knowledge guess remaining cost to aim the search? By the end you can test any heuristic for admissibility and consistency, design 8-puzzle heuristics from relaxed problems, and rank heuristics by dominance.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-compass-vs-blindfold">1. Start From Zero: Compass vs. Blindfold</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-admissibility-never-overestimate">2. Basic Layer: Admissibility (Nev… →</a></p>
+<p>Blind search touches every wall in a dark room. Informed search carries a compass: a guessed distance to the exit that prioritizes promising paths. The compass may err, so its error contract decides everything.</p>
+<p><strong>Definitions:</strong> a <strong>heuristic function</strong> <code>h(n)</code> estimates the cheapest remaining cost from node <code>n</code> to a goal. The true cheapest cost is written <code>h*(n)</code> (h-star). At any goal <code>G</code>, <code>h(G) = 0</code> must hold. Blind methods (BFS/DFS/UCS) use no <code>h</code>; informed methods order by it.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Compass vs. Blindfold</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The compass points but obstacles remain — guidance prunes, it does not teleport. Drop the image after this; the contracts below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> driving to a city 100 km away. <code>h = straight-line distance</code> (say 80 km) underestimates road distance — optimistic, hence safe for optimal search. <code>h = 150 km</code> overestimates and could discard the true best route — unsafe.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-admissibility-never-overestimate">2. Basic Layer: Admissibility (Never Overestimate)</h2>
+<p class="secnav"><a href="#1-start-from-zero-compass-vs-blindfold">← 1. Start From Zero: Compass vs. Bl…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-consistency-design-dominance">3. Formal Layer: Consistency, Desi… →</a></p>
+<p><strong>Data/state:</strong> current node <code>n</code>. <strong>Goal:</strong> estimate remaining cost without exceeding truth.</p>
+<p><strong>Meaning, variables, intuition, formula:</strong> admissibility means optimism everywhere. Variables: <code>h(n)</code> your estimate, <code>h*(n)</code> the true cheapest remainder:</p>
+<p>$$h(n) \le h^*(n) \quad \text{for all } n$$</p>
+<p>Intuition: under-promising keeps the optimal path looking affordable so it is never skipped. Overestimation (<code>h &gt; h*</code>) inflates the optimum&#39;s price tag and the search may settle for worse — optimality lost.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Admissibility Contract</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Admissible iff never overestimates on any node, with h(goal) = 0. Tiny check: true cost 8, guess 7 passes; guess 9 fails at that one node (one violation voids the license everywhere).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Why Overestimation Breaks Optimality</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>An inflated optimal path looks worse than a mediocre alternative. A* then returns the alternative — fast, wrong-priced. Admissibility is the optimality license; dominance (below) only ranks licensed heuristics.</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-consistency-design-dominance">3. Formal Layer: Consistency, Design, Dominance</h2>
+<p class="secnav"><a href="#2-basic-layer-admissibility-never-overestimate">← 2. Basic Layer: Admissibility (Nev…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Consistency (monotonicity)</strong> is stronger: heuristic differences along any edge cannot exceed the edge cost. For node <code>n</code>, successor <code>n&#39;</code> via action <code>a</code> with step cost <code>c(n,a,n&#39;)</code>:</p>
+<p>$$h(n) \le c(n, a, n&#39;) + h(n&#39;)$$</p>
+<p>Intuition (triangle inequality): the estimate here cannot exceed &quot;pay one step plus the estimate there.&quot; Consequence: <code>f(n) = g(n) + h(n)</code> never decreases along paths. <strong>Theorem: every consistent heuristic is admissible; the converse is false</strong> (some admissible heuristics wiggle inconsistently).</p>
+<p><strong>Design by relaxed problems:</strong> drop constraints to get an optimistic simplification whose exact cost is an admissible guess.</p>
 <ul>
-<li><strong>Informed (Heuristic) Search:</strong> Search strategies that leverage <strong>domain-specific knowledge</strong> to evaluate candidate states and prioritize paths likely to lead to the goal, significantly reducing node expansions.</li>
+<li><code>h1</code> (misplaced tiles): count of tiles off-goal (blank excluded). Relaxation: any tile teleports anywhere in one move.</li>
+<li><code>h2</code> (Manhattan/city-block): sum over tiles of horizontal-plus-vertical grid distance home. Relaxation: tiles slide through each other.</li>
 </ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Compass vs. Blindfold</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Uninformed search is like finding an exit in a dark room by touching every wall until finding an opening. 
-Informed search is like having a <strong>directional compass or GPS distance readout</strong>. While obstacles must still be navigated, the heuristic continuously guides the search toward promising directions.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-the-heuristic-function-h-n">2. The Heuristic Function $h(n)$</h2>
-<p class="secnav"><a href="#1-what-is-informed-heuristic-search">← 1. What is Informed (Heuristic) Se…</a><span class="secnav-sep">·</span><a href="#3-admissibility-the-underestimation-rule">3. Admissibility: The Underestimat… →</a></p>
-<p>The central component of informed search is the <strong>Heuristic Function</strong>, denoted as $h(n)$.</p>
-<ul>
-<li><strong>Definition:</strong> $h(n)$ is an estimated cost of the cheapest path from node $n$ to a goal state.</li>
-<li><strong>Goal Condition:</strong> At any goal state $G$, the heuristic value must be zero: $h(G) = 0$.</li>
-</ul>
-<h3>ASCII Diagram: Heuristic Estimation to Goal</h3>
-<pre><code class="language-text">                  Current Node [ n ]
-                       |
-                       |-- h(n) = Estimated remaining path cost
-                       v
-                  Goal State [ G ]  (h(G) = 0)
+<pre><code class="language-text">Current:  1 2 3 | 8 _ 4 | 7 6 5     Goal: 1 2 3 | 8 _ 4 | 7 6 5
 </code></pre>
-<hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-admissibility-the-underestimation-rule">3. Admissibility: The Underestimation Rule</h2>
-<p class="secnav"><a href="#2-the-heuristic-function-h-n">← 2. The Heuristic Function $h(n)$</a><span class="secnav-sep">·</span><a href="#4-consistency-monotonicity">4. Consistency (Monotonicity) →</a></p>
-<p>For heuristic search algorithms like $A^*$ to guarantee finding the <strong>optimal</strong> (lowest-cost) solution, the heuristic function must be <strong>Admissible</strong>.</p>
-<ul>
-<li><strong>Definition:</strong> A heuristic $h(n)$ is <strong>admissible</strong> if it never overestimates the true cost to reach the goal.</li>
-</ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Mathematical Condition for Admissibility</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Let $h^<em>(n)$ be the true, exact cost of the cheapest path from node $n$ to the nearest goal state. A heuristic $h(n)$ is admissible if and only if:
-$$h(n) \le h^</em>(n) \quad \text{for all nodes } n$$</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Why Overestimation Breaks Optimality</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>If a heuristic overestimates ($h(n) &gt; h^*(n)$), a truly optimal path may receive an inflated cost estimate. The search algorithm may prematurely discard or delay exploring this path in favor of a suboptimal alternative, forfeiting cost-optimality.</p>
-</div></details><hr>
-<p><a id="foundations"></a></p>
-<h2 id="4-consistency-monotonicity">4. Consistency (Monotonicity)</h2>
-<p class="secnav"><a href="#3-admissibility-the-underestimation-rule">← 3. Admissibility: The Underestimat…</a><span class="secnav-sep">·</span><a href="#5-designing-heuristics-for-the-8-puzzle">5. Designing Heuristics for the 8-… →</a></p>
-<p>A stronger condition than admissibility is <strong>Consistency</strong> (also known as Monotonicity), ensuring that heuristic values decrease smoothly along any valid path.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Triangle Inequality for Consistency</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A heuristic $h(n)$ is consistent if, for every node $n$ and every successor $n&#39;$ generated by action $a$ with step cost $c(n, a, n&#39;)$:
-$$h(n) \le c(n, a, n&#39;) + h(n&#39;)$$</p>
-</div></details><h3>ASCII Diagram: Consistency Triangle Inequality</h3>
-<pre><code class="language-text">                  Node [ n ]
-                 /          \
-                /            \
-  Step Cost c  /              \  Heuristic h(n&#39;)
-              v                v
-         Child [ n&#39; ] --------&gt; Goal [ G ]
-                    h(n) ≤ c + h(n&#39;)
-</code></pre>
-<ul>
-<li><strong>Core Theorem:</strong> <strong>Every consistent heuristic is also admissible.</strong> Consistency ensures that the evaluation function $f(n) = g(n) + h(n)$ is monotonically non-decreasing along any path.</li>
-</ul>
-<hr>
-<p><a id="history"></a></p>
-<h2 id="5-designing-heuristics-for-the-8-puzzle">5. Designing Heuristics for the 8-Puzzle</h2>
-<p class="secnav"><a href="#4-consistency-monotonicity">← 4. Consistency (Monotonicity)</a><span class="secnav-sep">·</span><a href="#6-dominance-of-heuristics">6. Dominance of Heuristics →</a></p>
-<p>Heuristics are systematically derived using the principle of <strong>Relaxed Problems</strong>—formulating simplified variants of the original problem by removing action constraints.</p>
-<h3>Two Standard 8-Puzzle Heuristics:</h3>
-<ol>
-<li><strong>$h_1$ (Misplaced Tiles):</strong> The number of tiles currently not in their target goal position (excluding the blank tile).<ul>
-<li><em>Relaxed Rule:</em> Any tile can move to any position in one step.</li>
-</ul>
-</li>
-<li><strong>$h_2$ (Manhattan Distance / City-Block Distance):</strong> The sum of the horizontal and vertical grid distances each tile must travel to reach its target position.<ul>
-<li><em>Relaxed Rule:</em> Tiles can move horizontally and vertically through other tiles without collision.</li>
-</ul>
-</li>
-</ol>
-<h3>ASCII Diagram: Misplaced Tiles vs. Manhattan Distance</h3>
-<pre><code class="language-text">      Current Board:               Target Goal:
-      +---+---+---+               +---+---+---+
-      | 1 | 2 | 3 |               | 1 | 2 | 3 |
-      | 8 |   | 4 |               | 8 | _ | 4 |
-      | 7 | 6 | 5 |               | 7 | 6 | 5 |
-      +---+---+---+               +---+---+---+
-</code></pre>
-<p>Both $h_1$ and $h_2$ are <strong>admissible</strong> because neither overestimates the actual number of moves required.</p>
-<hr>
-<h2 id="6-dominance-of-heuristics">6. Dominance of Heuristics</h2>
-<p class="secnav"><a href="#5-designing-heuristics-for-the-8-puzzle">← 5. Designing Heuristics for the 8-…</a><span class="secnav-sep">·</span><a href="#7-active-recall-quizzes">7. Active Recall Quizzes →</a></p>
-<p>When comparing multiple admissible heuristics, <strong>Heuristic Dominance</strong> determines which function will perform more efficiently.</p>
-<ul>
-<li><strong>Definition:</strong> Given two admissible heuristics $h_1$ and $h_2$, <strong>$h_2$ dominates $h_1$</strong> if, for all nodes $n$:
-$$h_2(n) \ge h_1(n)$$
-<em>(while maintaining $h_2(n) \le h^</em>(n)$).*</li>
-</ul>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Why Dominance Matters</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A dominating heuristic provides tighter lower bounds closer to the true cost $h^<em>(n)$. Because $h_2(n) \ge h_1(n)$, algorithms such as $A^</em>$ using $h_2$ will <strong>never expand more nodes</strong> than when using $h_1$, resulting in improved search speed and lower memory usage.</p>
-</div></details><hr>
+<p>Both are admissible (neither exceeds true moves). <strong>Dominance:</strong> for admissible <code>h1, h2</code>, <code>h2</code> dominates <code>h1</code> iff <code>h2(n) &gt;= h1(n)</code> everywhere (still <code>&lt;= h*</code>). Dominant heuristics expand no more A* nodes (up to ties). Since each misplaced tile needs &gt;= 1 move, <code>h2 &gt;= h1</code> always — Manhattan dominates misplaced tiles.</p>
+<p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-consistency-design-dominance">← 3. Formal Layer: Consistency, Desi…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>KTU procedure:</strong> on a given board, count misplaced (compare cells), sum Manhattan distances per tile, verify each <code>&lt;= h*</code>, then state dominance pointwise.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Admissible vs. consistent</td>
+<td>Never-overestimate vs. triangle inequality on every edge (consistent implies admissible)</td>
+</tr>
+<tr>
+<td><code>h</code> vs. <code>h*</code> vs. <code>g</code></td>
+<td>Guessed remainder vs. true remainder vs. paid-so-far</td>
+</tr>
+<tr>
+<td>Relaxed vs. real problem</td>
+<td>Fewer constraints (optimistic, admissible) vs. full rules</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) One overestimate anywhere voids admissibility. (2) Dominance needs two admissible rivals — inadmissible ones are disqualified before ranking. (3) Consistency is about edges, not just nodes.</p>
+<p><strong>Limitations:</strong> tighter heuristics cost more per node; dominance ignores computation time. Admissibility buys optimality only with the right search (A* with proper goal-testing) — heuristics alone solve nothing.</p>
 <p><a id="self-check"></a></p>
-<h2 id="7-active-recall-quizzes">7. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#6-dominance-of-heuristics">← 6. Dominance of Heuristics</a><span class="secnav-sep">·</span><a href="#8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A →</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What is the fundamental requirement for a heuristic function $h(n)$ to be classified as Admissible?</span>
@@ -400,7 +365,7 @@ $$h_2(n) \ge h_1(n)$$
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Admissibility requires the heuristic to be an optimistic estimate (a valid lower bound) of the true remaining path cost $h^*(n)$.</p><pre><code>&lt;/div&gt;
+      <p>Admissibility is optimism everywhere: a valid lower bound on true remaining cost. Euclidean distance is one example, not the definition.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -425,7 +390,7 @@ $$h_2(n) \ge h_1(n)$$
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Every misplaced tile must move at least 1 grid step, and often more. Therefore, the sum of grid distances ($h_2$) is always $\ge$ the number of misplaced tiles ($h_1$), making $h_2$ a dominating admissible heuristic.</p><pre><code>&lt;/div&gt;
+      <p>Each misplaced tile contributes at least 1 to Manhattan distance, so h2 &gt;= h1 pointwise while both stay &lt;= h*. Tighter bounds mean fewer A* expansions.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -450,38 +415,21 @@ $$h_2(n) \ge h_1(n)$$
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Consistency enforces the triangle inequality ($h(n) \le c(n, a, n&#39;) + h(n&#39;)$), which is a stronger constraint that guarantees admissibility across all valid state spaces.</p><pre><code>&lt;/div&gt;
+      <p>The triangle inequality implies never-overestimating, but optimism alone does not enforce smooth edge-to-edge behaviour.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="8-worked-university-exam-q-a">8. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#7-active-recall-quizzes">← 7. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> Define heuristic admissibility and explain why it is essential for $A^*$ optimality.</li>
-<li><strong>7 Marks:</strong> Define heuristic dominance, compute $h_1$ and $h_2$ on a given 8-puzzle state, and prove why $h_2$ dominates $h_1$.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Define an admissible heuristic function. Why is admissibility necessary in informed search?</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>Definition:</strong> A heuristic $h(n)$ is admissible if $h(n) \le h^<em>(n)$ for all nodes $n$, where $h^</em>(n)$ is the true cheapest cost to reach a goal state from $n$.</li>
-<li><strong>Significance:</strong> Admissibility prevents search algorithms from overestimating the cost of optimal paths, ensuring that the algorithm does not bypass the true shortest path in favor of a suboptimal one.</li>
-</ul>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: define admissibility and its A* role. 7 marks: compute h1/h2 on a board, prove h2 dominates h1, state consistency.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>h(n) &lt;= h*(n)</code>; <code>h(n) &lt;= c + h(n&#39;)</code>; consistent-implies-admissible; relaxed-problem derivations; <code>h2 &gt;= h1</code> dominance line.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Define admissible heuristic. Why necessary?</strong></p>
+<p><strong>Model Answer:</strong> h(n) &lt;= h*(n) everywhere with h(G)=0. It keeps optimal paths looking affordable so A* never discards them for worse alternatives.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Explain the concepts of Heuristic Admissibility and Heuristic Dominance. Compare the Misplaced Tiles heuristic ($h_1$) and Manhattan Distance heuristic ($h_2$) for the 8-puzzle.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Admissibility (2 Marks):</strong> A heuristic is admissible if $h(n) \le h^*(n)$ for all states $n$, guaranteeing optimistic lower-bound cost estimations.</li>
-<li><strong>Dominance (2 Marks):</strong> If $h_1$ and $h_2$ are admissible heuristics and $h_2(n) \ge h_1(n)$ for all nodes $n$, then $h_2$ dominates $h_1$. A dominating heuristic guarantees fewer node expansions during $A^*$ search.</li>
-<li><strong>Comparison for 8-Puzzle (3 Marks):</strong><ul>
-<li><em>Misplaced Tiles ($h_1$):</em> Counts the number of tiles not in their goal position. Each misplaced tile requires at least 1 move ($h_1(n) \le h^*(n)$).</li>
-<li><em>Manhattan Distance ($h_2$):</em> Sum of horizontal and vertical distances of each tile from its goal position. Each step contributes directly to the true move count ($h_2(n) \le h^*(n)$).</li>
-<li><em>Dominance:</em> Since each misplaced tile has Manhattan distance $\ge 1$, $h_2(n) \ge h_1(n)$ holds for all configurations. Thus, <strong>$h_2$ dominates $h_1$</strong>.</li>
-</ul>
-</li>
-</ol>
+<p><strong>Q: Compare h1 and h2 on the 8-puzzle with dominance.</strong></p>
+<p><strong>Model Answer:</strong> h1 counts misplaced tiles (teleport relaxation); h2 sums grid distances (through-move relaxation); both &lt;= h*. Each misplaced tile has Manhattan &gt;= 1, so h2 &gt;= h1 everywhere: h2 dominates, expanding no more A* nodes.
+:::</p>
 
     </main>
 

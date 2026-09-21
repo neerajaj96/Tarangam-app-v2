@@ -281,62 +281,97 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Complexity Analysis of Iterative Loops</h1>
 <p><strong>Single loops, nested loops, logarithmic increment loops, dependent inner loops, and amortized loop bounds.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Counting how many times a loop runs is a bit like counting steps on a staircase. A single flight of $n$ steps takes $n$ steps to climb — simple. But now imagine a building where, for <em>each</em> of the $n$ floors, you also have to climb a separate flight of $n$ steps just to check something on that floor before moving up — now you&#39;re doing $n \times n = n^2$ steps total, because the work is <em>nested</em>. And if, instead of climbing linearly, each step you take lets you skip to double your current floor (floor 1 → 2 → 4 → 8 → 16...), you&#39;ll reach the top in only about $\log_2 n$ steps — dramatically fewer, because the loop variable <em>grows multiplicatively</em> rather than by fixed increments.</p>
-<p>This section teaches you a systematic recipe: look at how the loop variable changes each iteration (does it go up by 1? by doubling? does the inner loop&#39;s range depend on the outer loop&#39;s current value?), and translate that pattern directly into a Big-O bound — without needing to run the code or guess.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Given raw code with loops, how do we read off its Big-O without running it? The recipe: look at <em>how the loop variable changes</em> each iteration (up by 1? doubling? inner range depending on the outer variable?) and translate that pattern into a sum — then into a bound.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Counting loop iterations is like counting staircase steps. One flight of $n$ steps = $n$ steps. But if <em>each</em> of $n$ floors also demands climbing $n$ steps, you climb $n \times n = n^2$. And if each step doubles your floor ($1 \to 2 \to 4 \to 8 \dots$), you top $n$ floors in only about $\log_2 n$ steps — multiplicative growth beats additive climbing.</p>
+</div></details><p><strong>Tiny toy example ($n = 8$).</strong> <code>for i in 1..8</code> runs 8 times. <code>i = 1; while i &lt;= 8: i *= 2</code> visits $1, 2, 4, 8$ — 4 iterations $\approx \log_2 8 + 1$. Same limit, half the trips.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<p><strong>Single loop, incrementing by a constant:</strong></p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-dependent-nested-loop-fully-costed">3. Worked example — dependent nest… →</a></p>
+<p><strong>Symbols:</strong> $n$ = loop bound (input size); $i, j$ = loop counters; $\Theta(\cdot)$ = tight bound. Every $O(1)$ body below means &quot;constant work per iteration&quot;.</p>
+<p><strong>Single loop, constant increment:</strong></p>
 <pre><code>for i = 1 to n:
     do O(1) work
 </code></pre>
-<p>Runs exactly $n$ times, each iteration doing constant work → total $\Theta(n)$.</p>
+<p>Runs $n$ times → total $\Theta(n)$.</p>
 <p><strong>Nested loops, independent ranges:</strong></p>
 <pre><code>for i = 1 to n:
     for j = 1 to m:
         do O(1) work
 </code></pre>
-<p>The inner loop runs $m$ times for <em>each</em> of the $n$ outer iterations, giving $n \times m$ total iterations → $\Theta(nm)$. When both loops run to $n$ (i.e. $m=n$), this becomes the very common $\Theta(n^2)$.</p>
-<p><strong>Dependent nested loops (inner range depends on outer variable):</strong></p>
+<p>Inner runs $m$ times per each of $n$ outer iterations → $\Theta(nm)$; with $m = n$, the classic $\Theta(n^2)$.</p>
+<p><strong>Dependent nested loops (inner range uses outer variable):</strong></p>
 <pre><code>for i = 1 to n:
     for j = 1 to i:
         do O(1) work
 </code></pre>
-<p>The inner loop runs $i$ times, and $i$ itself ranges from $1$ to $n$. Total iterations $= 1 + 2 + 3 + \dots + n = \frac{n(n+1)}{2}$ — this is the classic <strong>arithmetic series</strong> sum, which is $\Theta(n^2)$ (the leading term dominates; the constant $\frac{1}{2}$ is dropped by asymptotic notation, but the <em>degree</em>, $n^2$, survives).</p>
-<p><strong>Logarithmic loops (variable changes multiplicatively):</strong></p>
+<p>Total $= 1 + 2 + \dots + n = \frac{n(n+1)}{2}$ — the <strong>arithmetic series</strong>, $\Theta(n^2)$. Same rate as fully independent nesting, roughly half the absolute work.</p>
+<p><strong>Logarithmic loops (multiplicative change):</strong></p>
 <pre><code>i = 1
 while i &lt;= n:
     do O(1) work
     i = i * 2
 </code></pre>
-<p>$i$ takes values $1, 2, 4, 8, \dots$ — i.e. $2^0, 2^1, 2^2, \dots$ — and the loop stops once $2^k &gt; n$, i.e. once $k &gt; \log_2 n$. So the loop runs $\Theta(\log n)$ times. (The same logic applies symmetrically to a loop that starts at $n$ and <em>divides</em> by 2 each time until reaching 1 — this is exactly what happens inside binary search.)</p>
-<p><strong>Amortized analysis (a brief preview).</strong> Sometimes a single operation looks expensive in isolation, but happens rarely enough that its cost, <em>averaged over a long sequence of operations</em>, is actually small. Classic example: a dynamic array (like Python&#39;s list or Java&#39;s ArrayList) that doubles its capacity whenever it&#39;s full. A single &quot;resize&quot; copies all $n$ existing elements — an $O(n)$ operation — but resizes only happen $O(\log n)$ times total across $n$ insertions, and the total cost of all resizes across $n$ insertions sums to $O(n)$ (a geometric series: $1+2+4+\dots+n \approx 2n$). So the <em>amortized</em> (averaged) cost per insertion is $O(1)$, even though occasional individual insertions cost $O(n)$.</p>
-<p><strong>General technique — the summation method:</strong> express the total work as a sum over the loop&#39;s range, then evaluate that sum using standard series formulas (arithmetic series $\sum_{i=1}^n i = \frac{n(n+1)}{2}$, geometric series $\sum_{i=0}^{k} 2^i = 2^{k+1}-1$), and finally express the result in Big-O by keeping only the dominant (fastest-growing) term.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Two Series You Must Memorize</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arithmetic: $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \Theta(n^2)$ (dependent nested loops). Geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$, so $1+2+4+\dots+n = 2n-1 = \Theta(n)$ (doubling loops, dynamic-array resizes). Nine out of ten loop-counting questions reduce to recognizing which of these two sums you are looking at.</p>
+<p>$i = 1, 2, 4, \dots = 2^0, 2^1, \dots$; stops when $2^k &gt; n$, i.e. $k &gt; \log_2 n$ → $\Theta(\log n)$. Symmetrically, halving $n$ down to 1 (binary search&#39;s core) is also $\Theta(\log n)$.</p>
+<p><strong>Amortized preview.</strong> One operation may look expensive alone but be cheap <em>averaged over a sequence</em>. A dynamic array doubling when full pays $O(n)$ per resize, but only $O(\log n)$ resizes occur across $n$ insertions, totalling $O(n)$ (geometric series $1 + 2 + 4 + \dots + n \approx 2n$) — amortized $O(1)$ per insertion.</p>
+<p><strong>Summation method:</strong> write total work as a sum, evaluate with series formulas (arithmetic $\sum_{i=1}^n i = \frac{n(n+1)}{2}$; geometric $\sum_{i=0}^{k} 2^i = 2^{k+1}-1$), keep the dominant term.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Two Series You Must Memorize</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Arithmetic: $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \Theta(n^2)$ (dependent nested loops). Geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$, so $1+2+4+\dots+n = 2n-1 = \Theta(n)$ (doubling loops, dynamic-array resizes). Nine out of ten loop-counting questions reduce to recognising which sum you face.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Determine the time complexity of the following nested loop, where the inner loop&#39;s bound depends on the outer loop variable:</p>
+<h2 id="3-worked-example-dependent-nested-loop-fully-costed">3. Worked example — dependent nested loop, fully costed</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Determine the time complexity of:</p>
 <pre><code>for i = 1 to n:
     for j = 1 to i:
         print(i, j)
 </code></pre>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>For $i=1$, the inner loop runs $1$ time. For $i=2$, it runs $2$ times. ... For $i=n$, it runs $n$ times. The total number of <code>print</code> calls is $1 + 2 + 3 + \dots + n$. Using the arithmetic series formula, $\sum_{i=1}^{n} i = \frac{n(n+1)}{2} = \frac{n^2+n}{2}$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Expanding $\frac{n^2+n}{2} = \frac{1}{2}n^2 + \frac{1}{2}n$. As $n$ grows large, the $n^2$ term dominates the $n$ term, and asymptotic notation drops both the constant factor $\frac{1}{2}$ and the lower-order term $\frac{1}{2}n$. Final answer: $\Theta(n^2)$ — the <em>same</em> asymptotic complexity as two fully independent nested loops running $n$ times each, even though this version does roughly half the total work in absolute terms. This illustrates why Big-Theta cares about growth rate, not exact operation counts.</p>
+<p>where the inner bound depends on the outer variable.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>$i = 1$ → 1 print; $i = 2$ → 2 prints; …; $i = n$ → $n$ prints. Total $= 1 + 2 + \dots + n = \frac{n(n+1)}{2} = \frac{n^2+n}{2}$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$\frac{1}{2}n^2 + \frac{1}{2}n$: the $n^2$ term dominates, constants drop → $\Theta(n^2)$ — same rate as independent $n \times n$ nesting at half the absolute work. Big-Theta tracks growth, not exact counts.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-dependent-nested-loop-fully-costed">← 3. Worked example — dependent nest…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Dependent loops ($j$ to $i$) still give $\Theta(n^2)$ — &quot;roughly half&quot; changes constants, never the degree.</li>
+<li>Doubling from 1 and halving from $n$ are the <em>same</em> $\Theta(\log n)$ — direction does not matter.</li>
+<li>Amortized $O(1)$ does not mean &quot;every operation is cheap&quot;: single resizes still cost $O(n)$.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Arithmetic vs geometric series</td>
+<td>Dependent nesting $\Theta(n^2)$ vs doubling/amortization $\Theta(n)$ total</td>
+</tr>
+<tr>
+<td>$\Theta(n^2)$ dependent vs independent nesting</td>
+<td>Same growth rate, ~half the constant — asymptotics equate them</td>
+</tr>
+<tr>
+<td>Worst-case $O(n)$ vs amortized $O(1)$</td>
+<td>Single operation vs average over a sequence</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> both series formulas with closed forms; halving/doubling $\Rightarrow \log n$; dependent nesting sums to $n(n+1)/2$; amortized dynamic-array insertion is $O(1)$ via the geometric sum.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A loop where the control variable doubles each iteration (e.g. `i = i * 2`) until it exceeds $n$ has time complexity:</span>

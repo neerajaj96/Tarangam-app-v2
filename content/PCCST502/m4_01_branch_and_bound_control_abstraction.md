@@ -5,7 +5,7 @@ module: 4
 sequence: 1
 title: 'Branch & Bound: Control Abstraction'
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 8
 learningObjectives:
   - Sort live, E-node and dead states across FIFO, LIFO and LC search
   - Prune with optimistic bounds against the incumbent cost
@@ -26,24 +26,30 @@ tags:
 **Live/E/dead nodes, LC-search vs. FIFO/LIFO, bounding functions, and how cost-bounds generalize backtracking's feasibility pruning.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** Backtracking prunes dead ends (infeasible branches) — but optimization problems (cheapest tour, best assignment) need more: abandoning branches that are feasible yet *provably worse than a solution already in hand*. **Branch & Bound (B&B)** adds exactly this second blade: an optimistic cost estimate (bound) per branch plus a running best (incumbent), killing branches that cannot win.
 
 ::: callout-intuition Core Mental Model: The Treasure Hunter with a Map Legend
-Backtracking explores caves corridor by corridor, retreating only from dead ends. **Branch & bound** carries one extra instrument: a legend estimating the *best treasure any tunnel could possibly hold* (**bound**). At each fork it explores the most promising tunnel first (**least-cost search**), and abandons any tunnel whose legend reads worse than treasure already in hand (**prune by bound**). Same caves, far fewer footsteps — the map legend converts blind retreat into informed abandonment.
+Backtracking explores caves corridor by corridor, retreating only from dead ends. **Branch & bound** carries one extra instrument: a legend estimating the *best treasure any tunnel could possibly hold* (**bound**). At each fork it explores the most promising tunnel first (**least-cost search**), and abandons any tunnel whose legend reads worse than treasure already in hand (**prune by bound**). Same caves, far fewer footsteps — the legend converts blind retreat into informed abandonment. Drop the caves now: bounds, incumbents, and queue disciplines below are the exact machinery.
 :::
+
+**Tiny toy example (minimize).** Two branches: left promises ≥ 20 (bound), right promises ≥ 40. Explore left first, find a full solution costing 25 (incumbent 25). Right's bound 40 ≥ 25 → kill it unvisited. One addition saved a whole subtree.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-### 2.1 The Vocabulary: Live, E, Dead
+**Symbols and abbreviations:** E-node = expansion node (the live node currently being expanded); $\hat{c}(x)$ = bounding function (cheap optimistic estimate of the best cost in $x$'s subtree); incumbent = best complete solution found so far; FIFO = first-in-first-out (queue); LIFO = last-in-first-out (stack); LC = least-cost (priority queue on $\hat{c}$).
 
-* The **state-space tree** enumerates partial solutions (level $i$ fixes decision $i$).
-* A **live node** is generated but unexplored (waiting in the queue); the **E-node** (expansion node) is the live node currently being expanded; a node becomes **dead** once fully expanded or killed.
-* **Bounding function** $\hat{c}(x)$: a cheap, optimistic estimate of the best achievable cost in $x$'s subtree (lower bound for minimization). If $\hat{c}(x) \ge$ **incumbent** (best complete solution found so far), kill $x$ — its subtree cannot improve anything.
+**Vocabulary — numbered states:**
 
-### 2.2 Search Strategies: Who Becomes E-Node Next?
+1. The **state-space tree** enumerates partial solutions (level $i$ fixes decision $i$).
+2. A **live node** is generated but unexplored (waiting); the **E-node** is being expanded now; a node is **dead** once expanded or killed.
+3. **Bounding function** $\hat{c}(x)$: optimistic best cost below $x$ (lower bound for minimization). If $\hat{c}(x) \ge$ **incumbent**, kill $x$ — nothing underneath improves anything.
+
+**Search strategies (who becomes E-node next?):**
 
 | Strategy | Next E-node | Personality |
 |---|---|---|
@@ -51,11 +57,9 @@ Backtracking explores caves corridor by corridor, retreating only from dead ends
 | LIFO (depth) | Newest live node | Backtracking in disguise |
 | **LC (least-cost)** | Smallest $\hat{c}(x)$ | Always chase the most promising bound |
 
-LC-search + strong bounds is the flagship combination (TSP next topic); FIFO/LIFO need only a ranking counter, LC needs a priority queue on $\hat{c}$.
+LC + strong bounds is the flagship (TSP next); FIFO/LIFO need only a counter, LC needs a priority queue on $\hat{c}$.
 
-### 2.3 B&B vs. Backtracking (Superset, Not Rival)
-
-Backtracking prunes on **feasibility** (constraint violation ⇒ dead). Branch & bound prunes on feasibility **plus cost** ($\hat{c}(x)$ worse than incumbent ⇒ dead). Every backtracking search is B&B with the cost machinery idle; every B&B run on a pure satisfaction problem collapses to backtracking. Worst case stays exponential — bounds buy typical-case miracles, never complexity cures (Module 3's pitfall, inherited).
+**B&B vs backtracking (superset, not rival).** Backtracking prunes on **feasibility** (violation ⇒ dead). B&B prunes on feasibility **plus cost** ($\hat{c}(x)$ worse than incumbent ⇒ dead). Backtracking = B&B with cost machinery idle; B&B on pure satisfaction collapses to backtracking. Worst case stays exponential — bounds buy typical-case miracles, never complexity cures.
 
 ::: callout-formula KTU Formula Vault: B&B Facts
 Nodes: **live → E-node → dead** · strategies: **FIFO / LIFO / LC** (least-$\hat{c}$) · prune when **$\hat{c}(x) \ge$ incumbent** · bound must be **optimistic** (never overestimate promise for minimization) **and cheap** (a bound slower than search defeats itself).
@@ -68,24 +72,43 @@ For minimization, $\hat{c}$ must **underestimate** (admissible, like A* heuristi
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — bound, kill, and choose the next E-node
 
 ::: step [Step 1: Setup] Formulating the Problem
-4-job assignment-style selection: partial solution $x$ fixes jobs 1–2 costing 12 so far; remaining jobs 3–4 have cheapest-possible completions 9 and 11 (ignoring conflicts — optimistic by construction). Incumbent full solution costs 30. Bound $x$, decide its fate, and state which strategy picks the next E-node under LC vs FIFO.
+4-job selection: partial solution $x$ fixes jobs 1–2 costing 12; remaining jobs 3–4 have cheapest-possible completions 9 and 11 (conflicts ignored — optimistic by construction). Incumbent full solution costs 30. Bound $x$, decide its fate; say who LC vs FIFO expands next.
 :::
 
 ::: step [Step 2: Execution] Bounding and Choosing
-$\hat{c}(x) = 12 + 9 + 11 = 32 \ge 30 =$ incumbent → **kill $x$ unexpanded** (no completion through $x$ can beat 30). LC-search would next expand the live node with smallest $\hat{c}$; FIFO would take the oldest regardless of promise — here LC's priority queue skips straight past $x$'s entire subtree.
+$\hat{c}(x) = 12 + 9 + 11 = 32 \ge 30 =$ incumbent → **kill $x$ unexpanded** (no completion through $x$ beats 30). LC-search next expands the live node with smallest $\hat{c}$; FIFO takes the oldest regardless of promise — here LC's queue skips $x$'s entire subtree.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-One addition ($12+9+11$) pruned an exponentially-sized subtree sight unseen — provided the bound was genuinely optimistic (conflict-ignoring estimates always are: reality can only cost *more*). That inequality direction is the whole algorithm; everything else is queue discipline.
+One addition ($12+9+11$) pruned an exponential subtree sight unseen — valid only because the bound was genuinely optimistic (conflict-ignoring estimates always are: reality costs *more*). Inequality direction is the whole algorithm; the rest is queue discipline.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Prune on $\ge$, not $>$: equality means "can at best tie" — ties never improve, so killing on equality is correct (more next note).
+- Loose-but-optimistic bounds waste time, never correctness; tight-but-pessimistic bounds destroy correctness silently. Only one direction is safe.
+- A bound costlier than the search it saves is self-defeating — "cheap" is a requirement, not a wish.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Live vs E-node vs dead | Waiting vs expanding vs finished/killed (lifecycle, not priority) |
+| FIFO vs LIFO vs LC | Oldest vs newest vs smallest-bound next (LC pairs with bounding) |
+| Backtracking vs B&B | Feasibility pruning vs + cost-vs-incumbent pruning |
+
+**Exam recap (facts an examiner rewards):** the three node states; the three strategies with LC's promise-chasing; prune rule $\hat{c}(x) \ge$ incumbent; optimistic direction (underestimate for minimization) + cheapness.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz A minimization B&B node x has bound ĉ(x) = 32 and the incumbent costs 30. A student argues for expanding x "in case the bound is loose." What is wrong?
 () Nothing — loose bounds should always be double-checked by expansion

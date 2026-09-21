@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,35 +297,82 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Congestion Control: Principles &amp; TCP Dynamics</h1>
 <p><strong>Why the network chokes, the three costs of congestion, AIMD sawtooth fairness, slow start, and Tahoe vs. Reno on loss.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Too many cars enter a highway and everyone slows to a crawl — the jam is caused by the drivers themselves, and only the drivers can fix it by metering their entry. Packet networks behave identically: when senders collectively exceed a bottleneck&#39;s capacity, queues overflow, packets die, retransmissions double the load, and useful throughput collapses.</p>
+<p>The problem before the solution: no router phones the senders to coordinate — each TCP sender must infer congestion <em>alone</em> (from loss and delay) and adjust its sending rate so the network stays near capacity without collapsing. The shared etiquette is AIMD (Additive Increase, Multiplicative Decrease): probe gently upward, back off hard on loss.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Highway On-Ramp</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Packet loss is not a pothole (broken road) — it is a <strong>traffic jam</strong> (too many cars). And jams are self-inflicted: every driver entering faster makes everyone slower. TCP drivers therefore follow one shared etiquette: <em>probe for space by speeding up gently, and back off hard at the first brake lights</em>. If every flow obeys it, the highway self-organizes near capacity; if flows ignored it (like early UDP blasters), the road collapses into gridlock where almost no useful traffic moves at all.</p>
-</div></details><hr>
+<p>Dropping the highway now: cwnd = congestion window (allowed unacknowledged bytes); AIMD = +1 MSS per RTT up, halve on loss; slow start = doubling phase; ssthresh = remembered danger line.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-costs-aimd-dynamics-slow-start-tahoe-vs-reno">3. Purpose — Costs, AIMD Dynamics,… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Congestion</strong></td>
+<td>Aggregate demand persistently exceeding bottleneck capacity: queues grow, delays explode, packets drop.</td>
+</tr>
+<tr>
+<td><strong>cwnd (congestion window)</strong></td>
+<td>Sender-side cap on unacknowledged bytes, adjusted by loss signals to protect the <em>network</em> (contrast rwnd, which protects the receiver).</td>
+</tr>
+<tr>
+<td><strong>MSS (Maximum Segment Size)</strong></td>
+<td>Largest TCP payload per segment — AIMD&#39;s unit of increase.</td>
+</tr>
+<tr>
+<td><strong>AIMD (Additive Increase, Multiplicative Decrease)</strong></td>
+<td>Per RTT without loss: <code>cwnd += 1 MSS</code>; on loss: <code>cwnd /= 2</code>.</td>
+</tr>
+<tr>
+<td><strong>Slow start</strong></td>
+<td>Exponential phase (<code>cwnd</code> doubling per RTT from 1 MSS) used at birth and after severe loss — &quot;slow&quot; only relative to blasting at full rate instantly.</td>
+</tr>
+<tr>
+<td><strong>ssthresh (slow-start threshold)</strong></td>
+<td>The remembered danger line, reset to <code>cwnd/2</code> at each loss: grow fast below it, gently above.</td>
+</tr>
+<tr>
+<td><strong>Tahoe / Reno</strong></td>
+<td>Two TCP variants: Tahoe resets <code>cwnd = 1</code> on any loss; Reno halves on mild loss (triple duplicate ACKs, with fast recovery) and resets only on timeout.</td>
+</tr>
+<tr>
+<td><strong>Fast recovery</strong></td>
+<td>Reno&#39;s post-halving phase: resume additive growth immediately instead of slow-starting.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Three Costs of Congestion</h3>
+<h2 id="3-purpose-costs-aimd-dynamics-slow-start-tahoe-vs-reno">3. Purpose — Costs, AIMD Dynamics, Slow Start, Tahoe vs Reno</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 The Three Costs of Congestion</h3>
 <ol>
 <li><strong>Retransmission waste:</strong> dropped packets must be re-sent, so the network carries the same bytes twice while delivering once.</li>
 <li><strong>Buffer exhaustion and delay:</strong> queues fill, queueing delay explodes, and eventually <em>all</em> arrivals drop (bufferbloat: full buffers, zero goodput gain).</li>
 <li><strong>Unnecessary retransmissions:</strong> premature timeouts duplicate packets already queued — the sender pays for impatience with pure overhead.</li>
 </ol>
-<h3>2.2 AIMD: Additive Increase, Multiplicative Decrease</h3>
-<p>Each flow keeps a <strong>congestion window</strong> <code>cwnd</code> (bytes it may have unACKed) and adjusts per RTT with no explicit network signal — only loss as the congestion alarm:</p>
+<h3>3.2 Operation Flow: AIMD — Additive Increase, Multiplicative Decrease</h3>
+<p>Each flow keeps a <strong>congestion window</strong> <code>cwnd</code> (bytes it may have unACKed) and adjusts per RTT (Round-Trip Time) with no explicit network signal — only loss as the congestion alarm:</p>
 <ul>
 <li><strong>Additive increase:</strong> no loss for an RTT → <code>cwnd += 1 MSS</code> (gentle probe upward).</li>
 <li><strong>Multiplicative decrease:</strong> loss detected → <code>cwnd /= 2</code> (hard back-off).</li>
@@ -354,27 +405,58 @@
     <p class="video-caption"><strong>Key Insight:</strong> The Sawtooth Breathing</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the congestion window climb additively and crash multiplicatively on each loss — the dot rides real AIMD dynamics while the caption calls each phase.</div>
   </div>
-</div><p>Repeated across competing flows, AIMD converges to <strong>fairness</strong>: overfull flows get halved more often in absolute terms, so shares equalize — the celebrated &quot;sawtooth&quot; is the sound of fairness being enforced.</p>
-<h3>2.3 Slow Start, ssthresh, Tahoe vs. Reno</h3>
+</div><p>Repeated across competing flows with similar RTTs and synchronized loss signals, AIMD converges toward <strong>fairness</strong>: overfull flows get halved more in absolute terms, so shares equalize — the celebrated &quot;sawtooth&quot; is the sound of fairness being enforced. Qualification: with very different RTTs (short-RTT flows probe faster) or unsynchronized losses, shares skew — AIMD <em>tends toward</em> fairness under comparable conditions; it does not legislate perfect equality in all topologies.</p>
+<h3>3.3 Slow Start, ssthresh, Tahoe vs. Reno</h3>
 <ul>
 <li><strong>Slow start:</strong> despite the name, <em>exponential</em> growth — <code>cwnd</code> doubles per RTT from 1 MSS until first loss or <code>ssthresh</code>. Used at connection birth and after heavy loss (Tahoe).</li>
 <li><strong>ssthresh:</strong> the remembered danger line, set to <code>cwnd/2</code> at each loss event; below it grow fast (slow start), above it grow gently (congestion avoidance).</li>
 <li><strong>On loss:</strong> <strong>Tahoe</strong> resets <code>cwnd = 1</code> and slow-starts (treats every loss as catastrophe); <strong>Reno</strong> distinguishes: <strong>triple duplicate ACKs</strong> (mild, isolated loss) → halve and continue (<strong>fast recovery</strong>, no slow start); <strong>timeout</strong> (severe, total silence) → Tahoe-style reset to 1 MSS.</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Congestion in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Costs: <strong>retransmit waste + buffer delay + premature dupes</strong>. AIMD: <strong>+1 MSS/RTT</strong>, <strong>halve on loss</strong> → sawtooth → <strong>fairness</strong>. Slow start: <strong>double per RTT</strong> to ssthresh. ssthresh = <strong>cwnd/2 at loss</strong>. Tahoe: <strong>any loss → cwnd=1</strong>. Reno: <strong>3 dup-ACKs → halve + fast recovery</strong>; <strong>timeout → cwnd=1</strong>.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Congestion in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Costs: <strong>retransmit waste + buffer delay + premature dupes</strong>. AIMD: <strong>+1 MSS/RTT</strong>, <strong>halve on loss</strong> → sawtooth → <strong>fairness (similar-RTT flows)</strong>. Slow start: <strong>double per RTT</strong> to ssthresh. ssthresh = <strong>cwnd/2 at loss</strong>. Tahoe: <strong>any loss → cwnd=1</strong>. Reno: <strong>3 dup-ACKs → halve + fast recovery</strong>; <strong>timeout → cwnd=1</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Loss Means Congestion (in This Model)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP&#39;s founding bet: on wired networks, packet loss ≈ buffer overflow ≈ congestion — <em>not</em> link damage. So it always slows down on loss. The famous exception proving the rule: <strong>wireless</strong> links corrupt packets without congestion, where blind halving needlessly throttles — which is exactly why wireless-optimized TCP variants exist.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-costs-aimd-dynamics-slow-start-tahoe-vs-reno">← 3. Purpose — Costs, AIMD Dynamics,…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p><code>cwnd = 8</code> MSS, <code>ssthresh = 16</code>. One clean RTT → <code>cwnd = 9</code> (additive). Then triple duplicate ACKs → <code>ssthresh = 4</code>, <code>cwnd = 4</code> (halve, fast recovery). Same event under Tahoe → <code>cwnd = 1</code> and slow start. Mild loss: halved vs. flattened — the Reno improvement in one line.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A Reno flow has <code>cwnd = 24</code> MSS and <code>ssthresh = 32</code> MSS in congestion avoidance. Event A: triple duplicate ACKs arrive. Event B (later, after recovery to <code>cwnd = 14</code>): the retransmission timer expires. Trace <code>cwnd</code> and <code>ssthresh</code> through both events.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Reno Rules</div><div class="step-content"><p><strong>Event A (3 dup-ACKs, mild loss):</strong> <code>ssthresh = 24/2 = 12</code>; <code>cwnd = 24/2 = 12</code> (halve, fast recovery — <em>no</em> slow start). Growth resumes additively from 12.
 <strong>Event B (timeout at cwnd 14, severe loss):</strong> <code>ssthresh = 14/2 = 7</code>; <code>cwnd = 1</code> (full Tahoe-style reset). Slow start doubles 1 → 2 → 4 → 8 (crossing ssthresh=7 mid-way, switching to additive) and continues gently.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same flow, two philosophies: mild loss costs half the window and never leaves congestion avoidance; silence costs everything and restarts the climb from 1 MSS. The severity ladder — <strong>dup-ACKs halve, timeouts reset</strong> — is Reno&#39;s entire personality in one sentence.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cwnd vs. rwnd</td>
+<td>Network guard (sender-inferred) vs. receiver guard (advertised).</td>
+</tr>
+<tr>
+<td>Slow start vs. congestion avoidance</td>
+<td>Exponential doubling to ssthresh vs. +1 MSS/RTT AIMD above it.</td>
+</tr>
+<tr>
+<td>Tahoe vs. Reno</td>
+<td>Any loss → 1 vs. dup-ACKs halve + fast recovery, timeout → 1.</td>
+</tr>
+<tr>
+<td>Triple dup-ACK vs. timeout</td>
+<td>Mild isolated loss (network still delivering) vs. possible collapse (silence).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) &quot;AIMD guarantees equal shares always&quot; — add the similar-RTT/synchronized-loss qualifier. (2) Slow start is exponential, not slow — the name contrasts with instant full-rate blasting. (3) Forgetting to halve ssthresh on <em>both</em> loss types.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Three congestion costs (retransmit waste, buffer delay, premature dupes). AIMD: +1 MSS/RTT, halve on loss → sawtooth → fairness among similar-RTT flows. Slow start doubles to ssthresh (= cwnd/2 at loss). Tahoe: any loss → 1. Reno: 3 dup-ACKs → halve + fast recovery; timeout → 1. Wireless corruption breaks the loss≙congestion bet.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What are the three costs? Trace cwnd 24 → dup-ACKs → timeout at 14. When does fairness hold, and when does it skew? Why do wireless variants exist?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why does AIMD produce fairness among competing TCP flows sharing a bottleneck?</span>
@@ -559,7 +641,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_06_congestion_control_principles_and_tcp";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

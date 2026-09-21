@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.9 Socket Programming Select Poll</title>
+<meta name="description" content="Computer Networks (PCCST501) — 1.9 Socket Programming Select Poll | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.9 Socket Programming Select Poll">
+<meta property="og:description" content="Computer Networks (PCCST501) study notes: 1.9 Socket Programming Select Poll">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Computer Networks</span>
+        <span class="tag">PCCST501</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Application Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_internet_overview_and_network_edge.html" class="topic-link " id="topic-m1_01_internet_overview_and_network_edge">
+            <span class="topic-dot"></span>
+            <span>1.1 Internet Overview And Network Edge</span>
+          </a>
+          <a href="./m1_02_protocol_layering_and_osi_tcpip.html" class="topic-link " id="topic-m1_02_protocol_layering_and_osi_tcpip">
+            <span class="topic-dot"></span>
+            <span>1.2 Protocol Layering And OSI Tcpip</span>
+          </a>
+          <a href="./m1_03_application_layer_paradigms.html" class="topic-link " id="topic-m1_03_application_layer_paradigms">
+            <span class="topic-dot"></span>
+            <span>1.3 Application Layer Paradigms</span>
+          </a>
+          <a href="./m1_04_world_wide_web_and_http.html" class="topic-link " id="topic-m1_04_world_wide_web_and_http">
+            <span class="topic-dot"></span>
+            <span>1.4 World Wide Web And HTTP</span>
+          </a>
+          <a href="./m1_05_file_transfer_protocol_ftp.html" class="topic-link " id="topic-m1_05_file_transfer_protocol_ftp">
+            <span class="topic-dot"></span>
+            <span>1.5 File Transfer Protocol FTP</span>
+          </a>
+          <a href="./m1_06_electronic_mail_smtp_pop3_imap.html" class="topic-link " id="topic-m1_06_electronic_mail_smtp_pop3_imap">
+            <span class="topic-dot"></span>
+            <span>1.6 Electronic Mail SMTP POP3 IMAP</span>
+          </a>
+          <a href="./m1_07_domain_name_system_dns.html" class="topic-link " id="topic-m1_07_domain_name_system_dns">
+            <span class="topic-dot"></span>
+            <span>1.7 Domain Name System DNS</span>
+          </a>
+          <a href="./m1_08_peer_to_peer_bittorrent.html" class="topic-link " id="topic-m1_08_peer_to_peer_bittorrent">
+            <span class="topic-dot"></span>
+            <span>1.8 Peer To Peer Bittorrent</span>
+          </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link active" id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
+          <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M1 Application Layer Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Transport &amp; Network Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_transport_layer_services_and_multiplexing.html" class="topic-link " id="topic-m2_01_transport_layer_services_and_multiplexing">
+            <span class="topic-dot"></span>
+            <span>2.1 Transport Layer Services And Multiplexing</span>
+          </a>
+          <a href="./m2_02_udp_segment_structure_and_checksum.html" class="topic-link " id="topic-m2_02_udp_segment_structure_and_checksum">
+            <span class="topic-dot"></span>
+            <span>2.2 Udp Segment Structure And Checksum</span>
+          </a>
+          <a href="./m2_03_tcp_segment_structure_and_rtt.html" class="topic-link " id="topic-m2_03_tcp_segment_structure_and_rtt">
+            <span class="topic-dot"></span>
+            <span>2.3 TCP Segment Structure And Rtt</span>
+          </a>
+          <a href="./m2_04_reliable_transfer_gbn_and_sr.html" class="topic-link " id="topic-m2_04_reliable_transfer_gbn_and_sr">
+            <span class="topic-dot"></span>
+            <span>2.4 Reliable Transfer Gbn And Sr</span>
+          </a>
+          <a href="./m2_05_tcp_flow_control_and_connection_management.html" class="topic-link " id="topic-m2_05_tcp_flow_control_and_connection_management">
+            <span class="topic-dot"></span>
+            <span>2.5 TCP Flow Control And Connection Management</span>
+          </a>
+          <a href="./m2_06_congestion_control_principles_and_tcp.html" class="topic-link " id="topic-m2_06_congestion_control_principles_and_tcp">
+            <span class="topic-dot"></span>
+            <span>2.6 Congestion Control Principles And TCP</span>
+          </a>
+          <a href="./m2_07_multicast_routing_trees_rpf.html" class="topic-link " id="topic-m2_07_multicast_routing_trees_rpf">
+            <span class="topic-dot"></span>
+            <span>2.7 Multicast Routing Trees RPF</span>
+          </a>
+          <a href="./m2_08_quality_of_service_qos_mechanisms.html" class="topic-link " id="topic-m2_08_quality_of_service_qos_mechanisms">
+            <span class="topic-dot"></span>
+            <span>2.8 Quality Of Service QOS Mechanisms</span>
+          </a>
+          <a href="./m2_09_ipv4_addressing_forwarding_nat_icmp.html" class="topic-link " id="topic-m2_09_ipv4_addressing_forwarding_nat_icmp">
+            <span class="topic-dot"></span>
+            <span>2.9 IPV4 Addressing Forwarding NAT ICMP</span>
+          </a>
+          <a href="./m2_10_unicast_routing_link_state_distance_vector.html" class="topic-link " id="topic-m2_10_unicast_routing_link_state_distance_vector">
+            <span class="topic-dot"></span>
+            <span>2.10 Unicast Routing Link State Distance Vector</span>
+          </a>
+          <a href="./m2_11_ipv6_next_generation_transition.html" class="topic-link " id="topic-m2_11_ipv6_next_generation_transition">
+            <span class="topic-dot"></span>
+            <span>2.11 IPV6 Next Generation Transition</span>
+          </a>
+          <a href="./m2_99_practice_lab_transport_drills.html" class="topic-link " id="topic-m2_99_practice_lab_transport_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M2 Transport Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Data Link Layer</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_datalink_layer_services_and_framing.html" class="topic-link " id="topic-m3_01_datalink_layer_services_and_framing">
+            <span class="topic-dot"></span>
+            <span>3.1 Datalink Layer Services And Framing</span>
+          </a>
+          <a href="./m3_02_error_detection_crc_checksums_parity.html" class="topic-link " id="topic-m3_02_error_detection_crc_checksums_parity">
+            <span class="topic-dot"></span>
+            <span>3.2 Error Detection CRC Checksums Parity</span>
+          </a>
+          <a href="./m3_03_multiple_access_protocols.html" class="topic-link " id="topic-m3_03_multiple_access_protocols">
+            <span class="topic-dot"></span>
+            <span>3.3 Multiple Access Protocols</span>
+          </a>
+          <a href="./m3_04_lan_addressing_arp_switches_and_vlans.html" class="topic-link " id="topic-m3_04_lan_addressing_arp_switches_and_vlans">
+            <span class="topic-dot"></span>
+            <span>3.4 Lan Addressing ARP Switches And Vlans</span>
+          </a>
+          <a href="./m3_05_wireless_lan_802_11.html" class="topic-link " id="topic-m3_05_wireless_lan_802_11">
+            <span class="topic-dot"></span>
+            <span>3.5 Wireless Lan 802 11</span>
+          </a>
+          <a href="./m3_06_mobile_ip_agents_tunneling.html" class="topic-link " id="topic-m3_06_mobile_ip_agents_tunneling">
+            <span class="topic-dot"></span>
+            <span>3.6 Mobile IP Agents Tunneling</span>
+          </a>
+          <a href="./m3_99_practice_lab_datalink_drills.html" class="topic-link " id="topic-m3_99_practice_lab_datalink_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M3 Datalink Drills</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>Physical Layer &amp; SNMP</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_network_management_snmp_architecture.html" class="topic-link " id="topic-m4_01_network_management_snmp_architecture">
+            <span class="topic-dot"></span>
+            <span>4.1 Network Management SNMP Architecture</span>
+          </a>
+          <a href="./m4_02_nyquist_shannon_channel_capacity.html" class="topic-link " id="topic-m4_02_nyquist_shannon_channel_capacity">
+            <span class="topic-dot"></span>
+            <span>4.2 Nyquist Shannon Channel Capacity</span>
+          </a>
+          <a href="./m4_03_pcm_digitization_sampling_quantization.html" class="topic-link " id="topic-m4_03_pcm_digitization_sampling_quantization">
+            <span class="topic-dot"></span>
+            <span>4.3 PCM Digitization Sampling Quantization</span>
+          </a>
+          <a href="./m4_04_modulation_ask_fsk_psk_qam.html" class="topic-link " id="topic-m4_04_modulation_ask_fsk_psk_qam">
+            <span class="topic-dot"></span>
+            <span>4.4 Modulation Ask Fsk Psk Qam</span>
+          </a>
+          <a href="./m4_05_transmission_media_guided_unguided.html" class="topic-link " id="topic-m4_05_transmission_media_guided_unguided">
+            <span class="topic-dot"></span>
+            <span>4.5 Transmission Media Guided Unguided</span>
+          </a>
+          <a href="./m4_06_bandwidth_utilization_multiplexing_spread.html" class="topic-link " id="topic-m4_06_bandwidth_utilization_multiplexing_spread">
+            <span class="topic-dot"></span>
+            <span>4.6 Bandwidth Utilization Multiplexing Spread</span>
+          </a>
+          <a href="./m4_07_asn1_smi_mib_language.html" class="topic-link " id="topic-m4_07_asn1_smi_mib_language">
+            <span class="topic-dot"></span>
+            <span>4.7 ASN1 SMI MIB Language</span>
+          </a>
+          <a href="./m4_99_practice_lab_management_physical_drills.html" class="topic-link " id="topic-m4_99_practice_lab_management_physical_drills">
+            <span class="topic-dot"></span>
+            <span>🧪 Practice Lab: M4 Management Physical Drills</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel" role="status">0 of 37 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" role="status" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <a href="../course.html?course=PCCST501">PCCST501</a>
+        <span class="crumb-sep">/</span>
+        <a href="../course.html?course=PCCST501#module-1">Module 1</a>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.9 Socket Programming Select Poll</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 13 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#situation" class="jump-pill">situation</a>
+    <a href="#terms" class="jump-pill">terms</a>
+    <a href="#purpose-flows" class="jump-pill">purpose-flows</a>
+    <a href="#examples" class="jump-pill">examples</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Socket Programming: TCP/UDP Client-Server, Select, Poll &amp; Packet Sockets</h1>
+<p><strong>What problem one server serving many clients poses, what a socket (a communication endpoint) plus its Address Family names, how Transmission Control Protocol (TCP) and User Datagram Protocol (UDP) client-server calls sequence, how <code>select</code> and <code>poll</code> multiplex without threads, what non-blocking and readiness-based advanced Input/Output (I/O) add, and where <code>SOCK_PACKET</code> and <code>PF_PACKET</code> packet sockets sit.</strong></p>
+<p><a id="situation"></a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>A web server handles a hundred browsers at once with one program. The problem before any solution: the network delivers bytes, but programs need named endpoints, ordered conversations, and a way to wait on many conversations simultaneously without hiring a thread per browser.</p>
+<p>Tiny beginner example. Browser wants page from server at Internet Protocol (IP) address <code>93.184.216.34</code>, port <code>80</code>. The browser creates a socket (its end of the wire), connects it to that address plus port, sends <code>GET /</code>, reads the reply, closes. The server earlier created a listening socket bound to port <code>80</code>, and for this browser it accepts a fresh connected socket dedicated to exactly this conversation. One listening socket births one connected socket per browser — the pattern every flow below repeats.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Telephones With Many Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A socket is a telephone handset: <code>socket()</code> buys the handset, <code>bind()</code> prints your number on it, <code>listen()</code> puts it on the hook waiting for rings, <code>accept()</code> picks up one ringing line onto a fresh handset (the original keeps ringing for others), <code>connect()</code> dials out, <code>send</code>/<code>recv</code> talk, <code>close()</code> hangs up. <code>select</code>/<code>poll</code> is the receptionist watching fifty blinking lines and tapping you only for the ones with someone speaking — one clerk, many calls, no thread per line.</p>
+<p>Dropping the phones now: socket = kernel communication endpoint indexed by a file descriptor; address = (IP, port) pair; connection = bound pair of sockets with TCP state; multiplexing = one thread serving many ready descriptors.</p>
+</div></details><p><a id="terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-the-call-sequences-operation-flow">3. Purpose — The Call Sequences (O… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Socket</strong></td>
+<td>Kernel endpoint for communication, named by an integer file descriptor; created per conversation end.</td>
+</tr>
+<tr>
+<td><strong>Address family (<code>AF_INET</code> vs <code>AF_INET6</code>)</strong></td>
+<td>Which address format the socket speaks: <code>AF_INET</code> = IPv4 32-bit addresses, <code>AF_INET6</code> = IPv6 128-bit addresses. Chosen at <code>socket()</code> and fixed for life.</td>
+</tr>
+<tr>
+<td><strong>Socket type (<code>SOCK_STREAM</code> vs <code>SOCK_DGRAM</code>)</strong></td>
+<td>Conversation semantics: <code>SOCK_STREAM</code> = TCP byte stream (connected, reliable, ordered); <code>SOCK_DGRAM</code> = UDP datagrams (connectionless, one message per call).</td>
+</tr>
+<tr>
+<td><strong>Port</strong></td>
+<td>16-bit process apartment number on a host (web servers conventionally listen on port 80); IP names the building, port the door.</td>
+</tr>
+<tr>
+<td><strong><code>bind</code> / <code>listen</code> / <code>accept</code> / <code>connect</code></strong></td>
+<td>Server claims a port (<code>bind</code>), queues incoming dials (<code>listen</code>), adopts one dial onto a new socket (<code>accept</code>); client dials (<code>connect</code>).</td>
+</tr>
+<tr>
+<td><strong><code>select</code> / <code>poll</code></strong></td>
+<td>Single-thread multiplexers: block until some descriptor in a watched set is readable/writable, then report which — no busy loop, no thread per client.</td>
+</tr>
+<tr>
+<td><strong>Blocking vs non-blocking I/O</strong></td>
+<td>Blocking calls sleep until done; non-blocking calls return immediately with <code>EWOULDBLOCK</code> when nothing is ready (polled or multiplexed instead).</td>
+</tr>
+<tr>
+<td><strong><code>SOCK_PACKET</code> / <code>PF_PACKET</code></strong></td>
+<td>Packet sockets bypassing TCP/UDP to read/write raw link-layer frames: legacy <code>SOCK_PACKET</code> vs modern <code>PF_PACKET</code> family with <code>SOCK_RAW</code>. Sniffers live here, not in applications.</td>
+</tr>
+</tbody></table>
+<p><a id="purpose-flows"></a></p>
+<h2 id="3-purpose-the-call-sequences-operation-flow">3. Purpose — The Call Sequences (Operation Flow)</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 TCP Server and Client, Call by Call</h3>
+<p>Server (passive, serves many), numbered:</p>
+<ol>
+<li><code>sock = socket(AF_INET, SOCK_STREAM, 0)</code> — buy a TCP handset (IPv4).</li>
+<li><code>bind(sock, address, port)</code> — print your number (claim the port; needs privilege below 1024).</li>
+<li><code>listen(sock, backlog)</code> — hook the phone, queue up to <code>backlog</code> unaccepted dials.</li>
+<li>Loop: <code>conn = accept(sock)</code> — sleep until a dial arrives, then birth a fresh connected socket <code>conn</code> for exactly this client (listening socket stays open for the next dial).</li>
+<li><code>recv(conn)</code> / <code>send(conn)</code> — talk until done; <code>close(conn)</code> — hang up this conversation only.</li>
+</ol>
+<p>Client (active, dials once):</p>
+<ol>
+<li><code>sock = socket(AF_INET, SOCK_STREAM, 0)</code> — buy a handset (no <code>bind</code> needed; the kernel picks an ephemeral port).</li>
+<li><code>connect(sock, serverIP, serverPort)</code> — dial; blocks through the three-way handshake (SYN, SYN-ACK, ACK).</li>
+<li><code>send(sock, request)</code> / <code>recv(sock, reply)</code> — talk; <code>close(sock)</code> — hang up.</li>
+</ol>
+<p>Message structure note: TCP exposes a byte stream, not packets — one <code>send</code> may arrive as several <code>recv</code> chunks (or several sends coalesce). Framing (where one reply ends) is the application&#39;s job (length prefix or delimiter), unlike UDP below.</p>
+<h3>3.2 UDP, Call by Call (Connectionless Contrast)</h3>
+<p>No handshake, no <code>listen</code>/<code>accept</code>, no streams. Server: <code>socket(AF_INET, SOCK_DGRAM, 0)</code>, <code>bind(port)</code>, then loop <code>recvfrom(sock)</code> (returns data plus sender address) and <code>sendto(sock, reply, clientAddress)</code>. Client: <code>socket(SOCK_DGRAM)</code>, then <code>sendto(server)</code> / <code>recvfrom()</code> directly. Each call is one datagram: sent whole, delivered whole or not at all, possibly lost or reordered. Domain Name System (DNS) lives here precisely because one question plus one answer fits one round trip with no setup cost.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TCP vs UDP sockets</td>
+<td><code>SOCK_STREAM</code> + <code>listen</code>/<code>accept</code>/<code>connect</code> + streams vs <code>SOCK_DGRAM</code> + <code>sendto</code>/<code>recvfrom</code> + datagrams</td>
+</tr>
+<tr>
+<td>Listening vs connected socket</td>
+<td>Original stays ringing for new dials vs <code>accept</code>&#39;s child talks to exactly one client</td>
+</tr>
+<tr>
+<td><code>bind</code> on server vs client</td>
+<td>Server must <code>bind</code> its famous port; client usually skips it (ephemeral auto-port)</td>
+</tr>
+</tbody></table>
+<pre><code class="language-c">/* Minimal TCP server skeleton (IPv4, error checks omitted for reading). */
+int ls = socket(AF_INET, SOCK_STREAM, 0);
+bind(ls, &amp;server_addr, sizeof(server_addr));
+listen(ls, 16);
+for (;;) {
+    int conn = accept(ls, &amp;cli_addr, &amp;cli_len);
+    recv(conn, buf, sizeof(buf), 0);
+    send(conn, reply, reply_len, 0);
+    close(conn);
+}
+</code></pre>
+<p>Read it line by line: buy, name, queue, then forever adopt-talk-hangup per client. The loop is iterative (one conversation at a time) until §3.3 multiplexes it.</p>
+<h3>3.3 Multiplexing With <code>select</code> and <code>poll</code> (One Thread, Many Clients)</h3>
+<p>The iterative loop above stalls: while talking to a slow client, new dials queue unanswered. Threads are one cure; multiplexing is the cheaper one — ask the kernel &quot;which of these fifty descriptors is ready?&quot; and touch only those.</p>
+<p><code>select</code> mechanics, numbered:</p>
+<ol>
+<li>Build watched sets (<code>fd_set</code> for readable, writable, exceptional) plus <code>maxfd + 1</code> (highest descriptor plus one — the kernel scans <code>0..maxfd</code>).</li>
+<li>Call <code>select(maxfd+1, &amp;readfds, &amp;writefds, NULL, &amp;timeout)</code> — sleep until some descriptor is ready or the timeout expires.</li>
+<li>Scan the returned sets; every still-set bit is ready now — <code>accept</code>/<code>recv</code>/<code>send</code> on it without blocking.</li>
+<li>Rebuild sets before every call (<code>select</code> overwrites them) — the classic exam trap.</li>
+</ol>
+<p><code>poll</code> mechanics (same idea, cleaner interface): fill an array of <code>struct pollfd { fd, events, revents }</code> with wanted <code>events</code> (<code>POLLIN</code> readable, <code>POLLOUT</code> writable); call <code>poll(fds, nfds, timeout)</code>; read back <code>revents</code> per descriptor. No <code>maxfd</code> scan bound, no set-rebuild ritual, same readiness contract. Both are level-triggered (a still-ready descriptor reports ready on every call until drained — contrast edge-triggered <code>epoll</code>, out of syllabus but examinable as a named contrast).</p>
+<p>Worked trace (30 seconds): descriptors <code>{3: listener, 5: clientA, 7: clientB}</code>. <code>select</code> returns readable <code>{3, 7}</code>. Step 1: <code>accept(3)</code> births <code>conn 9</code> for the new dial. Step 2: <code>recv(7)</code> reads clientB&#39;s arrived bytes. Step 3: descriptor 5 untouched (nothing ready — no wasted thread, no busy spin). Loop rebuilds sets and sleeps again.</p>
+<h3>3.4 Advanced I/O: Non-Blocking and Readiness Discipline</h3>
+<p><strong>Non-blocking sockets</strong> (<code>O_NONBLOCK</code> via <code>fcntl</code>) never sleep: <code>accept</code>/<code>recv</code>/<code>send</code> return immediately, with <code>-1</code>/<code>EWOULDBLOCK</code> when nothing is ready. Discipline: pair them with <code>select</code>/<code>poll</code> (wait for readiness, then issue exactly the ready calls), never with spin loops (burns CPU for zero bytes). Partial sends complete the picture: non-blocking <code>send</code> may write fewer bytes than asked — loop on the remainder, still readiness-gated. Blocking-plus-multiplexing is the KTU default (simple, correct); non-blocking-plus-multiplexing is the scale pattern (many idle connections, one thread).</p>
+<h3>3.5 Packet Sockets: <code>SOCK_PACKET</code> and <code>PF_PACKET</code></h3>
+<p>Applications normally see TCP/UDP payloads; sniffers and custom stacks need raw frames (Ethernet headers included). Legacy Linux offered <code>socket(AF_INET, SOCK_PACKET, ...)</code> — deprecated, link-layer access through an IPv4-mapped hack. Modern code uses the <code>PF_PACKET</code> family: <code>socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL))</code> delivers every received frame with its link header, and <code>sendto</code> transmits crafted frames. Examinable placement: packet sockets bypass the transport layer entirely (no ports, no TCP state — the program parses Ethernet/IP/TCP itself), require privilege, and belong to measurement tools (<code>tcpdump</code> family), never to web or mail applications. Confusing <code>SOCK_STREAM</code> with <code>SOCK_RAW</code> mistakes streams for frames — the exam&#39;s favourite one-word trap.</p>
+<p><a id="examples"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-the-call-sequences-operation-flow">← 3. Purpose — The Call Sequences (O…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>One server port <code>80</code>, two browsers. Browser A connects → server <code>accept</code> returns <code>connA</code>; browser B connects → <code>accept</code> returns <code>connB</code>; listening socket never talks, only births. <code>select</code> watches <code>{listener, connA, connB}</code> and wakes only for ready ones — the whole multi-client trick in three descriptors.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A TCP server&#39;s <code>select</code> watches listener <code>fd 3</code> plus connected clients <code>fd 5</code> and <code>fd 7</code>. <code>select</code> returns readable <code>{3, 7}</code>. (a) Which calls run next, in what order discipline? (b) A UDP peer instead wants one question plus one answer with no setup — which calls, and why no <code>listen</code>?</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Dispatching Readiness</div><div class="step-content"><p>(a) Readable listener means a pending dial: <code>accept(3)</code> first (birth <code>conn 9</code>, keep listening). Readable <code>7</code> means arrived bytes: <code>recv(7)</code> next. Descriptor <code>5</code> is untouched — readiness, not round-robin, schedules work. Sets are rebuilt before the next <code>select</code> (overwrite trap). (b) UDP: <code>socket(SOCK_DGRAM)</code> + <code>sendto(server)</code> + <code>recvfrom()</code> — datagrams need no handshake, so <code>listen</code>/<code>accept</code>/<code>connect</code> have nothing to set up; DNS-scale single exchanges ride exactly this triple.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Three ready bits became two exact calls (<code>accept</code>, <code>recv</code>) with zero thread wakeups and zero spins — multiplexing&#39;s contract. UDP&#39;s triple is the connectionless mirror: name the destination per message, skip every stream call, accept loss as the price of zero setup.</p>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SOCK_STREAM</code> vs <code>SOCK_DGRAM</code></td>
+<td>TCP streams + <code>listen</code>/<code>accept</code>/<code>connect</code> vs UDP datagrams + <code>sendto</code>/<code>recvfrom</code></td>
+</tr>
+<tr>
+<td>Listening vs connected socket</td>
+<td>Rings for all vs talks to one; <code>accept</code> births the talker</td>
+</tr>
+<tr>
+<td><code>select</code> vs <code>poll</code></td>
+<td><code>fd_set</code> + <code>maxfd</code> + rebuild ritual vs <code>pollfd</code> array + <code>revents</code>, same level-triggered contract</td>
+</tr>
+<tr>
+<td>Blocking vs non-blocking</td>
+<td>Sleep until done vs instant <code>EWOULDBLOCK</code>; pair non-blocking with readiness, never spins</td>
+</tr>
+<tr>
+<td><code>SOCK_PACKET</code> vs <code>PF_PACKET</code></td>
+<td>Deprecated IPv4-mapped hack vs modern raw-frame family (<code>SOCK_RAW</code>, needs privilege)</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Forgetting <code>select</code> overwrites its sets — rebuild every loop. (2) Expecting TCP message boundaries — streams coalesce and split; frame in the application. (3) <code>bind</code>ing the client to a famous port — ephemeral auto-ports are the norm. (4) Calling <code>SOCK_PACKET</code> modern — it is legacy; <code>PF_PACKET</code> + <code>SOCK_RAW</code> is the current answer. (5) Spinning on non-blocking sockets — readiness-gate every retry.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP server: <code>socket</code> → <code>bind</code> → <code>listen</code> → loop <code>accept</code>/<code>recv</code>/<code>send</code>/<code>close</code>; client: <code>socket</code> → <code>connect</code> → <code>send</code>/<code>recv</code> → <code>close</code>. UDP: <code>socket</code> → <code>bind</code> (server) → <code>sendto</code>/<code>recvfrom</code>, no handshake. <code>select(maxfd+1, sets, timeout)</code> / <code>poll(fds, nfds, timeout)</code> multiplex level-triggered readiness in one thread (rebuild <code>select</code> sets per call). Non-blocking returns <code>EWOULDBLOCK</code> instead of sleeping — gate retries on readiness. <code>SOCK_PACKET</code> is legacy; <code>PF_PACKET</code> + <code>SOCK_RAW</code> sniffs raw frames with privilege, bypassing transport entirely.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Recite the five TCP server calls in order. Why does <code>accept</code> return a new descriptor? When does <code>select</code> need its sets rebuilt? Which UDP calls replace the whole handshake? What privilege and layer does <code>PF_PACKET</code> bypass?</p>
+<p><a id="self-check"></a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A TCP server calls socket, bind, listen, then loops accept/recv/send/close. A student proposes handling each accepted connection in the same loop iteration with blocking recv. What breaks with two simultaneous clients, and which two cures does this note teach?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Nothing — blocking calls serve all clients instantly</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The first client&#39;s slow recv stalls the loop, starving the second client&#39;s queued dial and arrived bytes; cures are threads per connection or (this note) single-thread readiness multiplexing with select/poll plus optionally non-blocking I/O gated on readiness</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The listening socket stops ringing after one accept</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>UDP must replace TCP for any multi-client server</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Iterative blocking service is head-of-line blocked at the application: one slow peer holds the only thread. Multiplexing inverts scheduling — the kernel reports exactly which descriptors are ready, and the loop touches only those; non-blocking makes each touch instant. Listening survives every accept; the stall is purely the loop&#39;s naivety.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">select watches fds 3 (listener), 5, 7 and returns readable {5}. The student then calls recv(7) &quot;to be fair&quot; and reuses last loop&#39;s fd_set without rebuilding. Name both errors and the correct next calls.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Both are correct — fairness and set reuse are required</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Error 1: touching 7 without readiness risks a blocking stall (readiness schedules, not round-robin); correct is recv(5) only. Error 2: select overwrites its sets, so stale sets misreport; rebuild sets (and maxfd) before every call</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Sets persist, so rebuilding corrupts them</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Fairness requires polling all fds every loop</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Readiness is a permission slip per descriptor per call: 5 is permitted, 7 is not. And select consumes its inputs — the returned sets are results, not reusable watchlists. Rebuild-then-wait is the ritual; violate either half and the multiplexer lies or stalls.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A sniffer needs Ethernet headers of every received frame. A student opens socket(AF_INET, SOCK_STREAM, 0) and reads. Why does this fail, and what is the syllabus-correct call?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Stream sockets include Ethernet headers when read twice</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>SOCK_STREAM delivers TCP byte streams with all lower headers stripped; raw frames need packet sockets — legacy SOCK_PACKET is deprecated, so the correct modern call is socket(PF_PACKET, SOCK_RAW, ...) with privilege, parsing Ethernet/IP/TCP in the program</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Packet sockets are UDP-only</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>No privilege is ever needed for raw frames</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Layer determines headers: transport sockets start above TCP/UDP, packet sockets start at the link. SOCK_PACKET names the legacy hack; PF_PACKET plus SOCK_RAW is the current family — privileged, header-inclusive, and the exclusive home of sniffers, never of web applications.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m1_08_peer_to_peer_bittorrent.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.8 Peer To Peer Bittorrent</div>
+      </a>
+      
+      
+      
+      <a href="./m1_99_practice_lab_application_layer_drills.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">🧪 Practice Lab: M1 Application Layer Drills</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(37) || 0;
+      var currentId = "m1_09_socket_programming_select_poll";
+      var courseCode = "PCCST501";
+      if (!totalTopics || !currentId || !courseCode) return;
+
+      var store = createLearnerState({});
+      var COURSE = courseCode;
+
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
+      }
+
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
+      }
+
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCST501", topicId: "m1_09_socket_programming_select_poll" });
+  </script>
+  <script>
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,42 +249,99 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Kernels &amp; Soft Margins</h1>
-<p><strong>Lifting inseparable data into separable space, the kernel trick that skips the lifting, slack variables with C, and the RBF universe.</strong></p>
+<p><strong>What problem kernels solve for tangled classes, what dot-product data they need, how soft margins train through slack with strictness $C$, and where flexibility becomes memorisation.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Red and blue dots alternate on a line: minus at $-2$ and $+2$, plus at $-0.5$ and $+0.5$. No single threshold separates them. Lift each dot by its square: minuses land at $4$, pluses at $0.25$. Threshold $1$ now splits perfectly. One squaring turned impossible into trivial.</p>
+<p>Tiny beginner check: list signs along the line as $-,+,+,-$. Every cut leaves a wrong-side point. After squaring, order becomes $+,+,-,-$ in lifted space. That reordering is the kernel idea.</p>
+<p>Analogy as support, then dropped. Crumple flat paper into 3D so layers separate. From here on we use exact terms only: feature map, kernel, slack, strictness $C$, Radial Basis Function (RBF).</p>
+<p>Abbreviations defined on first use: Radial Basis Function (RBF). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $\phi(x)$?</td>
+<td>Lifted coordinates, rarely computed</td>
+</tr>
+<tr>
+<td>What is $K(x,z)$?</td>
+<td>Kernel, dot product in lifted space</td>
+</tr>
+<tr>
+<td>What are $\xi_i$, $C$?</td>
+<td>Slack per point and price of violations</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Separate overlapping or curled classes without hand-building lifted features, while forgiving mislabels.</p>
+<p><strong>Data.</strong> Labelled pairs plus a kernel function. Support Vector Machines (SVMs) use data only inside dot products (dual form with $\sum\alpha_i y_i(x_i\cdot x)$). Replace dots with $K(x_i,x_j)$ to learn linear in lifted space while computing in input space.</p>
+<p><strong>Goal.</strong> Wide corridor in lifted space with priced violations in original labels.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Crumpled Paper</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Red and blue dots interleaved on a flat sheet (XOR-style) defeat every straight cut — so <em>crumple the paper into 3D</em>: lift each dot by $x_1^2 + x_2^2$ and the classes separate into layers a flat plane slices cleanly. <strong>Kernels</strong> are this crumple made computational: instead of explicitly computing lofty coordinates $\phi(x)$, evaluate only their <em>dot products</em> $K(x,z) = \phi(x)\cdot\phi(z)$ — all SVM math needs — often in closed form cheaper than the coordinates themselves. And <strong>soft margins</strong> admit the world is dirty: pay a fine per violation instead of demanding separable perfection.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Kernel Trick (Why It Isn&#39;t Cheating)</h3>
-<p>SVM training and prediction use data <em>only</em> inside dot products (dual form: $\sum \alpha_i y_i (x_i \cdot x)$). Replace every dot product with $K(x_i, x_j)$ and the machine learns a <em>linear</em> separator in $\phi$-space while computing in input space. Valid kernels (Mercer: the Gram matrix stays positive semidefinite) and their powers:</p>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (tangled plus dirty labels) → data (pairs plus kernel) → goal (separable with forgiveness) → method (kernel plus slack) → model (lifted separator) → training (dual plus $C$) → example → limitations.</p>
+<h3>3.1 The Kernel Trick, Why It Is Not Cheating</h3>
+<p>Valid kernels (Mercer: Gram matrix stays Positive Semidefinite (PSD)) and powers:</p>
 <ul>
-<li><strong>Linear</strong> $K = x\cdot z$ (no lifting — the baseline).</li>
-<li><strong>Polynomial</strong> $K = (x\cdot z + c)^d$ (all monomials to degree $d$ — explicit $\phi$ would explode combinatorially; the kernel costs $O(d)$-ish arithmetic).</li>
-<li><strong>RBF/Gaussian</strong> $K = \exp(-\gamma|x-z|^2)$ — <em>infinite</em>-dimensional $\phi$ (Taylor expansion never ends); $\gamma$ sets the influence radius (large $\gamma$ = spiky, local, overfit-prone; small $\gamma$ = smooth, blunt).</li>
+<li><strong>Linear</strong> $K=x\cdot z$ (no lifting, baseline).</li>
+<li><strong>Polynomial</strong> $K=(x\cdot z+c)^d$ (all monomials to degree $d$; explicit $\phi$ would explode combinatorially; kernel costs cheap arithmetic).</li>
+<li><strong>RBF or Gaussian</strong> $K=\exp(-\gamma|x-z|^2)$ with infinite-dimensional $\phi$ (Taylor expansion never ends). Here $\gamma$ sets influence radius: large $\gamma$ is spiky, local, overfit-prone; small $\gamma$ is smooth, blunt.</li>
 </ul>
-<h3>2.2 Soft Margins: Pricing Violations</h3>
-<p>Real data overlaps and mislabels. Add <strong>slack</strong> $\xi_i \ge 0$ per point and penalize: $\min \tfrac12|w|^2 + C\sum_i \xi_i$ s.t. $y_i(w^Tx_i+b) \ge 1-\xi_i$. <strong>$C$ is the strictness dial</strong>: huge $C$ ≈ hard margin (violations nearly forbidden — overfits noise); tiny $C$ ≈ violations tolerated (wide, forgiving corridor — underfits signals). Almost every real SVM runs soft; hard-margin is the textbook warm-up.</p>
+<p>Steps numbered:</p>
+<ol>
+<li>Choose kernel family by geometry (curls need locality, sparse text needs linear).</li>
+<li>Replace all dot products with $K$.</li>
+<li>Validate $\gamma$ and degree; never deploy infinite flexibility blindly.</li>
+</ol>
+<h3>3.2 Soft Margins: Pricing Violations, Symbol by Symbol</h3>
+<p>Add slack $\xi_i\ge 0$ per point and penalise: $\min \tfrac12|w|^2+C\sum_i\xi_i$ subject to $y_i(w^Tx_i+b)\ge 1-\xi_i$. Here $\xi_i$ measures margin shortfall, $C$ is strictness. Huge $C$ is near-hard margin (violations nearly forbidden, overfits noise); tiny $C$ is forgiving (wide corridor, underfits signals). Almost every real SVM runs soft; hard-margin is the warm-up.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kernel lifting vs more data</td>
+<td>Re-representation of latent separability vs new information; garbage stays garbage</td>
+</tr>
+<tr>
+<td>Large vs small $C$</td>
+<td>Strict (bends to noise) vs forgiving (ignores signal); $C$ is strictness, not strength</td>
+</tr>
+<tr>
+<td>Large vs small $\gamma$</td>
+<td>Spiky memoriser vs smooth blunter; validate the middle</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Kernel Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Trick: <strong>learn linear in φ-space, compute only K(x,z) dots</strong> · RBF = <strong>infinite dimensions</strong>, γ = <strong>influence radius</strong> · soft: <strong>min ½‖w‖² + CΣξ</strong> · C huge = <strong>hard/strict</strong>, C tiny = <strong>forgiving</strong> · Mercer (PSD Gram) = <strong>valid kernel certificate</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Kernels Don&#39;t Create Information (and C Is Not Regularization-Strength)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A kernel <em>re-represents</em> separability already latent in features — garbage features kernelized stay garbage (RBF can still <em>memorize</em> anything, which is overfitting, not learning). And $C$&#39;s direction trips everyone: <strong>bigger $C$ = LESS regularization</strong> (violations punished harder, boundary bends to data); smaller $C$ = more. Read $C$ as strictness, never strength.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>1D data: negatives at $x = \pm 2$, positives at $x = \pm 0.5$. Prove linear inseparability in 1D, then separate with $\phi(x) = x^2$ and name the threshold. (Arithmetic by inspection, verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Lifting and Splitting</div><div class="step-content"><p>1D check: any single threshold $t$ puts same-side points together — but signs alternate $(-, +, +, -)$, so every threshold mislabels at least one point: <strong>inseparable</strong>. Lift: $\phi(-2) = 4$, $\phi(-0.5) = 0.25$, $\phi(0.5) = 0.25$, $\phi(2) = 4$ — positives cluster at $0.25$, negatives at $4$: threshold $1$ separates perfectly (positives below, negatives above).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One squaring turned impossible into trivial — and the kernel lesson: nobody needed the <em>coordinates</em> $4$ and $0.25$ as geometry, only their <em>separability</em>. RBF does this to <em>every</em> finite dataset simultaneously (infinite dimensions always suffice), which is precisely why its $\gamma$ dial — not its existence — is the entire modeling decision.</p>
@@ -306,10 +371,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Squaring Turns Impossible Into Trivial</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the alternating line refuse every threshold, then crumple into two clean clusters under φ(x) = x² — separability without ever visiting the lofty coordinates.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Reading bigger $C$ as stronger regularisation. It is stricter and less regularised.</li>
+<li>Deploying spiky RBF as universal answer. Universal separability equals universal memorisation without validation.</li>
+<li>Kernelising garbage features expecting signal. Re-representation cannot invent information.</li>
+<li>Forgetting Mercer. Invalid kernels break the Gram PSD certificate and the dual.</li>
+</ul>
+<p>Limitations: RBF needs $\gamma$ plus $C$ validation; polynomials explode without kernels but still need degree choice; soft margins assume violations are priced, not free.</p>
+<p>Exam recap: trick is dots only; RBF infinite with $\gamma$ radius; soft objective min half-norm plus $C$ slacks; huge $C$ strict, tiny forgiving; Mercer PSD is validity.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">The polynomial kernel (x·z + 1)³ on 100-dimensional inputs is cheap to evaluate, yet its explicit φ-space has ~180,000 dimensions. Where did the computation go, and why is this legitimate?</span>
@@ -494,7 +570,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m3_04_kernels_soft_margins";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

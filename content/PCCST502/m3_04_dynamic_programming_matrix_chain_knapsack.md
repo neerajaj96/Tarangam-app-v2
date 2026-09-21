@@ -5,7 +5,7 @@ module: 3
 sequence: 4
 title: 'Dynamic Programming: Matrix Chain & Knapsack'
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 8
 learningObjectives:
   - Diagnose greed failure into overlapping subproblems plus substructure
   - Fill matrix-chain tables in increasing length order
@@ -26,18 +26,22 @@ tags:
 **When greed fails, remember: optimal substructure plus overlapping subproblems, memoization vs. tabulation, matrix-chain parenthesization, and 0/1 knapsack.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** Greedy fails 0/1 knapsack because whole-item choices *interact* through shared capacity. Naive recursion on such problems recomputes the same subproblems exponentially often (Fibonacci $F(10)$ re-derived dozens of times). **Dynamic programming (DP)** fixes exactly this: solve each *distinct* subproblem *once*, store it, reuse it — a whiteboard next to the recursion.
 
 ::: callout-intuition Core Mental Model: The Forgetful vs. Note-Taking Mathematician
-Two mathematicians compute Fibonacci numbers recursively. The **forgetful** one recomputes $F(10)$ dozens of times from scratch (plain divide-and-conquer on overlapping subproblems — exponential waste). The **note-taking** one writes each $F(k)$ on a whiteboard the first time and just *reads* it thereafter — same recursion, exponentially less work. **Dynamic programming** is exactly that whiteboard: solve each distinct subproblem *once*, store it, reuse it. DP applies precisely when subproblems **overlap** (recursion revisits them) and the problem has **optimal substructure** (optima built from optima).
+The **forgetful** mathematician recomputes $F(10)$ from scratch every time (plain recursion on overlapping subproblems — exponential waste). The **note-taking** one writes each $F(k)$ on a whiteboard once and *reads* it after. Same recursion, exponentially less work. DP applies precisely when subproblems **overlap** (recursion revisits them) and the problem has **optimal substructure** (optima built from optima). Drop the mathematicians now: memo tables and recurrences below are the exact machinery.
 :::
+
+**Tiny toy example (Fibonacci).** Naive $F(5) = F(4)+F(3)$ recomputes $F(3)$ twice, $F(2)$ three times. Note-taking: compute $F(0)..F(5) = 0,1,1,2,3,5$ once each — 6 writes, zero repeats. That gap (exponential vs linear) is DP's entire value.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-### 2.1 DP vs. Divide-and-Conquer vs. Greedy (the Trichotomy)
+**DP vs Divide-and-Conquer vs Greedy (the trichotomy):**
 
 | | Subproblems overlap? | Optimal substructure? | Method |
 |---|---|---|---|
@@ -46,19 +50,13 @@ Two mathematicians compute Fibonacci numbers recursively. The **forgetful** one 
 | DP territory | **Yes** | Yes | Solve each once, memoize/tabulate |
 
 * **Memoization** (top-down): recurse + cache ("remember what you computed").
-* **Tabulation** (bottom-up): fill the table smallest-first, no recursion overhead. Same complexity, different direction.
+* **Tabulation** (bottom-up): fill the table smallest-first, no recursion overhead. Same complexity, opposite direction.
 
-### 2.2 Matrix Chain Multiplication
-
-Parenthesize $A_1 \dots A_n$ (dims $p_0 \times p_1, \dots$) to minimize scalar multiplications. Trying all parenthesizations is exponential (Catalan-counted) — but subchains repeat, so DP over intervals:
-
+**Matrix chain multiplication.** Parenthesize $A_1 \dots A_n$ (dimensions $p_0 \times p_1, p_1 \times p_2, \dots$ — symbol-by-symbol: $p_{i-1}, p_i$ are the rows/columns of $A_i$) to minimise scalar multiplications. All parenthesizations are exponential (Catalan-counted) — but subchains repeat, so DP over intervals:
 $$m[i][j] = \min_{i \le k < j} \big(m[i][k] + m[k+1][j] + p_{i-1}\,p_k\,p_j\big), \quad m[i][i] = 0$$
+Read: cheapest cost for chain $i..j$ = best split $k$ of (left optimal + right optimal + multiply-the-two-results cost $p_{i-1}p_kp_j$). Fill by chain length $2 \to n$; split table $s[i][j]$ records the winning $k$ for reconstruction. Time $\Theta(n^3)$, space $\Theta(n^2)$.
 
-Fill by chain length $2 \to n$; split table $s[i][j]$ records the winning $k$ for reconstruction. Time $\Theta(n^3)$, space $\Theta(n^2)$.
-
-### 2.3 0/1 Knapsack (DP Redemption Arc)
-
-Capacity $W$, items $(v_i, w_i)$, take/skip each whole item: $dp[i][w] = \max(dp[i-1][w],\, v_i + dp[i-1][w-w_i])$. Pseudopolynomial $\Theta(nW)$ — the same greedy-killer from topic 1, now solved exactly by remembering (compare: fractional variant never needed DP at all).
+**0/1 knapsack (DP redemption arc).** Capacity $W$, items $(v_i, w_i)$ ($v$ = value, $w$ = weight), take/skip each whole item: $dp[i][w] = \max(dp[i-1][w],\, v_i + dp[i-1][w-w_i])$ — best using first $i$ items at capacity $w$ = max(skip $i$, take $i$ + best of rest). Pseudopolynomial $\Theta(nW)$ — the Module-3 greedy-killer, now solved exactly. (Fractional variant never needed DP.)
 
 ::: callout-formula KTU Formula Vault: DP Signatures
 Needs: **overlapping subproblems + optimal substructure** · memoize (top-down) or tabulate (bottom-up) · matrix chain: **$m[i][j] = \min_k$ split + $p_{i-1}p_kp_j$**, $\Theta(n^3)$ · knapsack: **take-or-skip max**, $\Theta(nW)$ · greedy fails where choices **interact** (0/1), DP remembers the interaction.
@@ -71,24 +69,43 @@ Optimal substructure *alone* does not justify DP — merge sort has it and needs
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — the classic six-matrix chain
 
 ::: step [Step 1: Setup] Formulating the Problem
-Chain $A_1(30\times35)\, A_2(35\times15)\, A_3(15\times5)\, A_4(5\times10)\, A_5(10\times20)\, A_6(20\times25)$ — the classic CLRS instance. Compute the optimal cost and parenthesization.
+Chain $A_1(30\times35)\, A_2(35\times15)\, A_3(15\times5)\, A_4(5\times10)\, A_5(10\times20)\, A_6(20\times25)$ (the classic CLRS — Cormen, Leiserson, Rivest, Stein — instance). Compute optimal cost and parenthesization.
 :::
 
 ::: step [Step 2: Execution] Filling by Chain Length
-Length-2 winners: $m[1][2] = 30\cdot35\cdot15 = 15{,}750$; $m[2][3] = 35\cdot15\cdot5 = 2{,}625$; $m[3][4] = 15\cdot5\cdot10 = 750$; $m[4][5] = 5\cdot10\cdot20 = 1{,}000$; $m[5][6] = 10\cdot20\cdot25 = 5{,}000$. Length-3+: each $m[i][j]$ tries every split $k$ (cost left + cost right + $p_{i-1}p_kp_j$), keeping the min and its $k$ in $s[i][j]$. Key late decisions: $m[1][6]$ tries $k=1..5$ with split costs $15{,}750+(\dots)$, and the winner is $k=3$: $m[1][3] + m[4][6] + 30\cdot5\cdot25 = 7{,}875 + 3{,}500 + 3{,}750 = \mathbf{15{,}125}$.
+Length-2: $m[1][2] = 30\cdot35\cdot15 = 15{,}750$; $m[2][3] = 2{,}625$; $m[3][4] = 750$; $m[4][5] = 1{,}000$; $m[5][6] = 5{,}000$. Length-3+: each $m[i][j]$ tries every split $k$ (left + right + $p_{i-1}p_kp_j$), keeping the min and its $k$ in $s[i][j]$. Decisive late split: $m[1][6]$ wins at $k=3$: $m[1][3] + m[4][6] + 30\cdot5\cdot25 = 7{,}875 + 3{,}500 + 3{,}750 = \mathbf{15{,}125}$.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-Optimal **15,125** scalar multiplications with parenthesization $((A_1(A_2A_3))((A_4A_5)A_6))$ — versus $(((\dots)))$ naive left-to-right at $30\cdot35\cdot15 + \dots$ far higher. The $s$-table doesn't just give the number; it *reconstructs the bracketing* — DP returns decisions, not just values.
+Optimal **15,125** multiplications, parenthesization $((A_1(A_2A_3))((A_4A_5)A_6))$ — far below naive left-to-right. The $s$-table returns *decisions*, not just values: it reconstructs the bracketing.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Fill by *increasing chain length*: $m[i][j]$ reads strictly shorter intervals — any other order reads uninitialised neighbours and corrupts silently.
+- $\Theta(nW)$ is pseudopolynomial (depends on $W$'s *value*, not its bit-length) — still exponential in input *size* for huge $W$.
+- Memoization and tabulation give the same complexity; "which direction" is implementation, not theory.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Overlap vs substructure | Revisited subproblems (DP's trigger) vs optima-from-optima (shared with D&C/greedy) |
+| Memoize vs tabulate | Top-down cache vs bottom-up order — same bounds, opposite direction |
+| 0/1 vs fractional knapsack | Coupled whole choices (DP $\Theta(nW)$) vs decoupled slices (greedy) |
+
+**Exam recap (facts an examiner rewards):** both DP preconditions; the $m[i][j]$ recurrence read symbol-by-symbol; length-order filling; knapsack take-or-skip with $\Theta(nW)$; 15,125 with its bracketing.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz Merge sort has optimal substructure but needs no DP table, while matrix chain does. What distinguishes them?
 () Merge sort lacks optimal substructure entirely

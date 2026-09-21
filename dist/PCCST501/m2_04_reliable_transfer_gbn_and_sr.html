@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,36 +297,76 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Reliable Transfer: Go-Back-N vs Selective Repeat</h1>
 <p><strong>How pipelining fixes stop-and-wait, sliding windows, cumulative vs. selective ACKs, single vs. per-packet timers — the GBN/SR comparison examiners love.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Send one packet, freeze until its acknowledgment returns, then send the next. On a fast, long link you transmit for a microsecond and then idle for 30 milliseconds — the link sits empty 99.97% of the time. Correct, but economically absurd.</p>
+<p>The problem before the solution: keep many packets <strong>in flight</strong> (pipelining) so transmission overlaps with waiting — and then answer the bookkeeping question: <em>when one packet in the flight is lost, do you re-send it plus everything after it, or just it alone?</em> The two answers are Go-Back-N (GBN) and Selective Repeat (SR).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Assembly Line</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Stop-and-wait reliability is a craftsman finishing one chair before starting the next — correct, but the workshop (network) sits idle most of the time. <strong>Pipelining</strong> is the assembly line: multiple chairs in progress at once, dramatically higher throughput, at the cost of bookkeeping when one chair is defective. The bookkeeping question — <em>when chair #5 is broken, do you rebuild #5 onward (Go-Back-N) or just #5 (Selective Repeat)?</em> — is this entire topic.</p>
-</div></details><hr>
+<p>Dropping the workshop now: window = allowed unacknowledged packets in flight; GBN = cumulative ACKs, one timer, resend the window; SR = individual ACKs, per-packet timers, resend one.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-utilization-math-then-both-protocols-step-by-step">3. Purpose — Utilization Math, The… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Stop-and-wait</strong></td>
+<td>Send one packet, await its ACK before the next — utilization $U = \frac{L/R}{\text{RTT} + L/R}$ with packet length $L$, rate $R$.</td>
+</tr>
+<tr>
+<td><strong>Pipelining</strong></td>
+<td>Keeping $N$ packets unacknowledged simultaneously so waiting overlaps transmission.</td>
+</tr>
+<tr>
+<td><strong>Sliding window</strong></td>
+<td>The allowed in-flight range, advancing as ACKs arrive (left edge = oldest unACKed, right edge = next to send).</td>
+</tr>
+<tr>
+<td><strong>GBN (Go-Back-N)</strong></td>
+<td>Sender window $N$; cumulative ACKs; one timer for the oldest unACKed packet; timeout re-sends everything from it onward; receiver discards out-of-order packets.</td>
+</tr>
+<tr>
+<td><strong>SR (Selective Repeat)</strong></td>
+<td>Individual ACK per packet; receiver buffers out-of-order arrivals; one logical timer per packet; only the lost packet is re-sent.</td>
+</tr>
+<tr>
+<td><strong>Sequence space</strong></td>
+<td>Count of distinct sequence numbers: GBN needs $\ge N+1$, SR needs $\ge 2N$ (with $k$ bits, $2^k$ must clear the bar).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Why Pipeline: Utilization Math</h3>
-<p>With stop-and-wait, the sender transmits for $L/R$ seconds then idles a full RTT. Utilization $U = \frac{L/R}{\text{RTT} + L/R}$ — on a 1 Gbps, 30 ms link with 1 KB packets, $U \approx 0.00027$: the link is busy <strong>0.027%</strong> of the time. Pipelining $N$ unacknowledged packets multiplies utilization toward $N \times U$ — the entire economic case for windows.</p>
-<h3>2.2 Go-Back-N (GBN)</h3>
-<ul>
-<li><strong>Window size $N$:</strong> up to $N$ unACKed packets in flight; sequence numbers need at least $N+1$ values ($k$ bits ⇒ $2^k \ge N+1$).</li>
-<li><strong>Cumulative ACKs:</strong> ACK $n$ confirms <em>all</em> packets through $n$.</li>
-<li><strong>Single timer</strong> for the oldest unACKed packet; on timeout, <strong>retransmit everything from that packet onward</strong> — even packets that arrived fine.</li>
-<li>Receiver is dumb: discards out-of-order packets, re-ACKs the last in-order one.</li>
-</ul>
+<h2 id="3-purpose-utilization-math-then-both-protocols-step-by-step">3. Purpose — Utilization Math, Then Both Protocols Step by Step</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Why Pipeline: Utilization Math</h3>
+<p>With stop-and-wait, the sender transmits for $L/R$ seconds then idles a full RTT (Round-Trip Time). Utilization $U = \frac{L/R}{\text{RTT} + L/R}$ — on a 1 Gbps, 30 ms link with 1 KB packets, $U \approx 0.00027$: the link is busy <strong>0.027%</strong> of the time. Pipelining $N$ unacknowledged packets multiplies utilization toward $N \times U$ — the entire economic case for windows.</p>
+<h3>3.2 Operation Flow: Go-Back-N (GBN)</h3>
+<p>Numbered steps of the sender algorithm:</p>
+<ol>
+<li>Allow up to $N$ unACKed packets in flight (window <code>[base, base+N-1]</code>); sequence numbers need at least $N+1$ values ($k$ bits ⇒ $2^k \ge N+1$).</li>
+<li>On receiving ACK $n$ (<strong>cumulative</strong>: confirms <em>all</em> packets through $n$), slide <code>base</code> past $n$, restart the single timer for the new oldest unACKed packet.</li>
+<li>On timeout of the oldest unACKed packet, <strong>retransmit everything from that packet onward</strong> — even packets that arrived fine.</li>
+<li>The receiver stays simple: it discards out-of-order packets and re-ACKs the last in-order one.</li>
+</ol>
 <pre><code class="language-text">GBN sender, window N=4, base=2 (packets 2,3,4,5 in flight):
 
  0   1  |  2   3   4   5  |  6   7   8 ...
@@ -354,26 +398,59 @@
     <p class="video-caption"><strong>Key Insight:</strong> The Window Sliding</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the sender window glide forward as cumulative ACKs arrive — four packets in flight, always, the left edge advancing exactly where acknowledgments land.</div>
   </div>
-</div><h3>2.3 Selective Repeat (SR)</h3>
-<ul>
-<li>Each packet ACKed <strong>individually</strong>; receiver <strong>buffers</strong> out-of-order arrivals.</li>
-<li><strong>One logical timer per unACKed packet</strong>; only the actually-lost packet is retransmitted.</li>
-<li>Price: sequence numbers need $2N$ values ($2^k \ge 2N$) — windows for sending and receiving must not overlap, or a restarted receiver confuses new packets with old retransmissions.</li>
-</ul>
+</div><h3>3.3 Operation Flow: Selective Repeat (SR)</h3>
+<ol>
+<li>Sender holds the same window — but each packet is ACKed <strong>individually</strong> and carries <strong>one logical timer</strong>.</li>
+<li>The receiver <strong>buffers</strong> out-of-order arrivals instead of discarding them, ACKing each.</li>
+<li>Only the actually-lost packet&#39;s timer expires, so only it is retransmitted.</li>
+<li>Price: sequence numbers need $2N$ values ($2^k \ge 2N$) — sending and receiving windows must never overlap numerically, or a restarted receiver confuses new packets with old retransmissions.</li>
+</ol>
+<p><em>TCP note:</em> real TCP is GBN-flavored (cumulative ACKs, single retransmission timer) with SR-flavored helpers (receiver buffering plus Selective-ACK — SACK — options) — a pragmatic mix, not a textbook copy of either.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: GBN vs SR in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Window $N$: GBN needs $2^k \ge$ <strong>$N+1$</strong>, SR needs $2^k \ge$ <strong>$2N$</strong>. ACKs: <strong>cumulative</strong> vs <strong>individual</strong>. Timers: <strong>one</strong> vs <strong>per-packet</strong>. Loss cost: <strong>whole window</strong> vs <strong>single packet</strong>. Receiver: <strong>discards</strong> out-of-order vs <strong>buffers</strong> them. Memory line to memorize: <em>&quot;GBN repeats, SR selects.&quot;</em></p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Window-Size Trap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With too few sequence numbers, SR breaks catastrophically while GBN merely wastes: if sender and receiver windows overlap numerically, the receiver cannot tell a <em>new</em> packet from a <em>retransmission</em> of an old one. That is exactly why SR demands twice the sequence space — the single most-tested &quot;why&quot; of this topic.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-utilization-math-then-both-protocols-step-by-step">← 3. Purpose — Utilization Math, The…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Window $N = 2$, packets 0,1,2 queued; packet 0 lost once. GBN: send 0,1 (0 lost; 1 discarded, re-ACK 0... precisely: nothing ACKed, re-ACK nothing meaningful); timeout on 0 → resend 0,1. Total 4 sends. SR: send 0,1; buffer 1, ACK it; resend 0 alone. Total 3 sends. Same loss, 4 vs 3 — the bookkeeping difference in miniature.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Window $N=4$, packets 0–7 in play, packet 2 is lost once (all retransmissions succeed). Count total transmissions under GBN and under SR, and state what each receiver does with packets 3–5.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Both Protocols</div><div class="step-content"><p><strong>GBN:</strong> sender emits 0,1,2,3 (2 lost). Receiver ACKs 0,1, then discards 3 (out of order, re-ACKs 1). Timer for packet 2 expires → sender re-emits <strong>2,3,4,5</strong>. Total sends: 4 + 4 = <strong>8 transmissions</strong>; packets 3–5&#39;s first copies were pure waste.
 <strong>SR:</strong> sender emits 0,1,2,3. Receiver ACKs 0,1,3 (buffers 3). Only packet 2&#39;s timer expires → re-emit <strong>2 alone</strong>. Total sends: 4 + 1 = <strong>5 transmissions</strong>; the buffered 3 slots straight into place on 2&#39;s arrival.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same loss, 8 vs 5 transmissions — SR&#39;s extra receiver memory and sequence space buy back the entire wasted window. On high-error links the gap widens; on clean links both behave identically, which is why TCP (next topics) blends the two philosophies.</p>
-</div></div><hr>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Same loss, 8 vs 5 transmissions — SR&#39;s extra receiver memory and sequence space buy back the entire wasted window. On high-error links the gap widens; on clean links both behave identically, which is why real TCP mixes GBN-style cumulative ACKs with SR-style selective options.</p>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GBN vs. SR receiver</td>
+<td>Discards out-of-order (re-ACKs last in-order) vs. buffers + individual ACKs.</td>
+</tr>
+<tr>
+<td>Sequence space $N+1$ vs. $2N$</td>
+<td>GBN: window + next expected distinguishable; SR: both windows must not overlap numerically.</td>
+</tr>
+<tr>
+<td>Timer discipline</td>
+<td>One (oldest) vs. per-packet.</td>
+</tr>
+<tr>
+<td>Loss cost</td>
+<td>Whole window re-sent vs. single packet re-sent.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Giving SR only $N+1$ numbers — it needs $2N$. (2) Saying GBN&#39;s receiver buffers — it discards. (3) Claiming TCP &quot;is&quot; GBN or SR — it blends cumulative ACKs/single timer with buffering and SACK.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Pipelining fixes stop-and-wait&#39;s $U \ll 1$. GBN: window $N$, cumulative ACKs, one timer, resend-from-loss, dumb receiver, $2^k \ge N+1$. SR: individual ACKs, buffering receiver, per-packet timers, resend-one, $2^k \ge 2N$. Trace format: sends → receiver action → timeout → resends → totals.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Why is stop-and-wait utilization ~0.03% on gigabit links? What does a GBN receiver do with packet 3 when 2 is missing? Why does SR need double the sequence space? How does real TCP mix the two?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">In Go-Back-N with window size N, how many distinct sequence numbers are required, and why that exact count?</span>
@@ -558,7 +635,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_04_reliable_transfer_gbn_and_sr";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

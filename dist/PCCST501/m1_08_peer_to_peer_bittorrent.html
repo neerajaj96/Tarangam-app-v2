@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,46 +297,132 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>P2P &amp; BitTorrent: Distribution That Scales Itself</h1>
 <p><strong>Uploaders who multiply — overlays, trackers, rarest-first, tit-for-tat, and the distribution-time math where client-server collapses and P2P holds.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>A new 6 GB movie release drops. One million fans want it tonight. A single company server would have to upload 6 million GB — its pipe would choke for days. But what if every fan who finishes downloading immediately starts uploading to other fans? Then each arrival <em>adds</em> capacity, and the crowd serves itself.</p>
+<p>The problem before the solution: bulk distribution to huge crowds breaks the client-server budget (server upload is fixed; demand is not). BitTorrent&#39;s answer is to convert downloaders into uploaders and organize them into a self-serving <strong>swarm</strong> — plus two clever rules that stop freeloading and starvation.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Potluck vs Soup Kitchen</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Client-server is a <strong>soup kitchen</strong>: one stove (server upload $u_s$) feeds every hungry arrival — double the crowd, double the wait. P2P is a <strong>potluck</strong>: each arrival brings a dish (its own upload $u_i$) and shares bites immediately (rarest-first), so the crowd <em>is</em> the capacity. BitTorrent&#39;s miracle is arithmetic, not altruism: total upload grows with $N$ while the file stays fixed.</p>
+<p>Dropping the kitchen now: $u_s$ = server upload rate, $u_i$ = peer $i$&#39;s upload rate, $F$ = file size, $N$ = number of peers — the symbols of the bound derived below.</p>
 </div></details><p>Pure P2P (no always-on server) versus the client-server Web/FTP of M1.4–M1.5 — same files moving, inverted capacity economics.</p>
-<hr>
+<p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-swarm-mechanics-then-the-bound-symbol-by-symbol">3. Purpose — Swarm Mechanics, Then… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Swarm</strong></td>
+<td>The set of all peers currently sharing one file.</td>
+</tr>
+<tr>
+<td><strong>Overlay (network)</strong></td>
+<td>The logical peer-to-peer links running on top of ordinary TCP connections.</td>
+</tr>
+<tr>
+<td><strong>Tracker</strong></td>
+<td>A matchmaking server that introduces peers to each other — it never carries file bytes. Decentralized alternatives (magnet links, DHT — Distributed Hash Table) remove even this server.</td>
+</tr>
+<tr>
+<td><strong>Torrent</strong></td>
+<td>The metadata file (piece list + cryptographic hashes) describing the shared content.</td>
+</tr>
+<tr>
+<td><strong>Peer / leech</strong></td>
+<td>A participant still downloading (leech = historical term for incomplete peers).</td>
+</tr>
+<tr>
+<td><strong>Seed</strong></td>
+<td>A peer holding the complete file and uploading only.</td>
+</tr>
+<tr>
+<td><strong>Rarest-first (piece selection)</strong></td>
+<td>Always fetch the piece fewest neighbours hold — keeps piece diversity high, preventing last-piece starvation.</td>
+</tr>
+<tr>
+<td><strong>Tit-for-tat / choking</strong></td>
+<td>Upload preferentially to peers that upload back to you; <strong>choke</strong> (refuse) freeloaders; <strong>optimistic unchoke</strong> periodically tries newcomers.</td>
+</tr>
+<tr>
+<td><strong>Distribution time $D$</strong></td>
+<td>Seconds until the <em>last</em> peer holds the full file — the quantity both architectures bound below.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Swarm anatomy</h3>
+<h2 id="3-purpose-swarm-mechanics-then-the-bound-symbol-by-symbol">3. Purpose — Swarm Mechanics, Then the Bound Symbol by Symbol</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Operation Flow: Swarm Anatomy</h3>
 <p><strong>Overlay</strong> (logical links atop TCP), <strong>tracker</strong> (introduces peers; magnet/DHT links decentralize even this), <strong>torrent</strong> (metadata + piece hashes), <strong>peers/leeches</strong> (downloading), <strong>seeds</strong> (complete, uploading). <strong>Rarest-first</strong> piece selection keeps diversity high (no last-piece starvation); <strong>tit-for-tat/choking</strong> uploads to the fastest reciprocators (optimistic unchoke probes newcomers) — freeloaders get choked by design.</p>
-<h3>2.2 Distribution-time bound</h3>
-<p>File $F$, server $u_s$, $N$ peers with uploads $u_i$ (downloads assumed ample): client-server $D_{cs} \ge \max(NF/u_s, F/d_{min})$; P2P lower bound $D_{p2p} \ge \max(F/u_s, F/d_{min}, NF/(u_s + \sum u_i))$. The third term is the potluck: aggregate upload absorbs the crowd.</p>
+<h3>3.2 Distribution-Time Bound — Symbols First</h3>
+<p>Symbols: $F$ = file size (bits), $u_s$ = server/seed upload rate (bits/s), $u_i$ = upload rate of peer $i$, $N$ = number of peers, $d_{min}$ = slowest peer download rate.</p>
+<ul>
+<li>Client-server lower bound: $D_{cs} \ge \max(NF/u_s, F/d_{min})$. Term 1: the lone server must push $N$ copies. Term 2: the slowest downloader cannot finish before one file&#39;s worth at its own rate.</li>
+<li>P2P lower bound: $D_{p2p} \ge \max(F/u_s, F/d_{min}, NF/(u_s + \sum u_i))$. Terms 1–2 as above (seed must inject one copy; slowest peer still slowest). Term 3 is the potluck: <em>aggregate</em> upload (server + all peers) absorbs the crowd&#39;s $N$ copies.</li>
+</ul>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: P2P</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Tracker introduces, DHT decentralizes · rarest-first diversifies · tit-for-tat rewards reciprocators, chokes freeloaders · $D_{p2p} \ge \max(F/u_s, NF/(u_s+\sum u_i))$ (downloads ample).</p>
 </div></details><p>Choking is <em>not</em> punishment of slow links per se — it rations upload toward contributors; a slow-but-sharing peer still eats via optimistic unchokes.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Tracker Worship</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The tracker introduces peers; it never touches file bytes (data flows peer-to-peer). An option routing downloads <em>through</em> the tracker mistakes the matchmaker for the warehouse — kill the tracker mid-swarm and transfers continue.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-swarm-mechanics-then-the-bound-symbol-by-symbol">← 3. Purpose — Swarm Mechanics, Then…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>File $F = 2$ units, server $u_s = 1$/s, $N = 1$ peer uploading $1$/s. Client-server: $D_{cs} = \max(2/1) = 2$s. P2P: aggregate $= 2$/s, $D_{p2p} = \max(2/1, 2/2) = \max(2, 1) = 2$s — with one peer the seed term binds and both tie. Add a second peer ($+1$/s): kitchen $D_{cs} = 4/1 = 4$s; potluck $D_{p2p} = \max(2, 4/3) = 2$s — the gap opens exactly when the crowd arrives.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>File $F = 6$ units, server upload $u_s = 2$/s, $N = 3$ peers each uploading $1$/s, downloads ample ($d_{min} = \infty$ effectively). Compute client-server vs P2P lower-bound distribution times.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Kitchen vs Potluck</div><div class="step-content"><p>Client-server: $D_{cs} = \max(3 \times 6/2, \dots) = \max(9, \dots) = 9$s — the lone stove serves $18$ unit-servings at rate $2$. P2P: aggregate upload $= 2 + 3 = 5$/s; $D_{p2p} = \max(6/2, 18/5) = \max(3, 3.6) = 3.6$s. Same file, same wires — $9$s vs $3.6$s purely from counting peer uploads as capacity.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$9$s client-server against $3.6$s P2P lower bound. Add a fourth peer ($+1$/s): kitchen stays $12$s ($24/2$), potluck drops toward $24/6 = 4$s... check: $NF = 24$, aggregate $6$ → $4$s vs kitchen $12$s — the gap <em>widens</em> with $N$: self-scalability, quantified.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tracker vs. seed</td>
+<td>Tracker introduces (no bytes); seeds/peers carry bytes.</td>
+</tr>
+<tr>
+<td>Rarest-first vs. tit-for-tat</td>
+<td>Cures piece starvation (diversity) vs. cures freeloading (incentives).</td>
+</tr>
+<tr>
+<td>$D_{cs}$ vs. $D_{p2p}$</td>
+<td>Kitchen scales as $N$ (fixed server); potluck&#39;s crowd term flattens toward $F/\bar{u}$.</td>
+</tr>
+<tr>
+<td>Choking vs. punishing slowness</td>
+<td>Rations toward contributors; slow sharers still eat via optimistic unchoke.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Routing bytes through the tracker — it only introduces. (2) Applying the aggregate term without the seed term — take the max of <em>all</em> terms; either can bind. (3) Calling tit-for-tat a starvation fix — starvation is rarest-first&#39;s disease.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Swarm = overlay + tracker (or DHT) + torrent metadata + peers + seeds. Rarest-first diversifies pieces; tit-for-tat/choking enforces reciprocity. Bounds: $D_{cs} \ge NF/u_s$ vs. $D_{p2p} \ge \max(F/u_s, NF/(u_s+\sum u_i))$ — source load $O(N)$ vs. $O(1)$, the economic argument for P2P live distribution.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What does the tracker never touch? Which mechanism fixes freeloading vs. last-piece starvation? Write both bounds from memory and name each term. Why does the potluck gap widen with $N$?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Bound Arithmetic</span>
@@ -426,9 +516,9 @@
       
       
       
-      <a href="./m1_99_practice_lab_application_layer_drills.html" class="nav-card next" id="nextTopicLink">
+      <a href="./m1_09_socket_programming_select_poll.html" class="nav-card next" id="nextTopicLink">
         <span class="dir">NEXT TOPIC ] &rarr;</span>
-        <div class="ttl">🧪 Practice Lab: M1 Application Layer Drills</div>
+        <div class="ttl">1.9 Socket Programming Select Poll</div>
       </a>
       
     </footer>
@@ -520,7 +610,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_08_peer_to_peer_bittorrent";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

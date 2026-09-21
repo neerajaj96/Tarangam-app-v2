@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,20 +281,24 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Randomized Algorithms: Las Vegas &amp; Monte Carlo</h1>
 <p><strong>Trading certainty for speed two opposite ways, randomized quicksort&#39;s expected analysis, Karger&#39;s min-cut, and amplification by repetition.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Two Kinds of Gambling</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Las Vegas</strong> gambler: always walks out with <em>correct</em> winnings, but the <em>time</em> spent is luck (randomized quicksort — sorted output guaranteed, runtime random). <strong>Monte Carlo</strong> gambler: finishes in <em>fixed</em> time, but the winnings are <em>probably</em> right (Karger min-cut, primality tests — fast answer, tiny error chance). Same coin flips, opposite bargains: certainty-of-answer vs. certainty-of-clock. And Monte Carlo&#39;s error is <em>buyable-down</em>: repeat and vote, and the failure chance decays exponentially.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Deterministic quicksort has a nemesis: already-sorted input forces $\Theta(n^2)$ (always pick the worst pivot). Random pivots delete the nemesis — no <em>input</em> is adversarial anymore, only unlucky <em>coins</em>. Elsewhere the bargain flips: Karger&#39;s min-cut finishes on a fixed clock but may answer wrong — yet repetition buys the error down exponentially. Same coins, opposite contracts.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Two Kinds of Gambling</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Las Vegas</strong> gambler: always walks out with <em>correct</em> winnings, but <em>time</em> spent is luck (randomized quicksort — sorted output guaranteed, runtime random). <strong>Monte Carlo</strong> gambler: finishes in <em>fixed</em> time, but winnings are <em>probably</em> right (Karger min-cut, Miller–Rabin primality — fast answer, tiny error chance). Certainty-of-answer vs certainty-of-clock — and Monte Carlo&#39;s error is <em>buyable-down</em>: repeat and vote, failure decays exponentially. Drop the casino now: indicator sums and contraction odds below are the exact analysis.</p>
+</div></details><p><strong>Tiny toy example (3 elements).</strong> Quicksort on $[1,2,3]$ with random pivot: pivot 2 (prob 1/3) → splits ${1},{3}$, done in 2 rounds; pivot 1 or 3 → one-sided split, 3 rounds. Answer always $[1,2,3]$ (Las Vegas: correctness never wavers); rounds vary 2–3 (randomness lives in time only).</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Two Contracts</h3>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-quicksort-expectation-and-karger-repetition">3. Worked example — quicksort expe… →</a></p>
+<p><strong>Symbols and abbreviations:</strong> $\mathbb{E}$ = expected value (probability-weighted average); $X_{ij}$ = indicator (1 if elements $i,j$ by rank are ever compared, else 0); $H_n$ = harmonic sum $1 + 1/2 + \dots + 1/n \approx \ln n$; $\epsilon$ = error probability.</p>
+<p><strong>The two contracts:</strong></p>
 <table>
 <thead>
 <tr>
@@ -324,26 +328,64 @@
 <td><strong>Amplification</strong>: $k$ independent runs + majority vote → error $\le \epsilon^k$ (exponential decay)</td>
 </tr>
 </tbody></table>
-<h3>2.2 Randomized Quicksort: Expected $\Theta(n \log n)$</h3>
-<p>Random pivot ⇒ no adversarial input survives (bad splits need <em>unlucky coins</em>, not unlucky data). Indicator analysis: $X_{ij} = 1$ iff elements $i,j$ (by rank) are ever compared; they compare iff one is chosen pivot before anything between them — probability $\frac{2}{j-i+1}$. Linearity of expectation:</p>
-<p>$$\mathbb{E}[X] = \sum_{i&lt;j} \frac{2}{j-i+1} = \Theta(n \log n)$$</p>
-<p>— the harmonic sum doing the heavy lifting, zero dependence on input order.</p>
-<h3>2.3 Karger&#39;s Contraction: Monte Carlo Min-Cut</h3>
-<p>Repeatedly contract a <em>uniformly random</em> edge until 2 vertices remain; output the crossing edges. One run keeps the true min-cut intact with probability $\ge \frac{2}{n(n-1)}$ (no contracted edge ever lay inside it). Small odds — but $O(n^2 \log n)$ independent runs amplify success to $1 - 1/n$ territory. Exponentially many cuts exist, yet random contraction + repetition finds the minimum in polynomial time.</p>
+<p><strong>Randomized quicksort: expected $\Theta(n \log n)$ — numbered analysis:</strong></p>
+<ol>
+<li>Random pivot ⇒ bad splits need <em>unlucky coins</em>, not unlucky data — no adversarial input survives.</li>
+<li>Indicator: $X_{ij} = 1$ iff rank-$i,j$ elements are ever compared; happens iff one is chosen pivot before anything between them — probability $\frac{2}{j-i+1}$ (2 favourable first-picks out of $j-i+1$ symmetric candidates).</li>
+<li>Linearity of expectation (expectation of a sum = sum of expectations, no independence needed):
+$$\mathbb{E}[X] = \sum_{i&lt;j} \frac{2}{j-i+1} = \Theta(n \log n)$$
+— the harmonic sum does the lifting; input order is irrelevant.</li>
+</ol>
+<p><strong>Karger&#39;s contraction (Monte Carlo min-cut) — numbered:</strong></p>
+<ol>
+<li>Repeatedly contract a <em>uniformly random</em> edge until 2 vertices remain; output the crossing edges.</li>
+<li>One run preserves the true min-cut with probability $\ge \frac{2}{n(n-1)}$ (no contracted edge ever lay inside it).</li>
+<li>Small odds — but $O(n^2 \log n)$ independent runs amplify success toward $1 - 1/n$. Exponentially many cuts exist, yet random contraction + repetition finds the minimum in polynomial time.</li>
+</ol>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Randomized Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Las Vegas: <strong>right answer, random time</strong> (rand-quicksort) · Monte Carlo: <strong>fixed time, probably right</strong> (Karger, Miller–Rabin) · amplify by <strong>repeat + vote</strong> (error $\epsilon^k$) · quicksort $\mathbb{E} = \sum_{i&lt;j}\frac{2}{j-i+1} = \Theta(n\log n)$ · Karger single-run success $\ge \frac{2}{n(n-1)}$.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Random ≠ Approximately Correct (Know Which Bargain)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Quicksort&#39;s randomness buys <em>speed with exactness</em> (Las Vegas); Karger&#39;s buys <em>speed with risk</em> (Monte Carlo). Asking &quot;what&#39;s quicksort&#39;s error probability&quot; is a category error — it has none. Asking &quot;Karger&#39;s exact runtime&quot; misses that <em>fixed trials</em> is its contract. Name the bargain before analyzing.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>For $n = 100$ elements, (a) bound randomized quicksort&#39;s expected comparisons via the indicator sum, and (b) compute how many Karger runs make min-cut failure $&lt; 1%$ on a 100-vertex graph.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Both</div><div class="step-content"><p>(a) $\mathbb{E}[X] = \sum_{i&lt;j} \frac{2}{j-i+1}$: group by gap $k = j-i$ ($n-k$ pairs each): $2\sum_{k=1}^{99} \frac{100-k}{k} &lt; 200 \sum_{k=1}^{99}\frac{1}{k} = 200 \cdot H_{99} \approx 200 \times 5.18 \approx 1036$ comparisons — versus worst-case $\approx 4950$ deterministic. Randomness nearly quintuples efficiency here.
-(b) Single-run success $p \ge \frac{2}{100 \times 99} \approx 0.0002$. Failure after $t$ runs $\le (1-p)^t \le e^{-pt} &lt; 0.01 \Rightarrow t &gt; \frac{\ln 100}{p} \approx 4.6 \times 4950 \approx 22{,}800$ runs — each $O(n^2)$, polynomial total for an exponentially-rare-event guarantee.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Quicksort: ~1036 expected vs ~4950 worst-case comparisons — randomization deletes the adversary. Karger: ~23k cheap runs buy 99% confidence against $2^{100}$ possible cuts — repetition deletes the risk. Two bargains, both settled in expectation arithmetic, not hope.</p>
+<h2 id="3-worked-example-quicksort-expectation-and-karger-repetition">3. Worked example — quicksort expectation and Karger repetitions at n = 100</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>For $n = 100$: (a) bound randomized quicksort&#39;s expected comparisons via the indicator sum; (b) compute how many Karger runs push min-cut failure below $1%$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Both</div><div class="step-content"><p>(a) $\mathbb{E}[X] = \sum_{i&lt;j} \frac{2}{j-i+1}$: group by gap $k = j-i$ ($n-k$ pairs each): $2\sum_{k=1}^{99} \frac{100-k}{k} &lt; 200 \sum_{k=1}^{99}\frac{1}{k} = 200 \cdot H_{99} \approx 200 \times 5.18 \approx 1036$ comparisons — vs worst-case $\approx 4950$ deterministic. (b) Single-run success $p \ge \frac{2}{100 \times 99} \approx 0.0002$. Failure after $t$ runs $\le (1-p)^t \le e^{-pt} &lt; 0.01 \Rightarrow t &gt; \frac{\ln 100}{p} \approx 4.6 \times 4950 \approx 22{,}800$ runs — each $O(n^2)$, polynomial total.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Quicksort: ~1036 expected vs ~4950 worst-case — randomization deletes the adversary. Karger: ~23k cheap runs buy 99% confidence against $2^{100}$ possible cuts — repetition deletes the risk. Both bargains settled in expectation arithmetic, not hope.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-quicksort-expectation-and-karger-repetition">← 3. Worked example — quicksort expe…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Linearity of expectation needs <em>no</em> independence — the indicator sum works despite comparisons being highly correlated.</li>
+<li>$p \ge 2/(n(n-1))$ is a <em>lower</em> bound on success (adversarial min-cut assumed); friendlier graphs do better, never worse.</li>
+<li>Amplification multiplies <em>runs</em>, not <em>input size</em>: error decays exponentially in $k$ while cost grows only linearly.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Las Vegas vs Monte Carlo</td>
+<td>Random time, exact answer vs fixed time, probable answer</td>
+</tr>
+<tr>
+<td>Expected vs worst-case quicksort</td>
+<td>$\Theta(n\log n)$ over coins vs $\Theta(n^2)$ adversarial deterministic</td>
+</tr>
+<tr>
+<td>More runs vs bigger input</td>
+<td>Exponential confidence gain vs polynomial cost growth</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> the two contracts with examples; $2/(j-i+1)$ symmetry argument; harmonic sum to $\Theta(n\log n)$; Karger $2/(n(n-1))$ with $(1-p)^t \le e^{-pt}$ amplification to ~23k runs at $n = 100$.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Randomized quicksort and Karger&#39;s algorithm both flip coins. What opposite contracts do they sign?</span>

@@ -5,11 +5,12 @@ module: 2
 sequence: 6
 title: 'Congestion Control: Principles & TCP Dynamics'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 10
 learningObjectives:
   - Name the three costs of congestion
   - Run AIMD, slow start, and ssthresh updates
   - Separate Tahoe resets from Reno halving on loss signals
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - congestion control
   - AIMD
@@ -28,26 +29,44 @@ tags:
 **Why the network chokes, the three costs of congestion, AIMD sawtooth fairness, slow start, and Tahoe vs. Reno on loss.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+Too many cars enter a highway and everyone slows to a crawl — the jam is caused by the drivers themselves, and only the drivers can fix it by metering their entry. Packet networks behave identically: when senders collectively exceed a bottleneck's capacity, queues overflow, packets die, retransmissions double the load, and useful throughput collapses.
+
+The problem before the solution: no router phones the senders to coordinate — each TCP sender must infer congestion *alone* (from loss and delay) and adjust its sending rate so the network stays near capacity without collapsing. The shared etiquette is AIMD (Additive Increase, Multiplicative Decrease): probe gently upward, back off hard on loss.
 
 ::: callout-intuition Core Mental Model: The Highway On-Ramp
 Packet loss is not a pothole (broken road) — it is a **traffic jam** (too many cars). And jams are self-inflicted: every driver entering faster makes everyone slower. TCP drivers therefore follow one shared etiquette: *probe for space by speeding up gently, and back off hard at the first brake lights*. If every flow obeys it, the highway self-organizes near capacity; if flows ignored it (like early UDP blasters), the road collapses into gridlock where almost no useful traffic moves at all.
+
+Dropping the highway now: cwnd = congestion window (allowed unacknowledged bytes); AIMD = +1 MSS per RTT up, halve on loss; slow start = doubling phase; ssthresh = remembered danger line.
 :::
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **Congestion** | Aggregate demand persistently exceeding bottleneck capacity: queues grow, delays explode, packets drop. |
+| **cwnd (congestion window)** | Sender-side cap on unacknowledged bytes, adjusted by loss signals to protect the *network* (contrast rwnd, which protects the receiver). |
+| **MSS (Maximum Segment Size)** | Largest TCP payload per segment — AIMD's unit of increase. |
+| **AIMD (Additive Increase, Multiplicative Decrease)** | Per RTT without loss: `cwnd += 1 MSS`; on loss: `cwnd /= 2`. |
+| **Slow start** | Exponential phase (`cwnd` doubling per RTT from 1 MSS) used at birth and after severe loss — "slow" only relative to blasting at full rate instantly. |
+| **ssthresh (slow-start threshold)** | The remembered danger line, reset to `cwnd/2` at each loss: grow fast below it, gently above. |
+| **Tahoe / Reno** | Two TCP variants: Tahoe resets `cwnd = 1` on any loss; Reno halves on mild loss (triple duplicate ACKs, with fast recovery) and resets only on timeout. |
+| **Fast recovery** | Reno's post-halving phase: resume additive growth immediately instead of slow-starting. |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Costs, AIMD Dynamics, Slow Start, Tahoe vs Reno
 
-### 2.1 The Three Costs of Congestion
+### 3.1 The Three Costs of Congestion
 
 1. **Retransmission waste:** dropped packets must be re-sent, so the network carries the same bytes twice while delivering once.
 2. **Buffer exhaustion and delay:** queues fill, queueing delay explodes, and eventually *all* arrivals drop (bufferbloat: full buffers, zero goodput gain).
 3. **Unnecessary retransmissions:** premature timeouts duplicate packets already queued — the sender pays for impatience with pure overhead.
 
-### 2.2 AIMD: Additive Increase, Multiplicative Decrease
+### 3.2 Operation Flow: AIMD — Additive Increase, Multiplicative Decrease
 
-Each flow keeps a **congestion window** `cwnd` (bytes it may have unACKed) and adjusts per RTT with no explicit network signal — only loss as the congestion alarm:
+Each flow keeps a **congestion window** `cwnd` (bytes it may have unACKed) and adjusts per RTT (Round-Trip Time) with no explicit network signal — only loss as the congestion alarm:
 
 * **Additive increase:** no loss for an RTT → `cwnd += 1 MSS` (gentle probe upward).
 * **Multiplicative decrease:** loss detected → `cwnd /= 2` (hard back-off).
@@ -68,26 +87,30 @@ cwnd ^
 Watch the congestion window climb additively and crash multiplicatively on each loss — the dot rides real AIMD dynamics while the caption calls each phase.
 :::
 
-Repeated across competing flows, AIMD converges to **fairness**: overfull flows get halved more often in absolute terms, so shares equalize — the celebrated "sawtooth" is the sound of fairness being enforced.
+Repeated across competing flows with similar RTTs and synchronized loss signals, AIMD converges toward **fairness**: overfull flows get halved more in absolute terms, so shares equalize — the celebrated "sawtooth" is the sound of fairness being enforced. Qualification: with very different RTTs (short-RTT flows probe faster) or unsynchronized losses, shares skew — AIMD *tends toward* fairness under comparable conditions; it does not legislate perfect equality in all topologies.
 
-### 2.3 Slow Start, ssthresh, Tahoe vs. Reno
+### 3.3 Slow Start, ssthresh, Tahoe vs. Reno
 
 * **Slow start:** despite the name, *exponential* growth — `cwnd` doubles per RTT from 1 MSS until first loss or `ssthresh`. Used at connection birth and after heavy loss (Tahoe).
 * **ssthresh:** the remembered danger line, set to `cwnd/2` at each loss event; below it grow fast (slow start), above it grow gently (congestion avoidance).
 * **On loss:** **Tahoe** resets `cwnd = 1` and slow-starts (treats every loss as catastrophe); **Reno** distinguishes: **triple duplicate ACKs** (mild, isolated loss) → halve and continue (**fast recovery**, no slow start); **timeout** (severe, total silence) → Tahoe-style reset to 1 MSS.
 
 ::: callout-formula KTU Formula Vault: Congestion in 6 Lines
-Costs: **retransmit waste + buffer delay + premature dupes**. AIMD: **+1 MSS/RTT**, **halve on loss** → sawtooth → **fairness**. Slow start: **double per RTT** to ssthresh. ssthresh = **cwnd/2 at loss**. Tahoe: **any loss → cwnd=1**. Reno: **3 dup-ACKs → halve + fast recovery**; **timeout → cwnd=1**.
+Costs: **retransmit waste + buffer delay + premature dupes**. AIMD: **+1 MSS/RTT**, **halve on loss** → sawtooth → **fairness (similar-RTT flows)**. Slow start: **double per RTT** to ssthresh. ssthresh = **cwnd/2 at loss**. Tahoe: **any loss → cwnd=1**. Reno: **3 dup-ACKs → halve + fast recovery**; **timeout → cwnd=1**.
 :::
 
 ::: callout-pitfall Loss Means Congestion (in This Model)
 TCP's founding bet: on wired networks, packet loss ≈ buffer overflow ≈ congestion — *not* link damage. So it always slows down on loss. The famous exception proving the rule: **wireless** links corrupt packets without congestion, where blind halving needlessly throttles — which is exactly why wireless-optimized TCP variants exist.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+`cwnd = 8` MSS, `ssthresh = 16`. One clean RTT → `cwnd = 9` (additive). Then triple duplicate ACKs → `ssthresh = 4`, `cwnd = 4` (halve, fast recovery). Same event under Tahoe → `cwnd = 1` and slow start. Mild loss: halved vs. flattened — the Reno improvement in one line.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
 A Reno flow has `cwnd = 24` MSS and `ssthresh = 32` MSS in congestion avoidance. Event A: triple duplicate ACKs arrive. Event B (later, after recovery to `cwnd = 14`): the retransmission timer expires. Trace `cwnd` and `ssthresh` through both events.
@@ -102,10 +125,26 @@ A Reno flow has `cwnd = 24` MSS and `ssthresh = 32` MSS in congestion avoidance.
 Same flow, two philosophies: mild loss costs half the window and never leaves congestion avoidance; silence costs everything and restarts the climb from 1 MSS. The severity ladder — **dup-ACKs halve, timeouts reset** — is Reno's entire personality in one sentence.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| cwnd vs. rwnd | Network guard (sender-inferred) vs. receiver guard (advertised). |
+| Slow start vs. congestion avoidance | Exponential doubling to ssthresh vs. +1 MSS/RTT AIMD above it. |
+| Tahoe vs. Reno | Any loss → 1 vs. dup-ACKs halve + fast recovery, timeout → 1. |
+| Triple dup-ACK vs. timeout | Mild isolated loss (network still delivering) vs. possible collapse (silence). |
+
+**Watch out:** (1) "AIMD guarantees equal shares always" — add the similar-RTT/synchronized-loss qualifier. (2) Slow start is exponential, not slow — the name contrasts with instant full-rate blasting. (3) Forgetting to halve ssthresh on *both* loss types.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+Three congestion costs (retransmit waste, buffer delay, premature dupes). AIMD: +1 MSS/RTT, halve on loss → sawtooth → fairness among similar-RTT flows. Slow start doubles to ssthresh (= cwnd/2 at loss). Tahoe: any loss → 1. Reno: 3 dup-ACKs → halve + fast recovery; timeout → 1. Wireless corruption breaks the loss≙congestion bet.
+:::
+
+**Active-recall checklist:** What are the three costs? Trace cwnd 24 → dup-ACKs → timeout at 14. When does fairness hold, and when does it skew? Why do wireless variants exist?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Why does AIMD produce fairness among competing TCP flows sharing a bottleneck?
 () Because routers assign each flow an equal fixed quota

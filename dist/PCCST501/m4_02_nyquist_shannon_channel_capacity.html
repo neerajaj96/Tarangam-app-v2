@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,53 +297,123 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Channel Capacity: Nyquist &amp; Shannon Limits</h1>
 <p><strong>Noiseless signaling ceilings, noisy-channel capacity, SNR in decibels, and the two worked numericals that anchor every exam.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>A telephone wire, a radio band, a fiber — each can carry only so many bits per second, no matter how clever the modem. Two separate ceilings set the limit: how fast you can <em>symbol</em> (bandwidth × distinguishable levels) and how much <em>noise</em> lets survive (bandwidth × signal quality). Your actual rate is whichever ceiling is lower.</p>
+<p>The problem before the solution: given a channel&#39;s bandwidth, signaling levels, and noise, compute the fastest <em>error-free</em> rate — and know which of the two laws binds, because exams deliberately arrange for either to win.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Shouting Across a Noisy Room</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>How fast can you convey information by shouting? Two separate ceilings: first, your <strong>mouth speed</strong> — syllables per second cap raw symbols no matter how perfect the silence (<strong>Nyquist</strong>: bandwidth × levels). Second, the <strong>room noise</strong> — in a quiet library you can whisper fine shades of meaning, but at a rock concert only crude yells survive (<strong>Shannon</strong>: bandwidth × log of signal-to-noise). Your actual rate is whichever ceiling is <em>lower</em> — physics grants no third option.</p>
-</div></details><hr>
+<p>Dropping the room now: $B$ = bandwidth in Hz; $L$ = discrete signal levels; SNR (Signal-to-Noise Ratio) = signal power ÷ noise power (linear); dB (decibels) = $10\log_{10}$ of that ratio.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-both-laws-symbol-by-symbol-then-the-verdict-rule">3. Purpose — Both Laws, Symbol by … →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Bandwidth $B$ (Hz)</strong></td>
+<td>The width of frequencies the channel passes — the raw symbol-speed budget.</td>
+</tr>
+<tr>
+<td><strong>Signal levels $L$</strong></td>
+<td>Count of distinguishable symbol values; each symbol carries $\log_2 L$ bits. Binary = $L = 2$.</td>
+</tr>
+<tr>
+<td><strong>SNR (Signal-to-Noise Ratio)</strong></td>
+<td>Signal power ÷ noise power, <strong>linear</strong> (e.g. 1000). Shannon needs this form.</td>
+</tr>
+<tr>
+<td><strong>SNR in dB (decibels)</strong></td>
+<td>$10 \log_{10}(\text{SNR})$: $10$ dB $= 10\times$, $20$ dB $= 100\times$, $30$ dB $= 1000\times$. Convert <em>before</em> Shannon.</td>
+</tr>
+<tr>
+<td><strong>Nyquist bit rate</strong></td>
+<td>Noiseless ceiling $C = 2B\log_2 L$ — assumes perfection.</td>
+</tr>
+<tr>
+<td><strong>Shannon capacity</strong></td>
+<td>Noisy law $C = B\log_2(1+\text{SNR})$ — no error-free scheme exceeds it; schemes exist approaching it arbitrarily closely (at unbounded coding effort).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Nyquist: The Noiseless Ceiling</h3>
+<h2 id="3-purpose-both-laws-symbol-by-symbol-then-the-verdict-rule">3. Purpose — Both Laws, Symbol by Symbol, Then the Verdict Rule</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Nyquist: The Noiseless Ceiling</h3>
 <p>For a <strong>noiseless</strong> channel of bandwidth $B$ Hz using $L$ discrete signal levels:</p>
 <p>$$C_{Nyquist} = 2B \log_2 L \quad \text{bits/sec}$$</p>
-<p>More levels pack more bits per symbol ($\log_2 L$), but levels must stay distinguishable — noise (ignored here) is exactly what caps $L$ in practice. Binary ($L=2$): $C = 2B$.</p>
-<h3>2.2 Shannon: The Noisy Truth</h3>
+<p>Symbols: $2B$ = maximum symbol rate (baud) the bandwidth supports; $\log_2 L$ = bits packed per symbol. More levels pack more bits per symbol ($\log_2 L$), but levels must stay distinguishable — noise (ignored here) is exactly what caps $L$ in practice. Binary ($L=2$): $C = 2B$.</p>
+<h3>3.2 Shannon: The Noisy Truth</h3>
 <p>For bandwidth $B$ with signal-to-noise ratio $\text{SNR}$ (linear, not dB):</p>
 <p>$$C_{Shannon} = B \log_2(1 + \text{SNR}) \quad \text{bits/sec}$$</p>
 <p>Decibel conversion (the step everyone fumbles): $\text{SNR}<em>{dB} = 10 \log</em>{10}(\text{SNR})$, so $30$ dB $\Rightarrow$ SNR $= 1000$, $20$ dB $\Rightarrow 100$, $10$ dB $\Rightarrow 10$. Shannon is the <em>law</em>: no coding scheme, however clever, sustains error-free transmission above $C$ — and codes exist approaching it arbitrarily closely.</p>
-<h3>2.3 Using Them Together</h3>
+<h3>3.3 Using Them Together</h3>
 <p>Nyquist assumes perfection (upper bound under ideal conditions); Shannon accounts for noise (the binding bound in practice). Given $B$, levels, and SNR, compute <strong>both</strong> — the achievable rate is $\min(\text{Nyquist}, \text{Shannon})$.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Two Laws</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Nyquist (noiseless): <strong>$2B\log_2 L$</strong> · Shannon (noisy): <strong>$B\log_2(1+SNR)$</strong> · dB: <strong>$10\log_{10}$</strong> (30 dB = 1000×) · answer = <strong>min of the two</strong>. If the question gives SNR in dB, convert <em>first</em> — the #1 mark-loser.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Levels Are Not Free (and dB Is Logarithmic)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Doubling levels adds only <em>one</em> bit per symbol ($\log_2$) while halving noise margin — more levels help only while the receiver can still tell them apart. And $30$ dB is not &quot;three times&quot; $10$ dB: it is $1000\times$ vs $10\times$ power ratio. Linear intuition on logarithmic units fails every time.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-both-laws-symbol-by-symbol-then-the-verdict-rule">← 3. Purpose — Both Laws, Symbol by …</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>$B = 1$ Hz, binary ($L = 2$): Nyquist $= 2 \times 1 \times 1 = 2$ bps. With $0$ dB SNR (signal = noise, SNR $= 1$): Shannon $= 1 \times \log_2 2 = 1$ bps. Verdict: $\min(2, 1) = 1$ bps — noise binds even in this toy room.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A $3$ kHz telephone channel: (a) noiseless, binary signaling — max rate? (b) noiseless, 8 levels — max rate? (c) with $30$ dB SNR — Shannon capacity? (d) binding limit?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Computing Both Ceilings</div><div class="step-content"><p>(a) Nyquist: $2 \times 3000 \times \log_2 2 = 6000$ bps $= 6$ kbps.
 (b) Nyquist: $2 \times 3000 \times \log_2 8 = 6000 \times 3 = 18{,}000$ bps $= 18$ kbps.
 (c) SNR $= 10^{30/10} = 1000$. Shannon: $3000 \times \log_2(1001) \approx 3000 \times 9.97 \approx 29{,}902$ bps $\approx 30$ kbps.
 (d) Noiseless claims (6 / 18 kbps) assume perfection; with real $30$ dB noise the Shannon $30$ kbps binds above the 8-level Nyquist $18$ kbps — so 8-level signaling at $18$ kbps is achievable, and no scheme on this line exceeds $\approx 30$ kbps error-free.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Three numbers, one verdict: levels buy linear-ish gains (6 → 18 kbps), noise sets the absolute roof ($\approx 30$ kbps here). Every capacity question in the exam is this exact dance — convert dB, compute both laws, take the min.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nyquist vs. Shannon</td>
+<td>Noiseless ideal ($2B\log_2L$) vs. noisy law ($B\log_2(1+SNR)$); answer = min.</td>
+</tr>
+<tr>
+<td>dB vs. linear SNR</td>
+<td>Logarithmic label vs. the ratio Shannon eats — convert first.</td>
+</tr>
+<tr>
+<td>Levels vs. capacity</td>
+<td>$\log_2$ gains per doubling, policed by noise margin and Shannon.</td>
+</tr>
+<tr>
+<td>Approaching vs. beating $C$</td>
+<td>Codes close the gap (turbo/LDPC/polar) — none crosses the ceiling error-free.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Plugging dB directly into $\log_2(1+SNR)$ — the #1 mark-loser. (2) Reporting one law and stopping — either can bind. (3) &quot;Infinite levels, infinite capacity&quot; — Shannon overrules levels via SNR.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Nyquist $2B\log_2L$ (noiseless); Shannon $B\log_2(1+SNR)$ (noisy law); dB $= 10\log_{10}$ (convert first: 10/20/30 dB → 10/100/1000). Verdict = min of both. Levels add bits logarithmically and cost noise margin; codes approach $C$, never exceed it error-free.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What are the units of each symbol? Convert 25 dB to linear. Why take the min? Why don&#39;t infinite levels win?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A noiseless 4 kHz channel uses 16-level signaling. A second, noisy 4 kHz channel has 20 dB SNR. What are the two ceilings, and which binds in practice?</span>
@@ -524,7 +598,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_02_nyquist_shannon_channel_capacity";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

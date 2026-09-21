@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,40 +249,96 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Linear Regression &amp; Least Squares</h1>
-<p><strong>The linear model, residual geometry, normal equations derived two ways, and a hand-solved 3-point fit.</strong></p>
+<p><strong>What problem linear regression solves, what data it needs, how least squares trains weights through normal equations, and where the closed form breaks.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Stiff Ruler Through Scatter</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Data points scatter like stars; a linear model lays a stiff ruler through them — tilting and shifting until the total squared gap between stars and ruler is minimal. <strong>Squared</strong> (not absolute) gaps, because squares punish big misses disproportionately, differentiate smoothly, and — the deep reason — make the optimum a single linear-algebra computation instead of a search. Least squares is the ruler-settling rule with a closed-form answer.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Model and Objective</h3>
-<p>Hypothesis $h_w(x) = w_0 + w_1 x_1 + \dots + w_d x_d = w^T\tilde{x}$ (absorb the intercept via $\tilde{x}_0 \equiv 1$). Residuals $r_i = y_i - w^T\tilde{x}_i$; objective (half-mean-squared, the $\tfrac12$ cancels the derivative&#39;s 2):</p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>You measure house size and price for a few homes and want to predict a new home&#39;s price. The problem: find a straight-line rule that misses the known points by as little as possible, then use it for new inputs.</p>
+<p>Tiny beginner example. Sizes 1 and 2 (in 1,000 square feet) sold for 10 and 20 lakh. The line through them is price $= 10 \times$ size. A new 1.5-size home predicts 15 lakh. Least squares generalises this idea to noisy points that no single line hits exactly.</p>
+<p>Analogy as support, then dropped. Picture a stiff ruler laid through scattered stars, tilted until total squared gap is smallest. From here on we use exact terms only: hypothesis, residual, objective, normal equations.</p>
+<p>Abbreviations defined on first use: Within-Cluster Sum of Squares is not needed here; Ordinary Least Squares (OLS) means this exact minimiser. Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $w$?</td>
+<td>Weight vector, the slopes and intercept to learn</td>
+</tr>
+<tr>
+<td>What is $r_i$?</td>
+<td>Residual, truth minus prediction on point $i$</td>
+</tr>
+<tr>
+<td>What is $X$, $y$?</td>
+<td>Design matrix of inputs and vector of targets</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Predict a continuous target from numeric features with a linear rule.</p>
+<p><strong>Data.</strong> Pairs $(x_i, y_i)$ for $i=1,\dots,n$. Here $x_i$ holds $d$ features and $y_i$ is a real number. Stack them into matrix $X$ with $n$ rows and $d+1$ columns (one extra column of ones for the intercept) and vector $y$ with $n$ entries.</p>
+<p><strong>Goal.</strong> Choose weights $w$ minimising total squared miss. Residual $r_i = y_i - w^T\tilde{x}_i$, where $\tilde{x}_i$ means $x_i$ with a leading $1$ so $w_0$ acts as intercept. Objective with $\frac{1}{2n}$ scaling (the $\frac{1}{2}$ cancels the derivative&#39;s 2, the $n$ averages over points):</p>
 <p>$$J(w) = \frac{1}{2n}\sum_{i=1}^n (y_i - w^T\tilde{x}_i)^2 = \frac{1}{2n}|y - Xw|^2$$</p>
-<h3>2.2 Normal Equations (Calculus Route)</h3>
-<p>$\nabla_w J = -\frac{1}{n}X^T(y - Xw) = 0 \Rightarrow$ <strong>$X^TXw = X^Ty$</strong> $\Rightarrow \hat{w} = (X^TX)^{-1}X^Ty$ (when $X$ has full column rank; else pseudoinverse/regularization territory).</p>
-<h3>2.3 Geometry Route (Same Answer, More Insight)</h3>
-<p>$y$ lives in $\mathbb{R}^n$; $Xw$ ranges over the $d$-dimensional column space of $X$. Minimizing $|y - Xw|$ = finding the <strong>closest point in that subspace</strong> = the <strong>orthogonal projection</strong> of $y$ — so the residual $y - X\hat{w}$ stands <strong>perpendicular</strong> to every column of $X$: $X^T(y - X\hat{w}) = 0$, i.e. the normal equations. Calculus grinds; geometry <em>sees</em>.</p>
+<p>Symbol by symbol: $|y-Xw|^2$ sums squared residuals; $Xw$ lists all predictions; $J$ is mean cost up to the half factor.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Stiff Ruler Through Scatter</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Data points scatter like stars; a linear model lays a stiff ruler through them — tilting and shifting until the total squared gap between stars and ruler is minimal. <strong>Squared</strong> (not absolute) gaps, because squares punish big misses disproportionately, differentiate smoothly, and — the deep reason — make the optimum a single linear-algebra computation instead of a search. Least squares is the ruler-settling rule with a closed-form answer.</p>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (continuous prediction) → data (matrix $X$, vector $y$) → goal (minimise $J$) → method (calculus or geometry) → model ($w^T\tilde{x}$) → training (normal equations) → example → limitations.</p>
+<h3>3.1 Normal Equations, Calculus Route</h3>
+<p>Set the gradient to zero. $\nabla_w J = -\frac{1}{n}X^T(y - Xw) = 0$ gives <strong>$X^TXw = X^Ty$</strong>, hence $\hat{w} = (X^TX)^{-1}X^Ty$ when $X$ has full column rank. Steps numbered:</p>
+<ol>
+<li>Write $J(w)$ as above.</li>
+<li>Differentiate with respect to $w$.</li>
+<li>Set gradient to zero and solve the linear system.</li>
+</ol>
+<h3>3.2 Geometry Route, Same Answer</h3>
+<p>Vector $y$ lives in $\mathbb{R}^n$; $Xw$ ranges over the $d$-dimensional column space of $X$. Minimising $|y-Xw|$ finds the closest point in that subspace, the orthogonal projection of $y$. So the residual $y-X\hat{w}$ stands perpendicular to every column of $X$: $X^T(y-X\hat{w}) = 0$, the same normal equations. Calculus grinds; geometry sees.</p>
+<p><strong>RIDGE strengthening.</strong> If columns are dependent or $d&gt;n$, $X^TX$ is singular and the inverse fails. The standard fix adds a penalty $\lambda I$ with $\lambda&gt;0$: $\hat{w}=(X^TX+\lambda I)^{-1}X^Ty$. This is RIDGE regression, MAP with a Gaussian prior from the previous note: it always inverts and shrinks weights. Least Absolute Shrinkage and Selection Operator (LASSO) uses an absolute penalty instead and can zero weights, but has no closed form and needs iterative optimisation.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Least squares vs. RIDGE</td>
+<td>Unpenalised closed form needing full rank vs. $\lambda I$ fix that always inverts and shrinks</td>
+</tr>
+<tr>
+<td>RIDGE vs. LASSO</td>
+<td>Squared penalty shrinking smoothly vs. absolute penalty selecting sparsely</td>
+</tr>
+<tr>
+<td>Calculus vs. geometry view</td>
+<td>Zero-gradient algebra vs. orthogonal-projection picture; same weights</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Least Squares Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Model $w^T\tilde{x}$ ($\tilde{x}_0=1$ absorbs intercept) · objective $\frac{1}{2n}|y-Xw|^2$ · normal equations <strong>$X^TXw = X^Ty$</strong> · solution $(X^TX)^{-1}X^Ty$ · geometry: residual <strong>⊥ column space</strong> · probabilistic twin: Gaussian-noise MLE (next-module bridge: squared loss <em>is</em> Gaussian log-likelihood).</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Invertibility Is Assumed, Not Guaranteed</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$(X^TX)^{-1}$ exists iff columns are independent — duplicate/perfectly-collinear features (or $d &gt; n$) make $X^TX$ singular and the formula dies. Real pipelines add $\lambda I$ (ridge: always invertible, shrunk solution — the MAP-Gaussian connection from last topic) instead of praying for full rank.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Fit $y = w_0 + w_1 x$ to $(1,1), (2,2), (3,2)$ via normal equations. (Arithmetic verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Solving 2×2</div><div class="step-content"><p>$X = [[1,1],[1,2],[1,3]]$, $y = [1,2,2]$. $X^TX = \begin{pmatrix}3 &amp; 6 \\ 6 &amp; 14\end{pmatrix}$, $X^Ty = \begin{pmatrix}5 \\ 11\end{pmatrix}$, $\det = 42-36 = 6$. $w_0 = (14\cdot5 - 6\cdot11)/6 = 4/6 = \mathbf{2/3}$; $w_1 = (3\cdot11 - 6\cdot5)/6 = 3/6 = \mathbf{1/2}$. Model: $\hat{y} = 2/3 + x/2$; predictions $7/6, 5/3, 13/6$ vs truths $1, 2, 2$ — residuals $\pm 1/6, \mp 1/3$ summing to a visibly balanced fit.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One $2\times2$ inverse solved the whole problem — no iteration, no guessing. And geometrically: the residual vector is orthogonal to both the all-ones column and the $x$-column (dot products vanish — check it), confirming the projection picture from §2.3 on real numbers.</p>
@@ -303,10 +367,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Three Points, One Ruler</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the ruler settle through (1,1), (2,2), (3,2) — residuals +1/6, −1/3, +1/6 summing to zero, perpendicular to both columns.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Inverting $X^TX$ without checking rank. Collinear features or $d&gt;n$ need RIDGE or pseudoinverse.</li>
+<li>Reading squared loss as robust. Squares amplify outliers; one wild point drags the ruler.</li>
+<li>Confusing fitted values with probabilities. Regression outputs are quantities, not confidences.</li>
+<li>Forgetting the intercept column. Without the ones column the line is forced through the origin.</li>
+</ul>
+<p>Limitations: linear in weights, sensitive to outliers, and closed form costs $O(d^3)$ for large $d$, where iterative Gradient Descent (GD) wins.</p>
+<p>Exam recap: model $w^T\tilde{x}$; objective $\frac{1}{2n}|y-Xw|^2$; equations $X^TXw=X^Ty$; geometry residual perpendicular to column space; Gaussian-noise MLE twin; RIDGE adds $\lambda I$.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Where does the closed-form ŵ = (XᵀX)⁻¹Xᵀy come from, and what can break it?</span>
@@ -491,7 +566,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m1_03_linear_regression_least_squares";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

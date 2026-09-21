@@ -269,58 +269,82 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge">⏱️ 6 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Propositional vs First-Order Inference</h1>
-<p><strong>Grounding blowup quantified, lifted inference as the escape, decidability contrast stated plainly — the syllabus comparison as its own topic.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Photocopy Shop vs Master Template</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Propositional inference <strong>photocopies</strong> every first-order rule for every object combo (grounding), then reasons over the paper mountain. Lifted inference reasons from the <strong>master template</strong> directly — one UNIFY step doing the work of infinitely many photocopies. Templates beat mountains whenever objects multiply; mountains win only when objects are few and templates tangled.</p>
-</div></details><p>M3.2–M3.3 built the paper mountain (models, resolution); M3.4 cut the master-template tools (UNIFY, lifted Modus Ponens, FOL chaining) — this topic prices the two against each other.</p>
-<hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Grounding arithmetic</h3>
-<p>A FOL KB with $p$ predicate symbols of max arity $k$ over $d$ constants grounds to $\approx p \cdot d^k$ atoms: $2$ binary predicates and $10$ constants already yield $200$ atoms and $2^{200}$ models — model checking (M3.2) dies standing, and propositional resolution drowns in clauses it never needed. Lifted rules (generalized Modus Ponens, FOL-FC/BC with UNIFY) sidestep the mountain by binding variables only as the proof demands.</p>
-<h3>2.2 Decidability and practice</h3>
-<p>Propositional entailment is <strong>decidable</strong> (co-NP-complete — exponential worst case, but an answer always arrives). FOL entailment is only <strong>semi-decidable</strong>: complete procedures confirm entailment eventually, but may loop forever on non-entailed queries. Practice: Datalog-style restricted FOL regains decidability; Prolog&#39;s backward chaining trades completeness (depth-first, no occur-check) for speed.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PL vs FOL</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Grounding $\approx p \cdot d^k$ atoms · PL decidable (co-NP-complete) · FOL semi-decidable (loops possible on NO) · lift with UNIFY, restrict (Datalog) or trade (Prolog) to cope.</p>
-</div></details><p>Lifting is not free magic: full FOL resolution still needs factoring, subsumption, and strategy — the mountain shrinks to a hill, and hills still need climbing gear.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Grounding as a &quot;Solution&quot;</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>An option proposing &quot;ground then use propositional resolution&quot; as the efficient FOL method mistakes a <em>reduction proof</em> for an algorithm. Grounding is the baseline that proves FOL <em>can</em> be handled — lifted inference is what handles it affordably.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>KB: $\forall x; (\text{Cat}(x) \Rightarrow \text{Mammal}(x))$, fact $\text{Cat}(\text{Tom})$, query $\text{Mammal}(\text{Tom})$ — with $9$ more cats in the KB ($10$ constants). Count the grounding versus the lifted proof.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Mountain vs Template</div><div class="step-content"><p>Grounding instantiates the rule $10$ times ($\text{Cat}(\text{Tom}) \Rightarrow \text{Mammal}(\text{Tom})$, $\dots$) plus $20$ atoms — then Modus Ponens fires on the Tom instance. Lifted Modus Ponens unifies $\text{Cat}(x)$ with $\text{Cat}(\text{Tom})$, $\theta = {x/\text{Tom}}$, and concludes in <strong>one</strong> step touching <strong>one</strong> fact. With function symbols (e.g. $\text{Father}(x)$) grounding is infinite — photocopies without end — while lifting still takes one step.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$10$ ground instances (finite case) or infinitely many (functions) versus $1$ lifted step. The exam moral: quote $p \cdot d^k$ for the mountain, UNIFY-once for the escape, functions for the kill-shot proving grounding cannot always work.</p>
-</div></div><hr>
+<p><strong>Problem: grounding (photocopying every rule for every object) proves FOL can be handled — but can it be afforded? By the end you can price grounding blowup, state the decidability contrast, and choose lifting, restriction, or Prolog&#39;s trade.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-photocopy-shop-vs-master-template">1. Start From Zero: Photocopy Shop vs. Master Template</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-grounding-arithmetic">2. Basic Layer: Grounding Arithmet… →</a></p>
+<p>Propositional inference photocopies each first-order rule for every object combo (grounding), then reasons over the paper mountain. Lifted inference reasons from the master template directly — one UNIFY step doing infinitely many photocopies&#39; work. Templates beat mountains whenever objects multiply.</p>
+<p><strong>Definitions:</strong> <strong>grounding</strong> instantiates all variables with all constants. <strong>Lifted inference</strong> binds variables only as proofs demand (generalized Modus Ponens, FOL forward/backward chaining with UNIFY). <strong>Decidable</strong> means an answer always arrives in finite time. <strong>Semi-decidable</strong> means yes-instances are confirmed in finite time but no-instances may loop forever.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Photocopy Shop vs Master Template</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;mountain versus template&quot; here, then drop the shop; grounding arithmetic plus decidability below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> rule <code>Cat(x) =&gt; Mammal(x)</code> with 10 cats grounds to 10 copies plus 20 atoms — then fires on Tom. Lifted Modus Ponens unifies once (<code>x/Tom</code>) and concludes in one step touching one fact.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-grounding-arithmetic">2. Basic Layer: Grounding Arithmetic</h2>
+<p class="secnav"><a href="#1-start-from-zero-photocopy-shop-vs-master-template">← 1. Start From Zero: Photocopy Shop…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-decidability-and-practice">3. Formal Layer: Decidability and … →</a></p>
+<p><strong>Data/state:</strong> <code>p</code> predicate symbols of max arity <code>k</code> over <code>d</code> constants. <strong>Goal:</strong> count the mountain.</p>
+<p><strong>Meaning, variables, formula:</strong> each <code>k</code>-ary predicate spans all ordered <code>k</code>-tuples (<code>d^k</code> combos); times <code>p</code> predicates:</p>
+<p>$$\text{ground atoms} \approx p \cdot d^k$$</p>
+<p>Tiny numbers: 2 binary predicates over 10 constants give 200 atoms and <code>2^200</code> models — model checking dies standing, propositional resolution drowns in never-needed clauses. With function symbols (e.g. Father(x)), grounding is infinite — photocopies without end — while lifting still takes one step.</p>
+<p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-decidability-and-practice">3. Formal Layer: Decidability and Practice</h2>
+<p class="secnav"><a href="#2-basic-layer-grounding-arithmetic">← 2. Basic Layer: Grounding Arithmet…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Decidability contrast (qualified):</strong> propositional entailment is <strong>decidable</strong> (co-NP-complete: exponential worst case, but an answer always arrives). FOL entailment is only <strong>semi-decidable</strong>: complete procedures confirm entailed queries eventually but may loop forever on non-entailed ones — no strategy fixes this in general (a theory ceiling, not a bug).</p>
+<p><strong>Practical escapes:</strong> <strong>Datalog-style restricted FOL</strong> (no functions, constrained rules) regains decidability. <strong>Prolog&#39;s backward chaining</strong> trades completeness (depth-first search can loop where breadth succeeds) and soundness corners (skipped occur check admits cyclic unifications) for industrial speed. Lifting itself needs factoring, subsumption, and strategy — the mountain shrinks to a hill that still needs climbing gear.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PL vs FOL</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Grounding approx <code>p * d^k</code> atoms. PL decidable (co-NP-complete). FOL semi-decidable (NO-answers may loop). Cope by lifting with UNIFY, restricting (Datalog), or trading (Prolog).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Grounding as a &quot;Solution&quot;</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>&quot;Ground then use propositional resolution&quot; is a reduction proof that FOL can be handled — not an efficient algorithm. Lifted inference is what handles it affordably. Options proposing grounding as the efficient method confuse existence with tractability.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-decidability-and-practice">← 3. Formal Layer: Decidability and …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grounding vs. lifting</td>
+<td>Exhaustive instantiation (complete, explosive) vs. demand-bound templates (affordable)</td>
+</tr>
+<tr>
+<td>Decidable vs. semi-decidable</td>
+<td>Both answers guaranteed vs. yes-only guaranteed (no-queries may loop)</td>
+</tr>
+<tr>
+<td>Datalog vs. Prolog coping</td>
+<td>Restrict the logic (decidability back) vs. trade theory corners (speed now)</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Arity exponentiates (<code>d^k</code>), predicates multiply (<code>p*</code>) — linear intuitions miss the square. (2) A looping prover on a NO-query is bumping theory, not buggy. (3) Prolog&#39;s dents (DFS loops, missing occur check) are recurring 3-mark material.</p>
+<p><strong>Limitations:</strong> lifting does not restore decidability; Datalog restricts expressiveness; Prolog sacrifices guarantees. Choose by workload: few objects tolerate grounding, many objects demand templates, infinite (functional) domains forbid grounding entirely.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Grounding Arithmetic</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$3$ binary predicates, $5$ constants. Ground atoms?</p>
+  <div class="quiz-prompt"><p>3 binary predicates, 5 constants. Ground atoms?</p>
 </div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$15$, predicates times constants</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$3 \times 5^2 = 75$ — each binary predicate spans all ordered pairs, so arity exponentiates, and $2^{75}$ models already bury model checking</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$3^5 = 243$</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$8$, binary means two</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>15, predicates times constants</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>3 × 5^2 = 75 — each binary predicate spans all ordered pairs, so arity exponentiates, and 2^75 models already bury model checking</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>3^5 = 243</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>8, binary means two</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -332,7 +356,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Arity is the exponent: $d^k$ combos per predicate ($25$ pairs here), times $p$ predicates. Linear intuitions ($15$) miss the square — arity-driven blowup is the whole argument for lifting.</p><pre><code>&lt;/div&gt;
+      <p>Arity is the exponent: d^k combos per predicate (25 pairs), times p predicates. Linear guesses miss the square — the whole argument for lifting.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -358,7 +382,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Semi-decidable means one-sided guarantee: proofs arrive, refutations may not. A looping prover on a NO-query is not buggy, it is bumping the theory ceiling — restrict the logic (Datalog) to lower it.</p><pre><code>&lt;/div&gt;
+      <p>Semi-decidable is a one-sided guarantee: proofs arrive, refutations may not. Restrict the logic (Datalog) to lower the ceiling.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -384,10 +408,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Real systems spend theory to buy speed: DFS risks infinite branches, skipped occur-check risks cyclic bindings. Knowing the dents (and when they bite) is the honest Prolog story — and a recurring 3-marker.</p><pre><code>&lt;/div&gt;
+      <p>Real systems spend theory for speed. Knowing the dents and when they bite is the honest Prolog story.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: grounding count, decidability contrast, or Prolog trade. 7 marks: Cat/Tom mountain-vs-template with functions as the kill-shot.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>p*d^k</code> with one worked power; PL-decidable vs. FOL-semi-decidable with loop direction; UNIFY-once escape; function symbols making grounding infinite.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: State the grounding count and decidability contrast.</strong></p>
+<p><strong>Model Answer:</strong> ~p*d^k atoms (arity exponentiates). PL entailment decidable (answer guaranteed); FOL only semi-decidable (yes confirmed, no may loop).</p>
+<h3>Sample 7-Mark Question</h3>
+<p><strong>Q: Contrast grounding with lifting on Cat(x)=&gt;Mammal(x) with 10 cats, plus functions.</strong></p>
+<p><strong>Model Answer:</strong> Grounding instantiates 10 copies plus atoms then fires on Tom; lifting unifies x/Tom once. With Father(x), grounding is infinite while lifting stays one step — photocopies without end versus one template application.
+:::</p>
 
     </main>
 

@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,68 +297,114 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Internet Overview &amp; The Network Edge</h1>
 <p><strong>End systems and hosts, access networks and physical media, and the two complementary ways of defining &quot;the Internet.&quot;</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>You tap a video on your phone. A fraction of a second later, it plays. Nothing visibly travels to you — yet a copy of that video&#39;s data has just crossed thousands of kilometres of glass, copper, and air, hopping through a dozen or more relay stations on the way.</p>
+<p>Here is the problem this note solves: <strong>how is &quot;the Internet&quot; organized so that any two computers on Earth can exchange data?</strong> Engineers answer with two complementary views. The <strong>nuts-and-bolts view</strong> (how is it built?) names the physical parts: computers at the edges, wires and radio links between them, and relay boxes that forward data. The <strong>services view</strong> (what does it do for me?) hides all of that and says: the Internet is a platform that moves bytes between any two programs, anywhere. Both views describe the same system; you need both, because exams test whether you can switch between them.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Global Highway System</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine a global highway network. Cars don&#39;t teleport between cities — they travel on physical roads, pass through intersections, and eventually arrive at a driveway belonging to a house or office. The Internet works the same way, except it moves <strong>data</strong> instead of cars.</p>
 <ul>
 <li>Your laptop, phone, or a streaming server is a <strong>house</strong> — an <em>end system</em> where a trip begins or ends.</li>
 <li>The fiber, copper, or radio link connecting you to the network is the <strong>road</strong> — a <em>communication link</em>.</li>
 <li>A router is an <strong>intersection</strong> — a <em>packet switch</em> that looks at an arriving chunk of data and forwards it toward the right road out.</li>
 </ul>
-<p>Zoom out far enough, though, and this &quot;nuts and bolts&quot; picture isn&#39;t the only useful lens. A software engineer building an app for millions of users doesn&#39;t think about copper wire and fiber — they think of the Internet as a <strong>service</strong>: a distributed platform that reliably moves bytes between any two programs, anywhere. Both views are correct; they&#39;re just answering different questions (&quot;how is it built?&quot; vs. &quot;what does it do for me?&quot;).</p>
-</div></details><hr>
+<p>Dropping the highway now: the technical terms above are the ones the exam uses, and the rest of this note defines each of them precisely.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-why-two-views-of-one-internet">3. Purpose — Why Two Views of One … →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>End system / host</strong></td>
+<td>Any computer at the <em>edge</em> of the network that runs application programs (laptop, phone, server, smart TV, sensor). &quot;Host&quot; = it <em>hosts</em> (runs) applications.</td>
+</tr>
+<tr>
+<td><strong>Packet</strong></td>
+<td>One small chunk of a larger message. Long messages are split so links and switches handle short, uniform pieces.</td>
+</tr>
+<tr>
+<td><strong>Packet switch</strong></td>
+<td>A relay box inside the network (a <strong>router</strong> joins different networks; a <strong>switch</strong> joins devices in one local network) that receives packets on one link and forwards each out of the best next link.</td>
+</tr>
+<tr>
+<td><strong>Communication link</strong></td>
+<td>The physical path bits travel: fiber-optic cable, copper wire, or radio waves — each with a <strong>transmission rate</strong> (bits per second, also called bandwidth).</td>
+</tr>
+<tr>
+<td><strong>Network edge</strong></td>
+<td>The outermost boundary of the Internet: end systems plus the first link and router that attach them.</td>
+</tr>
+<tr>
+<td><strong>Network core</strong></td>
+<td>Everything inside: the mesh of packet switches and high-capacity links connecting edges together.</td>
+</tr>
+<tr>
+<td><strong>Access network</strong></td>
+<td>The link(s) connecting <em>your</em> end system to the <em>first</em> router of the core.</td>
+</tr>
+<tr>
+<td><strong>ISP (Internet Service Provider)</strong></td>
+<td>The company (e.g. your broadband or mobile operator) that runs that first router and sells you access.</td>
+</tr>
+<tr>
+<td><strong>Guided / unguided media</strong></td>
+<td>Guided = signals travel <em>along</em> a solid path (copper, glass fiber). Unguided = signals travel through open air or space (radio, satellite).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The &quot;Nuts and Bolts&quot; View</h3>
+<h2 id="3-purpose-why-two-views-of-one-internet">3. Purpose — Why Two Views of One Internet</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 The &quot;Nuts and Bolts&quot; View (how it is built)</h3>
 <table>
 <thead>
 <tr>
 <th>Component</th>
 <th>Role</th>
-<th>Real-world analogy</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><strong>End Systems (Hosts)</strong></td>
-<td>Laptops, smartphones, servers, smart TVs, IoT devices that sit at the <em>edge</em> of the network and run applications</td>
-<td>Houses and businesses</td>
+<td>Laptops, smartphones, servers, smart TVs, Internet-of-Things (IoT) devices at the <em>edge</em>; they originate and consume data.</td>
 </tr>
 <tr>
 <td><strong>Communication Links</strong></td>
-<td>Fiber, copper, radio, satellite — each with its own transmission rate (bandwidth)</td>
-<td>Roads of varying width/speed</td>
+<td>Fiber, copper, radio, satellite — each with its own transmission rate.</td>
 </tr>
 <tr>
 <td><strong>Packet Switches</strong></td>
-<td>Routers and switches; take packets arriving on one link and forward them out another</td>
-<td>Intersections and roundabouts</td>
+<td>Routers and switches; take packets arriving on one link and forward them out of another.</td>
 </tr>
 </tbody></table>
-<h3>2.2 The &quot;Services&quot; View</h3>
-<p>From this angle the Internet is a <strong>distributed application platform</strong>: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between.</p>
-<h3>2.3 The Network Edge</h3>
-<p>The network edge is the outermost boundary of the Internet — where end systems physically attach. Hosts here split into two functional roles:</p>
+<h3>3.2 The &quot;Services&quot; View (what applications get)</h3>
+<p>From this angle the Internet is a <strong>distributed application platform</strong>: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between. Your video app never learns which routers carried its frames — and never needs to.</p>
+<h3>3.3 The Network Edge: Clients and Servers Are Roles</h3>
+<p>The network edge is where end systems physically attach. Hosts here split into two functional roles:</p>
 <ul>
 <li><strong>Clients</strong> — desktops, mobile devices, laptops that <em>request</em> information.</li>
 <li><strong>Servers</strong> — always-on, powerful machines that <em>supply</em> information (web pages, video streams, email), typically housed in large data centers today.</li>
 </ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Client and Server Are Roles, Not Device Types</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exams love this trap: a &quot;server&quot; is not a special kind of computer — it is a <em>role</em> an end system plays. Your laptop is a client when it streams Netflix, but the moment it serves a file to a peer (or runs a local dev server), it is acting as a <strong>server</strong>. Classify by <em>behavior</em> (requesting vs. supplying), never by hardware size.</p>
-</div></details><h3>2.4 Access Networks — Getting From the Edge to the First Router</h3>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Client and Server Are Roles, Not Device Types</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exams love this trap: a &quot;server&quot; is not a special kind of computer — it is a <em>role</em> an end system plays. Your laptop is a client when it streams video, but the moment it serves a file to a peer (or runs a local development server), it is acting as a <strong>server</strong>. Classify by <em>behavior</em> (requesting vs. supplying), never by hardware size.</p>
+</div></details><h3>3.4 Access Networks — Getting From the Edge to the First Router</h3>
 <pre><code class="language-mermaid">flowchart LR
     H[&quot;Host&lt;br/&gt;(your laptop/phone)&quot;] --&gt;|Access Network| ER[&quot;Edge Router&lt;br/&gt;(first hop into the network core)&quot;]
     ER --&gt; CORE[&quot;Network Core&lt;br/&gt;(routers, backbone links)&quot;]
@@ -368,46 +418,81 @@
     end
 </code></pre>
 <ul>
-<li><strong>Home Networks:</strong> DSL (over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).</li>
+<li><strong>Home Networks:</strong> DSL (Digital Subscriber Line, over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).</li>
 <li><strong>Enterprise Networks:</strong> Devices connect via Ethernet switches, which connect to an institutional router — common in companies and universities.</li>
 <li><strong>Wireless Access Networks:</strong><ul>
-<li><strong>Wi-Fi (WLAN):</strong> short range, within a building, to a local access point.</li>
+<li><strong>Wi-Fi (Wireless Local Area Network, WLAN):</strong> short range, within a building, to a local access point.</li>
 <li><strong>Cellular (4G/5G):</strong> long range, to a cell tower kilometers away.</li>
 </ul>
 </li>
 </ul>
-<h3>2.5 Physical Media</h3>
+<h3>3.5 Physical Media — What the Bits Ride On</h3>
 <p>Bits must travel across some physical medium — electromagnetic waves or light pulses.</p>
 <ul>
 <li><strong>Guided Media</strong> (waves travel along a solid path):<ul>
-<li><em>Twisted-Pair Copper</em> — cheapest, used in most Ethernet cabling (Cat5/Cat6).</li>
+<li><em>Twisted-Pair Copper</em> — cheapest, used in most Ethernet cabling (Cat5/Cat6 categories).</li>
 <li><em>Coaxial Cable</em> — two concentric copper conductors, supports high download speeds.</li>
-<li><em>Fiber Optics</em> — pulses of light through glass fiber; extremely fast, immune to electromagnetic interference, backbone of long-haul transoceanic links.</li>
+<li><em>Fiber Optics</em> — pulses of light through glass fiber; extremely fast and unaffected by electromagnetic interference (it carries light, not electric current), though signals still weaken with distance and the glass itself can be cut or damaged. It is the backbone of long-haul transoceanic links.</li>
 </ul>
 </li>
 <li><strong>Unguided Media</strong> (waves propagate through open air/space):<ul>
-<li><em>Terrestrial Radio</em> — Wi-Fi, AM/FM.</li>
-<li><em>Satellite Radio</em> — geosynchronous or Low Earth Orbit (LEO, e.g., Starlink).</li>
+<li><em>Terrestrial Radio</em> — Wi-Fi, AM/FM broadcast.</li>
+<li><em>Satellite Radio</em> — geosynchronous satellites or Low Earth Orbit (LEO) constellations.</li>
 </ul>
 </li>
 </ul>
-<hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP. Identify every &quot;nuts and bolts&quot; component involved in getting one video frame from Netflix&#39;s server to your TV screen.</p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-why-two-views-of-one-internet">← 3. Purpose — Why Two Views of One …</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>One laptop, one home router, one video server. The laptop (client end system) asks over Wi-Fi (unguided access link); the home router (first packet switch) forwards the request onto fiber (guided link) toward the core; core routers forward it to the server (server end system), which sends video packets back along the reverse chain. Three parts — ends, links, switches — and nothing else is involved.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP (Internet Service Provider). Identify every &quot;nuts and bolts&quot; component involved in getting one video frame from the streaming server to your TV screen.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing the Path</div><div class="step-content"><ol>
-<li><strong>End Systems:</strong> Netflix&#39;s server (a host, acting as <em>server</em>) and your smart TV (a host, acting as <em>client</em>).</li>
-<li><strong>Access Network (server side):</strong> Netflix&#39;s server sits in a data center connected via high-capacity enterprise-grade links into the network core.</li>
-<li><strong>Network Core:</strong> A sequence of <strong>packet switches</strong> (routers) forward the video&#39;s packets from Netflix&#39;s data center, across backbone links, toward your ISP.</li>
-<li><strong>Access Network (your side):</strong> The packets arrive at your ISP and travel over the <strong>FTTH fiber link</strong> (guided medium, physical layer) to your home router.</li>
+<li><strong>End Systems:</strong> The streaming server (a host, acting as <em>server</em>) and your smart TV (a host, acting as <em>client</em>).</li>
+<li><strong>Access Network (server side):</strong> The server sits in a data center connected via high-capacity enterprise-grade links into the network core.</li>
+<li><strong>Network Core:</strong> A sequence of <strong>packet switches</strong> (routers) forward the video&#39;s packets from the data center, across backbone links, toward your ISP.</li>
+<li><strong>Access Network (your side):</strong> The packets arrive at your ISP and travel over the <strong>FTTH fiber link</strong> (guided medium) to your home router.</li>
 <li><strong>Final Hop:</strong> Your router forwards the packets over <strong>Wi-Fi</strong> (unguided medium, terrestrial radio) to the smart TV.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>A single video frame crosses <em>multiple</em> communication links (fiber, backbone links, Wi-Fi) and passes through <em>multiple</em> packet switches, yet the &quot;services view&quot; hides all of this: your smart TV&#39;s app simply sees a continuous stream of video data arriving, as if the underlying nuts-and-bolts complexity didn&#39;t exist.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>End system vs. packet switch</td>
+<td>Hosts at the edge run applications (originate/consume data); switches inside forward packets (never originate application data).</td>
+</tr>
+<tr>
+<td>Client vs. server</td>
+<td>Roles (requesting vs. supplying), not device types — one laptop plays both across two apps.</td>
+</tr>
+<tr>
+<td>Nuts-and-bolts vs. services view</td>
+<td>How it is built (links/switches) vs. what apps get (a byte-moving platform).</td>
+</tr>
+<tr>
+<td>Guided vs. unguided</td>
+<td>Solid path (copper/coax/fiber) vs. open air/space (radio/satellite).</td>
+</tr>
+<tr>
+<td>DSL vs. FTTH</td>
+<td>Copper telephone wire vs. fiber to the premises (far higher rate).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) &quot;Server&quot; as hardware — always test role vs. device. (2) Calling the access link &quot;the Internet&quot; — it is only the first hop; the core lies beyond the edge router. (3) Fiber &quot;immune to everything&quot; — unaffected by electromagnetic interference, but still subject to attenuation and physical damage.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Internet = end systems at the edge + packet switches and links in the core. Two views: nuts-and-bolts (parts) and services (platform). Edge roles client/server are behavioral. Access: DSL/cable/FTTH (home), Ethernet (enterprise), Wi-Fi/cellular (wireless). Media: guided (twisted pair, coax, fiber) vs. unguided (terrestrial/satellite radio).</p>
+</div></details><p><strong>Active-recall checklist</strong> (answer aloud, then check against the quizzes below): What makes a device an &quot;end system&quot;? What three parts does the nuts-and-bolts view name? Why can a laptop be both client and server? Which access network serves homes vs. enterprises? Which guided medium suits transoceanic links, and with what qualification?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Foundational Concept</span>
@@ -592,7 +677,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_01_internet_overview_and_network_edge";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,23 +297,28 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Transmission Media: Guided &amp; Unguided</h1>
 <p><strong>Copper, glass, and thin air — twisted pair vs coax vs fibre, radio vs microwave vs satellite vs infrared, and two hand-computed propagation numbers.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Bits must ride <em>something</em> physical: copper wires, glass strands, or open air. The choice decides three budgets at once — how much data per second (bandwidth), how far before help (reach/repeaters), and how long one bit takes to arrive (propagation delay). No medium wins all three: copper is cheap but short, fibre is mighty but must be laid, satellites reach anywhere but invoice 240 ms of geometry.</p>
+<p>The problem before the solution: match each deployment (LAN room, campus backbone, ocean crossing, remote village) to the medium whose physics fits — and never confuse a fat pipe (bandwidth) with a fast trip (delay).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Roads, Rails, and Radio</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Twisted pair</strong> is a country road (cheap, short hops, noise from neighbours — twisting cancels crosstalk). <strong>Coax</strong> is a guarded highway (shielded, fatter bandwidth, costlier). <strong>Fibre</strong> is a light-rail in a vacuum tube (total internal reflection, near-light speed, kilometres without repeaters). <strong>Unguided</strong> (radio/microwave/satellite/infrared) skips roads entirely — broadcast freedom, shared-sky interference, and physics-set distance limits.</p>
+<p>Dropping the transport now: guided = copper/coax/fibre (signals bound to a path); unguided = radio/microwave/satellite/infrared (signals through space); TIR (Total Internal Reflection) = dense-glass light trapping; delay $= d/v$.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Dense Glass Traps Its Own Light</span>
@@ -330,28 +339,97 @@
     <p class="video-caption"><strong>Key Insight:</strong> Dense Glass Traps Its Own Light</p>
     <div class="video-observations"><strong>What to observe:</strong> Core $n = 1.48$ against cladding $n = 1.46$: past $\theta_c \approx 80.6°$ every wall hit reflects fully — the ray below zigzags for kilometres.</div>
   </div>
-</div><hr>
+</div><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-guided-menu-unguided-menu-delay-math">3. Purpose — Guided Menu, Unguided… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Guided media</strong></td>
+<td>Signals bound to a solid path: twisted pair, coaxial cable, fibre.</td>
+</tr>
+<tr>
+<td><strong>UTP/STP (Unshielded/Shielded Twisted Pair)</strong></td>
+<td>Copper pairs (Cat — Category — grades, ~100 m LAN runs, RJ45 connectors); twisting cancels crosstalk; shielding adds noise armor.</td>
+</tr>
+<tr>
+<td><strong>Coaxial cable</strong></td>
+<td>Concentric copper conductors (baseband vs. broadband use, BNC — Bayonet Neill–Concelman — connectors, cable-TV heritage).</td>
+</tr>
+<tr>
+<td><strong>Fibre (step/graded-index, single/multimode)</strong></td>
+<td>Glass strands guiding light (LED — Light-Emitting Diode — /laser sources); step vs. graded refractive profiles; single-mode (one path, longest reach) vs. multimode.</td>
+</tr>
+<tr>
+<td><strong>TIR (Total Internal Reflection)</strong></td>
+<td>Trapping condition for dense-to-rare boundaries: rays steeper than $\theta_c$ (with $\sin\theta_c = n_2/n_1$, $n_1 &gt; n_2$) reflect fully.</td>
+</tr>
+<tr>
+<td><strong>Unguided media</strong></td>
+<td>Signals through space: radio ($3$ kHz–$1$ GHz, omnidirectional, wall-passing), microwave ($1$–$300$ GHz, line-of-sight dishes, rain fade), satellite (GEO — Geostationary — $35{,}800$ km), infrared (short, wall-blocked).</td>
+</tr>
+<tr>
+<td><strong>Propagation delay</strong></td>
+<td>$d/v$: distance ÷ speed ($v \approx 2.4 \times 10^8$ m/s in cable, $c = 3 \times 10^8$ m/s in air). Distinct from bandwidth.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Guided menu</h3>
+<h2 id="3-purpose-guided-menu-unguided-menu-delay-math">3. Purpose — Guided Menu, Unguided Menu, Delay Math</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Guided Menu</h3>
 <p>Twisted pair (UTP/STP: Cat grades, $\sim 100$ m LAN runs, RJ45), coaxial (baseband vs broadband, BNC, cable-TV heritage), fibre (step-index vs graded-index, single-mode vs multimode; sources LED/laser; TIR condition $\sin\theta_c = n_2/n_1$ for $n_1 &gt; n_2$). Rule of thumb: bandwidth × distance crowns fibre, price crowns twisted pair, legacy plants keep coax alive.</p>
-<h3>2.2 Unguided menu</h3>
-<p>Radio ($3$ kHz–$1$ GHz: omnidirectional, walls pass), microwave ($1$–$300$ GHz: line-of-sight, dishes, rain fade), satellite (geostationary $35{,}800$ km: $\approx 240$ ms round-trip floor, broadcast one-to-many), infrared (short, wall-blocked — remote controls, not backbones). Propagation delay $= d/v$ with $v \approx 2.4 \times 10^8$ m/s in cable, $c$ in air.</p>
+<h3>3.2 Unguided Menu</h3>
+<p>Radio ($3$ kHz–$1$ GHz: omnidirectional, walls pass), microwave ($1$–$300$ GHz: line-of-sight, dishes, rain fade), satellite (geostationary $35{,}800$ km: $\approx 240$ ms ground–satellite–ground floor, broadcast one-to-many), infrared (short, wall-blocked — remote controls, not backbones). Propagation delay $= d/v$ with $v \approx 2.4 \times 10^8$ m/s in cable, $c$ in air.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Media</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Twist cancels crosstalk · coax shields · TIR needs $\sin\theta_c = n_2/n_1$ · radio passes walls, microwave needs sightlines, GEO $\approx 240$ ms floor · delay $= d/v$.</p>
-</div></details><p>Satellite delay is geometry, not congestion: $2 \times 35{,}800$ km at $c$ is $\approx 240$ ms before a single queue is met — latency budgets must swallow it whole.</p>
+</div></details><p>Satellite delay is geometry, not congestion: one ground–satellite–ground leg spans $2 \times 35{,}800$ km at $c$, i.e. $\approx 240$ ms, before a single queue is met — a full request-plus-reply doubles it to $\approx 480$ ms. Latency budgets must swallow it whole.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Bandwidth vs Propagation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Fibre&#39;s &quot;speed&quot; is bandwidth (bits/s), not shorter delay — light in glass ($2.4 \times 10^8$) is <em>slower</em> than radio in air ($c$). An option claiming fibre &quot;reduces propagation delay&quot; confuses fat pipes with fast trips.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-guided-menu-unguided-menu-delay-math">← 3. Purpose — Guided Menu, Unguided…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>1 km of cable at $v = 2.4 \times 10^8$ m/s: delay $= 1000 / 2.4 \times 10^8 \approx 4.17\ \mu$s. Same kilometre by radio at $c$: $\approx 3.33\ \mu$s — air wins the race while glass wins the bandwidth crown. Fat vs. fast, separated in two lines.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>(a) Fibre core $n_1 = 1.48$, cladding $n_2 = 1.46$: critical angle? (b) $2500$-km fibre run at $v = 2.4 \times 10^8$ m/s: one-way propagation delay?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Angle and Delay</div><div class="step-content"><p>(a) $\sin\theta_c = 1.46/1.48 \approx 0.98649$. Since $\sin 80° \approx 0.9848$ and $\sin 81° \approx 0.9877$, $\theta_c \approx 80.6°$ — rays steeper than this from the wall-normal stay trapped. (b) $d = 2.5 \times 10^6$ m; delay $= 2.5 \times 10^6 / 2.4 \times 10^8 \approx 0.01042$ s $\approx 10.42$ ms. Same run by GEO satellite: $\approx 240$ ms — $23\times$ worse before queueing starts.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$\theta_c \approx 80.6°$, fibre delay $\approx 10.42$ ms vs satellite $\approx 240$ ms. Two numbers that jointly explain the backbone: glass traps light cheaply, and geometry taxes satellites unavoidably.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bandwidth vs. propagation delay</td>
+<td>Bits/s (fatness) vs. seconds (trip time) — fibre wins the first, air wins the second.</td>
+</tr>
+<tr>
+<td>TIR direction</td>
+<td>Dense→rare past $\theta_c$ traps; rare→dense always refracts inward, never trapped.</td>
+</tr>
+<tr>
+<td>Radio vs. microwave vs. satellite</td>
+<td>Wall-passing broadcast vs. sightline dishes vs. $\approx 240$ ms geometry floor.</td>
+</tr>
+<tr>
+<td>Single-mode vs. multimode</td>
+<td>One path (longest reach) vs. many paths (modal spread, shorter reach).</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) &quot;Fibre is faster&quot; without saying <em>what</em> is faster — bandwidth, not delay. (2) TIR from the rare side — direction matters. (3) Treating satellite delay as fixable congestion — geometry invoices first.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Guided: twisted pair (cheap, ~100 m, twist cancels crosstalk), coax (shielded, legacy), fibre (TIR $\sin\theta_c=n_2/n_1$, single-mode farthest). Unguided: radio (passing), microwave (sightlines), GEO satellite ($\approx 240$ ms one ground–sat–ground leg, $\approx 480$ ms round trip), infrared (short). Delay $= d/v$; never confuse with bandwidth.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Which medium for a 2 km lightning-prone 10 Gbps link, and why two reasons? Derive the 240 ms floor. When does TIR fail? Which is &quot;faster&quot; — fibre or radio — and in what sense?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Selection Drill</span>
@@ -539,7 +617,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_05_transmission_media_guided_unguided";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

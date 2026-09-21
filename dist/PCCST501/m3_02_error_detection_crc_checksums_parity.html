@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,48 +297,89 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Error Detection: Parity, Checksums &amp; CRC</h1>
 <p><strong>Single/2D parity limits, Internet checksum reuse, polynomial CRC division with a hand-worked trace, and what each method can and cannot catch.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Noise flips bits on every real link. The receiver must answer one question per frame — &quot;did this arrive intact?&quot; — without seeing the original. The trick: the sender tapes a small computed <strong>tally</strong> to the data; the receiver recomputes and compares. Mismatch means corruption; match (almost surely) means intact.</p>
+<p>The problem before the solution: tallies differ in strength and cost. A 1-bit tally is cheap but blind to paired errors; a polynomial remainder costs shift-register hardware but catches bursts. This note climbs the ladder — parity, checksum, CRC (Cyclic Redundancy Check) — naming exactly what each misses.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Cashier&#39;s Tally</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A cashier counting a stack of bills announces the total alongside the stack — the customer recounts, and a mismatch means <em>something</em> went wrong (though not <em>which</em> bill). Error detection is that tally taped to the data: a few redundant bits, computed by the sender and rechecked by the receiver. Stronger tallies (CRC) catch sneakier damage; no tally <em>fixes</em> anything — detection asks for retransmission, correction needs far heavier codes (beyond this module&#39;s scope, used on Wi-Fi/physical layers).</p>
-</div></details><hr>
+<p>Dropping the cashier now: parity = 1-bit odd/even tally; checksum = 1s-complement word sum; CRC = polynomial remainder in GF(2) (Galois Field of 2 elements — XOR arithmetic); all three detect, none corrects.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-the-ladder-strongest-last">3. Purpose — The Ladder, Strongest… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Parity bit</strong></td>
+<td>One redundant bit making the total 1-count even (even parity) — catches any odd number of flips, blind to even counts.</td>
+</tr>
+<tr>
+<td><strong>2D (two-dimensional) parity</strong></td>
+<td>Parity per row <em>and</em> per column of a data block — catches 1–3 bit errors and most bursts; misses even-per-row-and-column patterns (the 4-bit rectangle).</td>
+</tr>
+<tr>
+<td><strong>Internet checksum</strong></td>
+<td>1s-complement sum of 16-bit words (M2.2&#39;s algorithm reused) — cheap, software-friendly; blind to word swaps and cancelling patterns.</td>
+</tr>
+<tr>
+<td><strong>CRC (Cyclic Redundancy Check)</strong></td>
+<td>$r$-bit remainder of polynomial division by an $(r+1)$-bit generator $G$, all arithmetic in GF(2) (XOR, no carries).</td>
+</tr>
+<tr>
+<td><strong>GF(2) (Galois Field with 2 elements)</strong></td>
+<td>Bit arithmetic where addition = subtraction = XOR and there are no carries.</td>
+</tr>
+<tr>
+<td><strong>Burst error</strong></td>
+<td>A run of consecutively corrupted bits — the damage mode CRC is built to catch.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Parity: 1D Catches Odd, 2D Catches Bursts (Mostly)</h3>
+<h2 id="3-purpose-the-ladder-strongest-last">3. Purpose — The Ladder, Strongest Last</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Parity: 1D Catches Odd, 2D Catches Bursts (Mostly)</h3>
 <ul>
 <li><strong>Single parity bit:</strong> even parity makes the total 1-count even. Catches any <strong>odd</strong> number of bit errors; <strong>blind to even</strong> flips (two errors cancel). Overhead: 1 bit per byte/word.</li>
 <li><strong>2D parity:</strong> arrange data in rows/columns, add a parity bit per row <em>and</em> per column. Catches all 1-, 2-, and 3-bit errors and <em>most</em> bursts; a 4-bit rectangle of errors (even per row <em>and</em> column) slips through — the classic counterexample to memorize.</li>
 </ul>
-<h3>2.2 Internet Checksum (Module 2 Reused)</h3>
+<h3>3.2 Internet Checksum (Module 2 Reused)</h3>
 <p>1s-complement sum of 16-bit words + pseudoheader; receiver expects all-1s. Lightweight, software-friendly — and weak: swapped 16-bit words produce the <em>identical</em> sum (reordering invisible), and many multi-bit patterns cancel.</p>
-<h3>2.3 CRC: Polynomial Division in Hardware</h3>
-<p>Treat bits as coefficients of a binary polynomial (all arithmetic mod 2 = XOR, no carries). With an $r+1$-bit <strong>generator</strong> $G$:</p>
+<h3>3.3 Operation Flow: CRC — Polynomial Division in Hardware, Step by Step</h3>
+<p>Treat bits as coefficients of a binary polynomial (all arithmetic mod 2 = XOR, no carries). With an $r+1$-bit <strong>generator</strong> $G$ (symbols: $D$ = data bits, $r$ = CRC length, $R$ = remainder):</p>
 <ol>
 <li>Append $r$ zero bits to data $D$.</li>
-<li>Divide by $G$ (XOR long division); the $r$-bit <strong>remainder</strong> $R$ is the CRC.</li>
+<li>Divide by $G$ (XOR long division, aligning $G$ under each leading 1); the $r$-bit <strong>remainder</strong> $R$ is the CRC.</li>
 <li>Transmit $\langle D, R \rangle$. Receiver divides the whole thing by $G$: remainder <strong>zero</strong> = intact.</li>
-<li>Power: catches <strong>all single-bit errors</strong>, all <strong>odd-count</strong> errors (if $G$ has an $(x+1)$ factor, as standard generators do), all bursts shorter than $r+1$ bits, and all but a $2^{-r}$ fraction of longer bursts.</li>
+<li>Power: catches <strong>all single-bit errors</strong>, all <strong>odd-count</strong> errors (standard generators include an $(x+1)$ factor, which is exactly the condition that guarantees odd-count detection), all bursts shorter than $r+1$ bits, and all but a $2^{-r}$ fraction of longer bursts.</li>
 </ol>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Detection Ladder</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Parity: odd-count only · 2D parity: +bursts except even-rectangles · checksum: cheap, blind to word swaps · <strong>CRC</strong>: single + odd + bursts $&lt; r+1$, misses only $2^{-r}$ of longer ones. Exam numerical = CRC division (below) or &quot;which errors escape 2D parity&quot; (the 4-bit rectangle).</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Detection ≠ Correction (and Remainder ≠ Error Location)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A failed check says <em>corrupt</em>, never <em>where</em> — none of these codes locate or fix bits (that needs Hamming/Reed-Solomon territory). And CRC&#39;s zero-remainder verdict is probabilistic armor ($2^{-r}$ leak), not a proof of intactness.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-the-ladder-strongest-last">← 3. Purpose — The Ladder, Strongest…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Data <code>101</code>, generator <code>11</code> ($r = 1$). Append one zero → <code>1010</code>. XOR-divide: <code>1010</code> vs <code>11</code> aligned left → <code>01</code> remainder... worked bitwise: <code>10</code> XOR <code>11</code> = <code>01</code>, bring down <code>1</code> → <code>011</code>, align <code>11</code> under leading 1 → <code>00</code>, bring down <code>0</code> → <code>00</code>. Remainder <code>0</code>. Transmit <code>1010</code>; receiver divides → <code>0000</code>, accept. One division, four XORs — the real thing is longer, not different.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Data $D = 1010001101$ (10 bits), generator $G = 110101$ ($r = 5$). Compute the CRC, form the transmitted codeword, and verify it at the receiver.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Dividing (XOR, No Carries)</div><div class="step-content"><p>Append five zeros: <code>101000110100000</code>. Successive 6-bit alignments against $G = 110101$:</p>
 <p><code>101000</code> → <code>011101</code> → <code>111011</code> → <code>001110</code> → <code>111010</code> → <code>001111</code> → <code>111110</code> → <code>001011</code> → <code>101100</code> → <code>011001</code> → <code>110010</code> → <code>000111</code></p>
@@ -359,10 +404,39 @@
     <p class="video-caption"><strong>Key Insight:</strong> Six Alignments to 01110</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch each 6-bit window XOR against the generator in turn — alignments appearing in division order until the 5-bit remainder stands alone, then the receiver&#39;s all-zero verdict.</div>
   </div>
-</div><hr>
+</div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Parity vs. 2D parity</td>
+<td>Odd-only vs. +bursts except the even rectangle.</td>
+</tr>
+<tr>
+<td>Checksum vs. CRC</td>
+<td>Word-sum (swap-blind, software-cheap) vs. polynomial remainder (burst-proof, shift-register hardware).</td>
+</tr>
+<tr>
+<td>Detection vs. correction</td>
+<td>Says corrupt (retransmit) vs. locates + fixes (Hamming and beyond).</td>
+</tr>
+<tr>
+<td>Remainder zero vs. proof</td>
+<td>Overwhelming evidence ($2^{-r}$ leak), not logical certainty.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) &quot;CRC locates the bad bit&quot; — it only convicts. (2) Forgetting the $r$ appended zeros before dividing. (3) Using normal subtraction — GF(2) means XOR, no borrows.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Ladder: single parity (odd-only) → 2D parity (fails even rectangles) → checksum (swap-blind) → CRC (single + odd + bursts $&lt; r+1$, $2^{-r}$ leak). CRC recipe: append $r$ zeros, XOR-divide by $G$, transmit $\langle D,R\rangle$, receiver expects zero. Detection never locates; failures mean discard + retransmit.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Which 4-bit pattern defeats 2D parity? Why are swapped words checksum-invisible? Recite the four CRC steps. What does a nonzero remainder license?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Two bits flip in a byte protected by a single even-parity bit. What happens, and why is 2D parity better here?</span>
@@ -396,7 +470,7 @@
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Exactly which bit flipped — flip it back and accept</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>The frame is corrupt (detection only); discard it and rely on retransmission (link ARQ or TCP) — location and repair are beyond CRC</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The frame is corrupt (detection only); discard it and rely on retransmission (link ARQ — Automatic Repeat reQuest — or TCP) — location and repair are beyond CRC</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>The generator polynomial was wrong — renegotiate it</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Nonzero remainders are normal; accept anyway</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -547,7 +621,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m3_02_error_detection_crc_checksums_parity";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

@@ -7,7 +7,7 @@
  * prerequisite-blocked topics, completed prerequisites, assessment-passed
  * topics, assessment-needs-review topics, review-due/overdue topics,
  * exam-relevant topics, mixed evidence, all-completed learner, repeated
- * identical inputs, and the full live repository (432 topics, 502
+ * identical inputs, and the full live repository (435 topics, 508
  * questions). Also proves the critical invariants: exactly one canonical
  * next-topic mechanism, no second engine, no ratings, no AI/ML.
  *
@@ -389,19 +389,19 @@ describe('Study Context wiring', () => {
   });
 });
 
-describe('live 432-topic repository with 502 questions', () => {
+describe('live 435-topic repository with 508 questions', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
   const liveBank = JSON.parse(fs.readFileSync('data/assessments.json', 'utf-8'));
 
-  it('partitions all 432 topics and builds every view deterministically', () => {
-    assert.equal(manifest.topics.length, 432);
-    assert.equal(liveBank.questions.length, 502);
+  it('partitions all 435 topics and builds every view deterministically', () => {
+    assert.equal(manifest.topics.length, 435);
+    assert.equal(liveBank.questions.length, 508);
     const breakdown = Adaptive.getProgressionBreakdown(manifest, none);
     assert.equal(
       breakdown.counts.completed + breakdown.counts.available + breakdown.counts.blocked + breakdown.counts.future,
-      432
+      435
     );
     // Fresh learner: roots available, everything else future (nothing underway).
     assert.equal(breakdown.counts.completed, 0);
@@ -409,13 +409,13 @@ describe('live 432-topic repository with 502 questions', () => {
     assert.ok(breakdown.counts.available > 0);
     assert.ok(breakdown.counts.future > 0);
     const difficulty = Adaptive.getDifficultyProgression(manifest, none);
-    assert.equal(difficulty.reduce((a, r) => a + r.total, 0), 432);
+    assert.equal(difficulty.reduce((a, r) => a + r.total, 0), 435);
     const model = Adaptive.buildAdaptiveModel(manifest, none, {
       now: NOW, assessment: { bank: liveBank, attempts: emptyStore() },
     });
     assert.ok(model.next.topic !== null);
     assert.ok(model.strengthen.length > 0);
-    assert.equal(model.exam.totalExamTopics, 432);
+    assert.equal(model.exam.totalExamTopics, 435);
     assert.equal(
       JSON.stringify(Adaptive.buildAdaptiveModel(manifest, none, { now: NOW })),
       JSON.stringify(Adaptive.buildAdaptiveModel(manifest, none, { now: NOW }))

@@ -5,11 +5,12 @@ module: 4
 sequence: 6
 title: 'Bandwidth Utilization: Multiplexing & Spread Spectrum'
 difficulty: beginner
-estimatedMinutes: 4
+estimatedMinutes: 9
 learningObjectives:
   - Price FDM guards and TDM framing overhead by hand
   - Separate port sharing from slice sharing across layers
   - Trade spreading bandwidth for graceful degradation
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - FDM/TDM/WDM
   - spread spectrum
@@ -25,24 +26,41 @@ tags:
 **Sharing one fat link — FDM slices frequency, TDM slices time, WDM slices light, spread spectrum hides in plain sight, all priced by hand.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+One expensive long-distance link, many customers. Giving each a private wire wastes fortunes; letting them collide wastes the link. The middle path: **divide** the link's capacity into shares (by frequency, time, or wavelength) — or **spread** every signal across the whole band in private codes so sharing degrades gracefully instead of blocking.
+
+The problem before the solution: share one wire's bandwidth among many signals with minimum overhead — and know the price of each sharing style (guard bands, framing bits, idle-slice waste) plus the alternative that skips reservation entirely.
 
 ::: callout-intuition Core Mental Model: Apartment Sharing
-One link, many tenants. **FDM** gives each tenant fixed rooms (frequency bands + guard walls). **TDM** gives the whole apartment in time shifts (slots in repeating frames). **WDM** is FDM with lasers (colours down one fibre). **Spread spectrum** skips walls entirely — everyone whispers across the whole apartment in private codes (FHSS hops, DSSS chips), collisions becoming background hiss.
+One link, many tenants. **FDM (Frequency Division Multiplexing)** gives each tenant fixed rooms (frequency bands + guard walls). **TDM (Time Division Multiplexing)** gives the whole apartment in time shifts (slots in repeating frames). **WDM (Wavelength Division Multiplexing)** is FDM with lasers (colours down one fibre). **Spread spectrum** skips walls entirely — everyone whispers across the whole apartment in private codes (FHSS — Frequency-Hopping Spread Spectrum — hops, DSSS — Direct-Sequence Spread Spectrum — chips), collisions becoming background hiss.
+
+Dropping the apartment now: guard band = unused fence between FDM channels; framing bit = TDM sync overhead; chip = one DSSS code unit; processing gain = chips per bit.
 :::
 
 Transport "multiplexing" (M2.1's ports) shares *endpoints*; this topic shares the *wire* — same word, different layer, classic exam trap.
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **FDM (Frequency Division Multiplexing)** | Split the band into channels + guard bands (analog heritage: $n$ channels need $n-1$ internal guards). |
+| **TDM (Time Division Multiplexing)** | Split time into repeating frames of slots + framing bits (digital; synchronous = fixed assignment, statistical = dynamic with per-slot addressing overhead). |
+| **WDM (Wavelength Division Multiplexing)** | Many wavelengths (colours) down one fibre — FDM at light, the backbone multiplier. |
+| **FHSS (Frequency-Hopping Spread Spectrum)** | Hop the carrier across frequencies (Bluetooth-style, jam-resistant). |
+| **DSSS (Direct-Sequence Spread Spectrum)** | Multiply each bit by a chip code (CDMA-style); processing gain $=$ chip-rate ÷ bit-rate. |
+| **Guard band** | Unused fence frequency between adjacent FDM bands — pure overhead. |
+| **Processing gain** | Chips per bit (e.g. $11$ → $\approx 10.4$ dB of jam resistance). |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Slicers, Spreaders, Overhead Math
 
-### 2.1 The three slicers
+### 3.1 The Three Slicers
 
 FDM: band split + guard bands (analog heritage: $n$ channels need $n - 1$ internal guards); TDM: synchronous slots per frame plus framing bits (digital; rate $=$ sources × slot-rate × frame-overhead factor); WDM: many wavelengths, one fibre (backbone multiplier). All three waste what they reserve: idle tenants still own their slice.
 
-### 2.2 Spread spectrum
+### 3.2 Spread Spectrum
 
 FHSS hops carrier across frequencies (Bluetooth-style, jam-resistant); DSSS multiplies each bit by a chip code (CDMA-style, processing gain $=$ chip-rate/bit-rate). Sharing by code, not by reservation — graceful degradation instead of hard blocking.
 
@@ -56,10 +74,14 @@ Statistical TDM (dynamic slot assignment) recovers idle-slice waste at the cost 
 M2.1 multiplexing = many sockets, one host (transport demultiplexing by port number). FDM/TDM multiplexing = many signals, one link (physical sharing by band/slot). An option routing "port numbers" into a TDM frame mixes layers two apart.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+FDM: 2 voice channels of 4 kHz, 1 kHz guard between them: total $= 2 \times 4 + 1 \times 1 = 9$ kHz (one internal fence — $n - 1 = 1$). TDM: 2 sources, 4-bit slots, 1 framing bit per frame: frame $= 9$ bits carrying 8 data → line runs $9/8$ hotter than payload.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
 (a) FDM: $3$ voice channels of $4$ kHz with $1$ kHz guards between adjacent bands — total bandwidth? (b) TDM: $4$ sources at $2$ Mbps, $8$-bit slots plus $1$ framing bit per frame — line rate?
@@ -73,10 +95,26 @@ M2.1 multiplexing = many sockets, one host (transport demultiplexing by port num
 $14$ kHz FDM ($14.3\%$ guard tax), $8.25$ Mbps TDM ($3.03\%$ framing tax). Overhead itemized per technique — guards for frequency, framing bits for time — and both taxes shrink as payload blocks grow.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| FDM vs. TDM vs. WDM | Slice frequency (+guards) vs. slice time (+framing) vs. slice light (colours). |
+| Sync vs. statistical TDM | Fixed slots (idle waste) vs. dynamic slots (+addressing overhead). |
+| Reservation vs. spread spectrum | Own-a-slice (hard blocking when full) vs. share-by-code (graceful degradation). |
+| Port multiplexing vs. link multiplexing | Transport endpoints (M2.1) vs. physical wire (this note). |
+
+**Watch out:** (1) Counting $n$ guards for $n$ bands — fenceposts need $n-1$. (2) Inverting the TDM ratio — line runs *hotter* than payload (multiply by frame/data $> 1$). (3) Routing port numbers into TDM frames — two layers apart.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+FDM = bands + $(n-1)$ guards; TDM = slots + framing bits (line = payload × frame/data); WDM = colours on fibre. Statistical TDM trades addressing overhead for idle recovery. Spread: FHSS hops, DSSS chips (gain = chips/bit, $\approx 10\log_{10}$ dB). Reservation blocks; codes degrade gracefully.
+:::
+
+**Active-recall checklist:** How many guards for 5 bands? Which way does the TDM ratio point? What does processing gain buy? When does statistical TDM win?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Q1: Guard Arithmetic
 $5$ channels, $10$ kHz each, $2$ kHz adjacent guards. Total?

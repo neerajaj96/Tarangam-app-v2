@@ -269,54 +269,75 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#terminology" class="jump-pill">📖 Terms</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>Passive RL: Direct Utility, ADP &amp; Temporal Differences</h1>
-<p><strong>Grading a fixed policy three ways — naive averaging, model-based dynamic programming, and the model-free TD update that powers modern RL.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-the-critic-who-never-coaches">1. The Critic Who Never Coaches</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-three-estimators-one-target">2. Three Estimators, One Target →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Sports Commentator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A <strong>passive learner</strong> is a commentator, not a coach: it watches a fixed game plan unfold and grades <em>how good that plan is</em> — never suggesting better plays. Three commentators differ in method: the <strong>naive averager</strong> replays whole seasons and averages final scores per situation; the <strong>model builder (ADP)</strong> first learns the stadium physics (transition odds), then solves the season on paper; the <strong>TD critic</strong> updates its grade <em>mid-game</em>, nudging each situation&#39;s score toward the next situation&#39;s score plus the points just earned.</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-three-estimators-one-target">2. Three Estimators, One Target</h2>
-<p class="secnav"><a href="#1-the-critic-who-never-coaches">← 1. The Critic Who Never Coaches</a><span class="secnav-sep">·</span><a href="#3-bootstrapping-bias-and-step-sizes">3. Bootstrapping, Bias, and Step S… →</a></p>
-<p>All three estimate $U^\pi(s)$ — expected discounted return following fixed $\pi$ — from experience trials $(s_0, r_1, s_1, r_2, \dots)$:</p>
+<p><strong>Problem: a fixed policy is running — how good is it, without a model and without waiting forever? By the end you can run direct averaging, Adaptive Dynamic Programming (ADP), and Temporal-Difference (TD) updates by hand and state exactly which bootstrap.</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-the-critic-who-never-coaches">1. Start From Zero: The Critic Who Never Coaches</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-three-estimators-one-target">2. Basic Layer: Three Estimators, … →</a></p>
+<p>A sports commentator grades a fixed game plan without suggesting better plays. Three commentators differ: the <strong>naive averager</strong> replays whole seasons and averages final scores per situation; the <strong>model builder (ADP)</strong> learns stadium physics (transition odds) then solves the season on paper; the <strong>TD critic</strong> nudges each situation&#39;s score toward the next situation&#39;s score plus points just earned — mid-game, every step.</p>
+<p><strong>Definitions:</strong> all three estimate <code>U^pi(s)</code> (expected discounted return following fixed policy pi from state s) from trials <code>(s0, r1, s1, r2, ...)</code>. <strong>Bootstrapping</strong> means updating an estimate from another (possibly wrong) estimate. <strong>TD error</strong> is the surprise signal (actual one-step return minus current estimate).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Sports Commentator</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;grade, don&#39;t coach&quot; here, then drop the booth; the three updates below are the technical content.</p>
+</div></details><p><strong>Tiny beginner example:</strong> policy always moves right; from A the agent banks rewards-to-go of 10, then 6, then 8. Direct estimation averages to 8. TD instead corrects per step toward <code>r + gamma U(next)</code> — online, no episode wait.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-layer-three-estimators-one-target">2. Basic Layer: Three Estimators, One Target</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-critic-who-never-coaches">← 1. Start From Zero: The Critic Who…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-bootstrapping-bias-step-sizes">3. Formal Layer: Bootstrapping, Bi… →</a></p>
+<p><strong>Data/state:</strong> experience trials under fixed pi. <strong>Goal:</strong> <code>U^pi</code> per state.</p>
 <ul>
-<li><strong>Direct utility estimation:</strong> for each visit to $s$, record the <em>rewards-to-go</em> ($\sum \gamma^t r$ from there on); average over visits. Model-free and dead simple — but it <strong>ignores Bellman constraints</strong> between states (each state&#39;s estimate learns in isolation, wasting the fact that neighbors constrain each other), so convergence is slow.</li>
-<li><strong>Adaptive dynamic programming (ADP):</strong> count transitions to learn $\hat{P}(s&#39;|s,a) = N(s,a,s&#39;)/N(s,a)$, learn $\hat{R}$, then <em>solve</em> the Bellman equations (value/policy iteration on the learned model). Data-efficient, constraint-respecting — but <strong>model-based</strong>: solving at every step is expensive, and early garbage models give garbage utilities.</li>
-<li><strong>Temporal-difference (TD) learning:</strong> the sweet spot — <strong>model-free</strong> like direct estimation, <strong>Bellman-respecting</strong> like ADP. After each transition $s \xrightarrow{r} s&#39;$:
-$$U(s) \leftarrow U(s) + \alpha,[,r + \gamma,U(s&#39;) - U(s),]$$
-The bracketed <strong>TD error</strong> is the surprise: positive when reality beat the estimate. No model, no waiting for episode end — learn <em>online</em>, every step.</li>
+<li><strong>Direct utility estimation:</strong> per visit to s, record rewards-to-go (discounted sum from there on); average over visits. Model-free and simple — but ignores Bellman constraints between neighbours (each state learns in isolation), so convergence is slow and data-hungry.</li>
+<li><strong>ADP:</strong> count transitions to learn the model <code>P-hat(s&#39;|s,a) = N(s,a,s&#39;)/N(s,a)</code> (observed fraction) plus rewards, then solve Bellman equations (value/policy iteration on the learned model). Data-efficient and constraint-respecting — but model-based: solving each step is expensive and early garbage models give garbage utilities.</li>
+<li><strong>TD learning:</strong> the sweet spot — model-free like direct, Bellman-respecting like ADP. After each transition <code>s --r--&gt; s&#39;</code>:</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Three Updates Side by Side</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Direct: average full returns per state (ignores neighbors). ADP: learn $\hat{T},\hat{R}$, then iterate $U(s) \leftarrow R(s) + \gamma\sum_{s&#39;}\hat{P},U(s&#39;)$ to convergence. TD(0): $U(s) \leftarrow U(s) + \alpha,[r + \gamma U(s&#39;) − U(s)]$ — one sample, one backup, zero model. Exam shorthand: <em>&quot;TD bootstraps (learns a guess from a guess); direct estimation doesn&#39;t.&quot;</em></p>
-</div></details><hr>
-<p><a id="terminology"></a></p>
-<h2 id="3-bootstrapping-bias-and-step-sizes">3. Bootstrapping, Bias, and Step Sizes</h2>
-<p class="secnav"><a href="#2-three-estimators-one-target">← 2. Three Estimators, One Target</a><span class="secnav-sep">·</span><a href="#4-one-td-update-by-hand">4. One TD Update by Hand →</a></p>
-<p><strong>Bootstrapping</strong> = updating an estimate from <em>another estimate</em> (TD uses $U(s&#39;)$; ADP uses solved values; direct estimation alone does not bootstrap). Bootstrapping injects <strong>bias</strong> early (wrong neighbors mislead) but slashes <strong>variance</strong> (one transition vs. whole-trajectory noise) — the bias-variance trade that makes TD win in practice. The learning rate $\alpha$ must <strong>decay</strong> ($\sum \alpha = \infty$, $\sum \alpha^2 &lt; \infty$, e.g. $\alpha = 1/t$) so updates settle rather than oscillate forever.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: TD Converges to the Truth Only Under Visitation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TD(0) converges to $U^\pi$ <em>if every state is visited infinitely often</em> under $\pi$ — a quiet assumption exams probe. A policy that never visits the east wing teaches nothing about it, however perfect the update rule. Coverage of experience, not cleverness of updates, is the binding constraint.</p>
-</div></details><hr>
+<p>$$U(s) \leftarrow U(s) + \alpha,[,r + \gamma,U(s&#39;) - U(s),]$$</p>
+<p>Symbol by symbol: <code>alpha</code> = learning rate (step size, must decay — below); <code>r</code> = reward just received; <code>gamma U(s&#39;)</code> = discounted next estimate; minus <code>U(s)</code> = surprise (TD error <code>delta</code>); add <code>alpha*delta</code> to the old estimate. No model, no episode wait — learn online every step.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Core: The Three Updates Side by Side</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Direct: average full returns (no bootstrap). ADP: learn model, iterate <code>U &lt;- R + gamma sum P-hat U</code> to convergence (bootstraps via solved values). TD(0): single-sample backup above (bootstraps via U(s&#39;)). Exam shorthand: TD bootstraps (guess from guess); direct does not.</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-layer-bootstrapping-bias-step-sizes">3. Formal Layer: Bootstrapping, Bias, Step Sizes</h2>
+<p class="secnav"><a href="#2-basic-layer-three-estimators-one-target">← 2. Basic Layer: Three Estimators, …</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Meaning, variables, trade:</strong> bootstrapping injects <strong>bias</strong> early (wrong neighbours mislead) but slashes <strong>variance</strong> (one transition vs. whole-trajectory noise) — the bias-variance trade making TD win in practice. Only direct estimation avoids bootstrapping; ADP and TD both bootstrap (solved values and single-sample targets respectively).</p>
+<p><strong>Step-size contract (qualified convergence):</strong> rate <code>alpha</code> must decay with <code>sum alpha = infinity</code> (keep moving) and <code>sum alpha^2 &lt; infinity</code> (dwindling energy), e.g. <code>alpha = 1/t</code> — the stochastic-approximation conditions. Fixed alpha jitters forever around truth without landing. <strong>Visitation contract:</strong> TD(0) converges to <code>U^pi</code> only if every state is visited infinitely often under pi — an unvisited east wing teaches nothing however perfect the rule.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: TD Converges to the Truth Only Under Visitation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Coverage of experience, not cleverness of updates, binds. Exams probe this quiet assumption: infinite visitation plus decaying alpha, or no convergence certificate.</p>
+</div></details><p><strong>One TD update by hand:</strong> U(A) = 4.6, U(B) = 0; transition A with r = 1 lands B; alpha 0.5, gamma 0.9. Error <code>delta = 1 + 0.9x0 - 4.6 = -3.6</code> (reality undershot). Update: <code>U(A) &lt;- 4.6 + 0.5(-3.6) = 2.8</code>. One step dragged the estimate from 4.6 past truth (~3.57) to 2.8 — overshoot that later visits with decaying alpha sand back up. That per-transition correction rhythm is TD.</p>
 <p><a id="worked-example"></a></p>
-<h2 id="4-one-td-update-by-hand">4. One TD Update by Hand</h2>
-<p class="secnav"><a href="#3-bootstrapping-bias-and-step-sizes">← 3. Bootstrapping, Bias, and Step S…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
-<p>Estimates: $U(A) = 4.6$, $U(B) = 0$. Experience: agent in $A$ receives $r = 1$ and lands in $B$. Parameters $\alpha = 0.5$, $\gamma = 0.9$.</p>
-<p>TD error: $\delta = r + \gamma U(B) - U(A) = 1 + 0.9 \times 0 - 4.6 = -3.6$ (reality undershot the rosy estimate). Update: $U(A) \leftarrow 4.6 + 0.5 \times (-3.6) = 4.6 - 1.8 = 2.8$. One transition dragged the estimate most of the way from 4.6 toward the true $\approx 3.57$ — overshooting slightly below it (2.8 &lt; 3.57), which later visits with decaying $\alpha$ will sand back up. That single-step correction-per-transition rhythm <em>is</em> temporal-difference learning.</p>
-<hr>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-layer-bootstrapping-bias-step-sizes">← 3. Formal Layer: Bootstrapping, Bi…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Direct vs. TD vs. ADP</td>
+<td>Average returns (no bootstrap, slowest) vs. per-step bootstrap (online sweet spot) vs. learn-model-then-solve (most per-sample mileage, most compute)</td>
+</tr>
+<tr>
+<td>Bias vs. variance here</td>
+<td>Bootstrapped neighbours mislead early (bias) but single steps are steady (low variance)</td>
+</tr>
+<tr>
+<td>Value-iteration backup vs. TD update</td>
+<td>Full expectation over dynamics (needs model) vs. single-sample correction (model-free)</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) ADP&#39;s early utilities inherit early model errors. (2) Direct estimation wastes neighbour constraints — same trials, least mileage. (3) Fixed alpha never settles; state the decay pair of sums.</p>
+<p><strong>Limitations:</strong> all three grade only the behaviour policy (no improvement); need coverage (unvisited states unknown); linear-model solving (ADP) scales poorly; TD needs the decay schedule tuned.</p>
 <p><a id="self-check"></a></p>
 <h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-one-td-update-by-hand">← 4. One TD Update by Hand</a><span class="secnav-sep">·</span><a href="#6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A →</a></p>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What exactly is bootstrapping, and which passive methods do it?</span>
@@ -339,7 +360,7 @@ The bracketed <strong>TD error</strong> is the surprise: positive when reality b
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Bootstrapping = &quot;a guess built on a guess&quot;: TD&#39;s $U(s&#39;)$ and ADP&#39;s solved values are themselves estimates. Direct averaging waits for <em>actual</em> full returns — unbiased but high-variance and slow. The bias-for-variance trade is why TD dominates practice.</p><pre><code>&lt;/div&gt;
+      <p>Bootstrapping is a guess built on a guess: TD&#39;s U(s&#39;) and ADP&#39;s solved values are estimates. Direct averaging waits for actual full returns — unbiased but slow.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -364,7 +385,7 @@ The bracketed <strong>TD error</strong> is the surprise: positive when reality b
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Neighbors&#39; utilities <em>must</em> satisfy Bellman relations; direct estimation ignores them, relearning from scratch per state what the equations give for free. ADP and TD both enforce consistency — via a solved model or per-step backups — and converge far faster on the same experience.</p><pre><code>&lt;/div&gt;
+      <p>Neighbours must satisfy Bellman relations; direct estimation relearns per state what the equations give free. ADP and TD enforce consistency via models or per-step backups.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -389,24 +410,21 @@ The bracketed <strong>TD error</strong> is the surprise: positive when reality b
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Early: large steps escape bad initial guesses fast. Late: near-truth estimates need whispers, not shoves — $\sum\alpha=\infty$ (keep moving) with $\sum\alpha^2&lt;\infty$ (dwindling step energy) is the classical convergence recipe. Fixed $\alpha$ jitters eternally around $U^\pi$ without landing.</p><pre><code>&lt;/div&gt;
+      <p>Large early steps escape bad guesses; late whispers settle near truth. Sum-alpha-infinite with sum-alpha-squared-finite is the classical landing recipe.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="6-worked-university-exam-q-a">6. Worked University Exam Q&amp;A</h2>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
 <p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> TD update rule, bootstrapping definition, or the three passive methods named with one line each.</li>
-<li><strong>7 Marks:</strong> Numerical TD update, or compare direct/ADP/TD on data efficiency and model dependence.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: State the TD(0) update rule and define the TD error.</strong></p>
-<p><strong>Model Answer:</strong> $U(s) \leftarrow U(s) + \alpha,[r + \gamma U(s&#39;) - U(s)]$. TD error $\delta = r + \gamma U(s&#39;) - U(s)$ = actual one-step return minus current estimate — the surprise signal driving all learning.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: TD rule, bootstrapping definition, or three methods in one line each. 7 marks: numerical TD update or the data-efficiency comparison.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> <code>U &lt;- U + alpha[r + gamma U(s&#39;) - U]</code> with delta named; bootstrap membership (ADP/TD yes, direct no); bias-variance line; decay sums plus infinite-visitation qualification; 4.6-to-2.8 arithmetic.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: State the TD(0) rule and define TD error.</strong></p>
+<p><strong>Model Answer:</strong> U(s) &lt;- U(s) + alpha[r + gamma U(s&#39;) - U(s)]. Delta = r + gamma U(s&#39;) - U(s): actual one-step return minus current estimate — the surprise driving learning.</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: An agent must evaluate a fixed policy from limited trials in a large stochastic world. Compare direct utility estimation, ADP, and TD learning for this task.</strong></p>
-<p><strong>Model Answer:</strong> Direct: model-free, unbiased, but ignores Bellman coupling — needs the most trials. ADP: learns $\hat{T},\hat{R}$ then solves — most data-efficient per trial, but model-solving is costly and early models mislead. TD: model-free single-step backups — best practical trade (low variance, online, bootstrapped), converging under infinite visitation with decaying $\alpha$. Recommendation: TD for large stochastic experience streams.</p>
+<p><strong>Q: Compare direct, ADP, TD on limited trials in a large stochastic world.</strong></p>
+<p><strong>Model Answer:</strong> Direct: model-free, unbiased, ignores coupling — most trials needed. ADP: learns model then solves — most per-trial mileage but costly solving and early-model errors. TD: model-free single-step bootstraps — best practical trade (online, low variance), converging under infinite visitation with decaying alpha.
+:::</p>
 
     </main>
 

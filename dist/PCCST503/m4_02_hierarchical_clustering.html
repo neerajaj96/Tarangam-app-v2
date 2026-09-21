@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,42 +249,100 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Clustering II: Hierarchical Methods</h1>
-<p><strong>Agglomerative merging, single/complete/average linkage, dendrograms, divisive splitting, and choosing cuts vs. choosing k.</strong></p>
+<p><strong>What problem nested grouping solves, what distance data it needs, how agglomerative merging trains a tree, and how linkage bets shape outcomes.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>k-means, the partitional method, demands $K$ before meeting anyone. The problem here: see every granularity at once, then choose $K$ with eyes open.</p>
+<p>Tiny beginner example. Points ${1,2,10}$. Closest pair $1,2$ marry first at distance $1$. The pair then marries $10$ at distance $8$. One run shows $K=2$ (cut between heights $1$ and $8$) and $K=1$ (above $8$). No reruns.</p>
+<p>Analogy as support, then dropped. Family reunion tree uniting closest relatives until one family. From here on we use exact terms only: agglomerative, divisive, linkage, dendrogram.</p>
+<p>Abbreviations defined on first use: no new abbreviations. Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is linkage?</td>
+<td>Rule for distance between groups</td>
+</tr>
+<tr>
+<td>What is height?</td>
+<td>Dissimilarity at which a union happens</td>
+</tr>
+<tr>
+<td>What is a cut?</td>
+<td>Horizontal line reading off $K$ clusters</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Build a nested grouping that postpones $K$.</p>
+<p><strong>Data.</strong> Pairwise distances (here absolute distance in 1D; generally Euclidean or domain dissimilarity). Start from $n$ singletons.</p>
+<p><strong>Goal.</strong> A dendrogram recording each union&#39;s distance, so long vertical gaps mark natural cuts.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Family Reunion Tree</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>k-Means demands you announce the number of families <em>before</em> meeting anyone. <strong>Hierarchical clustering</strong> instead builds the whole family <em>tree</em>: start with every guest alone (<strong>agglomerative</strong>: repeatedly marry the two closest groups) or everybody together (<strong>divisive</strong>: repeatedly split). The result — a <strong>dendrogram</strong> — postpones the $k$ decision until <em>after</em> you see the structure: draw one horizontal cut and read off however many families that height implies. One run, every granularity at once.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Agglomerative Loop and Linkages</h3>
-<p>Start: $n$ singleton clusters. Repeat: merge the closest pair (recompute inter-cluster distances), until one cluster remains. &quot;Closest&quot; is the <strong>linkage</strong> — the entire algorithm&#39;s personality:</p>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (multi-resolution grouping) → data (distances) → goal (informative tree) → method (merge closest) → model (dendrogram) → training (agglomerative loop) → example → limitations.</p>
+<h3>3.1 Agglomerative Loop and Linkages, Step by Step</h3>
+<p>Numbered loop:</p>
+<ol>
+<li>Start with $n$ singleton clusters.</li>
+<li>Compute inter-cluster distances by linkage.</li>
+<li>Merge the closest pair.</li>
+<li>Recompute distances; repeat until one cluster remains.</li>
+</ol>
+<p>Linkage is the personality:</p>
 <ul>
-<li><strong>Single linkage</strong> (nearest pair across clusters): follows chains — finds snaky clusters, but one noisy bridge-point <em>chains</em> distinct blobs together (chaining effect).</li>
-<li><strong>Complete linkage</strong> (farthest pair): demands total cohesion — round tight balls, but shatters elongated truth and cowers before outliers.</li>
-<li><strong>Average/centroid linkage:</strong> middle ground (mean pairwise distance), the pragmatic default.</li>
+<li><strong>Single linkage</strong> (nearest pair across clusters): follows chains. Finds snaky clusters, but one noisy bridge chains distinct blobs together.</li>
+<li><strong>Complete linkage</strong> (farthest pair): demands total cohesion. Round tight balls, but shatters elongated truth and cowers before outliers.</li>
+<li><strong>Average or centroid linkage:</strong> mean pairwise distance, pragmatic middle.</li>
 </ul>
-<h3>2.2 Dendrograms and Divisive Splitting</h3>
-<p>The merge tree records <em>at what distance</em> each union happened — long vertical branches = natural cluster gaps (cut there). <strong>Divisive</strong> (top-down, e.g. DIANA) splits instead of merging: $2^n$ possible splits make naive search hopeless, so practical divisive methods split by heuristic (k-means with $K=2$ recursively) — rarer in exams, reportable in one line.</p>
+<h3>3.2 Dendrograms and Divisive Splitting</h3>
+<p>The merge tree records at what distance each union happened. Long vertical branches mean natural gaps; cut there. <strong>Divisive</strong> top-down (for example DIANA) splits instead: $2^n$ possible splits make naive search hopeless, so practical methods split heuristically (recursive $K=2$ k-means). Rarer in exams; reportable in one line. Cost $O(n^2)$ to $O(n^3)$: no free dendrograms.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Partitional vs hierarchical</td>
+<td>Blind $K$ upfront with reruns vs deferred cut with one multi-resolution run</td>
+</tr>
+<tr>
+<td>Single vs complete</td>
+<td>Chains through bridges vs quarantines them; shape priors opposite</td>
+</tr>
+<tr>
+<td>Agglomerative vs divisive</td>
+<td>Merge-up practical default vs split-down heuristic and rarer</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Hierarchical Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agglomerative: <strong>singletons → merge closest → dendrogram</strong> · linkage: <strong>single</strong> (chains), <strong>complete</strong> (tight balls), <strong>average</strong> (middle) · cut height <strong>chooses k after seeing structure</strong> · divisive = <strong>split down</strong> (heuristic, rarer) · cost <strong>$O(n^2)$–$O(n^3)$</strong> (no free dendrograms).</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Single Linkage Chains Through Noise (Complete Cowers From It)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One stray point bridging two blobs merges them <em>forever</em> under single linkage (chaining) — while complete linkage lets one outlier veto honest merges. Linkage choice <em>is</em> a shape prior: chains vs. balls vs. compromise. There is no neutral linkage, only documented bets.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>1D points ${1, 2, 6, 7}$ with absolute distance. Run single-linkage and complete-linkage agglomeration fully, and state what $k=2$ cut each implies.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Merging Both Ways</div><div class="step-content"><p>Pairwise: $d(1,2)=1$, $d(6,7)=1$, cross-gaps $\ge 4$ ($d(2,6)=4$ smallest cross).
 <strong>Single:</strong> merge ${1,2}$ (gap 1), merge ${6,7}$ (gap 1); cluster distance $= \min$ cross $= d(2,6) = 4$; merge all at height 4. $k=2$ cut (between heights 1 and 4): ${1,2}$, ${6,7}$.
@@ -310,10 +376,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Merge at 1, Then Everything at 4</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch pairs marry at height 1, then the clusters join at 4 — with complete linkage&#39;s 6 and the k = 2 cut riding along as the comparison.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Calling hierarchical k-free. It defers $K$, it does not eliminate it.</li>
+<li>Expecting linkages to agree on noisy sketches. Bridges and outliers separate them by design.</li>
+<li>Reading leaves as $K$. $K$ comes from a horizontal cut, not leaf count.</li>
+<li>Ignoring cost. Dendrograms cost quadratic to cubic; k-means scales better.</li>
+</ul>
+<p>Limitations: linkage is a bet; cuts need human eyes; large $n$ needs approximations.</p>
+<p>Exam recap: singletons merge by linkage; single chains, complete balls, average middle; height is union cost; cut chooses $K$; divisive splits heuristically; partitional contrast is upfront versus deferred $K$.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A single noisy point sits exactly between two dense blobs. Contrast single vs. complete linkage outcomes.</span>
@@ -498,7 +575,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m4_02_hierarchical_clustering";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

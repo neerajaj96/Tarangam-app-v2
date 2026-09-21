@@ -417,13 +417,13 @@ describe('existing consumers keep working', () => {
   });
 });
 
-describe('live 432-topic repository', () => {
+describe('live 435-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('validates empty, legacy, and migrated states at full scale', () => {
-    assert.equal(manifest.topics.length, 432);
+    assert.equal(manifest.topics.length, 435);
     const empty = Schema.validateStoredState(memoryStorage(), manifest);
     assert.equal(empty.kind, 'empty');
     assert.equal(empty.valid, true);
@@ -440,6 +440,6 @@ describe('live 432-topic repository', () => {
     assert.deepEqual(v1['GAMAT301/m1_01_random_variables_pmf_cdf'], { status: 'completed', updatedAt: 1700000000000 });
     const s = createLearnerState({ manifest, storage: legacy });
     assert.equal(s.getOverallProgress().completed, 1);
-    assert.equal(s.getOverallProgress().total, 432);
+    assert.equal(s.getOverallProgress().total, 435);
   });
 });

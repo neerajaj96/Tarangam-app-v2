@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,22 +249,54 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Maximum-Margin Classifiers: SVMs</h1>
-<p><strong>Geometric vs. functional margins, support vectors, the minimum-norm objective, hinge loss, and why only boundary points matter.</strong></p>
+<p><strong>What problem Support Vector Machines (SVMs) solve beyond any separator, what labelled points they need, how margin maximisation trains the widest corridor, and where the theory&#39;s guarantees end.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Many lines separate two villages. Which road best survives future houses near the edge? The widest corridor, equally clear of both sides. Only the corridor walls decide the road; interior villages are irrelevant.</p>
+<p>Tiny beginner example. Plus at $(2,2)$, minus at $(0,0)$. Line $x_1+x_2=3$ separates them. The plus sits exactly on the wall; the minus lounges deep inside safe territory. The plus is a support vector; the minus is a passenger. Move the passenger anywhere deep inside and the road does not budge.</p>
+<p>Analogy as support, then dropped. Surveyor building the widest road. From here on we use exact terms only: functional margin, geometric margin, support vector, hinge loss.</p>
+<p>Abbreviations defined on first use: Support Vector Machines (SVMs). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $\hat{\gamma}_i$?</td>
+<td>Functional margin, scale-dependent score</td>
+</tr>
+<tr>
+<td>What is $\gamma_i$?</td>
+<td>Geometric margin, true distance</td>
+</tr>
+<tr>
+<td>What is $w$, $b$?</td>
+<td>Normal vector and offset of the road</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Among all separators, pick the one tolerating most test-time wobble.</p>
+<p><strong>Data.</strong> Labelled pairs $(x_i,y_i)$ with $y_i\in{+1,-1}$. Here $x_i$ is position, $y_i$ is village.</p>
+<p><strong>Goal.</strong> Maximise the geometric margin. For separator $w^Tx+b=0$, functional margin $\hat{\gamma}_i=y_i(w^Tx_i+b)$ doubles if $(w,b)$ double, without moving the line. Geometric margin $\gamma_i=\hat{\gamma}_i/|w|$ is true Euclidean distance, scale-free. Maximising geometric margin equals fixing functional margin at $1$ and minimising $|w|$.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Widest Corridor</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Two villages (classes) need a road (boundary) between them. Any line separating them <em>works</em> — but the wise surveyor builds the road maximizing clearance on <em>both</em> sides (widest corridor), so future houses (test points) near the edge stay correctly sided despite survey wobble. <strong>SVMs</strong> build exactly this widest corridor: among all separators, the one farthest from the nearest points of each class. Only the corridor&#39;s <em>walls</em> — the nearest points, the <strong>support vectors</strong> — determine the road; every other village is irrelevant to the survey.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
@@ -278,29 +318,64 @@
     <p class="video-caption"><strong>Key Insight:</strong> Maximum Margin Geometry</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch candidate boundaries rotate while the margin corridor breathes — widest at the optimum, with support vectors glowing on both walls and all interior points fading to irrelevance.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Functional vs. Geometric Margin</h3>
-<p>For separator $w^Tx + b = 0$ and example $(x_i, y_i)$, $y_i \in {+1,-1}$: <strong>functional margin</strong> $\hat{\gamma}_i = y_i(w^Tx_i + b)$ — scale-dependent (double $(w,b)$, double all $\hat{\gamma}$ without moving the line!). <strong>Geometric margin</strong> $\gamma_i = \hat{\gamma}_i / |w|$ — true Euclidean distance, scale-free. Maximizing the <em>geometric</em> margin $\iff$ fixing functional margin $= 1$ and <strong>minimizing $|w|$</strong>:</p>
+</div><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (robust separation) → data (labelled sides) → goal (wide corridor) → method (norm minimisation) → model ($w$, $b$) → training (convex program or hinge) → example → limitations.</p>
+<h3>3.1 Functional versus Geometric Margin</h3>
 <p>$$\min_{w,b}\ \tfrac12|w|^2 \quad \text{s.t.}\quad y_i(w^Tx_i + b) \ge 1\ \ \forall i$$</p>
-<p>— a convex quadratic program with a unique global optimum (contrast: perceptron stops at <em>any</em> separator; SVM demands the <em>best-placed</em> one).</p>
-<h3>2.2 Support Vectors and Hinge Loss</h3>
-<p>At the optimum, only points <em>on</em> the corridor walls ($y_i(w^Tx_i+b) = 1$) constrain the solution — the <strong>support vectors</strong> (typically few). Unconstrained twin: minimize $\sum_i \max(0,, 1 - y_i(w^Tx_i+b)) + \lambda|w|^2$ — <strong>hinge loss</strong> (zero when confidently right with margin ≥ 1, linear pain otherwise) plus the same minimum-norm pressure.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: SVM Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Geometric margin $= \hat{\gamma}/|w|$ (functional is <strong>scale-fakeable</strong>) · objective <strong>min ½‖w‖² s.t. margins ≥ 1</strong> (convex, unique) · corridor width $= 2/|w|$ · only <strong>support vectors</strong> matter · hinge $= \max(0, 1-y\cdot\text{score}) + \lambda|w|^2$.</p>
+<p>This is a convex quadratic program. Corrected qualification: it has a unique optimal weight vector $w^*$ under standard conditions; the offset $b$ can have an interval of optima when support vectors allow a range, and uniqueness of $w$ assumes separable data and a strictly convex norm. Contrast with the perceptron, which stops at any separator; SVM demands the best-placed one under these conditions.</p>
+<h3>3.2 Support Vectors and Hinge Loss, Symbol by Symbol</h3>
+<p>At the optimum, only points on the walls ($y_i(w^Tx_i+b)=1$) constrain the solution: the support vectors, typically few. Unconstrained twin: minimise $\sum_i\max(0,1-y_i(w^Tx_i+b))+\lambda|w|^2$. Here $\max(0,1-y\cdot\text{score})$ is hinge loss (zero when confidently right with margin at least $1$, linear pain otherwise), $\lambda$ prices norm. Corridor width equals $2/|w|$.</p>
+<p>Numbered use:</p>
+<ol>
+<li>Solve for $w$, $b$ on train.</li>
+<li>Read support vectors off active constraints.</li>
+<li>Classify new $x$ by $\text{sign}(w^Tx+b)$.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Functional vs geometric</td>
+<td>Scale-fakeable score vs true distance; compare norms, never functionals</td>
+</tr>
+<tr>
+<td>Perceptron vs SVM separator</td>
+<td>Any separator vs minimum-norm separator</td>
+</tr>
+<tr>
+<td>Hinge vs 0/1 vs cross-entropy</td>
+<td>Exact-zero-at-margin vs flat vs eternal polish</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: SVM Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Geometric margin $= \hat{\gamma}/|w|$ (functional is <strong>scale-fakeable</strong>) · objective <strong>min ½‖w‖² s.t. margins ≥ 1</strong> (convex; $w$ unique under standard conditions) · corridor width $= 2/|w|$ · only <strong>support vectors</strong> matter · hinge $= \max(0, 1-y\cdot\text{score}) + \lambda|w|^2$.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Scaling (w,b) Changes Nothing Geometric (and Fools Functional Readers)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$(2w, 2b)$ doubles every functional margin while the line — and every prediction — stands still. &quot;Bigger functional margin = better separator&quot; is therefore meaningless across scalings; compare separators by $|w|$ (smaller = wider corridor) or geometric margins only. Fix the scale (functional = 1) before comparing anything.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Separator $w = [1,1]$, $b = -3$ (line $x_1 + x_2 = 3$); points $A(2,2){+1}$, $B(0,0){-1}$. Compute functional margins, geometric margins, hinge losses, and corridor width. (Arithmetic verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Margins Both Ways</div><div class="step-content"><p>$|w| = \sqrt{2} \approx 1.414$. $A$: score $4-3 = 1$; functional $\hat{\gamma}_A = +1 \times 1 = 1$; geometric $1/\sqrt{2} \approx 0.707$. $B$: score $-3$; functional $\hat{\gamma}_B = -1 \times (-3) = 3$; geometric $3/\sqrt{2} \approx 2.121$. Hinge: $A$: $\max(0, 1-1) = 0$; $B$: $\max(0, 1-3) = 0$ — both correctly placed with margin to spare. Corridor width $= 2/|w| = 2/\sqrt{2} = \sqrt{2} \approx 1.414$.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$A$ sits exactly <em>on</em> the corridor wall (functional $= 1$ — a support vector if this $w$ were optimal); $B$ lounges deep in safe territory (functional $3$). Rescale to $(2w, 2b)$: functionals double ($2$, $6$) while geometry, predictions, and hinge-zero statuses freeze — the scale illusion made numeric.</p>
-</div></div><hr>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Comparing functionals across scalings. Fix scale or compare $|w|$.</li>
+<li>Deleting support vectors as simplification. They define the boundary; delete passengers instead.</li>
+<li>Claiming margin theory guarantees test wins on any data. It bets on wobble tolerance under separability and clean labels; noise needs soft margins next topic.</li>
+<li>Overclaiming uniqueness. $w$ is unique under standard convex conditions; $b$ can admit a range.</li>
+</ul>
+<p>Limitations: hard-margin needs separability; scales with points without kernels and solvers; margin is a robustness bet, not a test-accuracy certificate on dirty data.</p>
+<p>Exam recap: geometric equals functional over norm; objective min half-norm squared; width $2/|w|$; only support vectors matter; hinge zeroes past margin $1$.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Two candidate separators classify training data identically. Separator P has ‖w‖ = 0.5; separator Q has ‖w‖ = 4 (same functional-margin convention). Which generalizes better and why?</span>
@@ -485,7 +560,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m3_03_maximum_margin_svm";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

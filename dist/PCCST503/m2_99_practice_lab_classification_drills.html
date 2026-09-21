@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link active" id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -253,18 +261,20 @@
   </div>
 </div>
 <h1>Module 2 Practice Lab: Classification Drills</h1>
-<p><strong>Classifier selection under constraints, loss arithmetic races, veto autopsies, split decisions, and divergence triage.</strong></p>
+<p><strong>How to use this lab as a beginner: pick classifiers from data budget and stakeholders, read losses without confusing training with judging, and triage failures in order.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-step-by-step-scenario-analysis">1. Step-by-Step Scenario Analysis</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table →</a></p>
+<p>Beginner protocol: problem first, then data and goal, then method. Never start from brand names.</p>
 <h3>Scenario 1: The Startup Triage (Pick the Classifier, Defend It)</h3>
-<p>Constraints: (a) 300 labeled medical scans, 2M unlabeled, must ship in a week → <strong>Gaussian NB / simple generative</strong>: converges in $O(\log n)$ samples, no tuning marathons, calibrated-enough probabilities for review queues. (b) 10M labeled ad clicks, accuracy is revenue → <strong>logistic regression / trees</strong>: data-rich regime where discriminative ceilings win; NB&#39;s bias would leave money. (c) Credit decisions requiring <em>reasons</em> for regulators → <strong>shallow decision tree</strong>: auditable splits beat black-box points when the examiner is a lawyer. Method follows data budget + stakeholder, never fashion.</p>
+<p>Constraints: (a) 300 labeled medical scans, 2M unlabeled, must ship in a week → <strong>Gaussian NB / simple generative</strong>: converges in $O(\log n)$ samples, no tuning marathons, calibrated-enough probabilities for review queues. (b) 10M labeled ad clicks, accuracy is revenue → <strong>logistic regression / trees</strong>: data-rich regime where discriminative ceilings win; NB&#39;s bias would leave money. (c) Credit decisions requiring <em>reasons</em> for regulators → <strong>shallow decision tree</strong>: auditable splits beat black-box points when the examiner is a lawyer. Method follows data budget plus stakeholder, never fashion.</p>
+<p>Tiny check: ask &quot;how many labels, who consumes the model?&quot; Labels decide generative versus discriminative; stakeholder decides readable versus black box.</p>
 <h3>Scenario 2: Cross-Entropy Race (Feel the Curve)</h3>
-<p>True label $y=1$. Model A predicts $0.9$: loss $-\ln 0.9 \approx 0.105$. Model B predicts $0.5$: $0.693$. Model C predicts $0.1$: $2.303$. Same correct <em>direction</em> (all &gt; 0.5 → all classify right!), wildly different <em>losses</em> (22× spread) — accuracy sees three ties; cross-entropy sees confidence quality. Train on the loss, report the accuracy, and never confuse which game each number scores.</p>
+<p>True label $y=1$. Model A predicts $0.9$: loss $-\ln 0.9 \approx 0.105$. Model B predicts $0.5$: $0.693$. Model C predicts $0.1$: $2.303$. Same correct <em>direction</em> (all $&gt; 0.5$ classify right!), wildly different <em>losses</em> (22× spread) — accuracy sees three ties; cross-entropy sees confidence quality. Train on the loss, report the accuracy, and never confuse which game each number scores.</p>
 <h3>Scenario 3: The Veto Autopsy</h3>
-<p>Spam {win:2, money:2}/4 words, ham {win:0, money:1}/3 words, priors 50/50, $|V|=2$, $\alpha=1$. Classify &quot;win money&quot;: spam $0.5 \times 0.5 \times 0.5 = 0.125$; ham $0.5 \times 0.2 \times 0.4 = 0.04$ → <strong>spam</strong>, 3:1. Now delete smoothing: $P(\text{win}|\text{ham}) = 0/3 = 0$ — ham&#39;s score zeroes <em>regardless</em>; worse, any <em>unseen-in-both</em> word zeroes <em>both</em> classes and argmax ties on nothing. Autopsy conclusion: unsmoothed NB doesn&#39;t degrade gracefully — it holds vetoes, and vetoes detonate.</p>
+<p>Spam {win:2, money:2}/4 words, ham {win:0, money:1}/3 words, priors 50/50, vocabulary size $|V|=2$, $\alpha=1$. Classify &quot;win money&quot;: spam $0.5 \times 0.5 \times 0.5 = 0.125$; ham $0.5 \times 0.2 \times 0.4 = 0.04$ → <strong>spam</strong>, 3:1. Now delete smoothing: $P(\text{win}|\text{ham}) = 0/3 = 0$ — ham&#39;s score zeroes <em>regardless</em>; worse, any <em>unseen-in-both</em> word zeroes <em>both</em> classes and argmax ties on nothing. Autopsy conclusion: unsmoothed NB doesn&#39;t degrade gracefully — it holds vetoes, and vetoes detonate.</p>
 <h3>Scenario 4: Divergence Triage in 30 Seconds</h3>
-<p>Symptoms → verdicts: loss NaN after healthy epochs → halve $\eta$, clip, resume from checkpoint (divergence, not data). Loss plateaued high from epoch 1 → $\eta$ too small <em>or</em> model too weak — raise $\eta$ first (cheapest test), then capacity. Train/test gap yawning → variance disease (regularize, more data, simpler model). Train <em>and</em> test both bad → bias disease (bigger model, better features, longer training). Four symptoms, four prescriptions — triage before tuning, always.</p>
+<p>Symptoms to verdicts: loss Not-a-Number (NaN) after healthy epochs → halve Learning Rate ($\eta$), clip, resume from checkpoint (divergence, not data). Loss plateaued high from epoch 1 → $\eta$ too small <em>or</em> model too weak — raise $\eta$ first (cheapest test), then capacity. Train-test gap yawning → variance disease (regularise, more data, simpler model). Train <em>and</em> test both bad → bias disease (bigger model, better features, longer training). Four symptoms, four prescriptions — triage before tuning, always.</p>
 <hr>
 <p><a id="the-dimensions"></a></p>
 <h2 id="2-do-not-confuse-cheat-table">2. &quot;Do Not Confuse&quot; Cheat Table</h2>
@@ -294,7 +304,7 @@
 </tr>
 <tr>
 <td>Smoothing purpose</td>
-<td>Kills zero-vetoes (unseen ≠ impossible), not a performance topping</td>
+<td>Kills zero-vetoes (unseen is rare, not impossible), not a performance topping</td>
 </tr>
 <tr>
 <td>Gain vs. gain ratio</td>
@@ -310,7 +320,7 @@
 </tr>
 <tr>
 <td>Convex vs. non-convex training</td>
-<td>Guaranteed arrival vs. crafted local success (init/schedules/momentum)</td>
+<td>Global seeking with proper step size vs. crafted local success (init/schedules/momentum)</td>
 </tr>
 <tr>
 <td>k ties</td>
@@ -443,9 +453,9 @@
 
     <footer class="pagefoot" id="pagefoot">
       
-      <a href="./m2_05_gradient_descent_training_engine.html" class="nav-card prev" id="prevTopicLink">
+      <a href="./m2_06_classification_evaluation_metrics.html" class="nav-card prev" id="prevTopicLink">
         <span class="dir">&larr; PREVIOUS TOPIC [</span>
-        <div class="ttl">2.5 Gradient Descent Training Engine</div>
+        <div class="ttl">2.6 Classification Evaluation Metrics</div>
       </a>
       
       
@@ -544,7 +554,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m2_99_practice_lab_classification_drills";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

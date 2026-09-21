@@ -269,74 +269,86 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-dimensions" class="jump-pill">📐 Dimensions</a>
-    <a href="#the-matrix" class="jump-pill">🧮 Matrix</a>
-    <a href="#history" class="jump-pill">📜 History</a>
+    <a href="#start-zero" class="jump-pill">start-zero</a>
+    <a href="#basics" class="jump-pill">basics</a>
+    <a href="#formal-model" class="jump-pill">formal-model</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
     <a href="#exam-focus" class="jump-pill">🎯 Exam Focus</a>
   </div>
 </div>
 <h1>The Nature of Task Environments</h1>
-<p><strong>The 7 dimensions of task environments: observability, single vs. multi-agent, determinism, episodic vs. sequential, static vs. dynamic, discrete vs. continuous, and known vs. unknown.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-why-classify-environments">1. Why Classify Environments?</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-7-environmental-dimensions">2. The 7 Environmental Dimensions →</a></p>
-<p>Imagine you are hired to build a highly intelligent autonomous vehicle. If you build it assuming the environment is a perfectly flat, empty parking lot (your assumption), but deploy it in the middle of a chaotic city highway during monsoon season (the reality), your AI will instantly fail. </p>
-<p>Before an AI engineer writes a single line of code, they must classify the <strong>Task Environment</strong>. The design of the agent, the complexity of its brain (algorithms), and the amount of memory it needs are <strong>completely determined by the nature of its environment.</strong></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: The &quot;Holy Grail&quot; of AI Environments</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>AI engineers dream of the easiest possible environment. The simplest environment to program an AI for is:
-<strong>Fully Observable, Single-Agent, Deterministic, Episodic, Static, Discrete, and Known.</strong> (Think of an AI solving a digital Sudoku puzzle on an empty screen with no time limit). </p>
-<p>As we drift away from these properties and move toward the real world, the AI becomes exponentially harder to build!</p>
-</div></details><hr>
-<p><a id="the-dimensions"></a></p>
-<h2 id="2-the-7-environmental-dimensions">2. The 7 Environmental Dimensions</h2>
-<p class="secnav"><a href="#1-why-classify-environments">← 1. Why Classify Environments?</a><span class="secnav-sep">·</span><a href="#3-the-master-environment-matrix-table">3. The Master Environment Matrix T… →</a></p>
-<p>Russell and Norvig classify task environments along 7 specific dimensions:</p>
-<h3>1. Fully Observable vs. Partially Observable (vs. Unobservable)</h3>
-<p>This dimension is about <strong>Sensor Quality</strong>. Does the agent&#39;s sensors give it access to the <em>complete</em> state of the environment at all times?</p>
-<ul>
-<li><strong>Fully Observable:</strong> The agent can perceive everything that matters to the decision right now.<ul>
-<li><em>Example:</em> <strong>Chess</strong>. You can see every single piece on the board at all times. There are no hidden pieces.</li>
-</ul>
-</li>
-<li><strong>Partially Observable:</strong> Parts of the environment are hidden from the sensors due to noisy/inaccurate data or physical blind spots.<ul>
-<li><em>Example:</em> <strong>Poker</strong>. You can only see your own cards and community cards; opponents&#39; cards are hidden.</li>
-<li><em>Example:</em> <strong>Taxi Driving</strong>. A self-driving car cannot see around a blind corner or know what a pedestrian is planning to do.</li>
-</ul>
-</li>
-<li><strong>Unobservable:</strong> The agent has no sensors at all (blind).</li>
-</ul>
-<h3>2. Single-Agent vs. Multi-Agent</h3>
-<p>This dimension asks <strong>Who else is in the environment?</strong> Is there another entity actively maximizing its own performance measure?</p>
-<ul>
-<li><strong>Single-Agent:</strong> An agent solving a crossword puzzle or playing Solitaire alone.</li>
-<li><strong>Multi-Agent:</strong> <ul>
-<li><strong>Competitive:</strong> Playing Chess against an opponent trying to defeat you.</li>
-<li><strong>Cooperative:</strong> Autonomous taxis communicating at an intersection to avoid collisions.</li>
-</ul>
-</li>
-</ul>
-<h3>3. Deterministic vs. Stochastic</h3>
-<p>This dimension is about <strong>Certainty of Transitions</strong>. If the agent takes a specific action, is the resulting next state 100% guaranteed?</p>
-<ul>
-<li><strong>Deterministic:</strong> The next state is completely determined by the current state and the agent&#39;s action. (e.g., Moving a Knight to E4 in Chess).</li>
-<li><strong>Stochastic:</strong> The next state involves probabilistic uncertainty or dice rolls. (e.g., Backgammon, or a taxi braking on wet asphalt where braking distance varies).</li>
-</ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Deterministic vs. Stochastic vs. Non-deterministic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Deterministic:</strong> Exactly 1 outcome state ($s&#39; = T(s, a)$).</li>
-<li><strong>Stochastic:</strong> Multiple possible outcomes, but with known probabilities ($P(s&#39; \mid s, a)$).</li>
-<li><strong>Non-deterministic:</strong> Multiple possible outcomes, but probabilities are unknown (common when modeling adversarial human opponents).</li>
-</ul>
-</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Environment Transition Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Mathematically, an environment&#39;s transition from current state $s$ to next state $s&#39;$, given action $a$, is modeled as:</p>
-<ul>
-<li><strong>Deterministic Transition:</strong> $s&#39; = T(s, a)$</li>
-<li><strong>Stochastic Transition:</strong> $P(s&#39; \mid s, a) = \text{Probability of reaching state } s&#39; \text{ given state } s \text{ and action } a$</li>
-</ul>
-</div></details><div class="quiz-widget">
+<p><strong>Problem: the same agent brain can be trivial or hopeless depending on the world it faces. By the end you can classify any task on all seven environment dimensions and predict what the agent will need (memory, speed, models).</strong></p>
+<p><a id="start-zero"></a></p>
+<h2 id="1-start-from-zero-why-classify-before-coding">1. Start From Zero: Why Classify Before Coding?</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-building-blocks-the-seven-dimensions">2. Basic Building Blocks: The Seve… →</a></p>
+<p>Building a taxi brain assuming an empty parking lot, then deploying it in monsoon city traffic, guarantees failure. The environment decides the agent&#39;s memory, algorithms, and reaction speed. Classification comes before code.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: The Easiest Dream World</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The simplest environment is fully observable, single-agent, deterministic, episodic, static, discrete, and known — like untimed digital Sudoku. Every step toward the real world (hidden cards, opponents, dice, memory across moves, ticking clocks, continuous steering, unknown rules) makes the agent harder to build. Use this only as a difficulty compass.</p>
+</div></details><p><strong>Tiny beginner example:</strong> a photo-labeling agent sees the whole image (fully observable), acts alone, and each photo is independent (episodic). A taxi sees only part of the road (partially observable), shares it with rivals, and every turn affects the next (sequential). Same &quot;drive pixels to decisions&quot; idea, wildly different difficulty.</p>
+<p><a id="basics"></a></p>
+<h2 id="2-basic-building-blocks-the-seven-dimensions">2. Basic Building Blocks: The Seven Dimensions</h2>
+<p class="secnav"><a href="#1-start-from-zero-why-classify-before-coding">← 1. Start From Zero: Why Classify B…</a><span class="secnav-sep">·</span><a href="#3-formal-reference-the-master-matrix">3. Formal Reference: The Master Ma… →</a></p>
+<p><strong>Data/state:</strong> the world state; <strong>goal:</strong> name each dimension correctly. Russell and Norvig dimensions:</p>
+<p><strong>1. Observability (sensor quality):</strong> Fully observable (chess — all pieces visible) vs. partially observable (poker — hidden hands; taxi — blind corners) vs. unobservable (no sensors).</p>
+<p><strong>2. Agent count:</strong> Single (crossword, Solitaire) vs. multi — competitive (chess opponent) or cooperative (taxis coordinating at a junction).</p>
+<p><strong>3. Determinism (transition certainty):</strong> Deterministic (chess knight move lands exactly) vs. stochastic (Backgammon dice; wet-road braking) with known probabilities vs. non-deterministic (outcomes possible, probabilities unknown).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Environment Transition Model, Symbol by Symbol</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Current state <code>s</code>, action <code>a</code>, next state <code>s&#39;</code>. Deterministic: <code>s&#39; = T(s, a)</code> (one guaranteed result from transition function <code>T</code>). Stochastic: <code>P(s&#39; | s, a)</code> (probability of landing in <code>s&#39;</code> given <code>s</code> and <code>a</code>). Tiny numbers: dry brake stops in 10 m always (deterministic); wet brake stops in 10 m with probability 0.7, 15 m with 0.3 (stochastic).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Deterministic vs. Stochastic vs. Non-deterministic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Deterministic: exactly one outcome. Stochastic: many outcomes with known odds. Non-deterministic: many outcomes, odds unknown. Do not call dice &quot;non-deterministic&quot; — dice odds are known, so dice are stochastic.</p>
+</div></details><p><strong>4. Episodic vs. sequential (memory horizon):</strong> Episodic splits into independent episodes (apple defect scanner — apple 5 never affects apple 6). Sequential couples decisions (chess opening shapes move 40).</p>
+<p><strong>5. Static vs. dynamic (time pressure):</strong> Static waits while thinking (crossword). Dynamic changes during thinking (taxi — 5 seconds of thought is a crash). Semi-dynamic: world frozen but score decays while thinking (chess with a clock).</p>
+<p><strong>6. Discrete vs. continuous (granularity):</strong> Discrete is countable (chess squares, dice 1-6). Continuous is real-valued (steering 14.5 degrees, speed 45.2 km/h, flowing time).</p>
+<p><strong>7. Known vs. unknown (rule knowledge):</strong> Known means the agent holds the rulebook/physics (Solitaire rules given). Unknown means it must discover rules by trial (a new game with no manual).</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Known vs. Observable (Critical Exam Trap)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Known = I know the rules. Observable = I can see the current state. Poker is known (rules clear) but partially observable (hands hidden). Chess with unknown rules is fully observable (pieces visible) but unknown (laws missing).</p>
+</div></details><p><a id="formal-model"></a></p>
+<h2 id="3-formal-reference-the-master-matrix">3. Formal Reference: The Master Matrix</h2>
+<p class="secnav"><a href="#2-basic-building-blocks-the-seven-dimensions">← 2. Basic Building Blocks: The Seve…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
+<p><strong>Method:</strong> classify dimension by dimension with one-line justifications. Memorize this reference (formal layer after the intuition above):</p>
+<pre><code class="language-text">Environment        | Observable | Agents | Transition   | Horizon    | Time     | Space
+Crossword          | Fully      | Single | Deterministic| Episodic   | Static   | Discrete
+Chess (no clock)   | Fully      | Multi  | Deterministic| Sequential | Static   | Discrete
+Chess (clock)      | Fully      | Multi  | Deterministic| Sequential | Semi-dyn | Discrete
+Poker              | Partially  | Multi  | Stochastic   | Sequential | Static   | Discrete
+Backgammon         | Fully      | Multi  | Stochastic   | Sequential | Static   | Discrete
+Part-picking robot | Fully      | Single | Deterministic| Episodic   | Semi-dyn | Continuous
+Automated taxi     | Partially  | Multi  | Stochastic   | Sequential | Dynamic  | Continuous
+Medical diagnosis  | Partially  | Single | Stochastic   | Sequential | Dynamic  | Continuous
+</code></pre>
+<p><strong>Hardest task:</strong> the automated taxi — partially observable, multi-agent, stochastic, sequential, dynamic, continuous (plus unknown when streets change). That is why chess engines do not transfer to Level-5 driving.</p>
+<p><a id="worked-example"></a></p>
+<h2 id="4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, Limitations</h2>
+<p class="secnav"><a href="#3-formal-reference-the-master-matrix">← 3. Formal Reference: The Master Ma…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Procedure traced:</strong> Solitaire after the deal (face-down cards fixed): partially observable (hidden cards) and deterministic (flips reveal exactly). Static vs. dynamic vs. semi-dynamic and episodic vs. sequential are the favourite 3-mark pairs.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Static vs. episodic</td>
+<td>Time (does the world wait?) vs. memory (does this decision affect the next?)</td>
+</tr>
+<tr>
+<td>Stochastic vs. non-deterministic</td>
+<td>Known odds vs. unknown odds</td>
+</tr>
+<tr>
+<td>Fully observable vs. known</td>
+<td>Seeing the state vs. knowing the rules</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) A clock makes chess semi-dynamic, not dynamic — pieces freeze, the score bleeds. (2) Single hidden cards already make Solitaire partially observable. (3) &quot;Unknown&quot; never means &quot;unseen right now&quot; — it means the laws themselves are missing.</p>
+<p><strong>Limitations:</strong> classification predicts difficulty but selects no algorithm; observability plus determinism plus discreteness still leave exponential search (Module 2&#39;s problem).</p>
+<p><a id="self-check"></a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-worked-example-distinctions-limitations">← 4. Worked Example, Distinctions, L…</a><span class="secnav-sep">·</span><a href="#6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A →</a></p>
+<div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">You program an AI to play standard Solitaire on a computer. Once the cards are shuffled and dealt, all the face-down cards are locked in position. Which of the following best describes this environment?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -358,22 +370,10 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>It is <strong>Partially Observable</strong> because you cannot see the face-down cards. It is <strong>Deterministic</strong> because flipping a card is guaranteed to reveal that specific card with zero probability of an accidental state change once the deck is dealt.</p><pre><code>&lt;/div&gt;
+      <p>Hidden face-down cards make it partially observable. Fixed locked cards make flips exact, hence deterministic once dealt.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><h3>4. Episodic vs. Sequential</h3>
-<p>This dimension is about <strong>Temporal Horizon and Memory</strong>. Does a decision made right now impact decisions you have to make an hour from now?</p>
-<ul>
-<li><strong>Episodic:</strong> The agent&#39;s experience is divided into atomic, independent &quot;episodes&quot;. The current action does not affect future episodes.<ul>
-<li><em>Example:</em> A <strong>Part-Picking Defect Scanner</strong> checking apples on a conveyor belt. Classifying Apple #1 has zero impact on classifying Apple #2.</li>
-</ul>
-</li>
-<li><strong>Sequential:</strong> The current decision can affect all subsequent decisions.<ul>
-<li><em>Example:</em> <strong>Chess</strong>. A poor opening move on turn 3 can guarantee a loss on turn 40.</li>
-</ul>
-</li>
-</ul>
-<div class="quiz-widget">
+</div><div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">A defect-scanning agent inspects apples on a paused conveyor belt. Its verdict on apple #5 has no effect on apple #6 — each decision stands alone, and the belt waits while it deliberates. The environment is:</span>
     <span class="quiz-xp">+10 XP</span>
@@ -395,34 +395,10 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p><strong>Episodic</strong> because every apple is an independent atomic episode — the current decision cannot affect any future decision. <strong>Static</strong> because the scene waits while the agent thinks (no time pressure, no score decay). A single agent acts, and nothing here makes outcomes probabilistic, ruling out the other options.</p><pre><code>&lt;/div&gt;
+      <p>Episodic because decisions are independent atomic episodes; static because the belt waits during deliberation with no score decay.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><h3>5. Static vs. Dynamic</h3>
-<p>This dimension is about <strong>Time Pressure</strong>. Does the environment change while the AI is deliberating?</p>
-<ul>
-<li><strong>Static:</strong> The world pauses and waits for the AI to compute its move. (e.g., Crossword puzzles).</li>
-<li><strong>Dynamic:</strong> The world continues to evolve while the AI thinks. (e.g., Taxi driving, where pausing 5 seconds causes a crash).</li>
-</ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Semi-Dynamic Environments</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>If the environment itself does not change, but the agent&#39;s <strong>performance score drops over time while thinking</strong>, the environment is <strong>Semi-Dynamic</strong> (e.g., Chess played with a ticking chess clock).</p>
-</div></details><h3>6. Discrete vs. Continuous</h3>
-<p>This dimension is about <strong>State, Percept, and Action Granularity</strong>.</p>
-<ul>
-<li><strong>Discrete:</strong> Distinct, countable states and actions. (e.g., Chess has 64 squares, distinct turns, and a finite set of legal moves).</li>
-<li><strong>Continuous:</strong> Real-valued, analog variables. (e.g., Taxi steering wheel angles like $14.5^\circ$, continuous speeds, and flowing time).</li>
-</ul>
-<h3>7. Known vs. Unknown</h3>
-<p>This dimension describes the <strong>Agent&#39;s Knowledge of Environment Laws &amp; Rules</strong>.</p>
-<ul>
-<li><strong>Known:</strong> The agent has the complete rulebook / physics engine of the environment. (e.g., Solitaire rules are known).</li>
-<li><strong>Unknown:</strong> The agent must experiment and discover the rules through trial and error. (e.g., A video game played without a manual).</li>
-</ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Known vs. Observable (CRITICAL EXAM TRAP)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><ul>
-<li><strong>Known:</strong> I know the rules of the world.</li>
-<li><strong>Observable:</strong> I can see the current state of the world through my sensors.</li>
-<li><em>Example:</em> <strong>Poker</strong> is a <strong>Known</strong> environment (the rules are fully understood), but <strong>Partially Observable</strong> (opponents&#39; hands are concealed).</li>
-</ul>
-</div></details><div class="quiz-widget">
+</div><div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">An agent plays chess against a human with no clock, but it was never given the rules of chess and must discover legal moves by trial and error. How is this environment classified on the time and knowledge dimensions?</span>
     <span class="quiz-xp">+10 XP</span>
@@ -444,77 +420,21 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p><strong>Static</strong>: with no clock the board waits while the agent deliberates. <strong>Unknown</strong>: the agent lacks the rulebook and must learn the laws by exploring. Do not confuse this with observability — chess is fully observable (all pieces visible), but observability is about <em>seeing the state</em>, while Known/Unknown is about <em>knowing the rules</em>. That is exactly the trap above.</p><pre><code>&lt;/div&gt;
+      <p>Static because the board waits with no clock; unknown because the rulebook is missing and must be learned. Full observability of pieces is a separate dimension.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div><hr>
-<p><a id="the-matrix"></a></p>
-<h2 id="3-the-master-environment-matrix-table">3. The Master Environment Matrix Table</h2>
-<p class="secnav"><a href="#2-the-7-environmental-dimensions">← 2. The 7 Environmental Dimensions</a><span class="secnav-sep">·</span><a href="#4-the-hardest-possible-task-environment">4. The &quot;Hardest Possible Task Envi… →</a></p>
-<p>Examiners frequently ask students to classify standard benchmark environments. Memorize this reference matrix:</p>
-<pre><code class="language-text">+-----------------------+------------+---------+---------------+------------+-----------+------------+
-|   Task Environment    | Observable | Agents  | Transition    | Horizon    | Time      | State Space|
-+=======================+============+=========+===============+============+===========+============+
-| Crossword Puzzle      | Fully      | Single  | Deterministic | Episodic   | Static    | Discrete   |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-| Chess (without clock) | Fully      | Multi   | Deterministic | Sequential | Static    | Discrete   |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-| Chess (with clock)    | Fully      | Multi   | Deterministic | Sequential | Semi-Dyn  | Discrete   |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-| Poker                 | Partially  | Multi   | Stochastic    | Sequential | Static    | Discrete   |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-| Backgammon            | Fully      | Multi   | Stochastic    | Sequential | Static    | Discrete   |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-| Part-Picking Robot    | Fully      | Single  | Deterministic | Episodic   | Semi-Dyn  | Continuous |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-| Automated Taxi        | Partially  | Multi   | Stochastic    | Sequential | Dynamic   | Continuous |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-| Medical Diagnosis     | Partially  | Single  | Stochastic    | Sequential | Dynamic   | Continuous |
-+-----------------------+------------+---------+---------------+------------+-----------+------------+
-</code></pre>
-<hr>
-<p><a id="history"></a></p>
-<h2 id="4-the-hardest-possible-task-environment">4. The &quot;Hardest Possible Task Environment&quot;</h2>
-<p class="secnav"><a href="#3-the-master-environment-matrix-table">← 3. The Master Environment Matrix T…</a><span class="secnav-sep">·</span><a href="#5-worked-university-exam-q-a">5. Worked University Exam Q&amp;A →</a></p>
-<p>The <strong>Automated Taxi Driver</strong> exemplifies the hardest possible challenge in artificial intelligence:</p>
-<ul>
-<li><strong>Partially Observable</strong> (blind spots, hidden pedestrian intentions)</li>
-<li><strong>Multi-Agent</strong> (other drivers, cyclists, pedestrians)</li>
-<li><strong>Stochastic</strong> (weather, mechanical traction, sudden maneuvers)</li>
-<li><strong>Sequential</strong> (speed adjustments compound over long trajectories)</li>
-<li><strong>Dynamic</strong> (traffic conditions change in milliseconds)</li>
-<li><strong>Continuous</strong> (infinite steering angles, braking pressures, and continuous velocities)</li>
-</ul>
-<p>This is why algorithms that achieve superhuman performance in Chess (discrete, static, fully observable) cannot easily be transferred to Level 5 autonomous driving.</p>
-<hr>
-<p><a id="exam-focus"></a></p>
-<h2 id="5-worked-university-exam-q-a">5. Worked University Exam Q&amp;A</h2>
-<p class="secnav"><a href="#4-the-hardest-possible-task-environment">← 4. The &quot;Hardest Possible Task Envi…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Target Areas:</strong></p>
-<ul>
-<li><strong>3 Marks:</strong> Define Static vs. Dynamic vs. Semidynamic, or Episodic vs. Sequential.</li>
-<li><strong>7 Marks:</strong> Classify a real-world scenario (e.g., Ludo, Medical Diagnosis, Taxi Driver) across all 7 dimensions with 1-line justifications for each.</li>
-</ul>
-</div></details><h3>Sample 3-Mark Question</h3>
-<p><strong>Q: Explain the difference between a Static, Dynamic, and Semidynamic environment.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ul>
-<li><strong>Static Environment:</strong> The environment does not change while the agent is deliberating (thinking). E.g., Crossword puzzle.</li>
-<li><strong>Dynamic Environment:</strong> The environment continuously changes while the agent calculates its move, requiring rapid real-time response. E.g., Taxi driving.</li>
-<li><strong>Semidynamic Environment:</strong> The environment itself does not physically change, but the agent&#39;s performance measure (score) decays over time while thinking. E.g., Chess played with a chess clock.</li>
-</ul>
+</div><p><a id="exam-focus"></a></p>
+<h2 id="6-exam-recap-and-worked-q-a">6. Exam Recap and Worked Q&amp;A</h2>
+<p class="secnav"><a href="#5-active-recall-quizzes">← 5. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU University Exam Focus</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>3 marks: static/dynamic/semi-dynamic or episodic/sequential. 7 marks: classify a scenario (Ludo, medical, taxi) on all seven with one-line justifications.</p>
+</div></details><p><strong>Recap facts examiners reward:</strong> seven dimension names with one example each; transition formulas; semi-dynamic definition; known-vs-observable trap line.</p>
+<h3>Sample 3-Mark Question</h3>
+<p><strong>Q: Explain static, dynamic, and semi-dynamic environments.</strong></p>
+<p><strong>Model Answer:</strong> Static: world waits during thought (crossword). Dynamic: world evolves during thought (taxi). Semi-dynamic: world frozen, performance decays during thought (chess with clock).</p>
 <h3>Sample 7-Mark Question</h3>
-<p><strong>Q: Categorize the task environment of playing the board game &quot;Ludo&quot; against human opponents using the 7 environmental dimensions. Justify each classification.</strong></p>
-<p><strong>Model Answer:</strong></p>
-<ol>
-<li><strong>Fully Observable:</strong> All tokens, the board layout, and player positions are completely visible to the agent&#39;s sensors at all times.</li>
-<li><strong>Multi-Agent (Competitive):</strong> Multiple players compete to guide their tokens to home, where one player&#39;s victory directly diminishes another&#39;s utility.</li>
-<li><strong>Stochastic:</strong> Token movement depends on the roll of a 6-sided die, making next-state transitions probabilistic rather than deterministic.</li>
-<li><strong>Sequential:</strong> The choice of which token to advance on turn $t$ directly impacts whether that token is captured or reaches safe zones on turn $t+k$.</li>
-<li><strong>Static:</strong> While the agent is deciding its move, the board pieces and opponents remain stationary.</li>
-<li><strong>Discrete:</strong> The board consists of a finite set of discrete squares, with discrete turn counts and integer dice outcomes (1 to 6).</li>
-<li><strong>Known:</strong> The agent is provided with the complete, explicit rulebook governing legal moves, capture mechanics, and winning conditions.</li>
-</ol>
+<p><strong>Q: Classify Ludo against humans on all seven dimensions.</strong></p>
+<p><strong>Model Answer:</strong> Fully observable (all tokens visible); multi-agent competitive; stochastic (die 1-6); sequential (token choice shapes captures); static (board waits); discrete (squares, integer dice); known (full rulebook given).
+:::</p>
 
     </main>
 

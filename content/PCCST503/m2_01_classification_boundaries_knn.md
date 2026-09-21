@@ -5,8 +5,9 @@ module: 2
 sequence: 1
 title: 'Classification: Boundaries, Linear Flaws & k-NN'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 12
 learningObjectives:
+  - State the classification problem and 0/1 goal in plain words first
   - Judge classifiers with decision boundaries and 0/1 loss
   - Explain why least squares breaks on labels via leverage
   - Classify queries with k-nearest-neighbor voting by hand
@@ -24,31 +25,70 @@ tags:
 ---
 # Classification: Boundaries, Linear Flaws & k-NN
 
-**Decision boundaries, why regression misfires on labels, 0/1 loss, and nearest-neighbor voting with a hand-computed query.**
+**What problem classification solves, what labelled data it needs, why regression is the wrong tool, and how k-Nearest Neighbours (k-NN) votes from neighbours.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start Here: The Problem Before Any Solution (Absolute Beginner)
+
+Regression asks "how much?" Classification asks "which side of the fence?" Given labelled points, draw fences that put future points in the right pen.
+
+Tiny beginner example. Training: tall-and-heavy labelled plus, short-and-light labelled minus. A newcomer medium-tall arrives. k-NN with $k=3$ looks at the three closest labelled neighbours: plus, plus, minus gives plus by 2 to 1. No line was fitted; memory voted.
+
+Analogy as support, then dropped. Thermometers measure amount; fences decide sides. From here on we use exact terms only: decision boundary, zero-one loss, surrogate loss, leverage.
+
+Abbreviations defined on first use: k-Nearest Neighbours (k-NN). Symbols are defined before use below.
+
+| Question to ask | Meaning |
+|---|---|
+| What is a decision boundary? | Surface separating predicted regions |
+| What is 0/1 loss? | 1 if wrong, 0 if right; the honest judge |
+| What is $k$? | How many neighbours vote |
+
+<a id="symbols-data-goal"></a>
+## 2. Data, Goal and Symbols (Basic Understanding)
+
+**Problem.** Assign each input to one discrete label.
+
+**Data.** Labelled pairs $(x_i,y_i)$ with $y_i$ in $\{0,1\}$ or $\{+1,-1\}$. Here $x_i$ is a feature vector, $y_i$ is its class. Query $q$ is an unlabelled newcomer.
+
+**Goal.** Low zero-one (0/1) loss on future queries. The 0/1 loss is non-differentiable and hard to optimise directly, so training optimises a smooth surrogate (cross-entropy, hinge, Gini impurity) and reports 0/1 accuracy. Train the surrogate, judge with 0/1; never confuse the two.
+
+Distance symbol: Euclidean distance $d(q,x)=\sqrt{\sum_j(q_j-x_j)^2}$. Features must share scale first, or metres-versus-kilograms voting goes absurd.
 
 ::: callout-intuition Core Mental Model: Fences vs. Thermometers
 Regression is a **thermometer** (how much?). Classification is a **fence** (which side?). Fitting a thermometer where a fence belongs fails absurdly: least squares happily predicts "diabetes = 1.7" or lets one far-away outlier drag the whole line across the fence. And the fence itself can be lazy genius: **k-NN** builds no model at all — to label a newcomer, just ask its $k$ nearest labeled neighbors and take a vote. No training, all memory; the training set *is* the model.
 :::
 
----
-
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Method, Model and Training (Formal Theory)
 
-### 2.1 Decision Boundaries and 0/1 Loss
+Canonical order: problem (discrete choice) → data (labelled points plus query) → goal (low 0/1 loss) → method (surrogate training or neighbour voting) → model (boundary or stored data) → training procedure (optimise or memorise) → example → limitations.
 
-A classifier partitions feature space into labeled regions; the **decision boundary** is the surface between them (a point, line, or hypersurface depending on dimension). The honest score is **0/1 loss** (wrong = 1) — but it is non-differentiable and NP-hard to optimize directly, so every trainable classifier optimizes a *surrogate* (cross-entropy, hinge, Gini) and reports 0/1 accuracy. Surrogate-for-training, 0/1-for-judgment: never confuse the two.
+### 3.1 Decision Boundaries and 0/1 Loss
 
-### 2.2 Why Least Squares Fails Labels
+A classifier partitions feature space into labelled regions; the **decision boundary** is the surface between them. The honest score is **0/1 loss** (wrong = 1). It is non-differentiable and hard to optimise directly, so every trainable classifier optimises a surrogate and reports 0/1 accuracy.
 
-Encode classes as 0/1 and regress: far-away points exert huge squared leverage (one outlier $x = 100$ drags predictions for $x \in [0,1]$), and outputs like $1.7$ or $-0.3$ are meaningless as probabilities. Thresholding the line at 0.5 *sort of* works on clean data — until it catastrophically doesn't. Classification needs machinery that respects discreteness (sigmoid + cross-entropy next topic; margins in Module 3).
+### 3.2 Why Least Squares Fails Labels
 
-### 2.3 k-NN: The Laziest Learner
+Encode classes as 0/1 and regress: far-away points exert huge squared leverage (one outlier $x=100$ drags predictions for $x$ in $[0,1]$), and outputs like $1.7$ or $-0.3$ are meaningless as probabilities. Thresholding at 0.5 sort of works on clean data until it catastrophically does not. Classification needs machinery respecting discreteness.
 
-Store all training points. Query $q$: compute distances (usually Euclidean) to everything, take the $k$ nearest, **majority vote** (weight by $1/d$ to break influence ties). Choices that matter: $k$ (small = jagged, noise-fitting boundaries; large = smooth, detail-erasing — tune by validation), distance metric (scale features first, or meters-vs-kilograms voting goes absurd), and the price: $O(nd)$ memory + $O(nd)$ *per query* — training is free, prediction is expensive (KD-trees/Ball-trees mitigate).
+### 3.3 k-NN: Algorithm Steps Then Trace Preview
+
+Numbered steps:
+
+1. Store all training points.
+2. For query $q$, compute distances to every stored point.
+3. Take the $k$ nearest.
+4. Majority vote (weight by $1/d$ to soften ties).
+5. Choose $k$, metric, and scaling by validation.
+
+Choices that matter: $k$ (small means jagged, noise-fitting boundaries, high variance; large means smooth, detail-erasing, high bias), distance metric (standardise features first), and price: $O(nd)$ memory plus $O(nd)$ per query. Training is free; prediction is expensive (KD-trees help).
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| 0/1 loss vs surrogate | Judge with 0/1, train the smooth stand-in |
+| Small $k$ vs large $k$ | Variance (jagged) vs bias (smooth); tune by validation |
+| k-NN vs eager models | No training, costly queries vs costly training, cheap queries |
 
 ::: callout-formula KTU Formula Vault: Classification Facts
 Boundary = **region surface** · judge with **0/1 loss**, train with **surrogates** · regression-on-labels breaks via **leverage + meaningless outputs** · k-NN: **store all, vote k nearest** · small $k$ = **variance**, large $k$ = **bias** · cost per query **$O(nd)$**.
@@ -58,10 +98,8 @@ Boundary = **region surface** · judge with **0/1 loss**, train with **surrogate
 With $k=1$, training accuracy is *always* 100% (every point is its own nearest neighbor) — a meaningless perfect score. k-NN can only be assessed on held-out data (last module's discipline, sharpest here). Any "my 1-NN achieves 100%" claim confesses overfitting, not success.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. KTU Worked Example Step by Step
 
 ::: step [Step 1: Setup] Formulating the Problem
 Training points: $A(1,1){+}$, $B(2,3){+}$, $C(3,2){-}$, $D(5,4){-}$. Classify query $Q(2,2)$ with $k=3$ (Euclidean), and show what $k=1$ and $k=2$ would do. (Distances verified.)
@@ -79,10 +117,22 @@ $k=3$ says **+** by 2–1. The trace also exhibits k-NN's twin fragilities in mi
 Watch the three arrows land — 1.0, 1.0, 1.414 — with D stranded at 3.606, then the 2–1 verdict with the k = 2 tie and k = 1 hair-trigger riding along.
 :::
 
----
+<a id="watch-out-recap"></a>
+## 5. Watch Out, Limitations and Exam Recap
+
+Common mistakes and confusions:
+
+- Quoting $k=1$ train accuracy as success. It is always 100% by construction.
+- Using even $k$ without a tie rule. Prefer odd $k$, distance weights, or validation-chosen $k$.
+- Forgetting to scale features. One large-unit feature then dominates distances.
+- Confusing surrogate loss with 0/1 accuracy. Train one, report the other.
+
+Limitations: k-NN stores everything, queries slowly, and suffers in high dimensions where distances blur (curse of dimensionality).
+
+Exam recap: boundary is region surface; judge 0/1, train surrogates; regression breaks via leverage; k-NN stores all and votes; small $k$ is variance, large $k$ is bias; per-query cost $O(nd)$.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Why is fitting least-squares regression to 0/1 labels and thresholding at 0.5 considered broken rather than merely inelegant?
 () It is actually the recommended state-of-the-art method

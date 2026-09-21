@@ -2,7 +2,7 @@
  * Deterministic post-build smoke tests for the generated site (node:test +
  * node:assert only — no test framework). Operates against the freshly
  * generated dist/ directory (never source files as ground truth): entry
- * pages exist, all 432 manifest topics have HTML (and vice versa, no
+ * pages exist, all 435 manifest topics have HTML (and vice versa, no
  * orphans), every local navigation target resolves, every local
  * JS/CSS/manifest/icon/image/data reference resolves inside dist/, no
  * root-absolute Pages-incompatible paths or depth escapes, and
@@ -70,13 +70,13 @@ describe('generated entry pages', () => {
 });
 
 describe('generated topic pages match the manifest', () => {
-  it('generates all 432 topic pages with no orphans either way', () => {
+  it('generates all 435 topic pages with no orphans either way', () => {
     const { manifest } = loadDistManifest();
-    assert.equal(manifest.topics.length, 432, 'dist manifest must hold 432 topics');
+    assert.equal(manifest.topics.length, 435, 'dist manifest must hold 435 topics');
     const expected = new Set(
       manifest.topics.map((t) => path.join(DIST, t.courseCode, t.filename.replace(/\.md$/, '.html'))),
     );
-    assert.equal(expected.size, 432, 'manifest must point at 432 unique HTML targets');
+    assert.equal(expected.size, 435, 'manifest must point at 435 unique HTML targets');
     for (const target of [...expected].sort()) {
       assert.ok(fs.existsSync(target), `manifest topic missing HTML: ${target}`);
     }
@@ -89,7 +89,7 @@ describe('generated topic pages match the manifest', () => {
           return rel.includes(path.sep); // topic pages live at dist/<COURSE>/*.html
         }),
     );
-    assert.equal(onDisk.size, 432, `dist/ must hold 432 topic pages — actual: ${onDisk.size}`);
+    assert.equal(onDisk.size, 435, `dist/ must hold 435 topic pages — actual: ${onDisk.size}`);
     for (const file of [...onDisk].sort()) {
       assert.ok(expected.has(file), `orphaned topic page with no manifest entry: ${file}`);
     }

@@ -5,11 +5,12 @@ module: 1
 sequence: 99
 title: 'Module 1 Practice Lab: Foundations Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 14
 learningObjectives:
-  - Triage cases to paradigms inside sixty seconds each
+  - Triage cases to paradigms inside sixty seconds each from first principles
   - Track shifting estimates from MLE through MAP exactly
-  - Reject too-good fits with held-out discipline
+  - Reject too-good fits with held-out and cross-validation discipline
+  - State LASSO versus RIDGE and k-fold mechanics in one paragraph each
 concepts:
   - triage sprint
   - shifting estimates
@@ -26,24 +27,32 @@ tags:
 ---
 # Module 1 Practice Lab: Foundations Drills
 
-**Paradigm triage under time pressure, estimator selection, regression debugging scenarios, and exam essay models.**
+**How to use this lab as a beginner: triage paradigms from feedback type, move estimates from MLE to MAP with arithmetic, and reject memorised fits with held-out grades.**
 
 <a id="the-intuition"></a>
 ## 1. Step-by-Step Scenario Analysis
 
+Beginner protocol for every scenario below. First name the problem in one sentence. Then name the data (pairs, bare inputs, or rewards). Then name the goal and ruler. Then name the method. Only then compute.
+
 ### Scenario 1: Triage Sprint (60 seconds per case)
 
-For each, name paradigm + task type + (T, E, P) skeleton: (a) credit-card fraud flags from labeled histories; (b) segmenting 50k unlabeled support tickets by complaint theme; (c) elevator dispatcher learning from passenger wait-time penalties; (d) predicting delivery ETA in minutes from distance/traffic features.
+For each, name paradigm plus task type plus Task, Experience, Performance (T, E, P) skeleton: (a) credit-card fraud flags from labeled histories; (b) segmenting 50,000 unlabeled support tickets by complaint theme; (c) elevator dispatcher learning from passenger wait-time penalties; (d) predicting delivery Estimated Time of Arrival (ETA) in minutes from distance and traffic features.
 
-Answers: (a) supervised classification (T decide, E labeled transactions, P held-out precision/recall); (b) unsupervised clustering (no labels exist — k-means/LDA territory, Module 4); (c) RL (no correct dispatch shown, only delay penalties; P = expected wait); (d) supervised regression (continuous ETA, squared loss). Anyone answering (b) with "classification" skipped the label check — the lab's core reflex.
+Answers: (a) supervised classification (T decide, E labeled transactions, P held-out precision and recall); (b) unsupervised clustering (no labels exist — k-means territory, Module 4); (c) Reinforcement Learning (RL) (no correct dispatch shown, only delay penalties; P is expected wait); (d) supervised regression (continuous ETA, squared loss). Anyone answering (b) with "classification" skipped the label check — the lab's core reflex.
+
+Tiny check: cover the answers, ask "does each example show the right answer?" If yes, supervised. If no answers at all, unsupervised. If only episode scores, RL.
 
 ### Scenario 2: The Shifting Estimate
 
-A coin shows 7 heads in 10 flips. MLE says 0.7. A skeptic's prior (fair-ish, strength ≈ 20 flips) pulls MAP toward ~0.55. Now 1000 flips show 630 heads: MLE 0.63, MAP ≈ 0.63 — prior washed out. Moral in numbers: with $n=10$ the prior owns the answer; with $n=1000$ the data does. Exam phrasing: "state how MAP behaves as $n \to \infty$" → converges to MLE (prior weight $\to 0$ relative to data precision).
+A coin shows 7 heads in 10 flips. MLE says 0.7. A skeptic's prior (fair-ish, strength about 20 flips) pulls MAP toward about 0.55. Now 1,000 flips show 630 heads: MLE 0.63, MAP about 0.63 — prior washed out. Moral in numbers: with $n=10$ the prior owns the answer; with $n=1,000$ the data does. Exam phrasing: "state how MAP behaves as $n \to \infty$" — converges to MLE (prior weight goes to 0 relative to data precision).
+
+LASSO versus RIDGE in one paragraph: if those coin beliefs were regression weights, a Gaussian prior would give RIDGE shrinkage (all weights small, none zero), while a Laplace prior would give Least Absolute Shrinkage and Selection Operator (LASSO) sparsity (many exact zeros). Same data, different prior shape, different solution texture.
 
 ### Scenario 3: The Too-Good Fit
 
-A teammate's degree-12 polynomial on 15 points reports train $R^2 = 1.0$ and demands deployment. Your audit: held-out $R^2 = -0.4$ (worse than the mean!). Diagnosis: variance disease (memorization); prescription: cut degree, add ridge penalty (Gaussian prior!), or gather data — *not* more features. The two-grade certificate (train + held-out) from M1 is the entire diagnostic.
+A teammate's degree-12 polynomial on 15 points reports train R-squared (R²) $= 1.0$ and demands deployment. Your audit: held-out $R^2 = -0.4$ (worse than the mean!). Diagnosis: variance disease (memorisation); prescription: cut degree, add RIDGE penalty (Gaussian prior!), or gather data — not more features. The two-grade certificate (train plus held-out) from M1 is the entire diagnostic.
+
+Cross-validation mechanics in one paragraph: do not trust one split's decimals. In k-fold Cross-Validation (CV), rotate the validation fold so each point validates once and average. For final claims after degree or penalty selection, nest: inner loop picks, outer loop grades the picker on untouched data.
 
 ---
 
@@ -55,13 +64,15 @@ A teammate's degree-12 polynomial on 15 points reports train $R^2 = 1.0$ and dem
 | Likelihood vs. posterior | $P(D\|\theta)$ (data fixed, vary θ) vs. $P(\theta\|D)$ (belief about θ — needs a prior) |
 | MLE vs. MAP | Data-only peak vs. prior-penalized peak; coincide as $n \to \infty$ |
 | Unbiased vs. MLE variance | $n-1$ corrects bias; MLE uses $n$ (peak, not fairness) |
+| LASSO vs. RIDGE | Laplace prior, sparse zeros vs. Gaussian prior, dense shrinkage; strength chosen by CV |
+| Single split vs. k-fold vs. nested | One lucky grade vs. rotated average vs. honest grade of selection |
 | Regression vs. classification | Continuous $Y$ (closeness) vs. discrete $Y$ (buckets); different losses, different machinery |
-| k-NN train vs. test accuracy | $k=1$ trains at 100% always (memorization); only held-out counts |
+| k-Nearest Neighbours (k-NN) train vs. test accuracy | $k=1$ trains at 100% always (memorization); only held-out counts |
 | Sigmoid output vs. decision | $\sigma \in (0,1)$ confidence; boundary at $w^Tx = 0$ (still linear!) |
 | Surrogate vs. 0/1 loss | Train the smooth stand-in, judge with 0/1 accuracy |
 | Bias vs. variance | Rigid-wrong vs. wiggly-unstable; test U-curve finds the middle |
 | Train $R^2$ vs. test $R^2$ | Rises-by-construction vs. honest grade; report the second |
-| Batch vs. SGD vs. mini-batch | $O(nd)$ smooth vs. $O(d)$ noisy-fast vs. GPU default middle |
+| Batch vs. Stochastic Gradient Descent (SGD) vs. mini-batch | $O(nd)$ smooth vs. $O(d)$ noisy-fast vs. Graphics Processing Unit (GPU) default middle |
 
 ---
 

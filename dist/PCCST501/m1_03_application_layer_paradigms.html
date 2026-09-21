@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,30 +297,73 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Application Layer Paradigms</h1>
 <p><strong>Client-Server vs. Peer-to-Peer architectures, and how processes communicate across the network via sockets.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>You open two apps: a news website and a file-sharing program. The website always fetches articles from the company&#39;s own computers. The file-sharing app fetches pieces of a movie from <em>other users&#39;</em> laptops. Same Internet underneath — but two opposite organizations of <em>who serves whom</em>.</p>
+<p>The problem before the solution: an application designer must decide where the data lives and who does the work of serving it. Put everything on one central machine and you get control — but also a single bottleneck every user hammers. Spread the work across all users and you get scale — but lose control. This note names the two answers (client-server and peer-to-peer), then shows the one addressing trick both share: <strong>sockets</strong>.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Restaurant vs. The Potluck</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A <strong>Client-Server</strong> application is like a restaurant: there&#39;s one always-open kitchen (the server) that every customer (client) relies on. Customers never cook for each other — every request goes to the kitchen and every dish comes back from the kitchen. If the restaurant gets too popular, the kitchen becomes a bottleneck; the only fix is a bigger kitchen (or many kitchens acting as one, like a data center).</p>
 <p>A <strong>Peer-to-Peer (P2P)</strong> application is like a potluck dinner: there&#39;s no dedicated kitchen at all. Every guest brings a dish (uploads something) and takes food from others (downloads something) — everyone is simultaneously a &quot;customer&quot; and a &quot;cook.&quot; The more guests that show up, the more food is on the table too, so a potluck doesn&#39;t get bottlenecked the way a single restaurant would; it <em>self-scales</em>.</p>
 <p>Whichever paradigm is chosen, the developer never writes code for the routers in between — only for the <strong>end systems</strong>. And underneath both paradigms, actual communication between two specific programs always happens through the same low-level interface: a <strong>socket</strong>.</p>
-</div></details><hr>
+<p>Dropping the food now: restaurant = central server with a fixed address; potluck = symmetric peers that each serve and consume; socket = the numbered door a program sends through.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-the-two-architectures-and-the-shared-addressing-tr">3. Purpose — The Two Architectures… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Client-server architecture</strong></td>
+<td>Asymmetric design: one always-on <strong>server</strong> supplies a service; many <strong>clients</strong> consume it and never talk directly to each other.</td>
+</tr>
+<tr>
+<td><strong>Peer-to-peer (P2P) architecture</strong></td>
+<td>Symmetric design: every <strong>peer</strong> is both client and server at once; no dedicated central server.</td>
+</tr>
+<tr>
+<td><strong>Process</strong></td>
+<td>One running program (browser tab handler, mail client, game). The actual endpoint of communication — hosts run processes; processes exchange the bytes.</td>
+</tr>
+<tr>
+<td><strong>Socket</strong></td>
+<td>The software doorway between a process and the network, named by an IP (Internet Protocol) address plus a port number — written <code>IP:port</code>.</td>
+</tr>
+<tr>
+<td><strong>Port number</strong></td>
+<td>A 16-bit number naming <em>which process</em> on a host gets the data (e.g. web servers conventionally listen on port 80).</td>
+</tr>
+<tr>
+<td><strong>IP (Internet Protocol) address</strong></td>
+<td>The number naming <em>which host</em> on the Internet should receive the data.</td>
+</tr>
+<tr>
+<td><strong>DDoS (Distributed Denial of Service) attack</strong></td>
+<td>A flood of bogus requests from many machines meant to overwhelm a server — the weaponized form of the client-server bottleneck.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Client-Server Architecture</h3>
+<h2 id="3-purpose-the-two-architectures-and-the-shared-addressing-tr">3. Purpose — The Two Architectures and the Shared Addressing Trick</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Client-Server Architecture</h3>
 <pre><code class="language-mermaid">flowchart TB
     C1[&quot;Client A&quot;] --&gt;|request| S[&quot;Always-on Server&lt;br/&gt;(fixed IP address)&quot;]
     C2[&quot;Client B&quot;] --&gt;|request| S
@@ -330,9 +377,9 @@
 <li><strong>Always-on, fixed address:</strong> clients must be able to find the server reliably, so it needs a permanent IP address.</li>
 <li><strong>Clients don&#39;t talk directly:</strong> if Client A wants to reach Client B, the message is relayed <em>through</em> the server.</li>
 <li><strong>Scalability bottleneck:</strong> a flood of simultaneous client requests can overwhelm a single server (this is the mechanism behind a DDoS attack). The industry fix is data centers with vast server farms acting as one virtual server.</li>
-<li><strong>Examples:</strong> the Web (HTTP), Email (SMTP), File Transfer (FTP), Netflix.</li>
+<li><strong>Examples:</strong> the Web (HTTP — HyperText Transfer Protocol), Email (SMTP — Simple Mail Transfer Protocol), File Transfer (FTP — File Transfer Protocol), streaming services.</li>
 </ul>
-<h3>2.2 Peer-to-Peer (P2P) Architecture</h3>
+<h3>3.2 Peer-to-Peer (P2P) Architecture</h3>
 <pre><code class="language-mermaid">flowchart LR
     P1[&quot;Peer 1&quot;] &lt;--&gt; P2[&quot;Peer 2&quot;]
     P2 &lt;--&gt; P3[&quot;Peer 3&quot;]
@@ -346,12 +393,12 @@
 <li><strong>Self-scalability:</strong> each new peer adds <em>both</em> new demand (requests) and new capacity (uploads) — unlike client-server, where new demand only ever strains a fixed-size server.</li>
 <li><strong>Decentralized:</strong> no single point of failure; one peer leaving doesn&#39;t take down the whole network.</li>
 <li><strong>Challenges:</strong> harder to secure, highly variable performance (bounded by users&#39; own upload speeds), and peers frequently have dynamic, changing IP addresses.</li>
-<li><strong>Examples:</strong> BitTorrent, blockchain/Bitcoin nodes, early Skype.</li>
+<li><strong>Examples:</strong> BitTorrent, blockchain nodes, early Skype.</li>
 </ul>
-<h3>2.3 Processes Communicating via Sockets</h3>
+<h3>3.3 Operation Flow: Processes Communicating via Sockets</h3>
 <p>Regardless of architecture, the actual exchange of bytes happens between two <strong>processes</strong>, via a software interface called a <strong>socket</strong>.</p>
 <blockquote>
-<p><strong>The Door Analogy:</strong> A process is a house; its socket is the front door. To send a message, the process shoves it out the door, trusting that a transport infrastructure (the layers below) will carry it to the receiver&#39;s own door.</p>
+<p><strong>The Door Analogy (then the technical fact):</strong> A process is a house; its socket is the front door. Technically: to send a message, the process passes it through the socket to the transport layer below, which carries it to the receiver&#39;s socket.</p>
 </blockquote>
 <p>To route a message correctly, the network needs <em>two</em> pieces of addressing information:</p>
 <table>
@@ -359,7 +406,7 @@
 <tr>
 <th>Identifier</th>
 <th>Role</th>
-<th>Analogy</th>
+<th>Analogy (support only)</th>
 </tr>
 </thead>
 <tbody><tr>
@@ -375,18 +422,49 @@
 </tbody></table>
 <p>A Web Server process, for example, conventionally listens on <strong>Port 80</strong> — so even though many processes may be running on the same machine, the port number ensures an incoming HTTP request reaches the right one.</p>
 <details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The Two-Part Address</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The 2-mark &quot;why isn&#39;t IP enough?&quot; answer is always: <strong>IP address finds the host, port number finds the process</strong> — together they name a <strong>socket</strong> (<code>IP:port</code>). Any option claiming one identifier suffices, or that ports replace IPs, is the planted distractor.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-the-two-architectures-and-the-shared-addressing-tr">← 3. Purpose — The Two Architectures…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Your laptop runs a browser and a music player. A packet arrives for your laptop&#39;s IP. The IP address alone cannot decide between the two programs — so the packet also carries a destination port: port 80 steers it to the web-facing process, the music app&#39;s port steers it there instead. One host, two doors, zero confusion.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Two applications are being designed: (1) a company&#39;s centralized customer database accessed by thousands of employee laptops, and (2) a file-sharing app where users exchange large video files directly with each other. Decide which architecture fits each, and justify why.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the Paradigm Criteria</div><div class="step-content"><p><strong>Application 1 (Customer Database):</strong> Requires strict control, security, and a single consistent source of truth that employees query and update. A <strong>Client-Server</strong> model fits: the database server is always-on, has a fixed address, and every client relies on it rather than on each other.
 <strong>Application 2 (File-Sharing):</strong> Requires handling potentially huge numbers of large file transfers without one company having to fund and operate a single massive, always-on server. A <strong>P2P</strong> model fits: each user who downloads a video also becomes a source for other users, spreading the bandwidth cost across the whole user base and allowing the system to self-scale as more users join.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The customer database chooses Client-Server for <strong>consistency, security, and centralized control</strong>; the file-sharing app chooses P2P for <strong>self-scalability and lower infrastructure cost</strong>. This illustrates the core trade-off: Client-Server favors control and reliability at the cost of a scalability bottleneck, while P2P favors scalability and cost-efficiency at the cost of control, security, and predictable performance.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Client-server vs. P2P</td>
+<td>Asymmetric, always-on server, bottleneck vs. symmetric peers, self-scaling, harder to secure.</td>
+</tr>
+<tr>
+<td>IP address vs. port number</td>
+<td>Host identity vs. process identity — both required, neither replaces the other.</td>
+</tr>
+<tr>
+<td>Socket vs. port</td>
+<td>Socket = full <code>IP:port</code> doorway; port = just the process-number half.</td>
+</tr>
+<tr>
+<td>Self-scalability vs. &quot;free&quot;</td>
+<td>P2P capacity grows with users but is bounded by users&#39; uploads — scaling, not magic.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Calling a laptop &quot;a client device&quot; — client/server are roles; test behavior, not hardware. (2) Answering &quot;IP address is enough&quot; — one host runs many processes, so the port is mandatory. (3) Claiming P2P has no drawbacks — security, dynamic addresses, and variable speeds are the standard counterpoints.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Client-server = asymmetric, fixed-address server, bottleneck at scale (data centers mitigate). P2P = symmetric, self-scaling, decentralized, harder to secure. Processes talk via sockets named <code>IP:port</code>: IP finds the host, port finds the process (e.g. 80 = web). Developers code only end systems, never routers.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Which architecture fits a bank database, and why? Why does each new P2P peer add capacity? What two numbers name a socket, and what does each select? Where does transport-layer code run — hosts or routers?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: Foundational Concept</span>
@@ -574,7 +652,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m1_03_application_layer_paradigms";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

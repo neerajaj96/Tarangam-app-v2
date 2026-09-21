@@ -21,7 +21,7 @@
  * - Topic Study Context (status/latest/best/attempts/passed/needs-review/
  *   contributing-to-review/start-retry link; explicit unavailable text)
  * - event synchronization (single tarangam:progress-changed contract)
- * - full 432-topic live repository
+ * - full 435-topic live repository
  * - malformed/empty assessment attempts
  * - repeated deterministic runs
  *
@@ -558,28 +558,28 @@ describe('event synchronization', () => {
   });
 });
 
-describe('full 432-topic live repository', () => {
+describe('full 435-topic live repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
   const liveBank = JSON.parse(fs.readFileSync('data/assessments.json', 'utf-8'));
 
   it('preserves curriculum invariants and live assessment totals', () => {
-    assert.equal(manifest.topics.length, 432);
+    assert.equal(manifest.topics.length, 435);
     const metadata = manifest.topics.filter((t) => t.hasMetadata).length;
-    assert.equal(metadata, 432);
+    assert.equal(metadata, 435);
     let edges = 0;
     let maxDepth = 0;
     for (const t of manifest.topics) {
       edges += (t.prerequisites || []).length;
       if (typeof t.prerequisiteDepth === 'number') maxDepth = Math.max(maxDepth, t.prerequisiteDepth);
     }
-    assert.equal(edges, 605);
+    assert.equal(edges, 608);
     assert.equal(maxDepth, 11);
-    assert.equal(liveBank.questions.length, 502);
+    assert.equal(liveBank.questions.length, 508);
     const covered = new Set(liveBank.questions.map((q) => `${q.courseCode}/${q.topicId}`));
-    assert.equal(covered.size, 432);
-    assert.equal(432 - covered.size, 0);
+    assert.equal(covered.size, 435);
+    assert.equal(435 - covered.size, 0);
   });
 
   it('runs assessment-aware review deterministically on the live graph', () => {

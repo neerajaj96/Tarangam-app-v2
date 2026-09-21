@@ -5,7 +5,7 @@ module: 3
 sequence: 99
 title: 'Module 3 Practice Lab: Greedy, DP & Backtracking Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 10
 learningObjectives:
   - Settle knapsack showdowns with three different verdicts
   - Race chain splits with all parenthesizations shown
@@ -29,7 +29,15 @@ tags:
 **Knapsack showdowns, chain-split races, activity traces, pruning autopsies, and exam essay models.**
 
 <a id="the-intuition"></a>
-## 1. Step-by-Step Scenario Analysis
+## 1. Start from zero — how to use this lab
+
+**Problem first.** Module 3's exam marks go to method trios on identical input (same knapsack, three verdicts), full $m$-table races with splits shown, and certificates (exchange arguments, lower bounds) — never bare answers. Abbreviations: DP = dynamic programming; $m[i][j]$ = cheapest cost for subchain $i..j$; OPT = optimal value.
+
+::: callout-intuition Core Mental Model
+One input, many methods: the knapsack showdown proves *divisibility* decides the method; the chain race proves *length order* decides correctness of tabulation; the activity race proves *certificates* (not luck) decide optimality. Run each scenario with numbers on the table, exactly as modelled below.
+:::
+
+**Tiny warm-up.** Items $(v,w)$ = $(10,5), (9,4)$, capacity $9$: ratio-greedy takes $(10,5)$ then $(9,4)$ fits → 19; DP agrees 19 (both fit — no conflict, no drama). Conflict-free instances hide method differences; the showdown below picks a conflicting one on purpose.
 
 ### Scenario 1: The Knapsack Showdown (Same Items, Three Verdicts)
 

@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,39 +249,96 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Ensembles I: Bagging &amp; Random Forests</h1>
-<p><strong>Averaging away variance, bootstrap resampling, out-of-bag validation for free, feature subsampling, and why forests tame trees.</strong></p>
+<p><strong>What problem averaging solves for wiggly trees, what bootstrap samples it needs, how voting trains a steadier committee, and where averaging stops helping.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>One deep tree overreacts to details: change three training rows, get a different tree. The problem: keep trees&#39; flexibility but cancel their quirks.</p>
+<p>Tiny beginner example. Three judges guess 10, 12, 14 for truth 12. Average is 12 exactly. Each errs; errors cancel because truth is shared and quirks are not. That cancellation is bagging.</p>
+<p>Analogy as support, then dropped. Panel of imperfect judges shown slightly different evidence, majority vote. From here on we use exact terms only: bootstrap, aggregation, Out-of-Bag (OOB), correlation.</p>
+<p>Abbreviations defined on first use: Out-of-Bag (OOB). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $B$?</td>
+<td>Number of bootstrap datasets and models</td>
+</tr>
+<tr>
+<td>What is $\sigma^2$, $\rho$?</td>
+<td>Single-model variance and pairwise correlation</td>
+</tr>
+<tr>
+<td>What is $m$?</td>
+<td>Random features tried per split</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Cut variance without raising bias.</p>
+<p><strong>Data.</strong> $n$ training points. Each bootstrap dataset draws $n$ points with replacement. Each draw omits about $(1-1/n)^n\approx 1/e\approx 37%$ of points; those are OOB for that model.</p>
+<p><strong>Goal.</strong> Lower test error via $\rho\sigma^2+(1-\rho)\sigma^2/B$. Here first term is correlated floor no $B$ breaches; second term dies with $B$. Bagging murders variance, never bias.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Panel of Imperfect Judges</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One opinionated judge (a deep decision tree) overreacts to every detail. <strong>Bagging</strong> convenes hundreds of judges, each shown a <em>slightly different random subset</em> of the evidence (bootstrap sample), and takes the majority vote (or average). Individual quirks cancel; shared wisdom survives. <strong>Random forests</strong> go further: at every single ruling (split), each judge may consult only a <em>random handful of laws</em> (features) — forcing diversity even among judges who saw similar evidence. Averaging works precisely because errors are <em>uncorrelated</em> while truth is shared.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Bagging (Bootstrap Aggregating)</h3>
-<p>Given $n$ training points: draw $B$ <strong>bootstrap</strong> datasets (sample $n$ points <em>with replacement</em>), train one model per dataset, <strong>aggregate</strong> (vote for classes, average for regression). Variance analysis: averaging $B$ predictors with variance $\sigma^2$ and pairwise correlation $\rho$ gives $\rho\sigma^2 + \frac{1-\rho}{B}\sigma^2$ — the second term dies with $B$, the first (correlated error) does not. Bagging murders <em>variance</em>, never <em>bias</em>: it cannot fix a systematically wrong model family.</p>
-<h3>2.2 Out-of-Bag Validation (Free Lunch, Almost)</h3>
-<p>Each bootstrap sample omits $\approx (1-1/n)^n \approx 1/e \approx 37%$ of points — so every point is <strong>out-of-bag</strong> (OOB) for ~37% of the models. Aggregate each point&#39;s prediction over <em>only its OOB models</em> → a validation score costing zero held-out data and zero extra training. OOB error tracks test error remarkably well (mild optimism when tuning on it repeatedly — the usual selection-contamination fine print).</p>
-<h3>2.3 Random Forests: Decorrelating the Judges</h3>
-<p>Bagged <em>trees</em> still correlate (strong features dominate every tree&#39;s root splits → similar mistakes → high $\rho$, and the formula above stalls). Forests force each split to consider only $m \ll d$ random features (standard $m \approx \sqrt{d}$ classification, $d/3$ regression): trees <em>must</em> differ, $\rho$ drops, averaging bites deeper. More trees never overfit (variance term only shrinks) — grow until OOB plateaus, then stop paying compute.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Ensemble Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Bagging: <strong>bootstrap + aggregate</strong> · kills <strong>variance</strong>, not bias · OOB ≈ <strong>37%</strong> ($1/e$) free validation · forests: <strong>random $m$ features/split</strong> ($\sqrt{d}$ class, $d/3$ regr) to <strong>decorrelate</strong> · more trees <strong>can&#39;t overfit</strong> (watch OOB plateau, not train error).</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Bagging a Biased Model Bakes In the Bias (and OOB Isn&#39;t Double-Blind)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Averaging 500 linear fits on curved truth returns the same wrong curve, confidently ($B$ kills variance; bias $\rho\sigma^2$-term... precisely, the shared systematic error never averages out). And OOB tuned-upon-repeatedly becomes <em>selection data</em> wearing validation clothes — report final numbers on truly held-out folds for publication-grade claims.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (wiggly trees) → data (bootstraps) → goal (low variance) → method (resample plus aggregate, then decorrelate) → model (committee) → training (parallel fits) → example → limitations.</p>
+<h3>3.1 Bagging, Step by Step</h3>
+<p>Numbered steps:</p>
+<ol>
+<li>Draw $B$ bootstrap datasets of size $n$ with replacement.</li>
+<li>Train one model per dataset independently.</li>
+<li>Aggregate: vote for classes, average for regression.</li>
+</ol>
+<p>Variance: $B$ predictors with variance $\sigma^2$ and correlation $\rho$ average to $\rho\sigma^2+(1-\rho)\sigma^2/B$. Corrected qualification: more trees shrink the second term and typically plateau test error rather than U-turning, given deep enough trees and honest validation. This does not guarantee better accuracy on every dataset, and tuning repeatedly on OOB still contaminates selection. It cannot fix systematic bias: averaging wrong-family models stays wrong.</p>
+<h3>3.2 Out-of-Bag Validation, With Limits</h3>
+<p>Each point is OOB for about 37% of models. Aggregate each point over only its OOB models for a validation score costing zero held-out data and zero extra training. OOB tracks test error well, with mild optimism when tuned upon repeatedly. Final publication claims still need untouched folds.</p>
+<h3>3.3 Random Forests: Decorrelating the Judges</h3>
+<p>Bagged trees still correlate: strong features dominate root splits, so mistakes correlate and $\rho$ stalls averaging. Forests force each split to consider only $m\ll d$ random features (standard $m\approx\sqrt{d}$ classification, $d/3$ regression). Trees must differ, $\rho$ drops, voting bites deeper. Grow until OOB plateaus, then stop paying compute.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bagging vs forests</td>
+<td>Data diversity vs data plus split diversity; second lowers $\rho$ itself</td>
+</tr>
+<tr>
+<td>More trees vs tuned OOB</td>
+<td>Variance smoothing vs selection contamination if crowned on OOB</td>
+</tr>
+<tr>
+<td>Variance vs bias cure</td>
+<td>Ensembles for wiggles vs richer models for systematic wrongness</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Ensemble Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Bagging: <strong>bootstrap + aggregate</strong> · kills <strong>variance</strong>, not bias · OOB ≈ <strong>37%</strong> ($1/e$) free validation with selection limits · forests: <strong>random $m$ features/split</strong> ($\sqrt{d}$ class, $d/3$ regr) to <strong>decorrelate</strong> · more trees <strong>plateau (no U-turn) given depth and honest validation</strong> (watch OOB plateau, not train error).</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Bagging a Biased Model Bakes In the Bias (and OOB Isn&#39;t Double-Blind)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Averaging 500 linear fits on curved truth returns the same wrong curve, confidently ($B$ kills variance; bias ... precisely, the shared systematic error never averages out). And OOB tuned-upon-repeatedly becomes <em>selection data</em> wearing validation clothes — report final numbers on truly held-out folds for publication-grade claims.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>$n = 100$ training points, $B = 200$ bagged trees. (a) How many points does one bootstrap sample leave out on average, and how many trees is a given point OOB for? (b) Predictor variance $\sigma^2 = 4$, pairwise $\rho = 0.3$: ensemble variance at $B = 200$ vs a single tree?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting and Averaging</div><div class="step-content"><p>(a) Omitted fraction $(1 - 1/100)^{100} \approx 1/e \approx 0.368$: ~<strong>37 points</strong> left out per sample; each point OOB for $\approx 0.368 \times 200 \approx$ <strong>74 trees</strong> — a 74-model validation jury per point, free. (b) Ensemble variance $= 0.3 \times 4 + \frac{0.7}{200} \times 4 = 1.2 + 0.014 = \mathbf{1.214}$ vs single-tree $4$ — a $3.3\times$ cut, bounded below by the correlated floor $1.2$ no $B$ can breach.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Bagging turned variance $4 \to 1.21$ while bias sat untouched — and the 37% OOB mechanism graded everything without spending a single held-out point. The residual $1.2$ floor is exactly why forests exist: only <em>decorrelation</em> (random features) lowers $\rho$ itself, the one knob bagging cannot turn.</p>
@@ -298,10 +363,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Bagging Hits the Correlated Floor</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch variance collapse 4 to 1.214 and stop dead at the 1.2 floor — the bar that no B breaches, and the reason forests exist.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Expecting bagging to fix bias. It averages wiggles; wrong families stay wrong.</li>
+<li>Crowning champions on repeatedly tuned OOB. Monitoring yes, final verdict on untouched folds.</li>
+<li>Using full features and calling it a forest. Without random $m$, $\rho$ stays high.</li>
+<li>Reading train error for forest size. Grow until OOB plateaus.</li>
+</ul>
+<p>Limitations: needs decorrelation to beat the floor; biased bases stay biased; OOB juries get noisy at tiny $n$.</p>
+<p>Exam recap: bootstrap plus aggregate; variance formula with floor; OOB 37%; forests random $m$ to decorrelate; more trees plateau given honest validation.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Bagging 500 deep trees crushes test error on noisy data but changes nothing on a systematically simple (high-bias) problem. Explain both halves with the variance formula.</span>
@@ -486,7 +562,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m4_04_ensemble_bagging_random_forests";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

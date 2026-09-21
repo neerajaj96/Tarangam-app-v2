@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,41 +249,99 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>MDS: Maps From Mileage Tables</h1>
-<p><strong>Coordinates from distances alone — double-centering traced on a 3-4-5 triangle, eigenvalues as the dimension ledger, and why Euclidean MDS is PCA in disguise.</strong></p>
+<p><strong>What problem Multidimensional Scaling (MDS) solves from distances alone, what mileage tables it needs, how double-centering trains coordinates, and where stress prices compression.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Map From Mileages</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A road atlas lists city-to-city mileages, never coordinates — yet cartographers drew the map from exactly such tables. <strong>Classical MDS</strong> does the same algebra: square the distances, <strong>double-center</strong> (subtract row/column means, add grand mean) to get inner products, eigendecompose, and read coordinates off scaled eigenvectors. PCA (M4.3) starts from coordinates and finds spread axes; MDS starts from mileages and rebuilds the map — same geometry, opposite entrances.</p>
-</div></details><pre><code class="language-text">D (distances) --square--&gt; D2 --double-center--&gt; B = -1/2 J D2 J
-B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>A road atlas lists city-to-city mileages, never coordinates. Yet cartographers drew maps from such tables. The problem: rebuild coordinates from distances only.</p>
+<p>Tiny beginner example. Two cities distance $1$ apart. Place them at $-0.5$ and $+0.5$ on one axis. Distance preserved, no coordinates were given. Classical MDS does this algebra for $n$ cities.</p>
+<p>Analogy as support, then dropped. Map from mileages. From here on we use exact terms only: squared distances, double-centering, Gram matrix, stress.</p>
+<p>Abbreviations defined on first use: Multidimensional Scaling (MDS). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $D$, $D^2$?</td>
+<td>Distance matrix and its squared entries</td>
+</tr>
+<tr>
+<td>What is $B$?</td>
+<td>Centered inner-product matrix</td>
+</tr>
+<tr>
+<td>What are $\lambda_i$, $V_k$?</td>
+<td>Eigenvalues and top eigenvectors</td>
+</tr>
+</tbody></table>
+<p>Pipeline preview in plain text (balanced fences hold one block):</p>
+<pre><code class="language-text">D (distances) --square--&gt; D2 --double-center--&gt; B = -1/2 J D2 J
+B --eigendecompose--&gt; top-k eigenvectors x sqrt(lambda) = coordinates
 </code></pre>
-<hr>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Embed $n$ items in $k$ dimensions preserving given dissimilarities.</p>
+<p><strong>Data.</strong> An $n\times n$ distance matrix $D$, not an $n\times d$ feature matrix. Feeding raw features where mileages belong is the standard setup error. Square first: the centering identity is quadratic; linear $D$ centres into nonsense.</p>
+<p><strong>Goal.</strong> Coordinates $V_k\Lambda_k^{1/2}$ (top $k$ eigenvectors times root eigenvalues) with low stress. Here $J$ centres (subtract row and column means, add grand mean); Kruskal stress prices mismatch between true and embedded distances.</p>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Double-centering and the ledger</h3>
-<p>For $n$ points with squared-distance matrix $D^2$: $B_{ij} = -\tfrac{1}{2}(D^2_{ij} - \bar{r}_i - \bar{r}_j + \bar{g})$ (row means, grand mean) converts distances to centered inner products. Eigendecompose $B = V\Lambda V^T$; coordinates $= V_k \Lambda_k^{1/2}$ (top $k$). Built-in certificates: rows of $B$ sum to $0$ (centering — one eigenvalue exactly $0$ for the all-ones vector), $\mathrm{tr}(B) = \sum \lambda_i$ (variance ledger, same checksum habit as PCA).</p>
-<h3>2.2 Stress and the PCA identity</h3>
-<p>Fewer dimensions than rank $\Rightarrow$ distortion, priced by <strong>stress</strong> (Kruskal: mismatch between true and embedded distances). <strong>Classical MDS on Euclidean distances recovers PCA&#39;s embedding</strong> (same inner-product matrix, rotated axes) — mileage-table input, PCA-grade map output. Non-metric MDS (rank-order only) lives outside this syllabus.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: MDS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$B = -\tfrac{1}{2}JD^2J$ · coords $= V_k\sqrt{\Lambda_k}$ · rows sum $0$, trace $= \sum\lambda$ · Euclidean MDS $\equiv$ PCA · stress prices compression.</p>
-</div></details><p>MDS needs <em>dissimilarities</em>, not features — gene-expression correlations, survey proximities, road mileages all embed; PCA cannot start there at all.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Distances-In-Coordinates-Out Confusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MDS input is a <em>distance matrix</em> ($n \times n$), not a data matrix ($n \times d$) — feeding raw features where mileages belong (or vice versa) is the standard setup error. Squaring first ($D^2$, not $D$) is the second: the centering identity is quadratic, and linear distances centre into nonsense.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (no features, only mileages) → data ($D$) → goal (faithful map) → method (square, centre, eigendecompose) → model (coordinates) → training (one decomposition) → example → limitations.</p>
+<h3>3.1 Double-Centering and the Ledger, Symbol by Symbol</h3>
+<p>For squared matrix $D^2$: $B_{ij}=-\tfrac12(D^2_{ij}-\bar{r}_i-\bar{r}_j+\bar{g})$. Here $\bar{r}_i$ is row mean, $\bar{r}_j$ column mean, $\bar{g}$ grand mean. This converts distances to centred inner products. Eigendecompose $B=V\Lambda V^T$; coordinates $=V_k\Lambda_k^{1/2}$. Certificates: rows of $B$ sum to $0$ (centering, one eigenvalue exactly $0$ for all-ones vector); $\mathrm{tr}(B)=\sum\lambda_i$ (variance ledger, same checksum habit as PCA).</p>
+<p>Numbered steps:</p>
+<ol>
+<li>Square $D$ to $D^2$.</li>
+<li>Double-centre to $B$.</li>
+<li>Check row sums zero and trace.</li>
+<li>Eigendecompose; keep top $k$; scale by $\sqrt{\lambda}$.</li>
+</ol>
+<h3>3.2 Stress and the PCA Identity, With Conditions</h3>
+<p>Fewer dimensions than rank means distortion, priced by stress. <strong>Classical MDS on Euclidean distances recovers PCA&#39;s embedding up to rotation</strong> (same centred inner-product matrix eigendecomposed). Qualification: identity holds for Euclidean $D$ with classical scaling; non-metric MDS (rank order only) and non-Euclidean dissimilarities live outside it and can yield negative eigenvalues that truncation must handle. Mileage input, PCA-grade map output, under those conditions.</p>
+<p>MDS needs dissimilarities, not features: gene correlations, survey proximities, road mileages all embed; PCA cannot start there at all.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MDS input vs PCA input</td>
+<td>$n\times n$ mileages vs $n\times d$ features; do not swap</td>
+</tr>
+<tr>
+<td>$D$ vs $D^2$</td>
+<td>Linear distances centre into nonsense; square first</td>
+</tr>
+<tr>
+<td>Classical vs non-metric MDS</td>
+<td>Euclidean coordinates matching PCA up to rotation vs rank-order only</td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: MDS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$B = -\tfrac{1}{2}JD^2J$ · coords $= V_k\sqrt{\Lambda_k}$ · rows sum $0$, trace $= \sum\lambda$ · Euclidean classical MDS $\equiv$ PCA up to rotation · stress prices compression.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Distances-In-Coordinates-Out Confusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MDS input is a <em>distance matrix</em> ($n \times n$), not a data matrix ($n \times d$) — feeding raw features where mileages belong (or vice versa) is the standard setup error. Squaring first ($D^2$, not $D$) is the second: the centering identity is quadratic, and linear distances centre into nonsense.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Three depots with mileages $d_{12} = 3$, $d_{13} = 4$, $d_{23} = 5$ (a 3-4-5 triangle). Double-center to $B$, verify both certificates (row sums, trace), and state the eigenvalue ledger.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Centering the Triangle</div><div class="step-content"><p>$D^2 = [[0,9,16],[9,0,25],[16,25,0]]$. Row means: $25/3 \approx 8.333$, $34/3 \approx 11.333$, $41/3 \approx 13.667$; grand mean $100/9 \approx 11.111$. $B_{11} = -\tfrac{1}{2}(0 - 8.333 - 8.333 + 11.111) = 2.778$; $B_{22} = 5.778$; $B_{33} = 8.111$; $B_{12} = -0.222$; $B_{13} = -2.556$; $B_{23} = -5.556$. Certificates: row $1$ sums $2.778 - 0.222 - 2.556 = 0$ ✓ (centering holds); trace $= 2.778 + 5.778 + 8.111 = 16.667$. Eigenvalues: $\lambda_1 \approx 12.965$, $\lambda_2 \approx 3.702$, $\lambda_3 = 0$ (sums $16.667$ ✓, forced zero by centering). Dim-$1$ keeps $12.965/16.667 \approx 77.8%$; dim-$2$ keeps $100%$ (rank $2$ — the triangle is flat, so two axes suffice exactly).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$B$ built, both certificates green, ledger $12.965 + 3.702 + 0$. A 1-D line keeps $77.8%$ (flattened triangle, stress $&gt; 0$); 2-D recovers the exact right triangle ($3$-$4$-$5$ verifies: legs $3,4$, hypotenuse $5$). Mileages in, map out — no coordinates were harmed (none were given).</p>
@@ -301,22 +367,32 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
     <p class="video-caption"><strong>Key Insight:</strong> Eigenvalues Ledger the Triangle</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the ledger balance — 12.965 plus 3.702 plus centering&#39;s zero equals the trace — with dim-1 keeping 77.8% and dim-2 the exact triangle.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Feeding $n\times d$ features as $D$. MDS eats $n\times n$ dissimilarities.</li>
+<li>Centering $D$ not $D^2$. Quadratic identity needs squares.</li>
+<li>Counting the forced zero as information. It is centering&#39;s signature for the all-ones vector.</li>
+<li>Claiming MDS equals PCA always. Only classical Euclidean MDS, up to rotation.</li>
+</ul>
+<p>Limitations: non-Euclidean $D$ can break PSD and need corrections; stress grows as $k$ shrinks; large $n$ eigendecomposition is costly.</p>
+<p>Exam recap: $B=-JD^2J/2$; coords $V_k\sqrt{\Lambda_k}$; rows sum zero, trace ledger; Euclidean classical MDS is PCA up to rotation; stress prices compression.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Centering Drill</span>
+    <span class="quiz-category">Two points distance 1 apart have squared matrix [[0,1],[1,0]]. What is B11 and what coordinates follow?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$D^2 = [[0,1],[1,0]]$ (two points, distance $1$). $B_{11}$?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$0$, diagonal stays zero</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>$0.25$ — row means $0.5$, $0.5$, grand $0.5$: $B_{11} = -0.5(0 - 0.5 - 0.5 + 0.5) = 0.25$; eigenvalues $\{0.5, 0\}$ place the pair at $\pm 0.5$ on one axis, distance $1$ preserved exactly</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$1$, distances pass through</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$-0.5$, sign flipped</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>0, diagonals stay zero so no coordinates emerge</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>0.25 — row means 0.5, grand 0.5 gives B11 = -0.5(0 - 0.5 - 0.5 + 0.5) = 0.25; eigenvalues 0.5 and 0 place the pair at ±0.5, distance 1 preserved</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>1, distances pass through unchanged</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>-0.5, sign flipped so embedding fails</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -328,21 +404,20 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Centering manufactures coordinates ($\pm 0.5$), not copies distances: $B$ holds inner products of the <em>centered</em> layout. Row-sum zero ($0.25 - 0.25$) certifies before any eigendecomposition — certificate first, coordinates second.</p><pre><code>&lt;/div&gt;
+      <p>Centering manufactures coordinates (±0.5), not copies distances: $B$ holds inner products of the centered layout. Row-sum zero (0.25 − 0.25) certifies before any eigendecomposition — certificate first, coordinates second.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Ledger Check</span>
+    <span class="quiz-category">B is 4x4 with eigenvalues 9, 4, 1, 0. How many dims exact and what share in dim-2?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$B$ is $4 \times 4$ with eigenvalues $9, 4, 1, 0$. Embedding dims and dim-2 share?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>$4$ dims needed, share $9/14$</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Rank $3$ (one forced zero), so $3$ dims exact; top-$2$ keeps $(9+4)/14 = 13/14 \approx 92.9\%$ — the zero eigenvalue is centering&#39;s signature, never information, and denominators sum *kept plus dropped*</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>$2$ dims exact always</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Share $9/9 = 100\%$ in dim $1$</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>4 dims needed, share 9/14 in dim-1 only</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Rank 3 (one forced zero), so 3 dims exact; top-2 keeps (9+4)/14 = 13/14 ≈ 92.9% — zero is centering&#39;s signature, never information</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>2 dims exact always regardless of rank</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Share 9/9 = 100% in dim-1</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -354,21 +429,20 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Trace $= 14$ is total variance; $13/14$ in two axes. The $0$ belongs to the all-ones vector (rows sum $0$), so &quot;four eigenvalues&quot; means three dimensions — counting rank, not matrix size, is the ledger discipline.</p><pre><code>&lt;/div&gt;
+      <p>Trace = 14 is total variance; 13/14 in two axes. The 0 belongs to the all-ones vector (rows sum 0), so four eigenvalues mean three dimensions — counting rank, not matrix size, is the ledger discipline.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: MDS vs PCA</span>
+    <span class="quiz-category">Euclidean distance matrix, classical MDS versus PCA scatter. What is the relation?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Euclidean distance matrix of a dataset, classical MDS vs PCA scatter. Relation?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Unrelated projections</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Identical up to rotation — same centered inner-product matrix eigendecomposed, so coordinates match after an orthogonal shrug; MDS just arrived via mileages while PCA came via features</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>MDS needs labels, PCA doesn&#39;t</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>PCA preserves distances, MDS preserves variance</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Unrelated projections from different mathematics</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Identical up to rotation — same centered inner-product matrix eigendecomposed, so coordinates match after an orthogonal change; MDS arrived via mileages while PCA came via features</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MDS needs labels while PCA does not</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>PCA preserves distances while MDS preserves variance only</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -380,7 +454,7 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>One Gram matrix, two doorways: $XX^T$ from features (PCA) versus double-centered $D^2$ (MDS) coincide for Euclidean $D$. Rotation-freedom absorbs the basis difference — geometry equal, paperwork different, the identity examiners quote.</p><pre><code>&lt;/div&gt;
+      <p>One Gram matrix, two doorways: $XX^T$ from features (PCA) versus double-centered $D^2$ (MDS) coincide for Euclidean $D$. Rotation absorbs the basis difference — geometry equal, paperwork different, the identity examiners quote.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -492,7 +566,7 @@ B --eigendecompose--&gt; top-k eigenvectors x sqrt(λ) = coordinates
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m4_06_mds_multidimensional_scaling";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

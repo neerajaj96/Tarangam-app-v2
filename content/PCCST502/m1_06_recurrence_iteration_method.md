@@ -5,7 +5,7 @@ module: 1
 sequence: 6
 title: 'Solution of Recurrences: Iteration / Expansion Method'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 9
 learningObjectives:
   - Expand recurrences level by level to a generalized kth step
   - Read the stopping depth off the shrinking argument
@@ -26,57 +26,74 @@ tags:
 **Repeated substitution, identifying generalized patterns at step k, arithmetic and geometric series summation.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** Substitution needs a *guess* — but where do guesses come from? The iteration (expansion) method finds the answer with no guessing: unroll the recursion by hand a few levels, spot the pattern at a general level $k$, then compute exactly when the unrolling must stop (the base case). The leftover is a plain sum you already know how to evaluate.
 
 ::: callout-intuition Core Mental Model
-If the substitution method is "guess the answer, then prove it," the iteration (expansion) method is "unroll the recursion by hand, a few levels at a time, until you *see* the pattern yourself — no guessing required." It's like pulling apart those nesting dolls one at a time and laying them all out in a row: doll 1 contains doll 2, which contains doll 3, which contains doll 4... After unrolling a few, you notice "oh, doll $k$ is always exactly $2$ centimetres smaller than doll $k-1$" — a pattern you can now write down as a general formula for the $k$-th doll, and from there, figure out exactly how many dolls there are in total (which tells you when the recursion bottoms out).
-
-Concretely, you take the recurrence $T(n) = T(n-1) + f(n)$, and instead of leaving $T(n-1)$ as a mystery, you *substitute its own definition back in* — replacing $T(n-1)$ with $T(n-2) + f(n-1)$, then replacing that inner $T(n-2)$ with $T(n-3) + f(n-2)$, and so on. Each substitution "expands" the expression by one more level. After doing this enough times, you spot the general pattern at an arbitrary level $k$, and finally you know exactly when the expansion must stop (usually when the argument hits the base case, like $n-k=1$) — giving you a plain sum to evaluate.
+If substitution is "guess, then prove", iteration is "unroll until you *see* it". Lay the nesting dolls in a row: doll 1 holds doll 2 holds doll 3… after a few you notice "doll $k$ is always exactly the same amount smaller" — a formula for the $k$-th doll — and counting the row tells you when it ends. Concretely: replace $T(n-1)$ by its own definition, then replace the new inner term again, and again, until level $k$'s shape is obvious.
 :::
+
+**Tiny toy example.** $T(n) = T(n-1) + 1$, $T(1) = 1$: $T(n) = T(n-2)+1+1 = T(n-3)+1+1+1$. At level $k$: $T(n) = T(n-k) + k$. Stop when $n-k = 1$ ($k = n-1$): $T(n) = 1 + (n-1) = n$. No guess was ever needed.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-**The mechanical procedure:**
-1. Write the recurrence: $T(n) = T(n-1) + f(n)$ (or the divide-and-conquer form $T(n) = aT(n/b) + f(n)$).
-2. Expand one level: substitute the recurrence's own definition for the recursive term. E.g. $T(n) = [T(n-2) + f(n-1)] + f(n)$.
-3. Expand again: $T(n) = [T(n-3)+f(n-2)] + f(n-1) + f(n)$.
-4. Continue for a few more levels until the pattern at a general level $k$ becomes clear: $T(n) = T(n-k) + \sum_{i=0}^{k-1} f(n-i)$.
-5. Determine the value of $k$ at which the recursion reaches its base case (e.g. $n-k=1 \Rightarrow k=n-1$), and substitute that value of $k$ back in.
-6. What remains is a plain summation — evaluate it using standard series formulas (arithmetic: $\sum_{i=1}^n i = \frac{n(n+1)}{2}$; geometric: $\sum_{i=0}^{k} r^i = \frac{r^{k+1}-1}{r-1}$ for $r\ne1$), and finally simplify to Big-O/Big-Theta form.
+**Numbered steps (linear form $T(n) = T(n-k) + f(n)$):**
 
-**For divide-and-conquer recurrences** $T(n) = aT(n/b) + f(n)$, the same idea applies but the argument shrinks by *division* rather than subtraction: level $k$ has $a^k$ sub-problems, each of size $n/b^k$, and the total "extra work" summed across levels becomes $\sum_{i=0}^{k-1} a^i f(n/b^i)$, with recursion bottoming out once $n/b^k = 1$, i.e. $k = \log_b n$.
+1. Write the recurrence.
+2. Expand one level: $T(n) = [T(n-2) + f(n-1)] + f(n)$.
+3. Expand again: $T(n) = [T(n-3) + f(n-2)] + f(n-1) + f(n)$.
+4. Generalise to level $k$: $T(n) = T(n-k) + \sum_{i=0}^{k-1} f(n-i)$.
+5. Stop at the base case ($n-k = 1 \Rightarrow k = n-1$) and substitute $k$ back.
+6. Evaluate the remaining sum (arithmetic $\sum i = n(n+1)/2$; geometric $\sum r^i = (r^{k+1}-1)/(r-1)$) and simplify to Big-O/Theta.
 
-**Why this method is valuable even though the Master Theorem (next topic) often gives shortcuts:** the Master Theorem only applies to recurrences of a specific standard shape, and even then only tells you the *answer*, not *why* it's true. The iteration method works on a wider variety of recurrences (including non-standard ones the Master Theorem can't handle) and builds genuine intuition for *why* the final complexity comes out the way it does, because you watch the total work accumulate level by level.
+**Divide-and-conquer form** $T(n) = aT(n/b) + f(n)$: the argument shrinks by *division*. Level $k$ has $a^k$ sub-problems of size $n/b^k$; extra work sums to $\sum_{i=0}^{k-1} a^i f(n/b^i)$; recursion bottoms out at $n/b^k = 1$, i.e. $k = \log_b n$ (logarithm base $b$: the power to which $b$ is raised to get $n$).
+
+**Why learn this when the Master Theorem (next) shortcuts it?** The Master Theorem covers one standard shape and gives only the *answer*. Iteration handles non-standard recurrences too, and shows *why* the answer holds — you watch work accumulate level by level.
 
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — $T(n) = 2T(n/2) + n$ (merge-sort shape)
 
 ::: step [Step 1: Setup] Formulating the Problem
-Solve $T(n) = 2T(n/2) + n$, with base case $T(1) = 1$, using the iteration method. (This recurrence describes algorithms like Merge Sort: split into 2 halves, recurse on each, then do $O(n)$ work to combine.)
+Solve $T(n) = 2T(n/2) + n$, $T(1) = 1$ by iteration. (Split into 2 halves, recurse, do $O(n)$ combine work.)
 :::
 
 ::: step [Step 2: Execution] Applying Core Algorithm
-**Level 0:** $T(n) = 2T(n/2) + n$.
-**Level 1 (expand $T(n/2)$):** $T(n/2) = 2T(n/4) + n/2$, so $T(n) = 2[2T(n/4)+n/2] + n = 4T(n/4) + n + n = 4T(n/4) + 2n$.
-**Level 2 (expand $T(n/4)$):** similarly, $T(n) = 8T(n/8) + 3n$.
-**Spotting the pattern at level $k$:** $T(n) = 2^k T(n/2^k) + kn$ — at each level, the "extra work" contributed is exactly $n$ (not growing, not shrinking — this is the key feature of this particular recurrence), and there are $k$ levels so far.
-**Finding when recursion bottoms out:** the recursion reaches the base case when $n/2^k = 1$, i.e. $2^k = n$, i.e. $k = \log_2 n$.
-**Substituting $k = \log_2 n$:** $T(n) = 2^{\log_2 n} \cdot T(1) + (\log_2 n)\cdot n = n \cdot 1 + n\log_2 n = n + n\log_2 n$.
+**Level 0:** $T(n) = 2T(n/2) + n$. **Level 1:** $T(n/2) = 2T(n/4) + n/2$, so $T(n) = 4T(n/4) + n + n = 4T(n/4) + 2n$. **Level 2:** $T(n) = 8T(n/8) + 3n$. **Pattern at level $k$:** $T(n) = 2^k T(n/2^k) + kn$ — every level contributes exactly $n$ extra (halving size cancels doubling count). **Stop:** $n/2^k = 1 \Rightarrow k = \log_2 n$. **Substitute:** $T(n) = n \cdot 1 + n\log_2 n$.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-$T(n) = n + n\log_2 n$. As $n$ grows large, $n\log_2 n$ dominates the smaller $n$ term, so the final asymptotic answer is $T(n) = \Theta(n\log n)$ — exactly the well-known complexity of Merge Sort, derived here from first principles by literally watching the recursion unfold level by level, rather than quoting a memorised formula.
+$T(n) = n + n\log_2 n = \Theta(n \log n)$ — merge sort's complexity derived by watching recursion unfold, not by quoting formulas.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- The stopping depth $k$ is *solved for*, not chosen: set the shrunken argument equal to the base case ($n-k = 1$ or $n/b^k = 1$).
+- Track *both* the growing sub-problem count ($a^k$) and the shrinking size ($n/b^k$) — dropping either breaks the level total.
+- The final sum still needs the series formulas; unrolling without summing is an unfinished answer.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| Stopping rule, subtractive vs divisive | $k = n-1$ (linear) vs $k = \log_b n$ (divide-and-conquer) |
+| Iteration vs substitution | Discovers the bound (no guess) vs verifies a guessed bound |
+| Level total vs grand total | One row's work ($n$ here) vs sum over all rows ($n \log n$) |
+
+**Exam recap (facts an examiner rewards):** level-$k$ pattern $2^kT(n/2^k) + kn$ for the merge-sort recurrence; stopping condition $n/2^k = 1$; final $\Theta(n \log n)$; iteration works beyond the Master Theorem's shape.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz In the iteration/expansion method, what determines the number of levels $k$ you expand before stopping?
 () You always stop after exactly 3 levels

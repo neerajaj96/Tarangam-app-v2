@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,20 +281,24 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Greedy Strategy &amp; Control Abstraction</h1>
 <p><strong>Greedy-choice property, optimal substructure, the generic greedy loop, activity selection as the canonical proof, and when greed fails.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Coin-Change Cashier</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A cashier making change for 67¢ grabs the biggest coin that fits (quarter), then repeats (quarter, dime, nickel, pennies) — never reconsidering, never backtracking. Fast, obviously sensible — and <em>sometimes wrong</em>: with coin denominations {30, 25, 1} and 50¢ due, greedy grabs 30+20×1 (21 coins!) while 25+25 (2 coins) is optimal. <strong>Greedy algorithms</strong> commit to the locally best choice at every step with zero regrets. The entire theory of this topic is one question: <em>when is never-looking-back provably safe?</em></p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Many optimization problems ask &quot;pick the best <em>set</em> of things&quot; (activities, edges, coins). The laziest strategy: at each step grab whatever looks best <em>right now</em> and never reconsider. Sometimes that laziness is provably optimal (activity selection); sometimes it fails badly (0/1 knapsack). This note defines the greedy skeleton precisely, then isolates the two properties that license it.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Coin-Change Cashier</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A cashier making 67¢ grabs the biggest fitting coin (quarter), then repeats — never reconsidering. Fast, sensible — and <em>sometimes wrong</em>: with denominations {30, 25, 1} and 50¢ due, greedy takes 30+20×1 (21 coins!) while 25+25 (2 coins) is optimal. <strong>Greedy algorithms</strong> commit locally with zero regrets; the whole theory is one question: <em>when is never-looking-back provably safe?</em> Drop the till now: exchange arguments and substructure below are the exact answer.</p>
+</div></details><p><strong>Tiny toy example.</strong> Activities A(1–2), B(2–3), C(1–3) (&quot;start–finish&quot; hours): earliest-finish greedy picks A (ends 2), then B (starts 2 ≥ 2) → {A, B}, size 2 — optimal, since C blocks both others. The proof idea: A ends first, so swapping A into any solution never hurts.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Control Abstraction (the Generic Greedy Loop)</h3>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-eight-activities-earliest-finish-greedy">3. Worked example — eight activiti… →</a></p>
+<p><strong>Symbols and abbreviations:</strong> $S$ = solution built so far; &quot;feasible&quot; = satisfying the problem&#39;s constraints; exchange argument = proof technique swapping the greedy pick into an optimal solution.</p>
+<p><strong>Control abstraction — numbered steps (the generic greedy loop):</strong></p>
 <pre><code class="language-text">GreedyFramework(Problem P):
     Solution S ← ∅
     while S is not complete and candidates remain:
@@ -303,28 +307,58 @@
         discard x either way                      // never reconsidered
     return S
 </code></pre>
-<p>Every greedy algorithm in this module is this skeleton wearing different SELECT/feasible costumes (Kruskal: cheapest edge not forming a cycle; Dijkstra: closest unsettled vertex; Huffman: two lightest trees).</p>
-<h3>2.2 The Two Properties That License Greed</h3>
+<p>Every greedy algorithm here is this skeleton in costume (Kruskal: cheapest edge avoiding cycles; Dijkstra: closest unsettled vertex; Huffman: two lightest trees).</p>
+<p><strong>The two licensing properties:</strong></p>
 <ul>
-<li><strong>Greedy-choice property:</strong> <em>some</em> optimal solution extends the greedy first choice — i.e. there exists an optimal solution containing it (proved by <strong>exchange argument</strong>: take any optimal solution lacking the greedy pick, swap the pick in, show nothing gets worse).</li>
-<li><strong>Optimal substructure:</strong> after the greedy commitment, the <em>remainder</em> is the same problem on a smaller instance, solvable optimally the same way (shared with dynamic programming — §4).</li>
+<li><strong>Greedy-choice property:</strong> <em>some</em> optimal solution extends the greedy first choice — proved by <strong>exchange argument</strong>: take any optimal solution lacking the pick, swap the pick in, show nothing gets worse.</li>
+<li><strong>Optimal substructure:</strong> after committing, the <em>remainder</em> is the same problem on a smaller instance, solved the same way (shared with dynamic programming).</li>
 </ul>
-<p>Greedy needs <strong>both</strong>; DP needs only the second. Problems with substructure but <em>no</em> safe greedy choice (0/1 knapsack, longest path) punish greed and demand DP or backtracking instead. (Preview: on items $(60,10),(100,20),(120,30)$ with capacity $50$, ratio-greedy scores $60+100 = 160$ while $100+120 = 220$ fits — greed leaves 60 value on the table.)</p>
-<h3>2.3 Canonical Proof: Activity Selection</h3>
-<p>Given activities with start/finish times, maximize the count of compatible (non-overlapping) activities. Greedy rule: <strong>always pick the compatible activity finishing earliest</strong>. Exchange proof: let greedy pick $a_1$ (earliest finish $f_1$); any optimal solution&#39;s first activity $a_k$ has $f_k \ge f_1$, so swapping $a_k \to a_1$ keeps feasibility and count — an optimal solution <em>containing</em> $a_1$ exists; recurse on what remains after $f_1$. Result: $\Theta(n \log n)$ (sort by finish) and provably optimal.</p>
+<p>Greedy needs <strong>both</strong>; DP (dynamic programming) needs only the second. Substructure without a safe greedy choice (0/1 knapsack, longest path) punishes greed: on items $(60,10),(100,20),(120,30)$, capacity $50$, ratio-greedy banks $60+100 = 160$ while $100+120 = 220$ fits — 60 value abandoned.</p>
+<p><strong>Canonical proof: activity selection.</strong> Maximize compatible (non-overlapping) activities; greedy rule: <strong>earliest finish first</strong>. Exchange: greedy pick $a_1$ (finish $f_1$); any optimum&#39;s first activity $a_k$ has $f_k \ge f_1$, so $a_k \to a_1$ keeps feasibility and count — an optimum <em>containing</em> $a_1$ exists; recurse after $f_1$. Cost $\Theta(n \log n)$ (sort by finish), provably optimal.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Greed Checklist</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Loop: <strong>select-best → commit-if-feasible → never-revisit</strong> · license: <strong>greedy-choice</strong> (exchange argument) + <strong>optimal substructure</strong> · canonical wins: <strong>activity selection</strong> (earliest finish), <strong>fractional knapsack</strong> (best ratio), <strong>MST/Huffman/Dijkstra</strong> · canonical failure: <strong>0/1 knapsack</strong> (greed by ratio fails), <strong>coin systems without canonical denominations</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Fractional ≠ 0/1 Knapsack (the Standard Trap)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Greedy-by-ratio is <em>optimal</em> for <strong>fractional</strong> knapsack (take fractions of the best-ratio item — exchange argument holds) and can <em>fail</em> for <strong>0/1</strong> knapsack (indivisibility breaks the swap: classic $v/w$ counterexample $(60,10),(100,20),(120,30)$, capacity $50$: greedy banks $60+100 = 160$ but $100+120 = 220$ fits). Same ratio rule, opposite verdicts — the exam always pairs them.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Fractional ≠ 0/1 Knapsack (the Standard Trap)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Greedy-by-ratio is <em>optimal</em> for <strong>fractional</strong> knapsack (fractions keep the swap possible) and can <em>fail</em> for <strong>0/1</strong> knapsack (indivisibility breaks the swap: $(60,10),(100,20),(120,30)$, capacity $50$: greedy $160$ vs optimum $220$). Same ratio rule, opposite verdicts — the exam always pairs them.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Activities (start, finish): A(1,4), B(3,5), C(0,6), D(5,7), E(3,9), F(5,9), G(6,10), H(8,11). Select the maximum compatible subset with earliest-finish greedy, and show the exchange logic at the first step.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Running Greedy</div><div class="step-content"><p>Sort by finish: A(4), B(5), C(6), D(7), E(9), F(9), G(10), H(11). Pick A(1,4) (earliest finish). Discard overlapping: B(3&lt;4), C(0&lt;4), E(3&lt;4). Next earliest compatible: D(5,7) (5≥4 ✓). Discard F(5&lt;7? F starts 5 &lt; 7 ✓ overlaps → discard). Next: H(8,11) (8≥7 ✓); G(6&lt;7... G starts 6, D ends 7 → overlaps → discard). Selected: {A, D, H} — 3 activities.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>{A, D, H} with no overlaps and no room for a fourth (every leftover overlaps one of them — C spans 0–6 killing A+D, B/E/F/G each collide). Exchange argument at step 1: any optimal solution&#39;s first activity finishes ≥ 4 = A&#39;s finish, so A swaps in freely — greed&#39;s first commitment was safe, and inductively so is each following one.</p>
+<h2 id="3-worked-example-eight-activities-earliest-finish-greedy">3. Worked example — eight activities, earliest-finish greedy</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Activities (start, finish): A(1,4), B(3,5), C(0,6), D(5,7), E(3,9), F(5,9), G(6,10), H(8,11). Select the maximum compatible subset; show the exchange logic at step 1.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Running Greedy</div><div class="step-content"><p>Sort by finish: A(4), B(5), C(6), D(7), E(9), F(9), G(10), H(11). Pick A(1,4). Discard overlapping: B(3&lt;4), C(0&lt;4), E(3&lt;4). Next compatible: D(5,7) (5≥4 ✓); F starts 5 &lt; 7 → discard. Next: H(8,11) (8≥7 ✓); G starts 6 &lt; 7 → discard. Selected {A, D, H} — 3 activities.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>{A, D, H}: no overlaps, no room for a fourth (every leftover collides with one of them). Exchange at step 1: any optimum&#39;s first activity finishes ≥ 4 = A&#39;s finish, so A swaps in freely — the first commitment was safe, and inductively so is each following one.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-eight-activities-earliest-finish-greedy">← 3. Worked example — eight activiti…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>&quot;Greedy worked on this instance&quot; proves nothing — optimality is a universal claim over instances, proved by exchange.</li>
+<li>Ties ({A,D,H} vs {B,D,H}) are expected: the theorem promises <em>an</em> optimum, never uniqueness.</li>
+<li>Fractional success never transfers to 0/1: divisibility is the boundary, not the ratio rule.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Greedy-choice vs optimal substructure</td>
+<td>This step is safe (exchange) vs the rest is the same problem (recurse)</td>
+</tr>
+<tr>
+<td>Fractional vs 0/1 knapsack</td>
+<td>Slicing keeps swaps legal vs whole items couple decisions</td>
+</tr>
+<tr>
+<td>Greedy vs DP requirements</td>
+<td>Choice + substructure vs overlap + substructure</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> the three-line loop; both license properties with the exchange sketch; activity selection rule + $\Theta(n \log n)$; the 160-vs-220 knapsack counterexample with capacity 50.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What do the greedy-choice property and optimal substructure each contribute to a correctness proof?</span>

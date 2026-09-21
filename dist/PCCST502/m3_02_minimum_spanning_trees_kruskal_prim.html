@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,25 +281,36 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Minimum Spanning Trees: Kruskal &amp; Prim</h1>
 <p><strong>Cut property, cycle property, Kruskal with Union-Find, Prim&#39;s frontier growth, and a hand-traced MST both ways.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Cheapest Islands Network</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Six islands need bridges so all connect, minimizing total cost. Two instincts: <strong>Kruskal</strong> — sort all possible bridges by price, build the cheapest that doesn&#39;t close a loop (global shopping list, Union-Find as the loop detector). <strong>Prim</strong> — stand on one island, repeatedly build the cheapest bridge from <em>your connected territory</em> outward (territorial growth, one tree always). Different walks, same cheapest network — because both obey one law: the cut property.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Connect all vertices (islands) with the cheapest set of edges (bridges) that keeps everything reachable — no cycles (a cycle wastes a bridge), minimum total weight. That set is a <strong>Minimum Spanning Tree (MST)</strong>: spanning (touches every vertex), tree (acyclic), minimum (cheapest possible total). Two greedy instincts solve it differently — and one theorem licenses both.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Cheapest Islands Network</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Kruskal</strong> (named after Joseph Kruskal): sort all bridges by price; build the cheapest that does not close a loop (global shopping list, Union-Find as loop detector). <strong>Prim</strong> (named after Robert Prim): stand on one island; repeatedly build the cheapest bridge from <em>your territory</em> outward (one tree always). Different walks, same cheapest network — because both obey the cut property. Drop the islands now: cuts, sorts, and frontiers below are the exact content.</p>
+</div></details><p><strong>Tiny toy example (3 vertices).</strong> Triangle edges: $a$–$b$ (1), $b$–$c$ (2), $a$–$c$ (3). MST = {1, 2}, cost 3. Kruskal: take 1, take 2, skip 3 (cycle). Prim from $a$: take 1 to $b$, then 2 to $c$. Both agree here.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Cut Property (the Only Theorem That Matters Here)</h3>
-<p>For <strong>any</strong> cut (partition of vertices into $S$ / $V-S$), the <strong>lightest edge crossing it belongs to <em>some</em> MST</strong>. Proof sketch (exchange): if the MST-to-be skipped that edge, adding it creates a cycle crossing the cut somewhere pricier — swap and improve. Corollary (<strong>cycle property</strong>): the <em>heaviest</em> edge on any cycle belongs to <em>no</em> MST.</p>
-<ul>
-<li><strong>Kruskal:</strong> process edges lightest-first; take each unless it closes a cycle (Union-Find FIND test). Every taken edge is the lightest crossing <em>its</em> cut (the cut separating its young component) — cut property per step. $\Theta(E \log E)$ sorting dominates; Union-Find adds near-linear dust.</li>
-<li><strong>Prim:</strong> grow one tree from a root; always attach the cheapest edge leaving the tree (priority queue). Each attachment invokes the cut property on (tree / rest). $\Theta(E \log V)$ with a binary heap.</li>
-</ul>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-six-vertices-both-algorithms">3. Worked example — six vertices, … →</a></p>
+<p><strong>Symbols:</strong> cut = a partition of vertices into $S$ / $V-S$; an edge &quot;crosses&quot; the cut if its endpoints lie on opposite sides; MST = minimum spanning tree.</p>
+<p><strong>The cut property (the only theorem here).</strong> For <strong>any</strong> cut, the <strong>lightest edge crossing it belongs to <em>some</em> MST</strong>. Proof sketch (exchange): if the MST-to-be skipped it, adding it creates a cycle crossing the cut at a pricier edge — swap and improve. Corollary (<strong>cycle property</strong>): the <em>heaviest</em> edge on any cycle belongs to <em>no</em> MST.</p>
+<p><strong>Kruskal — numbered steps:</strong></p>
+<ol>
+<li>Sort all edges lightest-first: $\Theta(E \log E)$.</li>
+<li>Scan: take each edge unless its endpoints are already connected (Union-Find FIND test); each taken edge is lightest across its component&#39;s cut.</li>
+<li>Stop at $V-1$ edges. Union-Find adds near-linear dust.</li>
+</ol>
+<p><strong>Prim — numbered steps:</strong></p>
+<ol>
+<li>Root an arbitrary start vertex; its singleton is the territory.</li>
+<li>Repeatedly attach the cheapest edge leaving the territory (priority queue = heap, a structure always yielding the minimum).</li>
+<li>Each attachment invokes the cut property on (territory / rest). Cost $\Theta(E \log V)$ with a binary heap.</li>
+</ol>
 <pre><code class="language-text">Kruskal (global list):            Prim from 1 (territory):
 
 edges sorted: 1,2,2,3,            {1} --2--&gt; {1,3} --1--&gt; {1,3,2}
@@ -307,19 +318,49 @@ edges sorted: 1,2,2,3,            {1} --2--&gt; {1,3} --1--&gt; {1,3,2}
 take unless cycle                 always cheapest edge OUT
 </code></pre>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: MST Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Cut: <strong>lightest crossing edge ∈ some MST</strong> · cycle: <strong>heaviest on a cycle ∈ no MST</strong> · Kruskal: <strong>sort + Union-Find</strong>, $\Theta(E\log E)$ · Prim: <strong>grow + heap</strong>, $\Theta(E\log V)$ · dense graphs: Prim wins (no sort of $V^2$ edges); sparse: Kruskal shines.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: &quot;Some MST&quot; ≠ &quot;The MST&quot; (and Weights Must Differ for Uniqueness)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The cut property promises membership in <em>some</em> MST — with tied weights, Kruskal&#39;s and Prim&#39;s choices can legitimately differ and both be optimal. MST is <strong>unique iff all edge weights are distinct</strong>. Any &quot;the algorithm finds THE tree&quot; claim without distinctness is overstated.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: &quot;Some MST&quot; ≠ &quot;The MST&quot; (Distinct Weights Guarantee Uniqueness)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The cut property promises membership in <em>some</em> MST — with tied weights, Kruskal&#39;s and Prim&#39;s choices can legitimately differ yet both be optimal. Distinct edge weights <em>guarantee</em> a unique MST; equal weights merely <em>allow</em> multiple optima (they do not force them). Any &quot;the algorithm finds THE tree&quot; claim without distinctness is overstated.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Graph on ${1..6}$ with edges (weight): 2–3(1), 1–3(2), 4–5(2), 5–6(3), 1–2(4), 2–4(5), 4–6(6), 3–4(8), 3–5(10). Run Kruskal fully (with Union-Find states) and state Prim-from-1&#39;s attachment order.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Both</div><div class="step-content"><p><strong>Kruskal</strong> (sorted): take 2–3(1) [{2,3}]; take 1–3(2) [{1,2,3}]; take 4–5(2) [{4,5}]; skip 1–2(4) (cycle 1–3–2); take 5–6(3) [{4,5,6}]; take 2–4(5) (merges {1,2,3}+{4,5,6} — all connected); skip 4–6(6), 3–4(8), 3–5(10) (cycles). MST edges: <strong>{2–3, 1–3, 4–5, 5–6, 2–4}</strong>, cost $1+2+2+3+5 = \mathbf{13}$.
-<strong>Prim from 1:</strong> frontier cheapest out of {1}: 1–3(2) → {1,3}: cheapest out: 2–3(1) → {1,2,3}: cheapest out: 2–4(5) → {1,2,3,4}: cheapest out: 4–5(2) → add 5: cheapest out: 5–6(3). Same edge set, same cost 13 (both methods agree here, though the tied weight-2 edges mean uniqueness isn&#39;t forced in general — each tied edge just happens to be forced by its own cut).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Both algorithms bank cost <strong>13</strong> via different disciplines — Kruskal rejected four cycle-closers (1–2, 4–6, 3–4, 3–5), Prim never considered them. Same optimum, complementary certificates: sorted-list greed vs. territorial greed, both licensed by the cut property.</p>
+<h2 id="3-worked-example-six-vertices-both-algorithms">3. Worked example — six vertices, both algorithms</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Graph on ${1..6}$, edges (weight): 2–3(1), 1–3(2), 4–5(2), 5–6(3), 1–2(4), 2–4(5), 4–6(6), 3–4(8), 3–5(10). Run Kruskal fully (with Union-Find states); give Prim-from-1&#39;s attachment order.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Both</div><div class="step-content"><p><strong>Kruskal</strong> (sorted): take 2–3(1) [{2,3}]; take 1–3(2) [{1,2,3}]; take 4–5(2) [{4,5}]; skip 1–2(4) (cycle 1–3–2); take 5–6(3) [{4,5,6}]; take 2–4(5) (merges {1,2,3}+{4,5,6}); skip 4–6(6), 3–4(8), 3–5(10) (cycles). MST <strong>{2–3, 1–3, 4–5, 5–6, 2–4}</strong>, cost $1+2+2+3+5 = \mathbf{13}$. <strong>Prim from 1:</strong> out of {1}: 1–3(2) → {1,3}: cheapest out 2–3(1) → {1,2,3}: cheapest out 2–4(5) → add 4: cheapest out 4–5(2) → add 5: cheapest out 5–6(3). Same edge set, cost 13.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Both bank cost <strong>13</strong> by different disciplines — Kruskal rejected four cycle-closers; Prim never considered them. Same optimum, complementary certificates: sorted-list greed vs territorial greed, both licensed by the cut property. (The tied weight-2 edges merely <em>allow</em> divergence in general; here each is forced by its own cut.)</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-six-vertices-both-algorithms">← 3. Worked example — six vertices, …</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>&quot;Lightest crossing <em>some</em> cut&quot; is per-step: Kruskal&#39;s edge is lightest for <em>its component&#39;s</em> cut, not globally lightest remaining (skipped edges are heavier on their cycle).</li>
+<li>Dense vs sparse preference flips: Kruskal&#39;s sort wall is $\Theta(V^2 \log V)$ when dense.</li>
+<li>$V-1$ edges is the stop rule for connected graphs — count them to catch trace slips.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cut vs cycle property</td>
+<td>Lightest-crossing ∈ some MST vs heaviest-on-cycle ∈ no MST</td>
+</tr>
+<tr>
+<td>Kruskal vs Prim growth</td>
+<td>Merging forest (global sort) vs single growing tree (heap frontier)</td>
+</tr>
+<tr>
+<td>Unique vs some MST</td>
+<td>Distinct weights ⇒ unique; ties allow (never force) divergence</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> cut property statement + exchange sketch; Kruskal $\Theta(E \log E)$ with Union-Find cycle test; Prim $\Theta(E \log V)$ heap; dense→Prim, sparse→Kruskal.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Kruskal considers edge e (weight 7) connecting two vertices already in the same Union-Find set. Why must e be skipped, and which property blesses the skip?</span>

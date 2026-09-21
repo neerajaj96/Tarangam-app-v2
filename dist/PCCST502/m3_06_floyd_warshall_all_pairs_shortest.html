@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,15 +281,17 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Floyd-Warshall: All Pairs, One Recurrence</h1>
 <p><strong>Every pair, every midpoint — the $D^k$ table hand-traced on three vertices, the single relaxation that pays, and $O(V^3)$ honesty.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Transfer Hubs Opening in Turn</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Round $k$ opens vertex $k$ as a permitted transfer hub: every pair re-asks &quot;direct, or via the new hub?&quot; Dijkstra (M3.3) flies one source nonstop; Floyd-Warshall connects <em>all</em> airports by inducting hubs one at a time — slower per query ($O(V^3)$ prep), instant answers after ($O(1)$ lookup), and tolerant of negative edges (just not negative cycles).</p>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Dijkstra finds routes from <em>one</em> source. But a distance table for <em>every</em> pair (road atlas, network routing tables) needs all-pairs answers — and the graph may hold negative edges (discounts, not just costs), which Dijkstra forbids. Floyd-Warshall (named after Robert Floyd and Stephen Warshall) answers all pairs with one DP (dynamic programming) recurrence, tolerating negative edges (though not negative cycles).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Transfer Hubs Opening in Turn</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Round $k$ opens vertex $k$ as a permitted transfer hub: every pair re-asks &quot;direct, or via the new hub?&quot; Dijkstra flies one source nonstop; Floyd-Warshall connects <em>all</em> airports by inducting hubs one at a time — slower prep ($O(V^3)$), instant answers after ($O(1)$ lookup), tolerant of negative edges but not negative cycles. Drop the airports now: the $D^k$ recurrence below is the exact mechanism.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Direct 8 Loses to Via-2&#39;s 5</span>
@@ -312,35 +314,72 @@
     <p class="video-caption"><strong>Key Insight:</strong> Direct 8 Loses to Via-2&#39;s 5</p>
     <div class="video-observations"><strong>What to observe:</strong> Round $k = 2$ admits vertex $2$ as midpoint: $D[1][3] = \min(8, 3 + 2) = 5$ — the matrix below traces all three rounds.</div>
   </div>
-</div><hr>
+</div><p><strong>Tiny toy example (2 vertices).</strong> Edges $1 \to 2$ (7), $2 \to 1$ ($-2$). $D^0 = [[0,7],[-2,0]]$. Round 1 (hub 1): $D[2][2] = \min(0, -2+7) = 0$ — no change. Round 2 (hub 2): $D[1][1] = \min(0, 7-2) = 0$ — no change, diagonal clean, no negative cycle. Two rounds, zero drama, correct table.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Recurrence and complexity</h3>
-<p>$D^k[i][j] = \min(D^{k-1}[i][j],, D^{k-1}[i][k] + D^{k-1}[k][j])$ — best path using intermediate vertices from ${1..k}$. Run $k = 1..V$; time $\Theta(V^3)$, space $\Theta(V^2)$ (in-place updates safe: round $k$ reads its own row/column consistently). Handles negative weights; a negative diagonal entry at the end convicts a negative cycle. Versus $V \times$ Dijkstra ($O(VE\log V)$, non-negative only): Floyd wins on dense graphs and simplicity, loses on sparse ones.</p>
-<h3>2.2 Path reconstruction</h3>
-<p>Keep predecessors $\Pi[i][j]$ (last updated alongside $D$); follow pointers home. Without $\Pi$, distances only — &quot;how far&quot; without &quot;which way&quot;.</p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-three-vertices-three-rounds-one-change">3. Worked example — three vertices… →</a></p>
+<p><strong>Symbols:</strong> $D^k[i][j]$ = shortest path from $i$ to $j$ using intermediate vertices only from ${1..k}$; $V$ = vertex count; $\Pi[i][j]$ = predecessor table for rebuilding paths.</p>
+<p><strong>Recurrence and complexity — numbered steps:</strong></p>
+<ol>
+<li>Initialise $D^0$ = direct edge weights ($\infty$ where no edge, $0$ on the diagonal).</li>
+<li>For $k = 1..V$: $D^k[i][j] = \min(D^{k-1}[i][j],, D^{k-1}[i][k] + D^{k-1}[k][j])$ — best old path vs best via new hub $k$.</li>
+<li>Time $\Theta(V^3)$, space $\Theta(V^2)$ (in-place updates are safe: round $k$&#39;s row/column reads stay consistent since paths using $k$ twice cannot improve without negative cycles — a favourite viva trap).</li>
+<li>Negative weights allowed; a negative diagonal entry at the end convicts a <strong>negative cycle</strong> (looping profitably forever — shortest paths then undefined).</li>
+<li>Versus $V \times$ Dijkstra ($O(VE\log V)$, non-negative only): Floyd wins on dense graphs and simplicity, loses on sparse ones.</li>
+</ol>
+<p><strong>Path reconstruction.</strong> Keep predecessors $\Pi[i][j]$, updated alongside $D$; follow pointers home. Without $\Pi$: distances only — &quot;how far&quot; without &quot;which way&quot;.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Floyd-Warshall</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$D^k = \min(D^{k-1}, D^{k-1}[i][k] + D^{k-1}[k][j])$ · $\Theta(V^3)/\Theta(V^2)$ · negative edges OK, negative cycles detected via diagonal · $\Pi$ rebuilds paths.</p>
 </div></details><p>In-place safety is subtle but real: $D[i][k]$ and $D[k][j]$ are frozen during round $k$ (paths through $k$ twice can&#39;t improve without negative cycles) — overwriting needs no copy, a favourite viva trap.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Dijkstra-for-All-Pairs Reflex</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Running Dijkstra from every source fails on negative edges (its greedy settling assumes non-negativity) — Floyd&#39;s DP makes no such assumption. An option prescribing $V \times$ Dijkstra &quot;for all weights&quot; smuggles non-negativity into a negative-edge problem.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Digraph: $1 \to 2$ ($3$), $2 \to 3$ ($2$), $1 \to 3$ ($8$). Trace all $D^k$ rounds and name every entry that changes.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Three Rounds, One Change</div><div class="step-content"><p>$D^0 = [[0,3,8],[\infty,0,2],[\infty,\infty,0]]$. $k = 1$ (via $1$): only paths <em>starting</em>... candidates $D[i][1] + D[1][j]$ need incoming-to-$1$ (none finite except $D[1][1] = 0$) — no changes. $k = 2$ (via $2$): $D[1][3] = \min(8, D[1][2] + D[2][3] = 3 + 2) = 5$ ✓ (the single improvement); $D[1][1] = \min(0, 3 + \infty) = 0$; $D[3][3]$ untouched. $k = 3$ (via $3$): column/row $3$ offer no outgoing ($D[3][\cdot] = \infty$ off-diagonal) — no changes. Final $D = [[0,3,5],[\infty,0,2],[\infty,\infty,0]]$; diagonal clean (no negative cycle).</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Exactly one entry moved ($D[1][3]$: $8 \to 5$); rounds $1$ and $3$ changed nothing. Sparse graphs trace mostly-quiet rounds — the work concentrates where midpoints actually bridge, which is why $V \times$ Dijkstra wins sparse races while Floyd wins dense simplicity.</p>
+<h2 id="3-worked-example-three-vertices-three-rounds-one-change">3. Worked example — three vertices, three rounds, one change</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Digraph: $1 \to 2$ ($3$), $2 \to 3$ ($2$), $1 \to 3$ ($8$). Trace all $D^k$ rounds; name every entry that changes.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Three Rounds, One Change</div><div class="step-content"><p>$D^0 = [[0,3,8],[\infty,0,2],[\infty,\infty,0]]$. $k = 1$ (via $1$): candidates $D[i][1]+D[1][j]$ need incoming-to-$1$ (none finite except $D[1][1]=0$) — no changes. $k = 2$ (via $2$): $D[1][3] = \min(8, 3+2) = 5$ ✓ (the single improvement); $D[1][1] = \min(0, 3+\infty) = 0$; $D[3][3]$ untouched. $k = 3$ (via $3$): row/column 3 offer no outgoing ($D[3][\cdot] = \infty$ off-diagonal) — no changes. Final $D = [[0,3,5],[\infty,0,2],[\infty,\infty,0]]$; diagonal clean (no negative cycle).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Exactly one entry moved ($D[1][3]$: $8 \to 5$); rounds $1$ and $3$ changed nothing. Sparse graphs trace mostly-quiet rounds — work concentrates where midpoints actually bridge, which is why $V \times$ Dijkstra wins sparse races while Floyd wins dense simplicity.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-three-vertices-three-rounds-one-change">← 3. Worked example — three vertices…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Quiet rounds are normal output, not errors — most entries in most rounds (especially late $k$) correctly sit still. Never fabricate improvements.</li>
+<li>Negative <em>edges</em> are legal input; negative <em>cycles</em> void the question (report, don&#39;t route).</li>
+<li>$D^k$ indexes the hub set ${1..k}$, not &quot;paths of length $k$&quot; — $k$ counts admitted midpoints.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Negative edge vs negative cycle</td>
+<td>Tolerated input vs undefined shortest paths (diagonal $&lt; 0$)</td>
+</tr>
+<tr>
+<td>Floyd vs $V \times$ Dijkstra</td>
+<td>All weights + dense-friendly vs non-negative + sparse-friendly</td>
+</tr>
+<tr>
+<td>$D$ vs $\Pi$ tables</td>
+<td>How far (distances) vs which way (rebuilt paths)</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> the one-line recurrence with $k = 1..V$; $\Theta(V^3)/\Theta(V^2)$; diagonal negative ⟺ negative cycle; $\Pi$ for reconstruction; the $8 \to 5$ via-2 improvement.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q1: Recurrence Drill</span>
+    <span class="quiz-category">Recurrence drill: $D^{2} = [[0,4,9],[1,0,2],[7,5,0]]$. Compute $D^{3}[1][2]$ (1-indexed, via vertex $3$).</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>$D^{2} = [[0,4,9],[1,0,2],[7,5,0]]$. Compute $D^{3}[1][2]$ (1-indexed, via vertex $3$).</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>$14$, detours always win</span></button>
 <button class="quiz-option-btn" data-correct="true"><span>$\min(4, D[1][3] + D[3][2] = 9 + 5) = \min(4, 14) = 4$ — the via-$3$ detour ($14$) loses honestly to direct ($4$); the min keeps the champion, and quiet rounds are normal output, not errors</span></button>
@@ -362,11 +401,10 @@
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q2: Better Detour</span>
+    <span class="quiz-category">Better detour: same matrix, what is $D^{3}[2][1]$ via vertex $3$?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Same matrix: $D^{3}[2][1]$ via vertex $3$?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>$1$, direct always wins</span></button>
 <button class="quiz-option-btn" data-correct="true"><span>$\min(1, D[2][3] + D[3][1] = 2 + 7) = \min(1, 9) = 1$ — the $9$-detour loses to direct $1$; the min keeps the champion regardless of direction, new hubs don&#39;t gift improvements</span></button>
@@ -388,11 +426,10 @@
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Q3: Negative-Cycle Verdict</span>
+    <span class="quiz-category">Negative-cycle verdict: final diagonal reads $[0, -2, 0]$. Meaning?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>Final diagonal reads $[0, -2, 0]$. Meaning?</p>
-</div>
+  <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Distances need one more round</span></button>
 <button class="quiz-option-btn" data-correct="true"><span>Negative cycle exists through vertex $2$ — a path from $2$ back to $2$ totalling $-2$ means infinite profitable looping, so shortest paths are undefined (unbounded below) wherever the cycle is reachable; report, don&#39;t route</span></button>

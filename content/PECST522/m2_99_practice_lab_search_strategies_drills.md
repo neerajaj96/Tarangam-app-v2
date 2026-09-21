@@ -5,7 +5,7 @@ module: 2
 sequence: 99
 title: 'Module 2 Practice Lab: Search Strategy Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 9
 learningObjectives:
   - Count the eleven-percent IDS miracle against BFS exactly
   - Spring the hundred-cost shortcut trap for UCS verdicts
@@ -25,42 +25,36 @@ tags:
 ---
 # Module 2 Practice Lab: Search Strategy Drills
 
-**Strategy selection under constraints, cost-trap autopsies, IDS arithmetic, heuristic admissibility trials, and exam essay models.**
+**Problem: turn search theory into exam arithmetic and strategy choice. By the end you can price IDS overhead, spring cost traps, try heuristics, and explain tree-vs-graph gaps.**
 
-<a id="the-intuition"></a>
-## 1. Step-by-Step Scenario Analysis
+<a id="start-zero"></a>
+## 1. Start From Zero: Three Autopsies
 
-### Scenario 1: The 11% Miracle (IDS vs. BFS, Counted)
+**Problem first:** students memorize verdicts without numbers. **Method:** count one case fully per strategy family, then generalize.
 
-Branching $b = 10$, goal depth $d = 5$. BFS generates $1 + 10 + 100 + 1000 + 10{,}000 + 100{,}000 = \mathbf{111{,}111}$ nodes. IDS regenerates shallow tiers per iteration: $5\cdot10 + 4\cdot100 + 3\cdot1000 + 2\cdot10{,}000 + 1\cdot100{,}000 = 50 + 400 + 3000 + 20{,}000 + 100{,}000 = \mathbf{123{,}450}$ — just **11% more** for linear memory ($O(bd)$ vs. $O(b^d)$) *plus* depth-first's optimality-on-uniform-cost. The "wasteful regeneration" intuition dies on contact with geometric series: upper tiers are exponentially tiny, so re-walking them costs exponentially nothing.
+**Scenario 1 — The 11% miracle (IDS vs. BFS, counted):** branching b = 10, goal depth d = 5. BFS builds levels 0..5: 1 + 10 + 100 + 1000 + 10,000 + 100,000 = 111,111 nodes. IDS re-walks upper tiers: 5x10 + 4x100 + 3x1000 + 2x10,000 + 1x100,000 = 123,450 — ~11% more — for linear `O(b*d)` memory instead of `O(b^d)`, plus uniform-cost optimality. Upper tiers are exponentially tiny, so re-walking crumbs costs crumbs.
 
-### Scenario 2: The $100 Shortcut Trap (BFS vs. UCS)
+**Scenario 2 — The \$100 shortcut trap (BFS vs. UCS):** start-goal direct toll \$100 (1 step); start-A-goal backroad \$1 + \$1 (2 steps). BFS (counts steps) takes the toll; UCS (counts dollars) takes the backroad. "Fewest edges" answers BFS; "cheapest" answers UCS; "both" is correct only at uniform cost.
 
-Roads: start→goal direct toll $100 (1 step); start→A→goal costs $1 + $1 (2 steps). BFS (step-counting) picks the toll road (shallower); UCS (cost-counting) picks the $2 backroad. Same graph, opposite answers — BFS optimizes *depth*, UCS optimizes *dollars*. Whenever statement says "fewest edges" answer BFS; "cheapest" answer UCS; "both" is a trick (they coincide only at uniform cost).
+**Scenario 3 — Heuristic court:** true costs h*(A) = 8, h*(B) = 4. Candidate h1: A 7, B 5 — fails at B (5 > 4), hence **inadmissible** everywhere as a license (A* may go suboptimal). Candidate h2: A 6, B 3 — passes both, hence admissible. Dominance needs two admissible rivals, so with h1 disqualified no dominance relation exists; among admissible rivals, higher-never-over wins node by node.
 
-### Scenario 3: Heuristic Court (Admissible or Out)
+<a id="basics"></a>
+## 2. Basic Layer: Do-Not-Confuse Table
 
-True cheapest costs: $h^*(A) = 8$, $h^*(B) = 4$, goal $0$. Candidate $h_1$: $A \to 7$, $B \to 5$. Candidate $h_2$: $A \to 6$, $B \to 3$. Trial: $h_1(B) = 5 > 4$ — **inadmissible** (overestimates once, disqualified everywhere; A* with $h_1$ can return suboptimal paths). $h_2$: $6 \le 8$, $3 \le 4$ — **admissible**. Dominance? Requires *both* admissible — $h_1$ is out of the running entirely, so no dominance claim exists; among admissible heuristics, higher-never-over is better ($h_2$ beats any lower admissible rival node by node).
-
----
-
-<a id="the-dimensions"></a>
-## 2. "Do Not Confuse" Cheat Table
-
-| Pair | Distinction that earns marks |
+| Pair | Exam distinction |
 |---|---|
-| BFS vs. UCS optimum | Fewest steps vs. cheapest cost (differ exactly when costs vary) |
-| DFS vs. IDS memory | $O(bm)$ deep stack (loops risk) vs. $O(bd)$ with completeness restored |
-| DLS vs. IDS purpose | Depth-capped single shot (incomplete past $l$) vs. deepening loop to completeness |
-| IDS overhead | ~11% extra nodes at $b=10$ (geometric tiers make regeneration cheap) |
-| Admissible vs. consistent | $h \le h^*$ everywhere vs. triangle inequality $h(n) \le c + h(n')$ (consistent ⇒ admissible, not vice versa) |
-| Dominance requirements | Both admissible first, then pointwise ≥ everywhere (inadmissible rivals disqualified) |
-| $g$ vs. $h$ vs. $f$ | Cost-so-far vs. estimated-to-go vs. $g+h$ expansion priority |
-| Tree vs. graph search | Repeat-state explosion vs. explored-set pruning (exponential savings where states rejoin) |
-| Complete vs. optimal | Finds *a* solution vs. finds the *cheapest* (independent axes — DFS: neither; BFS: complete + optimal-iff-uniform; UCS/A*: both given conditions) |
-| Step cost vs. path cost | Single-edge price vs. accumulated total (UCS accumulates, BFS counts) |
+| BFS vs. UCS optimum | Fewest steps vs. cheapest cost (split exactly when costs vary) |
+| DFS vs. IDS memory | `O(b*m)` deep stack with loop risk vs. `O(b*d)` with completeness restored |
+| DLS vs. IDS | One capped shot (cutoff past l) vs. deepening loop to completeness |
+| IDS overhead | ~11% extra at b=10 (geometric tiers make regeneration cheap) |
+| Admissible vs. consistent | `h <= h*` everywhere vs. triangle `h(n) <= c + h(n')` (consistent implies admissible) |
+| Dominance | Both admissible first, then pointwise >= everywhere |
+| `g` vs. `h` vs. `f` | Paid-so-far vs. guessed-to-go vs. `g+h` priority |
+| Tree vs. graph search | Re-expand states via every path vs. explored-set prune (exponential savings where paths rejoin) |
+| Complete vs. optimal | Finds a solution vs. finds the cheapest (independent axes) |
+| Step vs. path cost | One-edge price vs. accumulated total |
 
----
+**Limitations of drills:** counts assume uniform branching and stated costs; real frontiers vary. Admissibility verdicts assume exact `h*` knowledge — in exams it is given; in practice it is bounded, not known.
 
 <a id="self-check"></a>
 ## 3. Active Recall Quizzes
@@ -71,7 +65,7 @@ True cheapest costs: $h^*(A) = 8$, $h^*(B) = 4$, goal $0$. Candidate $h_1$: $A \
 () IDS is wasteful and BFS should always be preferred
 () The 11% figure is fabricated; real overhead exceeds 500%
 ::: explanation
-Geometric domination: level $i$ dwarfs all levels above *combined* ($b^d$ vs. $\sum_{i<d}b^i \approx b^d/(b-1)$). Regeneration re-pays only the crumbs while the bottom tier (paid once, mostly) dominates both totals. "Wasteful" intuition prices all levels equally — the series refuses.
+Level i dwarfs all levels above combined (b^d vs. sum ~ b^d/(b-1)). Regeneration re-pays only crumbs while the bottom tier dominates both totals.
 :::
 
 ::: quiz h₁ overestimates at one node but is elsewhere admissible and dominant; h₂ is admissible everywhere but lower. An A* implementation must pick one heuristic. Which, and why is there no contest?
@@ -80,7 +74,7 @@ Geometric domination: level $i$ dwarfs all levels above *combined* ($b^d$ vs. $\
 () Neither — mix them by averaging to cancel the error
 () h₁, because higher heuristics always preserve optimality
 ::: explanation
-Optimality proofs assume $h \le h^*$ *everywhere* — a single violation breaks the guarantee chain (A* can then return suboptimal paths, silently). Dominance compares *admissible* rivals only. License first, ranking second; no license, no ranking.
+Optimality proofs need h <= h* everywhere — one violation breaks the chain silently. Dominance compares admissible rivals only. License first, ranking second.
 :::
 
 ::: quiz DFS dives down the leftmost path on a graph with a 1-step goal on the far right (branching 10, depth 3). BFS finds it expanding ~111 nodes; DFS explores the entire left subtree first. What does this show about completeness and optimality together?
@@ -89,7 +83,7 @@ Optimality proofs assume $h \le h^*$ *everywhere* — a single violation breaks 
 () Both strategies share identical guarantees on all graphs
 () BFS is incomplete on finite graphs
 ::: explanation
-Completeness (find *a* solution) and optimality (find the *cheapest*) are independent axes: DFS can miss forever down infinite paths and returns whatever it stumbles on; BFS's level order certifies both (uniform cost). Pick strategies by required guarantees — depth-first for memory, best-first for optimality.
+Completeness and optimality are independent: DFS can miss forever and returns whatever it stumbles on; level-order BFS certifies both under uniform cost.
 :::
 
 ::: quiz Tree search on a grid with many rejoining paths (transpositions) explodes exponentially while graph search stays polynomial-ish. What single mechanism explains the gap?
@@ -98,26 +92,25 @@ Completeness (find *a* solution) and optimality (find the *cheapest*) are indepe
 () Tree search cannot handle grids by definition
 () Grids forbid heuristics, crippling tree search uniquely
 ::: explanation
-Transpositions (many paths, same state) turn trees exponential while state *sets* stay put — the explored set converts path-counting into state-counting. Same overlap exploitation as dynamic programming's memoization (Module DAA-3's whiteboard, AI-flavored): never solve the same state twice.
+Many paths sharing states turn trees exponential while state sets stay put. The explored set converts path-counting into state-counting — the dynamic-programming moral in search form.
 :::
-
----
 
 <a id="exam-focus"></a>
 ## 4. High-Yield University Exam Questions
 
 ::: callout-exam KTU University Exam Focus
-**Target Areas:**
-* **3 Marks:** Any cheat-table row (BFS-vs-UCS and admissibility lead); IDS overhead figure with reasoning.
-* **7 Marks:** Strategy traces with counts, admissibility trials on given heuristics, or complete/optimal verdict tables per strategy.
+3 marks: any table row (BFS-vs-UCS and admissibility lead) or the IDS figure with reasoning. 7 marks: counted traces, admissibility trials, or per-strategy verdict tables.
 :::
 
-### Essay Question 1 (7 Marks)
-**Q: For b = 10, d = 5, compute BFS and IDS node counts, explain why IDS costs only ~11% more, and state what IDS buys with that 11%.**
+**Recap facts examiners reward:** 111,111 vs. 123,450 derivation; toll-vs-backroad verdict rule; one-violation disqualification; explored-set mechanism; complete-vs-optimal independence.
 
-**Model Answer:** BFS: $\sum_{i=0}^{5}10^i = 111{,}111$. IDS: $\sum$ over iterations $5\cdot10 + 4\cdot100 + 3\cdot1000 + 2\cdot10{,}000 + 1\cdot100{,}000 = 123{,}450$ — ratio $\approx 1.11$. Upper tiers are exponentially small, so regeneration re-pays crumbs. The 11% buys: linear memory $O(bd)$ instead of $O(b^d)$, plus (with uniform step costs) the completeness and optimality BFS enjoys — depth-first's footprint with breadth-first's guarantees.
+### Essay Question 1 (7 Marks)
+**Q: For b = 10, d = 5, compute BFS and IDS counts, explain the 11%, state what IDS buys.**
+
+**Model Answer:** BFS sum = 111,111. IDS weighted sum = 123,450, ratio ~1.11. Upper tiers exponentially small so regeneration costs crumbs. Buys linear O(b*d) memory plus uniform-cost completeness/optimality — depth-first footprint with breadth-first guarantees.
 
 ### Essay Question 2 (7 Marks)
-**Q: Given h* = {A:8, B:4} and candidates h₁ = {A:7, B:5}, h₂ = {A:6, B:3}: judge admissibility of each, judge dominance, and state the consequences for A*.**
+**Q: Judge h1 = {A:7, B:5} and h2 = {A:6, B:3} against h* = {A:8, B:4} for dominance and A* consequences.**
 
-**Model Answer:** Admissibility ($h \le h^*$ everywhere): $h_1$ fails at $B$ ($5 > 4$) → inadmissible (A* may return suboptimal paths using it); $h_2$ passes both ($6 \le 8$, $3 \le 4$) → admissible. Dominance needs two admissible rivals — with $h_1$ disqualified, no dominance relation exists (dominance compares the licensed, and $h_1$ holds no license). Consequence: run A* on $h_2$ (optimal, expands a superset... precisely, expands no more than any less-informed admissible rival); $h_1$ is usable only where optimality is waived.
+**Model Answer:** h1 fails at B (5 > 4): inadmissible, A* may return suboptimal paths. h2 passes both: admissible. No dominance exists (needs two licensed rivals). Run A* on h2 for guaranteed optimality with no more expansions than any weaker admissible rival.
+:::

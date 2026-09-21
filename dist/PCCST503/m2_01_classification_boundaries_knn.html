@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,39 +249,99 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Classification: Boundaries, Linear Flaws &amp; k-NN</h1>
-<p><strong>Decision boundaries, why regression misfires on labels, 0/1 loss, and nearest-neighbor voting with a hand-computed query.</strong></p>
+<p><strong>What problem classification solves, what labelled data it needs, why regression is the wrong tool, and how k-Nearest Neighbours (k-NN) votes from neighbours.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>Regression asks &quot;how much?&quot; Classification asks &quot;which side of the fence?&quot; Given labelled points, draw fences that put future points in the right pen.</p>
+<p>Tiny beginner example. Training: tall-and-heavy labelled plus, short-and-light labelled minus. A newcomer medium-tall arrives. k-NN with $k=3$ looks at the three closest labelled neighbours: plus, plus, minus gives plus by 2 to 1. No line was fitted; memory voted.</p>
+<p>Analogy as support, then dropped. Thermometers measure amount; fences decide sides. From here on we use exact terms only: decision boundary, zero-one loss, surrogate loss, leverage.</p>
+<p>Abbreviations defined on first use: k-Nearest Neighbours (k-NN). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is a decision boundary?</td>
+<td>Surface separating predicted regions</td>
+</tr>
+<tr>
+<td>What is 0/1 loss?</td>
+<td>1 if wrong, 0 if right; the honest judge</td>
+</tr>
+<tr>
+<td>What is $k$?</td>
+<td>How many neighbours vote</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Assign each input to one discrete label.</p>
+<p><strong>Data.</strong> Labelled pairs $(x_i,y_i)$ with $y_i$ in ${0,1}$ or ${+1,-1}$. Here $x_i$ is a feature vector, $y_i$ is its class. Query $q$ is an unlabelled newcomer.</p>
+<p><strong>Goal.</strong> Low zero-one (0/1) loss on future queries. The 0/1 loss is non-differentiable and hard to optimise directly, so training optimises a smooth surrogate (cross-entropy, hinge, Gini impurity) and reports 0/1 accuracy. Train the surrogate, judge with 0/1; never confuse the two.</p>
+<p>Distance symbol: Euclidean distance $d(q,x)=\sqrt{\sum_j(q_j-x_j)^2}$. Features must share scale first, or metres-versus-kilograms voting goes absurd.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Fences vs. Thermometers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Regression is a <strong>thermometer</strong> (how much?). Classification is a <strong>fence</strong> (which side?). Fitting a thermometer where a fence belongs fails absurdly: least squares happily predicts &quot;diabetes = 1.7&quot; or lets one far-away outlier drag the whole line across the fence. And the fence itself can be lazy genius: <strong>k-NN</strong> builds no model at all — to label a newcomer, just ask its $k$ nearest labeled neighbors and take a vote. No training, all memory; the training set <em>is</em> the model.</p>
-</div></details><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Decision Boundaries and 0/1 Loss</h3>
-<p>A classifier partitions feature space into labeled regions; the <strong>decision boundary</strong> is the surface between them (a point, line, or hypersurface depending on dimension). The honest score is <strong>0/1 loss</strong> (wrong = 1) — but it is non-differentiable and NP-hard to optimize directly, so every trainable classifier optimizes a <em>surrogate</em> (cross-entropy, hinge, Gini) and reports 0/1 accuracy. Surrogate-for-training, 0/1-for-judgment: never confuse the two.</p>
-<h3>2.2 Why Least Squares Fails Labels</h3>
-<p>Encode classes as 0/1 and regress: far-away points exert huge squared leverage (one outlier $x = 100$ drags predictions for $x \in [0,1]$), and outputs like $1.7$ or $-0.3$ are meaningless as probabilities. Thresholding the line at 0.5 <em>sort of</em> works on clean data — until it catastrophically doesn&#39;t. Classification needs machinery that respects discreteness (sigmoid + cross-entropy next topic; margins in Module 3).</p>
-<h3>2.3 k-NN: The Laziest Learner</h3>
-<p>Store all training points. Query $q$: compute distances (usually Euclidean) to everything, take the $k$ nearest, <strong>majority vote</strong> (weight by $1/d$ to break influence ties). Choices that matter: $k$ (small = jagged, noise-fitting boundaries; large = smooth, detail-erasing — tune by validation), distance metric (scale features first, or meters-vs-kilograms voting goes absurd), and the price: $O(nd)$ memory + $O(nd)$ <em>per query</em> — training is free, prediction is expensive (KD-trees/Ball-trees mitigate).</p>
+</div></details><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (discrete choice) → data (labelled points plus query) → goal (low 0/1 loss) → method (surrogate training or neighbour voting) → model (boundary or stored data) → training procedure (optimise or memorise) → example → limitations.</p>
+<h3>3.1 Decision Boundaries and 0/1 Loss</h3>
+<p>A classifier partitions feature space into labelled regions; the <strong>decision boundary</strong> is the surface between them. The honest score is <strong>0/1 loss</strong> (wrong = 1). It is non-differentiable and hard to optimise directly, so every trainable classifier optimises a surrogate and reports 0/1 accuracy.</p>
+<h3>3.2 Why Least Squares Fails Labels</h3>
+<p>Encode classes as 0/1 and regress: far-away points exert huge squared leverage (one outlier $x=100$ drags predictions for $x$ in $[0,1]$), and outputs like $1.7$ or $-0.3$ are meaningless as probabilities. Thresholding at 0.5 sort of works on clean data until it catastrophically does not. Classification needs machinery respecting discreteness.</p>
+<h3>3.3 k-NN: Algorithm Steps Then Trace Preview</h3>
+<p>Numbered steps:</p>
+<ol>
+<li>Store all training points.</li>
+<li>For query $q$, compute distances to every stored point.</li>
+<li>Take the $k$ nearest.</li>
+<li>Majority vote (weight by $1/d$ to soften ties).</li>
+<li>Choose $k$, metric, and scaling by validation.</li>
+</ol>
+<p>Choices that matter: $k$ (small means jagged, noise-fitting boundaries, high variance; large means smooth, detail-erasing, high bias), distance metric (standardise features first), and price: $O(nd)$ memory plus $O(nd)$ per query. Training is free; prediction is expensive (KD-trees help).</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0/1 loss vs surrogate</td>
+<td>Judge with 0/1, train the smooth stand-in</td>
+</tr>
+<tr>
+<td>Small $k$ vs large $k$</td>
+<td>Variance (jagged) vs bias (smooth); tune by validation</td>
+</tr>
+<tr>
+<td>k-NN vs eager models</td>
+<td>No training, costly queries vs costly training, cheap queries</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Classification Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Boundary = <strong>region surface</strong> · judge with <strong>0/1 loss</strong>, train with <strong>surrogates</strong> · regression-on-labels breaks via <strong>leverage + meaningless outputs</strong> · k-NN: <strong>store all, vote k nearest</strong> · small $k$ = <strong>variance</strong>, large $k$ = <strong>bias</strong> · cost per query <strong>$O(nd)$</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: k-NN Has No Training Error Worth Quoting</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With $k=1$, training accuracy is <em>always</em> 100% (every point is its own nearest neighbor) — a meaningless perfect score. k-NN can only be assessed on held-out data (last module&#39;s discipline, sharpest here). Any &quot;my 1-NN achieves 100%&quot; claim confesses overfitting, not success.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Training points: $A(1,1){+}$, $B(2,3){+}$, $C(3,2){-}$, $D(5,4){-}$. Classify query $Q(2,2)$ with $k=3$ (Euclidean), and show what $k=1$ and $k=2$ would do. (Distances verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Voting</div><div class="step-content"><p>$d(Q,A) = \sqrt{2} \approx 1.414{+}$; $d(Q,B) = 1.0{+}$; $d(Q,C) = 1.0{-}$; $d(Q,D) \approx 3.606{-}$. Three nearest: $B{+}, C{-}, A{+}$ → vote 2–1 ⇒ <strong>class +</strong>. Note the exact tie $d_B = d_C = 1.0$: with $k=2$ the vote splits 1–1 (tie-break rule needed — distance-weighting would favor neither here; conventional fallback: the nearer... they&#39;re equal — reduce $k$ to 1 or grow to 3). With $k=1$: nearest is $B$ (tie with $C$ broken arbitrarily — instability on display).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$k=3$ says <strong>+</strong> by 2–1. The trace also exhibits k-NN&#39;s twin fragilities in miniature: distance ties demanding tie-breaks, and $k=1$&#39;s hair-trigger instability — the bias–variance knob from Module 1, now with a concrete dial.</p>
@@ -300,10 +368,21 @@
     <p class="video-caption"><strong>Key Insight:</strong> Three Neighbors Vote 2 to 1 for Plus</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the three arrows land — 1.0, 1.0, 1.414 — with D stranded at 3.606, then the 2–1 verdict with the k = 2 tie and k = 1 hair-trigger riding along.</div>
   </div>
-</div><hr>
+</div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Quoting $k=1$ train accuracy as success. It is always 100% by construction.</li>
+<li>Using even $k$ without a tie rule. Prefer odd $k$, distance weights, or validation-chosen $k$.</li>
+<li>Forgetting to scale features. One large-unit feature then dominates distances.</li>
+<li>Confusing surrogate loss with 0/1 accuracy. Train one, report the other.</li>
+</ul>
+<p>Limitations: k-NN stores everything, queries slowly, and suffers in high dimensions where distances blur (curse of dimensionality).</p>
+<p>Exam recap: boundary is region surface; judge 0/1, train surrogates; regression breaks via leverage; k-NN stores all and votes; small $k$ is variance, large $k$ is bias; per-query cost $O(nd)$.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why is fitting least-squares regression to 0/1 labels and thresholding at 0.5 considered broken rather than merely inelegant?</span>
@@ -488,7 +567,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m2_01_classification_boundaries_knn";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

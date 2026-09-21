@@ -5,7 +5,7 @@ module: 1
 sequence: 6
 title: Problem-Solving Agents & Search Trees
 difficulty: beginner
-estimatedMinutes: 8
+estimatedMinutes: 10
 learningObjectives:
   - Formulate problems with the five-component contract
   - Separate state space from search tree with node expansion
@@ -24,93 +24,82 @@ tags:
 ---
 # Problem-Solving Agents & Search Trees
 
-**Goal formulation, the 5 components of a well-defined problem, state space vs. search tree, node expansion, and how search performance is measured.**
+**Problem: the right action sequence is not obvious, so the agent must compute it before moving. By the end you can write the five-part problem contract, separate maps from search traces, and judge any search strategy.**
 
-<a id="the-intuition"></a>
-## 1. What Does It Mean to "Solve a Problem"?
+<a id="start-zero"></a>
+## 1. Start From Zero: Think Before Moving
 
-Imagine driving to an unfamiliar airport. You do not start the engine and improvise turn by turn — you first decide the **goal** ("reach Terminal 2 by 6 PM"), then, map in hand, you work out a **sequence of actions** (take the highway, exit at 14B, follow signs) *before* moving a single metre. Only after the route is fully planned do you execute it.
-
-A **problem-solving agent** works exactly this way. It is a goal-based agent specialized for settings where the right action sequence is not obvious and must be *computed in advance*:
+Driving to an unknown airport, you fix the goal ("Terminal 2 by 6 PM"), plan the route on a map, then drive. A **problem-solving agent** (a goal-based agent for non-obvious sequences) does the same:
 
 ```text
-FORMULATE-GOAL  ──>  FORMULATE-PROBLEM  ──>  SEARCH  ──>  EXECUTE
- (where to end)      (states/actions)     (find path)   (follow it)
+FORMULATE-GOAL --> FORMULATE-PROBLEM --> SEARCH (offline) --> EXECUTE (online)
 ```
+
+Search is offline deliberation: mistakes in simulation are free; mistakes on the road are not. That is why a chess engine thinks for minutes then plays flawlessly.
 
 ::: callout-intuition Offline Thinking, Online Acting
-Search is **offline deliberation**: the agent simulates futures inside its head (or its memory) without touching the real world. Execution only begins once a complete action sequence exists. This separation is why a chess engine can "think" for minutes and then play a whole combination flawlessly — all the trial and error happened in simulation, where mistakes are free.
+Simulation first, wheels second. Drop the driving story after this; the examinable pipeline is goal, problem, search, execute — in that order.
 :::
 
----
+**Tiny beginner example:** start Arad, goal Fagaras, roads with distances. The agent simulates Arad-Sibiu-Fagaras vs. detours, prices each, then drives the cheapest. Planning and driving are separate phases.
 
-<a id="the-math"></a>
-## 2. The 5 Components of a Well-Defined Problem
+<a id="basics"></a>
+## 2. Basic Building Blocks: The Five-Part Contract
 
-Before any search algorithm can run, the task must be nailed down as a **well-defined problem** — five precise pieces (R&N §3.1). Vague formulations are the #1 source of failed AI projects: the algorithm cannot find what was never specified.
+**Data/state:** states (places), actions (moves). **Goal:** reach a goal state cheaply. Every well-defined problem needs five pieces:
 
-1. **Initial state** — where the agent starts (e.g. the city `Arad`, a scrambled board).
-2. **Actions** — what the agent *can* do in a given state (`ACTIONS(s)` returns the legal moves from $s$).
-3. **Transition model** — what each action *does*: `RESULT(s, a)` gives the state reached by doing $a$ in $s$.
-4. **Goal test** — how the agent recognizes success (an explicit state, e.g. `Bucharest`, or a property, e.g. "no queen attacks another").
-5. **Path cost** — a number measuring how *expensive* an action sequence is (distance, time, money). The **optimal solution** is the one with the lowest total path cost — not merely *any* sequence that reaches the goal.
+1. **Initial state** `s_0` — where you start (Arad).
+2. **Actions** `ACTIONS(s)` — legal moves from state `s`.
+3. **Transition model** `RESULT(s, a)` — state reached by doing `a` in `s`.
+4. **Goal test** — recognizes success (state equals Bucharest, or "no attacking queens").
+5. **Path cost** — number pricing a sequence (distance, time). The **optimal solution** is the lowest-cost goal-reaching sequence, not just any one.
 
 ::: callout-formula Formal Definition: A Problem Is a 5-Tuple
-$$\text{Problem} = (s_0,\ \text{ACTIONS},\ \text{RESULT},\ \text{GOAL-TEST},\ \text{STEP-COST})$$
-The **state space** is the set of *all* states reachable from $s_0$ by any action sequence — drawn as a **graph** whose nodes are states and whose edges are actions. Memorize all five components in order: they are the standard 3-mark "define a well-defined problem" answer.
+Problem = (initial state, ACTIONS, RESULT, GOAL-TEST, STEP-COST). The state space is all states reachable from the start — a graph of states (nodes) and actions (edges). Memorize all five in order for the standard 3-mark answer.
 :::
 
-### State Space vs. Search Tree (the most-tested distinction in this topic)
+**State space vs. search tree (most-tested distinction):** the state space is the territory (map graph, exists regardless). The search tree is the exploration trace (tree of paths actually generated; one state can appear many times via different routes). A **tree node** stores STATE, PARENT, ACTION, PATH-COST `g`, DEPTH. Expanding a node means generating all its children.
 
-* The **state space** is the *territory*: the graph of all reachable states. It exists whether or not anyone searches it.
-* The **search tree** is the *exploration trace*: the tree of paths the algorithm actually generates while searching. The same state can appear on the tree **many times** via different routes (Arad → Sibiu → Arad is a loop in the tree, not a new place on the map).
+<a id="formal-model"></a>
+## 3. Formal Layer: Judging Search Strategies
 
-::: callout-pitfall Tree Nodes Are Paths, Not Places
-A **search-tree node** is a data structure holding: the `STATE`, the `PARENT` node it came from, the `ACTION` used, the `PATH-COST` $g$ from the start, and the `DEPTH`. Beginners constantly confuse "expanding a node" (generating all its children) with "visiting a state". The tree can be exponentially larger than the state space — which is exactly why search needs strategies (Module 2) instead of blind wandering.
-:::
+**Method:** score every Module-2 algorithm on four criteria. **Model:** parameters branching factor `b` (max successors per node), solution depth `d` (depth of shallowest goal), maximum depth `m` (possibly infinite).
 
-### How a Search Strategy Is Judged (preview of Module 2)
+- **Complete?** Finds a solution whenever one exists?
+- **Optimal?** Finds the lowest-cost solution?
+- **Time?** Nodes generated/expanded.
+- **Space?** Nodes kept in memory.
 
-Every algorithm in the next module is scored on four criteria — learn the vocabulary now:
-
-* **Complete?** Does it always find a solution when one exists?
-* **Optimal?** Does it find the *lowest-cost* solution?
-* **Time complexity?** How many nodes does it generate/expand?
-* **Space complexity?** How many nodes must it keep in memory?
-
-Measured with branching factor $b$, solution depth $d$, and maximum depth $m$.
-
----
-
-<a id="worked-example"></a>
-## 3. Hand-Tracing a Search Tree (Arad → Fagaras)
-
-Consider a tiny road map: Arad connects to Sibiu (140 km) and Zerind (75 km); Sibiu connects to Fagaras (99 km) and back to Arad. Goal: reach Fagaras from Arad.
+**Procedure — hand-tracing two levels (steps then trace):** Step 1: root holds start with `g=0`. Step 2: expand root, create one child per action with accumulated costs. Step 3: test children for goal; expand one, repeat. Trace on Arad-Sibiu (140 km), Arad-Zerind (75 km), Sibiu-Fagaras (99 km):
 
 ```text
-STATE SPACE (the map — a graph):
+STATE SPACE (map):  Zerind --75-- Arad --140-- Sibiu --99-- Fagaras
 
-  Zerind --75-- Arad --140-- Sibiu --99-- Fagaras
-                      \_______________/
-                       (direct roads)
-
-SEARCH TREE (the trace — repeats allowed):
-
+SEARCH TREE (trace):
               [Arad] g=0
               /        \
-   (Zerind,75)          (Sibiu,140)
-   [Zerind] g=75        [Sibiu] g=140
-                             /      \
-                  (Arad,140)          (Fagaras,99)
-                  [Arad] g=280        [Fagaras] g=239  <-- GOAL
+   [Zerind] g=75    [Sibiu] g=140
+                        /        \
+              [Arad] g=280   [Fagaras] g=239 GOAL
 ```
 
-Reading the trace: the root node holds state Arad with $g=0$. **Expanding** it generates two children (Zerind, $g=75$; Sibiu, $g=140$). Expanding Sibiu generates Arad-again ($g=280$ — a repeated state, correctly appearing as a *new tree node*) and Fagaras ($g=239$), which passes the goal test. The solution is the action sequence Arad → Sibiu → Fagaras with path cost 239 — cheaper than any route detouring through Zerind. Note the tree already has 5 nodes for a 4-state map: on real maps this redundancy explodes, which is why Module 2 exists.
+Arad reappears because nodes are paths, not places. Solution: Arad-Sibiu-Fagaras at 239. The tree already exceeds the map — on real maps this redundancy explodes, motivating Module 2 strategies.
 
----
+<a id="worked-example"></a>
+## 4. Worked Example, Distinctions, Limitations
+
+| Similar pair | Distinction |
+|---|---|
+| State space vs. search tree | Territory graph vs. exploration trace (paths can repeat states) |
+| Goal-reaching vs. optimal | Any goal path vs. cheapest goal path (needs path cost) |
+| Search vs. execution | Offline simulation vs. online action |
+
+**Watch out:** (1) Without path cost, "optimal" is undefined. (2) Expanding is generating children, not visiting a city. (3) Depth `d` vs. max depth `m` drive different complexity bounds.
+
+**Limitations:** formulation alone solves nothing; blind traces loop and explode. Strategies with repeated-state handling and cost awareness (Module 2) are mandatory.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz A problem-solving agent is given a goal but no precomputed action sequence. What is the correct order of its operation?
 () Execute actions, then search for what it just did
@@ -118,7 +107,7 @@ Reading the trace: the root node holds state Arad with $g=0$. **Expanding** it g
 (*) Formulate the goal, formulate the problem, search for a solution, then execute it
 () Formulate the problem, execute immediately, and search only if execution fails
 ::: explanation
-The R&N problem-solving agent pipeline is strictly ordered: **goal formulation** (decide where to end) → **problem formulation** (fix states, actions, costs) → **search** (simulate action sequences offline) → **execution** (follow the found sequence). Searching before the problem is formulated is impossible — there is nothing to search over yet.
+Goal first (where to end), problem second (states/actions/costs to search over), search third (offline simulation), execution last. Nothing exists to search before formulation.
 :::
 
 ::: quiz In a search tree, the same city (e.g. Arad) appears as three different nodes. What does this mean?
@@ -127,7 +116,7 @@ The R&N problem-solving agent pipeline is strictly ordered: **goal formulation**
 () The search algorithm has a bug and must be restarted
 () The goal test was applied to the wrong state
 ::: explanation
-A search-tree node records a *path* (state + parent + action + path cost + depth), not a place. Different routes to the same state — Arad directly, Arad-via-Sibiu — are legitimately different nodes with different path costs. Confusing the tree (trace) with the state space (territory) is the classic error this topic warns against.
+Nodes record path plus cost plus depth, not just place. Different routes to Arad are legitimately different nodes with different costs.
 :::
 
 ::: quiz Which of the following is part of a well-defined problem but is NOT needed to merely reach *any* goal state — only to find the *best* one?
@@ -136,26 +125,25 @@ A search-tree node records a *path* (state + parent + action + path cost + depth
 (*) Path cost (step cost)
 () Actions function
 ::: explanation
-Reaching *a* goal needs the start, the moves, and a way to recognize success. **Path cost** is what lets the agent compare candidate solutions and pick the optimal (cheapest) one. Without costs, "optimal" is undefined — which is exactly why uninformed search (Module 2) splits into step-count methods (BFS/DFS) and cost-aware ones (UCS).
+Start, moves, and goal recognition reach something. Path cost compares candidates to define and find the cheapest — hence cost-aware methods like UCS exist.
 :::
-
----
 
 <a id="exam-focus"></a>
-## 5. Worked University Exam Q&A
+## 6. Exam Recap and Worked Q&A
 
 ::: callout-exam KTU University Exam Focus
-**Target Areas:**
-* **3 Marks:** List the 5 components of a well-defined problem, or the 4 criteria for evaluating search strategies.
-* **7 Marks:** Formulate a given scenario (route map, puzzle) as a 5-tuple and hand-trace the first two levels of its search tree, distinguishing state space from search tree.
+3 marks: five components or four judging criteria. 7 marks: formulate Arad-Fagaras as a 5-tuple, draw two tree levels, explain Arad's repeat and its implication.
 :::
 
-### Sample 3-Mark Question
-**Q: Define a well-defined problem in AI. What are its five components?**
+**Recap facts examiners reward:** 5-tuple names; node fields; territory-vs-trace line; four criteria with `b/d/m` meanings.
 
-**Model Answer:** A well-defined problem is a task specified precisely enough for a search algorithm to operate on, as a 5-tuple: (1) **Initial state** $s_0$ where the agent starts; (2) **Actions** — `ACTIONS(s)` legal in each state; (3) **Transition model** — `RESULT(s,a)`; (4) **Goal test** — success recognition; (5) **Path cost** — numeric cost enabling optimality comparisons.
+### Sample 3-Mark Question
+**Q: Define a well-defined problem.**
+
+**Model Answer:** Initial state, ACTIONS(s), RESULT(s,a), GOAL-TEST, STEP-COST/path-cost — precise enough for search to operate and optimality to be defined.
 
 ### Sample 7-Mark Question
-**Q: For route-finding from Arad to Fagaras on the given map, (a) formulate the well-defined problem, (b) draw two levels of the search tree, (c) explain why Arad reappears and what this implies.**
+**Q: Formulate Arad-Fagaras, trace two levels, explain the repeat.**
 
-**Model Answer:** (a) $s_0=$ Arad; actions $=$ drive to a neighboring city; result $=$ arrival city; goal test $=$ state is Fagaras; step cost $=$ road distance in km. (b) As traced in §3: root Arad expands to Zerind ($g=75$) and Sibiu ($g=140$); Sibiu expands to Arad ($g=280$) and Fagaras ($g=239$, goal). (c) Arad reappears because tree nodes are *paths*, not places — the same state via a longer route is a distinct node. Implication: trees outgrow state spaces (loops, redundancy), motivating systematic strategies with repeated-state handling in Module 2.
+**Model Answer:** s_0 Arad; actions drive to neighbours; result arrival city; goal test is-Fagaras; step cost road km. Tree as in section 3: Sibiu branch yields goal at 239. Arad repeats because nodes are paths; implication: trees outgrow state spaces, so systematic strategies with repeated-state checks are needed.
+:::

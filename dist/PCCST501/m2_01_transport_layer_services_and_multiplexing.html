@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,34 +297,73 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Transport-Layer Services &amp; Multiplexing</h1>
 <p><strong>Process-to-process delivery, connectionless vs. connection-oriented service, ports, sockets, and how one host sorts arriving segments to the right app.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>Your computer receives one stream of packets at its single IP (Internet Protocol) address — but runs a browser, a mail client, and a game at the same time. Which bytes belong to which program? The network layer (which delivers host-to-host) cannot answer: it stops at the front door. Someone must read the apartment number on each envelope.</p>
+<p>The problem before the solution: extend host-to-host delivery into <strong>process-to-process</strong> delivery. That someone is the <strong>transport layer</strong>, living in your machine (and the sender&#39;s) — never in the routers between. It offers applications exactly two service personalities: fast-and-unreliable (UDP — User Datagram Protocol) or careful-and-reliable (TCP — Transmission Control Protocol).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Apartment Building</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The network layer delivers mail to the right <strong>building</strong> (host, by IP address) — but a building holds many <strong>apartments</strong> (processes: browser, mail client, game). Somebody must read the apartment number on each envelope and slide it under the correct door. That somebody is the <strong>transport layer</strong>: it extends host-to-host delivery into <strong>process-to-process</strong> delivery. The &quot;apartment numbers&quot; are <strong>port numbers</strong>, and each door (socket) is watched by exactly one process.</p>
+<p>Dropping the building now: port = process number in the header; socket = the <code>IP:port</code> endpoint; multiplexing = many sockets sharing one network layer on send; demultiplexing = sorting arrivals back to sockets on receipt.</p>
 </div></details><p>The transport layer offers application processes exactly two personalities to choose from — and every application you have met picks one:</p>
 <ul>
 <li><strong>Connectionless, unreliable (UDP):</strong> &quot;throw the envelope and hope.&quot; No setup, no guarantees — but fast and light. (DNS lookups, live streaming, online games.)</li>
 <li><strong>Connection-oriented, reliable (TCP):</strong> &quot;call first, then speak carefully.&quot; A handshake opens the channel then every byte is tracked, ordered, and re-sent if lost. (Web, email, file transfer.)</li>
 </ul>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Service Lives in the End Systems, Not the Network</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exam trap: multiplexing, reliability, and congestion control are implemented <strong>only in hosts</strong> (sender + receiver), never inside routers. The network core stays dumb and fast; all the cleverness sits at the edge. If an option places TCP logic &quot;in the router,&quot; eliminate it instantly.</p>
-</div></details><hr>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-sorting-rules-then-the-numbers">3. Purpose — Sorting Rules, Then t… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Transport layer</strong></td>
+<td>The end-to-end layer (layer 4) extending host delivery to process delivery.</td>
+</tr>
+<tr>
+<td><strong>Multiplexing (sender side)</strong></td>
+<td>Gathering data chunks from several sockets, wrapping each with a transport header, handing them down to the network layer.</td>
+</tr>
+<tr>
+<td><strong>Demultiplexing (receiver side)</strong></td>
+<td>Inspecting each arrival&#39;s identifiers and steering its payload up to the correct socket.</td>
+</tr>
+<tr>
+<td><strong>Socket</strong></td>
+<td>The programming doorway between a process and transport, named <code>IP:port</code>.</td>
+</tr>
+<tr>
+<td><strong>Port number</strong></td>
+<td>16-bit process identifier; 0–1023 are <strong>well-known</strong> (HTTP 80, HTTPS 443, FTP-control 21, DNS 53, SMTP 25); clients use ephemeral high ports.</td>
+</tr>
+<tr>
+<td><strong>2-tuple / 4-tuple</strong></td>
+<td>The demultiplexing key: UDP uses (destination IP, destination port); TCP uses (source IP, source port, destination IP, destination port).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Multiplexing and Demultiplexing</h3>
+<h2 id="3-purpose-sorting-rules-then-the-numbers">3. Purpose — Sorting Rules, Then the Numbers</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Multiplexing and Demultiplexing</h3>
 <ul>
 <li><strong>Multiplexing (sender):</strong> gathering data chunks from several sockets, wrapping each with transport headers, and handing the segments down to the network layer.</li>
 <li><strong>Demultiplexing (receiver):</strong> inspecting each arriving segment&#39;s destination identifiers and steering its payload up to the correct socket.</li>
@@ -351,19 +394,50 @@
     NET --&gt;|dest port 80| S80[&quot;Socket :80 (HTTP)&quot;]
     NET --&gt;|dest port 443| S443[&quot;Socket :443 (HTTPS)&quot;]
 </code></pre>
-<h3>2.2 Sockets, Ports, and Well-Known Numbers</h3>
-<p>A <strong>socket</strong> is the programming interface between an application process and the transport layer, named by <code>(IP address, port number)</code>. Ports 0–1023 are <strong>well-known</strong> (HTTP 80, HTTPS 443, FTP-control 21, DNS 53, SMTP 25); servers listen on them while clients use ephemeral high ports.</p>
-<hr>
+<h3>3.2 Sockets, Ports, and Well-Known Numbers</h3>
+<p>A <strong>socket</strong> is the programming interface between an application process and the transport layer, named by <code>(IP address, port number)</code>. Ports 0–1023 are <strong>well-known</strong> (HTTP 80, HTTPS — HyperText Transfer Protocol Secure — 443, FTP-control 21, DNS 53, SMTP 25); servers listen on them while clients use ephemeral high ports.</p>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-sorting-rules-then-the-numbers">← 3. Purpose — Sorting Rules, Then t…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>One server port (80), two clients. Client A (source port 5001) and client B (source port 5002) both connect. Same destination IP + port — yet the server keeps them apart, because the full 4-tuples differ in the source half. Sockets server-side: 1 welcoming + 2 connection = 3.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Host A runs a DNS client (ephemeral port 52001) and a browser tab fetching a page. Host B runs a DNS server (port 53) and a web server (port 80). A DNS reply and an HTTP segment both arrive at host A addressed to its IP. Which socket gets each segment, and why can&#39;t they be mixed up?</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Demultiplexing</div><div class="step-content"><p>The DNS reply carries destination port 52001 → steered to the DNS client&#39;s socket (UDP 2-tuple match). The HTTP segment carries destination port (browser&#39;s ephemeral port, e.g. 49152) → steered to the browser&#39;s TCP socket (4-tuple match). The port numbers in the headers make the decision unambiguous even though both segments arrived at the same IP in the same instant.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Demultiplexing keys — not arrival order, not timing — decide ownership. UDP needs only the destination pair; TCP additionally separates connections by source, which is why one server port can serve thousands of simultaneous clients without confusion.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Multiplexing vs. demultiplexing</td>
+<td>Sender-side gathering vs. receiver-side sorting.</td>
+</tr>
+<tr>
+<td>UDP vs. TCP demux key</td>
+<td>2-tuple (dst IP + port) vs. 4-tuple (+ src IP + port).</td>
+</tr>
+<tr>
+<td>Port vs. socket</td>
+<td>Port = process number; socket = full <code>IP:port</code> endpoint.</td>
+</tr>
+<tr>
+<td>Welcoming vs. connection socket</td>
+<td>One listener on the well-known port vs. one socket per TCP connection.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) &quot;One port, one socket&quot; — ports name services, 4-tuples name connections. (2) Placing transport logic in routers — hosts only. (3) Answering &quot;1 socket&quot; for 200 clients — count 1 welcoming + 200 connection sockets.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Transport = process-to-process via ports/sockets, implemented in end systems only. UDP demux = 2-tuple; TCP demux = 4-tuple (one welcoming + one connection socket per client). Services: connectionless unreliable (UDP: DNS, streaming, games) vs. connection-oriented reliable (TCP: web, mail, files). Well-known ports 0–1023; clients ephemeral.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What does the transport layer add over the network layer? Recite both demux keys. Why do 200 clients need 201 server sockets? Where does reliability code execute?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What is the transport layer&#39;s core job, beyond what the network layer already provides?</span>
@@ -548,7 +622,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_01_transport_layer_services_and_multiplexing";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

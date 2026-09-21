@@ -5,7 +5,7 @@ module: 1
 sequence: 99
 title: 'Module 1 Practice Lab: AI Foundations, PEAS & Environment Matrix'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 9
 learningObjectives:
   - Specify spam filters, chatbots and farm bots with PEAS
   - Classify medical and Pac-Man environments on the matrix
@@ -25,87 +25,54 @@ tags:
 ---
 # Module 1 Practice Lab: AI Foundations, PEAS & Environment Matrix
 
-**Hands-on scenario classification, active recall drills, cheat-sheet comparisons, and university exam outlines.**
+**Problem: turn Module 1 theory into exam-ready classification skill. By the end you can PEAS-specify new systems, classify environments on all seven dimensions, and defend rationality verdicts.**
 
-<a id="the-intuition"></a>
-## 1. Step-by-Step Scenario Analysis
+<a id="start-zero"></a>
+## 1. Start From Zero: The Four-Step Analysis Habit
 
-::: callout-intuition How to Analyze AI & Agent Scenarios
-When dissecting an AI system:
-1. **Dimension Matrix:** Is it judged by **internal thought** or **external action**? Is it mimicking **humans** or striving for **rational optimality**?
-2. **PEAS Framework:** Identify **[P]**erformance Measure (what defines a win?), **[E]**nvironment (the operational sandbox), **[A]**ctuators (mechanisms to change the world), and **[S]**ensors (inputs).
-3. **Rationality Check:** Did the agent make the best statistical choice based *only* on the percept sequence available at that moment?
-4. **The 7 Environment Dimensions:** Check Observability, Agent count, Determinism, Horizon (Episodic/Sequential), Time (Static/Dynamic), State Space (Discrete/Continuous), and Rulebook (Known/Unknown).
+**Problem first:** exam scenarios mix definitions, PEAS, rationality, and environments in one paragraph. **Method:** run four steps in order.
+
+::: callout-intuition How to Analyze AI and Agent Scenarios
+Step 1: Matrix — internal thought or external action? Human mimicry or rational optimum? Step 2: PEAS — win condition, sandbox, changers, readers. Step 3: Rationality — best expected call on percepts available then? Step 4: Seven dimensions — observability, agents, determinism, horizon, time, space, rulebook. Drop the mnemonic after use; the steps are the skill.
 :::
 
-### Scenario 1: The Email Spam Filter
-* **The Setup:** An algorithm sorts incoming emails into "Inbox" or "Spam". It doesn't care how human cognition works, nor does it converse with you. It simply calculates the mathematical probability of an email being spam based on word frequencies.
-* **Classification:** **Acting Rationally**
-* **Sensors & Actuators:** Sensors = incoming `.eml` text streams; Actuators = moving files to folder / database tags.
+**Tiny beginner drill:** a spam filter. Matrix: acting rationally (scores probabilities, never chats). PEAS: performance (accuracy, low false positives); environment (mail stream); actuators (folder moves/tags); sensors (text stream). Rationality: judged on odds available then, not on one missed phish. Environment: partially observable, single-agent, stochastic, episodic, static, discrete, known.
 
-### Scenario 2: The Customer Service Chatbot Contest
-* **The Setup:** Programmers enter a competition where the winning software tricks 30% of human interrogators into believing they are chatting with a real human agent, complete with typos and emotional delays.
-* **Classification:** **Acting Humanly (The Turing Test Approach)**
+<a id="basics"></a>
+## 2. Basic Layer: Five Worked Scenarios
 
-### Scenario 3: The Smart Farming Irrigation Bot
-* **The Setup:** A robotic system drives through an orchard. It checks soil moisture and inspects leaves via multi-spectral cameras. When soil moisture drops below 20%, it activates precision drip nozzles.
-* **PEAS Breakdown:**
-  * **[P] Performance Measure:** Maximizing crop yield, minimizing water consumption, preventing tree disease.
-  * **[E] Environment:** Orchard field, soil, trees, changing weather, pests.
-  * **[A] Actuators:** Wheel motors, steering servo, precision water spray nozzles, pesticide dispensers.
-  * **[S] Sensors:** Soil moisture probes, multispectral leaf cameras, temperature sensors, GPS.
+**Data/state then goal then method applied per scenario:**
 
-### Scenario 4: Automated Medical Image Analyzer (Environment Classification)
-* **The Setup:** An AI examines an MRI scan, outputs "Tumor" or "Benign", generates a report, and then begins analyzing a completely independent new patient's scan.
-* **Environment Classification:**
-  * **Episodic:** Diagnosing Patient A has zero causal impact on the correct diagnosis for Patient B.
-  * **Static:** The digital image file does not mutate or change while the neural network is calculating its inference.
-  * **Single-Agent & Partially Observable:** Only the scan is provided (indirect observation of internal body state).
+**Scenario 1 — Email spam filter:** calculates spam probability from word frequencies. Classification: acting rationally. Sensors: message text; actuators: folder/database tags.
 
-### Scenario 5: Pac-Man (Environment Classification)
-* **The Setup:** An agent plays standard Pac-Man on an arcade machine against ghost algorithms.
-* **Environment Classification:** Fully Observable, Multi-Agent (Ghosts), Deterministic (ghost rules follow fixed paths), Sequential (eating a power pellet changes future turns), Dynamic (ghosts move while agent thinks), Discrete (grid maze), Known (rules are fixed).
+**Scenario 2 — Chatbot contest (fool 30% of interrogators with typos and delays):** acting humanly (Turing Test approach) — judged on indistinguishability, not correctness.
 
----
+**Scenario 3 — Orchard irrigation bot (soil under 20% triggers drip):** PEAS: performance (yield up, water down, disease down); environment (field, soil, weather, pests); actuators (wheels, nozzles, dispensers); sensors (moisture probes, multispectral cameras, temperature, GPS — Global Positioning System).
 
-<a id="the-dimensions"></a>
-## 2. "Do Not Confuse" Cheat Table
+**Scenario 4 — MRI analyzer (one patient, then the next independently):** episodic (patient A never affects B), static (file frozen during inference), single-agent, partially observable (scan hints at hidden biology).
+
+**Scenario 5 — Pac-Man vs. ghosts:** fully observable (maze visible), multi-agent (ghosts), deterministic under fixed ghost rules (note: commercial versions add randomness — qualify by implementation), sequential (pellets shape futures), dynamic in real-time play (board changes while thinking) or static in paused turn mode, discrete (grid), known (fixed rules).
+
+<a id="formal-model"></a>
+## 3. Formal Layer: Do-Not-Confuse Table
+
+| Pair | Exam distinction |
+|---|---|
+| Agent function vs. program | Abstract `f: P* -> A` vs. executable code on hardware with limits |
+| Rational vs. omniscient | Best expected call on limited info vs. foreknowledge of actual future |
+| Fully observable vs. known | Seeing the state vs. knowing the rules (poker: known yet partially observable) |
+| Static vs. episodic | Time (world waits?) vs. memory (decisions independent?) |
+| Stochastic vs. non-deterministic | Known odds vs. unknown odds |
+| Continuous vs. discrete | Real-valued steering/speeds vs. countable squares/turns |
 
 ::: callout-pitfall Exam Traps Ahead
-Examiners frequently test whether you know the subtle boundaries between closely related AI concepts. Memorize this table!
+Scrabble with no timer is static (board waits, score frozen) — sequential is a different dimension (memory), not a time answer. Thermostat relay is the actuator; thermometer is the sensor; power bill is performance. Sort slots by role, not by nouns.
 :::
 
-```text
-+-------------------------+-------------------------------------------------------------+
-| Concept A               | Concept B (And Why They Are Different)                      |
-+=========================+=============================================================+
-| AGENT FUNCTION          | AGENT PROGRAM                                               |
-| Abstract mathematical   | Concrete physical executable software running on hardware   |
-| mapping: f: P* -> A     | (Python script, C++ binary) subject to memory & CPU limits. |
-+-------------------------+-------------------------------------------------------------+
-| RATIONAL AGENT          | OMNISCIENT AGENT                                            |
-| Makes the *best choice* | Knows the *actual future outcome*. (Impossible in reality). |
-| based on limited info.  | Rationality maximizes expected utility; omniscience knows   |
-|                         | exact reality in advance.                                   |
-+-------------------------+-------------------------------------------------------------+
-| FULLY OBSERVABLE        | KNOWN                                                       |
-| Sensors can see the     | Agent knows the rules & physics of the environment.         |
-| entire current state.   | *Poker is KNOWN (rules are clear) but PARTIALLY OBSERVABLE* |
-+-------------------------+-------------------------------------------------------------+
-| STATIC                  | EPISODIC                                                    |
-| Relates to TIME: World  | Relates to MEMORY: Current action has no impact on future   |
-| pauses while thinking.  | decisions or performance scores.                            |
-+-------------------------+-------------------------------------------------------------+
-| STOCHASTIC              | NON-DETERMINISTIC                                           |
-| Probability distribution| Multiple outcomes possible, but probabilities are unknown.  |
-| of outcomes is known.   |                                                             |
-+-------------------------+-------------------------------------------------------------+
-```
-
----
+**Limitations of lab drills:** toy classifications assume textbook implementations; real Pac-Man randomness, live medical drift, and shifting spam tactics each move one dimension — always state assumptions in answers.
 
 <a id="self-check"></a>
-## 3. Active Recall Quizzes
+## 4. Active Recall Quizzes
 
 ::: quiz If a company builds an AI system designed specifically to pass the Turing Test, which quadrant of the Russell & Norvig AI matrix are they targeting?
 () Thinking Rationally
@@ -113,7 +80,7 @@ Examiners frequently test whether you know the subtle boundaries between closely
 (*) Acting Humanly
 () Thinking Humanly
 ::: explanation
-The Turing Test is the classic operational definition for "Acting Humanly" because it evaluates whether an external observer can distinguish the machine's behavior from a human.
+The Turing Test grades external indistinguishability from humans, which is exactly the Acting Humanly quadrant.
 :::
 
 ::: quiz You are designing a PEAS framework for a Smart Thermostat in an IoT home. Which of the following represents its Actuator?
@@ -122,7 +89,7 @@ The Turing Test is the classic operational definition for "Acting Humanly" becau
 (*) The electronic relay switch that turns the HVAC heating furnace on and off.
 () Minimizing monthly electric utility costs.
 ::: explanation
-The relay switch is the actuator because it is the mechanism through which the agent acts upon and changes the physical temperature of the environment.
+The relay changes world temperature (actuation). The thermometer senses, the resident is environment, and cost is performance (HVAC: Heating, Ventilation and Air Conditioning; IoT: Internet of Things).
 :::
 
 ::: quiz You are building an AI to play a digital version of Scrabble against a human opponent without any game timer. How is the time dimension classified?
@@ -131,7 +98,7 @@ The relay switch is the actuator because it is the mechanism through which the a
 (*) Static
 () Sequential
 ::: explanation
-Without a timer, the board does not change and the agent's performance score does not degrade while it is deliberating its move.
+No timer means the board waits and the score never decays during thought — static. Sequential answers a different (memory) dimension.
 :::
 
 ::: quiz Why is autonomous taxi driving considered a "Continuous" rather than a "Discrete" environment?
@@ -140,34 +107,25 @@ Without a timer, the board does not change and the agent's performance score doe
 (*) Because the inputs and actions (speed, steering wheel angle, acceleration) can take on infinite real-valued numbers.
 () Because the environment is fully observable.
 ::: explanation
-Continuous environments feature continuous real-valued state and action spaces (e.g. steering angle $14.5^\circ$, velocity $45.2 \text{ km/h}$), unlike discrete games with countable squares and discrete turns.
+Continuity is about real-valued state/action granularity (14.5 degrees, 45.2 km/h), not about driving duration or learning.
 :::
-
----
 
 <a id="exam-focus"></a>
-## 4. High-Yield University Exam Questions
+## 5. Exam Recap and Worked Q&A
 
 ::: callout-exam Exam Strategy
-Always use structured tabular format for PEAS questions and clearly separated bullet points for 7-mark comparison essays.
+Use tables for PEAS and numbered dimensions for environments. Always justify each cell in one line; bare labels earn partial credit only.
 :::
 
-### Essay Question 1 (7 Marks)
-**Categorize the task environment of a "Medical Diagnosis System" (an AI interacting with patients over time to diagnose and treat diseases) using the 7 environmental dimensions. Justify each classification.**
+**Recap facts examiners reward:** four-step habit; PEAS slot tests (changer vs. reader vs. judge); seven dimensions with one-line justifications; rationality-at-decision-time rule.
 
-**Model Answer:**
-1. **Partially Observable:** The agent cannot directly inspect all internal biological processes; it relies on indirect sensor data (blood tests, vital signs, reported symptoms).
-2. **Single-Agent:** The system treats the patient's body and pathogens as part of the natural environment, not as strategic opponents.
-3. **Stochastic:** Patient responses to pharmaceutical treatments exhibit biological variability and probabilistic outcomes rather than deterministic certainty.
-4. **Sequential:** Prescriptions and medical interventions administered today directly alter the patient's health trajectory and future treatment options.
-5. **Dynamic:** The patient's underlying physiological condition can deteriorate in real time while the AI is computing diagnostic assessments.
-6. **Continuous:** Physiological metrics (blood pressure, oxygen saturation, glucose levels, time) vary over continuous numerical scales.
-7. **Known:** The medical knowledge base, drug interaction tables, and physiological mechanisms are documented in medical literature.
+### Essay Question 1 (7 Marks)
+**Q: Classify a time-extended medical diagnosis system on all seven dimensions.**
+
+**Model Answer:** Partially observable (indirect tests, hidden biology); single-agent (body treated as environment); stochastic (variable drug response); sequential (today's dose shapes tomorrow); dynamic (patient changes during thought); continuous (vitals on real scales); known (documented medicine, unknown only when novel disease — qualify).
 
 ### Essay Question 2 (7 Marks)
-**Distinguish between Rationality and Omniscience in AI. Is a rational agent guaranteed to be successful? What role does autonomy play?**
+**Q: Distinguish rationality from omniscience. Must rational agents succeed? What is autonomy?**
 
-**Model Answer Outline:**
-* **Rationality vs. Omniscience (3 Marks):** Omniscience requires knowing the actual outcome of all actions in advance (impossible). Rationality requires choosing the action that maximizes *expected* performance measure based on the percept sequence history to date.
-* **Success Guarantee (2 Marks):** Rationality does not guarantee success. Unpredictable environmental events or partial observability can cause a fully rational decision to result in an undesirable outcome.
-* **Role of Autonomy (2 Marks):** Autonomy ensures the agent updates its internal model from its own experience and percepts rather than failing when designer assumptions no longer match the real world.
+**Model Answer:** Rationality maximizes expected performance on history; omniscience foreknows actual outcomes (impossible). Rationality does not guarantee success under uncertainty. Autonomy grounds behavior in own experience so agents survive broken designer priors.
+:::

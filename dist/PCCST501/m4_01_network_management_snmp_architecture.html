@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,39 +297,86 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Network Management &amp; SNMP Architecture</h1>
 <p><strong>Managing-agent model, SMI/MIB structure, SNMP operations and versions, and why management traffic rides the very network it manages.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>A campus runs 500 routers, switches, printers, and servers. Nobody can stand beside each one watching blinking lights — yet a failed link at 3 AM must page someone within seconds, and a technician must read any device&#39;s counters and push fixes from one desk.</p>
+<p>The problem before the solution: monitor and control thousands of devices <em>remotely</em>, through a uniform language cheap enough to embed in every device — even while the network being managed is itself sick. SNMP (Simple Network Management Protocol) is that language, spoken between manager stations and per-device agents.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Hospital Monitor Wall</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A hospital&#39;s nurses can&#39;t stand beside every bed — instead each bed has a <strong>monitor</strong> (agent) reporting pulse and oxygen to a <strong>central wall</strong> (manager), which raises alarms and occasionally pushes new dosage settings back. Network management is identical: every router/switch/host runs a lightweight <strong>agent</strong> process exposing counters and knobs; <strong>manager</strong> stations poll readings, receive alarm <strong>traps</strong>, and push configurations — all <em>over the same network being watched</em> (in-band management, with all the irony that implies when the network itself is what&#39;s broken).</p>
-</div></details><hr>
+<p>Dropping the hospital now: agent = per-device reporter/responder; manager/NMS (Network Management System) = central console; SMI (Structure of Management Information) = grammar; MIB (Management Information Base) = OID-addressed dictionary; Trap = unsolicited alarm.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-model-naming-operations-versions">3. Purpose — Model, Naming, Operat… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>NMS (Network Management System) / managing entity</strong></td>
+<td>The manager application (human console + analytics) that monitors and controls.</td>
+</tr>
+<tr>
+<td><strong>Managed device + agent</strong></td>
+<td>A router/switch/server/printer hosting an agent process that maintains local management data and answers the manager.</td>
+</tr>
+<tr>
+<td><strong>SNMP (Simple Network Management Protocol)</strong></td>
+<td>The query/response/alarm language between manager and agents — deliberately simple so agents stay embeddable everywhere.</td>
+</tr>
+<tr>
+<td><strong>SMI (Structure of Management Information)</strong></td>
+<td>The <em>grammar</em>: data types (counters that wrap, gauges, timeticks) and rules for defining objects.</td>
+</tr>
+<tr>
+<td><strong>MIB (Management Information Base)</strong></td>
+<td>The <em>dictionary</em>: a virtual tree where each variable has a unique numeric address — the OID (Object Identifier, e.g. <code>1.3.6.1.2.1…</code>). The agent maps OIDs to live device state on demand (no real &quot;database&quot;).</td>
+</tr>
+<tr>
+<td><strong>Trap</strong></td>
+<td>The only unsolicited agent→manager message (link down, overheat) — fast, unacknowledged, unreliable by design.</td>
+</tr>
+<tr>
+<td><strong>Community string</strong></td>
+<td>The v1/v2c cleartext password (&quot;public&quot;/&quot;private&quot;) — sniffable, lab-only.</td>
+</tr>
+<tr>
+<td><strong>USM / VACM (User-based Security Model / View-based Access Control Model)</strong></td>
+<td>SNMPv3&#39;s authentication + encryption layer and its who-may-touch-what access rules.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Managing/Managed Model</h3>
+<h2 id="3-purpose-model-naming-operations-versions">3. Purpose — Model, Naming, Operations, Versions</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 The Managing/Managed Model</h3>
 <ul>
 <li><strong>Managing entity:</strong> the NMS application (human console + analytics) that monitors and controls.</li>
 <li><strong>Managed devices:</strong> routers, switches, servers, printers — each hosting an <strong>agent</strong> that maintains local management data and answers the manager.</li>
 <li><strong>Management protocol (SNMP):</strong> the language between them — deliberately simple so agents stay cheap enough to embed in <em>every</em> device.</li>
 </ul>
-<h3>2.2 SMI and MIB: Naming Everything</h3>
+<h3>3.2 SMI and MIB: Naming Everything</h3>
 <ul>
 <li><strong>SMI (Structure of Management Information):</strong> the <em>grammar</em> — data types (counters that wrap, gauges, timeticks) and rules for defining objects.</li>
 <li><strong>MIB (Management Information Base):</strong> the <em>dictionary</em> — a virtual tree (OID hierarchy, e.g. <code>1.3.6.1.2.1…</code>) where each managed variable (packets forwarded, interface status, uptime) has a unique numeric address. The agent doesn&#39;t store a real &quot;database&quot; — it maps OIDs to live device state on demand.</li>
 </ul>
-<h3>2.3 SNMP Operations and Versions</h3>
+<h3>3.3 Operation Flow: SNMP Operations and Versions</h3>
 <table>
 <thead>
 <tr>
@@ -360,18 +411,49 @@
 <li><strong>SNMPv3:</strong> adds <strong>authentication + encryption</strong> (USM) and access control (VACM) — the version any security-conscious exam answer must name.</li>
 </ul>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: SNMP in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agents <strong>expose</strong>, managers <strong>poll/configure</strong> · SMI = <strong>grammar</strong>, MIB = <strong>OID tree dictionary</strong> · ops: <strong>Get/GetNext/Set/Response + Trap</strong> (trap = only unsolicited one) · v1/v2c = <strong>cleartext communities</strong> · v3 = <strong>auth + encryption</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Traps Are Unreliable by Design (and That&#39;s Fine)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Traps fire over connectionless UDP with <strong>no acknowledgment</strong> — a trap can itself die in the outage it reports. Managers therefore <em>also</em> poll critical state; traps are early warnings, never the record of truth. Any &quot;trap guarantees delivery&quot; option is wrong.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Traps Are Unreliable by Design (and That&#39;s Fine)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Traps fire over connectionless UDP (User Datagram Protocol) with <strong>no acknowledgment</strong> — a trap can itself die in the outage it reports. Managers therefore <em>also</em> poll critical state; traps are early warnings, never the record of truth. Any &quot;trap guarantees delivery&quot; option is wrong.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-model-naming-operations-versions">← 3. Purpose — Model, Naming, Operat…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>One router, one manager. Manager: <code>GetRequest</code> uptime → <code>Response 42 days</code>. Link dies → agent fires <code>Trap linkDown</code> instantly. Manager then polls <code>GetRequest ifOperStatus</code> to confirm, and pushes the fix with <code>SetRequest</code> — all over SNMPv3 in production.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An NMS must (a) read a router&#39;s current input-octet counter, (b) discover <em>all</em> interface descriptions without knowing how many exist, (c) push a new hostname, and (d) learn instantly if a link fails. Name the SNMP operation(s) per task and the versions that secure them.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Mapping Tasks to Operations</div><div class="step-content"><p>(a) Single known OID → <strong>GetRequest</strong>. (b) Unknown table length → repeated <strong>GetNextRequest</strong> (walk until the OID prefix changes — the standard table-crawl idiom). (c) Write → <strong>SetRequest</strong> (with a write community / v3 credentials). (d) Instant alarm → agent <strong>Trap</strong> on link-down — plus continued polling as backstop, since traps are unacknowledged.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Four tasks, four idioms: Get (known reads), GetNext-walk (unknown tables), Set (writes), Trap + poll (alarms). And every Set/Trap in production rides <strong>SNMPv3</strong> — v2c cleartext communities fail any question mentioning security.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SMI vs. MIB</td>
+<td>Grammar for defining objects vs. OID tree of actual variables.</td>
+</tr>
+<tr>
+<td>Get vs. GetNext vs. Trap</td>
+<td>Known read vs. table walk vs. unsolicited (unreliable) alarm.</td>
+</tr>
+<tr>
+<td>Poll vs. trap truth</td>
+<td>Polls = present-tense state; traps = event rumors (fast, losable).</td>
+</tr>
+<tr>
+<td>v2c vs. v3</td>
+<td>Cleartext communities vs. auth + encryption + access control.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Trusting a trap as guaranteed delivery — always pair with polling. (2) Swapping SMI/MIB roles — alphabet vs. dictionary entries. (3) Allowing v2c where security is mentioned — v3 is the only acceptable answer.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agents expose, managers poll/configure (in-band). SMI = grammar (counters/gauges/timeticks); MIB = OID dictionary mapped to live state. Idioms: Get (reads), GetNext-walk (tables), Set (writes), Trap (unsolicited, unacknowledged alarms). v1/v2c = cleartext communities (lab-only); v3 = USM auth/priv + VACM.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Which operation walks an unknown-length table? Why do managers poll if traps exist? What crosses the wire in v2c that must never cross in production? What does an agent store — a database or a mapping?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">What is the difference between SMI and MIB, and why do both exist?</span>
@@ -556,7 +638,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m4_01_network_management_snmp_architecture";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

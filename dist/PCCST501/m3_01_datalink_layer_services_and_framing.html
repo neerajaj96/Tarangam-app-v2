@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,54 +297,124 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Data Link Layer: Services &amp; Framing</h1>
 <p><strong>Node-to-node delivery, framing with byte/bit stuffing, link access, reliable delivery on noisy links, and error control placement.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>The network layer plans the <em>route</em> across the country — but between any <em>two adjacent stations</em>, someone must actually ride that one segment: package the parcel so its edges are findable, negotiate who speaks on a shared trail, and check the cargo survived the ride. Routing tables know nothing of these single-hop chores.</p>
+<p>The problem before the solution: move datagrams across <strong>one link</strong> between neighbours — delimiting frames in a raw bit stream, arbitrating shared media, and deciding (per medium) whether hop-local recovery is worth paying for.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Pony Express Relay</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The network layer plans the <em>route</em> across the country (which stations to pass through). But between any <em>two adjacent stations</em>, someone must actually ride the segment: package the letters into a saddlebag (<strong>framing</strong>), shout over the canyon to claim the trail (<strong>link access</strong>), check the bag wasn&#39;t gnawed en route (<strong>error detection</strong>), and demand a re-ride if it was (<strong>reliable delivery</strong>). The data link layer is that rider — responsible for exactly <strong>one hop</strong>, knowing nothing of the full journey.</p>
-</div></details><hr>
+<p>Dropping the relay now: frame = header + payload + trailer with findable edges; medium access = who-talks-now rules; per-hop reliability = ACKs + retransmission on lossy links only.</p>
+</div></details><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-four-services-then-framing-methods">3. Purpose — Four Services, Then F… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Frame</strong></td>
+<td>The link layer&#39;s packaged unit: header + network datagram + trailer.</td>
+</tr>
+<tr>
+<td><strong>Framing</strong></td>
+<td>Marking where each frame starts/ends in the bit stream. Methods: character count, byte stuffing, bit stuffing.</td>
+</tr>
+<tr>
+<td><strong>Byte stuffing</strong></td>
+<td>Flag bytes delimit frames; data bytes equal to FLAG (or the escape byte ESC) are prefixed with ESC.</td>
+</tr>
+<tr>
+<td><strong>Bit stuffing</strong></td>
+<td>Flag <code>01111110</code> delimits; sender inserts a <code>0</code> after any five consecutive data <code>1</code>s; receiver strips it (HDLC — High-Level Data Link Control — /USB approach).</td>
+</tr>
+<tr>
+<td><strong>Link access / MAC (Media Access Control)</strong></td>
+<td>Arbitrating a shared medium: who transmits now (next notes&#39; protocols).</td>
+</tr>
+<tr>
+<td><strong>Reliable delivery (per-hop)</strong></td>
+<td>ACK (acknowledgment) + retransmission across one link — bought on noisy links (Wi-Fi), skipped on clean ones (fiber).</td>
+</tr>
+<tr>
+<td><strong>Adapter / NIC (Network Interface Card)</strong></td>
+<td>The hardware running framing and error checks at line speed.</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Four Link-Layer Services</h3>
+<h2 id="3-purpose-four-services-then-framing-methods">3. Purpose — Four Services, Then Framing Methods</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 The Four Link-Layer Services</h3>
 <ul>
 <li><strong>Framing:</strong> wrapping each network datagram in a frame (header + payload + trailer) so the receiver knows where it starts and ends.</li>
-<li><strong>Link access:</strong> arbitrating a <em>shared</em> medium (who talks now?) via a MAC protocol — the heart of §3 next topic.</li>
+<li><strong>Link access:</strong> arbitrating a <em>shared</em> medium (who talks now?) via a MAC protocol — the heart of the next topics.</li>
 <li><strong>Reliable delivery:</strong> ACKs + retransmissions across <em>one</em> link (used on error-prone links like Wi-Fi; usually skipped on fiber, where TCP&#39;s end-to-end recovery suffices).</li>
-<li><strong>Error detection/correction:</strong> parity, checksums, CRC (entire next topic) — implemented in adapter hardware at line speed.</li>
+<li><strong>Error detection/correction:</strong> parity, checksums, CRC (Cyclic Redundancy Check) (entire next topic) — implemented in adapter hardware at line speed.</li>
 </ul>
-<h3>2.2 Framing: Finding the Edges</h3>
-<p>The receiver must locate frame boundaries in a raw bit stream. Three classic methods:</p>
-<ul>
+<h3>3.2 Operation Flow: Framing — Finding the Edges</h3>
+<p>The receiver must locate frame boundaries in a raw bit stream. Three classic methods, oldest first:</p>
+<ol>
 <li><strong>Character count:</strong> header states the frame length — simple, but one corrupted count desynchronizes <em>everything</em> after it.</li>
-<li><strong>Byte stuffing:</strong> flag bytes (e.g. <code>FLAG</code>) delimit frames; any <code>FLAG</code> byte <em>inside</em> data is escaped (<code>ESC FLAG</code>). Overhead grows with unlucky payloads.</li>
+<li><strong>Byte stuffing:</strong> flag bytes (e.g. <code>FLAG</code>) delimit frames; any <code>FLAG</code> byte <em>inside</em> data is escaped (<code>ESC FLAG</code>, and <code>ESC</code> itself is escaped). Overhead grows with unlucky payloads.</li>
 <li><strong>Bit stuffing:</strong> flag <code>01111110</code> delimits; the sender inserts a <code>0</code> after any five consecutive data <code>1</code>s, the receiver strips it — the standard HDLC/USB approach, self-synchronizing after any error burst.</li>
-</ul>
+</ol>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Framing Methods</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Count (fragile) · <strong>byte stuffing</strong> (escape FLAG/ESC bytes) · <strong>bit stuffing</strong> (0 after five 1s, flag 01111110). Exam pattern: &quot;stuff this bitstream&quot; — scan left to right, insert 0 after every run of five 1s <em>in the data</em>, then wrap with flags.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Reliable per Hop ≠ Reliable End to End</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Link-layer ACKs protect <em>one hop</em>; a frame correctly delivered across link 3 of 5 can still die at link 4&#39;s router queue. End-to-end correctness always remains TCP&#39;s job — link reliability is a <em>performance</em> optimization (fast local recovery on lossy media), never a substitute.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-four-services-then-framing-methods">← 3. Purpose — Four Services, Then F…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>Data <code>11111</code> (five 1s) with flag <code>01111110</code>. Bit-stuff: insert <code>0</code> after the five → transmit <code>111110</code>. The receiver sees five 1s + 0, strips the 0, recovers <code>11111</code> — and the flag pattern can never appear inside stuffed data, so boundaries stay unambiguous.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Apply bit stuffing to the data bits <code>0110111111111100</code> and frame the result with HDLC flags. Then show the receiver&#39;s destuffing.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Stuffing the Run</div><div class="step-content"><p>Scan for five consecutive <code>1</code>s: positions 4–13 hold a run of ten <code>1</code>s. Insert <code>0</code> after the first five (position 8), which breaks the run; positions 9–13 form five more <code>1</code>s, so insert <code>0</code> after position 13. Transmitted payload: <code>011011111</code> + <code>0</code> + <code>11111</code> + <code>0</code> + <code>00</code> = <code>011011111011111000</code> (18 bits). Wrap: <code>01111110 011011111011111000 01111110</code>. Receiver strips flags, then deletes the <code>0</code> following every five-<code>1</code> run, recovering the original 16 bits exactly.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One stuffed bit immunizes the whole frame against false flag detection — overhead paid only where long 1-runs occur, and any error burst resynchronizes at the next genuine flag. That self-healing property is why bit stuffing outlived byte counting.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Count vs. byte vs. bit stuffing</td>
+<td>Length header (fragile cascade) vs. escape FLAG bytes vs. 0-after-five-1s (self-synchronizing).</td>
+</tr>
+<tr>
+<td>Per-hop vs. end-to-end reliability</td>
+<td>One link&#39;s fast recovery vs. TCP&#39;s path-wide guarantee — optimization vs. correctness.</td>
+</tr>
+<tr>
+<td>Framing vs. error detection</td>
+<td>Finding edges vs. checking contents — different trailer/header jobs.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Stuffing the flag bits themselves — scan only the <em>data</em>. (2) Recommending per-hop ACKs on fiber — the loss rate doesn&#39;t justify it. (3) Treating link ACKs as end-to-end proof — five good hops don&#39;t guarantee the sixth.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Link layer = one-hop services: framing, access, per-hop reliability (lossy links only), error control (hardware). Framing ladder: count (cascade-fragile) → byte stuffing (ESC-escaped FLAGs) → bit stuffing (0 after five 1s, <code>01111110</code> flags, self-healing). Reliability placement follows the medium&#39;s loss rate; TCP always owns end-to-end correctness.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What are the four services? Why does one corrupted count poison all later frames? State the bit-stuffing rule and the destuffing rule. When is per-hop reliability worth it?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Why does the character-count framing method fall out of favor despite its simplicity?</span>
@@ -525,7 +599,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m3_01_datalink_layer_services_and_framing";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

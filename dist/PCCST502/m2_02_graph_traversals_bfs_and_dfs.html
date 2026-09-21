@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,21 +281,30 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Graph Traversals: BFS &amp; DFS</h1>
 <p><strong>Queues vs. stacks, shortest paths in unweighted graphs, edge classification, timestamps, and the shared O(V+E) skeleton.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Exploring a Cave</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>BFS</strong> explores like ripples in a pond: fully sweep everything one step away, then everything two steps away — you always know the <em>nearest</em> exit first. <strong>DFS</strong> explores like unrolling string down one tunnel: plunge as deep as possible, backtrack only at dead ends. Same cave, same total footsteps $\Theta(V+E)$ — but ripples find nearest things while string finds deep things (and reveals the cave&#39;s loop structure).</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Given a graph (vertices = places, edges = links) and a start vertex, how do we visit everything reachable — and what intelligence do we gain? Two orders exist. BFS (Breadth-First Search) fans out in rings: all 1-hop neighbours, then all 2-hop ones — so it learns <em>nearest-first distances</em>. DFS (Depth-First Search) plunges down one path to its end before backtracking — so it learns <em>structure</em> (loops, orderings).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Exploring a Cave</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>BFS</strong> spreads like pond ripples: sweep everything one step away, then two — you always meet the <em>nearest</em> exit first. <strong>DFS</strong> unrolls string down one tunnel: plunge deep, backtrack only at dead ends. Same cave, same footsteps $\Theta(V+E)$ — ripples measure nearness, string exposes loops. Drop the cave now: queues, colours, and timestamps below are the exact machinery.</p>
+</div></details><p><strong>Tiny toy example (4 vertices).</strong> Line $s-a-b-c$. BFS visits $s, a, b, c$ with distances $0, 1, 2, 3$. DFS from $s$ also visits all four but discovers them by plunging $s \to a \to b \to c$ with no branching — same coverage, different story told.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 BFS: Queue, Layers, Shortest Paths</h3>
-<p>BFS from $s$ uses a <strong>FIFO queue</strong>, paints vertices white/gray/black, and records distance $d[v]$ (edges from $s$) plus predecessor $\pi[v]$.</p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-one-directed-graph-both-traversals">3. Worked example — one directed g… →</a></p>
+<p><strong>Symbols:</strong> $V$ = vertex count, $E$ = edge count; $d[v]$ = distance (BFS) or discovery time (DFS); $\pi[v]$ = predecessor; colours white (unseen), gray (on the DFS stack), black (finished).</p>
+<p><strong>BFS: queue, layers, shortest paths — numbered steps:</strong></p>
+<ol>
+<li>Enqueue start $s$ with $d[s] = 0$; mark seen.</li>
+<li>Repeatedly dequeue $u$; for each neighbour $v$ unseen, set $d[v] = d[u]+1$, $\pi[v] = u$, enqueue $v$.</li>
+<li>Vertices finish in <strong>nondecreasing distance</strong> — so $d[v]$ is the fewest-edges path from $s$ (unweighted graphs only).</li>
+<li>Cost: each vertex dequeued once, each edge examined twice (undirected) → time $\Theta(V+E)$, space $\Theta(V)$.</li>
+</ol>
 <pre><code class="language-text">BFS layers from s (numbers = distance):
 
         s(0)
@@ -304,12 +313,7 @@
     /  \       \
  c(2)  d(2)    e(2)
 </code></pre>
-<ul>
-<li>Vertices are finished in <strong>nondecreasing distance</strong> — so $d[v]$ is the <em>shortest-path</em> distance in edges (unweighted graphs only!).</li>
-<li>Every edge is examined twice (undirected) → time $\Theta(V+E)$, space $\Theta(V)$.</li>
-</ul>
-<h3>2.2 DFS: Stack/Recursion, Timestamps, Edge Types</h3>
-<p>DFS stamps each vertex with discovery/finish times ($d[v]$, $f[v]$ — parenthesis structure: intervals nest or disjoint, never partially overlap) and classifies every edge in <em>directed</em> graphs:</p>
+<p><strong>DFS: stack/recursion, timestamps, edge types.</strong> Stamp discovery/finish times ($d[v]$, $f[v]$): intervals nest or stay disjoint, never half-overlap. Classify each directed edge $u \to v$ at exploration:</p>
 <table>
 <thead>
 <tr>
@@ -339,10 +343,7 @@
 <td>Jump between branches/subtrees</td>
 </tr>
 </tbody></table>
-<ul>
-<li>Undirected graphs have <strong>only tree + back edges</strong> (no forward/cross — the edge is seen from both ends).</li>
-<li>Same $\Theta(V+E)$ skeleton as BFS; recursion depth can hit $V$ (stack overflow on path graphs — the iterative version exists for exactly this reason).</li>
-</ul>
+<p>Undirected graphs have <strong>only tree + back edges</strong> (each edge is seen from both ends, killing forward/cross). Same $\Theta(V+E)$ skeleton; recursion depth can reach $V$ (iterative DFS exists for path-graph stack safety).</p>
 <div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Ripple Expansion Order</span>
@@ -365,19 +366,49 @@
     <div class="video-observations"><strong>What to observe:</strong> Watch nodes ignite layer by layer — s, then a and b, then c, d, e, then f and g. No node lights before every node nearer the source: nondecreasing distance, animated.</div>
   </div>
 </div><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Traversal Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>BFS = <strong>queue</strong>, layers, <strong>shortest path (unweighted)</strong>. DFS = <strong>stack/recursion</strong>, timestamps, <strong>edge classification</strong>. Both $\Theta(V+E)$. Directed edges: <strong>tree/back/forward/cross</strong> (gray target = back = cycle). Undirected: <strong>tree + back only</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: BFS &quot;Shortest&quot; Means Fewest Edges, Not Cheapest</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>BFS distances count <em>hops</em>. On weighted graphs (road lengths, costs) BFS&#39;s answer can be wildly non-optimal — that job belongs to Dijkstra/UCS (Module 3). Any option claiming BFS minimizes <em>weights</em> is the planted distractor.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: BFS &quot;Shortest&quot; Means Fewest Edges, Not Cheapest</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>BFS distances count <em>hops</em>. On weighted graphs (road lengths, costs) BFS can be wildly non-optimal — that job belongs to Dijkstra/UCS (Module 3). Any option claiming BFS minimizes <em>weights</em> is the planted distractor.</p>
 </div></details><hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Directed graph: $1 \to 2,\ 1 \to 3,\ 2 \to 3,\ 3 \to 1$. Run DFS from vertex 1 (neighbors in numeric order); then run BFS from 1. Classify each edge in the DFS run and give BFS distances.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Both Runs</div><div class="step-content"><p><strong>DFS:</strong> discover 1 ($d=1$); edge $1\to2$: 2 white → <strong>tree</strong>, discover 2 ($d=2$); edge $2\to3$: 3 white → <strong>tree</strong>, discover 3 ($d=3$); edge $3\to1$: 1 gray (ancestor) → <strong>back</strong> (cycle!); finish 3,2,1. Remaining edge $1\to3$: 3 black with $d[1]&lt;d[3]$ → <strong>forward</strong>.
-<strong>BFS:</strong> queue: 1 ($d=0$) → 2,3 ($d=1$ each) → done. $d = {1:0,\ 2:1,\ 3:1}$.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One graph, two stories: DFS exposes the $3\to1$ back edge (cycle detected) plus a forward shortcut; BFS certifies both 2 and 3 are one hop from 1. Use DFS to <em>understand structure</em> (cycles, ordering — next topic), BFS to <em>measure unweighted distance</em>.</p>
+<h2 id="3-worked-example-one-directed-graph-both-traversals">3. Worked example — one directed graph, both traversals</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Directed graph: $1 \to 2,\ 1 \to 3,\ 2 \to 3,\ 3 \to 1$. Run DFS from 1 (numeric neighbour order), classify every edge; then BFS from 1 with distances.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing Both Runs</div><div class="step-content"><p><strong>DFS:</strong> discover 1 ($d=1$); $1\to2$: 2 white → <strong>tree</strong>, discover 2 ($d=2$); $2\to3$: 3 white → <strong>tree</strong>, discover 3 ($d=3$); $3\to1$: 1 gray (ancestor) → <strong>back</strong> (cycle!); finish 3, 2, 1. Remaining $1\to3$: 3 black with $d[1]&lt;d[3]$ → <strong>forward</strong>. <strong>BFS:</strong> queue 1 ($d=0$) → 2, 3 ($d=1$ each) → done: $d = {1:0,\ 2:1,\ 3:1}$.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>DFS exposes the $3\to1$ back edge (cycle) plus a forward shortcut; BFS certifies 2 and 3 are each one hop away. DFS maps <em>structure</em> (cycles, orderings — next notes); BFS measures <em>unweighted distance</em>.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-one-directed-graph-both-traversals">← 3. Worked example — one directed g…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>Colour decides the edge type — vertex <em>numbers</em> never do. A &quot;backward-numbered&quot; edge to a black vertex is cross, not back.</li>
+<li>BFS on weighted graphs gives hop-optimal, not cost-optimal, paths.</li>
+<li>Gray = currently on the recursion stack = ancestor. Black = finished. White = unseen.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BFS vs DFS output</td>
+<td>Hop layers/distances vs timestamps/edge types — same cost, different intelligence</td>
+</tr>
+<tr>
+<td>Back vs cross edge</td>
+<td>Gray ancestor (cycle proof) vs black other-branch (history)</td>
+</tr>
+<tr>
+<td>Tree vs forward edge</td>
+<td>White target (discovery) vs black descendant (shortcut)</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> BFS queue + $\Theta(V+E)$ + unweighted-shortest; DFS colours + four directed types (undirected: two); gray target ⟺ back edge ⟺ directed cycle.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">During DFS of a directed graph, you traverse edge u → v and find v is gray (an ancestor in the current recursion stack). What is this edge, and what does it prove?</span>

@@ -5,11 +5,12 @@ module: 2
 sequence: 99
 title: 'Module 2 Practice Lab: Classification Drills'
 difficulty: intermediate
-estimatedMinutes: 7
+estimatedMinutes: 14
 learningObjectives:
-  - Pick classifiers for startups with defended reasoning
+  - Pick classifiers for startups with defended reasoning from first principles
   - Feel cross-entropy curves against zero-one judging
   - Autopsy vetoes and divergences inside thirty seconds
+  - State pruning, smoothing and step-size fixes without jargon
 concepts:
   - classifier selection
   - cross-entropy race
@@ -27,26 +28,30 @@ tags:
 ---
 # Module 2 Practice Lab: Classification Drills
 
-**Classifier selection under constraints, loss arithmetic races, veto autopsies, split decisions, and divergence triage.**
+**How to use this lab as a beginner: pick classifiers from data budget and stakeholders, read losses without confusing training with judging, and triage failures in order.**
 
 <a id="the-intuition"></a>
 ## 1. Step-by-Step Scenario Analysis
 
+Beginner protocol: problem first, then data and goal, then method. Never start from brand names.
+
 ### Scenario 1: The Startup Triage (Pick the Classifier, Defend It)
 
-Constraints: (a) 300 labeled medical scans, 2M unlabeled, must ship in a week → **Gaussian NB / simple generative**: converges in $O(\log n)$ samples, no tuning marathons, calibrated-enough probabilities for review queues. (b) 10M labeled ad clicks, accuracy is revenue → **logistic regression / trees**: data-rich regime where discriminative ceilings win; NB's bias would leave money. (c) Credit decisions requiring *reasons* for regulators → **shallow decision tree**: auditable splits beat black-box points when the examiner is a lawyer. Method follows data budget + stakeholder, never fashion.
+Constraints: (a) 300 labeled medical scans, 2M unlabeled, must ship in a week → **Gaussian NB / simple generative**: converges in $O(\log n)$ samples, no tuning marathons, calibrated-enough probabilities for review queues. (b) 10M labeled ad clicks, accuracy is revenue → **logistic regression / trees**: data-rich regime where discriminative ceilings win; NB's bias would leave money. (c) Credit decisions requiring *reasons* for regulators → **shallow decision tree**: auditable splits beat black-box points when the examiner is a lawyer. Method follows data budget plus stakeholder, never fashion.
+
+Tiny check: ask "how many labels, who consumes the model?" Labels decide generative versus discriminative; stakeholder decides readable versus black box.
 
 ### Scenario 2: Cross-Entropy Race (Feel the Curve)
 
-True label $y=1$. Model A predicts $0.9$: loss $-\ln 0.9 \approx 0.105$. Model B predicts $0.5$: $0.693$. Model C predicts $0.1$: $2.303$. Same correct *direction* (all > 0.5 → all classify right!), wildly different *losses* (22× spread) — accuracy sees three ties; cross-entropy sees confidence quality. Train on the loss, report the accuracy, and never confuse which game each number scores.
+True label $y=1$. Model A predicts $0.9$: loss $-\ln 0.9 \approx 0.105$. Model B predicts $0.5$: $0.693$. Model C predicts $0.1$: $2.303$. Same correct *direction* (all $> 0.5$ classify right!), wildly different *losses* (22× spread) — accuracy sees three ties; cross-entropy sees confidence quality. Train on the loss, report the accuracy, and never confuse which game each number scores.
 
 ### Scenario 3: The Veto Autopsy
 
-Spam {win:2, money:2}/4 words, ham {win:0, money:1}/3 words, priors 50/50, $|V|=2$, $\alpha=1$. Classify "win money": spam $0.5 \times 0.5 \times 0.5 = 0.125$; ham $0.5 \times 0.2 \times 0.4 = 0.04$ → **spam**, 3:1. Now delete smoothing: $P(\text{win}|\text{ham}) = 0/3 = 0$ — ham's score zeroes *regardless*; worse, any *unseen-in-both* word zeroes *both* classes and argmax ties on nothing. Autopsy conclusion: unsmoothed NB doesn't degrade gracefully — it holds vetoes, and vetoes detonate.
+Spam {win:2, money:2}/4 words, ham {win:0, money:1}/3 words, priors 50/50, vocabulary size $|V|=2$, $\alpha=1$. Classify "win money": spam $0.5 \times 0.5 \times 0.5 = 0.125$; ham $0.5 \times 0.2 \times 0.4 = 0.04$ → **spam**, 3:1. Now delete smoothing: $P(\text{win}|\text{ham}) = 0/3 = 0$ — ham's score zeroes *regardless*; worse, any *unseen-in-both* word zeroes *both* classes and argmax ties on nothing. Autopsy conclusion: unsmoothed NB doesn't degrade gracefully — it holds vetoes, and vetoes detonate.
 
 ### Scenario 4: Divergence Triage in 30 Seconds
 
-Symptoms → verdicts: loss NaN after healthy epochs → halve $\eta$, clip, resume from checkpoint (divergence, not data). Loss plateaued high from epoch 1 → $\eta$ too small *or* model too weak — raise $\eta$ first (cheapest test), then capacity. Train/test gap yawning → variance disease (regularize, more data, simpler model). Train *and* test both bad → bias disease (bigger model, better features, longer training). Four symptoms, four prescriptions — triage before tuning, always.
+Symptoms to verdicts: loss Not-a-Number (NaN) after healthy epochs → halve Learning Rate ($\eta$), clip, resume from checkpoint (divergence, not data). Loss plateaued high from epoch 1 → $\eta$ too small *or* model too weak — raise $\eta$ first (cheapest test), then capacity. Train-test gap yawning → variance disease (regularise, more data, simpler model). Train *and* test both bad → bias disease (bigger model, better features, longer training). Four symptoms, four prescriptions — triage before tuning, always.
 
 ---
 
@@ -59,11 +64,11 @@ Symptoms → verdicts: loss NaN after healthy epochs → halve $\eta$, clip, res
 | Sigmoid vs. boundary | $\sigma$ rescales confidence; $w^Tx=0$ still cuts linear and flat |
 | $(p-y)$ gradient meaning | Surprise-proportional updates: mistakes shout, certainties whisper |
 | Generative vs. discriminative | Model $P(x\|y)$ (fast, sampleable) vs. $P(y\|x)$ boundary (higher ceiling, hungrier) |
-| Smoothing purpose | Kills zero-vetoes (unseen ≠ impossible), not a performance topping |
+| Smoothing purpose | Kills zero-vetoes (unseen is rare, not impossible), not a performance topping |
 | Gain vs. gain ratio | Raw mess-removed vs. normalized (IDs shatter gain, ratio resists) |
 | Pre- vs. post-pruning | Stop early (risks under-shoot) vs. grow + validation-snip (costs a split) |
 | Batch vs. SGD vs. mini-batch | $O(nd)$ smooth vs. $O(d)$ noisy-fast vs. GPU default middle |
-| Convex vs. non-convex training | Guaranteed arrival vs. crafted local success (init/schedules/momentum) |
+| Convex vs. non-convex training | Global seeking with proper step size vs. crafted local success (init/schedules/momentum) |
 | k ties | Even-$k$ symmetric distances need tie rules — odd $k$ or $1/d$ weights |
 
 ---

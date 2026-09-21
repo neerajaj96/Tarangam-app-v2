@@ -5,11 +5,12 @@ module: 3
 sequence: 6
 title: 'Mobile IP: Keeping Your Address While Roaming'
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 9
 learningObjectives:
   - Run discovery, registration, and tunneling in order
   - Price triangle routing against route optimization
   - Split home identity from care-of location
+  - Self-test with the exam recap and active-recall checklist
 concepts:
   - home agent
   - tunneling
@@ -26,26 +27,46 @@ tags:
 **Home agents, foreign agents, care-of addresses — discovery, registration, tunneling, and the triangle-routing tax with its route-optimized refund.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. The Real-World Situation — Start From Zero
+
+Your phone keeps its IP address identity (connections, logins, sessions bound to it) but physically roams across networks whose addresses belong elsewhere. Routing by the permanent address delivers to the *home* network — where you no longer are. Changing address on every move breaks every open connection instead.
+
+The problem before the solution: keep one permanent **identity** while the physical **location** keeps changing. Mobile IP splits the two: the home address names you forever; a temporary care-of address says where you are now; agents at both ends forward between them.
 
 ::: callout-intuition Core Mental Model: Mail Forwarding on the Move
 Your **home address** (home IP) never changes, but you travel. The **home agent** (family member at home) collects your letters; the **foreign agent** (hotel concierge) receives the forwarded bundle (tunnel) and slips it under your door (**care-of address**). Discovery finds the concierge, registration files the forwarding order, tunneling wraps each letter in a fresh envelope (IP-in-IP) — three legs where one would do, the price of a permanent address.
+
+Dropping the mail now: home agent = router at your home network; foreign agent = router at the visited network; CoA (Care-of Address) = your temporary location address; tunnel = IP-in-IP encapsulation (+20 B outer header).
 :::
 
 ::: anim mobile-ip-tunnel Three Legs by Default, One After Optimization
 Correspondent to home agent to foreign agent to mobile node — then binding updates shortcut the triangle.
 :::
 
----
+<a id="key-terms"></a>
+## 2. Words First — Every Term Defined
+
+| Term (abbreviation expanded on first use) | Plain meaning |
+|---|---|
+| **Home address** | The mobile node's permanent IP — identity, DNS (Domain Name System)-visible, never changes. |
+| **Home agent** | A router on the home network that intercepts packets for the away node and tunnels them onward. |
+| **Foreign agent** | A router on the visited network that receives tunnels and delivers locally. |
+| **CoA (Care-of Address)** | The temporary, topologically correct address: the foreign agent's address (or a collocated address — the node's own temporary IP). |
+| **Tunneling (IP-in-IP encapsulation)** | Wrapping the original datagram in a fresh outer IP header (+20 B) addressed to the tunnel endpoint. |
+| **Triangle routing** | Default 3-leg path: correspondent → home agent → foreign agent → node. |
+| **Route optimization** | Correspondent caches the binding (home→care-of) and tunnels directly — 1 leg. |
+| **Correspondent** | Any host communicating with the mobile node. |
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Purpose — Three Phases, Then the Triangle Tax
 
-### 2.1 The three phases
+### 3.1 Operation Flow: The Three Phases, Step by Step
 
-**Discovery:** agents broadcast advertisements; the node solicits if impatient; movement detection compares network prefixes. **Registration:** node sends request (home address + care-of address + lifetime) via foreign agent to home agent; reply grants/denies — re-register before expiry (lifetimes, typically minutes–hours). **Tunneling:** home agent intercepts (gratuitous ARP/proxy), encapsulates (IP-in-IP: +20 B outer header, or minimal/generic-routing variants), foreign agent decapsulates and delivers; reverse path usually goes direct (no tunnel needed upstream).
+1. **Discovery:** agents broadcast advertisements; the node solicits if impatient; movement detection compares network prefixes.
+2. **Registration:** node sends request (home address + care-of address + lifetime) via foreign agent to home agent; reply grants/denies — re-register before expiry (lifetimes, typically minutes–hours).
+3. **Tunneling:** home agent intercepts (gratuitous ARP — Address Resolution Protocol — /proxy), encapsulates (IP-in-IP: +20 B outer header, or minimal/generic-routing variants), foreign agent decapsulates and delivers; reverse path usually goes direct (no tunnel needed upstream).
 
-### 2.2 Triangle tax and refund
+### 3.2 Triangle Tax and Refund
 
 Default path correspondent → home → foreign → node ($3$ legs even when neighbours roam together). **Route optimization:** correspondent caches bindings (home→care-of), tunnels directly ($1$ leg) — at the cost of binding-update signalling and correspondent-side mobility support.
 
@@ -59,10 +80,14 @@ Collocated care-of addresses (node's own temporary IP, no foreign agent) trade c
 The **home address** identifies (permanent, DNS-visible); the **care-of address** locates (temporary, topologically correct). An option routing by home address past the home agent, or exposing the CoA to applications, breaks one half of the split — identity stays home, location travels.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. Examples — Tiny First, Then Exam-Level
+
+### 4.1 Toy Example (30 seconds)
+
+Home agent A, foreign agent F, node at CoA C, 100-B payload. Default: sender → A (120 B with inner header); A wraps outer 20 B → 140 B to F; F strips, delivers 120 B to the node. Three legs, 20 extra bytes on the tunnel hop. Optimized: sender wraps directly to F — same 140 B, one leg.
+
+### 4.2 KTU-Style Worked Example
 
 ::: step [Step 1: Setup] Formulating the Problem
 Mobile node with home address $H$ roams to a foreign net (care-of $C$, foreign agent $F$, home agent $A$). Correspondent $Y$ sends a $1000$-B payload. Trace default delivery with on-wire sizes, then count legs after route optimization.
@@ -76,10 +101,26 @@ Discovery done, registered (lifetime granted). Default: (1) $Y \to A$ carries in
 Default $3$ legs at $1040$ B on the tunnel hop ($3.85\%$ overhead); optimized $1$ leg, identical bytes. Tax quantified two ways: distance (legs) refundable via bindings, bytes (encapsulation) permanent — know which refund buys what.
 :::
 
----
+<a id="exam-recap"></a>
+## 5. Distinctions, Watch-Outs, and Exam Recap
+
+| Pair students confuse | Distinction that earns marks |
+|---|---|
+| Home address vs. CoA | Permanent identity vs. temporary location — applications see the first, tunnels use the second. |
+| Triangle vs. optimized | 3 legs via home vs. 1 direct tunnel after binding update. |
+| Foreign-agent vs. collocated CoA | Tunnel ends at visited router vs. at the node itself. |
+| Registration vs. discovery | Filing the forwarding lease vs. finding the agent. |
+
+**Watch out:** (1) Routing past the home agent by home address — interception *is* the mechanism. (2) Expecting optimization to shrink bytes — it shrinks legs; the +20 B stays. (3) Letting the lifetime expire — re-register inside it or traffic blackholes.
+
+::: callout-exam KTU Exam Focus: One-Paragraph Recap
+Phases: discover (adverts) → register (request/reply + lifetime, renew early) → tunnel (IP-in-IP +20 B, reverse direct). Identity (home address) vs. location (CoA). Default triangle 3 legs; route optimization caches bindings → 1 leg, same bytes. Collocated CoA drops the foreign agent.
+:::
+
+**Active-recall checklist:** What does each phase produce? Why three legs by default? What does a binding update buy — legs or bytes? When does traffic blackhole?
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
 ::: quiz Q1: Registration Arithmetic
 Lifetime granted $600$ s; node re-registers every $500$ s. A rival design re-registers every $700$ s. Verdicts?

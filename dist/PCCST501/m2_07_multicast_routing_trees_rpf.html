@@ -105,6 +105,10 @@
             <span class="topic-dot"></span>
             <span>1.8 Peer To Peer Bittorrent</span>
           </a>
+          <a href="./m1_09_socket_programming_select_poll.html" class="topic-link " id="topic-m1_09_socket_programming_select_poll">
+            <span class="topic-dot"></span>
+            <span>1.9 Socket Programming Select Poll</span>
+          </a>
           <a href="./m1_99_practice_lab_application_layer_drills.html" class="topic-link " id="topic-m1_99_practice_lab_application_layer_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Application Layer Drills</span>
@@ -254,7 +258,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 36 completed</span>
+          <span id="progressLabel" role="status">0 of 37 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -293,23 +297,28 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#exam-recap" class="jump-pill">exam-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Multicast Routing: One Send, Many Receivers</h1>
 <p><strong>Class-D groups, IGMP membership, RPF flood-and-prune, source vs shared trees — and the copy-count trace that proves loops die silently.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Club Newsletter, Not Personal Letters</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Unicast</strong> mails personal letters ($N$ copies from the source); <strong>broadcast</strong> shouts at the whole street (everyone pays); <strong>multicast</strong> runs a <strong>club newsletter</strong> — one send, delivered only to subscribers (Class-D group $224.0.0.0$–$239.255.255.255$). Routers learn who subscribed via <strong>IGMP</strong>, then grow delivery trees covering exactly the members — no member, no copy, no waste.</p>
+<h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
+<p>A live lecture streams to 10,000 students. Sending 10,000 separate copies (unicast — one sender to one receiver, repeated) melts the source. Shouting to <em>everyone on the Internet</em> (broadcast) wastes the whole planet&#39;s bandwidth. The sane middle: send once, and let the network duplicate the stream only where paths branch toward actual viewers.</p>
+<p>The problem before the solution: deliver one send to <em>many selected</em> receivers without per-receiver work at the source and without loops duplicating packets forever. Multicast&#39;s answer: receivers <strong>subscribe</strong> to a group address; routers grow a <strong>delivery tree</strong> covering exactly the members; and a one-line <strong>RPF (Reverse Path Forwarding)</strong> check kills loops.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Club Newsletter, Not Personal Letters</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Unicast</strong> mails personal letters ($N$ copies from the source); <strong>broadcast</strong> shouts at the whole street (everyone pays); <strong>multicast</strong> runs a <strong>club newsletter</strong> — one send, delivered only to subscribers (Class-D group $224.0.0.0$–$239.255.255.255$). Routers learn who subscribed via <strong>IGMP (Internet Group Management Protocol)</strong>, then grow delivery trees covering exactly the members — no member, no copy, no waste.</p>
+<p>Dropping the newsletter now: group = Class-D address subscribers join; tree = the branched forwarding paths; RPF = forward only arrivals on the best path back to the source.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; On-Tree Copies, Off-Tree Drops</span>
@@ -333,28 +342,105 @@
     <p class="video-caption"><strong>Key Insight:</strong> On-Tree Copies, Off-Tree Drops</p>
     <div class="video-observations"><strong>What to observe:</strong> On-tree arrival fans out once per member link; the looped duplicate fails its RPF check and dies — flood reaches all, prune keeps only members.</div>
   </div>
-</div><hr>
+</div><p><a id="key-terms"></a></p>
+<h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-trees-protocols-igmp">3. Purpose — Trees, Protocols, IGM… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Unicast / broadcast / multicast</strong></td>
+<td>One-to-one / one-to-all-on-a-network / one-to-subscribers-only delivery.</td>
+</tr>
+<tr>
+<td><strong>Class-D address ($224.0.0.0$–$239.255.255.255$)</strong></td>
+<td>The IPv4 range reserved for multicast group identities — no host owns one; receivers subscribe to it.</td>
+</tr>
+<tr>
+<td><strong>IGMP (Internet Group Management Protocol)</strong></td>
+<td>The edge protocol by which hosts join/leave groups (membership reports to the local router).</td>
+</tr>
+<tr>
+<td><strong>Delivery tree</strong></td>
+<td>The branched set of router paths from source (or core) to all members. <strong>Source-based</strong> = one shortest-path tree per source; <strong>group-shared</strong> = one tree per group rooted at a rendezvous/core point.</td>
+</tr>
+<tr>
+<td><strong>RPF (Reverse Path Forwarding) check</strong></td>
+<td>Forward a multicast packet only if it arrived on the interface the router would use to unicast <em>back</em> to the source — else drop. The loop-killer.</td>
+</tr>
+<tr>
+<td><strong>Flood-and-prune</strong></td>
+<td>First flood everywhere, then cut branches with no members — how source trees are learned.</td>
+</tr>
+<tr>
+<td><strong>DVMRP / MOSPF / PIM-DM / PIM-SM (Distance Vector Multicast Routing Protocol / Multicast OSPF / Protocol Independent Multicast – Dense/Sparse Mode)</strong></td>
+<td>Intra-domain (within one administration) multicast protocols: source-tree flood-and-prune family vs. shared-tree family.</td>
+</tr>
+<tr>
+<td><strong>MBGP / MSDP (Multiprotocol BGP / Multicast Source Discovery Protocol)</strong></td>
+<td>Inter-domain (between administrations) multicast support: MBGP (Multiprotocol Border Gateway Protocol) carries multicast routes; MSDP shares active sources across domains.</td>
+</tr>
+<tr>
+<td><strong>CBT (Core Based Trees)</strong></td>
+<td>An early group-shared-tree design (rendezvous core per group).</td>
+</tr>
+</tbody></table>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Trees and protocols</h3>
+<h2 id="3-purpose-trees-protocols-igmp">3. Purpose — Trees, Protocols, IGMP</h2>
+<p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
+<h3>3.1 Operation Flow: Trees and Protocols</h3>
 <p>Two tree shapes: <strong>source-based</strong> (one shortest-path tree per source — DVMRP flood-and-prune, MOSPF) and <strong>group-shared</strong> (one rendezvous/core tree per group — CBT, PIM-SM). Intra-domain: DVMRP, MOSPF, PIM-DM/SM; inter-domain: MBGP carries multicast routes, MSDP shares active sources across domains. <strong>RPF check</strong>: forward a multicast packet only if it arrived on the interface the router would use to unicast <em>back</em> to the source — else drop (loop-killer, duplicate-killer).</p>
-<h3>2.2 IGMP&#39;s role</h3>
+<h3>3.2 IGMP&#39;s Role</h3>
 <p>Hosts join/leave groups with IGMP membership reports to their local router; routers query periodically and prune branches with zero members. Group state lives at the edge; the core forwards by tree, never by member list.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Multicast</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Class D $= 224/4$ · IGMP joins at edge · RPF: arrival $\in$ best-path-to-source else drop · source trees (flood-prune) vs shared trees (core) · intra (PIM/DVMRP) vs inter (MBGP/MSDP).</p>
 </div></details><p>RPF reuses the <em>unicast</em> table — no separate multicast topology needed for the check, which is why every multicast protocol leans on whatever unicast routing already computed.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Broadcast Confusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Broadcast hits all hosts on a LAN (one subnet, ARP-style); multicast crosses routers to <em>subscribers only</em>, group-addressed. An option delivering &quot;to every host on the Internet&quot; describes neither — multicast scope is membership, never everybody.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
+<p class="secnav"><a href="#3-purpose-trees-protocols-igmp">← 3. Purpose — Trees, Protocols, IGM…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<h3>4.1 Toy Example (30 seconds)</h3>
+<p>One source, one router, two links: link A reaches a member, link B reaches nobody. RPF passes on the source-facing arrival → one copy down link A, zero down link B. A duplicate looping back on link A fails RPF (best path to the source is the other interface) → dropped. Two decisions: copy toward members, kill the loop.</p>
+<h3>4.2 KTU-Style Worked Example</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Source $S$ feeds router R1 (best path to $S$ via eth0). R1 links: eth1 → member H1, eth2 → non-member H2, eth3 → R2 (which serves member H3). One packet from $S$ arrives on eth0; a looped duplicate later arrives on eth1. Tabulate R1&#39;s decisions and final deliveries.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Check, Copy, Drop</div><div class="step-content"><p>Original on eth0: RPF pass (eth0 <em>is</em> the best path to $S$) → forward one copy to eth1 (H1 ✓) and one to eth3 (→ R2 → H3 ✓); nothing to eth2 (no members — prune). Copies made: $2$. Duplicate on eth1: RPF fail (best path to $S$ is eth0, not eth1) → drop silently. H1 and H3 receive exactly $1$ each; H2 receives $0$; the loop dies at R1 instead of circling.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$2$ forwarded copies, $1$ silent drop, deliveries ${H1:1, H3:1, H2:0}$. RPF&#39;s two jobs visible in one trace: replicate toward members, annihilate loops — flood-and-prune&#39;s flood reaches, its prune (plus RPF) restrains.</p>
-</div></div><hr>
+</div></div><p><a id="exam-recap"></a></p>
+<h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
+<p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Pair students confuse</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Unicast vs. broadcast vs. multicast</td>
+<td>$N$ copies / all hosts / subscribers only.</td>
+</tr>
+<tr>
+<td>Source tree vs. shared tree</td>
+<td>Per-source shortest paths (flood-prune) vs. per-group core tree.</td>
+</tr>
+<tr>
+<td>IGMP vs. routing protocols</td>
+<td>Edge membership vs. tree construction vs. inter-domain source sharing.</td>
+</tr>
+<tr>
+<td>RPF pass vs. fail</td>
+<td>Arrival on best-path-to-source vs. any other interface — same bytes, opposite fates.</td>
+</tr>
+</tbody></table>
+<p><strong>Watch out:</strong> (1) Routing downloads <em>through</em> the tracker-like middleman — members receive from the tree, introducers only introduce. (2) Giving the tracker/tree-builder&#39;s job to IGMP — IGMP only joins at the edge. (3) &quot;Multicast to everyone&quot; — membership bounds every delivery.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Multicast = Class-D groups + IGMP edge joins + delivery trees + RPF loop-killer (arrival must equal best path to source). Source trees (DVMRP/MOSPF, flood-prune) vs. shared trees (CBT/PIM-SM, core); intra-domain PIM/DVMRP vs. inter-domain MBGP/MSDP. Source cost $O(1)$ vs. unicast $O(N)$.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What three delivery scopes exist? State the RPF rule in one line. Which protocols act at edge, domain, and inter-domain levels? Why does multicast reuse the unicast table?</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Q1: RPF Drill</span>
@@ -430,7 +516,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Joins climb outward: membership at the edge (IGMP), trees within the AS (PIM-SM), source announcements between ASes (MSDP over MBGP routes). Layered responsibility mirrors the unicast hierarchy — local, domain, inter-domain.</p><pre><code>&lt;/div&gt;
+      <p>Joins climb outward: membership at the edge (IGMP), trees within the AS (Autonomous System) (PIM-SM), source announcements between ASes (MSDP over MBGP routes). Layered responsibility mirrors the unicast hierarchy — local, domain, inter-domain.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
@@ -542,7 +628,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(36) || 0;
+      var totalTopics = Number(37) || 0;
       var currentId = "m2_07_multicast_routing_trees_rpf";
       var courseCode = "PCCST501";
       if (!totalTopics || !currentId || !courseCode) return;

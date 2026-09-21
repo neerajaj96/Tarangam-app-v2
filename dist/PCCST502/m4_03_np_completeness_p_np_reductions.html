@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -281,47 +281,82 @@
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out" class="jump-pill">watch-out</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>NP-Completeness: P, NP &amp; Reductions</h1>
-<p><strong>Decision problems, certificates vs. solutions, polynomial reductions, Cook&#39;s theorem, the 3-SAT→Clique proof pattern, and coping when completeness bites.</strong></p>
+<p><strong>Decision problems, certificates vs. solutions, polynomial reductions, Cook&#39;s theorem, the 3-SAT→Clique proof pattern, vertex cover via Clique, and coping when completeness bites.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Jigsaws and Solution Checkers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Some puzzles are <em>easy to solve</em> (2-piece jigsaw); some are <em>hard to solve but easy to verify</em> (a stranger hands you a finished 1000-piece sky — checking takes seconds, finding it took them hours). <strong>P</strong> = solvable fast. <strong>NP</strong> = <em>verifiable</em> fast (a claimed answer checkable in polynomial time). <strong>NP-complete</strong> = the hardest NP puzzles, all secretly the <em>same</em> puzzle in disguise: crack one fast and every NP problem collapses to fast (P = NP, million-dollar Clay prize, modern cryptography in ruins). A <strong>reduction</strong> is the disguise-remover: translate puzzle A into puzzle B so B&#39;s solver solves A.</p>
-</div></details><hr>
+<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
+<p><strong>Problem first.</strong> Some puzzles are easy to <em>solve</em> (2-piece jigsaw); others are hard to solve yet easy to <em>check</em> (a stranger hands you a finished 1000-piece sky — verifying takes seconds, finding it took hours). Complexity theory sorts decision problems (yes/no questions) by this solve-vs-check gap: <strong>P</strong> = solvable fast; <strong>NP</strong> = <em>verifiable</em> fast given a claimed answer; <strong>NP-complete</strong> = the hardest NP problems, all secretly the <em>same</em> puzzle in disguise — a fast solver for one converts, via translations called <strong>reductions</strong>, into fast solvers for all.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Jigsaws and Solution Checkers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>P</strong> = puzzles you solve fast. <strong>NP</strong> = puzzles whose claimed solutions you <em>check</em> fast (a certificate — proposed answer — verifiable in polynomial time). <strong>NP-complete</strong> = NP puzzles every other NP puzzle translates into: crack one fast and every NP problem collapses to fast (the P = NP question — a million-dollar Clay prize — with carefully qualified, not apocalyptic, consequences spelled out below). A <strong>reduction</strong> is the disguise-remover: translate A into B so B&#39;s solver solves A. Drop the jigsaws now: verifiers, classes, and the $A \le_p B$ arrow below are the exact machinery.</p>
+</div></details><p><strong>Tiny toy example (check vs solve).</strong> Sudoku: <em>solving</em> a hard 9×9 from scratch can take ages; <em>checking</em> a filled grid takes seconds (scan rows, columns, boxes). &quot;Checkable fast, solvable unknown-fast&quot; is the NP signature in miniature.</p>
+<hr>
 <p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 The Classes</h3>
-<ul>
-<li><strong>P:</strong> decision problems solvable in polynomial time ($O(n^k)$ for some fixed $k$) — sorting, shortest paths, MST, 2-SAT.</li>
-<li><strong>NP:</strong> problems with polynomial-time <strong>verifiers</strong> — given instance + <em>certificate</em> (proposed solution), correctness is checkable fast. Equivalently, solvable in polynomial time by a <em>nondeterministic</em> machine (guess-then-verify). P ⊆ NP; equality unknown.</li>
-<li><strong>NP-complete:</strong> $L \in$ NP <strong>and</strong> every NP problem reduces to $L$ in polynomial time. First known: <strong>SAT</strong> (<strong>Cook–Levin theorem</strong>, 1971) — circuit satisfiability encodes arbitrary NP computation. From SAT flow 3-SAT, Clique, Vertex Cover, Hamiltonian Cycle, Subset Sum, Bin Packing (decision form), TSP (decision form)...</li>
-</ul>
-<h3>2.2 Reductions: The Only Proof Move</h3>
-<p>$A \le_p B$ (A reduces to B): a polynomial-time map $f$ with $x \in A \iff f(x) \in B$. Two uses, opposite directions — <strong>the #1 confusion</strong>:</p>
+<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
+<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-3-sat-clique-on-two-clauses">3. Worked example — 3-SAT→Clique o… →</a></p>
+<p><strong>Symbols and abbreviations:</strong> SAT = satisfiability (is a Boolean formula satisfiable?); 3-SAT = SAT with 3 literals per clause; $A \le_p B$ = A polynomial-time reduces to B (a polytime map $f$ with $x \in A \iff f(x) \in B$); NPC = NP-complete; $\lnot x$ = negation of variable $x$.</p>
+<p><strong>The classes — numbered:</strong></p>
+<ol>
+<li><strong>P:</strong> decision problems solvable in polynomial time ($O(n^k)$, fixed $k$) — sorting, shortest paths, MST (minimum spanning tree), 2-SAT.</li>
+<li><strong>NP:</strong> problems with polynomial-time <strong>verifiers</strong> — instance + <em>certificate</em> checked fast. Equivalently, solvable in polytime by a <em>nondeterministic</em> machine (guess-then-verify). P ⊆ NP; equality unknown.</li>
+<li><strong>NP-complete:</strong> $L \in$ NP <strong>and</strong> every NP problem reduces to $L$ in polytime. First known: <strong>SAT</strong> (<strong>Cook–Levin theorem</strong>, 1971) — circuit satisfiability encodes arbitrary NP computation. From SAT flow 3-SAT, Clique, Vertex Cover, Hamiltonian Cycle, Subset Sum, Bin Packing (decision form), TSP (decision form).</li>
+</ol>
+<p><strong>Reductions: the only proof move.</strong> Two uses, opposite directions — <strong>the #1 confusion</strong>:</p>
 <ul>
 <li>To prove $B$ is <strong>hard</strong>: reduce a <em>known-hard</em> $A$ <strong>to</strong> $B$ ($A \le_p B$ — hardness flows forward into $B$).</li>
-<li>To prove $A$ is <strong>easy</strong> given $B$&#39;s solver: same arrow ($A \le_p B$) — easiness flows backward.</li>
+<li>To prove $A$ is <strong>easy</strong> given $B$&#39;s solver: same arrow ($A \le_p B$) — easiness flows backward (algorithms flow against the arrow).</li>
 </ul>
 <p>Direction mnemonic: <strong>hardness flows WITH the arrow</strong> (known-hard → target); algorithms flow against it.</p>
-<h3>2.3 Proof Pattern: 3-SAT → Clique</h3>
-<p>Given 3-CNF formula with $k$ clauses: create one vertex per literal occurrence; connect vertices from <em>different</em> clauses unless they are <strong>contradictory</strong> ($x$ vs $\lnot x$). Claim: $G$ has a $k$-clique <strong>iff</strong> the formula is satisfiable. (⇒) A $k$-clique picks one literal per clause, pairwise non-contradictory → set them true → all clauses satisfied. (⇐) A satisfying assignment offers one true literal per clause; those $k$ vertices pairwise agree → clique. Construction is polynomial ($3k$ vertices) — hardness transfers, Clique is NP-complete.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Complexity Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>P = <strong>poly-time solvable</strong> · NP = <strong>poly-time verifiable</strong> · NPC = <strong>in NP + all NP reduces to it</strong> · first NPC: <strong>SAT (Cook–Levin)</strong> · reduce <strong>known-hard → target</strong> to prove hardness · 3-SAT→Clique: <strong>triangle per clause, edges skip contradictions, k-clique ⟺ satisfiable</strong>.</p>
+<p><strong>Proof pattern: 3-SAT → Clique.</strong> Given 3-CNF (conjunctive normal form: AND of OR-clauses) formula with $k$ clauses: one vertex per literal occurrence; connect vertices from <em>different</em> clauses unless <strong>contradictory</strong> ($x$ vs $\lnot x$). Claim: $G$ has a $k$-clique (a set of $k$ pairwise-adjacent vertices) <strong>iff</strong> the formula is satisfiable. (⇒) A $k$-clique picks one literal per clause, pairwise consistent → set them true → all clauses satisfied. (⇐) A satisfying assignment offers one true literal per clause; those $k$ vertices pairwise agree → clique. Polynomial construction ($3k$ vertices) — hardness transfers; Clique is NP-complete.</p>
+<p><strong>Vertex cover — definition plus reduction sketch from Clique.</strong> A <strong>vertex cover</strong> of a graph $G = (V, E)$ is a set $C \subseteq V$ touching every edge (each edge has at least one endpoint in $C$); the decision problem asks whether a cover of size at most $t$ exists. It is NP-complete by reduction <em>from</em> Clique: given a Clique instance $(G, k)$, build the <strong>complement graph</strong> $\bar{G}$ (same vertices; edge in $\bar{G}$ iff <em>not</em> an edge in $G$, ignoring self-loops) and ask for a vertex cover of size $n - k$ where $n = |V|$. Sketch: $S$ is a $k$-clique in $G$ iff its $n - k$ leftover vertices $V \setminus S$ touch every edge of $\bar{G}$ (any uncovered $\bar{G}$-edge would join two vertices of $S$, contradicting the clique) — so $G$ has a $k$-clique ⟺ $\bar{G}$ has an $(n-k)$-cover. The construction is polynomial, and Vertex Cover ∈ NP (verify a claimed cover by scanning all edges) — both NPC obligations met.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Complexity Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>P = <strong>poly-time solvable</strong> · NP = <strong>poly-time verifiable</strong> · NPC = <strong>in NP + all NP reduces to it</strong> · first NPC: <strong>SAT (Cook–Levin)</strong> · reduce <strong>known-hard → target</strong> to prove hardness · 3-SAT→Clique: <strong>triangle per clause, edges skip contradictions, k-clique ⟺ satisfiable</strong> · Clique→Vertex-Cover: <strong>complement graph, $k$-clique ⟺ $(n-k)$-cover</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Reducing the Wrong Way (Proves Nothing)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>To show problem X is hard, reduce a known NPC problem <strong>to X</strong> — never X to the NPC problem (that shows X is <em>no harder than</em> NPC, i.e. possibly easy!). &quot;I reduced X to 3-SAT, therefore X is NP-complete&quot; is backwards and earns zero: it proves $X \in$ NP at best.</p>
-</div></details><hr>
+</div></details><p><strong>Qualified note on P = NP consequences (read carefully).</strong> A proof that P = NP would show polynomial-time algorithms <em>exist in principle</em> for every NP problem (NPC ones included, via reductions) — a landmark for theory and for the Clay prize. It would <strong>not</strong> automatically hand us <em>practical</em> algorithms (exponents and constants could be astronomically large), and its effect on cryptography is qualified: RSA-style systems rest on factoring / discrete-log hardness, problems that lie in NP but are <strong>not known to be NP-complete</strong> — so P = NP would imply they fall to polytime <em>in principle</em>, but whether the resulting attacks run feasibly is unknown, and symmetric-key cryptography and hashing might survive with larger parameters. Correct exam phrasing: cryptography would need urgent re-evaluation — never &quot;in ruins overnight&quot;.</p>
+<hr>
 <p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Formula $\phi = (x_1 \lor \lnot x_2 \lor x_3) \land (\lnot x_1 \lor x_2 \lor x_3)$ ($k=2$ clauses). Build the 3-SAT→Clique graph and decide satisfiability via the clique claim.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Constructing and Finding</div><div class="step-content"><p>Vertices: clause 1 ${x_1, \lnot x_2, x_3}$, clause 2 ${\lnot x_1, x_2, x_3}$ (6 vertices). Edges: all cross-clause pairs <em>except</em> contradictory ones — missing edges: $(x_1, \lnot x_1)$, $(\lnot x_2, x_2)$ (and $x_3$–$x_3$? same literal twice is <em>consistent</em>, so edge $(x_3, x_3\text{-copy})$ <strong>exists</strong>). Seek a 2-clique: any single cross edge qualifies — e.g. $(x_1, x_2)$: set $x_1 =$ true, $x_2 =$ true; clause 1 satisfied by $x_1$, clause 2 by $x_2$ ($x_3$ free). Satisfiable ✓.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The 2-clique ${x_1, x_2}$ <em>is</em> the satisfying assignment in disguise — the reduction&#39;s promise made concrete. And note the degenerate tell: with $k=2$ any formula whose clauses share <em>any</em> non-contradictory pair is satisfiable; hardness needs bigger $k$, where cliques stop being trivially findable.</p>
+<h2 id="3-worked-example-3-sat-clique-on-two-clauses">3. Worked example — 3-SAT→Clique on two clauses</h2>
+<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Formula $\phi = (x_1 \lor \lnot x_2 \lor x_3) \land (\lnot x_1 \lor x_2 \lor x_3)$ ($k=2$ clauses). Build the graph; decide satisfiability via the clique claim.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Constructing and Finding</div><div class="step-content"><p>Vertices: clause 1 ${x_1, \lnot x_2, x_3}$, clause 2 ${\lnot x_1, x_2, x_3}$ (6 vertices). Edges: all cross-clause pairs <em>except</em> contradictions — missing: $(x_1, \lnot x_1)$, $(\lnot x_2, x_2)$; same-literal pair $(x_3, x_3\text{-copy})$ is <em>consistent</em>, so that edge <strong>exists</strong>. Seek a 2-clique: any cross edge qualifies — e.g. $(x_1, x_2)$: set $x_1 =$ true, $x_2 =$ true; clause 1 via $x_1$, clause 2 via $x_2$ ($x_3$ free). Satisfiable ✓.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The 2-clique ${x_1, x_2}$ <em>is</em> the satisfying assignment in disguise. Degenerate tell: with $k=2$ any formula sharing <em>any</em> consistent cross pair is satisfiable; hardness needs bigger $k$, where cliques stop being trivially findable.</p>
 </div></div><hr>
+<p><a id="watch-out"></a></p>
+<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#3-worked-example-3-sat-clique-on-two-clauses">← 3. Worked example — 3-SAT→Clique o…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Common confusions (watch out):</strong></p>
+<ul>
+<li>&quot;NPC&quot; needs <em>both</em> halves: membership ($X \in$ NP via a verifier) <em>and</em> hardness (NPC $\le_p X$). One half is half the marks.</li>
+<li>A single hard instance proves nothing — complexity quantifies over infinite families and worst-case asymptotics, never anecdotes or laptop timings.</li>
+<li>Factoring/Discrete-log ∈ NP but not <em>known</em> NPC: keep them out of &quot;therefore NP-complete&quot; chains.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$A \le_p B$ for hardness vs easiness</td>
+<td>Known-hard → target proves hard; target → known-easy proves at most</td>
+</tr>
+<tr>
+<td>Clique vs vertex cover</td>
+<td>Pairwise-adjacent $k$-set vs edge-touching $(n-k)$-set on the complement</td>
+</tr>
+<tr>
+<td>P = NP theory vs practice</td>
+<td>Polytime existence in principle vs feasible exponents/constants</td>
+</tr>
+</tbody></table>
+<p><strong>Exam recap (facts an examiner rewards):</strong> P/NP/NPC one-liners; Cook–Levin first-NPC; reduction direction with the arrow mnemonic; 3-SAT→Clique construction both directions; Clique→Vertex-Cover via complement ($k$ ⟺ $n-k$); qualified P=NP phrasing.</p>
+<hr>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">To prove a new problem X is NP-complete, which reduction must you exhibit (and which extra membership fact)?</span>
@@ -374,13 +409,13 @@
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">If someone proves P = NP tomorrow, what happens to NP-complete problems and to RSA-style cryptography?</span>
+    <span class="quiz-category">If someone proves P = NP tomorrow, what follows for NP-complete problems and for RSA-style cryptography, stated carefully?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Nothing changes anywhere in computer science</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Every NPC problem gains a polynomial algorithm (reductions convert it), and cryptography founded on factoring/discrete-log hardness assumptions collapses — while verifiers stay exactly as they are</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Every NP problem (NPC ones included, via reductions) gains a polynomial-time algorithm in principle — but practical feasibility depends on unknown exponents/constants; RSA-style systems (factoring/discrete-log, in NP but not known NPC) would need urgent re-evaluation rather than automatically collapsing overnight, while verifiers stay exactly as they are</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Only sorting gets faster; everything else is unaffected</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>NP-complete problems become undecidable instead</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -394,7 +429,32 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>$P = NP$ promotes <em>every</em> NP problem (all NPC ones included, via reductions) into polynomial solvability — hardness assumptions underpinning RSA dissolve overnight. Verification was always easy; it&#39;s <em>search</em> that gets revolutionized.</p><pre><code>&lt;/div&gt;
+      <p>$P = NP$ promotes every NP problem into polynomial solvability <em>in principle</em> — that is the theoretical earthquake. But Big-O hides exponents and constants, so &quot;polynomial&quot; need not mean &quot;runnable&quot;; and since factoring/discrete-log are not known to be NP-complete, their fate is implied only indirectly (they sit in NP, so they fall in principle too — feasibility unknown). Cryptography faces re-evaluation, not certified instant doom. Verification was always easy; it is <em>search</em> that changes status.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Given a Clique instance (G, k) with n vertices, which Vertex Cover instance proves hardness via the complement construction, and why does the size shift to n − k?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Ask for a k-cover in the same graph G — cliques and covers coincide directly</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Ask for an (n − k)-cover in the complement Ḡ: the k clique vertices&#39; leftovers touch every Ḡ-edge (any uncovered Ḡ-edge would join two clique members, impossible), and the argument reverses — so k-clique ⟺ (n − k)-cover</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Ask for a k-cover in Ḡ — sizes never shift in reductions</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Vertex cover needs no reduction since it is obviously in P</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The complement flips adjacency: non-edges of $G$ become the edges $\bar{G}$&#39;s cover must touch. A $k$-clique leaves exactly $n - k$ vertices, and those leftovers hit every $\bar{G}$-edge (else two clique members would be non-adjacent in $G$). Both directions hold, the map is polynomial, and Vertex Cover&#39;s own verifier (scan all edges) supplies membership — the full NPC proof in miniature.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>

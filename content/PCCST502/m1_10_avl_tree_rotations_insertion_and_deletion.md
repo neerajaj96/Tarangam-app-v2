@@ -5,7 +5,7 @@ module: 1
 sequence: 10
 title: 'AVL Tree Rotations: LL, RR, LR, RL Operations'
 difficulty: beginner
-estimatedMinutes: 9
+estimatedMinutes: 12
 learningObjectives:
   - Match straight-line imbalances to single rotations with direction
   - Match zig-zag imbalances to double rotations in child-first order
@@ -26,28 +26,32 @@ tags:
 **Single rotations (LL, RR), double rotations (LR, RL), step-by-step insertion rebalancing, and deletion rebalancing.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start from zero — the problem first
+
+**Problem first.** The invariant $|BF| \le 1$ is easy to state — but inserting a key can break it, and we must repair the shape *without* breaking BST ordering and *without* losing keys. The repair tool is **rotation**: a local parent/child swap among 2–3 nodes that changes heights while preserving left-smaller/right-larger order everywhere.
 
 ::: callout-intuition Core Mental Model
-Picture a old-fashioned two-pan balance scale that's tipped too far to one side. To fix it, you don't throw anything away — you just physically rearrange the weights, moving some from the heavy side to the light side, until the scale sits level again. Crucially, the *same* weights are still on the scale, just redistributed — nothing was added or removed.
-
-A **rotation** in an AVL tree does exactly this for a "tipped" subtree — one whose balance factor has drifted outside the allowed $\{-1,0,+1\}$ range after an insertion or deletion. A rotation restructures a small, local piece of the tree — reassigning which node is the "parent" and which is the "child" among 2–3 nodes — *without* changing which elements are in the tree, and *without* breaking the crucial Binary Search Tree ordering property (left-smaller, right-larger must still hold everywhere afterward). There are exactly four named "shapes" of imbalance that can occur, and each has a specific, well-defined fix: **LL** and **RR** (single rotations, for a "straight-line" imbalance) and **LR** and **RL** (double rotations, for a "zig-zag" imbalance).
+Picture a two-pan balance tipped left. You do not discard weights — you redistribute them until it levels, same weights, new arrangement. A rotation does this to a tipped subtree ($|BF| = 2$): reassign parents among a few nodes, keep every key, keep BST order, restore balance. Straight-line leans (LL, RR) need one rotation against the lean; elbow (zig-zag) leans (LR, RL) need two — unbend the elbow, then fix the line. Drop the scale now: the four cases below are exact.
 :::
+
+**Tiny toy example.** Nodes $30$ over $20$ over $10$ (a left line): right-rotate $30$ → $20$ on top with $10$, $30$ as children. Keys $\{10, 20, 30\}$ unchanged, order intact, all $BF = 0$.
 
 ---
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 2. Basic idea, then formal theory
 
-**When rotations are triggered.** After inserting (or deleting) a node, walk back up from the changed node toward the root, updating each ancestor's height and balance factor. The *first* node found (closest to the newly inserted/deleted node) where $|BF|$ becomes $2$ is the node where a rotation is performed. Fixing the imbalance at this one node is provably always sufficient to restore the AVL invariant for the *entire* tree above it too (for insertion — deletion can occasionally require rotations to propagate further up, as noted below).
+**When rotations fire.** After an insert/delete, walk from the changed node up to the root, updating heights and balance factors. The *first* ancestor (nearest the change) with $|BF| = 2$ is where you rotate. For insertion, that single fix provably restores the whole tree; deletion may need to continue upward (below).
 
-**Case 1 — LL (Left-Left), single right rotation.** Occurs when the imbalance is caused by inserting into the **left** subtree of the **left** child of the unbalanced node (a "straight line leaning left"). Fix: rotate the unbalanced node **right** — the left child becomes the new local root, the old root becomes the new root's right child, and the new root's *former* right subtree (if any) is reattached as the old root's new left subtree.
+**Input to each case:** the unbalanced node plus *where* the new key landed relative to it. Steps and trace follow the same pattern every time: name the shape → rotate → recheck factors.
 
-**Case 2 — RR (Right-Right), single left rotation.** The mirror image of LL: imbalance caused by inserting into the **right** subtree of the **right** child (a "straight line leaning right"). Fix: rotate the unbalanced node **left** — symmetric to the LL fix.
+**Case LL (Left-Left) — single right rotation.** New key went into the **left** subtree of the **left** child (line leaning left). Fix: rotate the unbalanced node **right** — left child becomes local root; old root becomes its right child; the new root's former right subtree reattaches as the old root's left subtree.
 
-**Case 3 — LR (Left-Right), double rotation.** Occurs when the imbalance is caused by inserting into the **right** subtree of the **left** child (a "zig-zag" shape — left, then right). A single rotation cannot fix a zig-zag shape directly. Fix: first perform a **left** rotation on the left child (turning the zig-zag into a straight LL shape), *then* perform a **right** rotation on the original unbalanced node (now fixing that straight-line shape, exactly as in Case 1).
+**Case RR (Right-Right) — single left rotation.** Mirror image: key into the **right** of the **right** child. Fix: rotate **left**.
 
-**Case 4 — RL (Right-Left), double rotation.** The mirror image of LR: imbalance caused by inserting into the **left** subtree of the **right** child (a zig-zag: right, then left). Fix: first a **right** rotation on the right child, then a **left** rotation on the original unbalanced node.
+**Case LR (Left-Right) — double rotation.** Key into the **right** subtree of the **left** child (elbow: left, then right). A single rotation cannot fix an elbow. Fix: **left**-rotate the left child (elbow → straight LL line), **then right**-rotate the unbalanced node.
+
+**Case RL (Right-Left) — double rotation.** Mirror: key into the **left** of the **right** child. Fix: **right**-rotate the right child, **then left**-rotate the parent.
 
 ```text
 LL BEFORE (BF = +2 at 30)          LL AFTER (single right rotation at 30)
@@ -59,43 +63,60 @@ LL BEFORE (BF = +2 at 30)          LL AFTER (single right rotation at 30)
   10                                all balance factors back to 0
 ```
 
-Straight lines (LL, RR) need one rotation *against* the lean; zig-zags (LR, RL) need two — first unbend the elbow into a line, then fix the line.
+Straight lines need one rotation *against* the lean; zig-zags need two — elbow outward into a line first, then the line fix.
 
 ::: anim avl-ll LL Rotation in Motion
 Watch the leaning tower (30 over 20 over 10) swing right into balance (20 over 10 and 30) — same three nodes, same order, new shape, all balance factors zero.
 :::
 
-**Rotations preserve the BST property.** Each rotation only rearranges pointers among a small, fixed set of 2–3 nodes and their subtrees, in a way carefully designed so that, after the rotation, every value still lies in the correct left/right position relative to every other value — the ordering is never violated, only the *shape* changes.
-
-**A key difference for deletion.** After an insertion, fixing the balance factor at the single lowest unbalanced ancestor is always enough to re-balance the whole tree. After a *deletion*, however, a rotation performed at one level can sometimes reduce that subtree's height, which can in turn cause an imbalance to appear *further up* the tree — so deletion rebalancing must continue checking (and potentially rotating at) every ancestor all the way up to the root, not just stop at the first fix.
+**Rotations preserve BST order** by construction: only pointers among 2–3 nodes plus their subtrees move, and every value stays on its correct side. **Deletion difference:** insertion's fix restores the subtree's old height, so one rotation suffices; deletion's fix can *shrink* the subtree, unbalancing an ancestor — so deletion must recheck every ancestor up to the root, possibly rotating at several levels.
 
 ::: callout-formula KTU Formula Vault: Rotation Chooser
-Straight line → **single** rotation: **LL** (left-left) → rotate **right**; **RR** → rotate **left**. Zig-zag → **double**: **LR** → **left** on child, then **right** on parent; **RL** → **right** on child, then **left** on parent. Mnemonic: the *first* rotation always pushes the "elbow" of the zig-zag outward into a straight line.
+Straight line → **single**: **LL** → rotate **right**; **RR** → rotate **left**. Zig-zag → **double**: **LR** → **left** on child, then **right** on parent; **RL** → **right** on child, then **left** on parent. Mnemonic: the *first* rotation always pushes the elbow outward into a straight line.
 :::
+
+**Complexity.** Each rotation is $O(1)$ pointer work; the upward walk touches $O(\log n)$ ancestors (height-bounded) — so insertion/deletion stay $O(\log n)$ total.
 
 ---
 
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 3. Worked example — inserting 30, 20, 10
 
 ::: step [Step 1: Setup] Formulating the Problem
-Insert the keys $30, 20, 10$ in that order into an initially empty AVL tree, and determine what rebalancing (if any) is needed after each insertion.
+Insert keys $30, 20, 10$ in order into an empty AVL tree; rebalance after each insertion. (Empty-subtree height convention: $-1$, so a lone leaf has $BF = 0$.)
 :::
 
 ::: step [Step 2: Execution] Applying Core Algorithm
-Insert $30$: tree is just node $30$, balanced trivially ($BF=0$).
-Insert $20$: as a BST, $20 < 30$, so $20$ becomes $30$'s left child. Check balance factors: $30$'s left subtree height is $0$, right subtree height is $-1$ (empty, conventionally height $-1$ or sometimes treated as $0$ nodes/height $-1$ depending on convention) — $BF(30) = 0-(-1)=1$, still within $\{-1,0,1\}$, no rotation needed.
-Insert $10$: as a BST, $10 < 30$ so go left to $20$; $10 < 20$ so $10$ becomes $20$'s left child. Now check balance factors bottom-up: node $20$ is balanced ($BF=1$, fine). Node $30$: left subtree (rooted at $20$) now has height $1$, right subtree height $-1$; $BF(30) = 1-(-1) = 2$ — this violates the AVL invariant.
+Insert $30$: single node, $BF = 0$. Insert $20$: $20 < 30$, left child; $BF(30) = 0-(-1) = 1$, legal. Insert $10$: left of $20$; bottom-up: $BF(20) = 1$ fine; $BF(30) = 1-(-1) = 2$ — violation, key went left-of-left → **LL**.
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-The imbalance at node $30$ was caused by inserting into the **left** subtree of $30$'s **left** child ($20$) — the new node $10$ went left, then left again — this is exactly the **LL** shape. Fix: a single **right rotation** at node $30$. After rotation, $20$ becomes the new local root, with $10$ as its left child and $30$ as its right child — a perfectly balanced 3-node tree (every node's $BF=0$). This mirrors exactly how a real AVL insertion sequence self-corrects the moment it starts leaning too far in a straight line.
+Single **right rotation** at $30$: $20$ becomes root, $10$ left, $30$ right — every $BF = 0$. The tree self-corrected the moment it leaned into a straight line.
 :::
 
 ---
 
+<a id="watch-out"></a>
+## 4. Watch out, distinctions, exam recap
+
+**Common confusions (watch out):**
+
+- Rotate *against* the lean: left line → right rotation. Rotating with the lean worsens it.
+- LR starts on the *child* (left on left child), not the unbalanced node — order matters; parent-first breaks ordering.
+- Insertion stops after one fix; deletion keeps climbing to the root. Stopping early after a deletion is the standard lost mark.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| LL vs LR (and RR vs RL) | Straight line, one rotation vs elbow, child-first double rotation |
+| Insertion vs deletion rebalancing | One fix suffices vs recheck to the root (height can shrink) |
+| Rotation vs reinsertion | Same keys rearranged ($O(1)$) vs rebuilding (never needed) |
+
+**Exam recap (facts an examiner rewards):** the four shape→fix mappings; child-first order for doubles; BST order and key set preserved; deletion climbs to root; $O(\log n)$ per update.
+
+---
+
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz An imbalance caused by inserting into the right subtree of the left child of an unbalanced node requires which type of rotation?
 () LL (single right rotation)

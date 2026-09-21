@@ -5,11 +5,12 @@ module: 4
 sequence: 6
 title: 'MDS: Maps From Mileage Tables'
 difficulty: beginner
-estimatedMinutes: 5
+estimatedMinutes: 12
 learningObjectives:
+  - State the map-from-distances problem in plain words first
   - Recover coordinates with double-centering on distance tables
   - Audit dimensions with the eigenvalue ledger and stress
-  - Claim the Euclidean MDS and PCA identity correctly
+  - Claim the Euclidean MDS and PCA identity with its conditions
 concepts:
   - multidimensional scaling
   - double-centering
@@ -23,47 +24,79 @@ tags:
 ---
 # MDS: Maps From Mileage Tables
 
-**Coordinates from distances alone — double-centering traced on a 3-4-5 triangle, eigenvalues as the dimension ledger, and why Euclidean MDS is PCA in disguise.**
+**What problem Multidimensional Scaling (MDS) solves from distances alone, what mileage tables it needs, how double-centering trains coordinates, and where stress prices compression.**
 
 <a id="the-intuition"></a>
-## 1. The Intuition
+## 1. Start Here: The Problem Before Any Solution (Absolute Beginner)
 
-::: callout-intuition Core Mental Model: Map From Mileages
-A road atlas lists city-to-city mileages, never coordinates — yet cartographers drew the map from exactly such tables. **Classical MDS** does the same algebra: square the distances, **double-center** (subtract row/column means, add grand mean) to get inner products, eigendecompose, and read coordinates off scaled eigenvectors. PCA (M4.3) starts from coordinates and finds spread axes; MDS starts from mileages and rebuilds the map — same geometry, opposite entrances.
-:::
+A road atlas lists city-to-city mileages, never coordinates. Yet cartographers drew maps from such tables. The problem: rebuild coordinates from distances only.
+
+Tiny beginner example. Two cities distance $1$ apart. Place them at $-0.5$ and $+0.5$ on one axis. Distance preserved, no coordinates were given. Classical MDS does this algebra for $n$ cities.
+
+Analogy as support, then dropped. Map from mileages. From here on we use exact terms only: squared distances, double-centering, Gram matrix, stress.
+
+Abbreviations defined on first use: Multidimensional Scaling (MDS). Symbols are defined before use below.
+
+| Question to ask | Meaning |
+|---|---|
+| What is $D$, $D^2$? | Distance matrix and its squared entries |
+| What is $B$? | Centered inner-product matrix |
+| What are $\lambda_i$, $V_k$? | Eigenvalues and top eigenvectors |
+
+Pipeline preview in plain text (balanced fences hold one block):
 
 ```text
 D (distances) --square--> D2 --double-center--> B = -1/2 J D2 J
-B --eigendecompose--> top-k eigenvectors x sqrt(λ) = coordinates
+B --eigendecompose--> top-k eigenvectors x sqrt(lambda) = coordinates
 ```
 
----
+<a id="symbols-data-goal"></a>
+## 2. Data, Goal and Symbols (Basic Understanding)
+
+**Problem.** Embed $n$ items in $k$ dimensions preserving given dissimilarities.
+
+**Data.** An $n\times n$ distance matrix $D$, not an $n\times d$ feature matrix. Feeding raw features where mileages belong is the standard setup error. Square first: the centering identity is quadratic; linear $D$ centres into nonsense.
+
+**Goal.** Coordinates $V_k\Lambda_k^{1/2}$ (top $k$ eigenvectors times root eigenvalues) with low stress. Here $J$ centres (subtract row and column means, add grand mean); Kruskal stress prices mismatch between true and embedded distances.
 
 <a id="the-math"></a>
-## 2. Theoretical Framework & Formalism
+## 3. Method, Model and Training (Formal Theory)
 
-### 2.1 Double-centering and the ledger
+Canonical order: problem (no features, only mileages) → data ($D$) → goal (faithful map) → method (square, centre, eigendecompose) → model (coordinates) → training (one decomposition) → example → limitations.
 
-For $n$ points with squared-distance matrix $D^2$: $B_{ij} = -\tfrac{1}{2}(D^2_{ij} - \bar{r}_i - \bar{r}_j + \bar{g})$ (row means, grand mean) converts distances to centered inner products. Eigendecompose $B = V\Lambda V^T$; coordinates $= V_k \Lambda_k^{1/2}$ (top $k$). Built-in certificates: rows of $B$ sum to $0$ (centering — one eigenvalue exactly $0$ for the all-ones vector), $\mathrm{tr}(B) = \sum \lambda_i$ (variance ledger, same checksum habit as PCA).
+### 3.1 Double-Centering and the Ledger, Symbol by Symbol
 
-### 2.2 Stress and the PCA identity
+For squared matrix $D^2$: $B_{ij}=-\tfrac12(D^2_{ij}-\bar{r}_i-\bar{r}_j+\bar{g})$. Here $\bar{r}_i$ is row mean, $\bar{r}_j$ column mean, $\bar{g}$ grand mean. This converts distances to centred inner products. Eigendecompose $B=V\Lambda V^T$; coordinates $=V_k\Lambda_k^{1/2}$. Certificates: rows of $B$ sum to $0$ (centering, one eigenvalue exactly $0$ for all-ones vector); $\mathrm{tr}(B)=\sum\lambda_i$ (variance ledger, same checksum habit as PCA).
 
-Fewer dimensions than rank $\Rightarrow$ distortion, priced by **stress** (Kruskal: mismatch between true and embedded distances). **Classical MDS on Euclidean distances recovers PCA's embedding** (same inner-product matrix, rotated axes) — mileage-table input, PCA-grade map output. Non-metric MDS (rank-order only) lives outside this syllabus.
+Numbered steps:
+
+1. Square $D$ to $D^2$.
+2. Double-centre to $B$.
+3. Check row sums zero and trace.
+4. Eigendecompose; keep top $k$; scale by $\sqrt{\lambda}$.
+
+### 3.2 Stress and the PCA Identity, With Conditions
+
+Fewer dimensions than rank means distortion, priced by stress. **Classical MDS on Euclidean distances recovers PCA's embedding up to rotation** (same centred inner-product matrix eigendecomposed). Qualification: identity holds for Euclidean $D$ with classical scaling; non-metric MDS (rank order only) and non-Euclidean dissimilarities live outside it and can yield negative eigenvalues that truncation must handle. Mileage input, PCA-grade map output, under those conditions.
+
+MDS needs dissimilarities, not features: gene correlations, survey proximities, road mileages all embed; PCA cannot start there at all.
+
+| Similar pair | Distinction that earns marks |
+|---|---|
+| MDS input vs PCA input | $n\times n$ mileages vs $n\times d$ features; do not swap |
+| $D$ vs $D^2$ | Linear distances centre into nonsense; square first |
+| Classical vs non-metric MDS | Euclidean coordinates matching PCA up to rotation vs rank-order only |
 
 ::: callout-formula KTU Formula Vault: MDS
-$B = -\tfrac{1}{2}JD^2J$ · coords $= V_k\sqrt{\Lambda_k}$ · rows sum $0$, trace $= \sum\lambda$ · Euclidean MDS $\equiv$ PCA · stress prices compression.
+$B = -\tfrac{1}{2}JD^2J$ · coords $= V_k\sqrt{\Lambda_k}$ · rows sum $0$, trace $= \sum\lambda$ · Euclidean classical MDS $\equiv$ PCA up to rotation · stress prices compression.
 :::
-
-MDS needs *dissimilarities*, not features — gene-expression correlations, survey proximities, road mileages all embed; PCA cannot start there at all.
 
 ::: callout-pitfall Distances-In-Coordinates-Out Confusion
 MDS input is a *distance matrix* ($n \times n$), not a data matrix ($n \times d$) — feeding raw features where mileages belong (or vice versa) is the standard setup error. Squaring first ($D^2$, not $D$) is the second: the centering identity is quadratic, and linear distances centre into nonsense.
 :::
 
----
-
 <a id="worked-example"></a>
-## 3. Worked Example / Step-by-Step Scenario
+## 4. KTU Worked Example Step by Step
 
 ::: step [Step 1: Setup] Formulating the Problem
 Three depots with mileages $d_{12} = 3$, $d_{13} = 4$, $d_{23} = 5$ (a 3-4-5 triangle). Double-center to $B$, verify both certificates (row sums, trace), and state the eigenvalue ledger.
@@ -81,37 +114,46 @@ $B$ built, both certificates green, ledger $12.965 + 3.702 + 0$. A 1-D line keep
 Watch the ledger balance — 12.965 plus 3.702 plus centering's zero equals the trace — with dim-1 keeping 77.8% and dim-2 the exact triangle.
 :::
 
----
+<a id="watch-out-recap"></a>
+## 5. Watch Out, Limitations and Exam Recap
+
+Common mistakes and confusions:
+
+- Feeding $n\times d$ features as $D$. MDS eats $n\times n$ dissimilarities.
+- Centering $D$ not $D^2$. Quadratic identity needs squares.
+- Counting the forced zero as information. It is centering's signature for the all-ones vector.
+- Claiming MDS equals PCA always. Only classical Euclidean MDS, up to rotation.
+
+Limitations: non-Euclidean $D$ can break PSD and need corrections; stress grows as $k$ shrinks; large $n$ eigendecomposition is costly.
+
+Exam recap: $B=-JD^2J/2$; coords $V_k\sqrt{\Lambda_k}$; rows sum zero, trace ledger; Euclidean classical MDS is PCA up to rotation; stress prices compression.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 6. Active Recall Quizzes
 
-::: quiz Q1: Centering Drill
-$D^2 = [[0,1],[1,0]]$ (two points, distance $1$). $B_{11}$?
-(A) $0$, diagonal stays zero
-(*B) $0.25$ — row means $0.5$, $0.5$, grand $0.5$: $B_{11} = -0.5(0 - 0.5 - 0.5 + 0.5) = 0.25$; eigenvalues $\{0.5, 0\}$ place the pair at $\pm 0.5$ on one axis, distance $1$ preserved exactly
-(C) $1$, distances pass through
-(D) $-0.5$, sign flipped
+::: quiz Two points distance 1 apart have squared matrix [[0,1],[1,0]]. What is B11 and what coordinates follow?
+() 0, diagonals stay zero so no coordinates emerge
+(*) 0.25 — row means 0.5, grand 0.5 gives B11 = -0.5(0 - 0.5 - 0.5 + 0.5) = 0.25; eigenvalues 0.5 and 0 place the pair at ±0.5, distance 1 preserved
+() 1, distances pass through unchanged
+() -0.5, sign flipped so embedding fails
 ::: explanation
-Centering manufactures coordinates ($\pm 0.5$), not copies distances: $B$ holds inner products of the *centered* layout. Row-sum zero ($0.25 - 0.25$) certifies before any eigendecomposition — certificate first, coordinates second.
+Centering manufactures coordinates (±0.5), not copies distances: $B$ holds inner products of the centered layout. Row-sum zero (0.25 − 0.25) certifies before any eigendecomposition — certificate first, coordinates second.
 :::
 
-::: quiz Q2: Ledger Check
-$B$ is $4 \times 4$ with eigenvalues $9, 4, 1, 0$. Embedding dims and dim-2 share?
-(A) $4$ dims needed, share $9/14$
-(*B) Rank $3$ (one forced zero), so $3$ dims exact; top-$2$ keeps $(9+4)/14 = 13/14 \approx 92.9\%$ — the zero eigenvalue is centering's signature, never information, and denominators sum *kept plus dropped*
-(C) $2$ dims exact always
-(D) Share $9/9 = 100\%$ in dim $1$
+::: quiz B is 4x4 with eigenvalues 9, 4, 1, 0. How many dims exact and what share in dim-2?
+() 4 dims needed, share 9/14 in dim-1 only
+(*) Rank 3 (one forced zero), so 3 dims exact; top-2 keeps (9+4)/14 = 13/14 ≈ 92.9% — zero is centering's signature, never information
+() 2 dims exact always regardless of rank
+() Share 9/9 = 100% in dim-1
 ::: explanation
-Trace $= 14$ is total variance; $13/14$ in two axes. The $0$ belongs to the all-ones vector (rows sum $0$), so "four eigenvalues" means three dimensions — counting rank, not matrix size, is the ledger discipline.
+Trace = 14 is total variance; 13/14 in two axes. The 0 belongs to the all-ones vector (rows sum 0), so four eigenvalues mean three dimensions — counting rank, not matrix size, is the ledger discipline.
 :::
 
-::: quiz Q3: MDS vs PCA
-Euclidean distance matrix of a dataset, classical MDS vs PCA scatter. Relation?
-(A) Unrelated projections
-(*B) Identical up to rotation — same centered inner-product matrix eigendecomposed, so coordinates match after an orthogonal shrug; MDS just arrived via mileages while PCA came via features
-(C) MDS needs labels, PCA doesn't
-(D) PCA preserves distances, MDS preserves variance
+::: quiz Euclidean distance matrix, classical MDS versus PCA scatter. What is the relation?
+() Unrelated projections from different mathematics
+(*) Identical up to rotation — same centered inner-product matrix eigendecomposed, so coordinates match after an orthogonal change; MDS arrived via mileages while PCA came via features
+() MDS needs labels while PCA does not
+() PCA preserves distances while MDS preserves variance only
 ::: explanation
-One Gram matrix, two doorways: $XX^T$ from features (PCA) versus double-centered $D^2$ (MDS) coincide for Euclidean $D$. Rotation-freedom absorbs the basis difference — geometry equal, paperwork different, the identity examiners quote.
+One Gram matrix, two doorways: $XX^T$ from features (PCA) versus double-centered $D^2$ (MDS) coincide for Euclidean $D$. Rotation absorbs the basis difference — geometry equal, paperwork different, the identity examiners quote.
 :::

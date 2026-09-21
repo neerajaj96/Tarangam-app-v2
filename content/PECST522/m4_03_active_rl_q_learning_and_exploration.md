@@ -5,7 +5,7 @@ module: 4
 sequence: 3
 title: 'Active RL: Q-Learning & Exploration'
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 8
 learningObjectives:
   - Learn action-values off-policy with the max-detached Q-update
   - Price exploration with epsilon-greedy regret against GLIE convergence
@@ -23,65 +23,68 @@ tags:
 ---
 # Active RL: Q-Learning & Exploration
 
-**Action-values, the off-policy Q-update, exploration vs. exploitation, ε-greedy, and GLIE schedules that provably converge.**
+**Problem: state values cannot choose actions without a model, and the agent must try believed-suboptimal moves to learn. By the end you can hand-run the off-policy Q-update, price exploration schedules, and state exact convergence contracts.**
 
-<a id="the-intuition"></a>
-## 1. The Explorer's Dilemma
+<a id="start-zero"></a>
+## 1. Start From Zero: The Explorer's Dilemma
+
+New town, new restaurants. **Exploit:** eat nightly at the first decent cafe — guaranteed okay, possibly missing the legendary place two streets over. **Explore:** try random doors — mostly mediocre, one life-changing. Exploration pays in information (future meals); exploitation pays in reward (tonight). Active RL formalizes this: deliberately take currently-believed-suboptimal actions, because beliefs without evidence are prejudices.
 
 ::: callout-intuition Core Mental Model: The New Town Foodie
-You move to a new town. **Exploit**: eat every meal at the first decent café — guaranteed okay dinners, possibly missing the legendary place two streets over. **Explore**: try random doors — most mediocre, one life-changing. The dilemma is *temporal*: exploration pays in *information* (future meals), exploitation pays in *reward* (tonight). Active RL is this dilemma formalized: the agent must deliberately take actions it currently believes are *suboptimal*, because beliefs without evidence are just prejudices.
+Feel "information versus reward" here, then drop the town; Q-values plus epsilon schedules below are the technical content.
 :::
 
----
+**Tiny beginner example:** action Left is believed worth 2, Right believed worth 1. Trying Right once reveals it is actually worth 9 — one exploratory loss buying permanent gains. Never exploring locks in the wrong belief forever.
 
-<a id="the-dimensions"></a>
-## 2. Q-Values and the Off-Policy Update
+<a id="basics"></a>
+## 2. Basic Layer: Q-Values and the Off-Policy Update
 
-Passive methods learn state values $U^\pi$ — useless for *choosing* without a model (which action leads where?). **Action-values** $Q(s,a)$ grade *state–action pairs* directly, so the greedy policy $\arg\max_a Q(s,a)$ needs no transition model at all.
+**Data/state:** state-action pairs. **Goal:** the optimal policy without any transition model.
 
-**Q-learning** (model-free, **off-policy**): after $(s,a) \xrightarrow{r} s'$,
+Passive methods learn state values `U^pi` — useless for choosing without a model (which action leads where needs `P`). **Action-values** `Q(s,a)` grade pairs directly, so greedy policy `argmax_a Q(s,a)` needs no model.
+
+**Meaning, variables, intuition, formula — Q-learning** (model-free, **off-policy**). After `(s,a) --r--> s'`:
+
 $$Q(s,a) \leftarrow Q(s,a) + \alpha\,[\,r + \gamma \max_{a'} Q(s',a') - Q(s,a)\,]$$
-The $\max$ is the magic: the update targets the *optimal* continuation regardless of which (possibly exploratory) action was actually taken — so Q-learning converges to $Q^*$ even while behaving randomly. (SARSA, its on-policy sibling, backs up the *actually taken* $a'$ instead — safer during learning, optimal only in the limit of vanishing exploration.)
+
+Symbol by symbol: `alpha` = step size (must decay); `r` = reward just seen; `gamma max Q(s',a')` = discounted best continuation imaginable; minus current = error; step toward target. The `max` detaches learning from behaviour: updates aim at the optimal continuation regardless of the (possibly random) action actually taken — so optimal values are learned even while exploring randomly. On-policy sibling SARSA (State-Action-Reward-State-Action) backs up the actually-taken `a'` instead — safer during learning, optimal only as exploration vanishes.
 
 ::: callout-formula Formal Core: Q-Update Anatomy
-Target $= r + \gamma \max_{a'} Q(s',a')$ (best imaginable future) · error $=$ target $-$ current · step $\alpha$ toward it. Off-policy because the $\max$ detaches the *learned* value from the *behavior* policy. Converges to $Q^*$ under infinite state-action visitation + decaying $\alpha$.
+Target = r + gamma max Q(s',a') (best imaginable future). Error = target minus current. Off-policy because max decouples learned value from behaviour policy. Converges to Q* only under infinite state-action visitation plus decaying alpha (stated fully below).
 :::
 
----
+<a id="formal-model"></a>
+## 3. Formal Layer: Exploration Schedules and Convergence Contracts
 
-<a id="terminology"></a>
-## 3. Exploration Schedules: ε-Greedy and GLIE
+**Epsilon-greedy:** with probability `epsilon` act randomly, else greedily. Fixed epsilon explores forever — fine for non-stationary (shifting) worlds, permanently suboptimal asymptotically (linear regret forever: ~10% random actions at epsilon 0.1 to the end of time).
 
-* **ε-greedy:** with probability $\epsilon$ act randomly, else greedily. Fixed $\epsilon$ explores forever (never fully exploits) — fine for non-stationary worlds, suboptimal asymptotically.
-* **GLIE** (Greedy in the Limit of Infinite Exploration): $\epsilon_t \to 0$ (e.g. $\epsilon = 1/t$) while every $(s,a)$ is still tried infinitely often. Early chaos, eventual purity — Q-learning + GLIE + decaying $\alpha$ converges to optimal *behavior*, not just optimal values.
+**GLIE** (Greedy in the Limit of Infinite Exploration): `epsilon_t -> 0` (e.g. 1/t) while every `(s,a)` is still tried infinitely often. Early chaos, eventual purity — Q-learning plus GLIE plus decaying alpha converges to optimal *behaviour*, not just values.
 
 ```text
-regret
-^
-| * .                                     ε-greedy (fixed ε):
-| *  .  *                                linear regret forever
-| *    .   *
-| *-----------*----*----*----*----> time   (keeps paying exploration tax)
-|
-| *                                           GLIE (ε = 1/t):
-| * *                                     regret flattens — exploration
-| *   *  *  *  *  *  *  *> time            tax decays to zero
+regret ^                                     GLIE regret flattens
+fixed-epsilon regret rises linearly forever  (exploration tax decays to zero)
 ```
 
+**Convergence contract (qualified — never "Q-learning converges" bare):** to `Q*` (optimal action-values) under (1) infinite visitation of every `(s,a)`, (2) decaying alpha (stochastic-approximation sums), (3) bounded rewards (plus GLIE exploration if optimal behaviour, not just values, is claimed). Finite-time, finite-visit guarantees do not exist — state the infinitary terms explicitly.
+
 ::: callout-pitfall Exploration Is Not Noise for Its Own Sake
-Random actions are *experiments with a purpose*: each untried $(s,a)$ hides a value estimate with infinite uncertainty. Undirected thrashing (pure random forever) learns values but never *uses* them; pure greedy never *corrects* them. Schedules like GLIE exist because both extremes fail — the exam rewards answers that price exploration in *information*, not motion.
+Random actions are information-priced experiments on high-uncertainty pairs. Pure random never uses values; pure greedy never corrects them. Schedules exist because both extremes fail — price exploration in information, not motion.
 :::
 
----
+**One Q-update by hand:** Q(A,left) = 2.0; take left, r = 0, land B with Q(B,left) = 1.0, Q(B,right) = 4.0; alpha 0.5, gamma 0.9. Target: `0 + 0.9x4.0 = 3.6`. Error: `3.6 - 2.0 = 1.6`. Update: `2.0 + 0.5x1.6 = 2.8`. The next action in B did not matter — even exploratory left still aims at best (right). Off-policy in one line.
 
 <a id="worked-example"></a>
-## 4. One Q-Update by Hand
+## 4. Worked Example, Distinctions, Limitations
 
-$Q(A,\text{left}) = 2.0$; from $A$ the agent takes $\text{left}$, gets $r = 0$, lands in $B$ where $Q(B,\text{left}) = 1.0$, $Q(B,\text{right}) = 4.0$. $\alpha = 0.5$, $\gamma = 0.9$.
+| Similar pair | Distinction |
+|---|---|
+| Q-learning vs. SARSA | Off-policy max target (learns optimum while exploring) vs. on-policy taken-action target (learns behaviour's value) |
+| Fixed epsilon vs. GLIE | Permanent probing (non-stationary-safe, linear regret) vs. decay to pure greed (convergent behaviour) |
+| `U(s)` vs. `Q(s,a)` | Needs model to act (`argmax` over predicted successors) vs. grades actions directly (model-free `argmax`) |
 
-Target: $0 + 0.9 \times \max(1.0, 4.0) = 3.6$. Error: $3.6 - 2.0 = 1.6$. Update: $Q(A,\text{left}) \leftarrow 2.0 + 0.5 \times 1.6 = 2.8$. Note what did *not* matter: which action the agent takes *next* in $B$ — even if it explores with $\text{left}$, the update aims at the *best* continuation ($\text{right}$). Off-policy in one line.
+**Watch out:** (1) Acting greedily on `U(s)` without `P` is impossible — the representational shift to Q is what enables model-free control. (2) Fixed epsilon never retires exploration; GLIE assumes a stationary MDP (frozen greed is safe only if truth stops moving). (3) Max-target soundness still needs infinite visitation, not on-policy behaviour.
 
----
+**Limitations:** tabular Q needs enumerable pairs; exploration costs real regret (dangerous live — batch/offline RL or human gating where stakes forbid randomness); non-stationarity voids GLIE purity.
 
 <a id="self-check"></a>
 ## 5. Active Recall Quizzes
@@ -92,7 +95,7 @@ Target: $0 + 0.9 \times \max(1.0, 4.0) = 3.6$. Error: $3.6 - 2.0 = 1.6$. Update:
 () It requires a perfect transition model before acting
 () Off-policy means it never updates Q-values at all
 ::: explanation
-On-policy methods (SARSA) learn the value *of the behavior being executed*, exploration warts included; Q-learning's $\max$ decouples learning target from behavior, so wild exploration never corrupts the optimal-value estimates. Freedom to explore + safety of estimates = the algorithm's whole appeal.
+On-policy SARSA learns the executed behaviour's value, warts included; Q-learning's max decouples target from behaviour, so wild exploration never corrupts optimal-value estimates.
 :::
 
 ::: quiz A fixed ε = 0.1 greedy agent runs forever in a stationary world. What is true asymptotically?
@@ -101,7 +104,7 @@ On-policy methods (SARSA) learn the value *of the behavior being executed*, expl
 () It stops exploring after exactly 10 episodes
 () ε-greedy is only defined for bandits, never MDPs
 ::: explanation
-Fixed $\epsilon$ never retires exploration: 1-in-10 actions stay random to the end of time, each costing expected regret. GLIE ($\epsilon_t \to 0$ with infinite visitation) spends the exploration budget early and banks optimal behavior late.
+Fixed epsilon never retires: 1-in-10 actions stay random forever. GLIE spends exploration early and banks optimal behaviour late.
 :::
 
 ::: quiz Why do active methods need action-values Q(s,a) rather than the state-values U(s) that passive methods learn?
@@ -110,26 +113,25 @@ Fixed $\epsilon$ never retires exploration: 1-in-10 actions stay random to the e
 () State values cannot represent stochastic policies
 () Q-learning was invented before state values existed
 ::: explanation
-$\pi(s) = \arg\max_a \sum_{s'} P(s'|s,a)U(s')$ needs $P$ — the model passive evaluation never learned. $Q^*(s,a)$ already *contains* the consequence knowledge, so $\arg\max_a Q^*$ acts optimally model-free. That single representational shift is what makes model-free control possible.
+Greedy on U needs P(s'|s,a) — the model passive evaluation never learned. Q* already contains consequence knowledge, so argmax Q* acts optimally model-free. MDP = Markov Decision Process.
 :::
-
----
 
 <a id="exam-focus"></a>
-## 6. Worked University Exam Q&A
+## 6. Exam Recap and Worked Q&A
 
 ::: callout-exam KTU University Exam Focus
-**Target Areas:**
-* **3 Marks:** Q-learning update rule, ε-greedy, or GLIE conditions.
-* **7 Marks:** Off-policy vs on-policy (Q-learning vs SARSA), or exploration-exploitation with regret reasoning.
+3 marks: Q-update, epsilon-greedy, or GLIE conditions. 7 marks: off-policy vs. on-policy with regret reasoning.
 :::
 
-### Sample 3-Mark Question
-**Q: State the Q-learning update and the two conditions for convergence to Q*.**
+**Recap facts examiners reward:** Q-update with symbols; max-detachment line; epsilon vs. GLIE regret shapes; U-vs-Q representation argument; infinitary convergence trio (visitation, decaying alpha, bounded rewards; GLIE for behaviour).
 
-**Model Answer:** $Q(s,a) \leftarrow Q(s,a) + \alpha\,[r + \gamma \max_{a'} Q(s',a') - Q(s,a)]$. Converges under (1) infinite visitation of every $(s,a)$ pair and (2) decaying $\alpha$ (stochastic-approximation conditions) — plus GLIE exploration if optimal *behavior* (not just values) is required.
+### Sample 3-Mark Question
+**Q: State Q-learning and its convergence conditions to Q*.**
+
+**Model Answer:** Q <- Q + alpha[r + gamma max Q(s',a') - Q]. Converges under infinite (s,a) visitation plus decaying alpha (plus bounded rewards; GLIE if optimal behaviour required) — never in finite time bare.
 
 ### Sample 7-Mark Question
-**Q: "Exploration and exploitation conflict fundamentally." Discuss with ε-greedy and GLIE, and explain how Q-learning's off-policy nature softens the conflict.**
+**Q: Discuss exploration vs. exploitation with epsilon-greedy and GLIE, and how off-policy softens the conflict.**
 
-**Model Answer:** Exploitation banks known rewards; exploration buys information at immediate cost — finite experience cannot maximize both simultaneously (regret formalism, §3 sketch). Fixed-$\epsilon$ pays linear regret forever; GLIE decays exploration while preserving infinite visitation, converging to optimal behavior. Q-learning softens the dilemma (not removes it): because updates target $\max_{a'}$, exploratory actions still teach optimal values — the agent can *behave* foolishly while *learning* wisely, which on-policy SARSA cannot do.
+**Model Answer:** Exploitation banks known rewards; exploration buys information at immediate cost (regret). Fixed epsilon pays linear regret forever; GLIE decays while preserving infinite visitation, converging behaviour. Q-learning softens (not removes) the dilemma: max-targets teach optimal values from foolish behaviour — learn wisely while behaving foolishly, which SARSA cannot do.
+:::

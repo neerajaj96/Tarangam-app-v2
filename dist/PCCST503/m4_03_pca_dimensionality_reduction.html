@@ -89,6 +89,10 @@
             <span class="topic-dot"></span>
             <span>1.4 Multiple Regression Model Assessment</span>
           </a>
+          <a href="./m1_05_regression_metrics_regularisation.html" class="topic-link " id="topic-m1_05_regression_metrics_regularisation">
+            <span class="topic-dot"></span>
+            <span>1.5 Regression Metrics Regularisation</span>
+          </a>
           <a href="./m1_99_practice_lab_foundations_drills.html" class="topic-link " id="topic-m1_99_practice_lab_foundations_drills">
             <span class="topic-dot"></span>
             <span>🧪 Practice Lab: M1 Foundations Drills</span>
@@ -121,6 +125,10 @@
           <a href="./m2_05_gradient_descent_training_engine.html" class="topic-link " id="topic-m2_05_gradient_descent_training_engine">
             <span class="topic-dot"></span>
             <span>2.5 Gradient Descent Training Engine</span>
+          </a>
+          <a href="./m2_06_classification_evaluation_metrics.html" class="topic-link " id="topic-m2_06_classification_evaluation_metrics">
+            <span class="topic-dot"></span>
+            <span>2.6 Classification Evaluation Metrics</span>
           </a>
           <a href="./m2_99_practice_lab_classification_drills.html" class="topic-link " id="topic-m2_99_practice_lab_classification_drills">
             <span class="topic-dot"></span>
@@ -202,7 +210,7 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-meta">
-          <span id="progressLabel" role="status">0 of 23 completed</span>
+          <span id="progressLabel" role="status">0 of 25 completed</span>
           <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
         </div>
         <div class="progress-meta" style="margin-top:4px;">
@@ -241,22 +249,54 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 5 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
     <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
+    <a href="#symbols-data-goal" class="jump-pill">symbols-data-goal</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>PCA: Principal Component Analysis</h1>
-<p><strong>Variance as information, covariance eigen-structure, the projection theorem, variance-explained arithmetic, and scaling discipline.</strong></p>
+<p><strong>What problem Principal Component Analysis (PCA) solves for wide data, what centred matrix it needs, how eigendecomposition trains the best linear compressor, and where unsupervised variance misleads.</strong></p>
 <p><a id="the-intuition"></a></p>
-<h2 id="1-the-intuition">1. The Intuition</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formali… →</a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic U… →</a></p>
+<p>A 3D mobile casts 2D shadows on walls. Which wall shows most structure? The one where the shadow sprawls widest. PCA finds that wall mathematically and drops flat directions.</p>
+<p>Tiny beginner example. Points $(0,0)$, $(1,1)$, $(2,2)$ lie on diagonal $y=x$. Spread along $(1,1)$ is large; spread perpendicular is zero. Keep one direction $(1,1)$, drop the other, lose nothing. That is PCA on a line.</p>
+<p>Analogy as support, then dropped. Shadow gallery with widest sprawl. From here on we use exact terms only: centred data, covariance, eigenvector, eigenvalue.</p>
+<p>Abbreviations defined on first use: Principal Component Analysis (PCA). Symbols are defined before use below.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is $X$?</td>
+<td>Centred data matrix, mean zero per feature</td>
+</tr>
+<tr>
+<td>What is $\Sigma$?</td>
+<td>Covariance, $X^TX/(n-1)$</td>
+</tr>
+<tr>
+<td>What are $v_i$, $\lambda_i$?</td>
+<td>Direction $i$ and variance along it</td>
+</tr>
+</tbody></table>
+<p><a id="symbols-data-goal"></a></p>
+<h2 id="2-data-goal-and-symbols-basic-understanding">2. Data, Goal and Symbols (Basic Understanding)</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-method-model-and-training-formal-theory">3. Method, Model and Training (For… →</a></p>
+<p><strong>Problem.</strong> Keep maximum information per kept dimension with linear projections.</p>
+<p><strong>Data.</strong> Centred matrix $X$ with $n$ rows, $d$ columns. Centring means subtract per-feature mean so $\bar{x}=0$. Standardise (zero mean, unit variance) unless units are commensurate; PCA chases raw variance, so metres-versus-millimetres elects winners silently.</p>
+<p><strong>Goal.</strong> Top-$k$ directions keeping fraction $\sum_{i\le k}\lambda_i/\sum\lambda_i$ of variance, with no $k$-dimensional linear projection preserving more (projection theorem).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Shadow Gallery</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A 3D mobile casts shadows on gallery walls — each wall shows a 2D <em>projection</em>, and the most informative wall is the one where the shadow sprawls widest (most spread = most structure preserved). <strong>PCA</strong> finds that wall mathematically: the direction (unit vector) along which the data <em>varies most</em> is principal component 1; the best perpendicular runner-up is PC2; and so on. Keep the top few directions, drop the flat ones — maximum information per kept dimension, guaranteed by linear algebra rather than luck.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
@@ -278,31 +318,65 @@
     <p class="video-caption"><strong>Key Insight:</strong> Variance-Preserving Projection</p>
     <div class="video-observations"><strong>What to observe:</strong> Watch the cloud rotate onto its principal axes — spread maximizing along PC1, the flat tail directions collapsing away with barely any information lost.</div>
   </div>
-</div><hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-theoretical-framework-formalism">2. Theoretical Framework &amp; Formalism</h2>
-<p class="secnav"><a href="#1-the-intuition">← 1. The Intuition</a><span class="secnav-sep">·</span><a href="#3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step S… →</a></p>
-<h3>2.1 Covariance and Eigen-Structure</h3>
-<p>Center the data ($\bar{x} = 0$). Covariance $\Sigma = \frac{1}{n-1}X^TX$ ($d \times d$, symmetric). Its <strong>eigenvectors</strong> $v_i$ (orthonormal) are the principal directions; <strong>eigenvalues</strong> $\lambda_i$ are the variances along them. Projection $z = V_k^Tx$ onto top-$k$ keeps fraction $\sum_{i\le k}\lambda_i / \sum \lambda_i$ of total variance — and among <em>all</em> $k$-dimensional linear projections, <strong>none preserves more</strong> (the projection theorem: PCA is the optimal linear compressor by reconstruction error).</p>
-<h3>2.2 Practical Discipline (Where Exams Probe)</h3>
-<ul>
-<li><strong>Standardize first</strong> (zero mean, unit variance per feature) unless units are commensurate — PCA chases <em>raw variance</em>, so a meters-vs-millimeters feature choice silently elects the winner.</li>
-<li><strong>Choose $k$</strong> by cumulative variance (80–95% rules of thumb) or the scree-plot elbow — same spirit as clustering elbows.</li>
-<li>PCA is <strong>unsupervised</strong> (labels never enter) and <strong>linear</strong> (curved manifolds need kernels/autoencoders, not more components).</li>
-</ul>
+</div><p><a id="the-math"></a></p>
+<h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
+<p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p>Canonical order: problem (compress linearly) → data (centred, standardised $X$) → goal (max variance kept) → method (eigendecompose covariance) → model (top-$k$ orthonormal basis) → training (one eigendecomposition) → example → limitations.</p>
+<h3>3.1 Covariance and Eigen-Structure, Symbol by Symbol</h3>
+<p>Covariance $\Sigma=\frac{1}{n-1}X^TX$ ($d\times d$, symmetric). Eigenvectors $v_i$ (orthonormal) are principal directions; eigenvalues $\lambda_i$ are variances along them. Projection $z=V_k^Tx$ onto top $k$ keeps fraction above. Here $V_k$ holds top eigenvectors as columns; orthonormal means unit length and perpendicular, so variance bookkeeping holds.</p>
+<p>Numbered training:</p>
+<ol>
+<li>Centre (and usually standardise) $X$.</li>
+<li>Form $\Sigma$.</li>
+<li>Eigendecompose $\Sigma=V\Lambda V^T$.</li>
+<li>Keep top $k$ by cumulative variance (80–95% rules) or scree elbow.</li>
+<li>Project $z=V_k^Tx$.</li>
+</ol>
+<h3>3.2 Practical Discipline</h3>
+<p>PCA is unsupervised (labels never enter) and linear (curved manifolds need kernels or autoencoders). Standardise first across incommensurate axes. Choose $k$ by cumulative share or elbow, same kink instinct as clustering.</p>
+<table>
+<thead>
+<tr>
+<th>Similar pair</th>
+<th>Distinction that earns marks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Raw vs standardised PCA</td>
+<td>Unit-driven artifacts vs shape-driven structure</td>
+</tr>
+<tr>
+<td>Variance kept vs signal kept</td>
+<td>Reconstruction optimum vs class information; tail can hold labels</td>
+</tr>
+<tr>
+<td>PCA vs supervised LDA</td>
+<td>Unsupervised spread vs label-guided separation</td>
+</tr>
+</tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PCA Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Center → $\Sigma = X^TX/(n-1)$ · eigenvectors = <strong>directions</strong>, eigenvalues = <strong>variances</strong> · keep top-$k$: fraction $\sum_{i\le k}\lambda_i/\sum\lambda$ · <strong>standardize first</strong> (variance units decide winners) · optimal <strong>linear</strong> compressor · unsupervised (no labels used).</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Unscaled PCA Elects Units, Not Structure</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feeding raw features (income in rupees + age in years) lets the biggest-<em>unit</em> feature dominate PC1 regardless of information — a measurement artifact wearing mathematics. Standardization ($z$-scores) is not preprocessing politeness; it <em>defines what variance means</em> across incommensurate axes. Skip it and PC1 reports your unit choices.</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-step-by-step-scenario">3. Worked Example / Step-by-Step Scenario</h2>
-<p class="secnav"><a href="#2-theoretical-framework-formalism">← 2. Theoretical Framework &amp; Formali…</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Points $(1,2), (2,1), (3,4), (4,3)$. Compute the covariance, its eigen-structure, variance kept by PC1, and the PC1 direction. (Arithmetic verified.)</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Eigendecomposition by Hand</div><div class="step-content"><p>Mean $(2.5, 2.5)$; centered sums: $\sum dx^2 = 5.0$, $\sum dy^2 = 5.0$, $\sum dx,dy = 3.0$. $\Sigma = \frac{1}{3}\begin{pmatrix}5 &amp; 3 \\ 3 &amp; 5\end{pmatrix}$. Characteristic: $(5/3-\lambda)^2 - 1 = 0 \Rightarrow \lambda = 5/3 \pm 1$: $\lambda_1 = 8/3 \approx 2.667$, $\lambda_2 = 2/3 \approx 0.667$. Total $10/3$; PC1 keeps $2.667/3.333 = \mathbf{80%}$. Eigenvector for $\lambda_1$: $(5/3-8/3)x + y = 0 \Rightarrow y = x$ — direction $(1,1)/\sqrt{2}$ (the main diagonal, exactly where the eye sees the cloud stretched).</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>One direction ($y=x$) carries 80% of the variance; the perpendicular carries the 20% wobble. Dropping to 1D keeps four-fifths of the information at half the coordinates — and the eigenvector <em>agrees with visual inspection</em>, which is how you sanity-check PCA on every new dataset forever: plot, eyeball the stretch, confirm the math found it.</p>
-</div></div><hr>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Skipping standardisation on mixed units. PC1 then reports conventions, not geometry.</li>
+<li>Reading variance kept as accuracy kept. Low-variance tails can hold class signal.</li>
+<li>Skipping unit normalisation of hand eigenvectors. Projection and ledger assume orthonormal $V_k$.</li>
+<li>Using PCA for curved manifolds. Linear only; needs kernels or autoencoders.</li>
+</ul>
+<p>Limitations: unsupervised, linear, scale-sensitive; reconstruction optimal, not discrimination optimal.</p>
+<p>Exam recap: centre to covariance; eigenvectors directions, eigenvalues variances; top-$k$ share formula; standardise first; optimal linear compressor; unsupervised.</p>
 <p><a id="self-check"></a></p>
-<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
     <span class="quiz-category">Features: annual income (tens of thousands) and age (years). PCA without standardization puts nearly all PC1 weight on income. What happened, and what is the fix?</span>
@@ -487,7 +561,7 @@
   <script type="module">
     import { createLearnerState } from '../assets/learner-state.js';
     (function trackTopicProgress() {
-      var totalTopics = Number(23) || 0;
+      var totalTopics = Number(25) || 0;
       var currentId = "m4_03_pca_dimensionality_reduction";
       var courseCode = "PCCST503";
       if (!totalTopics || !currentId || !courseCode) return;

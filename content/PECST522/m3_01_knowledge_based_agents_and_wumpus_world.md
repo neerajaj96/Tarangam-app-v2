@@ -5,7 +5,7 @@ module: 3
 sequence: 1
 title: Knowledge-Based Agents & the Wumpus World
 difficulty: beginner
-estimatedMinutes: 6
+estimatedMinutes: 8
 learningObjectives:
   - Separate entailment as semantic fact from inference as procedure
   - Specify the Wumpus PEAS with its five percept meanings
@@ -23,23 +23,27 @@ tags:
 ---
 # Knowledge-Based Agents & the Wumpus World
 
-**Tell/Ask knowledge bases, entailment vs. inference, the Wumpus PEAS and percept rules, and why this toy dungeon drives all of logic-based AI.**
+**Problem: the agent cannot see the dungeon — how can it still act safely? By the end you can run the Tell/Ask loop, separate entailment from inference, and derive provably safe squares from percept histories.**
 
-<a id="the-intuition"></a>
-## 1. Why a Dungeon?
+<a id="start-zero"></a>
+## 1. Start From Zero: Why a Dungeon?
+
+You enter a dark cave with gold, pits, and a monster. You cannot see — but the cave talks: a draft means a pit is next door; a smell means the monster is adjacent; a glint means gold is *here*. A **knowledge-based agent** stores everything as **sentences** in a **knowledge base (KB)** — a stored set of facts plus general rules — combines them, and deduces safe moves it never observed.
+
+**Definitions:** **TELL** adds percept sentences to the KB. **ASK** queries what follows (what to do). **Entailment** (`KB |= alpha`, read "KB entails alpha") is the semantic fact that `alpha` is true in every world where the KB is true. **Inference** (`KB |- alpha`, "derives") is the syntactic procedure pushing symbols. **Sound** means everything derived is entailed (no lies). **Complete** means everything entailed is derivable (nothing missed).
 
 ::: callout-intuition Core Mental Model: The Cautious Spelunker
-You enter a pitch-dark cave rumored to hold gold, bottomless pits, and a sleeping monster. You cannot see — but the cave *talks*: a cold draft means a pit is next door; a foul smell means the monster is adjacent; a glint means gold is *here*. A **knowledge-based agent** plays exactly this game: it stores everything it perceives as **sentences** in a **knowledge base (KB)**, combines them with general rules ("draft ⇒ pit nearby"), and deduces safe moves it has never directly observed. The Wumpus World is the smallest universe where *reasoning beats seeing*.
+Reasoning beats seeing where seeing is impossible. Drop the cave after this; Tell/Ask plus entailment-vs-inference are the technical content.
 :::
 
-A knowledge-based agent runs one eternal loop: **TELL** the KB what it perceives, **ASK** the KB what to do, **EXECUTE** the answer. Declarative knowledge (facts + rules) stays cleanly separated from the dumb inference procedure that grinds on it — add zoology tomorrow by TELLing sentences, without touching a line of code.
+**Tiny beginner example:** KB holds "draft means adjacent pit" plus "square (1,1) had no draft." ASK "is (1,2) pit-free?" — yes, proven without visiting, because the rule plus the observation jointly force it.
 
----
+<a id="basics"></a>
+## 2. Basic Layer: PEAS, Percepts, Rules
 
-<a id="the-dimensions"></a>
-## 2. The World: PEAS, Percepts, Rules
+**Data/state:** five percept lists per square. **Goal:** grab gold and climb out alive.
 
-**Performance:** +1000 for grabbing the gold and climbing out, −1000 for death (pit or live Wumpus), −1 per action, −10 per arrow fired. **Environment:** a $4 \times 4$ grid (walls all around), fixed pits, one Wumpus, one gold pile. **Actuators:** move forward, turn left/right, grab, shoot (one arrow, flies straight until wall or Wumpus — killing it produces a **Scream** everywhere), climb out. **Sensors:** five percept lists per square — **Stench** (Wumpus orthogonally adjacent), **Breeze** (pit orthogonally adjacent), **Glitter** (gold *here*), **Bump** (walked into a wall), **Scream** (Wumpus just died).
+**Performance:** +1000 gold-and-out, -1000 death (pit or live Wumpus), -1 per action, -10 per arrow. **Environment:** 4x4 grid with walls, fixed pits, one Wumpus, one gold pile. **Actuators:** step forward, turn left/right, grab, shoot (one arrow flying straight; killing the Wumpus broadcasts a **Scream** everywhere), climb out. **Sensors:** **Stench** (Wumpus orthogonally adjacent — sharing an edge, not diagonal), **Breeze** (pit orthogonally adjacent), **Glitter** (gold co-located *here*), **Bump** (walked into a wall, position unchanged), **Scream** (Wumpus just died, heard everywhere once).
 
 ```text
 y=4  [Stench]   [OK]       [Breeze]   [PIT]
@@ -50,28 +54,41 @@ y=1  [START,OK] [Breeze]   [PIT]      [Breeze]
 ```
 
 ::: callout-formula Formal Core: Entailment vs. Inference
-The KB **entails** $\alpha$ ($KB \models \alpha$) if $\alpha$ is true in *every* world where the KB is true — a semantic, god's-eye fact. An **inference procedure** $i$ **derives** $\alpha$ ($KB \vdash_i \alpha$) by pushing symbols around syntactically. The procedure is **sound** if everything it derives is entailed, **complete** if it derives everything entailed. Sound + complete = reasoning you can bet the agent's life on.
+`KB |= alpha`: true in every KB-world (god's-eye fact). `KB |- alpha`: derived by procedure `i` (symbol pushing). Sound: derives only entailed. Complete: derives all entailed. Sound plus complete means deductions are bet-your-life trustworthy.
 :::
 
----
+The agent loops forever: TELL percepts, ASK for action, EXECUTE. Declarative knowledge stays separate from the inference engine — new zoology arrives as sentences, not code changes.
 
-<a id="worked-example"></a>
-## 3. Deducing Safety at (1,2)
+<a id="formal-model"></a>
+## 3. Formal Layer: Deducing Safety at (1,2)
 
-Start: agent at (1,1), percepts `[None,None,None,None,None]` — TELL gives $\lnot P_{1,1} \land \lnot W_{1,1}$. Move to (1,2), perceive `[Stench,None,None,None,None]`. The KB holds the general rule $S_{x,y} \Leftrightarrow W_{x+1,y} \lor W_{x-1,y} \lor W_{x,y+1} \lor W_{x,y-1}$ (stink means Wumpus next door) plus visited-square facts. From $S_{1,2}$ plus $\lnot W_{1,1}$ (visited safe) and the wall at $(0,2)$, the live candidates are $(1,3)$ and $(2,2)$ — so the agent derives $W_{1,3} \lor W_{2,2}$ — *a disjunction, not a location*. It cannot prove either square safe, so the rational move is to retreat and probe (2,1) instead. That is logic doing genuine work: knowing *that you don't know*, exactly.
+**Procedure — percept-to-safety deduction (steps then trace):** Step 1: TELL visited facts (at (1,1) with silence: no pit, no Wumpus here). Step 2: TELL general rules (stench at (x,y) iff Wumpus in an orthogonal neighbour). Step 3: ASK about candidates; accept only proven-safe squares.
+
+**Trace:** start (1,1) silent — TELL `not P(1,1)`, `not W(1,1)`. Move to (1,2), perceive stench only. Rule: stench means Wumpus in (1,1)/(2,2)/(1,3)/(0,2). Eliminate (1,1) by visited-safe and (0,2) by wall: live candidates (1,3), (2,2). Derive `W(1,3) OR W(2,2)` — a disjunction (an "or" statement), not a location. Cannot prove either square safe, so retreat and probe (2,1) instead. Logic's honest output is sometimes "I don't know which" — and acting on that ignorance (probing elsewhere) is rationality.
 
 ::: anim wumpus-deduce From Stench to Disjunction
 Watch the visited square check in, the stench square flag, and the two candidate squares pulse — while the verdict stays what logic actually earned: a disjunction, never a guess.
 :::
 
 ::: callout-pitfall Percepts Are Local, Conclusions Are Global
-Stench reports *adjacency*, never identity — students constantly write "stench ⇒ Wumpus here." Breeze, stench, and glitter each constrain a *neighborhood*; only combined sentences across squares pin down single cells. Every Wumpus exam trap exploits this slippage.
+Stench reports adjacency, never identity — "stench implies Wumpus here" is the exam trap. Breeze, stench, and glitter constrain neighbourhoods; only combined sentences across squares pin single cells.
 :::
 
----
+<a id="worked-example"></a>
+## 4. Worked Example, Distinctions, Limitations
+
+| Similar pair | Distinction |
+|---|---|
+| Entailment vs. derivation | Semantic truth-in-all-models vs. syntactic rule-pushing (soundness/completeness bridge them) |
+| Stench/breeze vs. glitter | Adjacent-world constraint vs. co-located fact (only glitter means "here") |
+| Disjunction vs. location | Certainty about a set vs. certainty within it (probe, never assume a disjunct) |
+
+**Watch out:** (1) Scream is global and one-time; bump means position frozen. (2) One silent square proves its neighbours pit-free only via the biconditional rule, not by vibes. (3) Safe means proven pit-free *and* Wumpus-free — check both.
+
+**Limitations:** propositional encoding needs one symbol per square-property (scales poorly — next topics' motivation); inference without probabilities cannot rank risks, only prove or withhold safety.
 
 <a id="self-check"></a>
-## 4. Active Recall Quizzes
+## 5. Active Recall Quizzes
 
 ::: quiz The agent perceives Glitter in its current square. What does it validly know, and what must it do?
 (*) Gold is in this exact square (glitter is co-located, not adjacent) — Grab it
@@ -79,7 +96,7 @@ Stench reports *adjacency*, never identity — students constantly write "stench
 () The Wumpus is here — shoot immediately
 () Nothing — glitter carries no information
 ::: explanation
-Glitter is the one *co-located* percept: unlike stench/breeze (adjacency), it fires only where the gold sits. The correct response is Grab — the one action whose precondition needs no inference at all.
+Glitter fires only where gold sits, unlike adjacency percepts. Grab needs no inference — its precondition is already met.
 :::
 
 ::: quiz Which statement best captures soundness versus completeness of an inference procedure?
@@ -88,7 +105,7 @@ Glitter is the one *co-located* percept: unlike stench/breeze (adjacency), it fi
 () Sound means it handles Horn clauses; complete means it handles full FOL
 () They are synonyms for determinism
 ::: explanation
-Soundness ($KB \vdash \alpha \Rightarrow KB \models \alpha$) forbids false conclusions; completeness ($KB \models \alpha \Rightarrow KB \vdash \alpha$) forbids missed ones. A lying-but-thorough agent is complete yet unsound; a silent-but-honest one is sound yet incomplete. You need both before trusting deductions with the agent's life.
+Soundness forbids false conclusions; completeness forbids missed ones. Trustworthy reasoning needs both.
 :::
 
 ::: quiz Why is the Wumpus World (rather than chess) the canonical testbed for knowledge representation?
@@ -97,26 +114,25 @@ Soundness ($KB \vdash \alpha \Rightarrow KB \models \alpha$) forbids false concl
 () The Wumpus can be bribed, unlike chess pieces
 () Chess forbids knowledge bases by tournament rule
 ::: explanation
-Chess is fully observable — search suffices, representation adds little. The dungeon's darkness makes raw search blind; only an agent that *stores percepts as sentences* and *derives unseen facts* survives. Partial observability + logical rules = the KR sweet spot in miniature.
+Chess is fully observable so search suffices. The dungeon's darkness makes raw search blind; only sentence-storing, fact-deriving agents survive. KR = Knowledge Representation.
 :::
-
----
 
 <a id="exam-focus"></a>
-## 5. Worked University Exam Q&A
+## 6. Exam Recap and Worked Q&A
 
 ::: callout-exam KTU University Exam Focus
-**Target Areas:**
-* **3 Marks:** PEAS of the Wumpus agent, or the five percepts with meanings.
-* **7 Marks:** Given a percept history, derive which squares are provably safe (show the Tell/Ask sentences used).
+3 marks: Wumpus PEAS or five percepts with meanings. 7 marks: percept-history safety proof showing Tell/Ask sentences.
 :::
 
-### Sample 3-Mark Question
-**Q: List the five Wumpus percepts and state what each indicates.**
+**Recap facts examiners reward:** Tell/Ask/Execute loop; `|=` vs. `|-` with sound/complete; five percepts (stench/breeze adjacent, glitter co-located, bump wall, scream global); disjunction-not-location discipline.
 
-**Model Answer:** **Stench** — Wumpus in an orthogonally adjacent square; **Breeze** — pit adjacent; **Glitter** — gold in the *current* square; **Bump** — attempted move into a wall (position unchanged); **Scream** — the Wumpus died (heard everywhere, once). Stench/breeze constrain neighborhoods; glitter alone is co-located.
+### Sample 3-Mark Question
+**Q: List the five Wumpus percepts and meanings.**
+
+**Model Answer:** Stench: adjacent Wumpus. Breeze: adjacent pit. Glitter: gold here. Bump: wall hit, unmoved. Scream: Wumpus died, heard everywhere once.
 
 ### Sample 7-Mark Question
-**Q: The agent visits (1,1) (no percepts) then (2,1) (breeze). Using KB sentences, prove (2,2) may hold a pit while (1,2) is provably safe.**
+**Q: Visited (1,1) silent then (2,1) breezy — prove (1,2) safe, judge (2,2).**
 
-**Model Answer:** TELL: $\lnot P_{1,1}$, $\lnot W_{1,1}$, $B_{2,1}$. Rule: $B_{2,1} \Leftrightarrow P_{1,1} \lor P_{3,1} \lor P_{2,2}$. Since $\lnot P_{1,1}$, deduce $P_{3,1} \lor P_{2,2}$ — pit possibly at (2,2), unproven either way. For (1,2): breeze rule at (1,1) would be $B_{1,1} \Leftrightarrow P_{2,1} \lor P_{1,2}$; observed $\lnot B_{1,1}$ forces $\lnot P_{2,1} \land \lnot P_{1,2}$ — (1,2) provably pit-free. Combined with no stench anywhere visited, (1,2) is the safe probe.
+**Model Answer:** TELL `not P(1,1)`, `not W(1,1)`, breeze at (2,1). Breeze rule forces `P(1,1) OR P(3,1) OR P(2,2)`; with `not P(1,1)` leaves suspects (3,1)/(2,2), neither provable. Silence at (1,1) via the (1,1)-breeze biconditional forces `not P(2,1)` and `not P(1,2)`; no stench forces Wumpus-free — (1,2) provably safe, (2,2) possibly mined, so probe (1,2).
+:::

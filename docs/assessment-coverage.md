@@ -6,19 +6,19 @@
 
 ## Totals
 
-- Questions: 502
-- Covered topics: 432 of 432 (100%)
+- Questions: 508
+- Covered topics: 435 of 435 (100%)
 - Uncovered topics: 0 (without questions — not assessed)
-- Exam-relevant coverage: 432 of 432 (100%)
+- Exam-relevant coverage: 435 of 435 (100%)
 - Single-question topics: 362
-- Multi-question topics: 70
+- Multi-question topics: 73
 
 ## Question-type distribution
 
 | Type | Count |
 | --- | ---: |
-| multiple_choice | 432 |
-| true_false | 65 |
+| multiple_choice | 435 |
+| true_false | 68 |
 | short_answer | 5 |
 
 ## Per-course coverage
@@ -32,9 +32,9 @@
 | OECST614 | 28 | 24 | 24 | 0 |
 | PBCST604 | 30 | 26 | 26 | 0 |
 | PCCST303 | 31 | 27 | 27 | 0 |
-| PCCST501 | 40 | 36 | 36 | 0 |
+| PCCST501 | 42 | 37 | 37 | 0 |
 | PCCST502 | 35 | 31 | 31 | 0 |
-| PCCST503 | 27 | 23 | 23 | 0 |
+| PCCST503 | 31 | 25 | 25 | 0 |
 | PCCST601 | 33 | 29 | 29 | 0 |
 | PCCST602 | 27 | 23 | 23 | 0 |
 | PECST522 | 34 | 30 | 30 | 0 |
@@ -74,7 +74,7 @@
 | PCCST303 | 2 | Linked Lists & Memory Management | 7 |
 | PCCST303 | 3 | Trees, Heaps & Graphs | 8 |
 | PCCST303 | 4 | Sorting, Searching & Hashing | 8 |
-| PCCST501 | 1 | Application Layer | 10 |
+| PCCST501 | 1 | Application Layer | 12 |
 | PCCST501 | 2 | Transport & Network Layer | 13 |
 | PCCST501 | 3 | Data Link Layer | 8 |
 | PCCST501 | 4 | Physical Layer & SNMP | 9 |
@@ -82,8 +82,8 @@
 | PCCST502 | 2 | Graphs & Divide/Conquer | 7 |
 | PCCST502 | 3 | Greedy, DP & Backtracking | 8 |
 | PCCST502 | 4 | Branch/Bound & Complexity | 7 |
-| PCCST503 | 1 | Foundations & Regression | 6 |
-| PCCST503 | 2 | Classification & Trees | 7 |
+| PCCST503 | 1 | Foundations & Regression | 8 |
+| PCCST503 | 2 | Classification & Trees | 9 |
 | PCCST503 | 3 | Neural Nets & SVMs | 6 |
 | PCCST503 | 4 | PCA & Ensembles | 8 |
 | PCCST601 | 1 | Front End & Scanners | 6 |
@@ -113,15 +113,15 @@
 
 ## Exam-relevant coverage
 
-- Exam-relevant topics in manifest: 432
-- Exam-relevant topics with questions: 432
+- Exam-relevant topics in manifest: 435
+- Exam-relevant topics with questions: 435
 - Exam-relevant topics without questions: 0 (not assessed)
 - Coverage: 100%
 
 ## Single- vs multi-question topics
 
 - Topics with exactly 1 question: 362
-- Topics with more than 1 question: 70
+- Topics with more than 1 question: 73
 
 Single-question topics (course/topic):
 
@@ -489,7 +489,7 @@ Single-question topics (course/topic):
 - PECST637/m4_06_m4_mixed_drill
 
 Question counts use bank order for covered topics and manifest order for uncovered topics.
-Covered topics: 432 listed in the bank; each carries 2–2 questions in this snapshot.
+Covered topics: 435 listed in the bank; each carries 2–2 questions in this snapshot.
 
 ## Remaining gaps
 
@@ -503,9 +503,9 @@ Covered topics: 432 listed in the bank; each carries 2–2 questions in this sna
   - OECST614: 0 uncovered of 24
   - PBCST604: 0 uncovered of 26
   - PCCST303: 0 uncovered of 27
-  - PCCST501: 0 uncovered of 36
+  - PCCST501: 0 uncovered of 37
   - PCCST502: 0 uncovered of 31
-  - PCCST503: 0 uncovered of 23
+  - PCCST503: 0 uncovered of 25
   - PCCST601: 0 uncovered of 29
   - PCCST602: 0 uncovered of 23
   - PECST522: 0 uncovered of 30

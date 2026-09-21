@@ -2,7 +2,7 @@
  * Dependency-free tests for performance budgets (node:test + node:assert
  * only — no test framework). Covers the deterministic audit in
  * scripts/performance-budget.js: budget configuration, size measurement,
- * injected budget failures, representative surface coverage, 432-topic
+ * injected budget failures, representative surface coverage, 435-topic
  * output preservation, Explorer scale safeguards (ordering intact, no
  * topic dropped, no server search, no learner-state change), and proof
  * that the accessibility, responsive, PWA, and assessment suites remain
@@ -111,11 +111,11 @@ describe('representative surface coverage', () => {
   });
 });
 
-describe('432-topic output preservation', () => {
+describe('435-topic output preservation', () => {
   it('keeps every topic page with byte-identical rebuilds', () => {
     const audit = auditPerformance('dist');
     const count = audit.results.find((r) => r.key === 'topicPageCount');
-    assert.equal(count.actual, 432);
+    assert.equal(count.actual, 435);
     assert.equal(count.pass, true);
   });
 });
