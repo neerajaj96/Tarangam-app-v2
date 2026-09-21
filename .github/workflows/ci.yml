@@ -7,8 +7,8 @@ name: CI quality gate
 # (npm run build:notes / npm test / npm run lint) and duplicates none of
 # scripts/check.js. The build runs before the tests so the generated-site
 # smoke suite always validates a freshly generated dist/. Any failing
-# command fails the job. No deployment here;
-# GitHub Pages release/deployment hardening remains a later phase.
+# command fails the job. No deployment here — Pages releases ship through
+# the separate .github/workflows/deploy-pages.yml workflow.
 on:
   push:
   pull_request:

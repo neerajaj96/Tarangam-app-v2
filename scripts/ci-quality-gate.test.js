@@ -94,10 +94,17 @@ describe('CI runs the existing quality gate and fails loudly', () => {
 
   it('adds no deployment and no external services', () => {
     const yml = read(WORKFLOW_PATH);
-    for (const token of ['deploy-pages', 'configure-pages', 'upload-pages-artifact', 'firebase', 'supabase', 'aws', 'azure', 'gcp']) {
+    // Only action references count (comments may name the deploy workflow).
+    const uses = [...yml.matchAll(/uses:\s*([^\s#]+)/g)].map((m) => m[1]);
+    for (const token of ['deploy-pages', 'configure-pages', 'upload-pages-artifact']) {
+      assert.ok(
+        !uses.some((a) => a.includes(token)),
+        `quality-gate workflow must not use ${token}`,
+      );
+    }
+    for (const token of ['firebase', 'supabase', 'aws', 'azure', 'gcp']) {
       assert.ok(!yml.toLowerCase().includes(token), `quality-gate workflow must not include ${token}`);
     }
-    const uses = [...yml.matchAll(/uses:\s*([^\s#]+)/g)].map((m) => m[1]);
     assert.ok(uses.length > 0, 'workflow must declare its actions');
     for (const action of uses) {
       assert.ok(
@@ -128,6 +135,7 @@ describe('required commands and suites stay wired', () => {
       'assessment.test.js',
       'ci-quality-gate.test.js',
       'generated-site-smoke.test.js',
+      'pages-deployment.test.js',
     ]) {
       assert.ok(pkg.scripts.test.includes(name), `suite must keep ${name}`);
     }
