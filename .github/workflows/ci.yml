@@ -4,8 +4,10 @@ name: CI quality gate
 # project's existing integrity, build, performance, accessibility,
 # responsive, PWA, assessment, learner-state, and backup/restore suites.
 # The workflow delegates all logic to the existing deterministic commands
-# (npm test / npm run build:notes / npm run lint) and duplicates none of
-# scripts/check.js. Any failing command fails the job. No deployment here;
+# (npm run build:notes / npm test / npm run lint) and duplicates none of
+# scripts/check.js. The build runs before the tests so the generated-site
+# smoke suite always validates a freshly generated dist/. Any failing
+# command fails the job. No deployment here;
 # GitHub Pages release/deployment hardening remains a later phase.
 on:
   push:
@@ -32,14 +34,15 @@ jobs:
       - name: Install dependencies (reproducible)
         run: npm ci
 
-      - name: Run test suites
-        run: npm test
-
       - name: Build notes and run content QA gate
         # Runs scripts/build.js (generates dist/) then scripts/check.js,
         # which verifies dist/ output, performance budgets, PWA assets,
-        # learner-state integrity, and backup/restore safeguards.
+        # learner-state integrity, and backup/restore safeguards. Runs
+        # before npm test so smoke tests validate the fresh output.
         run: npm run build:notes
+
+      - name: Run test suites
+        run: npm test
 
       - name: Lint (typecheck)
         run: npm run lint

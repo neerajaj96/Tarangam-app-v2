@@ -54,6 +54,27 @@ describe('CI runs the existing quality gate and fails loudly', () => {
     assert.ok(!yml.includes('|| true'), 'workflow must not swallow failures');
   });
 
+  it('builds before testing so smoke tests validate a fresh dist/', () => {
+    const yml = read(WORKFLOW_PATH);
+    const runLines = [...yml.matchAll(/^\s*run:\s*(.+)$/gm)].map((m) => m[1].trim());
+    const indexOf = (cmd) => runLines.findIndex((line) => line.includes(cmd));
+    for (const cmd of ['npm ci', 'npm run build:notes', 'npm test', 'npm run lint']) {
+      assert.ok(indexOf(cmd) !== -1, `workflow must run ${cmd}`);
+    }
+    assert.ok(
+      indexOf('npm ci') < indexOf('npm run build:notes'),
+      'workflow must install before building',
+    );
+    assert.ok(
+      indexOf('npm run build:notes') < indexOf('npm test'),
+      'workflow must build before testing so smoke tests see a fresh dist/',
+    );
+    assert.ok(
+      indexOf('npm test') < indexOf('npm run lint'),
+      'workflow must test before linting',
+    );
+  });
+
   it('delegates to existing commands without duplicating check logic', () => {
     const yml = read(WORKFLOW_PATH);
     // No run: step may invoke build/check scripts directly; all logic must
