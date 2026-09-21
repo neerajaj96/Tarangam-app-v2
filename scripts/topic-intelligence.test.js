@@ -1,7 +1,7 @@
 /**
  * Dependency-free tests for the canonical Topic Intelligence Layer
  * (node:test + node:assert only — no test framework). Covers, on fixtures
- * plus the live 435-topic repository: root/leaf detection,
+ * plus the live 486-topic repository: root/leaf detection,
  * ancestors/descendants, dependency chains, depth, navigation and
  * module/course boundaries, combined discovery, progress-aware readiness
  * (completed vs blocked, ancestor completion, remaining counts,
@@ -264,13 +264,13 @@ describe('progress-aware intelligence', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
-  it('indexes all 435 topics with full relationship coverage', () => {
-    assert.equal(manifest.topics.length, 435);
+  it('indexes all 486 topics with full relationship coverage', () => {
+    assert.equal(manifest.topics.length, 486);
     assert.deepEqual(ids(getAncestors(manifest, 'PCCST501', 'm1_07_domain_name_system_dns')),
       ['PCCST501/m1_01_internet_overview_and_network_edge',
         'PCCST501/m1_03_application_layer_paradigms',

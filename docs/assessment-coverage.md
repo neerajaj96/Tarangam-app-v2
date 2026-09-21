@@ -6,19 +6,19 @@
 
 ## Totals
 
-- Questions: 508
-- Covered topics: 435 of 435 (100%)
+- Questions: 610
+- Covered topics: 486 of 486 (100%)
 - Uncovered topics: 0 (without questions — not assessed)
-- Exam-relevant coverage: 435 of 435 (100%)
+- Exam-relevant coverage: 486 of 486 (100%)
 - Single-question topics: 362
-- Multi-question topics: 73
+- Multi-question topics: 124
 
 ## Question-type distribution
 
 | Type | Count |
 | --- | ---: |
-| multiple_choice | 435 |
-| true_false | 68 |
+| multiple_choice | 486 |
+| true_false | 119 |
 | short_answer | 5 |
 
 ## Per-course coverage
@@ -30,7 +30,10 @@
 | GXEST605 | 29 | 24 | 24 | 0 |
 | GZPHT121 | 31 | 26 | 26 | 0 |
 | OECST614 | 28 | 24 | 24 | 0 |
+| PBCST504 | 40 | 20 | 20 | 0 |
 | PBCST604 | 30 | 26 | 26 | 0 |
+| PCCSL507 | 24 | 12 | 12 | 0 |
+| PCCSL508 | 30 | 15 | 15 | 0 |
 | PCCST303 | 31 | 27 | 27 | 0 |
 | PCCST501 | 42 | 37 | 37 | 0 |
 | PCCST502 | 35 | 31 | 31 | 0 |
@@ -41,6 +44,7 @@
 | PECST631 | 30 | 26 | 26 | 0 |
 | PECST632 | 29 | 25 | 25 | 0 |
 | PECST637 | 29 | 25 | 25 | 0 |
+| UCHUM506 | 8 | 4 | 4 | 0 |
 
 ## Per-module questions
 
@@ -66,10 +70,20 @@
 | OECST614 | 2 | Classification & Evaluation | 7 |
 | OECST614 | 3 | Neural Nets & Trees | 7 |
 | OECST614 | 4 | Clustering & Ensembles | 7 |
+| PBCST504 | 1 | Embedded Foundations & ARM | 10 |
+| PBCST504 | 2 | STM32 & Peripherals | 10 |
+| PBCST504 | 3 | Serial Communication | 10 |
+| PBCST504 | 4 | IoT, RTOS & Project | 10 |
 | PBCST604 | 1 | InfoSec, Recon & VAPT | 7 |
 | PBCST604 | 2 | Web & DNS Security | 8 |
 | PBCST604 | 3 | Network Security | 8 |
 | PBCST604 | 4 | System Security & Projects | 7 |
+| PCCSL507 | 1 | Linux & Socket Programming | 8 |
+| PCCSL507 | 2 | Monitoring & Protocols | 8 |
+| PCCSL507 | 3 | Routing, Security & Simulation | 8 |
+| PCCSL508 | 1 | Python for ML | 12 |
+| PCCSL508 | 2 | Regression & Classification | 10 |
+| PCCSL508 | 3 | Clustering, Ensembles & Capstone | 8 |
 | PCCST303 | 1 | Basic Concepts, Stacks & Queues | 8 |
 | PCCST303 | 2 | Linked Lists & Memory Management | 7 |
 | PCCST303 | 3 | Trees, Heaps & Graphs | 8 |
@@ -110,18 +124,19 @@
 | PECST637 | 2 | Classical Ciphers | 6 |
 | PECST637 | 3 | Modern Ciphers & RSA | 8 |
 | PECST637 | 4 | Hashes, Signatures & PKI | 7 |
+| UCHUM506 | 1 | MOOC Guide | 8 |
 
 ## Exam-relevant coverage
 
-- Exam-relevant topics in manifest: 435
-- Exam-relevant topics with questions: 435
+- Exam-relevant topics in manifest: 486
+- Exam-relevant topics with questions: 486
 - Exam-relevant topics without questions: 0 (not assessed)
 - Coverage: 100%
 
 ## Single- vs multi-question topics
 
 - Topics with exactly 1 question: 362
-- Topics with more than 1 question: 73
+- Topics with more than 1 question: 124
 
 Single-question topics (course/topic):
 
@@ -489,7 +504,7 @@ Single-question topics (course/topic):
 - PECST637/m4_06_m4_mixed_drill
 
 Question counts use bank order for covered topics and manifest order for uncovered topics.
-Covered topics: 435 listed in the bank; each carries 2–2 questions in this snapshot.
+Covered topics: 486 listed in the bank; each carries 2–2 questions in this snapshot.
 
 ## Remaining gaps
 
@@ -501,7 +516,10 @@ Covered topics: 435 listed in the bank; each carries 2–2 questions in this sna
   - GXEST605: 0 uncovered of 24
   - GZPHT121: 0 uncovered of 26
   - OECST614: 0 uncovered of 24
+  - PBCST504: 0 uncovered of 20
   - PBCST604: 0 uncovered of 26
+  - PCCSL507: 0 uncovered of 12
+  - PCCSL508: 0 uncovered of 15
   - PCCST303: 0 uncovered of 27
   - PCCST501: 0 uncovered of 37
   - PCCST502: 0 uncovered of 31
@@ -512,6 +530,7 @@ Covered topics: 435 listed in the bank; each carries 2–2 questions in this sna
   - PECST631: 0 uncovered of 26
   - PECST632: 0 uncovered of 25
   - PECST637: 0 uncovered of 25
+  - UCHUM506: 0 uncovered of 4
 
 Gaps are informational only: nothing is locked or gated, and uncovered topics remain fully readable.
 

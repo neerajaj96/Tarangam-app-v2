@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 3.2 Usart</title>
+<meta name="description" content="Microcontrollers (PBCST504) — 3.2 Usart | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.2 Usart">
+<meta property="og:description" content="Microcontrollers (PBCST504) study notes: 3.2 Usart">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Microcontrollers</span>
+        <span class="tag">PBCST504</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Embedded Foundations &amp; ARM</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_embedded_systems_and_processor_types.html" class="topic-link " id="topic-m1_01_embedded_systems_and_processor_types">
+            <span class="topic-dot"></span>
+            <span>1.1 Embedded Systems And Processor Types</span>
+          </a>
+          <a href="./m1_02_embedded_c_essentials.html" class="topic-link " id="topic-m1_02_embedded_c_essentials">
+            <span class="topic-dot"></span>
+            <span>1.2 Embedded C Essentials</span>
+          </a>
+          <a href="./m1_03_arm_architecture_and_cortex_m.html" class="topic-link " id="topic-m1_03_arm_architecture_and_cortex_m">
+            <span class="topic-dot"></span>
+            <span>1.3 Arm Architecture And Cortex M</span>
+          </a>
+          <a href="./m1_04_cortex_m23_m33_armv8m.html" class="topic-link " id="topic-m1_04_cortex_m23_m33_armv8m">
+            <span class="topic-dot"></span>
+            <span>1.4 Cortex M23 M33 Armv8m</span>
+          </a>
+          <a href="./m1_05_registers_memory_bus.html" class="topic-link " id="topic-m1_05_registers_memory_bus">
+            <span class="topic-dot"></span>
+            <span>1.5 Registers Memory Bus</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>STM32 &amp; Peripherals</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_stm32_family_and_u575.html" class="topic-link " id="topic-m2_01_stm32_family_and_u575">
+            <span class="topic-dot"></span>
+            <span>2.1 Stm32 Family And U575</span>
+          </a>
+          <a href="./m2_02_power_management_and_low_power.html" class="topic-link " id="topic-m2_02_power_management_and_low_power">
+            <span class="topic-dot"></span>
+            <span>2.2 Power Management And Low Power</span>
+          </a>
+          <a href="./m2_03_ide_hal_first_program_led.html" class="topic-link " id="topic-m2_03_ide_hal_first_program_led">
+            <span class="topic-dot"></span>
+            <span>2.3 Ide Hal First Program LED</span>
+          </a>
+          <a href="./m2_04_displays_keypad_relay.html" class="topic-link " id="topic-m2_04_displays_keypad_relay">
+            <span class="topic-dot"></span>
+            <span>2.4 Displays Keypad Relay</span>
+          </a>
+          <a href="./m2_05_analog_io_timers_rtc.html" class="topic-link " id="topic-m2_05_analog_io_timers_rtc">
+            <span class="topic-dot"></span>
+            <span>2.5 Analog Io Timers Rtc</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Serial Communication</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_serial_basics_and_terminal.html" class="topic-link " id="topic-m3_01_serial_basics_and_terminal">
+            <span class="topic-dot"></span>
+            <span>3.1 Serial Basics And Terminal</span>
+          </a>
+          <a href="./m3_02_usart.html" class="topic-link active" id="topic-m3_02_usart">
+            <span class="topic-dot"></span>
+            <span>3.2 Usart</span>
+          </a>
+          <a href="./m3_03_i2c_sensor_lcd.html" class="topic-link " id="topic-m3_03_i2c_sensor_lcd">
+            <span class="topic-dot"></span>
+            <span>3.3 I2c Sensor Lcd</span>
+          </a>
+          <a href="./m3_04_spi_eeprom.html" class="topic-link " id="topic-m3_04_spi_eeprom">
+            <span class="topic-dot"></span>
+            <span>3.4 Spi Eeprom</span>
+          </a>
+          <a href="./m3_05_can_usb.html" class="topic-link " id="topic-m3_05_can_usb">
+            <span class="topic-dot"></span>
+            <span>3.5 Can Usb</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="4">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>IoT, RTOS &amp; Project</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_iot_mqtt_coap.html" class="topic-link " id="topic-m4_01_iot_mqtt_coap">
+            <span class="topic-dot"></span>
+            <span>4.1 Iot Mqtt Coap</span>
+          </a>
+          <a href="./m4_02_wireless_gsm_ble_lora_security.html" class="topic-link " id="topic-m4_02_wireless_gsm_ble_lora_security">
+            <span class="topic-dot"></span>
+            <span>4.2 Wireless GSM Ble Lora Security</span>
+          </a>
+          <a href="./m4_03_rtos_freertos_tasks.html" class="topic-link " id="topic-m4_03_rtos_freertos_tasks">
+            <span class="topic-dot"></span>
+            <span>4.3 Rtos Freertos Tasks</span>
+          </a>
+          <a href="./m4_04_freertos_ipc_timing.html" class="topic-link " id="topic-m4_04_freertos_ipc_timing">
+            <span class="topic-dot"></span>
+            <span>4.4 Freertos IPC Timing</span>
+          </a>
+          <a href="./m4_05_trustzone_debug_miniproject.html" class="topic-link " id="topic-m4_05_trustzone_debug_miniproject">
+            <span class="topic-dot"></span>
+            <span>4.5 Trustzone Debug Miniproject</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel" role="status">0 of 20 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" role="status" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <a href="../course.html?course=PBCST504">PBCST504</a>
+        <span class="crumb-sep">/</span>
+        <a href="../course.html?course=PBCST504#module-3">Module 3</a>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">3.2 Usart</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-problem" class="jump-pill">the-problem</a>
+    <a href="#words-first" class="jump-pill">words-first</a>
+    <a href="#formal-theory" class="jump-pill">formal-theory</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>USART Communication</h1>
+<p><strong>What problem the Synchronous option adds to a UART, what Universal Synchronous/Asynchronous Receiver-Transmitter (USART) modes cover, how baud and frame registers are chosen, and how bytes move by polling then by interrupt.</strong></p>
+<p><a id="the-problem"></a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-usart-vocabulary">2. Words First — USART Vocabulary →</a></p>
+<p>Two boards must chat: debug prints one way, sensor queries both ways. The problem: agree on speed and envelope, then move bytes without losing them when the CPU looks away. The USART peripheral is the chip&#39;s serial post office — async UART mode for wires, sync mode when a clock line is spared, all at configured baud.</p>
+<p>Tiny beginner example. Board prints &quot;T=75C&quot; at 115200 8N1: five characters leave TX one frame at a time; the PC terminal (matched settings) shows <code>T=75C</code>. Polling waits per byte (fine for five); interrupts collect while the CPU works (needed for streams).</p>
+<p>Analogy as support, then dropped. Think of a post office with a clerk (polling: you wait at the counter) versus a mailbox flag (interrupt: flag pops, you collect when free). Same mail, different waiting. From here on we use exact terms only: TXE/RXNE flags, overrun, baud divisor.</p>
+<p>Abbreviations defined on first use: Transmit Empty (TXE), Receive Not Empty (RXNE). Symbols: $f_{clk}$ peripheral clock, DIV baud divisor.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What is USART vs UART?</td>
+<td>USART = both sync and async hardware; UART = async subset (the usual use)</td>
+</tr>
+<tr>
+<td>What are TXE/RXNE?</td>
+<td>Status flags: transmit register empty (may load next), receive register full (must read now)</td>
+</tr>
+<tr>
+<td>What is overrun?</td>
+<td>New byte arrived before old was read — old lost, flag set, data suspect</td>
+</tr>
+</tbody></table>
+<p><a id="words-first"></a></p>
+<h2 id="2-words-first-usart-vocabulary">2. Words First — USART Vocabulary</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-formal-theory-config-then-move">3. Formal Theory — Config Then Mov… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Baud divisor (BRR register)</strong></td>
+<td>Divides $f_{clk}$ to the bit clock: DIV $= f_{clk}$/baud (oversampling accounted) — the one register behind every baud setting.</td>
+</tr>
+<tr>
+<td><strong>Word length / stop bits</strong></td>
+<td>8 vs 9 data bits; 1 vs 2 stop bits — must match the partner exactly (frame contract from M3.01).</td>
+</tr>
+<tr>
+<td><strong>Polling exchange</strong></td>
+<td>Loop on TXE to send, on RXNE to receive — simple, CPU held hostage per byte.</td>
+</tr>
+<tr>
+<td><strong>Interrupt exchange</strong></td>
+<td>TXE/RXNE interrupts fill/drain circular buffers in ISRs — CPU free between bytes, mandatory for streams.</td>
+</tr>
+<tr>
+<td><strong>Synchronous mode</strong></td>
+<td>USART drives a clock line (CK) with data — niche on STM32, used talking to SPI-like slaves; async remains the default.</td>
+</tr>
+</tbody></table>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Counter Plus Flags</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The peripheral is a counter (baud divisor slicing bit-times) plus two flags (TXE &quot;counter free&quot;, RXNE &quot;mail arrived&quot;). Polling stares at flags; interrupts sleep until flags tap. Configuration writes the contract (baud/frame); flags execute it.</p>
+</div></details><p><a id="formal-theory"></a></p>
+<h2 id="3-formal-theory-config-then-move">3. Formal Theory — Config Then Move</h2>
+<p class="secnav"><a href="#2-words-first-usart-vocabulary">← 2. Words First — USART Vocabulary</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p><strong>Configuration order (numbered):</strong> (1) enable USART + GPIO clocks; (2) map pins to alternate function; (3) write baud divisor for target baud at current $f_{clk}$; (4) set word length, parity, stop bits; (5) enable TX/RX, then the peripheral. Clock changes invalidate baud — recompute DIV after any $f_{clk}$ retune (viva trap: &quot;changed PLL, garbage terminal&quot; ⇒ stale divisor).</p>
+<p><strong>Polling send/receive shapes:</strong></p>
+<pre><code class="language-c">while (!(USART2-&gt;ISR &amp; USART_ISR_TXE)) {}  /* wait: transmit free? */
+USART2-&gt;TDR = ch;                          /* load byte, hardware frames it */
+...
+while (!(USART2-&gt;ISR &amp; USART_ISR_RXNE)) {} /* wait: byte arrived? */
+ch = USART2-&gt;RDR;                          /* read clears RXNE */
+</code></pre>
+<p>Read line by line: spin on flag, move one byte, hardware adds start/stop. Overrun rule: read RDR before the next frame completes, or enable RXNE interrupts into a buffer.</p>
+<p><strong>Interrupt upgrade:</strong> enable RXNE interrupt, ISR drains RDR into a ring buffer, main consumes at leisure; TX similarly from a queue. ISRs stay tiny (move bytes only) per M2.05 discipline. Sync mode adds the CK pin and clock-phase choices — same flags, shared drum.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: USART Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>USART ⊃ UART (+sync CK mode) · DIV = $f_{clk}$/baud, recompute after clock changes · TXE = may send, RXNE = must read · overrun = unread byte overwritten · polling simple/blocking, interrupts buffered/free · frame must match partner bit-for-bit.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Stale Divisor</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Any clock retune without baud recompute garbles the terminal while code is &quot;unchanged.&quot; Baud is a ratio, not a constant — name $f_{clk}$ in every baud answer.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-formal-theory-config-then-move">← 3. Formal Theory — Config Then Mov…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>$f_{clk} = 80$ MHz, target 115200 baud 8N1. (a) Baud divisor value shape? (b) After a clock change to 40 MHz with DIV untouched, what symptom and what fix? (c) Stream of 1000 bytes arrives: polling or interrupt, and why?</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Ratios and Buffers</div><div class="step-content"><p>(a) DIV $= 80{,}000{,}000/115200 ≈ 694.4$ (hardware takes integer + fraction fields per manual). (b) Actual baud halves to 57600 ⇒ garbage terminal; fix = recompute DIV for 40 MHz. (c) Interrupt + ring buffer: polling 1000 bytes holds the CPU ~87 ms doing nothing else.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Baud lives in a ratio with the clock; streams live in buffers behind interrupts. Two ratios, one buffer discipline — the whole USART exam in miniature.</p>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Matching baud but not frame. 8N1 vs 8E1 at identical baud still garbles — contract is baud + frame + port.</li>
+<li>Reading RDR late. Overrun silently replaces data; flags warn, code must hurry (or buffer via interrupt).</li>
+<li>Fat RX ISRs parsing protocols. Move bytes in ISR, parse in main — priority jitter corrupts framing otherwise.</li>
+</ul>
+<p>Exam recap: USART vs UART naming; DIV ratio with $f_{clk}$; TXE/RXNE meanings; overrun cause; polling vs interrupt economics; sync CK as niche; frame contract completeness.</p>
+<p><a id="self-check"></a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Terminal garbles after firmware &quot;only&quot; doubles the PLL clock. Nothing else changed. Diagnose precisely and give the one-register fix.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Terminals cannot handle fast clocks; lower baud permanently</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Baud divisor went stale: actual baud doubled with $f_{clk}$ (DIV = $f_{clk}$/baud unchanged) — recompute/write BRR for the new clock; baud is a ratio, and clock edits invalidate it</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Parity must now be enabled to compensate</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The GPIO pins melted from speed</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>&quot;Only the clock changed&quot; is the confession: every baud answer names $f_{clk}$. Recompute the ratio and garbage becomes text — the cheapest fix in serial debugging.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">2000-byte sensor dump: polling loop vs RXNE-interrupt ring buffer. Choose and price both in CPU attention.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Polling — simpler code always wins</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Interrupt + ring: polling burns ~174 ms of CPU staring at RXNE for 2000 bytes at 115200; interrupts cost microseconds per byte in ISRs plus leisurely main-side parsing — streams demand buffers, single bytes tolerate polling</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Interrupts lose bytes by design</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both hold the CPU equally</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Price attention per byte: polling rents the whole CPU per byte-time; interrupts rent microseconds. Volume decides the architecture — quote the millisecond math.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Byte lost with overrun flag set. What exactly happened in hardware, and what two cures exist?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Baud too high melted the register</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>New frame completed before firmware read RDR — hardware overwrote/flagged; cures: read faster (poll tighter) or RXNE-interrupt ring buffer (never let a byte wait past one frame time)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Parity correction failed; enable double parity</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The transmitter must slow down permanently</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Overrun is a deadline miss with a flag as receipt: one frame time to collect each byte. Either hurry the collector or queue the mail — both answers name the frame-time deadline.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m3_01_serial_basics_and_terminal.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">3.1 Serial Basics And Terminal</div>
+      </a>
+      
+      
+      
+      <a href="./m3_03_i2c_sensor_lcd.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">3.3 I2c Sensor Lcd</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(20) || 0;
+      var currentId = "m3_02_usart";
+      var courseCode = "PBCST504";
+      if (!totalTopics || !currentId || !courseCode) return;
+
+      var store = createLearnerState({});
+      var COURSE = courseCode;
+
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
+      }
+
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
+      }
+
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PBCST504", topicId: "m3_02_usart" });
+  </script>
+  <script>
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

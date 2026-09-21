@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 3.3 Simulation Ns3 Basics</title>
+<meta name="description" content="Networks Lab (PCCSL507) — 3.3 Simulation Ns3 Basics | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 3.3 Simulation Ns3 Basics">
+<meta property="og:description" content="Networks Lab (PCCSL507) study notes: 3.3 Simulation Ns3 Basics">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Networks Lab</span>
+        <span class="tag">PCCSL507</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Linux &amp; Socket Programming</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_linux_network_toolkit.html" class="topic-link " id="topic-m1_01_linux_network_toolkit">
+            <span class="topic-dot"></span>
+            <span>1.1 Linux Network Toolkit</span>
+          </a>
+          <a href="./m1_02_tcp_client_server_lab.html" class="topic-link " id="topic-m1_02_tcp_client_server_lab">
+            <span class="topic-dot"></span>
+            <span>1.2 TCP Client Server Lab</span>
+          </a>
+          <a href="./m1_03_udp_client_server_lab.html" class="topic-link " id="topic-m1_03_udp_client_server_lab">
+            <span class="topic-dot"></span>
+            <span>1.3 Udp Client Server Lab</span>
+          </a>
+          <a href="./m1_04_concurrent_server_select.html" class="topic-link " id="topic-m1_04_concurrent_server_select">
+            <span class="topic-dot"></span>
+            <span>1.4 Concurrent Server Select</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Monitoring &amp; Protocols</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_wireshark_capture_basics.html" class="topic-link " id="topic-m2_01_wireshark_capture_basics">
+            <span class="topic-dot"></span>
+            <span>2.1 Wireshark Capture Basics</span>
+          </a>
+          <a href="./m2_02_tcp_teardown_retransmission.html" class="topic-link " id="topic-m2_02_tcp_teardown_retransmission">
+            <span class="topic-dot"></span>
+            <span>2.2 TCP Teardown Retransmission</span>
+          </a>
+          <a href="./m2_03_dns_dhcp_experiment.html" class="topic-link " id="topic-m2_03_dns_dhcp_experiment">
+            <span class="topic-dot"></span>
+            <span>2.3 DNS Dhcp Experiment</span>
+          </a>
+          <a href="./m2_04_reliability_protocols_lab.html" class="topic-link " id="topic-m2_04_reliability_protocols_lab">
+            <span class="topic-dot"></span>
+            <span>2.4 Reliability Protocols Lab</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="3">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Routing, Security &amp; Simulation</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_static_routing_lab.html" class="topic-link " id="topic-m3_01_static_routing_lab">
+            <span class="topic-dot"></span>
+            <span>3.1 Static Routing Lab</span>
+          </a>
+          <a href="./m3_02_nat_firewall_lab.html" class="topic-link " id="topic-m3_02_nat_firewall_lab">
+            <span class="topic-dot"></span>
+            <span>3.2 NAT Firewall Lab</span>
+          </a>
+          <a href="./m3_03_simulation_ns3_basics.html" class="topic-link active" id="topic-m3_03_simulation_ns3_basics">
+            <span class="topic-dot"></span>
+            <span>3.3 Simulation Ns3 Basics</span>
+          </a>
+          <a href="./m3_04_topology_miniproject.html" class="topic-link " id="topic-m3_04_topology_miniproject">
+            <span class="topic-dot"></span>
+            <span>3.4 Topology Miniproject</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel" role="status">0 of 12 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" role="status" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <a href="../course.html?course=PCCSL507">PCCSL507</a>
+        <span class="crumb-sep">/</span>
+        <a href="../course.html?course=PCCSL507#module-3">Module 3</a>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">3.3 Simulation Ns3 Basics</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 3</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>Network Simulation with ns-3</h1>
+<p><strong>Objective:</strong> simulate what hardware cannot cheaply show — hundred-node topologies, exact loss sweeps, repeatable congestion — with one honest two-node script first.</p>
+<p><strong>What you should know first:</strong> real ping/loss behaviour from M1–M2 (simulation must reproduce reality before extending it).</p>
+<p><strong>Required software/tools:</strong> ns-3 installed (ns-3.3x via bake/source; heavyweight — lab machines preinstalled); Python or basic C++; FlowMonitor or ASCII traces + a plotting tool.</p>
+<h2 id="1-what-are-we-doing-and-why">1. What Are We Doing, and Why</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-concept-in-very-simple-language">2. Concept in Very Simple Language →</a></p>
+<p>We build point-to-point node0→node1, install a UDP echo, run, and read throughput from traces. Then we sweep loss 0→20% and plot delivery collapse. Why: simulators answer &quot;what if&quot; at scales and precisions hardware labs cannot afford — but only calibrated models earn trust.</p>
+<h2 id="2-concept-in-very-simple-language">2. Concept in Very Simple Language</h2>
+<p class="secnav"><a href="#1-what-are-we-doing-and-why">← 1. What Are We Doing, and Why</a><span class="secnav-sep">·</span><a href="#3-code-and-line-by-line-explanation">3. Code and Line-by-Line Explanati… →</a></p>
+<ul>
+<li><strong>Helpers stack:</strong> NodeContainer (cast) → PointToPointHelper (stage) → InternetStackHelper (costumes: IP) → addresses → Applications (script: echo talk) → Simulator::Run (action!).</li>
+<li><strong>Traces:</strong> ASCII (every event, huge) vs pcap (Wireshark-readable!) vs FlowMonitor (statistics XML: tx/rx/loss per flow).</li>
+<li><strong>Sweep discipline:</strong> change ONE parameter per run, seed-controlled randomness, same simulated seconds — else graphs lie.</li>
+</ul>
+<h2 id="3-code-and-line-by-line-explanation">3. Code and Line-by-Line Explanation</h2>
+<p class="secnav"><a href="#2-concept-in-very-simple-language">← 2. Concept in Very Simple Language</a><span class="secnav-sep">·</span><a href="#4-expected-output-and-how-to-verify">4. Expected Output and How to Veri… →</a></p>
+<pre><code class="language-cpp">// two-node.cc — the smallest honest simulation
+#include &quot;ns3/core-module.h&quot;
+#include &quot;ns3/network-module.h&quot;
+#include &quot;ns3/internet-module.h&quot;
+#include &quot;ns3/point-to-point-module.h&quot;
+#include &quot;ns3/applications-module.h&quot;
+using namespace ns3;
+int main(int argc, char *argv[]) {
+  NodeContainer nodes; nodes.Create(2);                       // cast: two nodes
+  PointToPointHelper p2p; p2p.SetDeviceAttribute(&quot;DataRate&quot;, StringValue(&quot;5Mbps&quot;));
+  p2p.SetChannelAttribute(&quot;Delay&quot;, StringValue(&quot;2ms&quot;));       // stage: 5 Mb/s, 2 ms wire
+  NetDevices devs = p2p.Install(nodes);                       // wire them together
+  InternetStackHelper stack; stack.Install(nodes);            // costumes: TCP/IP each
+  Ipv4AddressHelper addr; addr.SetBase(&quot;10.1.1.0&quot;, &quot;255.255.255.0&quot;);
+  Ipv4InterfaceContainer ifs = addr.Assign(devs);             // addresses: who is who
+  UdpEchoServerHelper srv(9);                                 // script: echo server port 9
+  ApplicationContainer apps = srv.Install(nodes.Get(1));
+  apps.Start(Seconds(1.0)); apps.Stop(Seconds(10.0));         // act 1–10 s only
+  UdpEchoClientHelper cli(ifs.GetAddress(1), 9);              // client dials node1:9
+  cli.SetAttribute(&quot;MaxPackets&quot;, UintegerValue(100));
+  cli.SetAttribute(&quot;Interval&quot;, TimeValue(Seconds(0.05)));     // 20 packets/s
+  cli.Install(nodes.Get(0));
+  p2p.EnablePcapAll(&quot;two-node&quot;);                              // record everything (Wireshark-ready)
+  Simulator::Run(); Simulator::Destroy();                     // ACTION, then cleanup
+}
+</code></pre>
+<ul>
+<li>Helpers read top-down as stage directions: cast → stage → costumes → script → action (exam-friendly telling order).</li>
+<li><code>EnablePcapAll</code> writes per-node pcaps — open node0&#39;s in Wireshark: your real-capture reading skills transfer exactly.</li>
+<li>Sweep: wrap loss via <code>RateErrorModel</code> on the device, loop rates in shell, parse FlowMonitor <code>rxPackets/txPackets</code> per run into one plot.</li>
+</ul>
+<h2 id="4-expected-output-and-how-to-verify">4. Expected Output and How to Verify</h2>
+<p class="secnav"><a href="#3-code-and-line-by-line-explanation">← 3. Code and Line-by-Line Explanati…</a><span class="secnav-sep">·</span><a href="#5-common-errors-and-viva-questions">5. Common Errors and Viva Question… →</a></p>
+<p>100 packets requested; loss 0% ⇒ rx 100, delay ≈ 2 ms + queuing; loss 20% ⇒ rx ≈ 80 (UDP echo never repairs — matches M1.03 morals). Verify honesty: zero-loss throughput ≈ 5 Mbps ceiling (never above DataRate — models that beat physics are misconfigured); pcap opens in Wireshark with sane sequence behaviour.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Uncalibrated Grandeur</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Hundred-node swooping graphs from unvalidated models are fiction with axes. Calibrate small (reproduce a real ping/loss number first), then scale — validity flows upward from reality, never down from ambition.</p>
+</div></details><h2 id="5-common-errors-and-viva-questions">5. Common Errors and Viva Questions</h2>
+<p class="secnav"><a href="#4-expected-output-and-how-to-verify">← 4. Expected Output and How to Veri…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause and cure</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>rx 0</code> everything sent</td>
+<td>Apps never started (Start/Stop times outside run) or addresses mismatched — check schedule vs <code>Simulator::Stop</code></td>
+</tr>
+<tr>
+<td>Throughput above DataRate</td>
+<td>Summed both directions or counted headers wrongly — throughput ≤ bottleneck by definition</td>
+</tr>
+<tr>
+<td>Identical runs differ wildly</td>
+<td>Uncontrolled RNG seeds — set <code>SeedManager</code> / fixed seeds for repeatability</td>
+</tr>
+</tbody></table>
+<p><strong>Viva:</strong> helpers in telling order (cast→stage→costumes→script→action)? pcap vs FlowMonitor (packets vs statistics)? Why sweep one parameter (causality)?</p>
+<p><strong>Exam/practical checklist:</strong> script builds+runs clean ☐; 0%-loss baseline = 100/100 ☐; sweep plot monotonic-ish falling ☐; pcap dissected in Wireshark ☐; seed fixed, runs repeatable ☐.</p>
+<p><a id="self-check"></a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-common-errors-and-viva-questions">← 5. Common Errors and Viva Question…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Simulated throughput reports 8 Mbps on a 5 Mbps link. What is wrong, and what is the correct reading discipline?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The link overperforms — report the bonus</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Accounting error (both directions summed, headers miscounted, or time window wrong): throughput can never exceed the bottleneck rate — recheck parsing against DataRate as a physical ceiling, then fix the measurement</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>ns-3 is optimistic by design; add 60% margin</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>DataRate means something else in simulation</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Physics caps models: the ceiling is a validity check, not a suggestion. Impossible numbers indict the measurement first — calibrate against the bottleneck before believing any graph.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Two sweeps change loss AND packet size together, showing collapse. Why is this graph inadmissible, and the correct rerun?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Collapse graphs are always inadmissible</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Confounded causes: two knobs turned, blame unassignable — rerun sweeping one parameter with seeds fixed, holding the other constant. One knob per curve is the causality contract</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Bigger packets always fix loss anyway</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Seeds must vary per run for honesty</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Sweeps are experiments: single variable, controlled rest, fixed randomness. Two-knob collapses prove nothing but enthusiasm — split the curves, pin the seeds, then conclude.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m3_02_nat_firewall_lab.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">3.2 NAT Firewall Lab</div>
+      </a>
+      
+      
+      
+      <a href="./m3_04_topology_miniproject.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">3.4 Topology Miniproject</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(12) || 0;
+      var currentId = "m3_03_simulation_ns3_basics";
+      var courseCode = "PCCSL507";
+      if (!totalTopics || !currentId || !courseCode) return;
+
+      var store = createLearnerState({});
+      var COURSE = courseCode;
+
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
+      }
+
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
+      }
+
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCSL507", topicId: "m3_03_simulation_ns3_basics" });
+  </script>
+  <script>
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

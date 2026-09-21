@@ -399,19 +399,19 @@ describe('progress-change synchronization', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('schedules the full curriculum deterministically with intact prerequisites', () => {
-    assert.equal(manifest.topics.length, 435);
+    assert.equal(manifest.topics.length, 486);
     const config = { targetType: 'completion', minutesPerDay: 60 };
     const first = Planner.buildStudyPlan(manifest, none, null, config, NOW);
     const second = Planner.buildStudyPlan(manifest, none, null, config, NOW);
     assert.equal(JSON.stringify(first), JSON.stringify(second));
     assert.equal(first.status, 'on_track');
-    assert.equal(first.remainingTopics.length, 435);
+    assert.equal(first.remainingTopics.length, 486);
     assert.ok(first.estimatedDays > 0);
     // Prerequisite order holds across every daily bucket.
     const dayOf = new Map();
@@ -436,7 +436,7 @@ describe('live 435-topic repository', () => {
     }
     // Exam and review targets stay meaningful on the live graph.
     const exam = Planner.buildStudyPlan(manifest, none, null, { targetType: 'exam', targetValue: 50, minutesPerDay: 60 }, NOW);
-    assert.ok(exam.remainingTopics.length > 0 && exam.remainingTopics.length < 435);
+    assert.ok(exam.remainingTopics.length > 0 && exam.remainingTopics.length < 486);
     const journey = buildJourneyModel(manifest, none, { planConfig: config, now: NOW });
     assert.equal(journey.planStatus, 'on_track');
     assert.ok(journey.recommended !== null);

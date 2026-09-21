@@ -420,15 +420,15 @@ if (fs.existsSync('dist')) {
     for (const line of formatGraphReport(analysis)) console.log(line);
     // 8. Topic manifest integrity (scripts/topic-manifest.js): same graph,
     // no rebuild. Fails on structural problems, edge disagreement, and
-    // drift from the known migration baseline (435 topics, 435 metadata).
+    // drift from the known migration baseline (486 topics, 486 metadata).
     if (analysis.errors.length === 0) {
       const manifest = buildTopicManifestFromGraph(graph, analysis, { curriculumDoc });
       for (const e of validateTopicManifest(manifest, { graph })) fail(`topic-manifest: ${e}`);
-      if (manifest.aggregates.totalTopics !== 435) {
-        fail(`topic-manifest: expected 435 topics (migration baseline) — actual: ${manifest.aggregates.totalTopics}`);
+      if (manifest.aggregates.totalTopics !== 486) {
+        fail(`topic-manifest: expected 486 topics (migration baseline) — actual: ${manifest.aggregates.totalTopics}`);
       }
-      if (manifest.aggregates.metadataTopics !== 435) {
-        fail(`topic-manifest: expected 435 metadata topics (migration baseline) — actual: ${manifest.aggregates.metadataTopics}`);
+      if (manifest.aggregates.metadataTopics !== 486) {
+        fail(`topic-manifest: expected 486 metadata topics (migration baseline) — actual: ${manifest.aggregates.metadataTopics}`);
       }
       console.log(formatManifestSummary(manifest));
     }

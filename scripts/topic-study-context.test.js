@@ -6,7 +6,7 @@
  * completed/incomplete states, ancestor completion, root/leaf flags,
  * navigation boundaries, invalid ids, static URL generation, learner-state
  * updates with next-recommendation advance, representative template checks,
- * and a full 435-topic compatibility sweep over the live repository.
+ * and a full 486-topic compatibility sweep over the live repository.
  *
  * Run: npm test  (node --test scripts/topic-study-context.test.js)
  */
@@ -163,7 +163,7 @@ describe('static template wiring', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
@@ -195,6 +195,6 @@ describe('live 435-topic repository', () => {
       }
       checked += 1;
     }
-    assert.equal(checked, 435);
+    assert.equal(checked, 486);
   });
 });

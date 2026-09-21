@@ -341,13 +341,13 @@ describe('event synchronization', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('queues reviews deterministically on the full graph', () => {
-    assert.equal(manifest.topics.length, 435);
+    assert.equal(manifest.topics.length, 486);
     const getStatus = (c, id) => (id === 'm1_01_random_variables_pmf_cdf' || id === 'm1_02_expectation_mean_variance' ? 'completed' : 'not_started');
     const getTs = (c, id) => {
       if (id === 'm1_01_random_variables_pmf_cdf') return NOW - 20 * DAY;

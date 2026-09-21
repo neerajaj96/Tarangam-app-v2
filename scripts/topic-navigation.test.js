@@ -199,13 +199,13 @@ describe('navigation leaves learner state and engines untouched', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('matches static build order to canonical neighbors for every topic', () => {
-    assert.equal(manifest.topics.length, 435);
+    assert.equal(manifest.topics.length, 486);
     for (const courseDir of fs.readdirSync('content')) {
       const ids = listTopicFiles(`content/${courseDir}`)
         .filter((f) => f.endsWith('.md'))

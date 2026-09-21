@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 4.5 Trustzone Debug Miniproject</title>
+<meta name="description" content="Microcontrollers (PBCST504) — 4.5 Trustzone Debug Miniproject | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 4.5 Trustzone Debug Miniproject">
+<meta property="og:description" content="Microcontrollers (PBCST504) study notes: 4.5 Trustzone Debug Miniproject">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Microcontrollers</span>
+        <span class="tag">PBCST504</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block " data-mod="1">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Embedded Foundations &amp; ARM</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_embedded_systems_and_processor_types.html" class="topic-link " id="topic-m1_01_embedded_systems_and_processor_types">
+            <span class="topic-dot"></span>
+            <span>1.1 Embedded Systems And Processor Types</span>
+          </a>
+          <a href="./m1_02_embedded_c_essentials.html" class="topic-link " id="topic-m1_02_embedded_c_essentials">
+            <span class="topic-dot"></span>
+            <span>1.2 Embedded C Essentials</span>
+          </a>
+          <a href="./m1_03_arm_architecture_and_cortex_m.html" class="topic-link " id="topic-m1_03_arm_architecture_and_cortex_m">
+            <span class="topic-dot"></span>
+            <span>1.3 Arm Architecture And Cortex M</span>
+          </a>
+          <a href="./m1_04_cortex_m23_m33_armv8m.html" class="topic-link " id="topic-m1_04_cortex_m23_m33_armv8m">
+            <span class="topic-dot"></span>
+            <span>1.4 Cortex M23 M33 Armv8m</span>
+          </a>
+          <a href="./m1_05_registers_memory_bus.html" class="topic-link " id="topic-m1_05_registers_memory_bus">
+            <span class="topic-dot"></span>
+            <span>1.5 Registers Memory Bus</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>STM32 &amp; Peripherals</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_stm32_family_and_u575.html" class="topic-link " id="topic-m2_01_stm32_family_and_u575">
+            <span class="topic-dot"></span>
+            <span>2.1 Stm32 Family And U575</span>
+          </a>
+          <a href="./m2_02_power_management_and_low_power.html" class="topic-link " id="topic-m2_02_power_management_and_low_power">
+            <span class="topic-dot"></span>
+            <span>2.2 Power Management And Low Power</span>
+          </a>
+          <a href="./m2_03_ide_hal_first_program_led.html" class="topic-link " id="topic-m2_03_ide_hal_first_program_led">
+            <span class="topic-dot"></span>
+            <span>2.3 Ide Hal First Program LED</span>
+          </a>
+          <a href="./m2_04_displays_keypad_relay.html" class="topic-link " id="topic-m2_04_displays_keypad_relay">
+            <span class="topic-dot"></span>
+            <span>2.4 Displays Keypad Relay</span>
+          </a>
+          <a href="./m2_05_analog_io_timers_rtc.html" class="topic-link " id="topic-m2_05_analog_io_timers_rtc">
+            <span class="topic-dot"></span>
+            <span>2.5 Analog Io Timers Rtc</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Serial Communication</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_serial_basics_and_terminal.html" class="topic-link " id="topic-m3_01_serial_basics_and_terminal">
+            <span class="topic-dot"></span>
+            <span>3.1 Serial Basics And Terminal</span>
+          </a>
+          <a href="./m3_02_usart.html" class="topic-link " id="topic-m3_02_usart">
+            <span class="topic-dot"></span>
+            <span>3.2 Usart</span>
+          </a>
+          <a href="./m3_03_i2c_sensor_lcd.html" class="topic-link " id="topic-m3_03_i2c_sensor_lcd">
+            <span class="topic-dot"></span>
+            <span>3.3 I2c Sensor Lcd</span>
+          </a>
+          <a href="./m3_04_spi_eeprom.html" class="topic-link " id="topic-m3_04_spi_eeprom">
+            <span class="topic-dot"></span>
+            <span>3.4 Spi Eeprom</span>
+          </a>
+          <a href="./m3_05_can_usb.html" class="topic-link " id="topic-m3_05_can_usb">
+            <span class="topic-dot"></span>
+            <span>3.5 Can Usb</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block open" data-mod="4">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M4</span>
+          <span>IoT, RTOS &amp; Project</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m4_01_iot_mqtt_coap.html" class="topic-link " id="topic-m4_01_iot_mqtt_coap">
+            <span class="topic-dot"></span>
+            <span>4.1 Iot Mqtt Coap</span>
+          </a>
+          <a href="./m4_02_wireless_gsm_ble_lora_security.html" class="topic-link " id="topic-m4_02_wireless_gsm_ble_lora_security">
+            <span class="topic-dot"></span>
+            <span>4.2 Wireless GSM Ble Lora Security</span>
+          </a>
+          <a href="./m4_03_rtos_freertos_tasks.html" class="topic-link " id="topic-m4_03_rtos_freertos_tasks">
+            <span class="topic-dot"></span>
+            <span>4.3 Rtos Freertos Tasks</span>
+          </a>
+          <a href="./m4_04_freertos_ipc_timing.html" class="topic-link " id="topic-m4_04_freertos_ipc_timing">
+            <span class="topic-dot"></span>
+            <span>4.4 Freertos IPC Timing</span>
+          </a>
+          <a href="./m4_05_trustzone_debug_miniproject.html" class="topic-link active" id="topic-m4_05_trustzone_debug_miniproject">
+            <span class="topic-dot"></span>
+            <span>4.5 Trustzone Debug Miniproject</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel" role="status">0 of 20 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" role="status" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <a href="../course.html?course=PBCST504">PBCST504</a>
+        <span class="crumb-sep">/</span>
+        <a href="../course.html?course=PBCST504#module-4">Module 4</a>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">4.5 Trustzone Debug Miniproject</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 4</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#the-problem" class="jump-pill">the-problem</a>
+    <a href="#words-first" class="jump-pill">words-first</a>
+    <a href="#formal-theory" class="jump-pill">formal-theory</a>
+    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
+    <a href="#watch-out-recap" class="jump-pill">watch-out-recap</a>
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>TrustZone Deployment, Debugging &amp; Mini-Project</h1>
+<p><strong>What problem shipping trustworthy firmware poses, how Secure/Non-secure partitioning deploys on the STM32U575, how systematic debugging plus optimisation tame real bugs, and how the mandatory hardware mini-project is scoped and marked.</strong></p>
+<p><a id="the-problem"></a></p>
+<h2 id="1-start-here-the-problem-before-any-solution-absolute-beginn">1. Start Here: The Problem Before Any Solution (Absolute Beginner)</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-deployment-vocabulary">2. Words First — Deployment Vocabu… →</a></p>
+<p>All course skills must ship as one trustworthy gadget: keys guarded, radio working, battery lasting, bugs found fast. The problem: partition the firmware into worlds, prove each half, and demo a working device. The U575&#39;s TrustZone plus a debugging method plus a scoped project plan close the course.</p>
+<p>Tiny beginner example. Smart room node: temperature (I2C) displayed (LCD), reported over radio hourly, keys vaulted, battery two years. Secure world: keys, crypto, attestation. Non-secure: sensors, display, radio, FreeRTOS tasks. Debug probe watches both; power profiler confirms sleep.</p>
+<p>Analogy as support, then dropped. Think of opening a shop: vault installed first (Secure), shop floor stocked (Non-secure), inspector checks wiring (debug), accountant verifies margins (power), opening day demo (mini-project). From here on we use exact terms only: partition plan, veneer, secure fault, scope.</p>
+<p>Abbreviations defined on first use: Software Development Kit (SDK) partition templates, Secure Fault (the TrustZone violation exception). Symbols: none.</p>
+<table>
+<thead>
+<tr>
+<th>Question to ask</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>What goes Secure?</td>
+<td>Keys, crypto, attestation, boot, veneers — minimal attack surface</td>
+</tr>
+<tr>
+<td>What goes Non-secure?</td>
+<td>App logic, drivers, radio stacks, tasks — everything replaceable</td>
+</tr>
+<tr>
+<td>What proves it works?</td>
+<td>Debug evidence + power numbers + demo, documented</td>
+</tr>
+</tbody></table>
+<p><a id="words-first"></a></p>
+<h2 id="2-words-first-deployment-vocabulary">2. Words First — Deployment Vocabulary</h2>
+<p class="secnav"><a href="#1-start-here-the-problem-before-any-solution-absolute-beginn">← 1. Start Here: The Problem Before …</a><span class="secnav-sep">·</span><a href="#3-formal-theory-partition-debug-optimise">3. Formal Theory — Partition, Debu… →</a></p>
+<table>
+<thead>
+<tr>
+<th>Term (abbreviation expanded on first use)</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Partition plan</strong></td>
+<td>Written list: every flash region, RAM block, and peripheral labelled Secure/Non-secure/Callable before coding — the vault blueprint.</td>
+</tr>
+<tr>
+<td><strong>Veneer functions</strong></td>
+<td>The only legal gates (M1.04): Non-secure calls land here, arguments validated, then Secure serves — narrow by design.</td>
+</tr>
+<tr>
+<td><strong>SecureFault debugging</strong></td>
+<td>Violation reads as an exception with fault registers naming the offender address — evidence, not mystery.</td>
+</tr>
+<tr>
+<td><strong>Optimisation axes</strong></td>
+<td>Size (−Os, const tables to flash), speed (hot paths to RAM, -O2), power (sleep depths, clock trims) — one axis at a time, measured.</td>
+</tr>
+<tr>
+<td><strong>Mini-project scope</strong></td>
+<td>Sense + decide + drive + report + vault: one sensor, one output, one link, keys guarded, battery story told — demoable in ten minutes.</td>
+</tr>
+</tbody></table>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Shop Opening</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Vault first (partition + keys), stock the floor (app + drivers), inspector visits (debug faults to zero), accountant signs (power budget met), doors open (demo). Skipping straight to doors-open is how projects fail the night before evaluation.</p>
+</div></details><p><a id="formal-theory"></a></p>
+<h2 id="3-formal-theory-partition-debug-optimise">3. Formal Theory — Partition, Debug, Optimise</h2>
+<p class="secnav"><a href="#2-words-first-deployment-vocabulary">← 2. Words First — Deployment Vocabu…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
+<p><strong>U575 partition (numbered):</strong> (1) Secure flash/RAM for boot, keys, crypto, veneers; Non-secure flash/RAM for app + tasks; shared veneer region callable. (2) Peripherals split: radio/UI to Non-secure, crypto/RTC-backup/keys to Secure. (3) SAU + IDAU + MPC/PPC gates enforce labels (course-level: boot code programs them, faults prove them). (4) Debug authenticated per lifecycle (open during dev, locked for release — M1.04&#39;s gate).</p>
+<p><strong>Debugging method (the viva answer):</strong> reproduce → isolate (binary-search the code half) → inspect (breakpoint/watch/fault registers) → hypothesise one cause → fix → regression-test. Optimise only measured hotspots: profiler before <code>-O</code> flags; <code>volatile</code> correctness before speed; sleep profiling (M2.02) before MHz tuning.</p>
+<p><strong>Mini-project rubric shape:</strong> working demo (sense-decide-drive-report live) + vault evidence (keys Secure, fault demo?) + power story ($I_{avg}$ math) + report (partition plan, schematics, code) + viva (any module questioned). Scope discipline: one sensor, one actuator, one link — depth over breadth, finished over fancy.</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Deployment Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Secure = keys/crypto/boot/veneers minimal · Non-secure = replaceable everything · faults name offenders · debug = reproduce/isolate/inspect/hypothesise/regress · optimise measured axes singly · project = sensor + output + link + vault + power story.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Demo-Day Hardware</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Untested power supplies, loose jumpers, and uncharged laptop batteries kill more demos than code bugs. Pack spares, freeze code the night before, rehearse the ten-minute story — logistics is part of engineering.</p>
+</div></details><p><a id="worked-example"></a></p>
+<h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
+<p class="secnav"><a href="#3-formal-theory-partition-debug-optimise">← 3. Formal Theory — Partition, Debu…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Scope a room node: I2C temperature, LCD, hourly radio report, vaulted keys, 2-year battery claim. (a) Partition list? (b) Power proof shape? (c) Debug plan when reports stop but display works?</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Plan, Proof, Method</div><div class="step-content"><p>(a) Secure: keys, crypto, boot, veneers. Non-secure: sensor/LCD/radio/tasks. Callable veneers: &quot;encrypt-and-sign(report)&quot;. (b) Duty-cycle $I_{avg}$ math (M2.02) + measured sleep current + battery capacity ÷ $I_{avg}$ ≥ 2 years. (c) Display works ⇒ sensor+tasks alive; isolate radio path: link budget? broker credentials? veneer faults? — binary-search halves, fault registers witness.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Partition written before code, power proven by division, bugs halved systematically — the deployment triad that turns coursework into a shippable gadget.</p>
+</div></div><p><a id="watch-out-recap"></a></p>
+<h2 id="5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam Recap</h2>
+<p class="secnav"><a href="#4-ktu-worked-example-step-by-step">← 4. KTU Worked Example Step by Step</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
+<p>Common mistakes and confusions:</p>
+<ul>
+<li>Vaulting everything Secure. Bloated Secure worlds are unauditable — minimal Secure, maximal Non-secure.</li>
+<li>Optimising unmeasured code. Profiler first; intuition about hotspots is usually wrong.</li>
+<li>Scoping three projects as one. One sensor-output-link-vault chain done well beats three half-wired dreams.</li>
+</ul>
+<p>Exam recap: partition contents per world; veneer-only entry; fault-register evidence; debug five-step method; single-axis optimisation; mini-project five-part rubric.</p>
+<p><a id="self-check"></a></p>
+<h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#5-watch-out-limitations-and-exam-recap">← 5. Watch Out, Limitations and Exam…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Partition a door-lock firmware: PIN store, PIN checker, Bluetooth stack, LED, log memory. Which world each, and where do calls cross?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>All Secure — safest is everything guarded</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Secure: PIN store + checker (+boot/keys); Non-secure: Bluetooth, LED, logs; crossings only via &quot;verify(pin)→yes/no&quot; veneers — minimal Secure stays auditable, radio bugs can&#39;t reach PIN bytes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>All Non-secure — TrustZone is optional decoration</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>PIN in Non-secure flash is fine with TLS</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Minimal-vault rule: guard secrets and their checkers, exile everything replaceable, narrow the gates to yes/no answers. &quot;Everything Secure&quot; fails auditability — the mark rewards restraint.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Reports stop; display and sensing continue. Give the isolation sequence and the evidence each step yields.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Rewrite the radio driver immediately</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Halve the path: sensor/tasks alive (display proves) ⇒ suspect radio/broker/credentials/veneers; check fault registers (SecureFault?), link/reception, broker logs, credential validity — each check eliminates a half with witness evidence, never guesses</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Reboot until it works; document nothing</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Blame the cloud provider in the report</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Binary search with witnesses: display-alive eliminates three suspects at once; registers and logs eliminate the rest one by one. Method beats memory — viva rewards the sequence, not the lucky guess.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Battery claim &quot;2 years&quot; with no math: what proof does the rubric demand?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Trust the ULP logo — marketing suffices</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Duty-cycle $I_{avg}$ computation (active + sleep terms), measured sleep current, battery capacity ÷ $I_{avg}$ ≥ claimed life, plus stated assumptions (temperature, self-discharge, radio retries) — claims without division are wishes</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Bigger battery retrofitted at demo</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Claims need no evidence in projects</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Power stories are arithmetic with witnesses: formula, measurement, capacity, margin. The M2.02 law returns at project scale — quote all four or the claim is decoration.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m4_04_freertos_ipc_timing.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">4.4 Freertos IPC Timing</div>
+      </a>
+      
+      
+      
+      <div></div>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(20) || 0;
+      var currentId = "m4_05_trustzone_debug_miniproject";
+      var courseCode = "PBCST504";
+      if (!totalTopics || !currentId || !courseCode) return;
+
+      var store = createLearnerState({});
+      var COURSE = courseCode;
+
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
+      }
+
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
+      }
+
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PBCST504", topicId: "m4_05_trustzone_debug_miniproject" });
+  </script>
+  <script>
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

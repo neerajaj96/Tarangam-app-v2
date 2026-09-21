@@ -4,7 +4,7 @@
  * Covers the pure model in assets/assessment.js (via scripts/assessment.js)
  * plus its bank validation, session engine, evaluation, persistence, and
  * Learning Journey / Dashboard / Explorer / Topic Study Context /
- * assessment-page integrations against the full 435-topic repository.
+ * assessment-page integrations against the full 486-topic repository.
  * Current time is always injected — never the real clock.
  *
  * Run: npm test  (node --test scripts/assessment.test.js)
@@ -675,57 +675,57 @@ describe('coverage report reproducibility', () => {
   });
   it('reports totals, breakdowns, and gaps without implying uncovered work is assessed', () => {
     const report = fs.readFileSync('docs/assessment-coverage.md', 'utf-8');
-    assert.ok(report.includes('Questions: 508'));
-    assert.ok(report.includes('Covered topics: 435 of 435'));
+    assert.ok(report.includes('Questions: 610'));
+    assert.ok(report.includes('Covered topics: 486 of 486'));
     assert.ok(report.includes('Uncovered topics: 0'));
-    assert.ok(report.includes('multiple_choice | 435'));
-    assert.ok(report.includes('true_false | 68'));
+    assert.ok(report.includes('multiple_choice | 486'));
+    assert.ok(report.includes('true_false | 119'));
     assert.ok(report.includes('short_answer | 5'));
     assert.ok(report.includes('| GAMAT301 | 30 | 24 |'));
     assert.ok(report.includes('Exam-relevant coverage'));
     assert.ok(report.includes('Single-question topics: 362'));
-    assert.ok(report.includes('Multi-question topics: 73'));
+    assert.ok(report.includes('Multi-question topics: 124'));
     assert.ok(report.includes('not assessed'));
     assert.ok(!/uncovered[^]*assessed as|assesses uncovered/i.test(report));
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
   const liveBank = JSON.parse(fs.readFileSync('data/assessments.json', 'utf-8'));
 
   it('validates the shipped bank with deterministic live coverage', () => {
-    assert.equal(manifest.topics.length, 435);
+    assert.equal(manifest.topics.length, 486);
     assert.deepEqual(Assessment.validateAssessmentBank(liveBank, manifest), []);
     const coverage = Assessment.getAssessmentCoverage(liveBank, manifest);
-    assert.equal(coverage.totalQuestions, 508);
-    assert.equal(coverage.coveredCount, 435);
-    assert.equal(coverage.totalTopics, 435);
+    assert.equal(coverage.totalQuestions, 610);
+    assert.equal(coverage.coveredCount, 486);
+    assert.equal(coverage.totalTopics, 486);
     assert.equal(coverage.uncoveredTopics.length, 0);
     assert.equal(
       JSON.stringify(Assessment.getAssessmentCoverage(liveBank, manifest)),
       JSON.stringify(Assessment.getAssessmentCoverage(liveBank, manifest))
     );
-    assert.equal(Assessment.getAssessmentQuestionCount(liveBank), 508);
-    assert.deepEqual(Assessment.getCoveredTopics(liveBank, manifest).length, 435);
+    assert.equal(Assessment.getAssessmentQuestionCount(liveBank), 610);
+    assert.deepEqual(Assessment.getCoveredTopics(liveBank, manifest).length, 486);
     assert.deepEqual(Assessment.getUncoveredTopics(liveBank, manifest).length, 0);
     const perCourse = Assessment.getQuestionsPerCourse(liveBank);
-    assert.equal(perCourse.reduce((a, r) => a + r.questionCount, 0), 508);
+    assert.equal(perCourse.reduce((a, r) => a + r.questionCount, 0), 610);
     assert.deepEqual(perCourse.find((r) => r.courseCode === 'GAMAT301'), { courseCode: 'GAMAT301', questionCount: 30 });
     assert.deepEqual(perCourse.find((r) => r.courseCode === 'GXEST104'), { courseCode: 'GXEST104', questionCount: 39 });
     const coveredPerCourse = Assessment.getCoveredTopicsPerCourse(liveBank, manifest);
-    assert.equal(coveredPerCourse.reduce((a, r) => a + r.coveredCount, 0), 435);
+    assert.equal(coveredPerCourse.reduce((a, r) => a + r.coveredCount, 0), 486);
     const perModule = Assessment.getQuestionsPerModule(liveBank, manifest);
-    assert.equal(perModule.reduce((a, r) => a + r.questionCount, 0), 508);
-    assert.equal(perModule.length, 64);
-    assert.deepEqual(Assessment.getQuestionTypeDistribution(liveBank), { multiple_choice: 435, true_false: 68, short_answer: 5 });
+    assert.equal(perModule.reduce((a, r) => a + r.questionCount, 0), 610);
+    assert.equal(perModule.length, 75);
+    assert.deepEqual(Assessment.getQuestionTypeDistribution(liveBank), { multiple_choice: 486, true_false: 119, short_answer: 5 });
     assert.equal(Assessment.getSingleQuestionTopics(liveBank, manifest).length, 362);
-    assert.equal(Assessment.getMultiQuestionTopics(liveBank, manifest).length, 73);
+    assert.equal(Assessment.getMultiQuestionTopics(liveBank, manifest).length, 124);
     const examCov = Assessment.getExamQuestionCoverage(liveBank, manifest);
-    assert.equal(examCov.totalExamTopics, 435);
-    assert.equal(examCov.coveredExamTopics, 435);
+    assert.equal(examCov.totalExamTopics, 486);
+    assert.equal(examCov.coveredExamTopics, 486);
     assert.equal(examCov.uncoveredExamTopics, 0);
     // Accepted-answer variants already shipped keep evaluating exactly.
     const hyphen = liveBank.questions.find((q) => q.id === 'q_gamat301_m3_01_02');

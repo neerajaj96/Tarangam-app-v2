@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0f17">
+<title>Tarangam — 1.2 Numpy Basics</title>
+<meta name="description" content="Machine Learning Lab (PCCSL508) — 1.2 Numpy Basics | Tarangam KTU 2024 study notes with worked steps and self-check quizzes.">
+<meta property="og:title" content="Tarangam — 1.2 Numpy Basics">
+<meta property="og:description" content="Machine Learning Lab (PCCSL508) study notes: 1.2 Numpy Basics">
+<meta property="og:type" content="article">
+<script>
+  // Pre-paint: apply stored theme/size before first render (no FOUC).
+  try {
+    var t = localStorage.getItem('user_preferred_theme') || 'dark';
+    var s = localStorage.getItem('user_preferred_font_size') || 'md';
+    document.documentElement.setAttribute('data-theme-pre', t);
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.setAttribute('data-theme', t);
+      document.body.setAttribute('data-size', s);
+    });
+  } catch (e) { /* private mode: fall through to defaults */ }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body data-theme="dark" data-size="md">
+<script>
+  // Apply stored prefs synchronously during parsing (pre-paint, no FOUC).
+  try {
+    document.body.setAttribute('data-theme', localStorage.getItem('user_preferred_theme') || 'dark');
+    document.body.setAttribute('data-size', localStorage.getItem('user_preferred_font_size') || 'md');
+  } catch (e) { /* private mode: keep defaults */ }
+</script>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<div class="reading-progress-bar" id="readingProgressBar"></div>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="brand">
+      <span class="brand-mark">त</span>
+      <div class="brand-text">
+        <span class="brand-name">Tarangam</span>
+        <span class="brand-sub">KTU 2024 &middot; S5 CSE</span>
+      </div>
+    </a>
+
+    <div class="subject-switch" id="subjectSwitch">
+      <div class="subject-card">
+        <span>Machine Learning Lab</span>
+        <span class="tag">PCCSL508</span>
+      </div>
+    </div>
+
+    <nav class="module-tree" id="moduleTree" aria-label="Module navigation">
+      
+      <div class="module-block open" data-mod="1">
+        <button class="module-head" aria-expanded="true" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M1</span>
+          <span>Python for ML</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m1_01_python_variables_lists_functions.html" class="topic-link " id="topic-m1_01_python_variables_lists_functions">
+            <span class="topic-dot"></span>
+            <span>1.1 Python Variables Lists Functions</span>
+          </a>
+          <a href="./m1_02_numpy_basics.html" class="topic-link active" id="topic-m1_02_numpy_basics">
+            <span class="topic-dot"></span>
+            <span>1.2 Numpy Basics</span>
+          </a>
+          <a href="./m1_03_pandas_basics.html" class="topic-link " id="topic-m1_03_pandas_basics">
+            <span class="topic-dot"></span>
+            <span>1.3 Pandas Basics</span>
+          </a>
+          <a href="./m1_04_matplotlib_basics.html" class="topic-link " id="topic-m1_04_matplotlib_basics">
+            <span class="topic-dot"></span>
+            <span>1.4 Matplotlib Basics</span>
+          </a>
+          <a href="./m1_05_traintest_features_target.html" class="topic-link " id="topic-m1_05_traintest_features_target">
+            <span class="topic-dot"></span>
+            <span>1.5 Traintest Features Target</span>
+          </a>
+          <a href="./m1_06_sklearn_environment_setup.html" class="topic-link " id="topic-m1_06_sklearn_environment_setup">
+            <span class="topic-dot"></span>
+            <span>1.6 Sklearn Environment Setup</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="2">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M2</span>
+          <span>Regression &amp; Classification</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m2_01_linear_regression_housing.html" class="topic-link " id="topic-m2_01_linear_regression_housing">
+            <span class="topic-dot"></span>
+            <span>2.1 Linear Regression Housing</span>
+          </a>
+          <a href="./m2_02_polynomial_regression_mpg.html" class="topic-link " id="topic-m2_02_polynomial_regression_mpg">
+            <span class="topic-dot"></span>
+            <span>2.2 Polynomial Regression Mpg</span>
+          </a>
+          <a href="./m2_03_ridge_lasso_regression.html" class="topic-link " id="topic-m2_03_ridge_lasso_regression">
+            <span class="topic-dot"></span>
+            <span>2.3 RIDGE LASSO Regression</span>
+          </a>
+          <a href="./m2_04_classification_experiments.html" class="topic-link " id="topic-m2_04_classification_experiments">
+            <span class="topic-dot"></span>
+            <span>2.4 Classification Experiments</span>
+          </a>
+          <a href="./m2_05_evaluation_metrics_lab.html" class="topic-link " id="topic-m2_05_evaluation_metrics_lab">
+            <span class="topic-dot"></span>
+            <span>2.5 Evaluation Metrics Lab</span>
+          </a>
+        </div>
+      </div>
+      <div class="module-block " data-mod="3">
+        <button class="module-head" aria-expanded="false" onclick="this.parentElement.classList.toggle('open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('open') ? 'true' : 'false');">
+          <span class="module-num">M3</span>
+          <span>Clustering, Ensembles &amp; Capstone</span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="topic-list">
+          <a href="./m3_01_kmeans_clustering_lab.html" class="topic-link " id="topic-m3_01_kmeans_clustering_lab">
+            <span class="topic-dot"></span>
+            <span>3.1 Kmeans Clustering Lab</span>
+          </a>
+          <a href="./m3_02_hierarchical_clustering_lab.html" class="topic-link " id="topic-m3_02_hierarchical_clustering_lab">
+            <span class="topic-dot"></span>
+            <span>3.2 Hierarchical Clustering Lab</span>
+          </a>
+          <a href="./m3_03_ensemble_methods_lab.html" class="topic-link " id="topic-m3_03_ensemble_methods_lab">
+            <span class="topic-dot"></span>
+            <span>3.3 Ensemble Methods Lab</span>
+          </a>
+          <a href="./m3_04_end_to_end_miniproject.html" class="topic-link " id="topic-m3_04_end_to_end_miniproject">
+            <span class="topic-dot"></span>
+            <span>3.4 End To End Miniproject</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="progress-container">
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="progressLabel" role="status">0 of 15 completed</span>
+          <button id="resetProgress" style="background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:10px; font-family:var(--font-mono);" title="Reset progress">Reset</button>
+        </div>
+        <div class="progress-meta" style="margin-top:4px;">
+          <span id="reviewLabel" role="status" title="Visited topics untouched for over 7 days — ripe for spaced review"></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar" onclick="var sb=document.getElementById('sidebar'); sb.classList.toggle('mobile-open'); this.setAttribute('aria-expanded', sb.classList.contains('mobile-open') ? 'true' : 'false');">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      
+      <div class="crumb" id="crumb">
+        <a href="../course.html?course=PCCSL508">PCCSL508</a>
+        <span class="crumb-sep">/</span>
+        <a href="../course.html?course=PCCSL508#module-1">Module 1</a>
+        <span class="crumb-sep">/</span>
+        <span style="color:var(--ink); font-weight:600;">1.2 Numpy Basics</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme" onclick="cycleTheme()" title="Press 'T' to cycle themes">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 107 7 7 7 0 00-7-7zm0 12.5A5.5 5.5 0 1115.5 10 5.5 5.5 0 0110 15.5z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" onclick="document.getElementById('settingsVeil').classList.add('open')">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.4 4.6l-1.4 1.4M6 12.6l-1.4 1.4M15.4 15.4l-1.4-1.4M6 7.4L4.6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="content">
+      <div class="topic-header">
+  <div class="topic-badges">
+    <span class="badge badge-accent">MODULE 1</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
+    <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
+    <span class="badge">🎯 KTU 2024 SCHEME</span>
+  </div>
+  <div class="quick-jump-bar">
+    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+  </div>
+</div>
+<h1>NumPy: Arrays &amp; Vector Math</h1>
+<p><strong>Aim:</strong> think in whole-array operations — the speed and shape language every ML experiment speaks.</p>
+<p><strong>Theory (one paragraph):</strong> A NumPy <code>ndarray</code> is a typed, fixed-shape grid (all floats, 1000×5) living in contiguous memory; lists are scattered pointers. Consequence: array math runs in compiled C (100× faster loops) and shapes mismatch loudly instead of silently. Broadcasting stretches small shapes across big ones by rule (trailing axes, size-1 stretches) — convenient and the #1 silent-bug factory.</p>
+<p><strong>Dataset meaning:</strong> a 2-D array <em>is</em> a dataset: rows = samples, columns = features (<code>X.shape == (n_samples, n_features)</code> — memorise this sentence).</p>
+<h2 id="1-procedure-step-by-step">1. Procedure Step by Step</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-expected-output-and-result">2. Expected Output and Result →</a></p>
+<ol>
+<li><code>pip install numpy</code>, <code>import numpy as np</code>, verify <code>np.__version__</code>.</li>
+<li>Run each block; predict shapes before printing (shape-guessing is the skill).</li>
+</ol>
+<pre><code class="language-python">import numpy as np
+a = np.array([1.0, 2.0, 3.0])     # 1-D, dtype float64, shape (3,)
+b = np.array([[1, 2], [3, 4]])    # 2-D, shape (2, 2): rows, columns
+print(a * 2, a + 10)              # elementwise: no loops written, none needed
+print(b[:, 0], b[1, :])           # column 0, row 1 (slice: rows, cols)
+print(b.reshape(4))               # new view, same data (cheap, shares memory)
+print(a + np.array([10]))         # broadcast: (3,) + (1,) -&gt; (3,) stretched
+print(np.mean(b, axis=0))         # per-column means: axis names the collapsed dim
+</code></pre>
+<p>Line-by-line honesty: <code>b[:, 0]</code> vs <code>b[1, :]</code> (colon = all along that axis); <code>axis=0</code> collapses rows (result per column — say it aloud); <code>reshape</code> shares memory (mutating the view mutates the original!); broadcasting <code>(3,)+(1,)</code> works but <code>(3,)+(2,)</code> errors — rules, not wishes.</p>
+<p><strong>Input/features/target:</strong> <code>X = b</code> (features, shape (2,2)); a column sliced out (<code>b[:, 1]</code>) is tomorrow&#39;s <em>target</em> <code>y</code> (shape (2,) — note: 1-D, not (2,1)!).</p>
+<h2 id="2-expected-output-and-result">2. Expected Output and Result</h2>
+<p class="secnav"><a href="#1-procedure-step-by-step">← 1. Procedure Step by Step</a><span class="secnav-sep">·</span><a href="#3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questi… →</a></p>
+<p>Elementwise prints, correct slices, <code>(4,)</code> reshape, broadcast sum <code>[11,12,13]</code>, column means <code>[2,3]</code>. Result: loops replaced by expressions; shapes predicted before printed.</p>
+<p><strong>How to verify:</strong> hand-compute <code>b[:,0]</code> mean (2.0) before running <code>np.mean</code> — agreement proves axis understanding.</p>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Broadcast Silence</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>(100,5) + (5,)</code> works (row-wise stretch — intended) but <code>(100,5) + (100,)</code> errors while <code>(100,5) + (1,5)</code> &quot;works&quot; by stretching rows — a wrong-but-legal stretch silently corrupts math. Print shapes after every operation until instinct forms.</p>
+</div></details><h2 id="3-common-mistakes-and-viva-questions">3. Common Mistakes and Viva Questions</h2>
+<p class="secnav"><a href="#2-expected-output-and-result">← 2. Expected Output and Result</a><span class="secnav-sep">·</span><a href="#4-active-recall-quizzes">4. Active Recall Quizzes →</a></p>
+<table>
+<thead>
+<tr>
+<th>Mistake</th>
+<th>Cure</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>axis</code> backwards (row vs column means swapped)</td>
+<td>axis names the <em>collapsed</em> dimension — say it aloud before coding</td>
+</tr>
+<tr>
+<td>Mutating a reshape view, original changes &quot;mysteriously&quot;</td>
+<td>views share memory — <code>.copy()</code> when independence needed</td>
+</tr>
+<tr>
+<td>Python-looping arrays elementwise</td>
+<td>vectorise: whole-array expressions (100× faster, fewer bug sites)</td>
+</tr>
+</tbody></table>
+<p><strong>Viva:</strong> array vs list (typed contiguous grid vs scattered pointers)? What broadcasts legally (trailing-axes, size-1 rule)? Why is <code>X.shape (n,d)</code> the dataset sentence?</p>
+<p><strong>Checklist:</strong> install+version ☐; shape predicted each print ☐; axis means stated aloud ☐; one broadcast error triggered deliberately ☐.</p>
+<p><a id="self-check"></a></p>
+<h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#3-common-mistakes-and-viva-questions">← 3. Common Mistakes and Viva Questi…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">`np.mean(X)` returned one number but you wanted per-feature means of a (100,5) matrix. What was missing, and what is the rule for axis?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>NumPy cannot do per-column means</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Missing `axis=0`: axis names the *collapsed* dimension — collapse rows (axis 0) to keep one value per column; bare `mean` collapses everything to a scalar</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Transpose first always</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Means need loops by definition</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Axis is the dimension that disappears: say &quot;collapse rows, keep columns&quot; before typing <code>axis=0</code>. The scalar is the symptom of collapsing everything — name the survivor, pick the axis.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">`(100,5) + (5,)` worked but gave wrong science; `(100,5) + (100,)` errored. Explain both using the broadcast rule.</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>NumPy prefers row vectors aesthetically</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Trailing-axis rule: `(5,)` stretches across rows (legal, possibly unintended); `(100,)` aligns against the last axis 5 ≠ 100 (illegal, loud error). Silence is the danger — legal stretches need shape-print verification</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Broadcasting is random by seed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Additions need identical shapes always</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Broadcasting stretches size-1/trailing shapes automatically — convenience with a corruption clause. Print shapes after every arithmetic until the rule is reflex; loud errors are gifts, silent stretches the hazard.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div>
+
+    </main>
+
+    <section class="ts-context" id="tsStudyContext" aria-label="Study context" hidden></section>
+
+    <footer class="pagefoot" id="pagefoot">
+      
+      <a href="./m1_01_python_variables_lists_functions.html" class="nav-card prev" id="prevTopicLink">
+        <span class="dir">&larr; PREVIOUS TOPIC [</span>
+        <div class="ttl">1.1 Python Variables Lists Functions</div>
+      </a>
+      
+      
+      
+      <a href="./m1_03_pandas_basics.html" class="nav-card next" id="nextTopicLink">
+        <span class="dir">NEXT TOPIC ] &rarr;</span>
+        <div class="ttl">1.3 Pandas Basics</div>
+      </a>
+      
+    </footer>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-veil" id="settingsVeil" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Reading preferences">
+    <div class="modal-head">
+      <h2>Reading Preferences</h2>
+      <button class="icon-btn" id="closeSettings" aria-label="Close" onclick="document.getElementById('settingsVeil').classList.remove('open')">
+        <svg width="18" height="18" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Color Theme</span>
+      <div class="theme-row" id="themeRow">
+        <button class="theme-opt" data-theme="dark" onclick="applyThemePreference('dark')"><span class="swatch swatch-dark"></span> Dark</button>
+        <button class="theme-opt" data-theme="light" onclick="applyThemePreference('light')"><span class="swatch swatch-light"></span> Light</button>
+        <button class="theme-opt" data-theme="reading" onclick="applyThemePreference('reading')"><span class="swatch swatch-reading"></span> Sepia</button>
+        <button class="theme-opt" data-theme="aesthetic" onclick="applyThemePreference('aesthetic')"><span class="swatch swatch-aesthetic"></span> Nordic</button>
+      </div>
+    </div>
+    <div class="modal-section">
+      <span class="modal-label">Font Scale</span>
+      <div class="size-row">
+        <button class="size-btn" data-size="sm" onclick="applyFontScaling('sm')">Small</button>
+        <button class="size-btn active" data-size="md" onclick="applyFontScaling('md')">Normal</button>
+        <button class="size-btn" data-size="lg" onclick="applyFontScaling('lg')">Large</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Client-Side Logic Engine -->
+<script>
+  // 1. Theme and Preferences Manager
+  const themes = ['dark', 'light', 'reading', 'aesthetic'];
+  function applyThemePreference(themeName) {
+    document.body.setAttribute('data-theme', themeName);
+    localStorage.setItem('user_preferred_theme', themeName);
+    document.querySelectorAll('.theme-opt').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === themeName);
+    });
+  }
+  function cycleTheme() {
+    const current = document.body.getAttribute('data-theme') || 'dark';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    applyThemePreference(next);
+  }
+  function applyFontScaling(size) {
+    document.body.setAttribute('data-size', size);
+    localStorage.setItem('user_preferred_font_size', size);
+    document.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+  }
+
+  // Restore preferences
+  (function initPreferences() {
+    const storedTheme = localStorage.getItem('user_preferred_theme') || 'dark';
+    const storedFontSize = localStorage.getItem('user_preferred_font_size') || 'md';
+    applyThemePreference(storedTheme);
+    applyFontScaling(storedFontSize);
+  })();
+
+  // 2. Reading Progress Bar (rAF-throttled, passive)
+  (function () {
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var bar = document.getElementById('readingProgressBar');
+      if (bar) bar.style.width = (height > 0 ? (winScroll / height) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  })();
+
+  // 3. Client-Side Topic Completion & Checkmark Tracking (unified
+  // learner state: viewing marks started, completion is explicit, legacy
+  // visited data keeps counting as completed). Classic script closes here;
+  // progress runs as a deferred module below.
+  </script>
+  <script type="module">
+    import { createLearnerState } from '../assets/learner-state.js';
+    (function trackTopicProgress() {
+      var totalTopics = Number(15) || 0;
+      var currentId = "m1_02_numpy_basics";
+      var courseCode = "PCCSL508";
+      if (!totalTopics || !currentId || !courseCode) return;
+
+      var store = createLearnerState({});
+      var COURSE = courseCode;
+
+      function navIds() {
+        var ids = [];
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (href) ids.push(href.replace('.html', '').split('/').pop());
+        });
+        return ids;
+      }
+
+      function completedIds() {
+        return navIds().filter(function (id) { return store.isTopicCompleted(COURSE, id); });
+      }
+
+      store.markTopicStarted(COURSE, currentId);
+
+      function renderCompleteButton() {
+        var host = document.querySelector('.topic-badges');
+        if (!host) return;
+        var done = store.isTopicCompleted(COURSE, currentId);
+        var btn = document.getElementById('tsCompleteBtn');
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'tsCompleteBtn';
+          btn.type = 'button';
+          btn.className = 'ts-complete';
+          btn.onclick = function () {
+            store.toggleTopicCompleted(COURSE, currentId);
+            renderProgress();
+            // Single unified journey event: dashboard, explorer, and the
+            // study context re-read shared localStorage (no polling).
+            document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+              detail: { courseCode: COURSE, topicId: currentId, source: 'topic-page' }
+            }));
+          };
+          host.appendChild(btn);
+        }
+        btn.innerText = done ? '✓ Completed — mark not started' : 'Mark completed';
+        btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      }
+
+      function renderProgress() {
+        var done = completedIds();
+        var fill = document.getElementById('progressFill');
+        var label = document.getElementById('progressLabel');
+        if (fill && label) {
+          var pct = Math.min(100, Math.round((done.length / totalTopics) * 100));
+          fill.style.width = pct + '%';
+          label.innerText = done.length + ' of ' + totalTopics + ' completed';
+        }
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          var href = link.getAttribute('href');
+          if (!href) return;
+          var topicId = href.replace('.html', '').split('/').pop();
+          var old = link.querySelector('.check-mark');
+          if (store.isTopicCompleted(COURSE, topicId)) {
+            link.classList.add('visited');
+            if (!old) {
+              var check = document.createElement('span');
+              check.className = 'check-mark';
+              check.style.marginLeft = 'auto';
+              check.style.color = 'var(--correct)';
+              check.style.fontSize = '12px';
+              check.innerText = '✓';
+              link.appendChild(check);
+            }
+          } else {
+            link.classList.remove('visited');
+            if (old) old.remove();
+          }
+        });
+        renderCompleteButton();
+      }
+
+      renderProgress();
+
+      // Cross-surface sync (unified journey contract): any progress change
+      // from dashboard, explorer, or the study context re-renders this
+      // page's progress without reload. localStorage stays the source.
+      document.addEventListener('tarangam:progress-changed', function () { renderProgress(); });
+      window.addEventListener('storage', function (event) {
+        if (!event.key) return;
+        if (event.key === 'tarangam_topic_state_v1' || event.key.indexOf('tarangam_visited_') === 0) {
+          renderProgress();
+        }
+      });
+
+      // Spaced review (v1 schedule): completed topics untouched for 7+ days
+      // are flagged in the nav; opening one refreshes its timestamp.
+      try {
+        var REVIEW_DUE_MS = 7 * 24 * 3600 * 1000;
+        var stamps = JSON.parse(localStorage.getItem('tarangam_visited_ts_' + COURSE) || '{}') || {};
+        var now = Date.now();
+        var doneIds = completedIds();
+        var due = doneIds.filter(function (id) {
+          var ts = stamps[id];
+          return typeof ts !== 'number' || (now - ts) > REVIEW_DUE_MS;
+        });
+        var idOf = function (link) {
+          var href = link.getAttribute('href') || '';
+          return href.replace('.html', '').split('/').pop();
+        };
+        document.querySelectorAll('.topic-link').forEach(function (link) {
+          if (due.indexOf(idOf(link)) !== -1) {
+            link.classList.add('due');
+            var old = link.querySelector('.check-mark');
+            if (old) old.remove();
+            if (!link.querySelector('.due-mark')) {
+              var mark = document.createElement('span');
+              mark.className = 'due-mark';
+              mark.style.marginLeft = 'auto';
+              mark.style.color = 'var(--accent-warm)';
+              mark.style.fontSize = '12px';
+              mark.title = 'Due for spaced review (unvisited 7+ days)';
+              mark.innerText = '↻';
+              link.appendChild(mark);
+            }
+          }
+        });
+        var reviewLabel = document.getElementById('reviewLabel');
+        if (reviewLabel) {
+          reviewLabel.innerText = due.length
+            ? due.length + ' due for review ↻'
+            : (doneIds.length ? 'all fresh ✓' : '');
+        }
+      } catch (e) { /* private mode: review silently disabled */ }
+
+      var resetBtn = document.getElementById('resetProgress');
+      if (resetBtn) {
+        resetBtn.onclick = function () {
+          store.clearCourseState(COURSE);
+          document.dispatchEvent(new CustomEvent('tarangam:progress-changed', {
+            detail: { courseCode: COURSE, topicId: null, source: 'topic-page-reset' }
+          }));
+          location.reload();
+        };
+      }
+    })();
+  </script>
+  <script type="module">
+    import { initStudyContext } from '../assets/topic-study-context.js';
+    initStudyContext({ courseCode: "PCCSL508", topicId: "m1_02_numpy_basics" });
+  </script>
+  <script>
+
+  // 4. Interactive Quiz Engine (Brilliant-Style Active Recall)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.quiz-widget').forEach((widget, qIdx) => {
+      // De-bias: ~71% of bank answers sit at position B — shuffle options per
+      // load so position carries zero information. data-correct travels with
+      // the button, so scoring is unaffected.
+      const box = widget.querySelector('.quiz-options');
+      if (box && box.children.length > 1) {
+        const btns = Array.from(box.children);
+        for (let i = btns.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = btns[i]; btns[i] = btns[j]; btns[j] = tmp;
+        }
+        btns.forEach(b => box.appendChild(b));
+      }
+      const options = widget.querySelectorAll('.quiz-option-btn');
+      const dropdown = widget.querySelector('.quiz-explanation-dropdown');
+      const legacyExplanation = widget.querySelector('.quiz-explanation');
+
+      options.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.hasAttribute('disabled')) return;
+
+          const isCorrect = btn.dataset.correct === "true";
+          
+          // Disable all options in this widget
+          options.forEach(b => {
+            b.setAttribute('disabled', 'true');
+            if (b.dataset.correct === "true") {
+              b.classList.add('selected-correct');
+            }
+          });
+
+          if (!isCorrect) {
+            btn.classList.add('selected-wrong');
+          }
+
+          if (dropdown) {
+            dropdown.open = true;
+          }
+          if (legacyExplanation) {
+            legacyExplanation.classList.add('revealed');
+          }
+        });
+      });
+    });
+
+    // Mermaid diagrams (CN flowcharts/sequence diagrams).
+    // Only converts when the CDN loaded; otherwise the raw code block stays readable.
+    if (window.mermaid) {
+      const theme = (document.body.getAttribute('data-theme') === 'light' ||
+                     document.body.getAttribute('data-theme') === 'reading') ? 'default' : 'dark';
+      mermaid.initialize({ startOnLoad: false, theme: theme });
+      const diagrams = [];
+      document.querySelectorAll('pre > code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = code.textContent;
+        pre.replaceWith(div);
+        diagrams.push(div);
+      });
+      if (diagrams.length) {
+        try { mermaid.run({ nodes: diagrams }); }
+        catch (e) { /* leave static text fallback */ }
+      }
+    }
+
+    // Video Speed Controls
+    document.querySelectorAll('.video-studio').forEach(studio => {      const video = studio.querySelector('video');
+      const speedBtns = studio.querySelectorAll('.speed-btn');
+      if (video && speedBtns.length > 0) {
+        speedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            speedBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            video.playbackRate = parseFloat(btn.dataset.speed || "1.0");
+          });
+        });
+      }
+    });
+  });
+
+  // 6. Touch Gestures (mobile): swipe content to move, edge-swipe to open nav.
+  // Passive listeners only — vertical scrolling stays on the browser's fast path.
+  (function () {
+    const SWIPE_MIN = 80;      // px of horizontal travel to count as a swipe
+    const EDGE_ZONE = 28;      // px from left edge that opens the sidebar
+    let sx = 0, sy = 0, st = 0, tracking = false;
+
+    function scrollsSideways(el) {
+      return !!(el && el.closest && el.closest('pre, table, .mermaid, .video-frame-wrap, code, .quiz-options'));
+    }
+
+    document.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      const t = e.touches[0];
+      sx = t.clientX; sy = t.clientY; st = Date.now();
+      tracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < 2 * Math.abs(dy)) return;
+      if (Date.now() - st > 1200) return;
+
+      const veil = document.getElementById('settingsVeil');
+      if (veil && veil.classList.contains('open')) return;
+      const sidebar = document.getElementById('sidebar');
+
+      // Left-edge swipe right: open navigation from anywhere.
+      if (sx < EDGE_ZONE && dx > 0) {
+        if (sidebar) {
+          sidebar.classList.add('mobile-open');
+          const tg = document.getElementById('sidebarToggle');
+          if (tg) tg.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+      // Swipe left on open sidebar: close it.
+      if (sidebar && sidebar.classList.contains('mobile-open') && sidebar.contains(e.target) && dx < 0) {
+        sidebar.classList.remove('mobile-open');
+        return;
+      }
+      // Content swipes turn pages — never hijack horizontal scrollers.
+      const content = document.getElementById('content');
+      if (!content || !content.contains(e.target)) return;
+      if (scrollsSideways(e.target)) return;
+      if (dx < 0) {
+        const next = document.getElementById('nextTopicLink');
+        if (next) next.click();
+      } else {
+        const prev = document.getElementById('prevTopicLink');
+        if (prev) prev.click();
+      }
+    }, { passive: true });
+  })();
+
+  // 5. Keyboard Navigation Shortcuts ([ ] only — arrows reserved for scrolling)
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = (e.target.tagName || '').toUpperCase();
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
+
+    if (e.key === '[') {
+      const prev = document.getElementById('prevTopicLink');
+      if (prev) prev.click();
+    } else if (e.key === ']') {
+      const next = document.getElementById('nextTopicLink');
+      if (next) next.click();
+    } else if (e.key.toLowerCase() === 't') {
+      cycleTheme();
+    } else if (e.key === 'Escape') {
+      const veil = document.getElementById('settingsVeil');
+      if (veil) veil.classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>

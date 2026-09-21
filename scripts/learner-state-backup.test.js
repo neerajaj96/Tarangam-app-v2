@@ -382,13 +382,13 @@ describe('accessibility and responsive integration', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('round-trips live progress deterministically', () => {
-    assert.equal(manifest.topics.length, 435);
+    assert.equal(manifest.topics.length, 486);
     const store = memoryStorage();
     const s = createLearnerState({ manifest, storage: store });
     s.markTopicCompleted('GAMAT301', 'm1_01_random_variables_pmf_cdf', 1700000000000);

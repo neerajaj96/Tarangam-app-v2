@@ -30,14 +30,14 @@ const curriculumDoc = loadCurriculum();
 const manifest = buildTopicManifest({ curriculumDoc, schema });
 
 describe('manifest contents', () => {
-  it('contains all 435 current topics', () => {
-    assert.equal(manifest.topics.length, 435);
-    assert.equal(manifest.aggregates.totalTopics, 435);
+  it('contains all 486 current topics', () => {
+    assert.equal(manifest.topics.length, 486);
+    assert.equal(manifest.aggregates.totalTopics, 486);
   });
 
-  it('contains exactly 435 metadata topics', () => {
-    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 435);
-    assert.equal(manifest.aggregates.metadataTopics, 435);
+  it('contains exactly 486 metadata topics', () => {
+    assert.equal(manifest.topics.filter((t) => t.hasMetadata).length, 486);
+    assert.equal(manifest.aggregates.metadataTopics, 486);
   });
 
   it('represents the GAMAT301 prerequisite chain correctly', () => {
@@ -83,7 +83,7 @@ describe('manifest contents', () => {
   });
 
   it('keeps legacy topics readable with hasMetadata: false', () => {
-    // No legacy topics remain in the repo (435/435 migrated), so exercise
+    // No legacy topics remain in the repo (486/486 migrated), so exercise
     // the still-supported legacy shape with a synthetic manifest instead.
     const legacyManifest = {
       topics: [{

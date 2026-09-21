@@ -229,16 +229,16 @@ describe('course page wiring', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
-  it('resolves all 16 courses and 64 modules with manifest-matching counts', () => {
-    assert.equal(manifest.topics.length, 435);
+  it('resolves all 20 courses and 75 modules with manifest-matching counts', () => {
+    assert.equal(manifest.topics.length, 486);
     const courses = Course.buildCourseOverviewList(manifest, none, null, undefined, null);
-    assert.equal(courses.length, 16);
-    assert.equal(courses.reduce((a, c) => a + c.totalTopics, 0), 435);
+    assert.equal(courses.length, 20);
+    assert.equal(courses.reduce((a, c) => a + c.totalTopics, 0), 486);
     let moduleCount = 0;
     for (const c of courses) {
       assert.equal(c.modules.length, c.moduleCount);
@@ -253,7 +253,7 @@ describe('live 435-topic repository', () => {
       const canonicalCourse = Intel.getCourseTopics(manifest, c.courseCode);
       assert.equal(c.totalTopics, canonicalCourse.length);
     }
-    assert.equal(moduleCount, 64);
+    assert.equal(moduleCount, 75);
   });
 
   it('keeps static build order identical to canonical neighbors', () => {

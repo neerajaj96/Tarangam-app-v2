@@ -8207,6 +8207,1434 @@
       "explanation": "A higher area can hide a worse operating dot; ship the dot the cost chose, ranked by the area.",
       "difficulty": "beginner",
       "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_01_01",
+      "courseCode": "PBCST504",
+      "topicId": "m1_01_embedded_systems_and_processor_types",
+      "type": "multiple_choice",
+      "question": "What separates a microcontroller from a microprocessor?",
+      "options": [
+        "A microcontroller holds CPU, RAM, ROM and I/O on one chip; a microprocessor holds only the CPU",
+        "A microprocessor holds everything on-chip; a microcontroller holds only the CPU",
+        "Both are identical except for the brand name",
+        "Microcontrollers always run a full operating system"
+      ],
+      "answer": "A microcontroller holds CPU, RAM, ROM and I/O on one chip; a microprocessor holds only the CPU",
+      "explanation": "Integration decides: the all-in-one chip runs fixed firmware jobs; the CPU-only chip needs external support.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_01_02",
+      "courseCode": "PBCST504",
+      "topicId": "m1_01_embedded_systems_and_processor_types",
+      "type": "true_false",
+      "question": "A TV remote uses a microcontroller because it runs one fixed job within tight power and cost limits.",
+      "answer": true,
+      "explanation": "Fixed single purpose plus power and cost limits point to the all-in-one chip.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_02_01",
+      "courseCode": "PBCST504",
+      "topicId": "m1_02_embedded_c_essentials",
+      "type": "multiple_choice",
+      "question": "How do you set pin 5 of a port without disturbing other pins?",
+      "options": [
+        "REG |= (1 << 5)",
+        "REG = (1 << 5)",
+        "REG &= (1 << 5)",
+        "REG ^= 0xFF"
+      ],
+      "answer": "REG |= (1 << 5)",
+      "explanation": "OR pastes a 1 on; assignment wipes the rest, AND reads, XOR flips all ones in the mask.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_02_02",
+      "courseCode": "PBCST504",
+      "topicId": "m1_02_embedded_c_essentials",
+      "type": "true_false",
+      "question": "Every memory-mapped register and every variable shared with an ISR must be volatile.",
+      "answer": true,
+      "explanation": "Hardware and interrupts change memory behind the program's back; volatile forces fresh reads.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_03_01",
+      "courseCode": "PBCST504",
+      "topicId": "m1_03_arm_architecture_and_cortex_m",
+      "type": "multiple_choice",
+      "question": "What does ARM sell to chip makers like STMicroelectronics?",
+      "options": [
+        "Processor blueprints and core designs under license; licensees build the chips",
+        "Finished STM32 chips ready for sale",
+        "Only software tools and debuggers",
+        "Silicon wafers and packaging services"
+      ],
+      "answer": "Processor blueprints and core designs under license; licensees build the chips",
+      "explanation": "ARM designs and licenses cores and architectures but fabricates no chips.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_03_02",
+      "courseCode": "PBCST504",
+      "topicId": "m1_03_arm_architecture_and_cortex_m",
+      "type": "true_false",
+      "question": "On ARM, arithmetic instructions work only on registers; only LDR and STR touch memory.",
+      "answer": true,
+      "explanation": "Load-store law: memory-arithmetic C lines compile to load-add-store triples.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_04_01",
+      "courseCode": "PBCST504",
+      "topicId": "m1_04_cortex_m23_m33_armv8m",
+      "type": "multiple_choice",
+      "question": "What does Armv8-M add over ARMv7-M that a compare-generations answer must list?",
+      "options": [
+        "TrustZone worlds, hardware stack-limit checking, improved exception handling, authenticated debug",
+        "Higher Megahertz and a lower price only",
+        "Thumb-2 instruction encoding",
+        "A built-in operating system"
+      ],
+      "answer": "TrustZone worlds, hardware stack-limit checking, improved exception handling, authenticated debug",
+      "explanation": "Generations differ by architecture features: worlds, stack limits, exceptions, debug auth.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_04_02",
+      "courseCode": "PBCST504",
+      "topicId": "m1_04_cortex_m23_m33_armv8m",
+      "type": "true_false",
+      "question": "Non-secure code calling into the Secure world must enter through Non-secure-Callable veneers; direct calls fault.",
+      "answer": true,
+      "explanation": "The narrow gate is the security: skipping it raises SecureFault by design.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_05_01",
+      "courseCode": "PBCST504",
+      "topicId": "m1_05_registers_memory_bus",
+      "type": "multiple_choice",
+      "question": "A firmware write targets address 0x48000014. What happens, and why?",
+      "options": [
+        "It drives a peripheral register (0x48 is peripheral space), moving hardware, not memory",
+        "It stores a variable in SRAM like any other address",
+        "It executes code from flash",
+        "Addresses are decorative; nothing happens"
+      ],
+      "answer": "It drives a peripheral register (0x48 is peripheral space), moving hardware, not memory",
+      "explanation": "Load/store is district-blind: the 0x48 prefix means hardware levers, 0x20 means SRAM data.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m1_05_02",
+      "courseCode": "PBCST504",
+      "topicId": "m1_05_registers_memory_bus",
+      "type": "true_false",
+      "question": "On Cortex-M the stack grows toward lower addresses and overflow eats heap and variables below.",
+      "answer": true,
+      "explanation": "Descent has no brakes without limits; Armv8-M stack-limit registers fault instead.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_01_01",
+      "courseCode": "PBCST504",
+      "topicId": "m2_01_stm32_family_and_u575",
+      "type": "multiple_choice",
+      "question": "What does the U in STM32U575 tell you, and which chip suits a battery sensor needing TrustZone?",
+      "options": [
+        "Ultra-low-power mission; the U575, which pairs coin-cell sleep currents with a TrustZone-capable M33",
+        "USB support; any F-series chip instead",
+        "U stands for untested silicon",
+        "The letter is random marketing"
+      ],
+      "answer": "Ultra-low-power mission; the U575, which pairs coin-cell sleep currents with a TrustZone-capable M33",
+      "explanation": "Series letter names the mission; power source plus security need cast the vote.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_01_02",
+      "courseCode": "PBCST504",
+      "topicId": "m2_01_stm32_family_and_u575",
+      "type": "true_false",
+      "question": "HAL GPIO code ports across STM32 series for core logic, but clocks, power modes and security setup must be redone per chip.",
+      "answer": true,
+      "explanation": "Shared chassis transfers habits; bakery extras differ per reference manual.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_02_01",
+      "courseCode": "PBCST504",
+      "topicId": "m2_02_power_management_and_low_power",
+      "type": "multiple_choice",
+      "question": "A node is awake 1 s hourly at 10 mA and sleeps at 1 microamp. What dominates battery life?",
+      "options": [
+        "Sleep current, because it rules 99.9% of the time: average is about 3.8 microamps",
+        "Active current, because milliamps dwarf microamps",
+        "The clock speed during sleep",
+        "The LED brightness setting"
+      ],
+      "answer": "Sleep current, because it rules 99.9% of the time: average is about 3.8 microamps",
+      "explanation": "Charge-weighted mean: the sleep term dominates at low duty cycles.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_02_02",
+      "courseCode": "PBCST504",
+      "topicId": "m2_02_power_management_and_low_power",
+      "type": "true_false",
+      "question": "Entering Stop mode without enabling a wake-up source leaves the chip unreachable until reset.",
+      "answer": true,
+      "explanation": "Deep sleep with no wire is absence: enable the wake source before sleeping.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_03_01",
+      "courseCode": "PBCST504",
+      "topicId": "m2_03_ide_hal_first_program_led",
+      "type": "multiple_choice",
+      "question": "GPIO writes do nothing on a fresh STM32 program. What is the first fix?",
+      "options": [
+        "Enable the port's peripheral clock before configuring pins",
+        "Increase the delay loop",
+        "Rewrite the code in assembly",
+        "Replace the microcontroller"
+      ],
+      "answer": "Enable the port's peripheral clock before configuring pins",
+      "explanation": "Gated-off peripherals ignore writes silently: clock first, configure second, command third.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_03_02",
+      "courseCode": "PBCST504",
+      "topicId": "m2_03_ide_hal_first_program_led",
+      "type": "true_false",
+      "question": "Reset leaves STM32 pins as analog inputs, so every used pin needs an explicit mode setup.",
+      "answer": true,
+      "explanation": "Analog default is the most common dead-LED cause.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_04_01",
+      "courseCode": "PBCST504",
+      "topicId": "m2_04_displays_keypad_relay",
+      "type": "multiple_choice",
+      "question": "Four multiplexed digits flicker visibly. What does the 2 ms-per-digit arithmetic say?",
+      "options": [
+        "Total refresh must stay near 8 ms (125 Hz); flicker means slices too long, so quicken each digit slot",
+        "Add more digits to share the load",
+        "Multiplexing always flickers and cannot be fixed",
+        "Slow the loop for stability"
+      ],
+      "answer": "Total refresh must stay near 8 ms (125 Hz); flicker means slices too long, so quicken each digit slot",
+      "explanation": "Flicker is timing, dimness is budget: 2 ms per digit keeps the frame flicker-free.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_04_02",
+      "courseCode": "PBCST504",
+      "topicId": "m2_04_displays_keypad_relay",
+      "type": "true_false",
+      "question": "An LCD prints commands as actions (jumps and clears) instead of text because data was sent with RS=0.",
+      "answer": true,
+      "explanation": "RS selects meaning: 0 is command, 1 is data, on the same wires.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_05_01",
+      "courseCode": "PBCST504",
+      "topicId": "m2_05_analog_io_timers_rtc",
+      "type": "multiple_choice",
+      "question": "A 12-bit ADC with 3.3 V reference reads 1.65 V. What code results?",
+      "options": [
+        "About 2047, since code equals input over reference times 4095",
+        "About 4095 regardless of input",
+        "About 1024 always at mid-supply",
+        "Zero, because mid-supply is undefined"
+      ],
+      "answer": "About 2047, since code equals input over reference times 4095",
+      "explanation": "Half voltage gives half scale: LSB is reference over 4096.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m2_05_02",
+      "courseCode": "PBCST504",
+      "topicId": "m2_05_analog_io_timers_rtc",
+      "type": "true_false",
+      "question": "PWM average voltage equals duty share times supply, so duty (not frequency) carries LED and servo meaning.",
+      "answer": true,
+      "explanation": "Frequency only needs to exceed perception; duty is the message.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_01_01",
+      "courseCode": "PBCST504",
+      "topicId": "m3_01_serial_basics_and_terminal",
+      "type": "multiple_choice",
+      "question": "What transfer rate do user bytes achieve on 115200 baud 8N1, and why?",
+      "options": [
+        "About 11520 bytes/s, because each byte costs 10 frame bits including start and stop",
+        "115200 bytes/s, since baud equals bytes",
+        "About 1152 bytes/s, since parity doubles the cost",
+        "Baud rates are unrelated to byte rates"
+      ],
+      "answer": "About 11520 bytes/s, because each byte costs 10 frame bits including start and stop",
+      "explanation": "Baud counts framing bits: divide by frame length first, then divide the file.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_01_02",
+      "courseCode": "PBCST504",
+      "topicId": "m3_01_serial_basics_and_terminal",
+      "type": "true_false",
+      "question": "A parity bit detects single-bit flips but never corrects errors.",
+      "answer": true,
+      "explanation": "Parity is a detection flag; correction needs codes above this layer.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_02_01",
+      "courseCode": "PBCST504",
+      "topicId": "m3_02_usart",
+      "type": "multiple_choice",
+      "question": "A terminal garbles right after firmware doubles the PLL clock with nothing else changed. What is wrong?",
+      "options": [
+        "The baud divisor went stale: actual baud doubled with the clock, so recompute it",
+        "Parity must now be enabled to compensate",
+        "GPIO pins melted from the higher speed",
+        "USART peripherals cannot run above 40 MHz"
+      ],
+      "answer": "The baud divisor went stale: actual baud doubled with the clock, so recompute it",
+      "explanation": "Baud is a ratio with the clock: clock edits invalidate the divisor.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_02_02",
+      "courseCode": "PBCST504",
+      "topicId": "m3_02_usart",
+      "type": "true_false",
+      "question": "Polling suits single bytes while interrupt-driven ring buffers suit streams, because polling holds the whole CPU per byte.",
+      "answer": true,
+      "explanation": "Volume decides the architecture: price attention per byte.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_03_01",
+      "courseCode": "PBCST504",
+      "topicId": "m3_03_i2c_sensor_lcd",
+      "type": "multiple_choice",
+      "question": "An I2C master addresses 0x48 for writing and gets NACK. What should be checked first?",
+      "options": [
+        "Whether any slave owns 0x48, whether it is powered, and whether pull-ups exist",
+        "The CPU clock speed setting",
+        "Whether the LCD contrast is adjusted",
+        "The USB cable version"
+      ],
+      "answer": "Whether any slave owns 0x48, whether it is powered, and whether pull-ups exist",
+      "explanation": "Address-phase NACK means nobody home: identity, power, then physics.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_03_02",
+      "courseCode": "PBCST504",
+      "topicId": "m3_03_i2c_sensor_lcd",
+      "type": "true_false",
+      "question": "I2C lines are open-drain, so missing pull-up resistors leave the whole bus dead.",
+      "answer": true,
+      "explanation": "Devices pull low only; resistors restore high.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_04_01",
+      "courseCode": "PBCST504",
+      "topicId": "m3_04_spi_eeprom",
+      "type": "multiple_choice",
+      "question": "EEPROM writes clock perfectly on the bus but data vanishes after power-cycle. What step was skipped?",
+      "options": [
+        "The WREN write-enable latch: transfers clocked fine but cells never burned without it",
+        "The SPI clock speed setting",
+        "The chip-select polarity jumper",
+        "The parity configuration"
+      ],
+      "answer": "The WREN write-enable latch: transfers clocked fine but cells never burned without it",
+      "explanation": "Bus success reports transfer, never storage: enable, then write, then poll.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_04_02",
+      "courseCode": "PBCST504",
+      "topicId": "m3_04_spi_eeprom",
+      "type": "true_false",
+      "question": "A multi-byte EEPROM write must never cross a page boundary in one operation, because addresses wrap within the page.",
+      "answer": true,
+      "explanation": "Fill to the boundary, then whole pages, then remainder.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_05_01",
+      "courseCode": "PBCST504",
+      "topicId": "m3_05_can_usb",
+      "type": "multiple_choice",
+      "question": "Two CAN nodes with IDs 0x100 and 0x180 start together. What happens?",
+      "options": [
+        "0x100 wins at the first bit where it drives dominant 0 against 0x180's recessive 1; the loser backs off and retries",
+        "0x180 wins because higher numbers have seniority",
+        "Both frames merge into 0x180",
+        "A master chip referees the collision"
+      ],
+      "answer": "0x100 wins at the first bit where it drives dominant 0 against 0x180's recessive 1; the loser backs off and retries",
+      "explanation": "Wired-AND decides mid-bit: lower wins gracefully, the frame survives intact.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m3_05_02",
+      "courseCode": "PBCST504",
+      "topicId": "m3_05_can_usb",
+      "type": "true_false",
+      "question": "USB HID lets a sensor gadget work with no custom PC driver by disguising as a keyboard or joystick through report descriptors.",
+      "answer": true,
+      "explanation": "Standard class means built-in drivers; the descriptor declares the identity.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_01_01",
+      "courseCode": "PBCST504",
+      "topicId": "m4_01_iot_mqtt_coap",
+      "type": "multiple_choice",
+      "question": "One thousand sensors stream telemetry to dashboards and a rule engine. Why MQTT over CoAP?",
+      "options": [
+        "Publishers file once to a broker that fans out to all subscribers, instead of thousands of direct query relationships",
+        "CoAP cannot use UDP",
+        "MQTT is always faster for single queries",
+        "Brokers are unnecessary overhead"
+      ],
+      "answer": "Publishers file once to a broker that fans out to all subscribers, instead of thousands of direct query relationships",
+      "explanation": "Streams with many consumers are the newspaper case: decoupling scales.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_01_02",
+      "courseCode": "PBCST504",
+      "topicId": "m4_01_iot_mqtt_coap",
+      "type": "true_false",
+      "question": "QoS 0 suits expendable telemetry while QoS 2 suits actuation where duplicates corrupt, because QoS prices duplicate tolerance.",
+      "answer": true,
+      "explanation": "Ask what a duplicate costs per flow; promises need connectivity first.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_02_01",
+      "courseCode": "PBCST504",
+      "topicId": "m4_02_wireless_gsm_ble_lora_security",
+      "type": "multiple_choice",
+      "question": "A 3 km soil probe reporting hourly on battery needs which radio, and why?",
+      "options": [
+        "LoRa, for kilometre range with byte rates under duty caps that allow years of battery",
+        "Bluetooth, for the longest range",
+        "GSM for the lowest power",
+        "Wi-Fi for kilometre penetration"
+      ],
+      "answer": "LoRa, for kilometre range with byte rates under duty caps that allow years of battery",
+      "explanation": "Environment facts place each radio on the range-rate-power triangle.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_02_02",
+      "courseCode": "PBCST504",
+      "topicId": "m4_02_wireless_gsm_ble_lora_security",
+      "type": "true_false",
+      "question": "Recorded unlock commands replayed later are defeated by nonces or monotonic counters, not by encryption alone.",
+      "answer": true,
+      "explanation": "Authentication answers identity; freshness answers time.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_03_01",
+      "courseCode": "PBCST504",
+      "topicId": "m4_03_rtos_freertos_tasks",
+      "type": "multiple_choice",
+      "question": "Adding a display routine to a super-loop makes braking miss deadlines. Why does an RTOS fix this structurally?",
+      "options": [
+        "Loop timing sums all code before each job, while the scheduler preempts by priority, bounding urgent latency",
+        "An RTOS runs code at higher Megahertz",
+        "An RTOS deletes low-priority tasks automatically",
+        "Deadlines do not apply to scheduled systems"
+      ],
+      "answer": "Loop timing sums all code before each job, while the scheduler preempts by priority, bounding urgent latency",
+      "explanation": "Determinism by ladder, not Megahertz: structure, not speed, is the fix.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_03_02",
+      "courseCode": "PBCST504",
+      "topicId": "m4_03_rtos_freertos_tasks",
+      "type": "true_false",
+      "question": "A high task waiting on a mutex held by a low task while a medium task runs long is priority inversion, cured by priority inheritance.",
+      "answer": true,
+      "explanation": "Three rungs make the hazard: waiter, holder, and middle spoiler.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_04_01",
+      "courseCode": "PBCST504",
+      "topicId": "m4_04_freertos_ipc_timing",
+      "type": "multiple_choice",
+      "question": "Two tasks share one UART. Why must the guard be a mutex rather than a binary semaphore?",
+      "options": [
+        "Only mutexes carry priority inheritance, so an urgent waiter lends urgency to the holder instead of suffering inversion",
+        "Binary semaphores are slower",
+        "Mutexes use less RAM",
+        "UARTs serialize themselves without guards"
+      ],
+      "answer": "Only mutexes carry priority inheritance, so an urgent waiter lends urgency to the holder instead of suffering inversion",
+      "explanation": "Guards need ownership: inheritance is the difference, not weight.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_04_02",
+      "courseCode": "PBCST504",
+      "topicId": "m4_04_freertos_ipc_timing",
+      "type": "true_false",
+      "question": "ISRs may give semaphores and send to queues with FromISR forms, but must never take mutexes or block.",
+      "answer": true,
+      "explanation": "The bell rings but never holds meetings: blocking ISRs freeze everything below.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_05_01",
+      "courseCode": "PBCST504",
+      "topicId": "m4_05_trustzone_debug_miniproject",
+      "type": "multiple_choice",
+      "question": "Where do a door lock's PIN store and Bluetooth stack live under TrustZone, and how do they interact?",
+      "options": [
+        "PIN store and checker in Secure; Bluetooth, LED and logs in Non-secure; crossings only via verify veneers",
+        "Everything in Secure for maximum safety",
+        "Everything in Non-secure since TrustZone is decorative",
+        "PIN in Non-secure flash protected by TLS"
+      ],
+      "answer": "PIN store and checker in Secure; Bluetooth, LED and logs in Non-secure; crossings only via verify veneers",
+      "explanation": "Minimal vault stays auditable: guard secrets, exile the replaceable, narrow the gates.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pbcst504_m4_05_02",
+      "courseCode": "PBCST504",
+      "topicId": "m4_05_trustzone_debug_miniproject",
+      "type": "true_false",
+      "question": "A two-year battery claim must be proved with duty-cycle average-current math, measured sleep current, and capacity division.",
+      "answer": true,
+      "explanation": "Claims without division are wishes: formula, measurement, capacity, margin.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_01_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_01_linux_network_toolkit",
+      "type": "multiple_choice",
+      "question": "Ping to 8.8.8.8 works but the browser fails everywhere. Which layer failed?",
+      "options": [
+        "DNS name resolution, since IPs route fine while names never resolve",
+        "The gateway cable",
+        "The DHCP lease",
+        "The browser installation"
+      ],
+      "answer": "DNS name resolution, since IPs route fine while names never resolve",
+      "explanation": "Working-IP with dead-name is DNS's signature split: inspect the resolver path.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_01_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_01_linux_network_toolkit",
+      "type": "true_false",
+      "question": "An ss entry of 0.0.0.0:8080 means the program accepts connections on all interfaces, while 127.0.0.1 means loopback only.",
+      "answer": true,
+      "explanation": "The address before the colon names the audience.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_02_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_02_tcp_client_server_lab",
+      "type": "multiple_choice",
+      "question": "A restarted TCP server fails with Errno 98 though old clients are gone. What lingers?",
+      "options": [
+        "The old connection in TIME_WAIT holding the port; SO_REUSEADDR permits immediate rebind",
+        "A burnt port that can never be reused",
+        "A Python cache of port numbers",
+        "A loopback policy needing root"
+      ],
+      "answer": "The old connection in TIME_WAIT holding the port; SO_REUSEADDR permits immediate rebind",
+      "explanation": "TIME_WAIT guards late duplicates; rebind policy is the socket option.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_02_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_02_tcp_client_server_lab",
+      "type": "true_false",
+      "question": "When recv returns empty bytes, the peer has closed its side: it is TCP's hang-up notice, never data.",
+      "answer": true,
+      "explanation": "Reads return data, then zero bytes at close.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_03_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_03_udp_client_server_lab",
+      "type": "multiple_choice",
+      "question": "A UDP client hangs forever on its first request while the server logs nothing. What is wrong?",
+      "options": [
+        "The server is down or the port is wrong, and the client has no timeout: connectionless failure is silent",
+        "Python is too slow for UDP",
+        "UDP always needs connect first",
+        "Loopback blocks UDP by policy"
+      ],
+      "answer": "The server is down or the port is wrong, and the client has no timeout: connectionless failure is silent",
+      "explanation": "No handshake means no refusal signal: timeouts are mandatory, not polite.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_03_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_03_udp_client_server_lab",
+      "type": "true_false",
+      "question": "Blocking recvfrom with no timeout freezes forever on the first lost datagram, so UDP clients must set timeouts and plan retries.",
+      "answer": true,
+      "explanation": "Loss is normal; eternity is a bug.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_04_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_04_concurrent_server_select",
+      "type": "multiple_choice",
+      "question": "An accepted socket is never added to the select watch set. What does its client see?",
+      "options": [
+        "Connect then silence forever, since readable bytes on an unwatched descriptor are never reported",
+        "Faster service from fewer watched sockets",
+        "An immediate server crash",
+        "Automatic discovery by select"
+      ],
+      "answer": "Connect then silence forever, since readable bytes on an unwatched descriptor are never reported",
+      "explanation": "Birth-join and close-leave is the watch invariant.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m1_04_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m1_04_concurrent_server_select",
+      "type": "true_false",
+      "question": "Per-client line buffers plus reply-only-on-newline let complete requests jump ahead of a slow client's partial line.",
+      "answer": true,
+      "explanation": "Partial work waits, complete work dispatches: fairness by buffering and readiness.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_01_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_01_wireshark_capture_basics",
+      "type": "multiple_choice",
+      "question": "A capture shows zero packets though the client printed its reply. What is wrong?",
+      "options": [
+        "Wrong interface or an over-narrow capture filter: the working traffic alibis the packets, so the microscope is mispointed",
+        "Wireshark is broken and must be reinstalled",
+        "TCP hides from Wireshark by encryption",
+        "Loopback traffic cannot be captured"
+      ],
+      "answer": "Wrong interface or an over-narrow capture filter: the working traffic alibis the packets, so the microscope is mispointed",
+      "explanation": "Blame the lens, never the proven packets: interface first, filter second.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_01_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_01_wireshark_capture_basics",
+      "type": "true_false",
+      "question": "Capture filters decide what gets recorded before Start, while display filters decide what is viewed after, and their syntaxes differ.",
+      "answer": true,
+      "explanation": "Two boxes, two grammars: record versus view.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_02_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_02_tcp_teardown_retransmission",
+      "type": "multiple_choice",
+      "question": "Under 15 percent loss the capture shows dup ACKs, a black retransmission, yet the client prints the full reply. What happened?",
+      "options": [
+        "The receiver begged the gap with dup ACKs, the sender repaired it, and reassembly delivered ordered bytes",
+        "The reply was pure luck",
+        "Wireshark repairs packets itself",
+        "Retransmissions duplicate the reply text"
+      ],
+      "answer": "The receiver begged the gap with dup ACKs, the sender repaired it, and reassembly delivered ordered bytes",
+      "explanation": "Dups diagnose, black resends cure, identical bytes certify.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_02_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_02_tcp_teardown_retransmission",
+      "type": "true_false",
+      "question": "A FIN close drains gracefully while an RST close aborts with in-flight data at risk.",
+      "answer": true,
+      "explanation": "FIN means done, drain me; RST means destroy now.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_03_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_03_dns_dhcp_experiment",
+      "type": "multiple_choice",
+      "question": "DORA shows Discover, Offer and Request but no Ack, and the machine keeps 169.254.x.x. What happened?",
+      "options": [
+        "The server never acknowledged, so the client fell back to link-local self-assignment with no gateway",
+        "The lease succeeded and 169.254 is the server address",
+        "Three DORA packets suffice for a lease",
+        "DHCP uses 169.254 as its server address"
+      ],
+      "answer": "The server never acknowledged, so the client fell back to link-local self-assignment with no gateway",
+      "explanation": "Four letters or no lease: the 169.254 is a confession, not a lease.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_03_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_03_dns_dhcp_experiment",
+      "type": "true_false",
+      "question": "A repeated dig answering in 0 msec proves the answer came from cache, with TTL counting down.",
+      "answer": true,
+      "explanation": "Zero query time is the cache's signature.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_04_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_04_reliability_protocols_lab",
+      "type": "multiple_choice",
+      "question": "Go-Back-N with a 20 ms timeout on a 100 ms RTT link barely beats stop-and-wait. Why?",
+      "options": [
+        "The timeout fires mid-flight every packet, resending healthy goods continuously: set two to four times the RTT",
+        "The window is too big and must shrink to one",
+        "Loss is too low to matter",
+        "Python is too slow for windows"
+      ],
+      "answer": "The timeout fires mid-flight every packet, resending healthy goods continuously: set two to four times the RTT",
+      "explanation": "Kindness becomes congestion when patience is shorter than one round trip.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m2_04_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m2_04_reliability_protocols_lab",
+      "type": "true_false",
+      "question": "A Go-Back-N receiver drops post-gap packets and keeps ACKing the gap, forcing the sender to rewind and resend from it.",
+      "answer": true,
+      "explanation": "Receiver simplicity costs sender waste: the gap rules until filled.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_01_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_01_static_routing_lab",
+      "type": "multiple_choice",
+      "question": "Routes are perfect on both hosts, interfaces are up, yet pings fail through the router namespace. What is off?",
+      "options": [
+        "IP forwarding in the router: tables name doors but the switch opens them",
+        "The veth cables are unplugged virtually",
+        "Ping is blocked by namespaces permanently",
+        "veth ends need their own IP addresses"
+      ],
+      "answer": "IP forwarding in the router: tables name doors but the switch opens them",
+      "explanation": "Tables without forwarding are decoration: check switch, route, link in that order.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_01_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_01_static_routing_lab",
+      "type": "true_false",
+      "question": "Routing is per-direction state: a working forward path never implies the return path, so every path needs its mirror route.",
+      "answer": true,
+      "explanation": "One working direction proves exactly half the tables.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_02_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_02_nat_firewall_lab",
+      "type": "multiple_choice",
+      "question": "A public peer's new connection to a private server times out with zero replies. What hides the server?",
+      "options": [
+        "NAT without a port-forward: inbound has no mapping, so nothing delivers; reachability needs an explicit DNAT rule",
+        "A firewall REJECT rule sending instant refusals",
+        "MASQUERADE blocking all TCP",
+        "Private servers cannot exist behind NAT"
+      ],
+      "answer": "NAT without a port-forward: inbound has no mapping, so nothing delivers; reachability needs an explicit DNAT rule",
+      "explanation": "Invisibility is NAT's default: translation and permission are separate verdicts.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_02_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_02_nat_firewall_lab",
+      "type": "true_false",
+      "question": "ESTABLISHED rules must come before default DROP so a gate's own answers can re-enter.",
+      "answer": true,
+      "explanation": "Your packets obey your rules too: replies are INPUT-path packets.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_03_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_03_simulation_ns3_basics",
+      "type": "multiple_choice",
+      "question": "A simulation reports 8 Mbps on a 5 Mbps link. What is wrong?",
+      "options": [
+        "Measurement accounting: throughput can never exceed the bottleneck, so recheck parsing against DataRate as a ceiling",
+        "The link overperforms and deserves a bonus report",
+        "ns-3 is optimistic by design",
+        "DataRate means something else in simulation"
+      ],
+      "answer": "Measurement accounting: throughput can never exceed the bottleneck, so recheck parsing against DataRate as a ceiling",
+      "explanation": "Physics caps models: impossible numbers indict the measurement first.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_03_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_03_simulation_ns3_basics",
+      "type": "true_false",
+      "question": "A sweep must change one parameter per curve with fixed seeds, or blame for any collapse is unassignable.",
+      "answer": true,
+      "explanation": "One knob per curve is the causality contract.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_04_01",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_04_topology_miniproject",
+      "type": "multiple_choice",
+      "question": "A DNAT rule exists yet the forwarded service times out externally while LAN access works. What is missing?",
+      "options": [
+        "The matching FORWARD accept: translation and permission are separate verdicts, and LAN bypasses both",
+        "A VPN replacement for DNAT",
+        "Binding the service to the public IP directly",
+        "Timeouts indicate success in firewall logic"
+      ],
+      "answer": "The matching FORWARD accept: translation and permission are separate verdicts, and LAN bypasses both",
+      "explanation": "Two tables, two verdicts: nat decides where, filter decides whether.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl507_m3_04_02",
+      "courseCode": "PCCSL507",
+      "topicId": "m3_04_topology_miniproject",
+      "type": "true_false",
+      "question": "Every report sentence in a mini-project needs an artefact (pcap line, counter, ping log): unexhibited claims score zero.",
+      "answer": true,
+      "explanation": "Evaluators mark artefacts, not memories.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_01_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_01_python_variables_lists_functions",
+      "type": "multiple_choice",
+      "question": "What is x after x = temps.append(22.4), and what is the fix?",
+      "options": [
+        "x is None, because append mutates in place and returns nothing; call append alone, then use temps",
+        "x is the new list, ready for mean(x)",
+        "append is broken for floats",
+        "x is 22.4, the appended value"
+      ],
+      "answer": "x is None, because append mutates in place and returns nothing; call append alone, then use temps",
+      "explanation": "Mutators act, they don't answer: separate acting from answering.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_01_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_01_python_variables_lists_functions",
+      "type": "true_false",
+      "question": "Indentation marks blocks in Python, so a stray space can end a block or crash the program.",
+      "answer": true,
+      "explanation": "The compiler reads alignment: read tracebacks last line first.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_02_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_02_numpy_basics",
+      "type": "multiple_choice",
+      "question": "np.mean(X) on a (100,5) matrix returned one number instead of per-feature means. What was missing?",
+      "options": [
+        "axis=0, because axis names the collapsed dimension and bare mean collapses everything",
+        "A transpose before every mean",
+        "A Python loop around the call",
+        "Larger float precision"
+      ],
+      "answer": "axis=0, because axis names the collapsed dimension and bare mean collapses everything",
+      "explanation": "Name the survivor dimension, then pick the axis.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_02_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_02_numpy_basics",
+      "type": "true_false",
+      "question": "Broadcasting (100,5) with (5,) stretches legally across rows, so silent stretches need shape-print verification.",
+      "answer": true,
+      "explanation": "Legal stretches corrupt silently; loud errors are gifts.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_03_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_03_pandas_basics",
+      "type": "multiple_choice",
+      "question": "describe() hides the income column that head() shows. What happened?",
+      "options": [
+        "Income became object type from a stray non-numeric, and describe skips non-numerics: dtypes proves it",
+        "describe is broken for large files",
+        "Income must be deleted as unmodellable",
+        "head hallucinates columns"
+      ],
+      "answer": "Income became object type from a stray non-numeric, and describe skips non-numerics: dtypes proves it",
+      "explanation": "Silent exclusion is the hazard; type-checking is the ritual.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_03_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_03_pandas_basics",
+      "type": "true_false",
+      "question": "Median filling suits skewed columns like income because the median resists outliers that drag the mean.",
+      "answer": true,
+      "explanation": "describe decides: skewed takes median, symmetric takes mean.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_04_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_04_matplotlib_basics",
+      "type": "multiple_choice",
+      "question": "A residual plot shows a clear U-curve. What does it confess and what cures it?",
+      "options": [
+        "Systematic underfit from missing bend: add capacity such as polynomial features and confirm flattening on held-out residuals",
+        "Perfect fit with decorative curves",
+        "Overfitting cured by harder regularisation",
+        "More same-kind data fixes any curve"
+      ],
+      "answer": "Systematic underfit from missing bend: add capacity such as polynomial features and confirm flattening on held-out residuals",
+      "explanation": "Curves name bias; funnels name variance: shape is diagnosis.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_04_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_04_matplotlib_basics",
+      "type": "true_false",
+      "question": "A 20k-row scatter renders as one black rectangle unless dots shrink and transparency encodes density.",
+      "answer": true,
+      "explanation": "Overplotting lies; small dots plus alpha confess structure.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_05_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_05_traintest_features_target",
+      "type": "multiple_choice",
+      "question": "Test R-squared is 0.91 but fresh-district data scores 0.62 after full-data scaler fitting. Why?",
+      "options": [
+        "Test statistics leaked into training features, inflating held-out scores that collapse on truly unseen data",
+        "Fresh districts are always harder; nothing is wrong",
+        "R-squared was computed wrong arithmetically",
+        "Scaling is unnecessary for regression"
+      ],
+      "answer": "Test statistics leaked into training features, inflating held-out scores that collapse on truly unseen data",
+      "explanation": "Fit transforms on train only: the gap size measures the sin.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_05_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_05_traintest_features_target",
+      "type": "true_false",
+      "question": "Pinning random_state makes splits repeatable, so grades reproduce instead of wandering per run.",
+      "answer": true,
+      "explanation": "Same code plus same seed equals same evidence.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_06_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_06_sklearn_environment_setup",
+      "type": "multiple_choice",
+      "question": "Why must lab scripts read local CSVs instead of fetching datasets from URLs?",
+      "options": [
+        "Offline failure, irreproducibility as remote files change, and wasted minutes per run",
+        "URLs are faster than local files",
+        "Local files read more slowly",
+        "Python forbids URL fetching by law"
+      ],
+      "answer": "Offline failure, irreproducibility as remote files change, and wasted minutes per run",
+      "explanation": "Local-first is reliability: no network dependency, byte-identical reruns, instant starts.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m1_06_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m1_06_sklearn_environment_setup",
+      "type": "true_false",
+      "question": "Recording sklearn versions in every report header turns cross-machine score mysteries into one-line diffs.",
+      "answer": true,
+      "explanation": "Defaults drift across releases: the stack is evidence.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_01_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_01_linear_regression_housing",
+      "type": "multiple_choice",
+      "question": "Residuals flatten at predicted 5.0 while truth varies above on housing. Is the model broken?",
+      "options": [
+        "No: targets are censored at the 5.0 cap, so no model can out-predict the ceiling; report the cap and grade the rest",
+        "Yes: add wild features to break the ceiling",
+        "Yes: remove scaling which clips predictions",
+        "R-squared is meaningless on capped data"
+      ],
+      "answer": "No: targets are censored at the 5.0 cap, so no model can out-predict the ceiling; report the cap and grade the rest",
+      "explanation": "Censoring is data fact, not model flaw.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_01_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_01_linear_regression_housing",
+      "type": "true_false",
+      "question": "Coefficient importance must be read in standardised units, because raw scales rig apparent sizes.",
+      "answer": true,
+      "explanation": "A common ruler makes top-driver claims factual.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_02_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_02_polynomial_regression_mpg",
+      "type": "multiple_choice",
+      "question": "Degree 5 shows train 0.97 with CV 0.71 while degree 2 shows 0.84 with 0.82. Which ships?",
+      "options": [
+        "Degree 2, since the wide train-CV gap of degree 5 confesses memorisation while degree 2 generalises",
+        "Degree 5, since train 0.97 is unbeatable",
+        "An average of both models",
+        "Degree 8 for even higher train scores"
+      ],
+      "answer": "Degree 2, since the wide train-CV gap of degree 5 confesses memorisation while degree 2 generalises",
+      "explanation": "Ship CV minima: train scores are construction, CV is evidence.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_02_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_02_polynomial_regression_mpg",
+      "type": "true_false",
+      "question": "PolynomialFeatures belongs inside the pipeline so every CV fold refits transforms on its own train slice.",
+      "answer": true,
+      "explanation": "Outside the loop is contamination by convenience.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_03_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_03_ridge_lasso_regression",
+      "type": "multiple_choice",
+      "question": "Lasso keeps AveRooms on one seed but swaps to AveBedrms on another with identical scores. What should the report conclude?",
+      "options": [
+        "Correlated twins share credit unstably: report the swap as correlation evidence, never crown one twin",
+        "AveRooms is the true cause; the other seed errored",
+        "Lasso is broken for correlated data",
+        "Silently average the twins into one feature"
+      ],
+      "answer": "Correlated twins share credit unstably: report the swap as correlation evidence, never crown one twin",
+      "explanation": "Identical scores prove interchangeability: stability findings cut both ways.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_03_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_03_ridge_lasso_regression",
+      "type": "true_false",
+      "question": "Ridge and Lasso inputs must be standardised because penalties otherwise punish raw magnitudes instead of importance.",
+      "answer": true,
+      "explanation": "Fair pricing needs a common ruler.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_04_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_04_classification_experiments",
+      "type": "multiple_choice",
+      "question": "k=1 scores 100 percent on train but loses cross-validation badly while k=15 tops it. Why?",
+      "options": [
+        "k=1 memorises with huge variance while k=15 smooths neighbourhoods: CV ranks generalisation, train ranks memory",
+        "k=1 is the best model and CV is broken",
+        "Larger k always wins universally",
+        "Variance does not apply to lazy learners"
+      ],
+      "answer": "k=1 memorises with huge variance while k=15 smooths neighbourhoods: CV ranks generalisation, train ranks memory",
+      "explanation": "Capacity runs backwards in kNN: small k means variance disease.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_04_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_04_classification_experiments",
+      "type": "true_false",
+      "question": "Comparing classifiers requires identical scaled inputs, splits and seeds, or the ranking is void.",
+      "answer": true,
+      "explanation": "Fairness precedes ranking: the protocol is the experiment.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_05_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_05_evaluation_metrics_lab",
+      "type": "multiple_choice",
+      "question": "For illness screening on 95/5 data, model A has accuracy 0.97 with recall 0.40 while B has 0.91 with 0.90. Which ships?",
+      "options": [
+        "B, because misses kill and A's accuracy is a majority echo while B catches nine of ten sick",
+        "A, because accuracy decides everything",
+        "Neither without 1.00 recall",
+        "Both equally above 0.90"
+      ],
+      "answer": "B, because misses kill and A's accuracy is a majority echo while B catches nine of ten sick",
+      "explanation": "Cost picks the column: recall headlines screening.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m2_05_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m2_05_evaluation_metrics_lab",
+      "type": "true_false",
+      "question": "AUC grades ranking across thresholds, so the deployed dot still needs its own precision and recall report.",
+      "answer": true,
+      "explanation": "Validate-rank by AUC, cost-pick the threshold, compare dots.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_01_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_01_kmeans_clustering_lab",
+      "type": "multiple_choice",
+      "question": "k=7 gives the lowest WCSS on a sweep. Why is k=7 the wrong pick?",
+      "options": [
+        "WCSS falls monotonically with k, so minimising it always over-clusters; pick by elbow kink confirmed by silhouette peak",
+        "Lowest WCSS defines the best clustering",
+        "WCSS rises with k, making minima meaningful",
+        "k must equal the feature count"
+      ],
+      "answer": "WCSS falls monotonically with k, so minimising it always over-clusters; pick by elbow kink confirmed by silhouette peak",
+      "explanation": "Monotone metrics can't optimise: bend plus peak decide.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_01_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_01_kmeans_clustering_lab",
+      "type": "true_false",
+      "question": "k-means distances must use scaled features, because raw units rig geometry toward large-numbered columns.",
+      "answer": true,
+      "explanation": "Preprocessing is half the analysis.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_02_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_02_hierarchical_clustering_lab",
+      "type": "multiple_choice",
+      "question": "Single linkage chains stragglers while complete linkage balls up on the same data. Which is correct?",
+      "options": [
+        "Neither absolutely: linkages favour shapes, so choose by shape hypothesis and report both",
+        "Single linkage, since chains are always truer",
+        "Complete linkage, since balance is always truer",
+        "The data is broken and must be resampled"
+      ],
+      "answer": "Neither absolutely: linkages favour shapes, so choose by shape hypothesis and report both",
+      "explanation": "Methods are lenses with preferences: findings wear their lens openly.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_02_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_02_hierarchical_clustering_lab",
+      "type": "true_false",
+      "question": "Hierarchical clustering defers k because one run records every granularity as dendrogram heights for later cutting.",
+      "answer": true,
+      "explanation": "One run holds every resolution; flat runs hold one.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_03_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_03_ensemble_methods_lab",
+      "type": "multiple_choice",
+      "question": "Boosting peaks at 120 rounds then sags by 500 while forests plateau. What ships?",
+      "options": [
+        "About 120 rounds, since peaks ship and endpoints don't: over-rounding memorises noise",
+        "500 rounds, since more is more",
+        "Forests are obsolete wherever boosting exists",
+        "OOB scores should be ignored"
+      ],
+      "answer": "About 120 rounds, since peaks ship and endpoints don't: over-rounding memorises noise",
+      "explanation": "Plateau means stop paying; peak-then-sag means stop rounding.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_03_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_03_ensemble_methods_lab",
+      "type": "true_false",
+      "question": "Bagging averages variance while boosting chases bias, so committees need the disease matched to the cure.",
+      "answer": true,
+      "explanation": "Variance down, bias down, then noise up: read all three deltas.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_04_01",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_04_end_to_end_miniproject",
+      "type": "multiple_choice",
+      "question": "An evaluator reruns a capstone and one stage score differs by 0.02. What decides pass or fail?",
+      "options": [
+        "The recorded stack versions: same code plus same data must match, and the version log convicts or acquits environment drift in one line",
+        "Any difference voids everything",
+        "Scores don't matter in projects",
+        "Rerun until it matches, then present"
+      ],
+      "answer": "The recorded stack versions: same code plus same data must match, and the version log convicts or acquits environment drift in one line",
+      "explanation": "Reproducibility is conditional on the recorded stack.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_pccsl508_m3_04_02",
+      "courseCode": "PCCSL508",
+      "topicId": "m3_04_end_to_end_miniproject",
+      "type": "true_false",
+      "question": "Every report sentence in a mini-project needs an artefact behind it, because evaluators mark artefacts, not memories.",
+      "answer": true,
+      "explanation": "Evidence plus limits beats superlatives alone.",
+      "difficulty": "beginner",
+      "examRelevance": "high"
+    },
+    {
+      "id": "q_uchum506_m1_01_01",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_01_why_constitution_for_engineers",
+      "type": "multiple_choice",
+      "question": "A classmate studies only Tarangam guide pages for the MOOC proctored exam. What is wrong?",
+      "options": [
+        "The guides teach navigation, not constitutional content: the exam tests the external MOOC's material",
+        "Guides equal courses, so nothing is wrong",
+        "MOOCs never hold exams",
+        "Guides are banned from citation anywhere"
+      ],
+      "answer": "The guides teach navigation, not constitutional content: the exam tests the external MOOC's material",
+      "explanation": "Orientation versus content are different artefacts: study each for its own job.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
+    },
+    {
+      "id": "q_uchum506_m1_01_02",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_01_why_constitution_for_engineers",
+      "type": "true_false",
+      "question": "The approved MOOC listing must be verified with the department each session, since sessions rotate.",
+      "answer": true,
+      "explanation": "Currency beats inheritance: last year's link may be closed or unapproved.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
+    },
+    {
+      "id": "q_uchum506_m1_02_01",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_02_using_the_external_mooc",
+      "type": "multiple_choice",
+      "question": "All videos watched in the final weekend, yet completion fails. What went wrong?",
+      "options": [
+        "Graded items with deadlines were missed: views alone rarely satisfy completion",
+        "Videos do not count as learning scientifically",
+        "Weekends are banned on MOOC platforms",
+        "Completion is random and blameless"
+      ],
+      "answer": "Graded items with deadlines were missed: views alone rarely satisfy completion",
+      "explanation": "Completion means graded artefacts on time, not hours watched.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
+    },
+    {
+      "id": "q_uchum506_m1_02_02",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_02_using_the_external_mooc",
+      "type": "true_false",
+      "question": "Posting quiz answers for peers is platform malpractice; concept discussion teaches without copying.",
+      "answer": true,
+      "explanation": "Generosity stays inside integrity: explain ideas, solve your own items.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
+    },
+    {
+      "id": "q_uchum506_m1_03_01",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_03_completion_and_evidence",
+      "type": "multiple_choice",
+      "question": "Certificate earned but no credit recorded, with nothing ever submitted to the department. What broke?",
+      "options": [
+        "The submission step: credit needs the notified handoff with acknowledgment",
+        "Certificates auto-transfer, so the office erred",
+        "Certificates are decorative and worthless",
+        "Departments reject all MOOCs on principle"
+      ],
+      "answer": "The submission step: credit needs the notified handoff with acknowledgment",
+      "explanation": "Enroll, progress, certificate, submit, record: unfiled evidence is absent evidence.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
+    },
+    {
+      "id": "q_uchum506_m1_03_02",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_03_completion_and_evidence",
+      "type": "true_false",
+      "question": "Certificates must match institutional records character-for-character at enrollment, or verification orphans them.",
+      "answer": true,
+      "explanation": "Corrections later are slow or impossible: match names first.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
+    },
+    {
+      "id": "q_uchum506_m1_04_01",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_04_revision_pointers_only",
+      "type": "multiple_choice",
+      "question": "Senior notes disagree with the MOOC transcript on an article's content. Which wins?",
+      "options": [
+        "The official transcript and the constitutional text it cites: verify-then-memorise",
+        "Senior notes, since seniors never err",
+        "The newer document regardless of source",
+        "Both are equally valid"
+      ],
+      "answer": "The official transcript and the constitutional text it cites: verify-then-memorise",
+      "explanation": "Authority resolves upward: constitution, then official material, then everything else.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
+    },
+    {
+      "id": "q_uchum506_m1_04_02",
+      "courseCode": "UCHUM506",
+      "topicId": "m1_04_revision_pointers_only",
+      "type": "true_false",
+      "question": "Revision must map to the MOOC's stated week-outcomes because outcomes are the exam's blueprint.",
+      "answer": true,
+      "explanation": "Coverage is measured against outcomes, not hours.",
+      "difficulty": "beginner",
+      "examRelevance": "low"
     }
   ]
 }

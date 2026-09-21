@@ -165,9 +165,9 @@ describe('live repo graph', () => {
   const built = buildTopicGraph({ curriculumDoc, schema });
   const analysis = analyzeTopicGraph(built);
 
-  it('discovers all 435 topics with 435 metadata-bearing', () => {
-    assert.equal(built.nodes.size, 435);
-    assert.equal(analysis.coverage.metadata, 435);
+  it('discovers all 486 topics with 486 metadata-bearing', () => {
+    assert.equal(built.nodes.size, 486);
+    assert.equal(analysis.coverage.metadata, 486);
     assert.deepEqual(built.metadataErrors, []);
   });
 
@@ -190,7 +190,7 @@ describe('live repo graph', () => {
     assert.equal(kinds.get('OECST614/m4_05_resampling_bias_variance_tradeoff -> OECST614/m2_03_overfitting_lasso_ridge'), 'internal');
     assert.equal(kinds.get('PCCST501/m4_99_practice_lab_management_physical_drills -> PCCST501/m4_01_network_management_snmp_architecture'), 'internal');
     assert.equal(kinds.get('PCCST502/m1_99_practice_lab_asymptotics_and_recurrences -> PCCST502/m1_08_master_theorem_and_cases'), 'internal');
-    assert.equal(analysis.edgeCount, 608);
+    assert.equal(analysis.edgeCount, 655);
   });
 
   it('computes chain depths', () => {
@@ -212,7 +212,7 @@ describe('live repo graph', () => {
     assert.equal(built.nodes.get('GXEST605/m4_07_drill_journal_guide').depth, 11);
     assert.equal(built.nodes.get('OECST614/m4_06_m4_mixed_drill').depth, 6);
     assert.equal(built.nodes.get('PCCST502/m1_99_practice_lab_asymptotics_and_recurrences').depth, 5);
-    assert.equal(analysis.maxDepth, 11);
+    assert.equal(analysis.maxDepth, 19);
   });
 
   it('has zero errors and only the known intro-topic warnings', () => {

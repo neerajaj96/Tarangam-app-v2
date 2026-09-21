@@ -45,7 +45,7 @@ export const PERFORMANCE_BUDGETS = {
   // transitive local JS + manifest + bank where the surface loads it).
   initialPayloadBytes: 1400 * 1024,
   // Generated topic pages must all survive optimization.
-  topicPageCount: 435,
+  topicPageCount: 486,
 };
 
 const ENTRY_MODULES = {
@@ -162,7 +162,7 @@ export function auditPerformance(outputDir = 'dist') {
   const maxTopic = largestTopics[0] ?? null;
   check('totalTopicHtmlBytes', totalTopicHtml, PERFORMANCE_BUDGETS.totalTopicHtmlBytes, `${pages.length} topic pages`);
   check('maxTopicPageBytes', maxTopic ? maxTopic.bytes : 0, PERFORMANCE_BUDGETS.maxTopicPageBytes, maxTopic ? `${maxTopic.courseCode}/${maxTopic.file}` : 'no topic pages');
-  check('topicPageCount', pages.length, PERFORMANCE_BUDGETS.topicPageCount, 'all 435 topics must survive');
+  check('topicPageCount', pages.length, PERFORMANCE_BUDGETS.topicPageCount, 'all 486 topics must survive');
   // Count is exact: over is as wrong as under (missing or stray pages).
   const countResult = results[results.length - 1];
   countResult.pass = countResult.actual === countResult.budget;

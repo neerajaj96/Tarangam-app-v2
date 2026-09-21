@@ -7,7 +7,7 @@
  * high/medium/low relevance, course and module boundaries, prerequisite
  * gaps, in-progress and next exam topics, deterministic ordering and
  * repeated-run stability, invalid metadata/status handling, all-completed
- * state, surface integrations, and the full 435-topic repository.
+ * state, surface integrations, and the full 486-topic repository.
  *
  * Weighting (documented in assets/exam-readiness.js):
  * high -> 3, medium -> 2, low -> 1, unknown -> 0 (excluded).
@@ -311,17 +311,17 @@ describe('learning journey integration', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
 
   it('scores the full curriculum deterministically', () => {
-    assert.equal(manifest.topics.length, 435);
+    assert.equal(manifest.topics.length, 486);
     const model = Exam.buildExamReadiness(manifest, none);
-    assert.equal(model.totalExamTopics, 435);
-    assert.deepEqual([model.breakdown.high.total, model.breakdown.medium.total, model.breakdown.low.total], [256, 179, 0]);
-    assert.equal(model.weightedTotal, 256 * 3 + 179 * 2);
+    assert.equal(model.totalExamTopics, 486);
+    assert.deepEqual([model.breakdown.high.total, model.breakdown.medium.total, model.breakdown.low.total], [303, 179, 4]);
+    assert.equal(model.weightedTotal, 303 * 3 + 179 * 2 + 4);
     assert.equal(model.readinessPercent, 0);
     assert.equal(model.isEmpty, true);
     assert.equal(`${model.nextExamTopic.courseCode}/${model.nextExamTopic.id}`, 'GAMAT301/m1_01_random_variables_pmf_cdf');
@@ -333,7 +333,7 @@ describe('live 435-topic repository', () => {
 
   it('keeps journey, dashboard, explorer, and context consistent live', () => {
     const journey = buildJourneyModel(manifest, none);
-    assert.equal(journey.examReadiness.totalExamTopics, 435);
+    assert.equal(journey.examReadiness.totalExamTopics, 486);
     assert.equal(journey.nextExamTopic.id, 'm1_01_random_variables_pmf_cdf');
     const dashboard = buildDashboardExamModel(manifest, none);
     assert.equal(dashboard.readinessPercent, 0);

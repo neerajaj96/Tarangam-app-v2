@@ -9,7 +9,8 @@
       "KTU B.Tech Curriculum 2024 Semester I–VIII, Computer Science and Engineering (Group A): official semester tables — course codes, titles, Course Type and Course Category (covers S1–S8 placement and PE/OE/PBL classification)",
       "KTU detailed syllabus (CSE, S3–S8): official course titles, Course Type and 4-module syllabus descriptions for GAMAT301, PCCST303, PCCST503, PCCST501, PCCST502, PECST522, PCCST601, PCCST602, PBCST604, PECST632, PECST637, PECST631 and OECST614",
       "KTU First Year syllabus (Group B, S1/S2): official title, code, Course Type Group Core-Theory and 4-module syllabus for GXEST104",
-      "KTU S6 Design Thinking and Product Development syllabus (Common to Group A & Group B): official title, code GXEST605, Course Type Theory and 4-module syllabus"
+      "KTU S6 Design Thinking and Product Development syllabus (Common to Group A & Group B): official title, code GXEST605, Course Type Theory and 4-module syllabus",
+      "S5 completion task specification (course codes, module scopes and topic lists for PBCST504 Microcontrollers, PCCSL507 Networks Lab, PCCSL508 Machine Learning Lab and UCHUM506 Constitution of India MOOC; PE-2 alternatives, Industrial Visit/Training and Minor/Honours documented as structure only in docs/s5-academic-structure.md)"
     ],
     "verifiedOn": "2026-09-19",
     "sources": [
@@ -18,9 +19,9 @@
       "index.html:year-block/sem-block/course-section",
       "README.md:topic counts/groups"
     ],
-    "totalCourses": 16,
-    "totalTopics": 435,
-    "totalModules": 64,
+    "totalCourses": 20,
+    "totalTopics": 486,
+    "totalModules": 75,
     "notes": "Canonical course/module metadata only. Topic-level detail stays in content/ + dist/navigation_index.json. Academic fields (course names, semester/year placement, category, module names) verified against the official KTU syllabus documents listed in verifiedAgainst; GZPHT121 is not present in the provided CSE/Group-A/B documents and is retained unchanged from the repository (see its verificationNote). Empty prerequisites/concepts arrays are reserved extension points for future search, concept-mapping, analytics, AI/RAG and additional curriculum versions; no such features are implemented here."
   },
   "dashboardOrder": [
@@ -32,6 +33,10 @@
     "PCCST501",
     "PCCST502",
     "PECST522",
+    "PBCST504",
+    "PCCSL507",
+    "PCCSL508",
+    "UCHUM506",
     "PCCST601",
     "PCCST602",
     "PBCST604",
@@ -394,6 +399,156 @@
       "tags": [
         "elective",
         "PE-2"
+      ],
+      "prerequisites": [],
+      "concepts": []
+    },
+    "PBCST504": {
+      "code": "PBCST504",
+      "name": "Microcontrollers",
+      "verified": true,
+      "year": 3,
+      "yearLabel": "3rd Year",
+      "semester": "S5",
+      "semesterId": "s5",
+      "category": "pbl",
+      "codeFamily": "PBCST",
+      "order": 17,
+      "topicCount": 20,
+      "contentDir": "content/PBCST504",
+      "modules": [
+        {
+          "number": 1,
+          "name": "Embedded Foundations & ARM",
+          "topicCount": 5,
+          "contentPattern": "content/PBCST504/m1_*_.md"
+        },
+        {
+          "number": 2,
+          "name": "STM32 & Peripherals",
+          "topicCount": 5,
+          "contentPattern": "content/PBCST504/m2_*_.md"
+        },
+        {
+          "number": 3,
+          "name": "Serial Communication",
+          "topicCount": 5,
+          "contentPattern": "content/PBCST504/m3_*_.md"
+        },
+        {
+          "number": 4,
+          "name": "IoT, RTOS & Project",
+          "topicCount": 5,
+          "contentPattern": "content/PBCST504/m4_*_.md"
+        }
+      ],
+      "tags": [
+        "pbl"
+      ],
+      "prerequisites": [],
+      "concepts": []
+    },
+    "PCCSL507": {
+      "code": "PCCSL507",
+      "name": "Networks Lab",
+      "verified": true,
+      "year": 3,
+      "yearLabel": "3rd Year",
+      "semester": "S5",
+      "semesterId": "s5",
+      "category": "lab",
+      "codeFamily": "PCCSL",
+      "order": 18,
+      "topicCount": 12,
+      "contentDir": "content/PCCSL507",
+      "modules": [
+        {
+          "number": 1,
+          "name": "Linux & Socket Programming",
+          "topicCount": 4,
+          "contentPattern": "content/PCCSL507/m1_*_.md"
+        },
+        {
+          "number": 2,
+          "name": "Monitoring & Protocols",
+          "topicCount": 4,
+          "contentPattern": "content/PCCSL507/m2_*_.md"
+        },
+        {
+          "number": 3,
+          "name": "Routing, Security & Simulation",
+          "topicCount": 4,
+          "contentPattern": "content/PCCSL507/m3_*_.md"
+        }
+      ],
+      "tags": [
+        "lab"
+      ],
+      "prerequisites": [],
+      "concepts": []
+    },
+    "PCCSL508": {
+      "code": "PCCSL508",
+      "name": "Machine Learning Lab",
+      "verified": true,
+      "year": 3,
+      "yearLabel": "3rd Year",
+      "semester": "S5",
+      "semesterId": "s5",
+      "category": "lab",
+      "codeFamily": "PCCSL",
+      "order": 19,
+      "topicCount": 15,
+      "contentDir": "content/PCCSL508",
+      "modules": [
+        {
+          "number": 1,
+          "name": "Python for ML",
+          "topicCount": 6,
+          "contentPattern": "content/PCCSL508/m1_*_.md"
+        },
+        {
+          "number": 2,
+          "name": "Regression & Classification",
+          "topicCount": 5,
+          "contentPattern": "content/PCCSL508/m2_*_.md"
+        },
+        {
+          "number": 3,
+          "name": "Clustering, Ensembles & Capstone",
+          "topicCount": 4,
+          "contentPattern": "content/PCCSL508/m3_*_.md"
+        }
+      ],
+      "tags": [
+        "lab"
+      ],
+      "prerequisites": [],
+      "concepts": []
+    },
+    "UCHUM506": {
+      "code": "UCHUM506",
+      "name": "Constitution of India (MOOC)",
+      "verified": true,
+      "year": 3,
+      "yearLabel": "3rd Year",
+      "semester": "S5",
+      "semesterId": "s5",
+      "category": "mooc",
+      "codeFamily": "UCHUM",
+      "order": 20,
+      "topicCount": 4,
+      "contentDir": "content/UCHUM506",
+      "modules": [
+        {
+          "number": 1,
+          "name": "MOOC Guide",
+          "topicCount": 4,
+          "contentPattern": "content/UCHUM506/m1_*_.md"
+        }
+      ],
+      "tags": [
+        "mooc"
       ],
       "prerequisites": [],
       "concepts": []

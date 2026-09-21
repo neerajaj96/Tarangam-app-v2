@@ -9,7 +9,7 @@
  * auto-weak, deterministic ordering, course/module aggregation, journey
  * integration without touching the canonical recommendation, dashboard
  * wiring, explorer filters, study-context rendering, determinism across
- * repeated runs, and the full 435-topic live repository.
+ * repeated runs, and the full 486-topic live repository.
  *
  * Attention is descriptive evidence only: explicit reasons, never scores.
  *
@@ -531,22 +531,22 @@ describe('repeated identical inputs give identical outputs', () => {
   });
 });
 
-describe('live 435-topic repository', () => {
+describe('live 486-topic repository', () => {
   const schema = loadTopicSchema();
   const curriculumDoc = loadCurriculum();
   const manifest = buildTopicManifest({ curriculumDoc, schema });
   const liveBank = JSON.parse(fs.readFileSync('data/assessments.json', 'utf-8'));
 
-  it('builds attention deterministically over all 435 topics', () => {
-    assert.equal(manifest.topics.length, 435);
-    assert.equal(liveBank.questions.length, 508);
+  it('builds attention deterministically over all 486 topics', () => {
+    assert.equal(manifest.topics.length, 486);
+    assert.equal(liveBank.questions.length, 610);
     const model = Weak.buildAttentionModel(manifest, none, null, NOW, { bank: liveBank, attempts: emptyStore() });
     assert.ok(model.counts.total > 0);
     assert.equal(model.counts.needsReview, 0);
     // Every course and module aggregates without throwing.
     const courses = Weak.buildCourseAttentionList(manifest, none, null, NOW, { bank: liveBank, attempts: emptyStore() });
-    assert.equal(courses.length, 16);
-    assert.equal(courses.reduce((a, c) => a + c.totalTopics, 0), 435);
+    assert.equal(courses.length, 20);
+    assert.equal(courses.reduce((a, c) => a + c.totalTopics, 0), 486);
     const modules = Weak.buildModuleAttentionList(manifest, none, null, 'GAMAT301', NOW, { bank: liveBank, attempts: emptyStore() });
     assert.equal(modules.length, 4);
     assert.equal(
