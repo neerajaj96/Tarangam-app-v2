@@ -40,6 +40,14 @@ Round $k = 2$ admits vertex $2$ as midpoint: $D[1][3] = \min(8, 3 + 2) = 5$ — 
 
 **Tiny toy example (2 vertices).** Edges $1 \to 2$ (7), $2 \to 1$ ($-2$). $D^0 = [[0,7],[-2,0]]$. Round 1 (hub 1): $D[2][2] = \min(0, -2+7) = 0$ — no change. Round 2 (hub 2): $D[1][1] = \min(0, 7-2) = 0$ — no change, diagonal clean, no negative cycle. Two rounds, zero drama, correct table.
 
+::: toggle Expand `D[k][i][j] = min(D[k−1][i][j], D[k−1][i][k] + D[k−1][k][j])` symbol by symbol
+$D^k[i][j]$ = best $i \to j$ distance using intermediate vertices only from $\{1..k\}$ (the growing permission set). $D^{k-1}[i][j]$ = best path ignoring the new hub (keep the old answer). $D^{k-1}[i][k] + D^{k-1}[k][j]$ = best path forced through new hub $k$ (arrive + depart). $\min$ = keep whichever is shorter (hub helps or it doesn't — one comparison per pair). $k = 1..V$ rounds induct one hub at a time; after round $V$ all intermediates allowed = true shortest paths. Tiny check above: $D[1][3] = \min(8, 3+2) = 5$ — via-2 beats direct-8.
+:::
+
+::: toggle What do `intermediate vertex`, `negative cycle`, and `Π` mean?
+`Intermediate vertex` = any vertex strictly between start and end on a path (hubs admitted round by round — $D^k$'s permission set). `Negative cycle` = a directed loop with total negative cost (looping forever keeps improving — shortest paths then undefined; convicted by a negative diagonal entry at the end). $\Pi[i][j]$ = predecessor of $j$ on the current best $i \to j$ path (follow pointers home to rebuild "which way", not just "how far").
+:::
+
 ---
 
 <a id="the-math"></a>

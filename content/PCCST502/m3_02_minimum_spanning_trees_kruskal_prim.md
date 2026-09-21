@@ -37,6 +37,14 @@ tags:
 
 **Tiny toy example (3 vertices).** Triangle edges: $a$–$b$ (1), $b$–$c$ (2), $a$–$c$ (3). MST = {1, 2}, cost 3. Kruskal: take 1, take 2, skip 3 (cycle). Prim from $a$: take 1 to $b$, then 2 to $c$. Both agree here.
 
+::: toggle What are `spanning tree`, `cut`, `cycle property`, `frontier`?
+`Spanning tree` = edges touching every vertex with no cycles (exactly $V−1$ edges — connectivity without waste). `Cut` = any vertex split $S$/$V−S$; crossing edges straddle it. `Cycle property` = the heaviest edge on any cycle belongs to no MST (Kruskal's skip rule certified). `Frontier` (Prim) = cheapest edges leaving the grown territory (the only candidates ever considered — everything inside is settled).
+:::
+
+::: toggle Trace Kruskal vs Prim on the triangle, decision by decision
+Kruskal (sorted 1,2,3): edge 1 — endpoints unconnected → take (Union-Find merges). Edge 2 — unconnected → take (now $V−1 = 2$ edges, stop). Edge 3 — endpoints already connected → skip (would close cycle 1-2-3). Prim from $a$: territory {a}, cheapest out is 1 → {a,b}; cheapest out now is 2 (vs 3) → {a,b,c}. Same {1,2}, cost 3 — sorted-list greed vs territorial greed, both licensed because each taken edge is lightest across its cut.
+:::
+
 ---
 
 <a id="the-math"></a>

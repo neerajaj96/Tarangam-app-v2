@@ -35,6 +35,14 @@ A cashier making 67¢ grabs the biggest fitting coin (quarter), then repeats —
 
 **Tiny toy example.** Activities A(1–2), B(2–3), C(1–3) ("start–finish" hours): earliest-finish greedy picks A (ends 2), then B (starts 2 ≥ 2) → {A, B}, size 2 — optimal, since C blocks both others. The proof idea: A ends first, so swapping A into any solution never hurts.
 
+::: toggle What are `local choice`, `feasible`, `greedy choice`, `optimal substructure`?
+`Local choice` = the best-looking single move right now (earliest finish, cheapest edge — no lookahead). `Feasible` = satisfying all constraints so far (compatible activities, acyclic edges — illegal picks discarded, never reconsidered). `Greedy choice` = the property that *some* optimum extends the first local pick (licensed by exchange argument). `Optimal substructure` = after committing, the remainder is the same problem smaller (recurse identically). Greed needs both properties; DP needs only the second.
+:::
+
+::: toggle Why does greedy win fractional knapsack but lose 0/1?
+Fractional allows taking part of an item, so the exchange argument survives: swap any optimum's first differing fraction toward the best ratio without breaking feasibility. 0/1 forbids fractions, so the swap can break (the (60,10),(100,20),(120,30) counterexample: ratio-greedy 160 vs optimum 220). Divisibility is the whole difference — same rule, opposite verdicts, and the exam always pairs them.
+:::
+
 ---
 
 <a id="the-math"></a>

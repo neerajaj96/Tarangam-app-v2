@@ -36,6 +36,14 @@ Boxes arrive one by one and must go *somewhere now* (online) — or you have see
 
 **Tiny toy example (capacity 10).** Items $[6, 4, 5]$: Next Fit packs {6,4} then {5} → 2 bins (optimal here). Items $[5, 5, 6, 4]$ in that order: NF packs {5,5} then {6,4} → 2 bins — but order $[6, 4, 5, 5]$? Same 2. Online pain needs adversarial orders (covered in quizzes) — the point stands: order decides waste.
 
+::: toggle What are `bin`, `OPT`, `online`, `approximation ratio`, `lower bound`?
+`Bin` = capacity-1 container (items are fractions $s_i \in (0,1]$ of it). `OPT` = the optimal (minimum) bin count for this instance (unknown in practice — bounds estimate it). `Online` = items arrive one by one, decide-now-forever (no lookahead, no reorder). `Approximation ratio` = worst-case multiple of OPT the rule never exceeds (FFD ≤ 11/9·OPT + 1 — a ceiling, not a report card). `Lower bound` = a count no packing beats ($\lceil\sum s_i\rceil$ total-size floor, oversized-item floor) — matching bound + packing certifies optimality without search.
+:::
+
+::: toggle Trace Next Fit vs First Fit on `[5, 5, 6, 4]` (capacity 10)
+Next Fit (one open bin, amnesiac): 5→B1{5}; 5→B1{5,5} full; 6 overflows → seal B1, open B2{6}; 4→B2{6,4}. Total 2. First Fit (all bins open, lowest fitting): 5→B1; 5→B1; 6→B2 (B1 overflows); 4→B1 (first fit — B1 has room 5 ≥ 4!). Total 2, but B1 reused where NF sealed it — memory (all open bins) vs amnesia (one open bin) is the whole difference, and the $2·OPT−1$ proof counts sealed pairs summing > 1.
+:::
+
 ---
 
 <a id="the-math"></a>

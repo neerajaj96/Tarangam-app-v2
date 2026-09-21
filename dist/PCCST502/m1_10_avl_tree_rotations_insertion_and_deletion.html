@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> The invariant $|BF| \le 1$ is easy to state — but inserting a key can break it, and we must repair the shape <em>without</em> breaking BST ordering and <em>without</em> losing keys. The repair tool is <strong>rotation</strong>: a local parent/child swap among 2–3 nodes that changes heights while preserving left-smaller/right-larger order everywhere.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a two-pan balance tipped left. You do not discard weights — you redistribute them until it levels, same weights, new arrangement. A rotation does this to a tipped subtree ($|BF| = 2$): reassign parents among a few nodes, keep every key, keep BST order, restore balance. Straight-line leans (LL, RR) need one rotation against the lean; elbow (zig-zag) leans (LR, RL) need two — unbend the elbow, then fix the line. Drop the scale now: the four cases below are exact.</p>
 </div></details><p><strong>Tiny toy example.</strong> Nodes $30$ over $20$ over $10$ (a left line): right-rotate $30$ → $20$ on top with $10$, $30$ as children. Keys ${10, 20, 30}$ unchanged, order intact, all $BF = 0$.</p>
-<hr>
+<details class="interactive-toggle"><summary>Trace the LL rotation pointer by pointer</summary><div class="toggle-content"><p>Before: 30 (BF +2) with left child 20, 20&#39;s right subtree T (possibly empty). Step 1: detach T from 20 (remember it). Step 2: 20 becomes local root; 30 becomes 20&#39;s right child. Step 3: reattach T as 30&#39;s left child (T&#39;s keys sit between 20 and 30, so BST order holds: 20 &lt; T &lt; 30). After: 20 over 10 and 30, all BF = 0. Why each step: steps 1–2 swap the lean; step 3 parks the middle subtree where order demands — skipping it loses keys.</p>
+</div></details><details class="interactive-toggle"><summary>How do I choose between LL, RR, LR, RL from the insertion path?</summary><div class="toggle-content"><p>Read the last two turns from the unbalanced node toward the new key: left-then-left = LL (single right rotation); right-then-right = RR (single left); left-then-right = LR (left on child, then right on parent); right-then-left = RL (right on child, then left on parent). Straight (same direction twice) → one rotation against the lean; elbow (directions differ) → child-first double rotation. Deletion reuses the shapes but must recheck every ancestor upward (heights can shrink).</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-inserting-30-20-10">3. Worked example — inserting 30, … →</a></p>

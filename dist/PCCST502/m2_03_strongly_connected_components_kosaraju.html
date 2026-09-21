@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> In a directed graph, &quot;connected&quot; splits in two: $u$ may reach $v$ while $v$ cannot return. A <strong>strongly connected component (SCC)</strong> is a maximal group with round trips everywhere inside (every member reaches every other). Task: partition all vertices into these groups. Naive pairwise reachability is far too slow; Kosaraju does it in two linear passes.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Island Chains in a One-Way Current</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Islands linked by one-way ferries: an SCC is a group with round trips between every pair. Between groups travel is one-way — collapse each group to a dot and the dots form a DAG (Directed Acyclic Graph: no directed cycles), since a cycle of groups would merge into one. Kosaraju&#39;s trick: record the order a first expedition <em>finishes</em> islands, then re-explore the <em>reversed</em> map in that order — each re-exploration nets exactly one group. Drop the islands now: finish times and the transpose below are the exact mechanism.</p>
 </div></details><p><strong>Tiny toy example (3 vertices).</strong> Edges $a \to b$, $b \to a$ (round trip!), $b \to c$ (one-way out). SCCs: ${a, b}$ (mutual) and ${c}$ (can be reached, never returns). Collapsed: ${a,b} \to {c}$ — a 2-node DAG.</p>
-<hr>
+<details class="interactive-toggle"><summary>What do `connected component`, `reachability`, and `strongly` mean?</summary><div class="toggle-content"><p><code>Connected component</code> (undirected) = a group joined by paths ignoring direction. <code>Reachability</code> ($u \leadsto v$) = a directed path exists from $u$ to $v$ (one-way counts). <code>Strongly</code> upgrades the requirement to round trips: $u \leadsto v$ AND $v \leadsto u$ for every pair inside. Tiny check: $b \to c$ alone makes ${b,c}$ connected but not strongly (no return) — &quot;strongly&quot; means mutual, never one-way.</p>
+</div></details><details class="interactive-toggle"><summary>Why must pass 2 run on the `transpose` in decreasing finish order?</summary><div class="toggle-content"><p>Transpose ($G^T$, every edge reversed) turns pass-1&#39;s source SCC into a sink: DFS from it cannot escape its own group (all reversed edges point inward). Decreasing finish order starts each peeling from a current sink, so each DFS tree harvests exactly one SCC. Arbitrary order bleeds across groups (a mid-order start walks into neighbours); increasing order starts at sinks of $G$ (= sources of $G^T$) and floods outward — the order is load-bearing, not bookkeeping.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-triangle-plus-tail">3. Worked example — triangle plus … →</a></p>

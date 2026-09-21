@@ -48,11 +48,23 @@ Think of an algorithm like a recipe for making tea. A real recipe must: (1) actu
 4. **Output** — at least one quantity produced, with a specified, provable relationship to the inputs (it must actually solve the stated problem).
 5. **Effectiveness** — every operation is basic enough to do exactly, in finite time, with pencil and paper. "Guess the answer" is not effective; "add two numbers" is.
 
+::: toggle What do `finite`, `definite`, and `effective` mean in one breath each?
+`Finite` = the instructions must end (a stopping point exists for every valid input — "keep stirring forever" fails). `Definite` = each instruction has exactly one meaning (no interpretation possible — "add sugar" fails, "add 2 teaspoons" passes). `Effective` = each step is actually doable with basic means (pencil-and-paper doable — "add moon dust" is clear but unobtainable, so it fails effectiveness, not definiteness).
+:::
+
+::: toggle What is the `RAM model` and what is `pseudocode`?
+RAM (Random Access Machine) model = an imaginary simplified computer (numbered memory cells, one-unit basic operations, sequential steps) used so analysis compares algorithms, not machines. Pseudocode = half-formal recipe notation between English and code (loops and conditions written plainly, no compiler needed) — precise enough to count operations from, readable without knowing any language.
+:::
+
 **Symbols and abbreviations used here:** $n$ = input size (e.g. number of list elements); $O(1)$ = constant work, independent of $n$ (defined fully in the asymptotics note).
 
 **The RAM (Random Access Machine) model.** To analyse algorithms fairly, we imagine a simplified ideal computer: unlimited memory of numbered cells, each readable in one unit of time ("random access", hence the name); basic operations — addition, subtraction, comparison, assignment, array indexing — each cost exactly one unit ($O(1)$), regardless of number sizes; instructions run sequentially, with no parallelism. This deliberately ignores caches, pipelining, and memory hierarchy so that analysis does not depend on any physical machine.
 
 **Space vs time efficiency.** *Time efficiency* asks "how many basic operations, as a function of $n$?" *Space efficiency* asks "how much extra memory beyond the input, as a function of $n$?" They often trade off: *memoization* (storing precomputed results) spends space to save time; recomputing on the fly spends time to save space. Neither is always better — it depends on which resource is scarcer.
+
+::: toggle What do `input`, `output`, and `correctness` mean for an algorithm?
+`Input` = zero or more quantities supplied from outside before or during execution (the ingredients — possibly none). `Output` = at least one produced quantity with a provable relationship to the input (the dish — mandatory, unlike input). Correctness = the output always satisfies the problem's specification for every valid input (not "usually works" — proven for all inputs).
+:::
 
 ---
 

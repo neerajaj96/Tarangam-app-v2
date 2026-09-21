@@ -38,6 +38,14 @@ Sibling of BFS/DFS traversals (M2.2) and Kosaraju's finish-time machinery (M2.3)
 
 **Tiny toy example (3 vertices).** Edges $a \to b$, $a \to c$ (no edge between $b$, $c$). Valid orders: $[a, b, c]$ and $[a, c, b]$ — $a$ first forced, the pair free. Non-uniqueness is normal, not suspicious.
 
+::: toggle What are `DAG`, `indegree`, and `dependency`?
+`DAG` = Directed Acyclic Graph (arrows have direction, and no directed cycle exists — you can never return to start). `Indegree` = count of incoming edges (unmet prerequisites — 0 means "ready now"). `Dependency` ($u \to v$) = $u$ must precede $v$ (socks before shoes). Tiny check: $a \to b$ forces $a$ before $b$ but says nothing about $c$ — unconstrained pairs order freely.
+:::
+
+::: toggle Why does a cycle make ordering impossible?
+A cycle $x \leadsto y \leadsto x$ demands $x$ before $y$ AND $y$ before $x$ simultaneously — unsatisfiable by logic, not by effort. Kahn's symptom: the queue empties with vertices left over (nothing has indegree 0 because every remainder sits on a cycle). Leftovers are the cycle certificate — count the output ($|order| < V$ means cycle, full stop).
+:::
+
 ---
 
 <a id="the-math"></a>

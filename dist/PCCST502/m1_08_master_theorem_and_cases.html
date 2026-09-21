@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Iteration and recursion trees both kept asking one question: does the root&#39;s work dominate, do the leaves dominate, or is every level equal? The Master Theorem turns that observation into a formula for the whole family $T(n) = aT(n/b) + f(n)$ — compare $f(n)$ against one reference quantity, read off one of three answers, no unrolling.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of it as the cheat sheet <em>earned</em> by the previous two topics. Root work vs leaf count, decided by a single comparison: compute the &quot;watershed&quot; $n^{\log_b a}$ (the leaf-level cost from the tree method), then ask whether your $f(n)$ is polynomially smaller (leaves win), equal (tie — pay per level), or polynomially bigger (root wins, with one regularity check).</p>
 </div></details><p><strong>Tiny toy example.</strong> $T(n) = 2T(n/2) + 1$: watershed $n^{\log_2 2} = n^1 = n$; $f(n) = 1$ is polynomially smaller → leaves dominate → $\Theta(n)$. One comparison replaces a full tree.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `a`, `b`, `f(n)`, and the `watershed`?</summary><div class="toggle-content"><p><code>a</code> = subproblems spawned per call (2 halves ⇒ $a = 2$). <code>b</code> = shrink factor (halved ⇒ $b = 2$). <code>f(n)</code> = the current level&#39;s own split/combine work (the $+1$ here — everything except the self-calls). Watershed $n^{\log_b a}$ = the leaf-level total from the recursion tree (leaves = $a^{\log_b n} = n^{\log_b a}$ many, each $O(1)$). Why compare: leaves vs root-work decides the winner — $f$ slower ⇒ leaves win, equal ⇒ tie (pay per level, extra $\log n$), faster ⇒ root wins.</p>
+</div></details><details class="interactive-toggle"><summary>Why do the three cases exist (and what is `regularity`)?</summary><div class="toggle-content"><p>Each case names a different winner of root-work vs leaf-work. Case 1: leaves outgrow the root&#39;s own work (total set at the bottom). Case 2: every level costs the same (levels = $\log_b n$ of them — hence the extra $\log n$). Case 3: the root&#39;s own work dwarfs the whole subtree below (answer = $f(n)$ itself). Regularity ($af(n/b) \le cf(n)$, $c &lt; 1$) guarantees the children&#39;s combined work stays a shrinking fraction of the parent&#39;s — without it, &quot;root dominates&quot; could still be ambushed from below.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-binary-search-and-merge-sort">3. Worked example — binary search … →</a></p>

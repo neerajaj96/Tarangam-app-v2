@@ -67,6 +67,14 @@ for i = 1 to n:
 ```
 Total $= 1 + 2 + \dots + n = \frac{n(n+1)}{2}$ — the **arithmetic series**, $\Theta(n^2)$. Same rate as fully independent nesting, roughly half the absolute work.
 
+::: toggle Where does `n(n+1)/2` come from?
+Pair the sum ends-inward: $(1+n) + (2+(n-1)) + \dots$ — each pair sums to $(n+1)$, and there are $n/2$ such pairs, giving $n(n+1)/2$. What it means: adding 1-through-n grows quadratically (tiny check: n=4 gives 10 = 4·5/2). Why it matters: this closed form is the entire dependent-loop analysis — recognise the shape, write the formula, keep the $n^2$ term.
+:::
+
+::: toggle Where does `2n − 1` (geometric) come from, and what is `amortized`?
+Doubling sizes $1+2+4+\dots+n$ sum to $2n-1$ (each term nearly equals all previous combined — the last resize dominates everything before it). Amortized = averaged over a whole operation sequence: $n$ insertions cost $O(n)$ total (cheap appends plus rare expensive resizes), so $O(n)/n = O(1)$ each *on average*. What it does NOT mean: every insertion is cheap (single resizes still cost $O(n)$) — the guarantee is over sequences, never single operations.
+:::
+
 **Logarithmic loops (multiplicative change):**
 ```
 i = 1

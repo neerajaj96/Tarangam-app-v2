@@ -36,6 +36,14 @@ Think "it works" versus "it works *well*". Module 1 turns the second phrase from
 
 **Tiny toy example (8 pages).** Linear checking on 8 pages takes up to 8 looks. Halving takes at most 3 looks ($8 \to 4 \to 2 \to 1$). Small gap. Now scale to $n = 1{,}000{,}000$: linear takes up to 1,000,000 looks; halving takes about $\log_2(1{,}000{,}000) \approx 20$ looks. Same two ideas, wildly different scaling — and scaling is what this module measures.
 
+::: toggle What do `O(n)` and `O(log n)` say in plain words?
+`O(n)` = work grows at most proportionally with input size (double the input, at most double the work — "order n"). `O(log n)` = work grows with the number of halvings (double the input, one extra step — "order log n"). Why halves give logs: each step discards half the candidates, so $n$ candidates need $\log_2 n$ halvings ($\log_2$ asks "how many halvings to reach 1?").
+:::
+
+::: toggle Why is a stopwatch comparison unfair?
+Stopwatches measure one machine, one language, one load: a slow algorithm on a fast laptop beats a fast algorithm on a tired phone, saying nothing about the ideas. Analysis counts operations as a function of $n$ in the imaginary RAM model — same ruler for both programs, so the verdict travels across all real machines.
+:::
+
 ---
 
 <a id="the-math"></a>

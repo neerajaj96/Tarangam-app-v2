@@ -36,6 +36,14 @@ Draw a family tree of the calls. Root = the size-$n$ call. Children = the sub-pr
 
 **Tiny toy example.** $T(n) = 2T(n/2) + 1$ for $n = 4$: root work 1; two children on size 2, work 1 each (row = 2); four leaves on size 1 (row = 4). Total $1 + 2 + 4 = 7$ — rows doubling downward, leaves dominating already visible.
 
+::: toggle Trace this tiny tree node by node
+Root: one call on size 4, own work $f(4) = 1$. Level 1: $a = 2$ children, each size $4/2 = 2$, own work 1 each → row total $2 × 1 = 2$. Level 2 (leaves): $2^2 = 4$ nodes of size 1, base cost 1 each → row 4. Grand total $1 + 2 + 4 = 7$. Read rows: 1, 2, 4 — doubling downward, so leaves dominate (growing-row case). Check against Master: watershed $n^{\log_2 2} = n = 4$ leaves × $\Theta(1)$ = 4, plus upper rows — consistent.
+:::
+
+::: toggle Where does `leaves = n^(log_b a)` come from?
+Depth: size halves $k$ times until $n/b^k = 1$, so $k = \log_b n$ levels. Leaf count: $a$ children per node for $\log_b n$ levels gives $a^{\log_b n}$ leaves. Log identity $a^{\log_b n} = n^{\log_b a}$ (take $\log_b$ of both: $\log_b n · \log_b a$ each side). Tiny check: $a=2, b=2, n=4$ gives $2^{\log_2 4} = 4$ leaves $= 4^{\log_2 2} = 4^1$. Each leaf costs $\Theta(1)$, so the leaf floor totals $\Theta(n^{\log_b a})$.
+:::
+
 ---
 
 <a id="the-math"></a>

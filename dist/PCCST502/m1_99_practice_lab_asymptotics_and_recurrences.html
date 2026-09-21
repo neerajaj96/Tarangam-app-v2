@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Reading derivations feels like understanding — until you face a blank page in the exam. This lab converts recognition into reflex: for each drill, cover the answer, write your own full trace (sums with formulas, recurrences with named cases, AVL insertions with per-step balance factors), then compare. Abbreviations below: $T(n)$ = cost function; BF = balance factor; LL/RR/LR/RL = the four rotation shapes.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Technique selection <em>is</em> the skill: loop → summation with series formulas; recurrence + claimed bound → substitution (guess, assume, substitute, verify); recurrence + no claim → iteration or tree; standard form $aT(n/b) + f(n)$ with clean $f$ → Master shortcut; key sequence → per-insertion BF checks. The drills below force each choice.</p>
 </div></details><p><strong>Tiny warm-up.</strong> $T(n) = 3T(n/2) + \Theta(n)$: watershed $n^{\log_2 3} \approx n^{1.58}$; $f = n$ is polynomially smaller → Case 1 → $\Theta(n^{1.58})$. Thirty seconds once the reflex exists.</p>
-<hr>
+<details class="interactive-toggle"><summary>How do I choose the technique in 10 seconds?</summary><div class="toggle-content"><p>Loop code → summation (which series?). Recurrence + claimed bound → substitution (guess/assume/substitute/verify). Recurrence, no claim → iteration (unroll to level $k$) or tree (row totals). Standard $aT(n/b)+f(n)$ with clean $f$ → Master (watershed first). Key sequence → per-insertion BF walk. The choice itself is the exam skill — name it before computing.</p>
+</div></details><details class="interactive-toggle"><summary>Trace the warm-up: where does `n^1.58` come from?</summary><div class="toggle-content"><p>$a = 3, b = 2$: watershed $n^{\log_2 3}$; $\log_2 3 \approx 1.58$ (since $2^{1.58} \approx 3$ — the power of 2 giving 3). $f = n = n^1$ is polynomially below $n^{1.58}$ (gap $n^{0.58}$), so Case 1: leaves dominate, answer $\Theta(n^{1.58})$. Reading order: watershed first, gap direction second, case third.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-the-technique-chooser-formal-recap">2. The technique chooser (formal recap)</h2>
 <p class="secnav"><a href="#1-start-from-zero-how-to-use-this-lab">← 1. Start from zero — how to use th…</a><span class="secnav-sep">·</span><a href="#3-worked-example-master-case-plus-avl-insertion-run">3. Worked example — Master case pl… →</a></p>

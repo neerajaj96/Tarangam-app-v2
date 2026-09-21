@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Given a graph (vertices = places, edges = links) and a start vertex, how do we visit everything reachable — and what intelligence do we gain? Two orders exist. BFS (Breadth-First Search) fans out in rings: all 1-hop neighbours, then all 2-hop ones — so it learns <em>nearest-first distances</em>. DFS (Depth-First Search) plunges down one path to its end before backtracking — so it learns <em>structure</em> (loops, orderings).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Exploring a Cave</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>BFS</strong> spreads like pond ripples: sweep everything one step away, then two — you always meet the <em>nearest</em> exit first. <strong>DFS</strong> unrolls string down one tunnel: plunge deep, backtrack only at dead ends. Same cave, same footsteps $\Theta(V+E)$ — ripples measure nearness, string exposes loops. Drop the cave now: queues, colours, and timestamps below are the exact machinery.</p>
 </div></details><p><strong>Tiny toy example (4 vertices).</strong> Line $s-a-b-c$. BFS visits $s, a, b, c$ with distances $0, 1, 2, 3$. DFS from $s$ also visits all four but discovers them by plunging $s \to a \to b \to c$ with no branching — same coverage, different story told.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `vertex`, `edge`, `directed`, `degree`, `path`, `cycle`?</summary><div class="toggle-content"><p><code>Vertex</code> = a place/node (a dot). <code>Edge</code> = a link between two vertices (a line; arrowed if directed). <code>Directed</code> = edges have one-way direction ($u \to v$ permits travel only $u$ to $v$); undirected = both ways. <code>Degree</code> = edges touching a vertex (popularity count). <code>Path</code> = a vertex sequence joined by edges (a route). <code>Cycle</code> = a path returning to its start (a loop — what DFS back edges expose).</p>
+</div></details><details class="interactive-toggle"><summary>Trace BFS queue states on `s—a,b; a—c,d; b—e`</summary><div class="toggle-content"><p>Queue [s], d=0. Dequeue s → enqueue a, b (d=1): queue [a,b]. Dequeue a → enqueue c, d (d=2): queue [b,c,d]. Dequeue b → enqueue e (d=2): queue [c,d,e]. Dequeue c, d, e (no new): queue drains. Order s,a,b,c,d,e with distances 0,1,1,2,2,2. Why mark visited at enqueue (not dequeue): otherwise diamond revisits enqueue the same vertex twice — marking on entry guarantees one queue slot each.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-one-directed-graph-both-traversals">3. Worked example — one directed g… →</a></p>
@@ -344,7 +346,8 @@
 </tr>
 </tbody></table>
 <p>Undirected graphs have <strong>only tree + back edges</strong> (each edge is seen from both ends, killing forward/cross). Same $\Theta(V+E)$ skeleton; recursion depth can reach $V$ (iterative DFS exists for path-graph stack safety).</p>
-<div class="video-studio">
+<details class="interactive-toggle"><summary>What do `discovery/finish times` and the four edge colours mean?</summary><div class="toggle-content"><p>Discovery $d[v]$ = the clock tick when DFS first reaches $v$; finish $f[v]$ = the tick when $v$&#39;s whole subtree completes (intervals nest or stay disjoint — never half-overlap). White = unseen, gray = on the current stack (an ancestor of the active node), black = finished. Edge to white = tree (first discovery); to gray = back (ancestor reached — a cycle exists); to black descendant = forward (lineage shortcut); to black otherwise = cross (branch jump). Tiny check: $3 \to 1$ with 1 gray means 1 is an ancestor — cycle certified.</p>
+</div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Ripple Expansion Order</span>
   </div>

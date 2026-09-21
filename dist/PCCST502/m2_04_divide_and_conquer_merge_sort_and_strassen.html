@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Sorting 1,000 files alone takes all weekend — so split the pile in half, hand each half to a friend with the <em>same</em> instructions, then merge their sorted piles by repeatedly taking the smaller front file. Nobody sorts more than a handful directly; all the magic is in the merge. Matrix multiplication gets the same treatment pushed further: reorganise the arithmetic so one of 8 recursive multiplications cancels out — same answer, asymptotically faster.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Sorting by Delegation</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Divide (split), conquer (recurse on smaller copies), combine (merge results). Merge sort delegates halves and merges linearly; Strassen delegates 7 — not 8 — half-size products after clever additions. The skeleton is identical; only the combine step&#39;s cleverness differs. Drop the delegation story now: recurrences and the $M_1..M_7$ formulas below are the exact content.</p>
 </div></details><p><strong>Tiny toy example (4 numbers).</strong> Sort $[4, 1, 3, 2]$: split $[4,1]$ / $[3,2]$ → sort to $[1,4]$ / $[2,3]$ → merge by front-comparison: 1, 2, 3, 4. Three levels, every level touching all 4 elements once.</p>
-<hr>
+<details class="interactive-toggle"><summary>Trace the merge: why does front-comparison work?</summary><div class="toggle-content"><p>Both halves arrive sorted, so each half&#39;s front is its smallest remaining. Comparing fronts picks the global smallest unfinished element (anything smaller would sit at some front — contradiction otherwise). Emit it, advance that half, repeat: each element moves once per level, total $\Theta(n)$ per level. Why it matters: the linear merge is what makes every level cost $n$ (not $n^2$), giving $\log_2 n$ equal levels and $\Theta(n \log n)$.</p>
+</div></details><details class="interactive-toggle"><summary>What do `A₁₁`, `M₁`, and `C₁₁` name in Strassen?</summary><div class="toggle-content"><p>$A_{11}$ = top-left quarter-block of $A$ (matrices split into 4 half-size blocks; subscripts name quadrants). $M_1$ = first clever product, $(A_{11}+A_{22})(B_{11}+B_{22})$ (sums computed first in $\Theta(n^2)$, then one half-size multiplication). $C_{11}$ = top-left quarter of the answer, recombined as $M_1+M_4-M_5+M_7$ (additions reassemble what the 7 products encoded). Why 7 beats 8: branching factor 7 vs 8 changes the watershed $n^{\log_2 7} \approx n^{2.81}$ vs $n^3$ — additions stay in $f(n)$, never in the exponent.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-strassen-on-2-2-verified-against-naive">3. Worked example — Strassen on 2×… →</a></p>

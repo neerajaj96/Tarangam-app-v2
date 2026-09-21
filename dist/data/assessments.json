@@ -1087,7 +1087,7 @@
         "Timing code is too short to measure"
       ],
       "answer": "Machine-independent comparison: constants and hardware noise are factored out",
-      "explanation": "Processor models and background load must not affect the comparison — mathematics gives a fair measuring stick.",
+      "explanation": "Correct: processor models and background load must not affect the comparison — mathematics gives a hardware-independent measuring stick. Stopwatch timing measures one machine on one day (noise, not ideas); the joke distractors confuse speed of notation with speed of programs.",
       "difficulty": "beginner",
       "examRelevance": "medium"
     },
@@ -6403,7 +6403,7 @@
         "O(n squared)"
       ],
       "answer": "O(1)",
-      "explanation": "The worked example puts the target at the first element so only one comparison is needed. Worst and average cases both grow with n while the best case stays constant.",
+      "explanation": "Correct: the target at the first element needs exactly one comparison regardless of n — constant work, O(1). O(n) describes worst/average cases (not the lucky one), O(log n) needs halving structure linear search lacks, and O(n squared) fits no linear scan.",
       "difficulty": "beginner",
       "examRelevance": "medium"
     },
@@ -6420,7 +6420,7 @@
         "Using a level count that always equals n"
       ],
       "answer": "The level where the recursive argument reaches the base case",
-      "explanation": "The procedure finds the general pattern at level k then solves for the k that hits the base case such as n minus k equals 1 or n divided by b to power k equals 1. Substituting that k leaves a plain sum to evaluate.",
+      "explanation": "Correct: k is solved, never chosen — set the shrunken argument equal to the base case (n-k=1 or n/b^k=1) and substitute back. Fixed depths (3 levels, k=n) leave unsolved recursive terms behind: unfinished answers wearing finished clothes.",
       "difficulty": "beginner",
       "examRelevance": "medium"
     },
@@ -6624,7 +6624,7 @@
         "Exactly OPT bins on every instance"
       ],
       "answer": "At most 11 divided by 9 times OPT plus 1 bins",
-      "explanation": "Sorting descending first lets big items take empty bins and small items plug gaps like sand. The notes contrast this near 22 percent overhead with online First Fit near 70 percent and Next Fit near double.",
+      "explanation": "Correct: sort-descending-first packs big items into empty bins while small ones plug gaps like sand — at most 11/9·OPT+1. The 2·OPT−1 bound belongs to Next Fit, 1.7·OPT+2 to online First/Best Fit, and exact-OPT on all instances is impossible for an NP-hard problem.",
       "difficulty": "beginner",
       "examRelevance": "high"
     },

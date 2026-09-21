@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Deterministic quicksort has a nemesis: already-sorted input forces $\Theta(n^2)$ (always pick the worst pivot). Random pivots delete the nemesis — no <em>input</em> is adversarial anymore, only unlucky <em>coins</em>. Elsewhere the bargain flips: Karger&#39;s min-cut finishes on a fixed clock but may answer wrong — yet repetition buys the error down exponentially. Same coins, opposite contracts.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Two Kinds of Gambling</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Las Vegas</strong> gambler: always walks out with <em>correct</em> winnings, but <em>time</em> spent is luck (randomized quicksort — sorted output guaranteed, runtime random). <strong>Monte Carlo</strong> gambler: finishes in <em>fixed</em> time, but winnings are <em>probably</em> right (Karger min-cut, Miller–Rabin primality — fast answer, tiny error chance). Certainty-of-answer vs certainty-of-clock — and Monte Carlo&#39;s error is <em>buyable-down</em>: repeat and vote, failure decays exponentially. Drop the casino now: indicator sums and contraction odds below are the exact analysis.</p>
 </div></details><p><strong>Tiny toy example (3 elements).</strong> Quicksort on $[1,2,3]$ with random pivot: pivot 2 (prob 1/3) → splits ${1},{3}$, done in 2 rounds; pivot 1 or 3 → one-sided split, 3 rounds. Answer always $[1,2,3]$ (Las Vegas: correctness never wavers); rounds vary 2–3 (randomness lives in time only).</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `random variable`, `expected running time`, `pivot`, `partition`?</summary><div class="toggle-content"><p><code>Random variable</code> = a quantity depending on chance (here: the coin flips choosing pivots). <code>Expected running time</code> $\mathbb{E}$ = probability-weighted average over all coin outcomes (not the worst coins, not the typical run — the mean). <code>Pivot</code> = the element partitioning around (everything smaller left, larger right). <code>Partition</code> = the rearrangement step itself (linear scan, $\Theta(n)$ per call). Tiny trace above: pivot 2 splits evenly (2 rounds total), pivots 1/3 split one-sided (3 rounds) — expectation averages over the three equally-likely pivots.</p>
+</div></details><details class="interactive-toggle"><summary>Monte Carlo vs Las Vegas: which bargain, and what does `amplification` buy?</summary><div class="toggle-content"><p>Las Vegas = correct answer, random time (reruns only buy speed — nothing to vote on). Monte Carlo = fixed time, probable correctness (error $\epsilon$ per run — repetition + majority vote drives error to $\le \epsilon^k$, exponential decay in $k$). Karger single-run success $\ge 2/(n(n-1))$ looks tiny, but $O(n^2\log n)$ runs amplify it toward $1-1/n$. Never ask quicksort&#39;s error probability (category error — it has none); never demand Karger&#39;s exact runtime (fixed trials is its contract).</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-quicksort-expectation-and-karger-repetition">3. Worked example — quicksort expe… →</a></p>

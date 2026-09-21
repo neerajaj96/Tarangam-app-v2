@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> The Travelling Salesperson Problem (TSP): visit each of $n$ cities once and return to the start, minimising total road cost. Brute force tries $(n-1)!/2$ tours (symmetric distances) — dead by $n = 20$. B&amp;B instead computes a cheap <strong>price floor</strong> (no tour costs less), then kills every partial route whose floor already exceeds the best complete tour in hand.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Salesperson&#39;s Price Floor</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Before planning any route, an assistant computes a floor: &quot;every city must be <em>left</em> (≥ cheapest outgoing road) and <em>entered</em> (≥ cheapest incoming road) — sum those minima and no tour on Earth costs less.&quot; That floor (row+column reduction) then judges every partial route: branches floored above the best known tour are abandoned unbuilt. Floors first, tours second, pruning always. Drop the assistant now: reduction totals and infinities below are the exact mechanism.</p>
 </div></details><p><strong>Tiny toy example (3 cities).</strong> Costs: $1\to2$ (5), $2\to3$ (5), $3\to1$ (5), all returns (50). Row minima $5,5,5$ → floor 15. The tour $1\to2\to3\to1$ costs exactly 15 = floor → optimal proven with zero search. Floors certify; tours cash in.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `tour`, `Hamiltonian cycle`, `edge cost`, `bound`, `incumbent`?</summary><div class="toggle-content"><p><code>Tour</code> = a route visiting every city exactly once and returning to start. <code>Hamiltonian cycle</code> = the graph name for such a closed visit-all loop (TSP asks for the cheapest one). <code>Edge cost</code> = road price $M[i][j]$ (asymmetric allowed — $i \to j$ may differ from $j \to i$). <code>Bound</code> = reduction-total floor (no tour costs less — optimistic by construction). <code>Incumbent</code> = best complete tour found so far (e.g. nearest-neighbour 39 — prunes everything floored at or above it).</p>
+</div></details><details class="interactive-toggle"><summary>Trace the root bound: where do `29` and `6` come from?</summary><div class="toggle-content"><p>Row minima (ignore diagonal $-$): row 1 min 10, row 2 min 5, row 3 min 6, row 4 min 8 → subtract each from its row, running total 29 (every tour uses one entry per row, so every tour costs ≥ 29 less than the original — floor banked). Column minima of the reduced matrix: 0, 0, 1, 5 → total 6 (every tour uses one entry per column — another 6 banked). Bound $29 + 6 = 35$: no tour under 35 exists; incumbent 39 leaves the window [35, 39) to search.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-branching-on-edge-1-2-to-certified-optimum">3. Worked example — branching on e… →</a></p>

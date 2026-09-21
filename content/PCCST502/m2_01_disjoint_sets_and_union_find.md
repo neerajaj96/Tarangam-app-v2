@@ -35,6 +35,14 @@ Each family picks one elder as its **representative**. "Are these guests related
 
 **Tiny toy example (3 guests).** Singletons $\{a\}, \{b\}, \{c\}$. UNION(a,b): $b$ under $a$. Query FIND(b): climb $b \to a$ (1 hop). UNION(a,c): $c$ under $a$. Every later query costs 1 hop — the structure flattens itself with use.
 
+::: toggle What are `set`, `disjoint`, `representative`, `parent`, `root`, `forest`?
+`Set` = a group of elements treated as one unit. `Disjoint` = sharing no elements (families don't overlap). `Representative` = the one member naming the set (the elder). `Parent` = each element's pointer upward (everyone except the root has one). `Root` = the element pointing to itself (the elder = the set's name). `Forest` = the collection of all such trees (all families at the reunion).
+:::
+
+::: toggle Why does `union by rank` help, and why does `path compression` help?
+Union by rank grafts the shorter tree under the taller, so height grows only on ties (tall trees stay tall only when forced — bushiness preserved). Path compression rewires every climbed node directly under the root, so repeated queries shorten their own paths (the structure learns from use — first query pays, later ones ride free). Rank bounds growth; compression harvests reuse. Either alone degrades: tall-skinny trees without compression, unflattened paths without rank — the $\alpha(n)$ miracle needs both.
+:::
+
 ---
 
 <a id="the-math"></a>

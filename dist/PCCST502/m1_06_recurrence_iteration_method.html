@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Substitution needs a <em>guess</em> — but where do guesses come from? The iteration (expansion) method finds the answer with no guessing: unroll the recursion by hand a few levels, spot the pattern at a general level $k$, then compute exactly when the unrolling must stop (the base case). The leftover is a plain sum you already know how to evaluate.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>If substitution is &quot;guess, then prove&quot;, iteration is &quot;unroll until you <em>see</em> it&quot;. Lay the nesting dolls in a row: doll 1 holds doll 2 holds doll 3… after a few you notice &quot;doll $k$ is always exactly the same amount smaller&quot; — a formula for the $k$-th doll — and counting the row tells you when it ends. Concretely: replace $T(n-1)$ by its own definition, then replace the new inner term again, and again, until level $k$&#39;s shape is obvious.</p>
 </div></details><p><strong>Tiny toy example.</strong> $T(n) = T(n-1) + 1$, $T(1) = 1$: $T(n) = T(n-2)+1+1 = T(n-3)+1+1+1$. At level $k$: $T(n) = T(n-k) + k$. Stop when $n-k = 1$ ($k = n-1$): $T(n) = 1 + (n-1) = n$. No guess was ever needed.</p>
-<hr>
+<details class="interactive-toggle"><summary>Trace three levels of `T(n) = T(n−1) + 1` and read off level `k`</summary><div class="toggle-content"><p>Level 0: $T(n)$ (original call). Level 1: replace $T(n)$ by its definition shifted: $T(n-1) + 1$. Level 2: replace $T(n-1)$ likewise: $T(n-2) + 1 + 1$. Level 3: $T(n-3) + 1 + 1 + 1$. Pattern at level $k$: $T(n-k) + k$ (argument shrunk by $k$, ones accumulated $k$ times). Stop rule: level ends when the argument hits the base case ($n−k = 1$), giving $k = n−1$ and $T(n) = 1 + (n−1) = n$.</p>
+</div></details><details class="interactive-toggle"><summary>Why is `k` solved for, never chosen?</summary><div class="toggle-content"><p>Levels are not a free parameter — the recursion dictates exactly when it bottoms out. Setting the shrunken argument equal to the base case ($n−k = 1$ or $n/b^k = 1$) and solving yields the true depth ($\log_b n$ here). Choosing $k$ arbitrarily (say 3) leaves an unsolved $T(n−3)$ behind — an unfinished answer wearing finished clothes.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-t-n-2t-n-2-n-merge-sort-shape">3. Worked example — $T(n) = 2T(n/2… →</a></p>

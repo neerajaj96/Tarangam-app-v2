@@ -315,7 +315,9 @@
         do O(1) work
 </code></pre>
 <p>Total $= 1 + 2 + \dots + n = \frac{n(n+1)}{2}$ — the <strong>arithmetic series</strong>, $\Theta(n^2)$. Same rate as fully independent nesting, roughly half the absolute work.</p>
-<p><strong>Logarithmic loops (multiplicative change):</strong></p>
+<details class="interactive-toggle"><summary>Where does `n(n+1)/2` come from?</summary><div class="toggle-content"><p>Pair the sum ends-inward: $(1+n) + (2+(n-1)) + \dots$ — each pair sums to $(n+1)$, and there are $n/2$ such pairs, giving $n(n+1)/2$. What it means: adding 1-through-n grows quadratically (tiny check: n=4 gives 10 = 4·5/2). Why it matters: this closed form is the entire dependent-loop analysis — recognise the shape, write the formula, keep the $n^2$ term.</p>
+</div></details><details class="interactive-toggle"><summary>Where does `2n − 1` (geometric) come from, and what is `amortized`?</summary><div class="toggle-content"><p>Doubling sizes $1+2+4+\dots+n$ sum to $2n-1$ (each term nearly equals all previous combined — the last resize dominates everything before it). Amortized = averaged over a whole operation sequence: $n$ insertions cost $O(n)$ total (cheap appends plus rare expensive resizes), so $O(n)/n = O(1)$ each <em>on average</em>. What it does NOT mean: every insertion is cheap (single resizes still cost $O(n)$) — the guarantee is over sequences, never single operations.</p>
+</div></details><p><strong>Logarithmic loops (multiplicative change):</strong></p>
 <pre><code>i = 1
 while i &lt;= n:
     do O(1) work

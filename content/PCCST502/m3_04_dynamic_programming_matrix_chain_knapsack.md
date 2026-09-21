@@ -36,6 +36,14 @@ The **forgetful** mathematician recomputes $F(10)$ from scratch every time (plai
 
 **Tiny toy example (Fibonacci).** Naive $F(5) = F(4)+F(3)$ recomputes $F(3)$ twice, $F(2)$ three times. Note-taking: compute $F(0)..F(5) = 0,1,1,2,3,5$ once each — 6 writes, zero repeats. That gap (exponential vs linear) is DP's entire value.
 
+::: toggle What are `overlapping subproblems`, `state`, `memoization`, `tabulation`?
+`Overlapping subproblems` = the recursion revisits identical smaller instances (F(3) computed twice above — the waste DP removes). `State` = the parameters naming one subproblem ($F(k)$, or $m[i][j]$ = cheapest chain $i..j$). `Memoization` = top-down recursion plus a cache (compute on demand, remember). `Tabulation` = bottom-up table filled smallest-first (no recursion at all). Same complexity, opposite directions — memoization asks as needed, tabulation builds everything below first.
+:::
+
+::: toggle Expand the matrix-chain recurrence symbol by symbol
+$m[i][j]$ = cheapest scalar-multiplication count for subchain $A_i..A_j$ (the answer sought; $m[i][i] = 0$ — one matrix needs no multiplication). $k$ = split point tried ($i \le k < j$ — every way to parenthesize outermost). $m[i][k] + m[k+1][j]$ = optimal costs of the two halves (optimal substructure: optima built from optima). $p_{i-1}p_kp_j$ = cost of multiplying the two resulting matrices (dimensions $(p_{i-1} \times p_k)$ times $(p_k \times p_j)$ need exactly that many scalar mults). $\min_k$ = keep the cheapest split (record it in $s[i][j]$ for reconstruction). Fill order: increasing chain length (each entry reads strictly shorter intervals — any other order reads garbage).
+:::
+
 ---
 
 <a id="the-math"></a>

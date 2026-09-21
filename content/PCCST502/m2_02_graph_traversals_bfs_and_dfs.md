@@ -35,6 +35,14 @@ tags:
 
 **Tiny toy example (4 vertices).** Line $s-a-b-c$. BFS visits $s, a, b, c$ with distances $0, 1, 2, 3$. DFS from $s$ also visits all four but discovers them by plunging $s \to a \to b \to c$ with no branching — same coverage, different story told.
 
+::: toggle What are `vertex`, `edge`, `directed`, `degree`, `path`, `cycle`?
+`Vertex` = a place/node (a dot). `Edge` = a link between two vertices (a line; arrowed if directed). `Directed` = edges have one-way direction ($u \to v$ permits travel only $u$ to $v$); undirected = both ways. `Degree` = edges touching a vertex (popularity count). `Path` = a vertex sequence joined by edges (a route). `Cycle` = a path returning to its start (a loop — what DFS back edges expose).
+:::
+
+::: toggle Trace BFS queue states on `s—a,b; a—c,d; b—e`
+Queue [s], d=0. Dequeue s → enqueue a, b (d=1): queue [a,b]. Dequeue a → enqueue c, d (d=2): queue [b,c,d]. Dequeue b → enqueue e (d=2): queue [c,d,e]. Dequeue c, d, e (no new): queue drains. Order s,a,b,c,d,e with distances 0,1,1,2,2,2. Why mark visited at enqueue (not dequeue): otherwise diamond revisits enqueue the same vertex twice — marking on entry guarantees one queue slot each.
+:::
+
 ---
 
 <a id="the-math"></a>
@@ -69,6 +77,10 @@ BFS layers from s (numbers = distance):
 | Cross | $v$ black, otherwise | Jump between branches/subtrees |
 
 Undirected graphs have **only tree + back edges** (each edge is seen from both ends, killing forward/cross). Same $\Theta(V+E)$ skeleton; recursion depth can reach $V$ (iterative DFS exists for path-graph stack safety).
+
+::: toggle What do `discovery/finish times` and the four edge colours mean?
+Discovery $d[v]$ = the clock tick when DFS first reaches $v$; finish $f[v]$ = the tick when $v$'s whole subtree completes (intervals nest or stay disjoint — never half-overlap). White = unseen, gray = on the current stack (an ancestor of the active node), black = finished. Edge to white = tree (first discovery); to gray = back (ancestor reached — a cycle exists); to black descendant = forward (lineage shortcut); to black otherwise = cross (branch jump). Tiny check: $3 \to 1$ with 1 gray means 1 is an ancestor — cycle certified.
+:::
 
 ::: anim bfs-layers Ripple Expansion Order
 Watch nodes ignite layer by layer — s, then a and b, then c, d, e, then f and g. No node lights before every node nearer the source: nondecreasing distance, animated.

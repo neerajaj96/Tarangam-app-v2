@@ -36,6 +36,14 @@ If substitution is "guess, then prove", iteration is "unroll until you *see* it"
 
 **Tiny toy example.** $T(n) = T(n-1) + 1$, $T(1) = 1$: $T(n) = T(n-2)+1+1 = T(n-3)+1+1+1$. At level $k$: $T(n) = T(n-k) + k$. Stop when $n-k = 1$ ($k = n-1$): $T(n) = 1 + (n-1) = n$. No guess was ever needed.
 
+::: toggle Trace three levels of `T(n) = T(n−1) + 1` and read off level `k`
+Level 0: $T(n)$ (original call). Level 1: replace $T(n)$ by its definition shifted: $T(n-1) + 1$. Level 2: replace $T(n-1)$ likewise: $T(n-2) + 1 + 1$. Level 3: $T(n-3) + 1 + 1 + 1$. Pattern at level $k$: $T(n-k) + k$ (argument shrunk by $k$, ones accumulated $k$ times). Stop rule: level ends when the argument hits the base case ($n−k = 1$), giving $k = n−1$ and $T(n) = 1 + (n−1) = n$.
+:::
+
+::: toggle Why is `k` solved for, never chosen?
+Levels are not a free parameter — the recursion dictates exactly when it bottoms out. Setting the shrunken argument equal to the base case ($n−k = 1$ or $n/b^k = 1$) and solving yields the true depth ($\log_b n$ here). Choosing $k$ arbitrarily (say 3) leaves an unsolved $T(n−3)$ behind — an unfinished answer wearing finished clothes.
+:::
+
 ---
 
 <a id="the-math"></a>

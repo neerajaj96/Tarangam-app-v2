@@ -36,6 +36,14 @@ Drop ink on the start city: the stain spreads along every road at equal speed. T
 
 **Tiny toy example (3 vertices).** $s$–$a$ (4), $s$–$b$ (2), $b$–$a$ (1). Settle $s$ (0) → tentative $a=4$, $b=2$. Settle $b$ (2) → relax $a$ to $\min(4, 2+1) = 3$. Settle $a$ (3): direct edge 4 beaten by the 2-hop 3 — discovery order ($a$ first) lost to distance order ($b$ first).
 
+::: toggle What are `tentative distance`, `settled`, and `relaxation`?
+`Tentative distance` $d[v]$ = best route known *so far* (may improve). `Settled` = extracted as minimum and declared final (never revisited — valid only with non-negative weights). `Relaxation` of $(u,v,w)$ = ask "is going through $u$ shorter?": if $d[u]+w < d[v]$, set $d[v] = d[u]+w$ (tighten the estimate, remember $u$ as predecessor). Tiny trace above: $a$'s 4 relaxes to 3 through $b$ before $a$ settles — settling reads the final value, relaxing proposes candidates.
+:::
+
+::: toggle Why do negative weights void Dijkstra?
+Settling assumes no later discovery undercuts a settled vertex — true only if every extension adds non-negative cost (any alternative route through unsettled vertices costs $\ge d[u]$ plus $\ge 0$). A negative edge breaks the arithmetic: a settled vertex can improve late via the cheap edge, but the algorithm never revisits it — output silently wrong (runs fine, guarantees evaporated). Bellman-Ford re-checks everything instead, paying slowness for safety.
+:::
+
 ---
 
 <a id="the-math"></a>

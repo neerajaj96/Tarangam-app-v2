@@ -36,6 +36,14 @@ Backtracking explores caves corridor by corridor, retreating only from dead ends
 
 **Tiny toy example (minimize).** Two branches: left promises ≥ 20 (bound), right promises ≥ 40. Explore left first, find a full solution costing 25 (incumbent 25). Right's bound 40 ≥ 25 → kill it unvisited. One addition saved a whole subtree.
 
+::: toggle What are `branch`, `bound`, `incumbent`, `E-node`, `live`, `dead`?
+`Branch` = one fork's subtree (a partial decision plus all its completions). `Bound` $\hat{c}(x)$ = cheap optimistic estimate of the best cost under $x$ (lower bound for minimization — never overestimate promise). `Incumbent` = best complete solution found so far (the treasure in hand — only full solutions update it). `E-node` = the live node being expanded right now. `Live` = generated, waiting; `dead` = expanded or killed. Kill rule: $\hat{c}(x) \ge$ incumbent ⇒ nothing underneath wins ⇒ discard unvisited.
+:::
+
+::: toggle Why is the branch discarded (trace the toy)?
+Left's bound 20 < ∞ (no incumbent yet) → explore first (LC picks smallest bound). Full solution 25 found → incumbent = 25. Right's bound 40 ≥ 25 → every completion through right costs ≥ 40 > 25 → cannot improve → kill without visiting (one comparison saved a subtree). Had the incumbent been 45 instead, right would survive (40 < 45 — still promising) — pruning compares against the *current* best, never a fixed threshold.
+:::
+
 ---
 
 <a id="the-math"></a>

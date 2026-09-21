@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Loops are costed by sums — but what about a function that <em>calls itself</em>? You cannot &quot;sum its loop&quot; because there is no loop: the cost of size $n$ is defined <em>in terms of</em> the cost of a smaller size. We need an equation that captures that self-reference (a <em>recurrence relation</em>), then a method to turn it into a plain bound like $O(n^2)$.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture Russian nesting dolls: each doll contains a smaller identical doll, down to a tiny solid one. A recursive algorithm is the same: solving size $n$ does a little direct work, then hands a smaller copy to itself — until the problem is small enough to solve directly (the base case, the solid doll). A recurrence writes this as an equation: &quot;cost($n$) = work here + cost(smaller)&quot;. The substitution method then <em>guesses</em> the answer&#39;s shape and <em>proves</em> it by mathematical induction.</p>
 </div></details><p><strong>Tiny toy example.</strong> Recursive countdown: $T(n) = T(n-1) + 1$, $T(1) = 1$ (&quot;to count down from $n$, print once, then count down from $n-1$&quot;). Unroll for $n = 3$: $T(3) = T(2)+1 = T(1)+1+1 = 3$. The answer smells like $T(n) = n$ — substitution will prove such guesses airtight.</p>
-<hr>
+<details class="interactive-toggle"><summary>Where does each term of `T(n) = T(n−1) + 1` come from?</summary><div class="toggle-content"><p><code>T(n)</code> = cost of the whole countdown from $n$ (what we want). <code>T(n−1)</code> = cost of the smaller self-call (counting down from $n−1$ — the recursion). <code>+ 1</code> = the current level&#39;s own work (one print — $f(n) = 1$ here). <code>T(1) = 1</code> = base case cost (print once, no further calls — the recursion&#39;s floor). Reading order: own work plus smaller-self cost, anchored at the base.</p>
+</div></details><details class="interactive-toggle"><summary>What are `base case`, `recursive case`, and the `call stack`?</summary><div class="toggle-content"><p>Base case = the input so small it is solved directly with no self-call ($T(1) = 1$ — the solid doll). Recursive case = bigger inputs handled by doing a little work plus calling self on smaller input. Call stack = the pile of half-finished calls waiting while deeper calls run (each call&#39;s local state parked until its child returns — deep recursion can overflow it).</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-t-n-t-n-1-n-by-substitution">3. Worked example — $T(n) = T(n-1)… →</a></p>

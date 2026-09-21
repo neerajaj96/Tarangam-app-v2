@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Connect all vertices (islands) with the cheapest set of edges (bridges) that keeps everything reachable — no cycles (a cycle wastes a bridge), minimum total weight. That set is a <strong>Minimum Spanning Tree (MST)</strong>: spanning (touches every vertex), tree (acyclic), minimum (cheapest possible total). Two greedy instincts solve it differently — and one theorem licenses both.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Cheapest Islands Network</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><strong>Kruskal</strong> (named after Joseph Kruskal): sort all bridges by price; build the cheapest that does not close a loop (global shopping list, Union-Find as loop detector). <strong>Prim</strong> (named after Robert Prim): stand on one island; repeatedly build the cheapest bridge from <em>your territory</em> outward (one tree always). Different walks, same cheapest network — because both obey the cut property. Drop the islands now: cuts, sorts, and frontiers below are the exact content.</p>
 </div></details><p><strong>Tiny toy example (3 vertices).</strong> Triangle edges: $a$–$b$ (1), $b$–$c$ (2), $a$–$c$ (3). MST = {1, 2}, cost 3. Kruskal: take 1, take 2, skip 3 (cycle). Prim from $a$: take 1 to $b$, then 2 to $c$. Both agree here.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `spanning tree`, `cut`, `cycle property`, `frontier`?</summary><div class="toggle-content"><p><code>Spanning tree</code> = edges touching every vertex with no cycles (exactly $V−1$ edges — connectivity without waste). <code>Cut</code> = any vertex split $S$/$V−S$; crossing edges straddle it. <code>Cycle property</code> = the heaviest edge on any cycle belongs to no MST (Kruskal&#39;s skip rule certified). <code>Frontier</code> (Prim) = cheapest edges leaving the grown territory (the only candidates ever considered — everything inside is settled).</p>
+</div></details><details class="interactive-toggle"><summary>Trace Kruskal vs Prim on the triangle, decision by decision</summary><div class="toggle-content"><p>Kruskal (sorted 1,2,3): edge 1 — endpoints unconnected → take (Union-Find merges). Edge 2 — unconnected → take (now $V−1 = 2$ edges, stop). Edge 3 — endpoints already connected → skip (would close cycle 1-2-3). Prim from $a$: territory {a}, cheapest out is 1 → {a,b}; cheapest out now is 2 (vs 3) → {a,b,c}. Same {1,2}, cost 3 — sorted-list greed vs territorial greed, both licensed because each taken edge is lightest across its cut.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-six-vertices-both-algorithms">3. Worked example — six vertices, … →</a></p>

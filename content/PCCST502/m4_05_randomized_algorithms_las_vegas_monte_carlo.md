@@ -35,6 +35,14 @@ tags:
 
 **Tiny toy example (3 elements).** Quicksort on $[1,2,3]$ with random pivot: pivot 2 (prob 1/3) → splits $\{1\},\{3\}$, done in 2 rounds; pivot 1 or 3 → one-sided split, 3 rounds. Answer always $[1,2,3]$ (Las Vegas: correctness never wavers); rounds vary 2–3 (randomness lives in time only).
 
+::: toggle What are `random variable`, `expected running time`, `pivot`, `partition`?
+`Random variable` = a quantity depending on chance (here: the coin flips choosing pivots). `Expected running time` $\mathbb{E}$ = probability-weighted average over all coin outcomes (not the worst coins, not the typical run — the mean). `Pivot` = the element partitioning around (everything smaller left, larger right). `Partition` = the rearrangement step itself (linear scan, $\Theta(n)$ per call). Tiny trace above: pivot 2 splits evenly (2 rounds total), pivots 1/3 split one-sided (3 rounds) — expectation averages over the three equally-likely pivots.
+:::
+
+::: toggle Monte Carlo vs Las Vegas: which bargain, and what does `amplification` buy?
+Las Vegas = correct answer, random time (reruns only buy speed — nothing to vote on). Monte Carlo = fixed time, probable correctness (error $\epsilon$ per run — repetition + majority vote drives error to $\le \epsilon^k$, exponential decay in $k$). Karger single-run success $\ge 2/(n(n-1))$ looks tiny, but $O(n^2\log n)$ runs amplify it toward $1-1/n$. Never ask quicksort's error probability (category error — it has none); never demand Karger's exact runtime (fixed trials is its contract).
+:::
+
 ---
 
 <a id="the-math"></a>

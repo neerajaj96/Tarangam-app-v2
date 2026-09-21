@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Given a start city and road lengths (non-negative weights), find the cheapest route to <em>every</em> city. BFS fails here: fewest <em>hops</em> is not cheapest <em>cost</em> (one highway beats three lanes). Dijkstra&#39;s fix: always finalise the currently closest-looking city — with non-negative roads, no later discovery can undercut it.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Expanding Ink Blot</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Drop ink on the start city: the stain spreads along every road at equal speed. The moment ink <em>first</em> touches a city, its path is the shortest — no later arrival beats first contact at equal spread rates. <strong>Dijkstra&#39;s algorithm</strong> (named after Edsger Dijkstra) simulates the blot with a priority queue: repeatedly <em>settle</em> the unsettled vertex with smallest tentative distance (first contact = final), then <em>relax</em> its outgoing roads (offer neighbours a shorter route through it). Drop the ink now: extract-min and relaxation below are the exact mechanism.</p>
 </div></details><p><strong>Tiny toy example (3 vertices).</strong> $s$–$a$ (4), $s$–$b$ (2), $b$–$a$ (1). Settle $s$ (0) → tentative $a=4$, $b=2$. Settle $b$ (2) → relax $a$ to $\min(4, 2+1) = 3$. Settle $a$ (3): direct edge 4 beaten by the 2-hop 3 — discovery order ($a$ first) lost to distance order ($b$ first).</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `tentative distance`, `settled`, and `relaxation`?</summary><div class="toggle-content"><p><code>Tentative distance</code> $d[v]$ = best route known <em>so far</em> (may improve). <code>Settled</code> = extracted as minimum and declared final (never revisited — valid only with non-negative weights). <code>Relaxation</code> of $(u,v,w)$ = ask &quot;is going through $u$ shorter?&quot;: if $d[u]+w &lt; d[v]$, set $d[v] = d[u]+w$ (tighten the estimate, remember $u$ as predecessor). Tiny trace above: $a$&#39;s 4 relaxes to 3 through $b$ before $a$ settles — settling reads the final value, relaxing proposes candidates.</p>
+</div></details><details class="interactive-toggle"><summary>Why do negative weights void Dijkstra?</summary><div class="toggle-content"><p>Settling assumes no later discovery undercuts a settled vertex — true only if every extension adds non-negative cost (any alternative route through unsettled vertices costs $\ge d[u]$ plus $\ge 0$). A negative edge breaks the arithmetic: a settled vertex can improve late via the cheap edge, but the algorithm never revisits it — output silently wrong (runs fine, guarantees evaporated). Bellman-Ford re-checks everything instead, paying slowness for safety.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-six-vertices-settled-one-by-one">3. Worked example — six vertices, … →</a></p>

@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -292,7 +292,9 @@
 <p><strong>Problem first.</strong> Module 2&#39;s exam marks go to traces, not slogans: pointer states after each UNION, edge types with colour evidence, Kosaraju orders that survive direction scrutiny, Strassen verdicts with constants acknowledged. Abbreviations: FIND/UNION = the disjoint-set operations; $d[v]$/$f[v]$ = DFS discovery/finish times; OPT = optimal value.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Treat each scenario as a marking scheme: state the setup, show every intermediate state (forest with ranks, colours with times, bounds with arithmetic), then conclude with the certificate (connectivity verdict, cycle proof, ratio verdict). The three scenarios below model exactly that discipline.</p>
 </div></details><p><strong>Tiny warm-up.</strong> UNION(1,2) by rank from singletons: tie $0,0$ → 2 under 1, rank(1) = 1. One line, three facts (parent, rank, tie rule cited).</p>
-<h3>Scenario 1: Union-Find Surgery (Ranks on the Table)</h3>
+<details class="interactive-toggle"><summary>How do I read a union-find trace line?</summary><div class="toggle-content"><p>Each UNION line must state three facts: the new parent pointer (who goes under whom), the rank update (increment only on equal-rank ties — otherwise unchanged), and the tie rule cited (smaller-under-larger, either way on ties). Warm-up decoded: tie (0,0) → parent(2) = 1, rank(1) becomes 1, rule &quot;tie, either way&quot; cited. Missing any of the three loses the mark the line was built to earn.</p>
+</div></details><details class="interactive-toggle"><summary>How do I autopsy one DFS edge?</summary><div class="toggle-content"><p>Four questions in order: (1) target colour when explored? (white/gray/black). (2) Which species follows? (white→tree, gray→back, black+descendant→forward, black otherwise→cross). (3) What does it prove? (back = cycle certified; others = structure mapped). (4) Timestamps consistent? ($d$/$f$ intervals nest or disjoint — half-overlap indicts the trace). Scenario 2&#39;s $4\to2$ gray verdict carries all four: gray, back, cycle 2→4→2, nesting intact.</p>
+</div></details><h3>Scenario 1: Union-Find Surgery (Ranks on the Table)</h3>
 <p>Singletons ${1..6}$. UNION(1,2): tie → 2 under 1, rank(1)=1. UNION(3,4): 4 under 3, rank(3)=1. UNION(1,3): tie 1 vs 1 → 3 under 1, rank(1)=2. Forest: $1$ roots ${1,2,3,4}$ (children $2,3$; grandchild $4$), ${5}$, ${6}$ untouched. FIND(4): climbs $4 \to 3 \to 1$, rewiring $4$ directly under $1$. Are 2 and 4 connected? FIND both → root 1 each: <strong>yes</strong>, in near-constant time — and the second query on either is a single hop. Ranks used: ${r_1=2, r_3=1, \text{rest } 0}$.</p>
 <h3>Scenario 2: DFS Autopsy (One Graph, Four Edge Species)</h3>
 <p>Directed edges: $1\to2,\ 1\to3,\ 2\to4,\ 3\to4,\ 4\to2$. DFS from 1, numeric order. Discover 1; $1\to2$ <strong>tree</strong> (discover 2); $2\to4$ <strong>tree</strong> (discover 4); $4\to2$: vertex 2 gray (ancestor) → <strong>back</strong> (cycle 2→4→2 proven); finish 4, finish 2; $1\to3$ <strong>tree</strong> (discover 3); $3\to4$: vertex 4 black with $d[3] &gt; d[4]$ → <strong>cross</strong>. Final: 3 tree + 1 back + 1 cross, zero forward — every species except forward in five edges, and the back edge names the cycle.</p>

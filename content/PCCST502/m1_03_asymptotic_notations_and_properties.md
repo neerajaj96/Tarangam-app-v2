@@ -36,6 +36,14 @@ Describing runners, you would say "A is roughly twice as fast as B over long rac
 
 **Tiny toy example.** $f(n) = 3n + 2$ vs $g(n) = n^2$: at $n = 3$, $f = 11 > g = 9$. At $n = 100$, $f = 302 \ll g = 10{,}000$. Asymptotics asks about large $n$ only — the crossover, not the small-$n$ skirmish.
 
+::: toggle Big-O does NOT mean "exact running time" — what does it mean?
+Big-O states an *upper envelope*: "$f$ grows no faster than $g$" (there exist $c, n_0$ with $f \le c·g$ beyond $n_0$). It never claims equality of rates — $n = O(n^{100})$ is true but uselessly loose. What it means: a guarantee ceiling. What it does NOT mean: the precise count, a tight description, or anything about small $n$. Tiny intuition: saying "the trip takes O(1 day)" promises arrival within a day, not that it takes exactly a day.
+:::
+
+::: toggle What are `c` and `n_0`, and why are ugly values allowed?
+`c` = a constant multiplier you may choose (stretch the reference curve until it covers $f$). `n_0` = the threshold beyond which coverage must hold (early skirmishes ignored). Ugly values are allowed because the definition asks only "does *some* pair exist" — existence proves the growth relationship; elegance is never graded. Tiny example: $3n^2+5n+2 \le 10n^2$ for $n \ge 1$ witnesses $(c,n_0) = (10,1)$, done.
+:::
+
 ---
 
 <a id="the-math"></a>
@@ -58,6 +66,10 @@ Equivalently, $c_1 g(n) \le f(n) \le c_2 g(n)$ for $n \ge n_0$ — sandwiched be
 **Little-o (strict upper bound):** $f(n) = o(g(n))$ means $f$ grows *strictly slower* — formally, $\lim_{n\to\infty} \frac{f(n)}{g(n)} = 0$. Rules out equal rates (so $n \ne o(n)$, but $n = o(n^2)$).
 
 **Little-omega (strict lower bound):** $f(n) = \omega(g(n))$ means $f$ grows *strictly faster* — formally, $\lim_{n\to\infty} \frac{f(n)}{g(n)} = \infty$ (so $n^2 = \omega(n)$, but $n \ne \omega(n)$).
+
+::: toggle `o` vs `O` (and `ω` vs `Ω`) — what does "strict" change?
+Little versions forbid equality via limits: $f = o(g)$ means the ratio $f/g \to 0$ (f vanishes beside g — strictly slower, never equal, so $n = o(n)$ is false while $n = O(n)$ is true). Little-omega mirrors with ratio $\to \infty$. What it means: a stronger, equality-excluding claim. Why used: ruling out equal rates (e.g. proving an algorithm is *strictly* subquadratic). Common confusion: reading $o$ as "a smaller Big-O" — it is a different, stricter relation.
+:::
 
 **Structural properties (manipulate bounds like algebra):**
 - **Reflexivity:** $f = O(f)$, $\Omega(f)$, $\Theta(f)$ — everything weakly bounds itself. Little-o/little-omega are *not* reflexive (strictness forbids equality).

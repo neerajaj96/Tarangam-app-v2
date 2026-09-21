@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Binary search on a sorted array is fast ($O(\log n)$) because each comparison kills half the candidates — but inserting into an array&#39;s middle means shifting everything after it ($O(n)$). A Binary Search Tree (BST) wants both: array-like search <em>and</em> cheap inserts. Catch: a BST is only fast if it actually <em>branches</em>. Insert $1, 2, 3, 4, 5$ in order and each node gets one child — a line, not a tree — and search degrades to $O(n)$ linear scanning.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A BST&#39;s speed equals its height (levels to descend). Sorted insertion builds a degenerate line of height $n$ — all &quot;eliminate half&quot; power gone, since nothing branches. An AVL (Adelson-Velsky and Landis) tree bolts on one rule: after every update, rebalance so the line shape can never form. &quot;Fast if lucky&quot; becomes &quot;fast, guaranteed, always&quot; — height pinned near $\log n$ whatever order keys arrive in.</p>
 </div></details><p><strong>Tiny toy example (3 keys).</strong> Insert $1, 2, 3$ into a plain BST: $1 \to 2 \to 3$ line, height 2, finding 3 costs 3 visits. An AVL tree rotates mid-way into $2$ over $1, 3$: height 1, finding anything costs ≤ 2 visits. Same keys, different shape, different bill.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `tree`, `binary tree`, `BST`, `height`, `balance`, `balance factor`?</summary><div class="toggle-content"><p><code>Tree</code> = nodes linked parent-to-child with exactly one root and no cycles. <code>Binary tree</code> = each node has at most two children (left, right). <code>BST</code> = binary tree plus ordering (left subtree smaller, right larger) enabling go-left-or-right search. <code>Height</code> = edges on the longest root-to-leaf path (levels descended = search cost). <code>Balance</code> = subtrees roughly equal height. <code>Balance factor</code> = left-height minus right-height (AVL demands −1, 0, or +1 everywhere).</p>
+</div></details><details class="interactive-toggle"><summary>Where does `h &lt; 1.44 log₂ n` come from?</summary><div class="toggle-content"><p>Sparsest legal AVL tree: one subtree of height $h−1$, the other $h−2$ (any shorter breaks $|BF| ≤ 1$). Node counts follow $N_h = N_{h−1} + N_{h−2} + 1$ (Fibonacci-like, exponential $\Theta(\phi^h)$, $\phi ≈ 1.618$). Inverting $n \ge N_h$ gives $h &lt; 1.44\log_2 n$. What it means: even the skinniest allowed AVL is only ~1.44× taller than perfect — height stays logarithmic, so all operations stay $O(\log n)$.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-checking-one-node-s-balance-factor">3. Worked example — checking one n… →</a></p>

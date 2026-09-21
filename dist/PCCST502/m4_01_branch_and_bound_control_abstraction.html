@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Backtracking prunes dead ends (infeasible branches) — but optimization problems (cheapest tour, best assignment) need more: abandoning branches that are feasible yet <em>provably worse than a solution already in hand</em>. <strong>Branch &amp; Bound (B&amp;B)</strong> adds exactly this second blade: an optimistic cost estimate (bound) per branch plus a running best (incumbent), killing branches that cannot win.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Treasure Hunter with a Map Legend</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Backtracking explores caves corridor by corridor, retreating only from dead ends. <strong>Branch &amp; bound</strong> carries one extra instrument: a legend estimating the <em>best treasure any tunnel could possibly hold</em> (<strong>bound</strong>). At each fork it explores the most promising tunnel first (<strong>least-cost search</strong>), and abandons any tunnel whose legend reads worse than treasure already in hand (<strong>prune by bound</strong>). Same caves, far fewer footsteps — the legend converts blind retreat into informed abandonment. Drop the caves now: bounds, incumbents, and queue disciplines below are the exact machinery.</p>
 </div></details><p><strong>Tiny toy example (minimize).</strong> Two branches: left promises ≥ 20 (bound), right promises ≥ 40. Explore left first, find a full solution costing 25 (incumbent 25). Right&#39;s bound 40 ≥ 25 → kill it unvisited. One addition saved a whole subtree.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `branch`, `bound`, `incumbent`, `E-node`, `live`, `dead`?</summary><div class="toggle-content"><p><code>Branch</code> = one fork&#39;s subtree (a partial decision plus all its completions). <code>Bound</code> $\hat{c}(x)$ = cheap optimistic estimate of the best cost under $x$ (lower bound for minimization — never overestimate promise). <code>Incumbent</code> = best complete solution found so far (the treasure in hand — only full solutions update it). <code>E-node</code> = the live node being expanded right now. <code>Live</code> = generated, waiting; <code>dead</code> = expanded or killed. Kill rule: $\hat{c}(x) \ge$ incumbent ⇒ nothing underneath wins ⇒ discard unvisited.</p>
+</div></details><details class="interactive-toggle"><summary>Why is the branch discarded (trace the toy)?</summary><div class="toggle-content"><p>Left&#39;s bound 20 &lt; ∞ (no incumbent yet) → explore first (LC picks smallest bound). Full solution 25 found → incumbent = 25. Right&#39;s bound 40 ≥ 25 → every completion through right costs ≥ 40 &gt; 25 → cannot improve → kill without visiting (one comparison saved a subtree). Had the incumbent been 45 instead, right would survive (40 &lt; 45 — still promising) — pruning compares against the <em>current</em> best, never a fixed threshold.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-bound-kill-and-choose-the-next-e-node">3. Worked example — bound, kill, a… →</a></p>

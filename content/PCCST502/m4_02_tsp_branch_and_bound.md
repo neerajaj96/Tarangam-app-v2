@@ -36,6 +36,14 @@ Before planning any route, an assistant computes a floor: "every city must be *l
 
 **Tiny toy example (3 cities).** Costs: $1\to2$ (5), $2\to3$ (5), $3\to1$ (5), all returns (50). Row minima $5,5,5$ → floor 15. The tour $1\to2\to3\to1$ costs exactly 15 = floor → optimal proven with zero search. Floors certify; tours cash in.
 
+::: toggle What are `tour`, `Hamiltonian cycle`, `edge cost`, `bound`, `incumbent`?
+`Tour` = a route visiting every city exactly once and returning to start. `Hamiltonian cycle` = the graph name for such a closed visit-all loop (TSP asks for the cheapest one). `Edge cost` = road price $M[i][j]$ (asymmetric allowed — $i \to j$ may differ from $j \to i$). `Bound` = reduction-total floor (no tour costs less — optimistic by construction). `Incumbent` = best complete tour found so far (e.g. nearest-neighbour 39 — prunes everything floored at or above it).
+:::
+
+::: toggle Trace the root bound: where do `29` and `6` come from?
+Row minima (ignore diagonal $-$): row 1 min 10, row 2 min 5, row 3 min 6, row 4 min 8 → subtract each from its row, running total 29 (every tour uses one entry per row, so every tour costs ≥ 29 less than the original — floor banked). Column minima of the reduced matrix: 0, 0, 1, 5 → total 6 (every tour uses one entry per column — another 6 banked). Bound $29 + 6 = 35$: no tour under 35 exists; incumbent 39 leaves the window [35, 39) to search.
+:::
+
 ---
 
 <a id="the-math"></a>

@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -305,10 +305,13 @@
 <li><strong>Output</strong> — at least one quantity produced, with a specified, provable relationship to the inputs (it must actually solve the stated problem).</li>
 <li><strong>Effectiveness</strong> — every operation is basic enough to do exactly, in finite time, with pencil and paper. &quot;Guess the answer&quot; is not effective; &quot;add two numbers&quot; is.</li>
 </ol>
-<p><strong>Symbols and abbreviations used here:</strong> $n$ = input size (e.g. number of list elements); $O(1)$ = constant work, independent of $n$ (defined fully in the asymptotics note).</p>
+<details class="interactive-toggle"><summary>What do `finite`, `definite`, and `effective` mean in one breath each?</summary><div class="toggle-content"><p><code>Finite</code> = the instructions must end (a stopping point exists for every valid input — &quot;keep stirring forever&quot; fails). <code>Definite</code> = each instruction has exactly one meaning (no interpretation possible — &quot;add sugar&quot; fails, &quot;add 2 teaspoons&quot; passes). <code>Effective</code> = each step is actually doable with basic means (pencil-and-paper doable — &quot;add moon dust&quot; is clear but unobtainable, so it fails effectiveness, not definiteness).</p>
+</div></details><details class="interactive-toggle"><summary>What is the `RAM model` and what is `pseudocode`?</summary><div class="toggle-content"><p>RAM (Random Access Machine) model = an imaginary simplified computer (numbered memory cells, one-unit basic operations, sequential steps) used so analysis compares algorithms, not machines. Pseudocode = half-formal recipe notation between English and code (loops and conditions written plainly, no compiler needed) — precise enough to count operations from, readable without knowing any language.</p>
+</div></details><p><strong>Symbols and abbreviations used here:</strong> $n$ = input size (e.g. number of list elements); $O(1)$ = constant work, independent of $n$ (defined fully in the asymptotics note).</p>
 <p><strong>The RAM (Random Access Machine) model.</strong> To analyse algorithms fairly, we imagine a simplified ideal computer: unlimited memory of numbered cells, each readable in one unit of time (&quot;random access&quot;, hence the name); basic operations — addition, subtraction, comparison, assignment, array indexing — each cost exactly one unit ($O(1)$), regardless of number sizes; instructions run sequentially, with no parallelism. This deliberately ignores caches, pipelining, and memory hierarchy so that analysis does not depend on any physical machine.</p>
 <p><strong>Space vs time efficiency.</strong> <em>Time efficiency</em> asks &quot;how many basic operations, as a function of $n$?&quot; <em>Space efficiency</em> asks &quot;how much extra memory beyond the input, as a function of $n$?&quot; They often trade off: <em>memoization</em> (storing precomputed results) spends space to save time; recomputing on the fly spends time to save space. Neither is always better — it depends on which resource is scarcer.</p>
-<hr>
+<details class="interactive-toggle"><summary>What do `input`, `output`, and `correctness` mean for an algorithm?</summary><div class="toggle-content"><p><code>Input</code> = zero or more quantities supplied from outside before or during execution (the ingredients — possibly none). <code>Output</code> = at least one produced quantity with a provable relationship to the input (the dish — mandatory, unlike input). Correctness = the output always satisfies the problem&#39;s specification for every valid input (not &quot;usually works&quot; — proven for all inputs).</p>
+</div></details><hr>
 <p><a id="worked-example"></a></p>
 <h2 id="3-worked-example-testing-a-procedure-step-by-step">3. Worked example — testing a procedure step by step</h2>
 <p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>

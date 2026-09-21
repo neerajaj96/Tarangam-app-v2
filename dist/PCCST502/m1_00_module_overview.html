@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -294,7 +294,9 @@
 <p><strong>The question Module 1 answers:</strong> how do we compare two solutions <em>fairly and mathematically</em>, without running both on a real computer (whose speed depends on processor model, other apps running, programming language — none of which should matter to the comparison)? The answer is a measuring stick built in stages: first define what an &quot;algorithm&quot; even is, then define how to count its work (time and space complexity), then learn a compact notation for that work (Big-O and friends), then calculate it for loops and for recursive functions, and finally apply all of it to a real data structure — the AVL (Adelson-Velsky and Landis) tree — where keeping the work bounded is the entire point of the design.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think &quot;it works&quot; versus &quot;it works <em>well</em>&quot;. Module 1 turns the second phrase from a vague feeling into a provable fact: a number like $O(n)$ (read &quot;order n&quot;: the work grows at most linearly with input size $n$) or $O(\log n)$ (the work grows only logarithmically — doubling the input adds just one more step).</p>
 </div></details><p><strong>Tiny toy example (8 pages).</strong> Linear checking on 8 pages takes up to 8 looks. Halving takes at most 3 looks ($8 \to 4 \to 2 \to 1$). Small gap. Now scale to $n = 1{,}000{,}000$: linear takes up to 1,000,000 looks; halving takes about $\log_2(1{,}000{,}000) \approx 20$ looks. Same two ideas, wildly different scaling — and scaling is what this module measures.</p>
-<hr>
+<details class="interactive-toggle"><summary>What do `O(n)` and `O(log n)` say in plain words?</summary><div class="toggle-content"><p><code>O(n)</code> = work grows at most proportionally with input size (double the input, at most double the work — &quot;order n&quot;). <code>O(log n)</code> = work grows with the number of halvings (double the input, one extra step — &quot;order log n&quot;). Why halves give logs: each step discards half the candidates, so $n$ candidates need $\log_2 n$ halvings ($\log_2$ asks &quot;how many halvings to reach 1?&quot;).</p>
+</div></details><details class="interactive-toggle"><summary>Why is a stopwatch comparison unfair?</summary><div class="toggle-content"><p>Stopwatches measure one machine, one language, one load: a slow algorithm on a fast laptop beats a fast algorithm on a tired phone, saying nothing about the ideas. Analysis counts operations as a function of $n$ in the imaginary RAM model — same ruler for both programs, so the verdict travels across all real machines.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-the-roadmap-each-topic-answers-one-question">2. The roadmap — each topic answers one question</h2>
 <p class="secnav"><a href="#1-start-from-zero-what-problem-does-this-module-solve">← 1. Start from zero — what problem …</a><span class="secnav-sep">·</span><a href="#3-worked-example-linear-search-versus-binary-search">3. Worked example — linear search … →</a></p>

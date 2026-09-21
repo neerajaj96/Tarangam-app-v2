@@ -36,6 +36,14 @@ Think of it as the cheat sheet *earned* by the previous two topics. Root work vs
 
 **Tiny toy example.** $T(n) = 2T(n/2) + 1$: watershed $n^{\log_2 2} = n^1 = n$; $f(n) = 1$ is polynomially smaller → leaves dominate → $\Theta(n)$. One comparison replaces a full tree.
 
+::: toggle What are `a`, `b`, `f(n)`, and the `watershed`?
+`a` = subproblems spawned per call (2 halves ⇒ $a = 2$). `b` = shrink factor (halved ⇒ $b = 2$). `f(n)` = the current level's own split/combine work (the $+1$ here — everything except the self-calls). Watershed $n^{\log_b a}$ = the leaf-level total from the recursion tree (leaves = $a^{\log_b n} = n^{\log_b a}$ many, each $O(1)$). Why compare: leaves vs root-work decides the winner — $f$ slower ⇒ leaves win, equal ⇒ tie (pay per level, extra $\log n$), faster ⇒ root wins.
+:::
+
+::: toggle Why do the three cases exist (and what is `regularity`)?
+Each case names a different winner of root-work vs leaf-work. Case 1: leaves outgrow the root's own work (total set at the bottom). Case 2: every level costs the same (levels = $\log_b n$ of them — hence the extra $\log n$). Case 3: the root's own work dwarfs the whole subtree below (answer = $f(n)$ itself). Regularity ($af(n/b) \le cf(n)$, $c < 1$) guarantees the children's combined work stays a shrinking fraction of the parent's — without it, "root dominates" could still be ambushed from below.
+:::
+
 ---
 
 <a id="the-math"></a>

@@ -40,6 +40,14 @@ Technique selection *is* the skill: loop → summation with series formulas; rec
 
 **Tiny warm-up.** $T(n) = 3T(n/2) + \Theta(n)$: watershed $n^{\log_2 3} \approx n^{1.58}$; $f = n$ is polynomially smaller → Case 1 → $\Theta(n^{1.58})$. Thirty seconds once the reflex exists.
 
+::: toggle How do I choose the technique in 10 seconds?
+Loop code → summation (which series?). Recurrence + claimed bound → substitution (guess/assume/substitute/verify). Recurrence, no claim → iteration (unroll to level $k$) or tree (row totals). Standard $aT(n/b)+f(n)$ with clean $f$ → Master (watershed first). Key sequence → per-insertion BF walk. The choice itself is the exam skill — name it before computing.
+:::
+
+::: toggle Trace the warm-up: where does `n^1.58` come from?
+$a = 3, b = 2$: watershed $n^{\log_2 3}$; $\log_2 3 \approx 1.58$ (since $2^{1.58} \approx 3$ — the power of 2 giving 3). $f = n = n^1$ is polynomially below $n^{1.58}$ (gap $n^{0.58}$), so Case 1: leaves dominate, answer $\Theta(n^{1.58})$. Reading order: watershed first, gap direction second, case third.
+:::
+
 ---
 
 <a id="the-math"></a>

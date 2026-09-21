@@ -36,6 +36,10 @@ Best case = luckiest possible input of size $n$. Worst case = unluckiest possibl
 
 **Tiny toy example (4 papers).** Names [Asha, Bina, Chetan, Divya], searching for each in turn: finding Asha costs 1 flip (best), Divya costs 4 flips (worst), and the average over the four equally-likely targets is $(1+2+3+4)/4 = 2.5$ flips.
 
+::: toggle Expand `T(n) = 3n + 2` symbol by symbol
+`T` = time (operation count — the cost function being defined). `(n)` = "as a function of input size n" (the expression varies with n). `3n` = three operations per input element (the `3×` multiplication scales with size — e.g. 3 loop-body steps each). `+ 2` = two one-time setup operations (the addition is size-independent overhead). `=` = "is counted as" (a cost model, not wall-clock seconds). Whole meaning: this algorithm's work grows linearly — double n, roughly double the work. Tiny numbers: n=10 → 32 operations; n=100 → 302.
+:::
+
 ---
 
 <a id="the-math"></a>
@@ -50,6 +54,14 @@ Best case = luckiest possible input of size $n$. Worst case = unluckiest possibl
 **Average case** $T_{avg}(n)$: *expected* operations averaged over all inputs of size $n$ under an assumed probability distribution (typically uniform). Mathematically harder (needs the distribution) and only as trustworthy as the assumption — if real inputs skew differently, the average-case number misleads.
 
 **Space complexity** counts memory cells used as a function of $n$: input storage + *auxiliary* space (extra variables, temporary arrays, recursion call stack) + output storage. "$O(1)$ space" / "in-place" means the *auxiliary* part is constant — the input itself must exist regardless and is not counted against the algorithm.
+
+::: toggle What do `best`, `worst`, and `average` case mean in one breath each?
+`Best` = luckiest input of size n (minimum work — promises nothing about other inputs). `Worst` = unluckiest input (maximum work — the unconditional guarantee engineers buy; the default measure). `Average` = expected work over a stated input distribution (usually "all inputs equally likely" — only as trustworthy as that assumption). Tiny example: linear search best 1, worst n, average (n+1)/2.
+:::
+
+::: toggle What is `auxiliary space` vs total space?
+Total space = input + auxiliary (working memory) + output. Auxiliary = only the extra the algorithm allocates while running (a few variables, temp arrays, recursion stack). "In-place / O(1) space" constrains the auxiliary part alone — input and output storage always exist and are never counted against the algorithm.
+:::
 
 **Why worst case dominates:** average case needs a distribution assumption that may not match reality; best case promises nothing about unlucky inputs. Worst case is distribution-free with an unconditional upper bound — the default in textbooks, interviews, and system design unless stated otherwise.
 

@@ -36,6 +36,14 @@ Picture a two-pan balance tipped left. You do not discard weights — you redist
 
 **Tiny toy example.** Nodes $30$ over $20$ over $10$ (a left line): right-rotate $30$ → $20$ on top with $10$, $30$ as children. Keys $\{10, 20, 30\}$ unchanged, order intact, all $BF = 0$.
 
+::: toggle Trace the LL rotation pointer by pointer
+Before: 30 (BF +2) with left child 20, 20's right subtree T (possibly empty). Step 1: detach T from 20 (remember it). Step 2: 20 becomes local root; 30 becomes 20's right child. Step 3: reattach T as 30's left child (T's keys sit between 20 and 30, so BST order holds: 20 < T < 30). After: 20 over 10 and 30, all BF = 0. Why each step: steps 1–2 swap the lean; step 3 parks the middle subtree where order demands — skipping it loses keys.
+:::
+
+::: toggle How do I choose between LL, RR, LR, RL from the insertion path?
+Read the last two turns from the unbalanced node toward the new key: left-then-left = LL (single right rotation); right-then-right = RR (single left); left-then-right = LR (left on child, then right on parent); right-then-left = RL (right on child, then left on parent). Straight (same direction twice) → one rotation against the lean; elbow (directions differ) → child-first double rotation. Deletion reuses the shapes but must recheck every ancestor upward (heights can shrink).
+:::
+
 ---
 
 <a id="the-math"></a>

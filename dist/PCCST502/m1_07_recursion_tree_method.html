@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Iteration unrolls recursion as algebra — but many learners <em>see</em> better than they symbol-push. The recursion tree turns the same unrolling into a picture: the root is the original call on size $n$, its children are the sub-calls, and so on down to base-case leaves. Write each node&#39;s own work beside it, total each <em>row</em>, then add the rows.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Draw a family tree of the calls. Root = the size-$n$ call. Children = the sub-problems it spawns; grandchildren = theirs. Leaves = base cases that stop. Next to each node write only <em>its own</em> work (not its children&#39;s). Row totals reveal the pattern instantly: rows shrinking → root rules; rows equal → count the rows; rows growing → leaves rule.</p>
 </div></details><p><strong>Tiny toy example.</strong> $T(n) = 2T(n/2) + 1$ for $n = 4$: root work 1; two children on size 2, work 1 each (row = 2); four leaves on size 1 (row = 4). Total $1 + 2 + 4 = 7$ — rows doubling downward, leaves dominating already visible.</p>
-<hr>
+<details class="interactive-toggle"><summary>Trace this tiny tree node by node</summary><div class="toggle-content"><p>Root: one call on size 4, own work $f(4) = 1$. Level 1: $a = 2$ children, each size $4/2 = 2$, own work 1 each → row total $2 × 1 = 2$. Level 2 (leaves): $2^2 = 4$ nodes of size 1, base cost 1 each → row 4. Grand total $1 + 2 + 4 = 7$. Read rows: 1, 2, 4 — doubling downward, so leaves dominate (growing-row case). Check against Master: watershed $n^{\log_2 2} = n = 4$ leaves × $\Theta(1)$ = 4, plus upper rows — consistent.</p>
+</div></details><details class="interactive-toggle"><summary>Where does `leaves = n^(log_b a)` come from?</summary><div class="toggle-content"><p>Depth: size halves $k$ times until $n/b^k = 1$, so $k = \log_b n$ levels. Leaf count: $a$ children per node for $\log_b n$ levels gives $a^{\log_b n}$ leaves. Log identity $a^{\log_b n} = n^{\log_b a}$ (take $\log_b$ of both: $\log_b n · \log_b a$ each side). Tiny check: $a=2, b=2, n=4$ gives $2^{\log_2 4} = 4$ leaves $= 4^{\log_2 2} = 4^1$. Each leaf costs $\Theta(1)$, so the leaf floor totals $\Theta(n^{\log_b a})$.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-t-n-3t-n-4-n-2">3. Worked example — $T(n) = 3T(n/4… →</a></p>

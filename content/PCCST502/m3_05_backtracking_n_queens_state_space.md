@@ -35,6 +35,14 @@ Brute force walks *every* path to its end. **Backtracking** ties string at the e
 
 **Tiny toy example (2-Queens).** $2 \times 2$ board: place Q1 at (1,1); row 2 offers columns 1 (same column ✗) and 2 (diagonal $|2-1| = |2-1|$ ✗) — dead end, backtrack. Q1 at (1,2): symmetric dead end. Zero solutions after visiting 2 partial placements instead of $2^2 = 4$ full ones — pruning on a tiny board.
 
+::: toggle What are `candidate`, `partial solution`, `constraint`, `decision`, `backtrack`, `pruning`?
+`Candidate` = one complete placement (a full column vector — possibly illegal). `Partial solution` = placed-so-far rows (a prefix like [2,4] — legality checked incrementally). `Constraint` = a rule candidates must satisfy (explicit: each column 1..n; implicit: no shared column/diagonal). `Decision` = choosing the next row's column (a fork in the tree). `Backtrack` = rewind to the last fork when the partial solution provably fails. `Pruning` = abandoning the whole subtree beneath a dead partial placement (never visited — the savings).
+:::
+
+::: toggle Why check the new queen only against earlier rows?
+Attacks are symmetric (if queen 5 attacks queen 2, queen 2 attacks queen 5) and future rows are empty, so any conflict involving queen $k+1$ must touch queens $1..k$ — checking backward catches everything exactly once. Forward-checking would test empty rows (vacuous) and re-test old pairs (duplicate work). Backward-only is complete and cheapest: $k$ attack tests per placement, never $n$.
+:::
+
 ---
 
 <a id="the-math"></a>

@@ -35,6 +35,14 @@ A BST's speed equals its height (levels to descend). Sorted insertion builds a d
 
 **Tiny toy example (3 keys).** Insert $1, 2, 3$ into a plain BST: $1 \to 2 \to 3$ line, height 2, finding 3 costs 3 visits. An AVL tree rotates mid-way into $2$ over $1, 3$: height 1, finding anything costs ≤ 2 visits. Same keys, different shape, different bill.
 
+::: toggle What are `tree`, `binary tree`, `BST`, `height`, `balance`, `balance factor`?
+`Tree` = nodes linked parent-to-child with exactly one root and no cycles. `Binary tree` = each node has at most two children (left, right). `BST` = binary tree plus ordering (left subtree smaller, right larger) enabling go-left-or-right search. `Height` = edges on the longest root-to-leaf path (levels descended = search cost). `Balance` = subtrees roughly equal height. `Balance factor` = left-height minus right-height (AVL demands −1, 0, or +1 everywhere).
+:::
+
+::: toggle Where does `h < 1.44 log₂ n` come from?
+Sparsest legal AVL tree: one subtree of height $h−1$, the other $h−2$ (any shorter breaks $|BF| ≤ 1$). Node counts follow $N_h = N_{h−1} + N_{h−2} + 1$ (Fibonacci-like, exponential $\Theta(\phi^h)$, $\phi ≈ 1.618$). Inverting $n \ge N_h$ gives $h < 1.44\log_2 n$. What it means: even the skinniest allowed AVL is only ~1.44× taller than perfect — height stays logarithmic, so all operations stay $O(\log n)$.
+:::
+
 ---
 
 <a id="the-math"></a>

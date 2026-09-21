@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Place $n$ queens on an $n \times n$ board so none attack another — or enumerate <em>all</em> ways. Trying all $n^n$ placements is hopeless; but most partial placements already show a conflict (two queens sharing a diagonal), making every completion underneath pointless. <strong>Backtracking</strong> exploits exactly this: build row by row, abandon a branch the moment it provably fails, rewind to the last fork, try the next column.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Maze with String</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Brute force walks <em>every</em> path to its end. <strong>Backtracking</strong> ties string at the entrance: advance while promising; the moment a path <em>provably</em> fails (dead end, or a bound worse than best), rewind to the last fork and try the next branch — <em>pruning</em> whole subtrees unvisited. The string (recursion stack) plus dead-end detectors (<strong>bounding functions</strong>) turn exhaustive search from impossible into merely expensive. Drop the maze now: state-space trees and attack tests below are the exact machinery.</p>
 </div></details><p><strong>Tiny toy example (2-Queens).</strong> $2 \times 2$ board: place Q1 at (1,1); row 2 offers columns 1 (same column ✗) and 2 (diagonal $|2-1| = |2-1|$ ✗) — dead end, backtrack. Q1 at (1,2): symmetric dead end. Zero solutions after visiting 2 partial placements instead of $2^2 = 4$ full ones — pruning on a tiny board.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `candidate`, `partial solution`, `constraint`, `decision`, `backtrack`, `pruning`?</summary><div class="toggle-content"><p><code>Candidate</code> = one complete placement (a full column vector — possibly illegal). <code>Partial solution</code> = placed-so-far rows (a prefix like [2,4] — legality checked incrementally). <code>Constraint</code> = a rule candidates must satisfy (explicit: each column 1..n; implicit: no shared column/diagonal). <code>Decision</code> = choosing the next row&#39;s column (a fork in the tree). <code>Backtrack</code> = rewind to the last fork when the partial solution provably fails. <code>Pruning</code> = abandoning the whole subtree beneath a dead partial placement (never visited — the savings).</p>
+</div></details><details class="interactive-toggle"><summary>Why check the new queen only against earlier rows?</summary><div class="toggle-content"><p>Attacks are symmetric (if queen 5 attacks queen 2, queen 2 attacks queen 5) and future rows are empty, so any conflict involving queen $k+1$ must touch queens $1..k$ — checking backward catches everything exactly once. Forward-checking would test empty rows (vacuous) and re-test old pairs (duplicate work). Backward-only is complete and cheapest: $k$ attack tests per placement, never $n$.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-4-queens-to-both-solutions">3. Worked example — 4-Queens to bo… →</a></p>

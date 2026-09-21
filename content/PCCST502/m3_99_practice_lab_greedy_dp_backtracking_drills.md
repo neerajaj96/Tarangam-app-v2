@@ -39,6 +39,14 @@ One input, many methods: the knapsack showdown proves *divisibility* decides the
 
 **Tiny warm-up.** Items $(v,w)$ = $(10,5), (9,4)$, capacity $9$: ratio-greedy takes $(10,5)$ then $(9,4)$ fits → 19; DP agrees 19 (both fit — no conflict, no drama). Conflict-free instances hide method differences; the showdown below picks a conflicting one on purpose.
 
+::: toggle How do I run the knapsack showdown (three verdicts, one input)?
+Compute all three on the same items: (1) ratio-greedy (sort by $v/w$, take fitting wholes — fast, sometimes wrong for 0/1); (2) DP take-or-skip table (exact for 0/1 — the reference answer); (3) fractional upper bound (take fractions — legal only if divisible, always ≥ the 0/1 optimum). Compare: greedy vs DP diagnoses greed's failure; fractional vs DP measures the divisibility gap (240 vs 220 here). Divisibility decides legality, DP decides 0/1 truth.
+:::
+
+::: toggle How do I race chain splits without missing one?
+List splits per interval in order: length-2 pairs first (single split each — direct products), then length-3 (two splits each — left+right+combine term), then full length (all splits, keep min + winning $k$). Each $m[i][j]$ reads strictly shorter intervals (length order = correctness). Missing-split symptom: an $m$-value below the true optimum (skipped the winning $k$) — recount splits per interval ($j−i$ of them).
+:::
+
 ### Scenario 1: The Knapsack Showdown (Same Items, Three Verdicts)
 
 Items $(v,w)$: $(60,10), (100,20), (120,30)$, capacity $50$. **Ratio-greedy**: densities $6, 5, 4$ → take $(60,10)$, then $(100,20)$ fits ($30$ used), then $(120,30)$ doesn't ($60 > 50$): total **160**. **DP take-or-skip**: $dp$ fills to **220** via $\{(100,20),(120,30)\}$ (weight exactly 50). **Fractional** (for reference): $60 + 100 + \frac{20}{30}\cdot120 = 240$. Three methods, three answers (160 / 220 / 240) on identical input — divisibility decides which is *legal*, optimality decides which is *right*.

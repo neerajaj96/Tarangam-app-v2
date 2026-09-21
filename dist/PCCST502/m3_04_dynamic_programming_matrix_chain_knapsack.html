@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Greedy fails 0/1 knapsack because whole-item choices <em>interact</em> through shared capacity. Naive recursion on such problems recomputes the same subproblems exponentially often (Fibonacci $F(10)$ re-derived dozens of times). <strong>Dynamic programming (DP)</strong> fixes exactly this: solve each <em>distinct</em> subproblem <em>once</em>, store it, reuse it — a whiteboard next to the recursion.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Forgetful vs. Note-Taking Mathematician</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The <strong>forgetful</strong> mathematician recomputes $F(10)$ from scratch every time (plain recursion on overlapping subproblems — exponential waste). The <strong>note-taking</strong> one writes each $F(k)$ on a whiteboard once and <em>reads</em> it after. Same recursion, exponentially less work. DP applies precisely when subproblems <strong>overlap</strong> (recursion revisits them) and the problem has <strong>optimal substructure</strong> (optima built from optima). Drop the mathematicians now: memo tables and recurrences below are the exact machinery.</p>
 </div></details><p><strong>Tiny toy example (Fibonacci).</strong> Naive $F(5) = F(4)+F(3)$ recomputes $F(3)$ twice, $F(2)$ three times. Note-taking: compute $F(0)..F(5) = 0,1,1,2,3,5$ once each — 6 writes, zero repeats. That gap (exponential vs linear) is DP&#39;s entire value.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `overlapping subproblems`, `state`, `memoization`, `tabulation`?</summary><div class="toggle-content"><p><code>Overlapping subproblems</code> = the recursion revisits identical smaller instances (F(3) computed twice above — the waste DP removes). <code>State</code> = the parameters naming one subproblem ($F(k)$, or $m[i][j]$ = cheapest chain $i..j$). <code>Memoization</code> = top-down recursion plus a cache (compute on demand, remember). <code>Tabulation</code> = bottom-up table filled smallest-first (no recursion at all). Same complexity, opposite directions — memoization asks as needed, tabulation builds everything below first.</p>
+</div></details><details class="interactive-toggle"><summary>Expand the matrix-chain recurrence symbol by symbol</summary><div class="toggle-content"><p>$m[i][j]$ = cheapest scalar-multiplication count for subchain $A_i..A_j$ (the answer sought; $m[i][i] = 0$ — one matrix needs no multiplication). $k$ = split point tried ($i \le k &lt; j$ — every way to parenthesize outermost). $m[i][k] + m[k+1][j]$ = optimal costs of the two halves (optimal substructure: optima built from optima). $p_{i-1}p_kp_j$ = cost of multiplying the two resulting matrices (dimensions $(p_{i-1} \times p_k)$ times $(p_k \times p_j)$ need exactly that many scalar mults). $\min_k$ = keep the cheapest split (record it in $s[i][j]$ for reconstruction). Fill order: increasing chain length (each entry reads strictly shorter intervals — any other order reads garbage).</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-the-classic-six-matrix-chain">3. Worked example — the classic si… →</a></p>

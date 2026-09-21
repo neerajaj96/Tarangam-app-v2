@@ -36,6 +36,14 @@ Islands linked by one-way ferries: an SCC is a group with round trips between ev
 
 **Tiny toy example (3 vertices).** Edges $a \to b$, $b \to a$ (round trip!), $b \to c$ (one-way out). SCCs: $\{a, b\}$ (mutual) and $\{c\}$ (can be reached, never returns). Collapsed: $\{a,b\} \to \{c\}$ — a 2-node DAG.
 
+::: toggle What do `connected component`, `reachability`, and `strongly` mean?
+`Connected component` (undirected) = a group joined by paths ignoring direction. `Reachability` ($u \leadsto v$) = a directed path exists from $u$ to $v$ (one-way counts). `Strongly` upgrades the requirement to round trips: $u \leadsto v$ AND $v \leadsto u$ for every pair inside. Tiny check: $b \to c$ alone makes $\{b,c\}$ connected but not strongly (no return) — "strongly" means mutual, never one-way.
+:::
+
+::: toggle Why must pass 2 run on the `transpose` in decreasing finish order?
+Transpose ($G^T$, every edge reversed) turns pass-1's source SCC into a sink: DFS from it cannot escape its own group (all reversed edges point inward). Decreasing finish order starts each peeling from a current sink, so each DFS tree harvests exactly one SCC. Arbitrary order bleeds across groups (a mid-order start walks into neighbours); increasing order starts at sinks of $G$ (= sources of $G^T$) and floods outward — the order is load-bearing, not bookkeeping.
+:::
+
 ---
 
 <a id="the-math"></a>

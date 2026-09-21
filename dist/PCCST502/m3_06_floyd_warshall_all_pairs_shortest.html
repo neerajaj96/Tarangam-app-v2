@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -315,7 +315,9 @@
     <div class="video-observations"><strong>What to observe:</strong> Round $k = 2$ admits vertex $2$ as midpoint: $D[1][3] = \min(8, 3 + 2) = 5$ — the matrix below traces all three rounds.</div>
   </div>
 </div><p><strong>Tiny toy example (2 vertices).</strong> Edges $1 \to 2$ (7), $2 \to 1$ ($-2$). $D^0 = [[0,7],[-2,0]]$. Round 1 (hub 1): $D[2][2] = \min(0, -2+7) = 0$ — no change. Round 2 (hub 2): $D[1][1] = \min(0, 7-2) = 0$ — no change, diagonal clean, no negative cycle. Two rounds, zero drama, correct table.</p>
-<hr>
+<details class="interactive-toggle"><summary>Expand `D[k][i][j] = min(D[k−1][i][j], D[k−1][i][k] + D[k−1][k][j])` symbol by symbol</summary><div class="toggle-content"><p>$D^k[i][j]$ = best $i \to j$ distance using intermediate vertices only from ${1..k}$ (the growing permission set). $D^{k-1}[i][j]$ = best path ignoring the new hub (keep the old answer). $D^{k-1}[i][k] + D^{k-1}[k][j]$ = best path forced through new hub $k$ (arrive + depart). $\min$ = keep whichever is shorter (hub helps or it doesn&#39;t — one comparison per pair). $k = 1..V$ rounds induct one hub at a time; after round $V$ all intermediates allowed = true shortest paths. Tiny check above: $D[1][3] = \min(8, 3+2) = 5$ — via-2 beats direct-8.</p>
+</div></details><details class="interactive-toggle"><summary>What do `intermediate vertex`, `negative cycle`, and `Π` mean?</summary><div class="toggle-content"><p><code>Intermediate vertex</code> = any vertex strictly between start and end on a path (hubs admitted round by round — $D^k$&#39;s permission set). <code>Negative cycle</code> = a directed loop with total negative cost (looping forever keeps improving — shortest paths then undefined; convicted by a negative diagonal entry at the end). $\Pi[i][j]$ = predecessor of $j$ on the current best $i \to j$ path (follow pointers home to rebuild &quot;which way&quot;, not just &quot;how far&quot;).</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-three-vertices-three-rounds-one-change">3. Worked example — three vertices… →</a></p>

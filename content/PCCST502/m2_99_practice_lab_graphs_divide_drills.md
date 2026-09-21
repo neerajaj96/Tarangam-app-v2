@@ -39,6 +39,14 @@ Treat each scenario as a marking scheme: state the setup, show every intermediat
 
 **Tiny warm-up.** UNION(1,2) by rank from singletons: tie $0,0$ → 2 under 1, rank(1) = 1. One line, three facts (parent, rank, tie rule cited).
 
+::: toggle How do I read a union-find trace line?
+Each UNION line must state three facts: the new parent pointer (who goes under whom), the rank update (increment only on equal-rank ties — otherwise unchanged), and the tie rule cited (smaller-under-larger, either way on ties). Warm-up decoded: tie (0,0) → parent(2) = 1, rank(1) becomes 1, rule "tie, either way" cited. Missing any of the three loses the mark the line was built to earn.
+:::
+
+::: toggle How do I autopsy one DFS edge?
+Four questions in order: (1) target colour when explored? (white/gray/black). (2) Which species follows? (white→tree, gray→back, black+descendant→forward, black otherwise→cross). (3) What does it prove? (back = cycle certified; others = structure mapped). (4) Timestamps consistent? ($d$/$f$ intervals nest or disjoint — half-overlap indicts the trace). Scenario 2's $4\to2$ gray verdict carries all four: gray, back, cycle 2→4→2, nesting intact.
+:::
+
 ### Scenario 1: Union-Find Surgery (Ranks on the Table)
 
 Singletons $\{1..6\}$. UNION(1,2): tie → 2 under 1, rank(1)=1. UNION(3,4): 4 under 3, rank(3)=1. UNION(1,3): tie 1 vs 1 → 3 under 1, rank(1)=2. Forest: $1$ roots $\{1,2,3,4\}$ (children $2,3$; grandchild $4$), $\{5\}$, $\{6\}$ untouched. FIND(4): climbs $4 \to 3 \to 1$, rewiring $4$ directly under $1$. Are 2 and 4 connected? FIND both → root 1 each: **yes**, in near-constant time — and the second query on either is a single hop. Ranks used: $\{r_1=2, r_3=1, \text{rest } 0\}$.

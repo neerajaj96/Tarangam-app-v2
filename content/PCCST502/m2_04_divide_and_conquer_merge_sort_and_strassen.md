@@ -36,6 +36,14 @@ Divide (split), conquer (recurse on smaller copies), combine (merge results). Me
 
 **Tiny toy example (4 numbers).** Sort $[4, 1, 3, 2]$: split $[4,1]$ / $[3,2]$ → sort to $[1,4]$ / $[2,3]$ → merge by front-comparison: 1, 2, 3, 4. Three levels, every level touching all 4 elements once.
 
+::: toggle Trace the merge: why does front-comparison work?
+Both halves arrive sorted, so each half's front is its smallest remaining. Comparing fronts picks the global smallest unfinished element (anything smaller would sit at some front — contradiction otherwise). Emit it, advance that half, repeat: each element moves once per level, total $\Theta(n)$ per level. Why it matters: the linear merge is what makes every level cost $n$ (not $n^2$), giving $\log_2 n$ equal levels and $\Theta(n \log n)$.
+:::
+
+::: toggle What do `A₁₁`, `M₁`, and `C₁₁` name in Strassen?
+$A_{11}$ = top-left quarter-block of $A$ (matrices split into 4 half-size blocks; subscripts name quadrants). $M_1$ = first clever product, $(A_{11}+A_{22})(B_{11}+B_{22})$ (sums computed first in $\Theta(n^2)$, then one half-size multiplication). $C_{11}$ = top-left quarter of the answer, recombined as $M_1+M_4-M_5+M_7$ (additions reassemble what the 7 products encoded). Why 7 beats 8: branching factor 7 vs 8 changes the watershed $n^{\log_2 7} \approx n^{2.81}$ vs $n^3$ — additions stay in $f(n)$, never in the exponent.
+:::
+
 ---
 
 <a id="the-math"></a>

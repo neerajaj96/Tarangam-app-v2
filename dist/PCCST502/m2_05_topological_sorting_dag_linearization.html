@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -294,7 +294,9 @@
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Getting Dressed</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Socks before shoes, shirt before tie — a DAG of prerequisites linearizes into <em>some</em> valid morning order (never unique). <strong>Kahn&#39;s algorithm</strong> (named after A. B. Kahn) dresses greedily: repeatedly wear anything with no remaining prerequisites (indegree $0$ — count of incoming edges), deleting it from everyone&#39;s lists. Leftover clothes with circular demands (a cycle) can never be worn — the queue empties with items remaining: the cycle certificate. Drop the wardrobe now: indegrees and queues below are the exact mechanism.</p>
 </div></details><p>Sibling of BFS/DFS traversals (M2.2) and Kosaraju&#39;s finish-time machinery (M2.3) — same graph toolkit, new question: not &quot;reachable?&quot; but &quot;in what order?&quot;</p>
 <p><strong>Tiny toy example (3 vertices).</strong> Edges $a \to b$, $a \to c$ (no edge between $b$, $c$). Valid orders: $[a, b, c]$ and $[a, c, b]$ — $a$ first forced, the pair free. Non-uniqueness is normal, not suspicious.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `DAG`, `indegree`, and `dependency`?</summary><div class="toggle-content"><p><code>DAG</code> = Directed Acyclic Graph (arrows have direction, and no directed cycle exists — you can never return to start). <code>Indegree</code> = count of incoming edges (unmet prerequisites — 0 means &quot;ready now&quot;). <code>Dependency</code> ($u \to v$) = $u$ must precede $v$ (socks before shoes). Tiny check: $a \to b$ forces $a$ before $b$ but says nothing about $c$ — unconstrained pairs order freely.</p>
+</div></details><details class="interactive-toggle"><summary>Why does a cycle make ordering impossible?</summary><div class="toggle-content"><p>A cycle $x \leadsto y \leadsto x$ demands $x$ before $y$ AND $y$ before $x$ simultaneously — unsatisfiable by logic, not by effort. Kahn&#39;s symptom: the queue empties with vertices left over (nothing has indegree 0 because every remainder sits on a cycle). Leftovers are the cycle certificate — count the output ($|order| &lt; V$ means cycle, full stop).</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-kahn-on-six-vertices-fully-traced">3. Worked example — Kahn on six ve… →</a></p>

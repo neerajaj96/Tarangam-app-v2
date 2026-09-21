@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Given friendships forming over time (&quot;A meets B — merge their groups&quot;; &quot;are C and D in the same group?&quot;), how do we answer connectivity queries fast as merges keep coming? Re-scanning everyone per query is $O(n)$ each — too slow inside Kruskal&#39;s algorithm, which asks thousands of such questions. We need a data structure for <em>dynamic connectivity</em>: create groups, merge them, test membership — all nearly instantly.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Family Trees at a Reunion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Each family picks one elder as its <strong>representative</strong>. &quot;Are these guests related?&quot; = climb both family trees to the elders and compare. &quot;These families married — merge&quot; = graft one elder under the other. Two speed tricks: graft the <strong>shorter tree under the taller</strong> (union by rank), and whenever you climb, <strong>re-hang everyone you pass directly under the elder</strong> (path compression) — future queries then finish in one hop. Drop the reunion now: parents, ranks, and rewiring below are the exact mechanism.</p>
 </div></details><p><strong>Tiny toy example (3 guests).</strong> Singletons ${a}, {b}, {c}$. UNION(a,b): $b$ under $a$. Query FIND(b): climb $b \to a$ (1 hop). UNION(a,c): $c$ under $a$. Every later query costs 1 hop — the structure flattens itself with use.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `set`, `disjoint`, `representative`, `parent`, `root`, `forest`?</summary><div class="toggle-content"><p><code>Set</code> = a group of elements treated as one unit. <code>Disjoint</code> = sharing no elements (families don&#39;t overlap). <code>Representative</code> = the one member naming the set (the elder). <code>Parent</code> = each element&#39;s pointer upward (everyone except the root has one). <code>Root</code> = the element pointing to itself (the elder = the set&#39;s name). <code>Forest</code> = the collection of all such trees (all families at the reunion).</p>
+</div></details><details class="interactive-toggle"><summary>Why does `union by rank` help, and why does `path compression` help?</summary><div class="toggle-content"><p>Union by rank grafts the shorter tree under the taller, so height grows only on ties (tall trees stay tall only when forced — bushiness preserved). Path compression rewires every climbed node directly under the root, so repeated queries shorten their own paths (the structure learns from use — first query pays, later ones ride free). Rank bounds growth; compression harvests reuse. Either alone degrades: tall-skinny trees without compression, unflattened paths without rank — the $\alpha(n)$ miracle needs both.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-three-unions-plus-a-compressing-find">3. Worked example — three unions p… →</a></p>

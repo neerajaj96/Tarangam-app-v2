@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Saying &quot;this algorithm takes exactly $3n^2 + 5n + 2$ operations&quot; is overspecified: the $3$, $5$, $2$ depend on language, compiler, and machine — irrelevant details. What survives across all machines is the <em>shape</em> of growth: doubling $n$ roughly quadruples the work (quadratic shape), whatever the constants. Asymptotic notation keeps exactly that shape and throws away the rest.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Describing runners, you would say &quot;A is roughly twice as fast as B over long races&quot; rather than &quot;A finishes in exactly 42.7 seconds&quot; — the exact number depends on wind and shoes; the <em>relationship</em> is the durable fact. Big-O gives an <em>upper bound</em> (&quot;never grows faster than this&quot;), Big-Omega a <em>lower bound</em> (&quot;never grows slower&quot;), Big-Theta a <em>tight bound</em> (&quot;exactly this rate, both sides&quot;). Little-o and little-omega are the strict cousins: <em>strictly</em> slower / faster, never equal.</p>
 </div></details><p><strong>Tiny toy example.</strong> $f(n) = 3n + 2$ vs $g(n) = n^2$: at $n = 3$, $f = 11 &gt; g = 9$. At $n = 100$, $f = 302 \ll g = 10{,}000$. Asymptotics asks about large $n$ only — the crossover, not the small-$n$ skirmish.</p>
-<hr>
+<details class="interactive-toggle"><summary>Big-O does NOT mean &quot;exact running time&quot; — what does it mean?</summary><div class="toggle-content"><p>Big-O states an <em>upper envelope</em>: &quot;$f$ grows no faster than $g$&quot; (there exist $c, n_0$ with $f \le c·g$ beyond $n_0$). It never claims equality of rates — $n = O(n^{100})$ is true but uselessly loose. What it means: a guarantee ceiling. What it does NOT mean: the precise count, a tight description, or anything about small $n$. Tiny intuition: saying &quot;the trip takes O(1 day)&quot; promises arrival within a day, not that it takes exactly a day.</p>
+</div></details><details class="interactive-toggle"><summary>What are `c` and `n_0`, and why are ugly values allowed?</summary><div class="toggle-content"><p><code>c</code> = a constant multiplier you may choose (stretch the reference curve until it covers $f$). <code>n_0</code> = the threshold beyond which coverage must hold (early skirmishes ignored). Ugly values are allowed because the definition asks only &quot;does <em>some</em> pair exist&quot; — existence proves the growth relationship; elegance is never graded. Tiny example: $3n^2+5n+2 \le 10n^2$ for $n \ge 1$ witnesses $(c,n_0) = (10,1)$, done.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-proving-3n-2-5n-2-o-n-2">3. Worked example — proving $3n^2 … →</a></p>
@@ -309,7 +311,8 @@ $$f(n) = \Theta(g(n)) \iff f(n) = O(g(n)) \text{ and } f(n) = \Omega(g(n))$$
 Equivalently, $c_1 g(n) \le f(n) \le c_2 g(n)$ for $n \ge n_0$ — sandwiched between two multiples of the <em>same</em> $g$. Strongest statement; reach for it whenever both bounds match.</p>
 <p><strong>Little-o (strict upper bound):</strong> $f(n) = o(g(n))$ means $f$ grows <em>strictly slower</em> — formally, $\lim_{n\to\infty} \frac{f(n)}{g(n)} = 0$. Rules out equal rates (so $n \ne o(n)$, but $n = o(n^2)$).</p>
 <p><strong>Little-omega (strict lower bound):</strong> $f(n) = \omega(g(n))$ means $f$ grows <em>strictly faster</em> — formally, $\lim_{n\to\infty} \frac{f(n)}{g(n)} = \infty$ (so $n^2 = \omega(n)$, but $n \ne \omega(n)$).</p>
-<p><strong>Structural properties (manipulate bounds like algebra):</strong></p>
+<details class="interactive-toggle"><summary>`o` vs `O` (and `ω` vs `Ω`) — what does &quot;strict&quot; change?</summary><div class="toggle-content"><p>Little versions forbid equality via limits: $f = o(g)$ means the ratio $f/g \to 0$ (f vanishes beside g — strictly slower, never equal, so $n = o(n)$ is false while $n = O(n)$ is true). Little-omega mirrors with ratio $\to \infty$. What it means: a stronger, equality-excluding claim. Why used: ruling out equal rates (e.g. proving an algorithm is <em>strictly</em> subquadratic). Common confusion: reading $o$ as &quot;a smaller Big-O&quot; — it is a different, stricter relation.</p>
+</div></details><p><strong>Structural properties (manipulate bounds like algebra):</strong></p>
 <ul>
 <li><strong>Reflexivity:</strong> $f = O(f)$, $\Omega(f)$, $\Theta(f)$ — everything weakly bounds itself. Little-o/little-omega are <em>not</em> reflexive (strictness forbids equality).</li>
 <li><strong>Symmetry:</strong> $f = \Theta(g) \iff g = \Theta(f)$ — Theta is two-way. Big-O/Omega are <em>not</em> symmetric ($n = O(n^2)$, but $n^2 \ne O(n)$).</li>

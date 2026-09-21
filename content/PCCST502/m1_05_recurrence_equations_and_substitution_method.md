@@ -36,6 +36,14 @@ Picture Russian nesting dolls: each doll contains a smaller identical doll, down
 
 **Tiny toy example.** Recursive countdown: $T(n) = T(n-1) + 1$, $T(1) = 1$ ("to count down from $n$, print once, then count down from $n-1$"). Unroll for $n = 3$: $T(3) = T(2)+1 = T(1)+1+1 = 3$. The answer smells like $T(n) = n$ — substitution will prove such guesses airtight.
 
+::: toggle Where does each term of `T(n) = T(n−1) + 1` come from?
+`T(n)` = cost of the whole countdown from $n$ (what we want). `T(n−1)` = cost of the smaller self-call (counting down from $n−1$ — the recursion). `+ 1` = the current level's own work (one print — $f(n) = 1$ here). `T(1) = 1` = base case cost (print once, no further calls — the recursion's floor). Reading order: own work plus smaller-self cost, anchored at the base.
+:::
+
+::: toggle What are `base case`, `recursive case`, and the `call stack`?
+Base case = the input so small it is solved directly with no self-call ($T(1) = 1$ — the solid doll). Recursive case = bigger inputs handled by doing a little work plus calling self on smaller input. Call stack = the pile of half-finished calls waiting while deeper calls run (each call's local state parked until its child returns — deep recursion can overflow it).
+:::
+
 ---
 
 <a id="the-math"></a>

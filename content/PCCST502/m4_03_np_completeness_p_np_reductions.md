@@ -35,6 +35,14 @@ tags:
 
 **Tiny toy example (check vs solve).** Sudoku: *solving* a hard 9×9 from scratch can take ages; *checking* a filled grid takes seconds (scan rows, columns, boxes). "Checkable fast, solvable unknown-fast" is the NP signature in miniature.
 
+::: toggle What are `decision problem`, `certificate`, `verifier`, `P`, `NP`?
+`Decision problem` = a yes/no question (is this satisfiable? — not "find the assignment"). `Certificate` = a claimed yes-answer (the filled grid — proposed, not derived). `Verifier` = a fast checker of instance + certificate (scan rows/columns/boxes in polytime). `P` = decidable fast (solver runs in $O(n^k)$). `NP` = verifiable fast given a certificate (equivalently: solvable fast by a guessing machine). NP does NOT mean "not polynomial" — it means nondeterministic-polynomial (guess, then verify fast).
+:::
+
+::: toggle What does `A ≤p B` say, and why does direction matter?
+$A \le_p B$ = a polytime map $f$ with $x \in A \iff f(x) \in B$ (translate A's instances into B's, preserving yes/no). Hardness flows WITH the arrow: reducing known-hard $A$ to $B$ proves $B$ hard (B inherits A's difficulty — a fast B-solver would solve A). Algorithms flow AGAINST it (B's solver solves A through the map). Backwards reductions prove nothing about hardness: reducing $X$ to 3-SAT shows $X \in$ NP at best (no harder than NPC), never completeness.
+:::
+
 ---
 
 <a id="the-math"></a>

@@ -40,6 +40,14 @@ Every scenario is a marking scheme: state the setup with numbers, show each deci
 
 **Tiny warm-up.** Bound 40 vs incumbent 39: prune (nothing beats 39). Reduction "X → 3-SAT proves X NPC": wrong arrow, half-proof. FFD into a matching floor: optimal, certified. Miller–Rabin $k=2$: error $\le 4^{-2} = 1/16$.
 
+::: toggle How do I run the bound race (three timings, one matrix)?
+Fix the matrix (optimum 35, root bound 35, forbid-side 39), then vary only the incumbent: (a) 39 (nearest-neighbour) → branch once, prune once, done. (b) 35 (lucky) → root bound == incumbent → zero branching, optimal certified immediately. (c) 60 (terrible) → forbid-side survives (39 < 60), search sprawls till 35 surfaces. Readout: incumbent quality IS search cost — same matrix, three runtimes, one variable changed. Report all three timings, never just the lucky one.
+:::
+
+::: toggle How do I autopsy a reduction claim in 30 seconds?
+Three questions: (1) arrow direction? (known-hard → target proves hardness; target → known proves at most membership). (2) Both NPC halves? (hardness in + verifier shown = complete; one half = half-proof). (3) Asymptotic or anecdote? (worst-case families, never laptop timings). Warm-up decoded: "X → 3-SAT proves X NPC" fails (1) — backwards arrow, membership at best. Apply all three to every claim before writing a verdict.
+:::
+
 ### Scenario 1: The Bound Race (TSP, Same Matrix, Three Timings)
 
 Instance from M4 (optimum 35, root bound 35, forbid-1→2 bound 39). Three counterfactuals: (a) incumbent starts at 39 (nearest-neighbor): root 35 < 39 → branch; include-side resolves tour 35 (new incumbent); forbid-side bound 39 ≥ 35 → prune; done — 1 branch, 1 prune. (b) Incumbent starts at 35 (lucky heuristic): root bound 35 == incumbent 35 → **optimal proven with zero branching** (nothing can beat what's already certified). (c) Incumbent starts at 60 (terrible): both branches live longer (forbid-side 39 < 60 survives!), search sprawls until tour 35 surfaces. Moral: incumbent quality *is* search cost — good heuristics aren't polish, they're pruning fuel.

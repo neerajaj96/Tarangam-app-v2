@@ -273,7 +273,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -293,7 +293,9 @@
 <p><strong>Problem first.</strong> Items of sizes $s_i \in (0,1]$ arrive; bins hold capacity 1; use as few bins as possible. The decision form is NP-complete (from Partition), the optimization NP-hard — exact optima are off the table for large inputs, so the honest goal is a <em>guaranteed-near</em> packing: never worse than a stated multiple of optimal. Abbreviations: OPT = optimal bin count; NF/FF/BF/FFD = Next/First/Best-Fit/(Decreasing) heuristics; &quot;online&quot; = items arrive one by one, decide-now-forever.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Packing a Moving Truck</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Boxes arrive one by one and must go <em>somewhere now</em> (online) — or you have seen them all and can pre-sort (offline). <strong>Next Fit</strong> uses one open box, sealing it forever on overflow (amnesiac). <strong>First Fit</strong> keeps all boxes open, slotting each item into the <em>first</em> that fits (total recall). <strong>Best Fit</strong> picks the <em>tightest</em> fit (tidiness). <strong>First-Fit Decreasing</strong> sorts big-to-small first — tiny items at the end plug gaps like sand in gravel. Sorting is the superpower: FFD&#39;s worst case (~22% over) crushes online rules (~70% over). Drop the truck now: ratios and lower bounds below are the exact guarantees.</p>
 </div></details><p><strong>Tiny toy example (capacity 10).</strong> Items $[6, 4, 5]$: Next Fit packs {6,4} then {5} → 2 bins (optimal here). Items $[5, 5, 6, 4]$ in that order: NF packs {5,5} then {6,4} → 2 bins — but order $[6, 4, 5, 5]$? Same 2. Online pain needs adversarial orders (covered in quizzes) — the point stands: order decides waste.</p>
-<hr>
+<details class="interactive-toggle"><summary>What are `bin`, `OPT`, `online`, `approximation ratio`, `lower bound`?</summary><div class="toggle-content"><p><code>Bin</code> = capacity-1 container (items are fractions $s_i \in (0,1]$ of it). <code>OPT</code> = the optimal (minimum) bin count for this instance (unknown in practice — bounds estimate it). <code>Online</code> = items arrive one by one, decide-now-forever (no lookahead, no reorder). <code>Approximation ratio</code> = worst-case multiple of OPT the rule never exceeds (FFD ≤ 11/9·OPT + 1 — a ceiling, not a report card). <code>Lower bound</code> = a count no packing beats ($\lceil\sum s_i\rceil$ total-size floor, oversized-item floor) — matching bound + packing certifies optimality without search.</p>
+</div></details><details class="interactive-toggle"><summary>Trace Next Fit vs First Fit on `[5, 5, 6, 4]` (capacity 10)</summary><div class="toggle-content"><p>Next Fit (one open bin, amnesiac): 5→B1{5}; 5→B1{5,5} full; 6 overflows → seal B1, open B2{6}; 4→B2{6,4}. Total 2. First Fit (all bins open, lowest fitting): 5→B1; 5→B1; 6→B2 (B1 overflows); 4→B1 (first fit — B1 has room 5 ≥ 4!). Total 2, but B1 reused where NF sealed it — memory (all open bins) vs amnesia (one open bin) is the whole difference, and the $2·OPT−1$ proof counts sealed pairs summing &gt; 1.</p>
+</div></details><hr>
 <p><a id="the-math"></a></p>
 <h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
 <p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-first-fit-traced-optimality-certified">3. Worked example — First Fit trac… →</a></p>
