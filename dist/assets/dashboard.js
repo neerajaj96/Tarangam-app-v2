@@ -34,6 +34,9 @@ import {
   buildAttentionModel,
   explainAttention,
 } from './weak-topic-analysis.js';
+import {
+  buildAdaptiveModel,
+} from './adaptive-learning.js';
 import { buildLearningAnalytics, getModuleAnalyticsList } from './learning-analytics.js';
 import {
   buildStudyPlan,
@@ -176,6 +179,15 @@ export function buildDashboardAttentionModel(manifest, getStatus, getTimestamp =
   return buildAttentionModel(manifest, getStatus, getTimestamp, now, assessment);
 }
 
+// Pure adaptive derivation for tests and UI: manifest + status reader +
+// timestamp reader + injected now + optional `{ bank, attempts }` and plan
+// config -> deterministic adaptive snapshot (next, strengthen,
+// progression, difficulty, exam, revision + untouched riders). Descriptive
+// only: no ratings, no predictions, no second next-topic mechanism.
+export function buildDashboardAdaptiveModel(manifest, getStatus, getTimestamp = null, now, assessment = null, planConfig = null) {
+  return buildAdaptiveModel(manifest, getStatus, { getTimestamp, now, assessment, planConfig });
+}
+
 // Pure analytics derivation for tests and UI: manifest + status reader +
 // timestamp reader + injected now -> descriptive analytics snapshot.
 // Observational only: no recommendations, predictions, or scores.
@@ -311,8 +323,8 @@ async function init() {
     }
   };
   loadAssessmentBank().then(
-    ({ bank }) => { assessmentBank = bank; renderAssessment(); renderReview(); renderExam(); renderAttention(); },
-    () => { assessmentBank = null; renderAssessment(); renderReview(); renderExam(); renderAttention(); }
+    ({ bank }) => { assessmentBank = bank; renderAssessment(); renderReview(); renderExam(); renderAttention(); renderAdaptive(); },
+    () => { assessmentBank = null; renderAssessment(); renderReview(); renderExam(); renderAttention(); renderAdaptive(); }
   );
 
   const renderAll = () => {
@@ -322,6 +334,7 @@ async function init() {
     renderExam();
     renderReview();
     renderAttention();
+    renderAdaptive();
     renderPlan();
     renderAssessment();
     renderLists();
@@ -633,6 +646,59 @@ async function init() {
     }
   }
 
+  function attentionAssessmentHref(topic) {
+    return `./assessment.html#scope=topic&course=${encodeURIComponent(topic.courseCode)}&topic=${encodeURIComponent(topic.id)}`;
+  }
+
+  function renderAdaptive() {
+    const box = $('db-adaptive');
+    if (!box) return;
+    // Adaptive presentation over recorded evidence only: the canonical
+    // next topic, strengthen evidence with reasons, progression states,
+    // difficulty groups, exam focus, and revision focus. Same styling and
+    // links as every other section; nothing here rates or predicts.
+    const attempts = readAttempts();
+    const assessment = assessmentBank ? { bank: assessmentBank, attempts } : null;
+    const model = buildDashboardAdaptiveModel(manifest, statusReader, timestampReader, Date.now(), assessment);
+    const next = model.next;
+    const nextBlock = !next.topic
+      ? '<span class="xp-path-title">Curriculum complete.</span>'
+      : `<span class="xp-path-title">${esc(next.topic.title)}</span>
+        <span class="xp-path-meta">${esc(next.topic.courseCode)} · M${esc(next.topic.module)}</span>
+        <span class="xp-path-meta">${esc(next.explanation)}</span>
+        <button class="xp-path-btn" data-adaptive-open="${esc(next.topic.courseCode)}/${esc(next.topic.id)}" type="button">View in explorer</button>
+        <a class="xp-open" href="${esc(topicHref(baseUrl, next.topic))}">Open topic →</a>`;
+    const strengthenBlock = model.strengthen.length
+      ? model.strengthen.map((e) =>
+        `<button class="xp-path-btn" data-adaptive-open="${esc(e.courseCode)}/${esc(e.id)}" type="button">${esc(e.title)}</button>`
+      ).join('')
+      : '<span class="xp-path-label">none with recorded evidence</span>';
+    const p = model.progression.counts;
+    const diffBlock = model.difficulty.map((d) =>
+      `<span class="xp-path-meta">${esc(d.difficulty === null ? 'unspecified' : d.difficulty)}: ${d.completed}/${d.total} complete · ${d.remaining} remaining</span>`
+    ).join(' ');
+    const examBlock = model.exam.nextExamTopic
+      ? `<span class="xp-path-title">${esc(model.exam.nextExamTopic.title)}</span>
+        <span class="xp-path-meta">${model.exam.readinessPercent}% ready · weighted ${model.exam.weightedCompleted}/${model.exam.weightedTotal}</span>`
+      : `<span class="xp-path-meta">${model.exam.readinessPercent}% ready · no remaining exam topic</span>`;
+    const revisionBlock = model.revision.nextReviewTopic
+      ? `<span class="xp-path-meta">${esc(model.revision.nextReviewTopic.title)} · ${esc(model.revision.nextReviewTopic.reviewState || '')}</span>`
+      : '<span class="xp-path-meta">no reviews due</span>';
+    box.innerHTML = `<h2>Adaptive focus</h2>
+      <div class="xp-path-next"><span class="xp-path-label">Next:</span>${nextBlock}</div>
+      <div class="xp-path-row"><span class="xp-path-label">Strengthen (${model.strengthen.length}):</span>${strengthenBlock}</div>
+      <div class="xp-path-row"><span class="xp-path-meta">Progression: ${p.completed} completed · ${p.available} available · ${p.blocked} blocked · ${p.future} future (of ${p.total})</span></div>
+      <div class="xp-path-row"><span class="xp-path-label">Difficulty:</span>${diffBlock}</div>
+      <div class="xp-path-row"><span class="xp-path-label">Exam focus:</span>${examBlock}</div>
+      <div class="xp-path-row"><span class="xp-path-label">Revision focus:</span>${revisionBlock}</div>`;
+    for (const btn of box.querySelectorAll('[data-adaptive-open]')) {
+      btn.addEventListener('click', () => {
+        const [course, ...rest] = btn.getAttribute('data-adaptive-open').split('/');
+        window.location.href = explorerHref({ courseCode: course, id: rest.join('/') });
+      });
+    }
+  }
+
   function planCourseOptions(selected) {
     const codes = [...new Set(manifest.topics.map((t) => t.courseCode))].sort();
     return `<option value="">All courses</option>` + codes.map((c) =>
@@ -866,6 +932,7 @@ async function init() {
       renderExam();
       renderReview();
       renderAttention();
+      renderAdaptive();
       renderPlan();
       renderAssessment();
       renderLists();
@@ -880,6 +947,7 @@ async function init() {
   renderExam();
   renderReview();
   renderAttention();
+  renderAdaptive();
   renderPlan();
   renderAssessment();
   renderLists();

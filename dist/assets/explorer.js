@@ -68,6 +68,12 @@ import {
   getTopicAttention,
   explainAttention,
 } from './weak-topic-analysis.js';
+import {
+  getProgressionState,
+  getProgressionPath,
+  PROGRESSION_BLOCKED,
+  PROGRESSION_FUTURE,
+} from './adaptive-learning.js';
 
 // Pure assessment coverage for Explorer indicators (no recommendations):
 // total questions, covered/total topics, uncovered count, exam-relevant
@@ -441,6 +447,22 @@ function attentionChips(topic) {
   return '<span class="badge badge-gold">◉ Needs attention</span>';
 }
 
+function progressionChips(topic) {
+  // Per-card progression signal from the canonical adaptive-learning
+  // views. Completed/available states are already covered by the status
+  // and journey chips, so only blocked vs future add information here.
+  if (!state.manifest || !state.progress) return '';
+  let progression = null;
+  try {
+    progression = getProgressionState(state.manifest, statusReader(), topic.courseCode, topic.id);
+  } catch {
+    return '';
+  }
+  if (progression === PROGRESSION_BLOCKED) return '<span class="badge xp-st-todo">▤ Blocked — prerequisites incomplete</span>';
+  if (progression === PROGRESSION_FUTURE) return '<span class="badge xp-st-todo">▤ Future topic</span>';
+  return '';
+}
+
 function currentFilters() {
   return {
     q: state.q,
@@ -613,7 +635,7 @@ function renderList() {
     return `<button class="xp-card${active}" data-topic="${esc(t.id)}">
       <span class="xp-card-seq">${esc(fmtSeq(t))}</span>
       <span class="xp-card-title">${esc(t.title)}</span>
-      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}${attentionChips(t)}</span>
+      <span class="xp-card-chips">${statusChip(t)}${metaChips(t)}${journeyChips(t)}${reviewChips(t)}${planChips(t, plan)}${assessmentChips(t)}${attentionChips(t)}${progressionChips(t)}</span>
     </button>`;
   }).join('');
   for (const card of list.querySelectorAll('[data-topic]')) {
@@ -680,6 +702,20 @@ function renderDetail() {
   const attentionBlock = attentionInfo && attentionInfo.needsAttention
     ? `<div class="xp-pre-head">◉ ${esc(attentionInfo.explanation)}</div>`
     : '';
+  let progressionBlock = '';
+  try {
+    const path = getProgressionPath(state.manifest, statusReader(), topic.courseCode, topic.id);
+    if (path && path.path.length > 1) {
+      const steps = path.path.map((s) =>
+        `<span class="badge">${esc(s.title)} · ${esc(s.state.replace(/_/g, ' '))}${s.current ? ' · you are here' : ''}</span>`
+      ).join(' ');
+      progressionBlock = `<div class="xp-pre-head">Progression (${esc(path.state.replace(/_/g, ' '))}): ${steps}</div>`;
+    } else if (path) {
+      progressionBlock = `<div class="xp-pre-head">Progression: ${esc(path.state.replace(/_/g, ' '))} — no prerequisites.</div>`;
+    }
+  } catch {
+    progressionBlock = '';
+  }
   const plan = activePlan();
   const planDay = plan ? getTopicPlanDay(plan, topic.courseCode, topic.id) : null;
   const planBlock = planDay !== null
@@ -692,12 +728,13 @@ function renderDetail() {
     <div class="xp-detail-head">
       <div class="xp-detail-seq">${esc(fmtSeq(topic))} · ${esc(topic.courseCode)}</div>
       <h2 class="xp-detail-title">${esc(topic.title)}</h2>
-      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}${assessmentChips(topic)}${attentionChips(topic)}</div>
+      <div class="xp-card-chips">${statusChip(topic)}${metaChips(topic)}${journeyChips(topic)}${reviewChips(topic)}${planChips(topic, plan)}${assessmentChips(topic)}${attentionChips(topic)}${progressionChips(topic)}</div>
       ${journeyBlock}
       ${reviewBlock}
       ${planBlock}
       ${assessmentBlock}
       ${attentionBlock}
+      ${progressionBlock}
       <button class="xp-toggle" data-toggle="${esc(topic.id)}" type="button">${isDone ? '✓ Completed — mark not started' : 'Mark completed'}</button>
       ${planDay === null ? `<button class="xp-toggle" data-plan-add="${esc(topic.courseCode)}/${esc(topic.id)}" type="button">Add course to study plan</button>` : ''}
     </div>

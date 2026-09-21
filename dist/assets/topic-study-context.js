@@ -65,6 +65,9 @@ import {
   getTopicAttention,
   explainAttention,
 } from './weak-topic-analysis.js';
+import {
+  getProgressionPath,
+} from './adaptive-learning.js';
 import { loadManifest } from './curriculum-data.js';
 import { createLearnerState } from './learner-state.js';
 
@@ -213,6 +216,36 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
   } catch {
     attention = null;
   }
+  // Prerequisite-aware progression for this topic: its dependency chain
+  // with each node's state (completed/available/blocked/future) from
+  // recorded evidence only. Never fabricated.
+  let progression = null;
+  try {
+    const path = getProgressionPath(manifest, getStatus, courseCode, topicId);
+    if (path) {
+      const fit = path.state === 'completed'
+        ? 'Completed.'
+        : path.state === 'available'
+          ? 'Available — all prerequisites complete.'
+          : path.state === 'blocked'
+            ? 'Blocked — some prerequisites are still incomplete (informational only, nothing is locked).'
+            : 'Future topic — its prerequisites are still untouched (informational only).';
+      progression = {
+        state: path.state,
+        steps: path.path.map((s) => ({
+          courseCode: s.courseCode,
+          id: s.id,
+          title: s.title,
+          href: topicHrefFrom(courseCode, { courseCode: s.courseCode, id: s.id }),
+          current: s.current,
+          state: s.state,
+        })),
+        fit,
+      };
+    }
+  } catch {
+    progression = null;
+  }
   return {
     courseCode: topic.courseCode,
     courseName: topic.courseName || topic.courseCode,
@@ -263,6 +296,7 @@ export function buildStudyContextModel(manifest, getStatus, courseCode, topicId,
     exam,
     review,
     attention,
+    progression,
     analytics,
     planned,
     assessment,
@@ -405,6 +439,19 @@ export function renderStudyContext(model) {
       + depLine + `</div>`;
   })();
 
+  const progressionBlock = (() => {
+    // Prerequisite-aware progression path with per-node states from
+    // recorded evidence only.
+    const p = model.progression;
+    if (!p || !Array.isArray(p.steps) || !p.steps.length) return '';
+    const items = p.steps.map((s) =>
+      `<li>${s.current ? `<strong>${esc(s.title)} (you are here)</strong>` : `<a href="${esc(s.href)}">${esc(s.title)}</a>`} <span class="badge">${esc(s.state.replace(/_/g, ' '))}</span></li>`
+    ).join('');
+    return `<div class="ts-block ts-progression"><h3>Progression</h3>`
+      + `<p class="xp-note">${esc(p.fit)}</p>`
+      + `<ol class="ts-list">${items}</ol></div>`;
+  })();
+
   const analyticsBlock = (() => {
     const a = model.analytics;
     if (!a) return '';
@@ -482,6 +529,7 @@ export function renderStudyContext(model) {
   ${examBlock}
   ${reviewBlock}
   ${attentionBlock}
+  ${progressionBlock}
   ${analyticsBlock}
   ${planBlock}
   ${assessmentBlock}

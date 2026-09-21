@@ -863,6 +863,59 @@ if (fs.existsSync('dist')) {
   }
 }
 
+// 16. Canonical deterministic adaptive learning views: presentation over
+// recorded evidence — no AI/LLM, no prediction, no ability or mastery
+// ratings, no numerical ratings, no gamification, no second next-topic
+// mechanism, no new learner state, no polling. The existing recommendation,
+// storage, assessment, weight, threshold, and graph semantics stay intact.
+{
+  if (!fs.existsSync('assets/adaptive-learning.js')) {
+    fail('adaptive: expected source file assets/adaptive-learning.js — actual: missing');
+  } else {
+    const js = fs.readFileSync('assets/adaptive-learning.js', 'utf-8');
+    for (const token of ['getAdaptiveNext', 'getStrengthenList', 'getProgressionState', 'getProgressionBreakdown', 'getCourseProgression', 'getModuleProgression', 'getProgressionPath', 'getDifficultyProgression', 'getExamFocus', 'getRevisionFocus', 'buildAdaptiveModel', 'PROGRESSION_STATES']) {
+      if (!js.includes(token)) fail(`adaptive: assets/adaptive-learning.js is missing "${token}"`);
+    }
+    for (const dep of ["from './topic-intelligence.js'", "from './learning-journey.js'", "from './exam-readiness.js'", "from './revision.js'", "from './weak-topic-analysis.js'", "from './learning-analytics.js'", "from './assessment.js'", "from './study-planner.js'"]) {
+      if (!js.includes(dep)) fail(`adaptive: assets/adaptive-learning.js must reuse the canonical layers (missing ${dep})`);
+    }
+    for (const banned of ['fetch(', 'XMLHttpRequest', 'setInterval', 'localStorage', 'openai', 'anthropic', 'streak', 'leaderboard']) {
+      if (js.toLowerCase().includes(banned)) fail(`adaptive: assets/adaptive-learning.js must stay deterministic and static-first (found "${banned}")`);
+    }
+    if (/\bLLM\b/i.test(js)) fail('adaptive: assets/adaptive-learning.js must not add AI/LLM');
+    if (/semantic\s+(grad|similarity|scor)/i.test(js)) fail('adaptive: assets/adaptive-learning.js must not add semantic grading');
+    if (/mastery|weakness.?score|weakScore|performance score|ability score|predicted/i.test(js)) fail('adaptive: assets/adaptive-learning.js must not add ratings or predictions');
+    if (/xps\b|experience points/i.test(js)) fail('adaptive: assets/adaptive-learning.js must not add gamification');
+    if (/function\s+getRecommendedNextTopics|function\s+getNextRecommendedTopic/.test(js)) fail('adaptive: assets/adaptive-learning.js must not define a second next-topic mechanism');
+    if (!js.includes('getNextRecommendedTopic(')) fail('adaptive: assets/adaptive-learning.js must delegate next to the canonical mechanism');
+    if (!js.includes('REVIEW_DUE_DAYS') && !js.includes('getReviewQueue')) fail('adaptive: assets/adaptive-learning.js must reuse the existing revision model');
+    // Dashboard adaptive section (descriptive, no ratings).
+    const dash = fs.existsSync('assets/dashboard.js') ? fs.readFileSync('assets/dashboard.js', 'utf-8') : '';
+    for (const token of ['buildDashboardAdaptiveModel', 'renderAdaptive', 'db-adaptive']) {
+      if (!dash.includes(token)) fail(`adaptive: assets/dashboard.js is missing dashboard integration "${token}"`);
+    }
+    if (/mastery|weakness.?score|performance score|ability score/i.test(dash)) fail('adaptive: assets/dashboard.js must not add ratings to the adaptive section');
+    const dashHtml = fs.existsSync('dashboard.html') ? fs.readFileSync('dashboard.html', 'utf-8') : '';
+    if (!dashHtml.includes('id="db-adaptive"')) fail('adaptive: dashboard.html is missing the adaptive section (db-adaptive)');
+    // Explorer progression indicators reuse the adaptive views.
+    const explorer = fs.existsSync('assets/explorer.js') ? fs.readFileSync('assets/explorer.js', 'utf-8') : '';
+    for (const token of ['getProgressionState', 'getProgressionPath']) {
+      if (!explorer.includes(token)) fail(`adaptive: assets/explorer.js is missing explorer integration "${token}"`);
+    }
+    // Study-context progression path.
+    const study = fs.existsSync('assets/topic-study-context.js') ? fs.readFileSync('assets/topic-study-context.js', 'utf-8') : '';
+    if (!study.includes('getProgressionPath')) fail('adaptive: assets/topic-study-context.js is missing study-context integration');
+    if (!study.includes('ts-progression')) fail('adaptive: assets/topic-study-context.js does not render the progression block');
+    // Existing invariants hold: storage, assessment, weights, thresholds.
+    const learnerState = fs.existsSync('assets/learner-state.js') ? fs.readFileSync('assets/learner-state.js', 'utf-8') : '';
+    if (!learnerState.includes('tarangam_topic_state_v1')) fail('adaptive: existing learner-state storage must remain unchanged');
+    const exam = fs.existsSync('assets/exam-readiness.js') ? fs.readFileSync('assets/exam-readiness.js', 'utf-8') : '';
+    if (!exam.includes('high: 3') && !exam.includes('high:3')) fail('adaptive: existing exam-readiness weights must remain unchanged');
+    const revision = fs.existsSync('assets/revision.js') ? fs.readFileSync('assets/revision.js', 'utf-8') : '';
+    if (!revision.includes('REVIEW_DUE_DAYS = 7') || !revision.includes('REVIEW_OVERDUE_DAYS = 14')) fail('adaptive: existing revision thresholds must remain unchanged');
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
