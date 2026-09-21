@@ -28,6 +28,9 @@ import * as Schema from './learner-state-schema.js';
 import * as AssetsSchema from '../assets/learner-state-schema.js';
 import { buildJourneyModel } from '../assets/learning-journey.js';
 import { buildRevisionModel } from '../assets/revision.js';
+import { buildTopicManifest } from './topic-manifest.js';
+import { loadTopicSchema } from './topic-metadata.js';
+import { loadCurriculum } from './curriculum.js';
 
 function entry(overrides) {
   const base = {
