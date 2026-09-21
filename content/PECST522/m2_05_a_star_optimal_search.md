@@ -36,7 +36,7 @@ Every route has toll already paid (`g(n)`: cost from start to `n`) plus toll quo
 Feel "bill plus guess" here, then drop the road; the contracts below decide optimality, not the metaphor.
 :::
 
-**Tiny beginner example:** X (g=5, h=2, f=7) vs. Y (g=2, h=6, f=8). A* pops X first — cheap past outweighs rosy quote. Greedy would pop Y (6 > 2 means Y looks closer) and pay more later.
+**Tiny beginner example:** X (g=5, h=2, f=7) vs. Y (g=2, h=6, f=8). A* pops X first — its small quote (h=2) outweighs its larger paid cost, giving the smaller total. Greedy would also pop X here (2 < 6 means X looks closer) — greedy follows h alone, so the two agree whenever the smallest quote sits on the smallest total, and diverge when a rosy quote on one branch hides a cheaper total on another.
 
 <a id="basics"></a>
 ## 2. Basic Layer: The Algorithm
@@ -81,11 +81,11 @@ Testing on generation returns the first *seen* goal, not the cheapest. A generat
 ::: quiz Q1: Ordering Drill
 Frontier: X (g=5, h=2), Y (g=2, h=6), Z (g=4, h=4). A* pops first?
 (A) Y, biggest h wins
-(*B) X with f = 7, against Y's 8 and Z's 8 — f = g+h decides, and X's cheap past outweighs Y's rosy quote
+(*B) X with f = 7, against Y's 8 and Z's 8 — f = g+h decides, and X's small quote (h=2) outweighs its larger paid cost (g=5)
 (C) Z, middle values first
 (D) Ties always broken alphabetically
 ::: explanation
-Totals are 7, 8, 8. A* reads f, not components — X leads despite the worst-looking quote because its odometer banked savings.
+Totals are 7, 8, 8. A* reads f, not components — X leads thanks to the best-looking quote (h=2), which more than offsets its larger odometer (g=5).
 :::
 
 ::: quiz Q2: Guarantee Matching

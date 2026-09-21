@@ -54,7 +54,7 @@ Abbreviations defined on first use: True Positive (TP), True Negative (TN), Fals
 
 **Data.** Labelled pairs $(x_i, y_i)$ with $y_i \in \{0, 1\}$, plus model scores $s_i$ thresholded at $t$ into predictions $\hat{y}_i$. Here $x_i$ is features, $y_i$ is truth, $\hat{y}_i$ is the verdict at threshold $t$.
 
-**Goal.** A metric matching the cost of mistakes: recall when misses kill (disease, fraud), precision when false alarms bankrupt (spam folder, арестовы), F1 when both bite, AUC when thresholds are still undecided.
+**Goal.** A metric matching the cost of mistakes: recall when misses kill (disease, fraud), precision when false alarms bankrupt (spam folder), F1 when both bite, AUC when thresholds are still undecided.
 
 The **confusion matrix** is the $2 \times 2$ ledger every metric below reads:
 

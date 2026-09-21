@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -290,7 +290,7 @@
 <p>Every route has toll already paid (<code>g(n)</code>: cost from start to <code>n</code>) plus toll quoted ahead (<code>h(n)</code>: estimated remainder). Greedy drove on quotes; UCS crawled on odometers. A* adds both: hurry where quotes are low, never commit past a route whose total already exceeds a proven alternative.</p>
 <p><strong>Definitions:</strong> <code>g(n)</code> = paid-so-far cost. <code>h(n)</code> = heuristic guess of remainder. <code>f(n) = g(n) + h(n)</code> = estimated total through <code>n</code>. <strong>Admissible</strong> means <code>h &lt;= h*</code> (never overestimates true remainder <code>h*</code>). <strong>Consistent</strong> means <code>h(n) &lt;= c(n,a,n&#39;) + h(n&#39;)</code> on every edge (triangle inequality; <code>c</code> = step cost).</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Toll Paid Plus Toll Quoted</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Feel &quot;bill plus guess&quot; here, then drop the road; the contracts below decide optimality, not the metaphor.</p>
-</div></details><p><strong>Tiny beginner example:</strong> X (g=5, h=2, f=7) vs. Y (g=2, h=6, f=8). A* pops X first — cheap past outweighs rosy quote. Greedy would pop Y (6 &gt; 2 means Y looks closer) and pay more later.</p>
+</div></details><p><strong>Tiny beginner example:</strong> X (g=5, h=2, f=7) vs. Y (g=2, h=6, f=8). A* pops X first — its small quote (h=2) outweighs its larger paid cost, giving the smaller total. Greedy would also pop X here (2 &lt; 6 means X looks closer) — greedy follows h alone, so the two agree whenever the smallest quote sits on the smallest total, and diverge when a rosy quote on one branch hides a cheaper total on another.</p>
 <p><a id="basics"></a></p>
 <h2 id="2-basic-layer-the-algorithm">2. Basic Layer: The Algorithm</h2>
 <p class="secnav"><a href="#1-start-from-zero-toll-paid-plus-toll-quoted">← 1. Start From Zero: Toll Paid Plus…</a><span class="secnav-sep">·</span><a href="#3-formal-layer-contracts-efficiency-cost">3. Formal Layer: Contracts, Effici… →</a></p>
@@ -341,7 +341,7 @@
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Y, biggest h wins</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>X with f = 7, against Y&#39;s 8 and Z&#39;s 8 — f = g+h decides, and X&#39;s cheap past outweighs Y&#39;s rosy quote</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>X with f = 7, against Y&#39;s 8 and Z&#39;s 8 — f = g+h decides, and X&#39;s small quote (h=2) outweighs its larger paid cost (g=5)</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Z, middle values first</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>Ties always broken alphabetically</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -355,7 +355,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Totals are 7, 8, 8. A* reads f, not components — X leads despite the worst-looking quote because its odometer banked savings.</p><pre><code>&lt;/div&gt;
+      <p>Totals are 7, 8, 8. A* reads f, not components — X leads thanks to the best-looking quote (h=2), which more than offsets its larger odometer (g=5).</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
