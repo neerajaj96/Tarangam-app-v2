@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -298,12 +298,27 @@
 <p><strong>2. Agent count:</strong> Single (crossword, Solitaire) vs. multi — competitive (chess opponent) or cooperative (taxis coordinating at a junction).</p>
 <p><strong>3. Determinism (transition certainty):</strong> Deterministic (chess knight move lands exactly) vs. stochastic (Backgammon dice; wet-road braking) with known probabilities vs. non-deterministic (outcomes possible, probabilities unknown).</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Environment Transition Model, Symbol by Symbol</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Current state <code>s</code>, action <code>a</code>, next state <code>s&#39;</code>. Deterministic: <code>s&#39; = T(s, a)</code> (one guaranteed result from transition function <code>T</code>). Stochastic: <code>P(s&#39; | s, a)</code> (probability of landing in <code>s&#39;</code> given <code>s</code> and <code>a</code>). Tiny numbers: dry brake stops in 10 m always (deterministic); wet brake stops in 10 m with probability 0.7, 15 m with 0.3 (stochastic).</p>
+</div></details><details class="interactive-toggle"><summary>What do `s`, `a`, `s&#39;`, `T` and `P(s&#39; | s, a)` mean?</summary><div class="toggle-content"><ul>
+<li><code>s</code> is the current state, <code>a</code> is the action taken there, and <code>s&#39;</code> is the resulting next state.</li>
+<li><code>T</code> is the deterministic rule giving the one guaranteed <code>s&#39;</code>; <code>P(s&#39; | s, a)</code> gives landing odds instead.</li>
+<li>Tiny case: dry braking gives <code>s&#39;</code> always, while wet braking gives 10 m with 0.7 and 15 m with 0.3.</li>
+</ul>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Deterministic vs. Stochastic vs. Non-deterministic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Deterministic: exactly one outcome. Stochastic: many outcomes with known odds. Non-deterministic: many outcomes, odds unknown. Do not call dice &quot;non-deterministic&quot; — dice odds are known, so dice are stochastic.</p>
 </div></details><p><strong>4. Episodic vs. sequential (memory horizon):</strong> Episodic splits into independent episodes (apple defect scanner — apple 5 never affects apple 6). Sequential couples decisions (chess opening shapes move 40).</p>
-<p><strong>5. Static vs. dynamic (time pressure):</strong> Static waits while thinking (crossword). Dynamic changes during thinking (taxi — 5 seconds of thought is a crash). Semi-dynamic: world frozen but score decays while thinking (chess with a clock).</p>
+<details class="interactive-toggle"><summary>Why does `episodic` vs `sequential` matter?</summary><div class="toggle-content"><ul>
+<li><code>episodic</code> means each decision stands alone, so apple 5 needs no memory of apple 4.</li>
+<li><code>sequential</code> means today&#39;s move shapes tomorrow, so a chess opening constrains move 40.</li>
+<li>How to use: episodic agents can forget between episodes, while sequential agents must remember.</li>
+</ul>
+</div></details><p><strong>5. Static vs. dynamic (time pressure):</strong> Static waits while thinking (crossword). Dynamic changes during thinking (taxi — 5 seconds of thought is a crash). Semi-dynamic: world frozen but score decays while thinking (chess with a clock).</p>
 <p><strong>6. Discrete vs. continuous (granularity):</strong> Discrete is countable (chess squares, dice 1-6). Continuous is real-valued (steering 14.5 degrees, speed 45.2 km/h, flowing time).</p>
 <p><strong>7. Known vs. unknown (rule knowledge):</strong> Known means the agent holds the rulebook/physics (Solitaire rules given). Unknown means it must discover rules by trial (a new game with no manual).</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Known vs. Observable (Critical Exam Trap)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Known = I know the rules. Observable = I can see the current state. Poker is known (rules clear) but partially observable (hands hidden). Chess with unknown rules is fully observable (pieces visible) but unknown (laws missing).</p>
+</div></details><details class="interactive-toggle"><summary>What does `known` vs `observable` mean?</summary><div class="toggle-content"><ul>
+<li><code>known</code> means the agent holds the rulebook, like knowing poker&#39;s betting rules.</li>
+<li><code>observable</code> means the agent can see the current state, like seeing hidden hands or not.</li>
+<li>Tiny contrast: poker is known yet partially observable, while chess with missing rules is fully observable yet unknown.</li>
+</ul>
 </div></details><p><a id="formal-model"></a></p>
 <h2 id="3-formal-reference-the-master-matrix">3. Formal Reference: The Master Matrix</h2>
 <p class="secnav"><a href="#2-basic-building-blocks-the-seven-dimensions">← 2. Basic Building Blocks: The Seve…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>

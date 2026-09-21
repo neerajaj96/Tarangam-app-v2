@@ -32,6 +32,12 @@ tags:
 
 **Problem first:** a table-driven agent stores one action per percept history. With `|P|` possible percepts and horizon `t`, size is `|P|^t` (percept count to the power of time steps). Tiny numbers: 10 percepts over 20 steps needs 10^20 rows — physically impossible for a taxi. So agents compute instead of memorizing.
 
+::: toggle What do `|P|`, `t` and `|P|^t` mean?
+- `|P|` counts the distinct percepts possible at one step, like 10 sensor patterns.
+- `t` counts the time steps of history, like 20 steps of driving.
+- `|P|^t` multiplies choices per step, so 10 percepts over 2 steps need 100 rows, and over 20 steps need 10^20.
+:::
+
 **Foundation:** `Agent = Architecture + Program`. Architecture is the hardware (sensors, processors, memory, actuators). Program is the software mapping histories to actions. The five architectures below are five program designs of increasing power.
 
 ::: callout-intuition Core Mental Model: The Basic Thermostat
@@ -64,6 +70,12 @@ $$S_t = \text{Update}(S_{t-1}, A_{t-1}, P_t)$$
 
 Symbol by symbol: `S_t` = current internal state estimate; `S_{t-1}` = previous estimate; `A_{t-1}` = last action taken; `P_t` = newest percept. Intuition: remember where you were, account for what you did, correct with what you now see.
 
+::: toggle What do `S_t`, `S_{t-1}`, `A_{t-1}` and `P_t` mean?
+- `S_t` is the current guess about the hidden world, like still being centred in the tunnel.
+- `S_{t-1}` is the previous guess and `A_{t-1}` is what the agent just did, like driving straight for 3 s.
+- `P_t` is the newest percept correcting that prediction once GPS or vision returns.
+:::
+
 ::: callout-intuition Core Mental Model: Driving Through a Mountain Tunnel
 GPS drops in a tunnel, but the car propagates "60 km/h straight for 3 s means still centered" until signals return. Memory bridges blindness. Drop the tunnel after this; the equation above is the examinable content.
 :::
@@ -86,6 +98,12 @@ meaning function `U` maps each state `S` to a real number (its desirability). Th
 $$a^* = \arg\max_{a \in A} \sum_{s'} P(s' \mid s, a) \cdot U(s')$$
 
 Symbols: `a*` = best action; `A` = action set; `s'` = possible next state; `P` = transition probability; `U(s')` = next-state score. Tiny numbers: Route A (25 min, \$30, risky) scores 60; Route B (30 min, \$0, safe) scores 85 — goal-based calls both "arrive," utility-based picks B.
+
+::: toggle What do `U`, `S`, `R` and `argmax` mean?
+- `U` is the utility function scoring states; `S` is the set of states being scored.
+- `R` means real numbers, so every state gets a numeric desirability like 60 or 85.
+- `argmax` picks the action with the best expected score, which is why safe route B beats merely arriving route A.
+:::
 
 **Architecture 5 — Learning Agent (four parts):** starts with little knowledge and improves. (1) **Performance element** selects actions. (2) **Critic** grades against the external performance standard. (3) **Learning element** rewrites rules/models/utilities from that feedback. (4) **Problem generator** proposes exploratory actions (explore vs. exploit).
 

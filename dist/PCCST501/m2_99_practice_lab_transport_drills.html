@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -316,9 +316,18 @@
 <p>Each scenario chains one module idea end to end — demultiplexing keys (M2.1), RTT smoothing with Karn&#39;s rule (M2.3), window traces (M2.4), handshake/teardown and flow windows (M2.5), congestion events (M2.6). Abbreviations: TCP (Transmission Control Protocol), UDP (User Datagram Protocol), RTT (Round-Trip Time), SRTT (Smoothed RTT), GBN (Go-Back-N), SR (Selective Repeat), ISN (Initial Sequence Number), MSL (Maximum Segment Lifetime).</p>
 <h3>Scenario 1: The Startup&#39;s Socket Census</h3>
 <p>A server hosts HTTP (port 80), DNS (53/UDP), and FTP-control (21). At one instant: 200 browser clients hold HTTP connections, 50 DNS queries are in flight, 3 admins hold FTP sessions. Count the server&#39;s sockets and state each one&#39;s demux key: HTTP → 200 connection sockets (4-tuples; clients&#39; source ports differ) + 1 welcoming socket; DNS → 1 socket (2-tuple port 53 shared by all 50 queries); FTP → 3 control sockets + 0 data (idle between transfers). Total: <strong>205 sockets</strong>, three keying disciplines on one machine.</p>
-<h3>Scenario 2: Timeout Arithmetic Under Pressure</h3>
+<details class="interactive-toggle"><summary>What is the `4-tuple` vs `2-tuple` census?</summary><div class="toggle-content"><p>A TCP <code>4-tuple</code> adds source IP and port, so 200 HTTP clients need 200 connection sockets plus 1 welcoming socket.
+A UDP <code>2-tuple</code> keys only on destination, so 50 DNS queries share 1 port-53 socket.
+Tiny example: HTTP counts 201, DNS counts 1, and 3 FTP sessions add 3 control sockets for 205 total.</p>
+</div></details><h3>Scenario 2: Timeout Arithmetic Under Pressure</h3>
 <p>SRTT = 200 ms, DevRTT = 25 ms, fresh SampleRTT = 320 ms ($\alpha=0.125$, $\beta=0.25$). New SRTT $= 0.875(200) + 0.125(320) = 175 + 40 = 215$ ms. Deviation $|215-320| = 105$; new DevRTT $= 0.75(25) + 0.25(105) = 18.75 + 26.25 = 45$ ms. Timeout $= 215 + 4(45) = \mathbf{395}$ ms — one slow sample nearly doubled the safety margin (jitter reacts faster than delay, by design).</p>
-<h3>Scenario 3: Loss Showdown (GBN vs. SR, Same Bad Luck)</h3>
+<details class="interactive-toggle"><summary>Why does `Karn` forbid sampling retransmissions?</summary><div class="toggle-content"><p><code>Karn</code> ambiguity means one ACK for a twice-sent segment could answer either the original or the copy.
+Why it matters: an unattributable start time would poison <code>SRTT</code> and <code>DevRTT</code> with phantom delays.
+Tiny example: SampleRTT 320 from a retransmitted copy must be discarded even though the number looks fresh.</p>
+</div></details><details class="interactive-toggle"><summary>What does Reno do on duplicate ACKs vs timeout?</summary><div class="toggle-content"><p>Reno halves <code>cwnd</code> with fast recovery on triple duplicate ACKs, but resets <code>cwnd</code> to 1 on timeout.
+Both events halve <code>ssthresh</code>, so the remembered danger line ratchets down either way.
+Tiny example: <code>cwnd</code> 30 halves to 15 on duplicate ACKs, later timeout at 20 resets to 1 with <code>ssthresh</code> 10.</p>
+</div></details><h3>Scenario 3: Loss Showdown (GBN vs. SR, Same Bad Luck)</h3>
 <p>Window $N=5$, packets 0–6 queued, packet 1 lost once. <strong>GBN:</strong> sends 0–4, receiver keeps 0, discards 2,3,4 (re-ACKs 0); timeout on 1 → resends 1,2,3,4,5. Total: 5 + 5 = <strong>10 transmissions</strong>. <strong>SR:</strong> sends 0–4, buffers 2,3,4 with individual ACKs; resends <strong>1 alone</strong>. Total: 5 + 1 = <strong>6 transmissions</strong>. Same loss, 10 vs. 6 — receiver memory and sequence space ($2N$ vs. $N+1$) priced in retransmissions.</p>
 <h3>Scenario 4: Congestion Double Feature</h3>
 <p>Reno flow, cwnd (congestion window) = 30, ssthresh (slow-start threshold) = 40 (congestion avoidance): triple dup-ACKs → ssthresh = 15, cwnd = 15, fast recovery (no slow start). Later at cwnd = 20 the timer expires → ssthresh = 10, cwnd = 1, slow start doubles 1→2→4→8 (crossing 10? no — 8 &lt; 10, continue) → 16 (past ssthresh → additive from here). Moral: dup-ACKs cost half; silence costs everything.</p>

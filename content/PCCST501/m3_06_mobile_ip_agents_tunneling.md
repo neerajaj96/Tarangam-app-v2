@@ -57,6 +57,12 @@ Correspondent to home agent to foreign agent to mobile node — then binding upd
 | **Route optimization** | Correspondent caches the binding (home→care-of) and tunnels directly — 1 leg. |
 | **Correspondent** | Any host communicating with the mobile node. |
 
+::: toggle What are `home agent`, `foreign agent` and `CoA`?
+The `home agent` is the router on the home network that intercepts packets for the away node.
+The `foreign agent` receives tunnels on the visited network, and the `CoA` is the temporary location address.
+Tiny example: mail to permanent home `H` gets tunnelled to care-of `C` at foreign agent `F`.
+:::
+
 <a id="the-math"></a>
 ## 3. Purpose — Three Phases, Then the Triangle Tax
 
@@ -65,6 +71,12 @@ Correspondent to home agent to foreign agent to mobile node — then binding upd
 1. **Discovery:** agents broadcast advertisements; the node solicits if impatient; movement detection compares network prefixes.
 2. **Registration:** node sends request (home address + care-of address + lifetime) via foreign agent to home agent; reply grants/denies — re-register before expiry (lifetimes, typically minutes–hours).
 3. **Tunneling:** home agent intercepts (gratuitous ARP — Address Resolution Protocol — /proxy), encapsulates (IP-in-IP: +20 B outer header, or minimal/generic-routing variants), foreign agent decapsulates and delivers; reverse path usually goes direct (no tunnel needed upstream).
+
+::: toggle What happens in `discovery`, `registration` and `tunneling`?
+`Discovery` finds agents from broadcasts or solicits, `registration` files home plus care-of plus lifetime with the home agent.
+`Tunneling` wraps each datagram in a 20-byte outer header to the tunnel endpoint for delivery.
+Tiny example: discover `F`, register `H` to `C` for 600 seconds, then each 1020-byte inner packet rides 1040 bytes.
+:::
 
 ### 3.2 Triangle Tax and Refund
 

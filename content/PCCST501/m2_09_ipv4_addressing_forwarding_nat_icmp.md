@@ -64,9 +64,33 @@ MAC addresses (M3.4) name interfaces on one wire; IP names hosts across the plan
 
 CIDR `a.b.c.d/n`: first $n$ bits network, rest host. For ordinary subnets ($n \le 30$), usable hosts $= 2^{32-n} - 2$ (network + broadcast addresses reserved). Qualifiers: `/31` links (RFC — Request for Comments — 3021, point-to-point) use both addresses with no broadcast ($2$ usable, no subtraction), and `/32` names a single host ($1$ address, a route not a subnet) — so state the $-2$ rule with its range. Subnetting borrows host bits ($/24 \to 4 \times /26$s). Forwarding table: (prefix, mask, next-hop, interface); **longest-prefix match** decides — $/26$ beats $/24$ beats default $0.0.0.0/0$. Private realms $10/8$, $172.16/12$, $192.168/16$ never route publicly.
 
+::: toggle What does `a.b.c.d/n` and usable-host math mean?
+`a.b.c.d/n` means the first `n` bits name the network and the rest name hosts inside it.
+Usable hosts equal 2 to the host bits minus network and broadcast, except `/31` point links and `/32` host routes.
+Tiny example: `192.168.10.0/26` has 6 host bits, so 64 minus 2 equals 62 usable addresses.
+:::
+
+::: toggle What is `longest-prefix match`?
+`Longest-prefix match` forwards by the table entry with the longest covering prefix, never by table order.
+Why it matters: a specific `/26` beats a general `/24`, and default `0.0.0.0/0` matches only when nothing else does.
+Tiny example: `10.0.5.9` matching `/8` and `/24` leaves via the `/24` next hop.
+:::
+
 ### 3.2 NAT and ICMP
 
 Basic NAT rewrites (private IP, port) ↔ (public IP, new port) per flow in a translation table — return traffic un-rewrites by lookup. ICMP rides IP (protocol $1$): echo request/reply ($8$/$0$) for `ping`, TTL-expiry ($11$) for `traceroute`'s hop-by-hop map, destination-unreachable ($3$) for dead ends.
+
+::: toggle What does `NAT` rewrite?
+`NAT` rewrites a private IP plus port into a public IP plus new port per outbound flow in a table.
+Return traffic looks up the same binding and gets rewritten back, while unsolicited inbound with no binding drops.
+Tiny example: `10.0.0.5:5000` leaves as `203.0.113.7:61000`, and replies to `61000` map back inside.
+:::
+
+::: toggle What do ICMP types `8/0`, `11` and `3` mean?
+ICMP type `8` is echo request and type `0` is echo reply, the pair `ping` uses to test round trips.
+Type `11` reports TTL expiry for each `traceroute` hop, type `3` reports destination unreachable dead ends.
+Tiny example: rising TTL values collect one type-`11` message per router until the target answers echo.
+:::
 
 ::: callout-formula KTU Formula Vault: IPv4
 Usable $= 2^{32-n} - 2$ ($n \le 30$; /31 and /32 are special) · longest prefix wins · privates $10/8$, $172.16/12$, $192.168/16$ · NAT $=$ per-flow rewrite table · ICMP $8/0$ echo, $11$ expiry, $3$ unreachable.

@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -373,11 +373,17 @@
 </ol>
 <h3>3.2 Operation Flow: AIMD — Additive Increase, Multiplicative Decrease</h3>
 <p>Each flow keeps a <strong>congestion window</strong> <code>cwnd</code> (bytes it may have unACKed) and adjusts per RTT (Round-Trip Time) with no explicit network signal — only loss as the congestion alarm:</p>
-<ul>
+<details class="interactive-toggle"><summary>What is `cwnd` and `MSS`?</summary><div class="toggle-content"><p><code>cwnd</code> is the congestion window, the sender-side cap on unacknowledged bytes protecting the network.
+<code>MSS</code> is the Maximum Segment Size, the largest TCP payload per segment and the unit of window growth.
+Tiny example: <code>cwnd</code> 8 <code>MSS</code> allows 8 segments in flight, then grows by about 1 <code>MSS</code> per clean round trip.</p>
+</div></details><ul>
 <li><strong>Additive increase:</strong> no loss for an RTT → <code>cwnd += 1 MSS</code> (gentle probe upward).</li>
 <li><strong>Multiplicative decrease:</strong> loss detected → <code>cwnd /= 2</code> (hard back-off).</li>
 </ul>
-<pre><code class="language-text">cwnd ^
+<details class="interactive-toggle"><summary>What does `AIMD` do each RTT?</summary><div class="toggle-content"><p><code>AIMD</code> adds about 1 <code>MSS</code> to <code>cwnd</code> per loss-free round trip, then halves <code>cwnd</code> on loss.
+Why this shape: gentle probing finds capacity while hard back-off drains queues fast across all flows.
+Tiny example: <code>cwnd</code> 8 grows to 9 clean, then halves to 4 on loss, tracing the sawtooth.</p>
+</div></details><pre><code class="language-text">cwnd ^
      |        /\          /\          /\
      |       /  \        /  \        /  \
      |      /    \      /    \      /    \
@@ -412,7 +418,10 @@
 <li><strong>ssthresh:</strong> the remembered danger line, set to <code>cwnd/2</code> at each loss event; below it grow fast (slow start), above it grow gently (congestion avoidance).</li>
 <li><strong>On loss:</strong> <strong>Tahoe</strong> resets <code>cwnd = 1</code> and slow-starts (treats every loss as catastrophe); <strong>Reno</strong> distinguishes: <strong>triple duplicate ACKs</strong> (mild, isolated loss) → halve and continue (<strong>fast recovery</strong>, no slow start); <strong>timeout</strong> (severe, total silence) → Tahoe-style reset to 1 MSS.</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Congestion in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Costs: <strong>retransmit waste + buffer delay + premature dupes</strong>. AIMD: <strong>+1 MSS/RTT</strong>, <strong>halve on loss</strong> → sawtooth → <strong>fairness (similar-RTT flows)</strong>. Slow start: <strong>double per RTT</strong> to ssthresh. ssthresh = <strong>cwnd/2 at loss</strong>. Tahoe: <strong>any loss → cwnd=1</strong>. Reno: <strong>3 dup-ACKs → halve + fast recovery</strong>; <strong>timeout → cwnd=1</strong>.</p>
+<details class="interactive-toggle"><summary>What are `slow start`, `ssthresh`, Tahoe and Reno?</summary><div class="toggle-content"><p><code>Slow start</code> doubles <code>cwnd</code> per RTT from 1 <code>MSS</code>, while <code>ssthresh</code> remembers half the pre-loss window as the danger line.
+<code>Tahoe</code> resets to 1 on any loss, <code>Reno</code> halves on triple duplicate ACKs with fast recovery and resets only on timeout.
+Tiny example: <code>cwnd</code> 24 hit by duplicate ACKs becomes 12 under Reno but 1 under Tahoe.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Congestion in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Costs: <strong>retransmit waste + buffer delay + premature dupes</strong>. AIMD: <strong>+1 MSS/RTT</strong>, <strong>halve on loss</strong> → sawtooth → <strong>fairness (similar-RTT flows)</strong>. Slow start: <strong>double per RTT</strong> to ssthresh. ssthresh = <strong>cwnd/2 at loss</strong>. Tahoe: <strong>any loss → cwnd=1</strong>. Reno: <strong>3 dup-ACKs → halve + fast recovery</strong>; <strong>timeout → cwnd=1</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Loss Means Congestion (in This Model)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>TCP&#39;s founding bet: on wired networks, packet loss ≈ buffer overflow ≈ congestion — <em>not</em> link damage. So it always slows down on loss. The famous exception proving the rule: <strong>wireless</strong> links corrupt packets without congestion, where blind halving needlessly throttles — which is exactly why wireless-optimized TCP variants exist.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>

@@ -45,9 +45,27 @@ You type `http://example.com/page.html` (one embedded image) into a browser on d
 4. **Sockets**: browser's ephemeral port ↔ server port 80 (the 4-tuple demultiplexes the reply to the right tab).
 5. **Access**: dorm Wi-Fi (wireless access) → FTTH (Fiber to the Home) fiber (guided) → core routers (packet switches) — nuts-and-bolts path hidden by the service view.
 
+::: toggle What does `persistent` HTTP mean?
+`Persistent` HTTP reuses one TCP connection for the base page plus every embedded object.
+Why it matters: one handshake serves all objects instead of paying a handshake per object.
+Tiny example: HTML plus one image needs 1 connection persistent, but 2 connections non-persistent.
+:::
+
+::: toggle What is the socket `4-tuple`?
+A `4-tuple` is source IP plus source port plus destination IP plus destination port, naming one TCP connection.
+Why it matters: one server IP and port 80 can serve many tabs because each client ephemeral port differs.
+Tiny example: two tabs with client ports 5001 and 5002 get two tuples and two connection sockets.
+:::
+
 ### Scenario 2: FTP Backup vs. HTTP Upload
 
 Nightly backup of 100 small files to a campus server. FTP: **1 control connection** + **100 data connections** (one per file — connection churn dominates!). HTTP/1.1 persistent POSTs: **1 connection** reused 100 times. Verdict: FTP's per-file data channel is pure overhead here — HTTP wins on connection economy (though FTP's out-of-band control + statefulness serve interactive browsing better).
+
+::: toggle What do FTP `control` and `data` connections do?
+The `control` connection on port 21 carries login, directory and retrieve commands for the whole session.
+Each `data` connection carries exactly one file's bytes, then closes, so 100 files need 100 data connections.
+Tiny example: backing up 3 files uses 1 control plus 3 data connections, while persistent HTTP uses 1 total.
+:::
 
 ### Scenario 3: Dorm Movie Night (P2P or Server?)
 

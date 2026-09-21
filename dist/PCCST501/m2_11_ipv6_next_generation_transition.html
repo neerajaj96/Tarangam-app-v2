@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,14 +368,23 @@
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Packet Structure: Header and Addresses</h3>
 <p>Fixed $40$ B: version/traffic-class/<strong>flow-label</strong> ($20$ bits: pseudo-connection marks for labelled QoS treatment), payload-length/next-header/hop-limit ($8$-bit TTL heir), $16$-B source + $16$-B destination. Dropped vs IPv4: header length field (fixed!), checksum (link layers already guard), fragmentation by routers (source-only, via extension headers). Address types: unicast (global/link-local <code>fe80::/10</code>/unique-local), <strong>multicast</strong> (<code>ff00::/8</code> — M2.7&#39;s groups, native here), anycast (nearest-member delivery).</p>
-<h3>3.2 Operation Flow: Writing and Migrating</h3>
+<details class="interactive-toggle"><summary>What is a `hextet` and `::` compression?</summary><div class="toggle-content"><p>A <code>hextet</code> is one 16-bit colon-separated group, with 8 groups per IPv6 address.
+Compression strips leading zeros per group, then replaces the longest all-zero run once with <code>::</code>.
+Tiny example: <code>FE80:0:0:0:0:0:0:1</code> strips to zeros and collapses to <code>FE80::1</code>.</p>
+</div></details><details class="interactive-toggle"><summary>What are `flow label`, `hop limit` and extension headers?</summary><div class="toggle-content"><p>The <code>flow label</code> is 20 bits tagging one flow for consistent QoS handling across routers.
+<code>Hop limit</code> decrements per router like TTL, while extension headers chain after the fixed 40 bytes for source-only fragmentation.
+Tiny example: all packets of one voice call carry the same label, and routers fast-path past the options.</p>
+</div></details><h3>3.2 Operation Flow: Writing and Migrating</h3>
 <p>$8$ hextets — two canonical steps, in order:</p>
 <ol>
 <li>Strip leading zeros in each group (<code>0DB8</code> → <code>DB8</code>, <code>0042</code> → <code>42</code>, <code>0000</code> → <code>0</code>).</li>
 <li>Replace the <em>longest</em> run of all-zero groups with one <code>::</code>, exactly once (ambiguity guard).</li>
 </ol>
 <p>Transition choice follows the overlap: <strong>dual-stack</strong> (both protocols, preferred when both ends can run both), <strong>tunneling</strong> (v6-in-v4, e.g. 6to4/Teredo for v6 islands across a v4 sea), <strong>translation</strong> (NAT64/DNS64 at borders, last resort for disjoint islands).</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: IPv6</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$40$-B fixed · flow label $20$ bits · no router fragmentation/checksum · compress zeros once (<code>::</code>) · space $2^{128} \approx 3.4 \times 10^{38}$ · migrate: both/tunnel/translate.</p>
+<details class="interactive-toggle"><summary>What do `dual-stack`, `tunneling` and `translation` mean?</summary><div class="toggle-content"><p><code>Dual-stack</code> runs IPv4 and IPv6 together on both ends, preferred whenever both sides support both.
+<code>Tunneling</code> carries IPv6 inside IPv4 across a version-4 sea, <code>translation</code> rewrites v4 to v6 at borders with <code>NAT64</code>.
+Tiny example: v6 islands over v4 use <code>6to4</code>, while v4-only servers reaching v6-only clients need border translation.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: IPv6</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$40$-B fixed · flow label $20$ bits · no router fragmentation/checksum · compress zeros once (<code>::</code>) · space $2^{128} \approx 3.4 \times 10^{38}$ · migrate: both/tunnel/translate.</p>
 </div></details><p>Extension headers chain <em>after</em> the base $40$ B — routers fast-path the fixed part and skip the rest, the simplicity dividend IPv4&#39;s option-strewn headers never paid.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Double-Colon Double-Use</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One <code>::</code> per address — two would make group-count ambiguous ($2001$::$1$::$2$ cannot be re-inflated uniquely). An option compressing twice trades keystrokes for unparseability; longest-run-once is the whole rule.</p>
 </div></details><p><a id="worked-example"></a></p>

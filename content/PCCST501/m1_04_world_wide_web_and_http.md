@@ -60,6 +60,18 @@ Dropping the restaurant now: stateless = server keeps no per-client memory; pers
 | **Cookie** | A small ID the server gives the browser (via the `Set-cookie` header) that the browser resends on later requests so the server can recover per-client state. |
 | **TCP (Transmission Control Protocol)** | Reliable, ordered, connection-oriented transport service HTTP/1.0, HTTP/1.1, and HTTP/2 run over. (HTTP/3 instead runs over QUIC, a UDP-based protocol — so "HTTP always uses TCP" is true only up to HTTP/2.) |
 
+::: toggle What does `HTTP` mean?
+`HTTP` is the web's request-and-response protocol: the browser asks for an object, the server answers.
+It runs at the application layer and, up to HTTP/2, uses TCP for reliable ordered delivery.
+Tiny example: `GET /index.html HTTP/1.1` asks the server to return that one file.
+:::
+
+::: toggle What does `stateless` mean?
+`Stateless` means the server keeps no memory of past requests between connections.
+Each request is handled as if brand new, even from the same browser seconds later.
+That is why logins need cookies: the protocol itself remembers nothing.
+:::
+
 <a id="the-math"></a>
 ## 3. Purpose — Connection Economy, Then Message Structure
 
@@ -125,6 +137,18 @@ For a page with $N$ objects (HTML + embedded): **non-persistent needs $N$ TCP co
 * **Status Line:** version + status code + status message, e.g. `HTTP/1.1 200 OK` or `HTTP/1.1 404 Not Found`
 * **Header Lines:** `Date:`, `Server:`, `Content-Length:`, `Content-Type:`
 * **Data (Body):** the actual requested object.
+
+::: toggle What do `GET`, `POST`, and status `200 OK` mean?
+`GET` asks the server to return an object, while `POST` carries form data up in the body.
+`200 OK` means the request succeeded, and `404 Not Found` means no such object exists.
+Tiny example: `GET /index.html` returns the page, `POST /login` submits a form.
+:::
+
+::: toggle What does `cookie` mean?
+A `cookie` is a small ID the server issues with `Set-cookie` for the browser to store.
+The browser resends it on later requests so the server can look up that client's state.
+The protocol stays stateless; the ID plus server-side lookup restores sessions.
+:::
 
 ### 3.4 Cookies: Faking Statefulness on Top of a Stateless Protocol
 

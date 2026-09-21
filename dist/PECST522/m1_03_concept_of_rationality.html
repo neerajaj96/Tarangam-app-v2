@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 7 MIN READ</span>
+    <span class="badge">⏱️ 8 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -289,7 +289,12 @@
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-building-blocks-the-four-factors">2. Basic Building Blocks: The Four… →</a></p>
 <p>You look both ways at a green crossing and step out. A freak falling branch injures you. Was stepping out irrational? No — given everything you could perceive, it was the right call. Did you succeed? No — luck intervened. Could you have predicted the branch? No — that would need omniscience (knowing the actual future), which physics forbids.</p>
 <p><strong>Definition:</strong> a <strong>rational agent</strong> selects the action expected to maximize its performance measure, given its percept sequence and built-in knowledge. Rationality judges the <strong>decision process</strong>, not the retrospective outcome.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Rationality Is Not Magic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Crossing carefully and still failing separates three ideas: rational (best expected call), successful (good actual outcome), omniscient (foresaw everything). Drop the story after this; the technical test is always &quot;what did the percept sequence justify at decision time?&quot;</p>
+<details class="interactive-toggle"><summary>What does `rational` mean here?</summary><div class="toggle-content"><ul>
+<li><code>rational</code> means the best expected call on the percepts available at decision time.</li>
+<li>Why it differs from success: a careful crossing can still fail through unforeseeable luck.</li>
+<li>How to test: replay what the agent knew then, never what the examiner knows now.</li>
+</ul>
+</div></details><details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Rationality Is Not Magic</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Crossing carefully and still failing separates three ideas: rational (best expected call), successful (good actual outcome), omniscient (foresaw everything). Drop the story after this; the technical test is always &quot;what did the percept sequence justify at decision time?&quot;</p>
 </div></details><p><strong>Tiny beginner example:</strong> a delivery robot pauses at a blind corner to look (information gathering) even though pausing costs time — because the expected crash cost outweighs the delay. Rationality prices information, not just motion.</p>
 <p><a id="basics"></a></p>
 <h2 id="2-basic-building-blocks-the-four-factors">2. Basic Building Blocks: The Four Factors</h2>
@@ -310,7 +315,12 @@
 <p><strong>Meaning, variables, intuition, formula:</strong> let <code>A</code> be the action set, <code>s&#39;</code> a possible resulting state, <code>P(s&#39; | history, a)</code> the probability of reaching <code>s&#39;</code> after action <code>a</code>, and <code>U(s&#39;)</code> the utility (numeric goodness) of <code>s&#39;</code>:</p>
 <p>$$\text{Action}^* = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid \text{percept sequence}, a) \cdot U(s&#39;)$$</p>
 <p>Symbol by symbol: <code>Action*</code> is the winning action; <code>argmax</code> means &quot;the action achieving the largest value&quot;; the sum weighs each future state&#39;s utility by its probability. Intuition: bet on the action whose probability-weighted future is brightest.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition of a Rational Agent</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For each percept sequence, pick the action maximizing expected performance given that sequence plus built-in knowledge. The formula above is that sentence in mathematics — memorize both forms.</p>
+<details class="interactive-toggle"><summary>What do `Action*`, `argmax`, `P(s&#39; | history, a)` and `U(s&#39;)` mean?</summary><div class="toggle-content"><ul>
+<li><code>Action*</code> is the winning action; <code>argmax</code> picks whichever action scores highest.</li>
+<li><code>P(s&#39; | history, a)</code> is the chance of landing in future state <code>s&#39;</code> after action <code>a</code>.</li>
+<li><code>U(s&#39;)</code> is that future state&#39;s goodness number; tiny case: <code>0.9 x 10 + 0.1 x 0 = 9</code> beats <code>0.5 x 10 + 0.5 x 0 = 5</code>.</li>
+</ul>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition of a Rational Agent</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For each percept sequence, pick the action maximizing expected performance given that sequence plus built-in knowledge. The formula above is that sentence in mathematics — memorize both forms.</p>
 </div></details><p><strong>Rationality versus omniscience versus success:</strong></p>
 <pre><code class="language-text">RATIONALITY: best EXPECTED call on history so far (handles uncertainty)
 OMNISCIENCE: knows ACTUAL outcomes in advance (impossible in real physics)
@@ -324,7 +334,12 @@ SUCCESS: good HISTORICAL outcome (needs luck as well as reason)
 <pre><code class="language-text">INITIAL PERCEPTS --&gt; EXPLORE AND SENSE --&gt; LEARN DYNAMICS --&gt; RATIONAL ACTS
 </code></pre>
 <p><strong>Autonomy:</strong> an agent is <strong>autonomous</strong> to the extent its behavior comes from its <strong>own experience</strong> rather than only designer assumptions. The <em>Sphex</em> wasp (a digger wasp studied in ethology) repeats one rigid burrow-check ritual even when experimenters move its prey mid-ritual — zero autonomy, pure preprogramming. A delivery robot that revises its map after slips is autonomous: it survives broken designer assumptions.</p>
-<table>
+<details class="interactive-toggle"><summary>What does `autonomy` mean here?</summary><div class="toggle-content"><ul>
+<li><code>autonomy</code> means behaviour shaped by the agent&#39;s own percept history, not only built-in rules.</li>
+<li>Why it matters: designer maps are incomplete, so experience must repair broken assumptions.</li>
+<li>Tiny contrast: the <code>Sphex</code> wasp repeats its ritual blindly, while a learning delivery robot updates its map after slips.</li>
+</ul>
+</div></details><table>
 <thead>
 <tr>
 <th>Similar pair</th>

@@ -48,9 +48,21 @@ A coin shows 7 heads in 10 flips. MLE says 0.7. A skeptic's prior (fair-ish, str
 
 LASSO versus RIDGE in one paragraph: if those coin beliefs were regression weights, a Gaussian prior would give RIDGE shrinkage (all weights small, none zero), while a Laplace prior would give Least Absolute Shrinkage and Selection Operator (LASSO) sparsity (many exact zeros). Same data, different prior shape, different solution texture.
 
+::: toggle Why does MAP `converge to MLE` as `n → ∞`?
+MAP is a precision-weighted average: data weight `n/σ²` vs prior weight `1/τ²`. At `n = 10` the prior's fixed weight still counts; at `n = 1,000` the data weight is 100× louder and the prior's share rounds to zero.
+Tiny numbers: skeptic's prior (~20 flips strong) drags `0.7` to `~0.55` at `n = 10`, but `0.63` stays `~0.63` at `n = 1,000` — evidence drowns belief.
+Exam moral: beliefs matter most exactly when data is scarcest; with big `n`, MAP and MLE agree.
+:::
+
 ### Scenario 3: The Too-Good Fit
 
 A teammate's degree-12 polynomial on 15 points reports train R-squared (R²) $= 1.0$ and demands deployment. Your audit: held-out $R^2 = -0.4$ (worse than the mean!). Diagnosis: variance disease (memorisation); prescription: cut degree, add RIDGE penalty (Gaussian prior!), or gather data — not more features. The two-grade certificate (train plus held-out) from M1 is the entire diagnostic.
+
+::: toggle Why does one `zero` veto a whole Naive Bayes class?
+A class score is a product: prior `×` likelihood `×` likelihood `…`. One factor of `0` (an unseen word) annihilates every other factor — the spammiest remaining words cannot outvote nothing.
+Smoothing replaces never-seen (`0`) with rare-but-possible (small positive): a veto becomes a weak vote. Delete-the-word instead and future mail containing it becomes unscorable evidence.
+Rule of thumb: products amplify zeros absolutely — always smooth counts before multiplying.
+:::
 
 Cross-validation mechanics in one paragraph: do not trust one split's decimals. In k-fold Cross-Validation (CV), rotate the validation fold so each point validates once and average. For final claims after degree or penalty selection, nest: inner loop picks, outer loop grades the picker on untouched data.
 

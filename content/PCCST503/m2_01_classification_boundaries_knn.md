@@ -53,7 +53,19 @@ Abbreviations defined on first use: k-Nearest Neighbours (k-NN). Symbols are def
 
 **Goal.** Low zero-one (0/1) loss on future queries. The 0/1 loss is non-differentiable and hard to optimise directly, so training optimises a smooth surrogate (cross-entropy, hinge, Gini impurity) and reports 0/1 accuracy. Train the surrogate, judge with 0/1; never confuse the two.
 
+::: toggle What is `0/1 loss` — and why can't we train on it?
+`0/1 loss` = 1 if the verdict is wrong, 0 if right: the honest judge, counting mistakes with no partial credit.
+It is a flat staircase (steps, no slope), so gradients are zero almost everywhere and undefined at the jumps — gradient descent has nothing to follow.
+Fix: train a smooth `surrogate` (cross-entropy, hinge) that slopes toward correctness, then report `0/1` accuracy. Two games: slope to learn, steps to grade.
+:::
+
 Distance symbol: Euclidean distance $d(q,x)=\sqrt{\sum_j(q_j-x_j)^2}$. Features must share scale first, or metres-versus-kilograms voting goes absurd.
+
+::: toggle Expand every symbol in `d(q,x) = √Σ(q_j − x_j)²`
+`q` = query (the unlabelled newcomer); `x` = one stored training point. `j` = feature index (height `j=1`, weight `j=2`, …). `−` = per-feature gap; `²` kills signs and punishes big gaps; `Σ` adds across features; `√` returns to original units.
+Tiny numbers: `q = (2,2)`, `B = (2,3)`: gaps `(0,−1)` → squares `(0,1)` → sum `1` → root `1.0` — the `1.0` in §4's trace.
+Scale first: a kilograms feature swings hundreds while metres swing ones — unscaled, kilograms elect every neighbour alone.
+:::
 
 ::: callout-intuition Core Mental Model: Fences vs. Thermometers
 Regression is a **thermometer** (how much?). Classification is a **fence** (which side?). Fitting a thermometer where a fence belongs fails absurdly: least squares happily predicts "diabetes = 1.7" or lets one far-away outlier drag the whole line across the fence. And the fence itself can be lazy genius: **k-NN** builds no model at all — to label a newcomer, just ask its $k$ nearest labeled neighbors and take a vote. No training, all memory; the training set *is* the model.
@@ -84,6 +96,12 @@ Numbered steps:
 
 Choices that matter: $k$ (small means jagged, noise-fitting boundaries, high variance; large means smooth, detail-erasing, high bias), distance metric (standardise features first), and price: $O(nd)$ memory plus $O(nd)$ per query. Training is free; prediction is expensive (KD-trees help).
 
+::: toggle Why is small `k` high-variance and large `k` high-bias?
+Small `k` (e.g. 1): one noisy neighbour flips the verdict — jagged boundaries that memorise quirks. §4's `k = 1` verdict hinges on an arbitrary tie-break: variance on display.
+Large `k` (e.g. all points): the majority class always wins — smooth boundaries that erase real detail, including small genuine clusters.
+Tune `k` on validation: grow it until the held-out error bottoms — the bias–variance U-curve with a concrete dial.
+:::
+
 | Similar pair | Distinction that earns marks |
 |---|---|
 | 0/1 loss vs surrogate | Judge with 0/1, train the smooth stand-in |
@@ -95,7 +113,7 @@ Boundary = **region surface** · judge with **0/1 loss**, train with **surrogate
 :::
 
 ::: callout-pitfall k-NN Has No Training Error Worth Quoting
-With $k=1$, training accuracy is *always* 100% (every point is its own nearest neighbor) — a meaningless perfect score. k-NN can only be assessed on held-out data (last module's discipline, sharpest here). Any "my 1-NN achieves 100%" claim confesses overfitting, not success.
+With $k=1$, training accuracy is *always* 100% on consistent data (no two identical training points with conflicting labels), because every point is its own nearest neighbor — a meaningless perfect score. k-NN can only be assessed on held-out data (last module's discipline, sharpest here). Any "my 1-NN achieves 100%" claim confesses overfitting, not success.
 :::
 
 <a id="worked-example"></a>

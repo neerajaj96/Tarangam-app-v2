@@ -66,6 +66,12 @@ We now fix meaning, then variables, then intuition, then formula — the mathema
 - $P$ is the performance measure: the grading ruler on future data (accuracy on held-out applicants the system has never seen).
 - Learning means $P$ on $T$ goes up as $E$ grows. If the ruler never moves, no learning happened, whatever the training curve claims.
 
+::: toggle What do `T`, `E` and `P` mean in one sentence each?
+`T` = task (the job, e.g. classify loan applications). `E` = experience (the past data it practices on, e.g. 10,000 labelled applications). `P` = performance (the grading ruler on unseen data, e.g. held-out accuracy).
+Learning = `P` goes up as `E` grows: more practice, better grades on new cases.
+Tiny check: applicant D (720, 58,000) is the `T`; rows A–C are the `E`; getting D right is the `P`.
+:::
+
 **Method preview.** Choose the paradigm from the feedback type, then choose regression versus classification inside supervised learning, then follow the universal workflow.
 
 ::: callout-intuition Core Mental Model: Recipes vs. Taste Buds
@@ -84,8 +90,18 @@ Canonical Machine Learning (ML) order for this note: problem (decide without kno
 ### 3.1 The Three Paradigms
 
 - **Supervised learning:** training data are $(x, y)$ pairs with **labels**. Learn a function $f$ that maps each input space element $X$ to output space $Y$, written $f: X \to Y$, that minimises expected loss on future pairs. Split by output kind in Section 3.2.
+
+::: toggle What does `f: X → Y` mean?
+`f` is the learned function (the mapping the model stands for). `X` is the input space (all possible feature vectors, e.g. every score–income pair). `Y` is the output space (all possible answers, e.g. approve or deny).
+The arrow `→` reads "maps to": feed any `x` from `X`, get one `y` in `Y`. Training chooses which `f`; the boundary in §3.1 is `f`'s visible edge.
+:::
 - **Unsupervised learning:** training data are bare $x$ values. Find **structure**: clusters (k-means), densities, low-dimensional manifolds (Principal Component Analysis (PCA)), associations. There is no per-example right answer to copy.
 - **Reinforcement learning:** training signal is **rewards** for action sequences (no correct answers shown). Learn a **policy**, a rule mapping states to actions, that maximises long-term return. The Artificial Intelligence (AI) module's Markov Decision Process (MDP) machinery reappears here with function approximation.
+
+::: toggle What is a `policy` in reinforcement learning?
+A `policy` is the rule mapping each state to an action (e.g. if bins pile left, drive left). It is the RL analogue of `f`: states in, actions out.
+Reward grades whole episodes (+1 delivery, −1 collision), never single moves — so the policy is judged by long-term return per shift, not per-step correctness.
+:::
 
 ### 3.2 Regression versus Classification (Inside Supervised Learning)
 

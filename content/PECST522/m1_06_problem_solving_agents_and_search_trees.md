@@ -54,11 +54,23 @@ Simulation first, wheels second. Drop the driving story after this; the examinab
 4. **Goal test** — recognizes success (state equals Bucharest, or "no attacking queens").
 5. **Path cost** — number pricing a sequence (distance, time). The **optimal solution** is the lowest-cost goal-reaching sequence, not just any one.
 
+::: toggle What do `s_0`, `ACTIONS(s)` and `RESULT(s, a)` mean?
+- `s_0` is the start state, like being at Arad.
+- `ACTIONS(s)` lists the legal moves from `s`, like drive to Sibiu or Zerind.
+- `RESULT(s, a)` is the state reached by that move, like arriving in Sibiu after choosing it.
+:::
+
 ::: callout-formula Formal Definition: A Problem Is a 5-Tuple
 Problem = (initial state, ACTIONS, RESULT, GOAL-TEST, STEP-COST). The state space is all states reachable from the start — a graph of states (nodes) and actions (edges). Memorize all five in order for the standard 3-mark answer.
 :::
 
 **State space vs. search tree (most-tested distinction):** the state space is the territory (map graph, exists regardless). The search tree is the exploration trace (tree of paths actually generated; one state can appear many times via different routes). A **tree node** stores STATE, PARENT, ACTION, PATH-COST `g`, DEPTH. Expanding a node means generating all its children.
+
+::: toggle Why does `Arad` appear twice in the search tree?
+- A tree node records the whole path plus cost, not just the place name.
+- Arad-as-root costs 0, while Arad-via-Sibiu costs 280, so they are different path-nodes.
+- What changes after: the tree already exceeds the map, which is why search needs repeated-state checks.
+:::
 
 <a id="formal-model"></a>
 ## 3. Formal Layer: Judging Search Strategies

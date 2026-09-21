@@ -59,6 +59,18 @@ Dropping the food now: restaurant = central server with a fixed address; potluck
 | **IP (Internet Protocol) address** | The number naming *which host* on the Internet should receive the data. |
 | **DDoS (Distributed Denial of Service) attack** | A flood of bogus requests from many machines meant to overwhelm a server — the weaponized form of the client-server bottleneck. |
 
+::: toggle What does `client` vs `server` mean?
+A `client` requests a service and a `server` supplies it, so the words name roles, not device types.
+The `server` is usually always-on with a fixed address so clients can find it.
+Tiny example: a browser is the client, the web machine answering on port 80 is the server.
+:::
+
+::: toggle What does `P2P` mean?
+`P2P` means peer-to-peer: every peer is both client and server at once, with no central server.
+Each newcomer adds demand and also upload capacity, so the system self-scales.
+Tiny example: in BitTorrent each downloader re-uploads pieces to other downloaders.
+:::
+
 <a id="the-math"></a>
 ## 3. Purpose — The Two Architectures and the Shared Addressing Trick
 
@@ -112,6 +124,18 @@ To route a message correctly, the network needs *two* pieces of addressing infor
 | **Port Number** | Identifies the correct *process* running on that host | Apartment number |
 
 A Web Server process, for example, conventionally listens on **Port 80** — so even though many processes may be running on the same machine, the port number ensures an incoming HTTP request reaches the right one.
+
+::: toggle What does `port` mean?
+A `port` is a 16-bit number naming which process on a host should receive the data.
+The IP address finds the host, the port finds the process on that host.
+Tiny example: port 80 steers an arrival to the web process, not the music app.
+:::
+
+::: toggle What does `socket` mean?
+A `socket` is the software doorway between a process and the network, named as `IP:port`.
+To send, a process passes bytes through its socket down to the transport layer below.
+Tiny example: browser socket `192.0.2.5:5001` talking to server socket `93.184.216.34:80`.
+:::
 
 ::: callout-exam KTU Exam Focus: The Two-Part Address
 The 2-mark "why isn't IP enough?" answer is always: **IP address finds the host, port number finds the process** — together they name a **socket** (`IP:port`). Any option claiming one identifier suffices, or that ports replace IPs, is the planted distractor.

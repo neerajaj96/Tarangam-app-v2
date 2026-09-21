@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -386,7 +386,10 @@
 <td>Any host communicating with the mobile node.</td>
 </tr>
 </tbody></table>
-<p><a id="the-math"></a></p>
+<details class="interactive-toggle"><summary>What are `home agent`, `foreign agent` and `CoA`?</summary><div class="toggle-content"><p>The <code>home agent</code> is the router on the home network that intercepts packets for the away node.
+The <code>foreign agent</code> receives tunnels on the visited network, and the <code>CoA</code> is the temporary location address.
+Tiny example: mail to permanent home <code>H</code> gets tunnelled to care-of <code>C</code> at foreign agent <code>F</code>.</p>
+</div></details><p><a id="the-math"></a></p>
 <h2 id="3-purpose-three-phases-then-the-triangle-tax">3. Purpose — Three Phases, Then the Triangle Tax</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Operation Flow: The Three Phases, Step by Step</h3>
@@ -395,7 +398,10 @@
 <li><strong>Registration:</strong> node sends request (home address + care-of address + lifetime) via foreign agent to home agent; reply grants/denies — re-register before expiry (lifetimes, typically minutes–hours).</li>
 <li><strong>Tunneling:</strong> home agent intercepts (gratuitous ARP — Address Resolution Protocol — /proxy), encapsulates (IP-in-IP: +20 B outer header, or minimal/generic-routing variants), foreign agent decapsulates and delivers; reverse path usually goes direct (no tunnel needed upstream).</li>
 </ol>
-<h3>3.2 Triangle Tax and Refund</h3>
+<details class="interactive-toggle"><summary>What happens in `discovery`, `registration` and `tunneling`?</summary><div class="toggle-content"><p><code>Discovery</code> finds agents from broadcasts or solicits, <code>registration</code> files home plus care-of plus lifetime with the home agent.
+<code>Tunneling</code> wraps each datagram in a 20-byte outer header to the tunnel endpoint for delivery.
+Tiny example: discover <code>F</code>, register <code>H</code> to <code>C</code> for 600 seconds, then each 1020-byte inner packet rides 1040 bytes.</p>
+</div></details><h3>3.2 Triangle Tax and Refund</h3>
 <p>Default path correspondent → home → foreign → node ($3$ legs even when neighbours roam together). <strong>Route optimization:</strong> correspondent caches bindings (home→care-of), tunnels directly ($1$ leg) — at the cost of binding-update signalling and correspondent-side mobility support.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Mobile IP</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Discover (adverts) → register (request/reply + lifetime) → tunnel (IP-in-IP, $+20$ B) · CoA $=$ foreign-agent or collocated · triangle $3$ legs, optimized $1$ · reverse direct.</p>
 </div></details><p>Collocated care-of addresses (node&#39;s own temporary IP, no foreign agent) trade concierge convenience for registration complexity — same phases, fewer middlemen.</p>

@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -298,7 +298,10 @@
 <p><strong>Data.</strong> Training split for fitting, validation split for choices, test split for final grading. Fitting and grading on the same data contaminates the grade. k-fold CV strengthens this: split data into $k$ equal folds (commonly $k=5$ or $10$), train on $k-1$ folds, validate on the held-out fold, rotate so each fold validates once, and average. LOO is the extreme $k=n$. Nested validation adds an outer loop: the inner loop selects degree or features, the outer loop grades the whole procedure on untouched data.</p>
 <p><strong>Goal.</strong> High test $R^2$, low test error, with train and test grades agreeing.</p>
 <p>Symbols: $R^2 = 1 - \sum(y_i-\hat{y}<em>i)^2/\sum(y_i-\bar{y})^2 = 1-SS</em>{res}/SS_{tot}$. Here $\hat{y}_i$ is prediction, $\bar{y}$ is test mean. Value $1$ is perfect, $0$ matches the mean baseline, negative is worse than guessing the mean. Expected test error equals bias-squared plus variance plus irreducible noise.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Panel of Witnesses</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One predictor is one witness — useful, limited. <strong>Multiple regression</strong> convenes the panel: price explained jointly by size <em>and</em> bedrooms <em>and</em> age, each coefficient testifying <em>holding the others fixed</em>. But panels overfit: with enough witnesses you can &quot;explain&quot; anything, including noise — memorizing the training lineup instead of learning the law. <strong>Assessment</strong> (held-out testing, R², bias–variance) is the cross-examination separating genuine understanding from expensive memorization.</p>
+<details class="interactive-toggle"><summary>Expand every symbol in `R² = 1 − SS_res/SS_tot`</summary><div class="toggle-content"><p><code>ŷ_i</code> = model prediction; <code>ȳ</code> = mean target (the dumb baseline: always guess the average). <code>SS_res = Σ(y_i − ŷ_i)²</code> (what your model left unexplained); <code>SS_tot = Σ(y_i − ȳ)²</code> (what the baseline leaves unexplained).
+<code>R² = 1 −</code> (your leftover / baseline leftover): <code>1</code> is perfect, <code>0</code> ties the baseline, negative loses to it — §4&#39;s <code>0.997</code> beats the mean almost completely.
+Judge on test only: train <code>R²</code> rises by construction with every added predictor, even noise — §4 pairs <code>0.997</code> with a held-out check for exactly this reason.</p>
+</div></details><details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Panel of Witnesses</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>One predictor is one witness — useful, limited. <strong>Multiple regression</strong> convenes the panel: price explained jointly by size <em>and</em> bedrooms <em>and</em> age, each coefficient testifying <em>holding the others fixed</em>. But panels overfit: with enough witnesses you can &quot;explain&quot; anything, including noise — memorizing the training lineup instead of learning the law. <strong>Assessment</strong> (held-out testing, R², bias–variance) is the cross-examination separating genuine understanding from expensive memorization.</p>
 </div></details><div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">🎬 60FPS MANIM SIMULATION &middot; Multiple Regression Geometry</span>
@@ -337,11 +340,17 @@
 <li><strong>Train-test split (or CV):</strong> fit on train, judge on unseen test. Test error estimates generalisation; train error does not.</li>
 <li><strong>R²:</strong> fraction of variance explained. Rises by construction with added predictors on train, so judge it on test only.</li>
 <li><strong>k-fold mechanics, strengthened:</strong> each point validates exactly once; averaging over folds cuts the luck of one split. Use stratified folds for classification so class ratios survive. Repeat or nest when selection itself must be graded.</li>
-<li><strong>RIDGE and LASSO reminder:</strong> when predictors collinear or $d$ large, add a penalty. RIDGE ($\lambda\sum w_j^2$, Gaussian prior) shrinks smoothly and keeps all features; LASSO ($\lambda\sum|w_j|$, Laplace prior) can zero features and select. The penalty strength is itself chosen by CV, never by train error.</li>
 </ul>
-<h3>3.3 Bias-Variance Preview</h3>
+<details class="interactive-toggle"><summary>Why `nested` validation — what does the outer loop grade?</summary><div class="toggle-content"><p>Inner loop selects (which degree, which <code>λ</code>); outer loop grades the whole selecting procedure on untouched folds. One loop cannot do both: winners picked on test data are crowned for test luck.
+Mechanics: split outer folds; inside each, run full k-fold selection; score the selected model on the held-out outer fold; average.
+Report the outer average as honest performance — §3.1&#39;s step 4 (report once on untouched test) is single-split nesting.</p>
+</div></details>
+- **RIDGE and LASSO reminder:** when predictors collinear or $d$ large, add a penalty. RIDGE ($\lambda\sum w_j^2$, Gaussian prior) shrinks smoothly and keeps all features; LASSO ($\lambda\sum|w_j|$, Laplace prior) can zero features and select. The penalty strength is itself chosen by CV, never by train error.<h3>3.3 Bias-Variance Preview</h3>
 <p>Expected test error equals bias-squared (rigidity: wrong family) plus variance (wiggliness: sample sensitivity) plus irreducible noise. Simple models starve on bias; flexible ones drown in variance; test error bottoms at the sweet spot. This tradeoff reappears in regularisation, trees versus forests, and neural sizing.</p>
-<table>
+<details class="interactive-toggle"><summary>What are `bias`, `variance` and `noise`?</summary><div class="toggle-content"><p><code>Bias²</code> = rigidity error (model family too stiff to bend to truth — underfit). <code>Variance</code> = wiggle error (fit dances with each sample&#39;s noise — overfit). <code>Noise</code> = irreducible label randomness no model removes.
+Simple models starve on bias; flexible ones drown in variance; test error is their sum — U-shaped, bottoming at the sweet spot §3.1&#39;s procedure hunts.
+Tiny picture: darts — biased cluster off-center, high-variance scatter everywhere, noise the board&#39;s own wobble.</p>
+</div></details><table>
 <thead>
 <tr>
 <th>Similar pair</th>

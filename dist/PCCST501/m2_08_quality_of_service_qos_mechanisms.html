@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -377,9 +377,18 @@
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 The Four Knobs and Two Architectures</h3>
 <p>Flow needs: <strong>bandwidth</strong> (rate), <strong>delay</strong> (one-way latencies), <strong>jitter</strong> (delay variance — the VoIP — Voice over IP — killer), <strong>loss</strong> (fraction dropped). IntServ: per-flow RSVP reservation + admission control + packet classification/scheduling — guarantees, core-state explosion. DiffServ: edge marks DSCP, core applies per-hop behaviors (EF expedited, AF assured with drop precedences) — scalable, coarser promises.</p>
-<h3>3.2 Operation Flow: Shaping, Policing, Scheduling</h3>
+<details class="interactive-toggle"><summary>What do `IntServ` and `DiffServ` mean?</summary><div class="toggle-content"><p><code>IntServ</code> reserves per-flow bandwidth with <code>RSVP</code> signalling and admission control for strong guarantees.
+<code>DiffServ</code> marks packets per class with <code>DSCP</code> at the edge, such as <code>EF</code> for voice, with no per-flow core state.
+Tiny example: 256 voice flows need 256 reservations under <code>IntServ</code> but one <code>EF</code> lane under <code>DiffServ</code>.</p>
+</div></details><h3>3.2 Operation Flow: Shaping, Policing, Scheduling</h3>
 <p><strong>Token bucket</strong> $(r, C)$: tokens accrue at $r$/s up to depth $C$; each packet spends one — conformant traffic over any window $T$ is bounded by $C + rT$. <strong>Shaping</strong> delays excess (smooths, needs buffers); <strong>policing</strong> drops/remarks excess (no mercy, no buffers). Schedulers split the link: FIFO (First-In First-Out, no isolation), strict priority (starvation risk), <strong>WFQ</strong> (weighted fair shares — weight-proportional bandwidth with delay bounds).</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: QoS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Knobs: rate/delay/jitter/loss · IntServ $=$ RSVP per-flow (guaranteed, heavy) · DiffServ $=$ DSCP per-class (scalable, coarse) · conform $\le C + rT$ · WFQ shares $\propto$ weights.</p>
+<details class="interactive-toggle"><summary>What is a token bucket `(r, C)`?</summary><div class="toggle-content"><p>A token bucket accrues tokens at rate <code>r</code> up to depth <code>C</code>, and each packet spends one token to conform.
+Conformant traffic over window <code>T</code> stays within <code>C</code> plus <code>r</code> times <code>T</code>, so depth absorbs bursts and rate meters the tail.
+Tiny example: <code>r</code> 3 with depth 6 lets 6 instant packets through, then only 3 per second after.</p>
+</div></details><details class="interactive-toggle"><summary>What do `shaping`, `policing` and `WFQ` do?</summary><div class="toggle-content"><p><code>Shaping</code> queues excess packets to smooth the flow, <code>policing</code> drops or remarks excess with no queue.
+<code>WFQ</code> divides link bandwidth in proportion to class weights, unlike <code>FIFO</code> sharing or strict priority starving others.
+Tiny example: weights 3 to 2 to 1 on 9 Mbps give 4.5, 3 and 1.5 Mbps when all classes queue.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: QoS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Knobs: rate/delay/jitter/loss · IntServ $=$ RSVP per-flow (guaranteed, heavy) · DiffServ $=$ DSCP per-class (scalable, coarse) · conform $\le C + rT$ · WFQ shares $\propto$ weights.</p>
 </div></details><p>Policing vs shaping is <em>where excess goes</em> (floor vs waiting room), not how much is allowed — the bucket parameters are identical, the furniture differs.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Priority Panacea</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Strict priority for voice starves bulk traffic the moment voice saturates its share — guarantees for one class become denial for another. WFQ exists precisely to bound that damage with minimum shares — priority without weights is a loaded promise.</p>
 </div></details><p><a id="worked-example"></a></p>

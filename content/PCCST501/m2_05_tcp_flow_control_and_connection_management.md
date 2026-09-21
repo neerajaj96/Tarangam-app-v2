@@ -65,6 +65,12 @@ $$\text{LastByteSent} - \text{LastByteAcked} \le \min(\text{cwnd}, \text{rwnd})$
 * `rwnd` protects the **receiver** (flow control, this topic); `cwnd` protects the **network** (congestion control, next topic) — the sender always honors the *smaller* of the two.
 * The window rides in every TCP header, so it tracks the application's reading speed in real time. A zero window politely freezes the sender (with persist probes against deadlock).
 
+::: toggle What is `rwnd` and the `min(cwnd, rwnd)` rule?
+`rwnd` is the receive window, the free bytes left in the receiver buffer advertised in every TCP header.
+The sender limits unacknowledged bytes to the smaller of `cwnd` for the network and `rwnd` for the receiver.
+Tiny example: `rwnd` 6000 with 3000 in flight allows 3000 more even if `cwnd` allows 9000.
+:::
+
 ### 3.2 Operation Flow: Connection Setup — The 3-Way Handshake
 
 ```mermaid
@@ -79,6 +85,12 @@ sequenceDiagram
 
 Numbered logic: (1) client's SYN proves client→server reachability and proposes ISN `x`; (2) server's SYNACK proposes ISN `y` and confirms `x`; (3) client's ACK confirms `y`.
 
+::: toggle Why three messages in the `SYN` handshake?
+`SYN` proposes one side starting number, `SYNACK` proposes the other number plus confirms the first, `ACK` confirms the second.
+Why three: both `ISN` values need explicit confirmation, or a stale duplicate `SYN` could open a phantom connection.
+Tiny example: client `x`, server `y`, then `ACK y+1` proves the server greeting actually arrived.
+:::
+
 Why three and not two? The third ACK proves the *server's* SYN arrived — with only two steps, a stale duplicate SYN could conjure a half-open connection the client never wanted. Each side picks a **random ISN** (security: predictable ISNs enable spoofing) and each side's number is explicitly confirmed by the other.
 
 ::: anim tcp-handshake The Three-Message Greeting
@@ -88,6 +100,12 @@ Watch SYN leave, SYNACK return, ACK confirm — in this order, always. The anima
 ### 3.3 Operation Flow: Teardown — Four Steps (FIN Apiece + Echoes)
 
 Either side sends **FIN**; the other **ACKs** it, finishes its own remaining data, then sends its **own FIN**, which is ACKed in turn — 4 messages because the two directions close **independently** (half-close is legal: "I'm done sending, still listening"). The initiator then waits **2MSL** (twice the maximum segment lifetime) in TIME_WAIT so stray duplicates die before the same ports are reused.
+
+::: toggle Why four steps plus `2MSL` wait in teardown?
+Each direction sends its own `FIN` and gets its own `ACK`, so two independent closes need four messages.
+The final `2MSL` wait lets stray duplicate segments expire before the same port pair is reused.
+Tiny example: a late duplicate arriving after close would otherwise corrupt the next connection on those ports.
+:::
 
 ::: callout-formula KTU Formula Vault: Handshake vs Teardown
 Setup = **3** (SYN → SYNACK → ACK; synchronizes *both* ISNs, defeats stale SYNs). Teardown = **4** (FIN → ACK … FIN → ACK; directions close independently) + **2MSL** wait (lets ghosts expire). Sender's live limit = **min(cwnd, rwnd)** — cwnd guards the *network*, rwnd guards the *receiver*.

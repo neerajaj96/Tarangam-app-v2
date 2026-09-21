@@ -54,6 +54,12 @@ Abbreviations defined on first use: R-squared (R²), Cross-Validation (CV), Leav
 
 Symbols: $R^2 = 1 - \sum(y_i-\hat{y}_i)^2/\sum(y_i-\bar{y})^2 = 1-SS_{res}/SS_{tot}$. Here $\hat{y}_i$ is prediction, $\bar{y}$ is test mean. Value $1$ is perfect, $0$ matches the mean baseline, negative is worse than guessing the mean. Expected test error equals bias-squared plus variance plus irreducible noise.
 
+::: toggle Expand every symbol in `R² = 1 − SS_res/SS_tot`
+`ŷ_i` = model prediction; `ȳ` = mean target (the dumb baseline: always guess the average). `SS_res = Σ(y_i − ŷ_i)²` (what your model left unexplained); `SS_tot = Σ(y_i − ȳ)²` (what the baseline leaves unexplained).
+`R² = 1 −` (your leftover / baseline leftover): `1` is perfect, `0` ties the baseline, negative loses to it — §4's `0.997` beats the mean almost completely.
+Judge on test only: train `R²` rises by construction with every added predictor, even noise — §4 pairs `0.997` with a held-out check for exactly this reason.
+:::
+
 ::: callout-intuition Core Mental Model: The Panel of Witnesses
 One predictor is one witness — useful, limited. **Multiple regression** convenes the panel: price explained jointly by size *and* bedrooms *and* age, each coefficient testifying *holding the others fixed*. But panels overfit: with enough witnesses you can "explain" anything, including noise — memorizing the training lineup instead of learning the law. **Assessment** (held-out testing, R², bias–variance) is the cross-examination separating genuine understanding from expensive memorization.
 :::
@@ -83,11 +89,23 @@ Steps to choose complexity honestly, numbered:
 - **Train-test split (or CV):** fit on train, judge on unseen test. Test error estimates generalisation; train error does not.
 - **R²:** fraction of variance explained. Rises by construction with added predictors on train, so judge it on test only.
 - **k-fold mechanics, strengthened:** each point validates exactly once; averaging over folds cuts the luck of one split. Use stratified folds for classification so class ratios survive. Repeat or nest when selection itself must be graded.
+
+::: toggle Why `nested` validation — what does the outer loop grade?
+Inner loop selects (which degree, which `λ`); outer loop grades the whole selecting procedure on untouched folds. One loop cannot do both: winners picked on test data are crowned for test luck.
+Mechanics: split outer folds; inside each, run full k-fold selection; score the selected model on the held-out outer fold; average.
+Report the outer average as honest performance — §3.1's step 4 (report once on untouched test) is single-split nesting.
+:::
 - **RIDGE and LASSO reminder:** when predictors collinear or $d$ large, add a penalty. RIDGE ($\lambda\sum w_j^2$, Gaussian prior) shrinks smoothly and keeps all features; LASSO ($\lambda\sum|w_j|$, Laplace prior) can zero features and select. The penalty strength is itself chosen by CV, never by train error.
 
 ### 3.3 Bias-Variance Preview
 
 Expected test error equals bias-squared (rigidity: wrong family) plus variance (wiggliness: sample sensitivity) plus irreducible noise. Simple models starve on bias; flexible ones drown in variance; test error bottoms at the sweet spot. This tradeoff reappears in regularisation, trees versus forests, and neural sizing.
+
+::: toggle What are `bias`, `variance` and `noise`?
+`Bias²` = rigidity error (model family too stiff to bend to truth — underfit). `Variance` = wiggle error (fit dances with each sample's noise — overfit). `Noise` = irreducible label randomness no model removes.
+Simple models starve on bias; flexible ones drown in variance; test error is their sum — U-shaped, bottoming at the sweet spot §3.1's procedure hunts.
+Tiny picture: darts — biased cluster off-center, high-variance scatter everywhere, noise the board's own wobble.
+:::
 
 | Similar pair | Distinction that earns marks |
 |---|---|

@@ -55,6 +55,12 @@ $$J(w) = \frac{1}{2n}\sum_{i=1}^n (y_i - w^T\tilde{x}_i)^2 = \frac{1}{2n}\|y - X
 
 Symbol by symbol: $\|y-Xw\|^2$ sums squared residuals; $Xw$ lists all predictions; $J$ is mean cost up to the half factor.
 
+::: toggle Expand every symbol in `J(w)`
+`J(w)` = cost of weights `w` (lower is better). `y` = vector of `n` true targets; `Xw` = vector of `n` predictions (matrix `X` times weights `w`). `y − Xw` = all residuals at once; `‖·‖²` squares and sums them.
+`÷ n` averages over points (size-independent grade); `× 1/2` cancels the derivative's 2 when differentiating — bookkeeping, not statistics.
+Tiny numbers: §1's rule price `= 10 ×` size predicts 10, 20 for sizes 1, 2 — residuals 0, 0, so `J = 0`: the ruler already sits perfectly.
+:::
+
 ::: callout-intuition Core Mental Model: The Stiff Ruler Through Scatter
 Data points scatter like stars; a linear model lays a stiff ruler through them — tilting and shifting until the total squared gap between stars and ruler is minimal. **Squared** (not absolute) gaps, because squares punish big misses disproportionately, differentiate smoothly, and — the deep reason — make the optimum a single linear-algebra computation instead of a search. Least squares is the ruler-settling rule with a closed-form answer.
 :::
@@ -72,9 +78,21 @@ Set the gradient to zero. $\nabla_w J = -\frac{1}{n}X^T(y - Xw) = 0$ gives **$X^
 2. Differentiate with respect to $w$.
 3. Set gradient to zero and solve the linear system.
 
+::: toggle Why does `gradient = 0` find the minimum?
+The gradient `∇J` points uphill (steepest ascent), so `−∇J` points downhill. Setting it to zero means flat ground in every direction — the bowl's bottom.
+One equation per weight: `XᵀXw = Xᵀy` balances all residuals at once instead of stepping (descent in M2.05 walks; here algebra teleports).
+Zero gradient is necessary, not magic: on non-convex losses flat ground can be a saddle — least squares is a bowl, so flat means best.
+:::
+
 ### 3.2 Geometry Route, Same Answer
 
 Vector $y$ lives in $\mathbb{R}^n$; $Xw$ ranges over the $d$-dimensional column space of $X$. Minimising $\|y-Xw\|$ finds the closest point in that subspace, the orthogonal projection of $y$. So the residual $y-X\hat{w}$ stands perpendicular to every column of $X$: $X^T(y-X\hat{w}) = 0$, the same normal equations. Calculus grinds; geometry sees.
+
+::: toggle What does `residual perpendicular to column space` mean?
+The column space is every prediction `Xw` can ever make (all reachable rulers). The residual `y − Xŵ` is the leftover gap; perpendicular means it is orthogonal (dot product `0`) to every column of `X`.
+Closest-point logic: the shortest gap from `y` to the reachable subspace meets it at a right angle — any slant could slide shorter. That right angle is `Xᵀ(y − Xŵ) = 0`.
+Check it on §4's fit: residual vector `·` all-ones column `= 0` and `· x`-column `= 0` — the numbers certify the picture.
+:::
 
 **RIDGE strengthening.** If columns are dependent or $d>n$, $X^TX$ is singular and the inverse fails. The standard fix adds a penalty $\lambda I$ with $\lambda>0$: $\hat{w}=(X^TX+\lambda I)^{-1}X^Ty$. This is RIDGE regression, MAP with a Gaussian prior from the previous note: it always inverts and shrinks weights. Least Absolute Shrinkage and Selection Operator (LASSO) uses an absolute penalty instead and can zero weights, but has no closed form and needs iterative optimisation.
 
@@ -104,7 +122,7 @@ $X = [[1,1],[1,2],[1,3]]$, $y = [1,2,2]$. $X^TX = \begin{pmatrix}3 & 6 \\\\ 6 & 
 :::
 
 ::: step [Step 3: Conclusion] Final Result
-One $2\times2$ inverse solved the whole problem — no iteration, no guessing. And geometrically: the residual vector is orthogonal to both the all-ones column and the $x$-column (dot products vanish — check it), confirming the projection picture from §2.3 on real numbers.
+One $2\times2$ inverse solved the whole problem — no iteration, no guessing. And geometrically: the residual vector is orthogonal to both the all-ones column and the $x$-column (dot products vanish — check it), confirming the projection picture from §3.2 on real numbers.
 :::
 
 ::: anim ruler-fit Three Points, One Ruler

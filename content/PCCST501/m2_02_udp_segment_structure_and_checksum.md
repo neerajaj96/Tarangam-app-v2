@@ -65,12 +65,30 @@ Dropping the post office now: 8-byte header = source port + destination port + l
 
 No sequence numbers, no acknowledgment numbers, no window fields — the header's tiny size *is* the entire design philosophy: minimum mechanism, maximum speed.
 
+::: toggle What are the four UDP header fields?
+The four fields are `source port`, `destination port`, `length`, and `checksum`, each 2 bytes for 8 total.
+`Ports` steer to processes, `length` gives header plus data bytes, `checksum` detects errors.
+Tiny example: a DNS query to destination port 53 carries its reply port, total length, and checksum in 8 bytes.
+:::
+
 ### 3.2 Operation Flow: Checksum — 1s-Complement Sum (+ Pseudoheader)
 
 1. Arrange the segment (with checksum field set to 0) as a sequence of 16-bit words, **prefixed by a 12-byte pseudoheader** (source IP, destination IP, protocol number, UDP length).
 2. Add all words using **1s-complement arithmetic** (end-around carry: overflow bits wrap back into the sum).
 3. Take the **1s complement** (flip every bit) of the result — that value goes in the checksum field.
 4. The receiver repeats the sum *including* the received checksum: a correct segment sums to all-1s (`0xFFFF`); anything else means corruption → the datagram is **silently discarded** (no notification, no retransmission — the application must cope).
+
+::: toggle What is `1s-complement` addition with `end-around carry`?
+`1s-complement` addition adds 16-bit words as binary, then wraps any overflow carry-out back into the sum.
+`End-around carry` is that wrap step, and the final sum is bit-flipped (`complement`) into the checksum field.
+Tiny example: `1` plus `1` in one bit gives `0` carry `1`, wraps to `1`, then complements to `0`.
+:::
+
+::: toggle What is the `pseudoheader`?
+The `pseudoheader` is a 12-byte virtual prefix with source IP, destination IP, protocol number, and UDP length.
+Why it matters: including it in the checksum catches misdelivery to the wrong host at the transport layer.
+Tiny example: a datagram delivered to the wrong IP fails the receiver checksum because its addresses differ.
+:::
 
 *Standard note:* the UDP checksum is optional in IPv4 (a zero field means "unchecked") but mandatory in IPv6 — so "UDP always checksums" needs the version qualifier.
 

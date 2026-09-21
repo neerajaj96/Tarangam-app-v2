@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,7 +368,10 @@
 <li><code>rwnd</code> protects the <strong>receiver</strong> (flow control, this topic); <code>cwnd</code> protects the <strong>network</strong> (congestion control, next topic) — the sender always honors the <em>smaller</em> of the two.</li>
 <li>The window rides in every TCP header, so it tracks the application&#39;s reading speed in real time. A zero window politely freezes the sender (with persist probes against deadlock).</li>
 </ul>
-<h3>3.2 Operation Flow: Connection Setup — The 3-Way Handshake</h3>
+<details class="interactive-toggle"><summary>What is `rwnd` and the `min(cwnd, rwnd)` rule?</summary><div class="toggle-content"><p><code>rwnd</code> is the receive window, the free bytes left in the receiver buffer advertised in every TCP header.
+The sender limits unacknowledged bytes to the smaller of <code>cwnd</code> for the network and <code>rwnd</code> for the receiver.
+Tiny example: <code>rwnd</code> 6000 with 3000 in flight allows 3000 more even if <code>cwnd</code> allows 9000.</p>
+</div></details><h3>3.2 Operation Flow: Connection Setup — The 3-Way Handshake</h3>
 <pre><code class="language-mermaid">sequenceDiagram
     participant C as Client
     participant S as Server
@@ -378,7 +381,10 @@
     Note over C,S: Both sides now agree on initial sequence numbers
 </code></pre>
 <p>Numbered logic: (1) client&#39;s SYN proves client→server reachability and proposes ISN <code>x</code>; (2) server&#39;s SYNACK proposes ISN <code>y</code> and confirms <code>x</code>; (3) client&#39;s ACK confirms <code>y</code>.</p>
-<p>Why three and not two? The third ACK proves the <em>server&#39;s</em> SYN arrived — with only two steps, a stale duplicate SYN could conjure a half-open connection the client never wanted. Each side picks a <strong>random ISN</strong> (security: predictable ISNs enable spoofing) and each side&#39;s number is explicitly confirmed by the other.</p>
+<details class="interactive-toggle"><summary>Why three messages in the `SYN` handshake?</summary><div class="toggle-content"><p><code>SYN</code> proposes one side starting number, <code>SYNACK</code> proposes the other number plus confirms the first, <code>ACK</code> confirms the second.
+Why three: both <code>ISN</code> values need explicit confirmation, or a stale duplicate <code>SYN</code> could open a phantom connection.
+Tiny example: client <code>x</code>, server <code>y</code>, then <code>ACK y+1</code> proves the server greeting actually arrived.</p>
+</div></details><p>Why three and not two? The third ACK proves the <em>server&#39;s</em> SYN arrived — with only two steps, a stale duplicate SYN could conjure a half-open connection the client never wanted. Each side picks a <strong>random ISN</strong> (security: predictable ISNs enable spoofing) and each side&#39;s number is explicitly confirmed by the other.</p>
 <div class="video-studio">
   <div class="video-studio-header">
     <span class="video-tag">✨ ANIMATED DIAGRAM &middot; The Three-Message Greeting</span>
@@ -400,7 +406,10 @@
   </div>
 </div><h3>3.3 Operation Flow: Teardown — Four Steps (FIN Apiece + Echoes)</h3>
 <p>Either side sends <strong>FIN</strong>; the other <strong>ACKs</strong> it, finishes its own remaining data, then sends its <strong>own FIN</strong>, which is ACKed in turn — 4 messages because the two directions close <strong>independently</strong> (half-close is legal: &quot;I&#39;m done sending, still listening&quot;). The initiator then waits <strong>2MSL</strong> (twice the maximum segment lifetime) in TIME_WAIT so stray duplicates die before the same ports are reused.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Handshake vs Teardown</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Setup = <strong>3</strong> (SYN → SYNACK → ACK; synchronizes <em>both</em> ISNs, defeats stale SYNs). Teardown = <strong>4</strong> (FIN → ACK … FIN → ACK; directions close independently) + <strong>2MSL</strong> wait (lets ghosts expire). Sender&#39;s live limit = <strong>min(cwnd, rwnd)</strong> — cwnd guards the <em>network</em>, rwnd guards the <em>receiver</em>.</p>
+<details class="interactive-toggle"><summary>Why four steps plus `2MSL` wait in teardown?</summary><div class="toggle-content"><p>Each direction sends its own <code>FIN</code> and gets its own <code>ACK</code>, so two independent closes need four messages.
+The final <code>2MSL</code> wait lets stray duplicate segments expire before the same port pair is reused.
+Tiny example: a late duplicate arriving after close would otherwise corrupt the next connection on those ports.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Handshake vs Teardown</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Setup = <strong>3</strong> (SYN → SYNACK → ACK; synchronizes <em>both</em> ISNs, defeats stale SYNs). Teardown = <strong>4</strong> (FIN → ACK … FIN → ACK; directions close independently) + <strong>2MSL</strong> wait (lets ghosts expire). Sender&#39;s live limit = <strong>min(cwnd, rwnd)</strong> — cwnd guards the <em>network</em>, rwnd guards the <em>receiver</em>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Flow Control ≠ Congestion Control</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Same mechanism family (windows), opposite patients: <strong>rwnd</strong> answers &quot;is the <em>receiver&#39;s buffer</em> full?&quot; (end-to-end, receiver-set); <strong>cwnd</strong> answers &quot;is the <em>network</em> overloaded?&quot; (inferred from loss/delay, sender-computed). An exam option attributing router queues to rwnd — or receiver buffers to cwnd — is always wrong.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>

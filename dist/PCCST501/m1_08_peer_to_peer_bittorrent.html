@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -372,13 +372,22 @@
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Operation Flow: Swarm Anatomy</h3>
 <p><strong>Overlay</strong> (logical links atop TCP), <strong>tracker</strong> (introduces peers; magnet/DHT links decentralize even this), <strong>torrent</strong> (metadata + piece hashes), <strong>peers/leeches</strong> (downloading), <strong>seeds</strong> (complete, uploading). <strong>Rarest-first</strong> piece selection keeps diversity high (no last-piece starvation); <strong>tit-for-tat/choking</strong> uploads to the fastest reciprocators (optimistic unchoke probes newcomers) — freeloaders get choked by design.</p>
-<h3>3.2 Distribution-Time Bound — Symbols First</h3>
+<details class="interactive-toggle"><summary>What do `swarm`, `tracker` and `seed` mean?</summary><div class="toggle-content"><p>A <code>swarm</code> is all peers sharing one file right now, linked by an <code>overlay</code> of logical TCP connections.
+A <code>tracker</code> only introduces peers to each other and never carries file bytes, while a <code>seed</code> holds the full file and uploads only.
+Tiny example: a new peer asks the tracker for 50 neighbours, then downloads pieces from them, not from the tracker.</p>
+</div></details><details class="interactive-toggle"><summary>What do `rarest-first` and `tit-for-tat` fix?</summary><div class="toggle-content"><p><code>Rarest-first</code> always fetches the piece fewest neighbours hold, so no last rare piece starves the swarm.
+<code>Tit-for-tat</code> uploads preferentially to peers that upload back, choking freeloaders, with <code>optimistic unchoke</code> probing newcomers.
+Tiny example: a peer with only common pieces hunts the one rare chunk first, and a leecher that shares nothing soon gets choked.</p>
+</div></details><h3>3.2 Distribution-Time Bound — Symbols First</h3>
 <p>Symbols: $F$ = file size (bits), $u_s$ = server/seed upload rate (bits/s), $u_i$ = upload rate of peer $i$, $N$ = number of peers, $d_{min}$ = slowest peer download rate.</p>
 <ul>
 <li>Client-server lower bound: $D_{cs} \ge \max(NF/u_s, F/d_{min})$. Term 1: the lone server must push $N$ copies. Term 2: the slowest downloader cannot finish before one file&#39;s worth at its own rate.</li>
 <li>P2P lower bound: $D_{p2p} \ge \max(F/u_s, F/d_{min}, NF/(u_s + \sum u_i))$. Terms 1–2 as above (seed must inject one copy; slowest peer still slowest). Term 3 is the potluck: <em>aggregate</em> upload (server + all peers) absorbs the crowd&#39;s $N$ copies.</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: P2P</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Tracker introduces, DHT decentralizes · rarest-first diversifies · tit-for-tat rewards reciprocators, chokes freeloaders · $D_{p2p} \ge \max(F/u_s, NF/(u_s+\sum u_i))$ (downloads ample).</p>
+<details class="interactive-toggle"><summary>What do `F`, `u_s`, `u_i` and `D` mean?</summary><div class="toggle-content"><p><code>F</code> is file size in bits, <code>u_s</code> is the server or seed upload rate, each <code>u_i</code> is peer <code>i</code> upload rate, and <code>D</code> is seconds until the last peer finishes.
+Why they matter: client-server needs <code>N</code> copies from <code>u_s</code> alone, while P2P spreads <code>N</code> copies over <code>u_s</code> plus all <code>u_i</code>.
+Tiny example: <code>F</code> 6 units with <code>u_s</code> 2 and three peers at 1 gives P2P <code>max(3, 3.6)</code> equals 3.6 seconds.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: P2P</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Tracker introduces, DHT decentralizes · rarest-first diversifies · tit-for-tat rewards reciprocators, chokes freeloaders · $D_{p2p} \ge \max(F/u_s, NF/(u_s+\sum u_i))$ (downloads ample).</p>
 </div></details><p>Choking is <em>not</em> punishment of slow links per se — it rations upload toward contributors; a slow-but-sharing peer still eats via optimistic unchokes.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Tracker Worship</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The tracker introduces peers; it never touches file bytes (data flows peer-to-peer). An option routing downloads <em>through</em> the tracker mistakes the matchmaker for the warehouse — kill the tracker mid-swarm and transfers continue.</p>
 </div></details><p><a id="worked-example"></a></p>

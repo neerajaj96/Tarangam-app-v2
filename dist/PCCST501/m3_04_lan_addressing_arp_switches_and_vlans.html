@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -367,19 +367,28 @@
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 MAC Addresses (48-bit, Flat, Permanent)</h3>
 <p>Six hex bytes (<code>AA:BB:CC:DD:EE:FF</code>), globally unique per adapter, first half = manufacturer OUI. <strong>Flat</strong> (no structure encoding location — unlike hierarchical IP prefixes), <strong>portable</strong> (moves with the device), and valid only <strong>within one broadcast domain</strong> — routers never forward by MAC.</p>
-<h3>3.2 Operation Flow: ARP — The Binding Protocol, Step by Step</h3>
+<details class="interactive-toggle"><summary>What is a `MAC` address vs IP?</summary><div class="toggle-content"><p>A <code>MAC</code> address is a 48-bit flat factory identity burned into the adapter, with the first half naming the maker.
+An IP address is hierarchical and routable worldwide, while <code>MAC</code> works only inside one broadcast domain.
+Tiny example: laptop <code>AA</code> keeps its <code>MAC</code> across rooms but changes IP from <code>192.168.1.10</code> to <code>10.0.0.5</code>.</p>
+</div></details><h3>3.2 Operation Flow: ARP — The Binding Protocol, Step by Step</h3>
 <p>To send an IP datagram to 192.168.1.5 on the local LAN, the sender needs the <em>destination MAC</em>:</p>
 <ol>
 <li>Check the <strong>ARP table</strong> (cache of IP→MAC with TTL aging). Hit? Done.</li>
 <li>Miss → <strong>broadcast</strong> an ARP query (&quot;who has 192.168.1.5? tell 192.168.1.1&quot;) to <code>FF:FF:FF:FF:FF:FF</code>.</li>
 <li>Only the owner replies (<strong>unicast</strong> with its MAC); sender caches it. Gratuitous ARP (claiming your own mapping unprompted) also detects IP conflicts and poisons... legitimately updates stale caches.</li>
 </ol>
-<h3>3.3 Hubs vs. Switches (Collision Domains Die Here)</h3>
+<details class="interactive-toggle"><summary>What do ARP `query`, `reply` and cache do?</summary><div class="toggle-content"><p>An ARP <code>query</code> broadcasts <code>who has X</code> to all LAN hosts when the cache misses.
+Only the owner sends a unicast <code>reply</code> with its MAC, which the sender caches with TTL aging.
+Tiny example: A broadcasts for <code>.20</code>, B unicasts back <code>BB</code>, and A caches <code>.20</code> to <code>BB</code> for next frames.</p>
+</div></details><h3>3.3 Hubs vs. Switches (Collision Domains Die Here)</h3>
 <ul>
 <li><strong>Hub:</strong> physical-layer repeater — every bit out of every port. One <strong>collision domain</strong> for all; CSMA/CD mandatory; half-duplex.</li>
 <li><strong>Switch:</strong> link-layer device with per-port buffers + a <strong>self-learning forwarding table</strong> (source MAC → ingress port, learned from passing traffic, aged out). Forwards <em>only</em> to the destination&#39;s port (floods unknown destinations); each port is its <strong>own collision domain</strong> — full-duplex, no collisions, no CD needed.</li>
 </ul>
-<h3>3.4 VLANs: Many LANs, One Switch</h3>
+<details class="interactive-toggle"><summary>What does a switch learn vs hub vs `VLAN`?</summary><div class="toggle-content"><p>A switch learns source <code>MAC</code> to ingress port from passing traffic and forwards only to the destination port.
+A hub repeats every bit out every port, while a <code>VLAN</code> tags one switch into separate broadcast domains.
+Tiny example: first frame to unknown <code>BB</code> floods once, the reply teaches the table, later frames go port to port.</p>
+</div></details><h3>3.4 VLANs: Many LANs, One Switch</h3>
 <p>A <strong>VLAN</strong> partitions one physical switch into multiple <em>logical</em> broadcast domains via 802.1Q tags (4 extra bytes: 12-bit VLAN ID). Broadcasts stay inside the VLAN; inter-VLAN traffic must pass through a router. Why: security/isolation (HR vs. guest traffic), broadcast containment, and organizational grouping independent of physical ports.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: LAN Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>MAC = <strong>48-bit, flat, factory-burned</strong> · ARP = <strong>broadcast query, unicast reply, cached with TTL</strong> · hub = <strong>one collision domain</strong> · switch = <strong>self-learned table, per-port domains, flood-if-unknown</strong> · VLAN = <strong>802.1Q tag, broadcast isolation, router to cross</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: ARP Is LAN-Local (and Trusts Everyone)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>ARP resolves addresses only <strong>within one broadcast domain</strong> — crossing subnets is the <em>router&#39;s</em> job (sender ARPs for its gateway&#39;s MAC, not the far host&#39;s). And ARP has <strong>zero authentication</strong>: any host may answer any query — the mechanism behind ARP spoofing/poisoning attacks. &quot;Secure because it&#39;s low-level&quot; is dangerously backwards.</p>

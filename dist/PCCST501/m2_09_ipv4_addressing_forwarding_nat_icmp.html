@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -368,9 +368,21 @@
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Addresses, Subnets, Forwarding</h3>
 <p>CIDR <code>a.b.c.d/n</code>: first $n$ bits network, rest host. For ordinary subnets ($n \le 30$), usable hosts $= 2^{32-n} - 2$ (network + broadcast addresses reserved). Qualifiers: <code>/31</code> links (RFC — Request for Comments — 3021, point-to-point) use both addresses with no broadcast ($2$ usable, no subtraction), and <code>/32</code> names a single host ($1$ address, a route not a subnet) — so state the $-2$ rule with its range. Subnetting borrows host bits ($/24 \to 4 \times /26$s). Forwarding table: (prefix, mask, next-hop, interface); <strong>longest-prefix match</strong> decides — $/26$ beats $/24$ beats default $0.0.0.0/0$. Private realms $10/8$, $172.16/12$, $192.168/16$ never route publicly.</p>
-<h3>3.2 NAT and ICMP</h3>
+<details class="interactive-toggle"><summary>What does `a.b.c.d/n` and usable-host math mean?</summary><div class="toggle-content"><p><code>a.b.c.d/n</code> means the first <code>n</code> bits name the network and the rest name hosts inside it.
+Usable hosts equal 2 to the host bits minus network and broadcast, except <code>/31</code> point links and <code>/32</code> host routes.
+Tiny example: <code>192.168.10.0/26</code> has 6 host bits, so 64 minus 2 equals 62 usable addresses.</p>
+</div></details><details class="interactive-toggle"><summary>What is `longest-prefix match`?</summary><div class="toggle-content"><p><code>Longest-prefix match</code> forwards by the table entry with the longest covering prefix, never by table order.
+Why it matters: a specific <code>/26</code> beats a general <code>/24</code>, and default <code>0.0.0.0/0</code> matches only when nothing else does.
+Tiny example: <code>10.0.5.9</code> matching <code>/8</code> and <code>/24</code> leaves via the <code>/24</code> next hop.</p>
+</div></details><h3>3.2 NAT and ICMP</h3>
 <p>Basic NAT rewrites (private IP, port) ↔ (public IP, new port) per flow in a translation table — return traffic un-rewrites by lookup. ICMP rides IP (protocol $1$): echo request/reply ($8$/$0$) for <code>ping</code>, TTL-expiry ($11$) for <code>traceroute</code>&#39;s hop-by-hop map, destination-unreachable ($3$) for dead ends.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: IPv4</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Usable $= 2^{32-n} - 2$ ($n \le 30$; /31 and /32 are special) · longest prefix wins · privates $10/8$, $172.16/12$, $192.168/16$ · NAT $=$ per-flow rewrite table · ICMP $8/0$ echo, $11$ expiry, $3$ unreachable.</p>
+<details class="interactive-toggle"><summary>What does `NAT` rewrite?</summary><div class="toggle-content"><p><code>NAT</code> rewrites a private IP plus port into a public IP plus new port per outbound flow in a table.
+Return traffic looks up the same binding and gets rewritten back, while unsolicited inbound with no binding drops.
+Tiny example: <code>10.0.0.5:5000</code> leaves as <code>203.0.113.7:61000</code>, and replies to <code>61000</code> map back inside.</p>
+</div></details><details class="interactive-toggle"><summary>What do ICMP types `8/0`, `11` and `3` mean?</summary><div class="toggle-content"><p>ICMP type <code>8</code> is echo request and type <code>0</code> is echo reply, the pair <code>ping</code> uses to test round trips.
+Type <code>11</code> reports TTL expiry for each <code>traceroute</code> hop, type <code>3</code> reports destination unreachable dead ends.
+Tiny example: rising TTL values collect one type-<code>11</code> message per router until the target answers echo.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: IPv4</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Usable $= 2^{32-n} - 2$ ($n \le 30$; /31 and /32 are special) · longest prefix wins · privates $10/8$, $172.16/12$, $192.168/16$ · NAT $=$ per-flow rewrite table · ICMP $8/0$ echo, $11$ expiry, $3$ unreachable.</p>
 </div></details><p>NAT breaks end-to-end (inbound needs port-forwarding; IPsec — Internet Protocol Security — AH — Authentication Header — chokes on rewrites) — address conservation bought with transparency, the tradeoff behind every &quot;why is P2P hard at home&quot; question (M1.8&#39;s reunion).</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Classful Nostalgia</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Classes A/B/C are museum pieces — CIDR ($/n$ anywhere) replaced them decades ago. An option sizing $192.168.x.x$ as &quot;Class C, $254$ hosts&quot; by class (not mask) fails subnetted networks ($/26 \to 62$) and wastes the question&#39;s given prefix.</p>
 </div></details><p><a id="worked-example"></a></p>

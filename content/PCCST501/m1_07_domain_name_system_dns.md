@@ -75,9 +75,27 @@ Three server classes: **root** (13 logical identities, knows TLD addresses), **T
 
 Total $= 8$. The iterative variant returns referrals instead of answers, shifting work to the requester. Every record carries a **TTL** — cache lifetime, the staleness-vs-load dial.
 
+::: toggle What do `recursive` and `iterative` queries mean?
+A `recursive` query asks the local resolver to chase the full answer and return only the final address.
+An `iterative` reply returns the next referral instead, so the requester does the next climb step itself.
+Tiny example: cold `mail.ktu.edu` needs 8 messages recursive, with referrals at root and TLD along the way.
+:::
+
+::: toggle What does `TTL` mean?
+`TTL` is Time To Live in seconds, how long a cached DNS record may be reused before refetching.
+Why it matters: long `TTL` cuts queries but risks stale answers, short `TTL` stays fresh but reloads the hierarchy.
+Tiny example: a cached TLD address skips its 2-message round trip, so 8 messages collapse to 6.
+:::
+
 ### 3.2 Records and Transport
 
 `A` (name→IPv4), `AAAA` (→IPv6), `NS` (zone's servers), `CNAME` (alias→canonical), `MX` (mail exchanger — email's reunion with the previous note). UDP/53 normally, TCP/53 for zone transfers and oversized replies. Single point of failure dodged by replication: $13$ root identities, anycast instances worldwide.
+
+::: toggle What do `A`, `AAAA`, `CNAME`, `MX` and `NS` mean?
+`A` maps a name to an IPv4 address and `AAAA` to an IPv6 address, the final answers a browser needs.
+`CNAME` maps an alias to its canonical name, `MX` names the mail server, `NS` names the zone's servers.
+Tiny example: `www` uses `CNAME` to `web`, `web` uses `A` to its IPv4, and mail uses `MX` to find port-25 target.
+:::
 
 ::: callout-formula KTU Formula Vault: DNS
 Root → TLD → authoritative · worst case $8$ messages · TTL prices cache life · `A/AAAA/NS/CNAME/MX` · UDP/$53$ (TCP for bulk).

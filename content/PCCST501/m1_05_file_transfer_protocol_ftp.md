@@ -55,8 +55,32 @@ Dropping the store now: control connection = Port 21, session-long; data connect
 | **Out-of-band control** | Signaling travels on a different connection from the data it governs (FTP). Opposite: **in-band** (HTTP mixes both). |
 | **Active mode** | The server opens the data connection back to the client's address. |
 | **Passive mode (`PASV`)** | The client opens the data connection outbound to a server-provided port — firewall-friendly. |
+
+::: toggle Why does `active` mode fail behind firewalls?
+In `active` mode the server connects back to the client's random port for data.
+Client firewalls reject that unsolicited inbound leg as if it were an attack.
+`PASV` fixes it: the client always dials out, which firewalls normally allow.
+:::
+
+::: toggle What does `stateful` mean for FTP?
+`Stateful` means the server remembers login and working directory across commands.
+That lets relative commands like `CWD ../reports` make sense mid-session.
+The price is per-user memory, so FTP scales worse than stateless HTTP.
+:::
 | **Stateful session** | The server remembers per-user context (working directory, login) across commands — the opposite of HTTP's amnesia. |
 | **Firewall** | A filter (usually at a network boundary) that blocks unsolicited inbound connections while allowing outbound ones. |
+
+::: toggle What does `FTP` mean?
+`FTP` is the application-layer protocol for interactive file management and transfer.
+It handles login, directory browsing, renaming, uploads, and downloads.
+Tiny example: `RETR movie.mp4` downloads a file, `STOR notes.txt` uploads one.
+:::
+
+::: toggle What does `out-of-band` control mean?
+`Out-of-band` means control commands travel on a separate connection from file bytes.
+FTP keeps Port 21 for commands and opens a fresh data channel per file.
+HTTP instead mixes headers and payload in one connection, which is `in-band`.
+:::
 
 <a id="the-math"></a>
 ## 3. Purpose — Two Channels, One Session Lifecycle, Two Firewall Modes

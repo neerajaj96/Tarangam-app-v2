@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 11 MIN READ</span>
+    <span class="badge">⏱️ 12 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -354,16 +354,22 @@
 <td><strong>Passive mode (<code>PASV</code>)</strong></td>
 <td>The client opens the data connection outbound to a server-provided port — firewall-friendly.</td>
 </tr>
-<tr>
-<td><strong>Stateful session</strong></td>
-<td>The server remembers per-user context (working directory, login) across commands — the opposite of HTTP&#39;s amnesia.</td>
-</tr>
-<tr>
-<td><strong>Firewall</strong></td>
-<td>A filter (usually at a network boundary) that blocks unsolicited inbound connections while allowing outbound ones.</td>
-</tr>
 </tbody></table>
-<p><a id="the-math"></a></p>
+<details class="interactive-toggle"><summary>Why does `active` mode fail behind firewalls?</summary><div class="toggle-content"><p>In <code>active</code> mode the server connects back to the client&#39;s random port for data.
+Client firewalls reject that unsolicited inbound leg as if it were an attack.
+<code>PASV</code> fixes it: the client always dials out, which firewalls normally allow.</p>
+</div></details><details class="interactive-toggle"><summary>What does `stateful` mean for FTP?</summary><div class="toggle-content"><p><code>Stateful</code> means the server remembers login and working directory across commands.
+That lets relative commands like <code>CWD ../reports</code> make sense mid-session.
+The price is per-user memory, so FTP scales worse than stateless HTTP.</p>
+</div></details>
+| **Stateful session** | The server remembers per-user context (working directory, login) across commands — the opposite of HTTP's amnesia. |
+| **Firewall** | A filter (usually at a network boundary) that blocks unsolicited inbound connections while allowing outbound ones. |<details class="interactive-toggle"><summary>What does `FTP` mean?</summary><div class="toggle-content"><p><code>FTP</code> is the application-layer protocol for interactive file management and transfer.
+It handles login, directory browsing, renaming, uploads, and downloads.
+Tiny example: <code>RETR movie.mp4</code> downloads a file, <code>STOR notes.txt</code> uploads one.</p>
+</div></details><details class="interactive-toggle"><summary>What does `out-of-band` control mean?</summary><div class="toggle-content"><p><code>Out-of-band</code> means control commands travel on a separate connection from file bytes.
+FTP keeps Port 21 for commands and opens a fresh data channel per file.
+HTTP instead mixes headers and payload in one connection, which is <code>in-band</code>.</p>
+</div></details><p><a id="the-math"></a></p>
 <h2 id="3-purpose-two-channels-one-session-lifecycle-two-firewall-mo">3. Purpose — Two Channels, One Session Lifecycle, Two Firewall Modes</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 The Dual-Connection Architecture</h3>

@@ -64,6 +64,18 @@ Datagram service unchanged (M2.9's forwarding logic ports over: longest match, n
 
 Fixed $40$ B: version/traffic-class/**flow-label** ($20$ bits: pseudo-connection marks for labelled QoS treatment), payload-length/next-header/hop-limit ($8$-bit TTL heir), $16$-B source + $16$-B destination. Dropped vs IPv4: header length field (fixed!), checksum (link layers already guard), fragmentation by routers (source-only, via extension headers). Address types: unicast (global/link-local `fe80::/10`/unique-local), **multicast** (`ff00::/8` — M2.7's groups, native here), anycast (nearest-member delivery).
 
+::: toggle What is a `hextet` and `::` compression?
+A `hextet` is one 16-bit colon-separated group, with 8 groups per IPv6 address.
+Compression strips leading zeros per group, then replaces the longest all-zero run once with `::`.
+Tiny example: `FE80:0:0:0:0:0:0:1` strips to zeros and collapses to `FE80::1`.
+:::
+
+::: toggle What are `flow label`, `hop limit` and extension headers?
+The `flow label` is 20 bits tagging one flow for consistent QoS handling across routers.
+`Hop limit` decrements per router like TTL, while extension headers chain after the fixed 40 bytes for source-only fragmentation.
+Tiny example: all packets of one voice call carry the same label, and routers fast-path past the options.
+:::
+
 ### 3.2 Operation Flow: Writing and Migrating
 
 $8$ hextets — two canonical steps, in order:
@@ -72,6 +84,12 @@ $8$ hextets — two canonical steps, in order:
 2. Replace the *longest* run of all-zero groups with one `::`, exactly once (ambiguity guard).
 
 Transition choice follows the overlap: **dual-stack** (both protocols, preferred when both ends can run both), **tunneling** (v6-in-v4, e.g. 6to4/Teredo for v6 islands across a v4 sea), **translation** (NAT64/DNS64 at borders, last resort for disjoint islands).
+
+::: toggle What do `dual-stack`, `tunneling` and `translation` mean?
+`Dual-stack` runs IPv4 and IPv6 together on both ends, preferred whenever both sides support both.
+`Tunneling` carries IPv6 inside IPv4 across a version-4 sea, `translation` rewrites v4 to v6 at borders with `NAT64`.
+Tiny example: v6 islands over v4 use `6to4`, while v4-only servers reaching v6-only clients need border translation.
+:::
 
 ::: callout-formula KTU Formula Vault: IPv6
 $40$-B fixed · flow label $20$ bits · no router fragmentation/checksum · compress zeros once (`::`) · space $2^{128} \approx 3.4 \times 10^{38}$ · migrate: both/tunnel/translate.

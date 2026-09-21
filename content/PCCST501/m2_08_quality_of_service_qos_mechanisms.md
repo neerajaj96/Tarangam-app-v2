@@ -64,9 +64,27 @@ Ten packets slam a depth-$6$ bucket at $3$ tokens/s: six ride tokens through, fo
 
 Flow needs: **bandwidth** (rate), **delay** (one-way latencies), **jitter** (delay variance — the VoIP — Voice over IP — killer), **loss** (fraction dropped). IntServ: per-flow RSVP reservation + admission control + packet classification/scheduling — guarantees, core-state explosion. DiffServ: edge marks DSCP, core applies per-hop behaviors (EF expedited, AF assured with drop precedences) — scalable, coarser promises.
 
+::: toggle What do `IntServ` and `DiffServ` mean?
+`IntServ` reserves per-flow bandwidth with `RSVP` signalling and admission control for strong guarantees.
+`DiffServ` marks packets per class with `DSCP` at the edge, such as `EF` for voice, with no per-flow core state.
+Tiny example: 256 voice flows need 256 reservations under `IntServ` but one `EF` lane under `DiffServ`.
+:::
+
 ### 3.2 Operation Flow: Shaping, Policing, Scheduling
 
 **Token bucket** $(r, C)$: tokens accrue at $r$/s up to depth $C$; each packet spends one — conformant traffic over any window $T$ is bounded by $C + rT$. **Shaping** delays excess (smooths, needs buffers); **policing** drops/remarks excess (no mercy, no buffers). Schedulers split the link: FIFO (First-In First-Out, no isolation), strict priority (starvation risk), **WFQ** (weighted fair shares — weight-proportional bandwidth with delay bounds).
+
+::: toggle What is a token bucket `(r, C)`?
+A token bucket accrues tokens at rate `r` up to depth `C`, and each packet spends one token to conform.
+Conformant traffic over window `T` stays within `C` plus `r` times `T`, so depth absorbs bursts and rate meters the tail.
+Tiny example: `r` 3 with depth 6 lets 6 instant packets through, then only 3 per second after.
+:::
+
+::: toggle What do `shaping`, `policing` and `WFQ` do?
+`Shaping` queues excess packets to smooth the flow, `policing` drops or remarks excess with no queue.
+`WFQ` divides link bandwidth in proportion to class weights, unlike `FIFO` sharing or strict priority starving others.
+Tiny example: weights 3 to 2 to 1 on 9 Mbps give 4.5, 3 and 1.5 Mbps when all classes queue.
+:::
 
 ::: callout-formula KTU Formula Vault: QoS
 Knobs: rate/delay/jitter/loss · IntServ $=$ RSVP per-flow (guaranteed, heavy) · DiffServ $=$ DSCP per-class (scalable, coarse) · conform $\le C + rT$ · WFQ shares $\propto$ weights.

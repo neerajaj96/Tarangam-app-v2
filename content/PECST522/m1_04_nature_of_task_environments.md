@@ -51,11 +51,23 @@ The simplest environment is fully observable, single-agent, deterministic, episo
 Current state `s`, action `a`, next state `s'`. Deterministic: `s' = T(s, a)` (one guaranteed result from transition function `T`). Stochastic: `P(s' | s, a)` (probability of landing in `s'` given `s` and `a`). Tiny numbers: dry brake stops in 10 m always (deterministic); wet brake stops in 10 m with probability 0.7, 15 m with 0.3 (stochastic).
 :::
 
+::: toggle What do `s`, `a`, `s'`, `T` and `P(s' | s, a)` mean?
+- `s` is the current state, `a` is the action taken there, and `s'` is the resulting next state.
+- `T` is the deterministic rule giving the one guaranteed `s'`; `P(s' | s, a)` gives landing odds instead.
+- Tiny case: dry braking gives `s'` always, while wet braking gives 10 m with 0.7 and 15 m with 0.3.
+:::
+
 ::: callout-pitfall Deterministic vs. Stochastic vs. Non-deterministic
 Deterministic: exactly one outcome. Stochastic: many outcomes with known odds. Non-deterministic: many outcomes, odds unknown. Do not call dice "non-deterministic" — dice odds are known, so dice are stochastic.
 :::
 
 **4. Episodic vs. sequential (memory horizon):** Episodic splits into independent episodes (apple defect scanner — apple 5 never affects apple 6). Sequential couples decisions (chess opening shapes move 40).
+
+::: toggle Why does `episodic` vs `sequential` matter?
+- `episodic` means each decision stands alone, so apple 5 needs no memory of apple 4.
+- `sequential` means today's move shapes tomorrow, so a chess opening constrains move 40.
+- How to use: episodic agents can forget between episodes, while sequential agents must remember.
+:::
 
 **5. Static vs. dynamic (time pressure):** Static waits while thinking (crossword). Dynamic changes during thinking (taxi — 5 seconds of thought is a crash). Semi-dynamic: world frozen but score decays while thinking (chess with a clock).
 
@@ -65,6 +77,12 @@ Deterministic: exactly one outcome. Stochastic: many outcomes with known odds. N
 
 ::: callout-pitfall Known vs. Observable (Critical Exam Trap)
 Known = I know the rules. Observable = I can see the current state. Poker is known (rules clear) but partially observable (hands hidden). Chess with unknown rules is fully observable (pieces visible) but unknown (laws missing).
+:::
+
+::: toggle What does `known` vs `observable` mean?
+- `known` means the agent holds the rulebook, like knowing poker's betting rules.
+- `observable` means the agent can see the current state, like seeing hidden hands or not.
+- Tiny contrast: poker is known yet partially observable, while chess with missing rules is fully observable yet unknown.
 :::
 
 <a id="formal-model"></a>

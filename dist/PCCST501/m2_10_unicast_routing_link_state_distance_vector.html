@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 12 MIN READ</span>
+    <span class="badge">⏱️ 13 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -395,7 +395,10 @@
 <li>Hierarchy via OSPF areas contains flooding at scale. Converges in roughly flood-time + compute.</li>
 </ol>
 <p><strong>Distance-vector (gossip with neighbours only):</strong></p>
-<ol>
+<details class="interactive-toggle"><summary>What are `link-state` and `distance-vector`?</summary><div class="toggle-content"><p><code>Link-state</code> floods every <code>LSA</code> until all routers hold the same map, then each runs <code>Dijkstra</code> locally.
+<code>Distance-vector</code> shares only best distances with neighbours and applies Bellman-Ford <code>D_x(y)</code> updates.
+Tiny example: two routers agree in one flood round by map, but gossip needs rounds of <code>I reach X in 5</code>.</p>
+</div></details><ol>
 <li>Each router keeps a vector of best-known distances $D_x(y)$ to every destination $y$.</li>
 <li>Periodically (and on change — triggered updates) it shares the vector with direct neighbours only.</li>
 <li>On hearing neighbour $v$&#39;s vector, it applies Bellman-Ford: $D_x(y) = \min_v {c(x,v) + D_v(y)}$, where $c(x,v)$ is the direct link cost to $v$.</li>
@@ -403,7 +406,10 @@
 </ol>
 <h3>3.2 Failure Modes</h3>
 <p>LS: flooding storms on flapping links (mitigated by dampening/areas). DV: <strong>count-to-infinity</strong> — stale good news recirculates upward after a cost increase ($3 \to 4 \to 5 \dots$ until holddown/poison intervenes); triggered updates + poison limit it to larger loops, never fully cure gossip&#39;s optimism.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Routing</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>LS $=$ flood + Dijkstra, $O(E\log V)$ each · DV: $D_x(y) = \min_v(c + D_v)$ · RIP $16 = \infty$ · poisoned reverse breaks pairs · BGP $=$ path-vector + policy.</p>
+<details class="interactive-toggle"><summary>What are `count-to-infinity` and `poisoned reverse`?</summary><div class="toggle-content"><p><code>Count-to-infinity</code> is stale distance rumours climbing upward after a link cost rises or fails.
+<code>Poisoned reverse</code> advertises infinity back toward the neighbour used as next hop, while <code>split horizon</code> never advertises back.
+Tiny example: B hearing stale <code>3</code> via A goes <code>4</code>, then A goes <code>5</code>, unless B had poisoned A with infinity.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Routing</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>LS $=$ flood + Dijkstra, $O(E\log V)$ each · DV: $D_x(y) = \min_v(c + D_v)$ · RIP $16 = \infty$ · poisoned reverse breaks pairs · BGP $=$ path-vector + policy.</p>
 </div></details><p>OSPF areas and BGP policies are <em>administrative</em> answers to scaling/trust, not algorithmic ones — hierarchy contains flooding, policy contains strangers.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Good-News Symmetry</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>DV converges fast on improvements (a cheaper route propagates in one exchange wave) and slowly on failures (stale routes must age out upward). An option claiming symmetric convergence mistakes gossip&#39;s optimism for a protocol guarantee — bad news travels at rumour speed.</p>
 </div></details><p><a id="linux-ip-routing"></a></p>
@@ -417,7 +423,10 @@ default via 192.168.1.1 dev eth0 proto dhcp metric 100
 10.10.0.0/16 via 10.10.0.1 dev eth1 proto static metric 10
 </code></pre>
 <p>Read it column by column: destination prefix (<code>default</code> means <code>0.0.0.0/0</code> — last resort); <code>via</code> = next-hop gateway; <code>dev</code> = outgoing interface; <code>proto</code> = who installed it (<code>kernel</code> = directly connected, <code>dhcp</code>, <code>static</code>, or a routing daemon); <code>metric</code> = tie-break cost (lower wins among equal-length prefixes); <code>scope link</code> = reachable directly without a gateway; <code>src</code> = preferred source address.</p>
-<h3>4.2 Longest-Prefix Match, Live</h3>
+<details class="interactive-toggle"><summary>What do `via`, `dev` and `metric` mean in `ip route show`?</summary><div class="toggle-content"><p><code>ip route show</code> lists destination prefixes with the next-hop gateway after <code>via</code> and the outgoing interface after <code>dev</code>.
+<code>metric</code> breaks ties only among equal-length prefixes, with lower cost winning, while longest prefix still wins first.
+Tiny example: <code>10.10.0.0/16 via 10.10.0.1 dev eth1</code> beats <code>default</code> for <code>10.10.5.9</code> by longer match.</p>
+</div></details><h3>4.2 Longest-Prefix Match, Live</h3>
 <p>The kernel forwards exactly as M2.9 taught: longest matching prefix wins, metrics break ties only at equal length. A packet to <code>10.10.5.9</code> matches <code>10.10.0.0/16</code> (via <code>10.10.0.1</code>) and <code>default</code> — <code>/16</code> is longer, so it leaves via <code>eth1</code>, and the default is never consulted. A packet to <code>8.8.8.8</code> matches only <code>default</code> → gateway <code>192.168.1.1</code> out <code>eth0</code>. This is the forwarding table the routing protocols above exist to populate — reading it here closes the loop between control plane (learning) and data plane (spending).</p>
 <h3>4.3 Editing: <code>ip route add</code> / <code>ip route del</code></h3>
 <pre><code class="language-text">$ sudo ip route add 172.16.5.0/24 via 10.10.0.1 dev eth1

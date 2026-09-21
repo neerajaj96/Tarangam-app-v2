@@ -72,6 +72,12 @@ Canonical order: problem (estimate $\theta$) → data (i.i.d. $D$) → goal (exp
 
 For i.i.d. data $D = \{x_i\}$ and parameters $\theta$: **likelihood** $L(\theta) = P(D \mid \theta) = \prod_i P(x_i \mid \theta)$, a function of $\theta$ with data fixed. Work with **log-likelihood** $\ell(\theta) = \sum_i \log P(x_i \mid \theta)$. Products become sums; maxima coincide since log is monotone. This also avoids numerical underflow from multiplying many small probabilities.
 
+::: toggle Why does taking the `log` keep the same winner?
+`log` is strictly increasing: bigger input, bigger output, always — so the `θ` maximising `L` also maximises `log L`. Same peak, friendlier mountain.
+It turns products into sums (`log(a×b) = log a + log b`), which differentiate term by term and never underflow: ten `0.1`s multiply to `1e-10` but add to `10 × (−2.303)`.
+Tiny numbers: `L(0.5) = 0.125` vs `L(0.7) = 0.147` from §1; logs `−2.079` vs `−1.918` keep the order — `0.7` still wins.
+:::
+
 ### 3.2 MLE: Two Canonical Derivations
 
 - **Gaussian mean** with known variance $\sigma^2$: $\ell(\mu) = -\frac{1}{2\sigma^2}\sum (x_i - \mu)^2 + C$. Here $C$ collects constants not depending on $\mu$. Setting $\frac{d\ell}{d\mu} = 0$ gives $\hat{\mu}_{MLE} = \frac{1}{n}\sum x_i = \bar{x}$, the sample mean, derived not assumed. Here $\bar{x}$ means the arithmetic average.
@@ -86,7 +92,19 @@ $$\hat{\mu}_{MAP} = \frac{\frac{n\bar{x}}{\sigma^2} + \frac{\mu_0}{\tau^2}}{\fra
 
 Symbol by symbol: $n\bar{x}/\sigma^2$ is data precision times data mean; $\mu_0/\tau^2$ is prior precision times prior mean; the denominator is total precision. It is a precision-weighted average. As $n \to \infty$, data dominates and MAP approaches MLE; near $n \approx 0$, the prior rules.
 
+::: toggle Expand every symbol in the MAP precision-weighted average
+`n` = sample count; `x̄` = sample mean (data's vote); `σ²` = known data variance, so `n/σ²` = data precision (loudness of evidence). `μ0` = prior mean (belief's vote); `τ²` = prior variance, so `1/τ²` = prior precision.
+Precision = `1/variance`: tighter knowledge shouts louder. The estimate is a loudness-weighted average — §4's tie (`1` vs `1`) splits `5.0` and `0` into `2.5`.
+As `n` grows, `n/σ²` swamps `1/τ²`: with `n = 400` the data owns `100/101` of the vote and MAP `≈ 4.95 ≈` MLE.
+:::
+
 **Regularisation preview, strengthened.** Least Absolute Shrinkage and Selection Operator (LASSO) with penalty $\lambda\sum |w_j|$ is MAP with a Laplace prior, whose sharp peak at zero expects sparsity and produces exact zeros. RIDGE with penalty $\lambda\sum w_j^2$ is MAP with a Gaussian prior, whose smooth dome expects small but nonzero weights and shrinks without zeroing. Choosing LASSO versus RIDGE states a prior over solutions. A full metrics and regularisation drill continues in the dedicated follow-up topic; here the correspondence is the conceptual anchor.
+
+::: toggle Why does LASSO give `zeros` while RIDGE gives only `smalls`?
+LASSO's Laplace prior peaks sharply at zero (a tent): pulling a weight slightly off zero costs a lot, so weak weights snap exactly to `0` — sparsity.
+RIDGE's Gaussian prior domes smoothly at zero: near-zero costs almost nothing, so weights shrink but survive — dense smalls.
+Penalty = `−log` prior: `|w|` for Laplace, `w²` for Gaussian. Choosing the penalty states which solution texture you believe in.
+:::
 
 | Similar pair | Distinction that earns marks |
 |---|---|

@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 6 MIN READ</span>
+    <span class="badge">⏱️ 7 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -304,9 +304,19 @@
 <li><strong>Goal test</strong> — recognizes success (state equals Bucharest, or &quot;no attacking queens&quot;).</li>
 <li><strong>Path cost</strong> — number pricing a sequence (distance, time). The <strong>optimal solution</strong> is the lowest-cost goal-reaching sequence, not just any one.</li>
 </ol>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition: A Problem Is a 5-Tuple</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Problem = (initial state, ACTIONS, RESULT, GOAL-TEST, STEP-COST). The state space is all states reachable from the start — a graph of states (nodes) and actions (edges). Memorize all five in order for the standard 3-mark answer.</p>
+<details class="interactive-toggle"><summary>What do `s_0`, `ACTIONS(s)` and `RESULT(s, a)` mean?</summary><div class="toggle-content"><ul>
+<li><code>s_0</code> is the start state, like being at Arad.</li>
+<li><code>ACTIONS(s)</code> lists the legal moves from <code>s</code>, like drive to Sibiu or Zerind.</li>
+<li><code>RESULT(s, a)</code> is the state reached by that move, like arriving in Sibiu after choosing it.</li>
+</ul>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: Formal Definition: A Problem Is a 5-Tuple</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Problem = (initial state, ACTIONS, RESULT, GOAL-TEST, STEP-COST). The state space is all states reachable from the start — a graph of states (nodes) and actions (edges). Memorize all five in order for the standard 3-mark answer.</p>
 </div></details><p><strong>State space vs. search tree (most-tested distinction):</strong> the state space is the territory (map graph, exists regardless). The search tree is the exploration trace (tree of paths actually generated; one state can appear many times via different routes). A <strong>tree node</strong> stores STATE, PARENT, ACTION, PATH-COST <code>g</code>, DEPTH. Expanding a node means generating all its children.</p>
-<p><a id="formal-model"></a></p>
+<details class="interactive-toggle"><summary>Why does `Arad` appear twice in the search tree?</summary><div class="toggle-content"><ul>
+<li>A tree node records the whole path plus cost, not just the place name.</li>
+<li>Arad-as-root costs 0, while Arad-via-Sibiu costs 280, so they are different path-nodes.</li>
+<li>What changes after: the tree already exceeds the map, which is why search needs repeated-state checks.</li>
+</ul>
+</div></details><p><a id="formal-model"></a></p>
 <h2 id="3-formal-layer-judging-search-strategies">3. Formal Layer: Judging Search Strategies</h2>
 <p class="secnav"><a href="#2-basic-building-blocks-the-five-part-contract">← 2. Basic Building Blocks: The Five…</a><span class="secnav-sep">·</span><a href="#4-worked-example-distinctions-limitations">4. Worked Example, Distinctions, L… →</a></p>
 <p><strong>Method:</strong> score every Module-2 algorithm on four criteria. <strong>Model:</strong> parameters branching factor <code>b</code> (max successors per node), solution depth <code>d</code> (depth of shallowest goal), maximum depth <code>m</code> (possibly infinite).</p>

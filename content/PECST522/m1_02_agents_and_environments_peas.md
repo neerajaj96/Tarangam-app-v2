@@ -43,11 +43,23 @@ Sensors in, brain decides, actuators out. Keep the analogy only to feel the loop
 
 **Data/state:** a **percept** is one sensor snapshot right now (one camera frame). A **percept sequence** is the full history of percepts since startup. An **action** is one actuator command (brake 15%).
 
+::: toggle What does `percept sequence` mean?
+- A `percept` is one snapshot now, like one camera frame showing a red light.
+- A `percept sequence` is every snapshot since startup, like all frames plus all speed readings so far.
+- Why history matters: the same snapshot can need different actions depending on what came before.
+:::
+
 **Meaning then variables then formula:** the **agent function**, written `f`, is the abstract rule saying which action follows each possible history. Meaning: "for this past, do that." Variables: `P*` (the set of all possible percept sequences — `*` means any length history), `A` (the set of all possible actions):
 
 $$f: P^* \rightarrow A$$
 
 So `f(history) = action`. The **agent program** is the concrete software (Python/C++) running on real hardware (CPU/GPU) that computes `f` under memory and time limits. Function is mathematics; program is engineering.
+
+::: toggle What do `f`, `P*`, `A` and the arrow mean?
+- `f` is the abstract rule itself, like the idea that dirty history means suck.
+- `P*` is every possible sensor history of any length; `A` is every possible action.
+- The arrow maps each history to one action, so `f([dirty, dirty]) = suck` is one entry of that rule.
+:::
 
 ```text
 Environment --percepts--> Sensors --> Agent Program --> Actuators --actions--> Environment
@@ -81,6 +93,12 @@ Factory picker   | correct bins, speed      | belt, parts            | arm, grip
 English tutor    | scores, engagement       | student, test agency   | screen display             | keyboard, microphone
 Vacuum world     | clean room, low energy   | room, dirt, furniture  | wheels, suction            | dirt, bump sensors
 ```
+
+::: toggle What does each `PEAS` letter ask?
+- `P` asks what counts as winning in the world, like safe arrival for a taxi.
+- `E` asks what the agent cannot control, like roads and pedestrians.
+- `A` asks what changes the world, like steering, while `S` asks what reads it, like a camera.
+:::
 
 <a id="worked-example"></a>
 ## 4. Worked Example: The Vacuum Paradox and Limitations

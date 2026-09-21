@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -359,7 +359,7 @@
 </tr>
 <tr>
 <td><strong>Association / handoff</strong></td>
-<td>Join sequence (scan → associate → authenticate) vs. moving between APs (reassociation; same subnet = Layer-2 handoff, cross-subnet = Mobile IP).</td>
+<td>Join sequence (scan → authenticate → associate) vs. moving between APs (reassociation; same subnet = Layer-2 handoff, cross-subnet = Mobile IP).</td>
 </tr>
 </tbody></table>
 <p><a id="the-math"></a></p>
@@ -370,15 +370,24 @@
 <li><strong>Self-deafening:</strong> a transmitting radio drowns out incoming signals at its own antenna — collision <em>detection</em> during transmission is physically impossible.</li>
 <li><strong>Hidden terminals:</strong> A and C both reach access point B but not each other; both sense silence, transmit together, collide <em>at B</em> — a collision neither sender could hear. (Mirror image: <strong>exposed terminals</strong> B→A and C→D could safely overlap, but carrier sense needlessly silences C — lost parallelism.)</li>
 </ul>
-<h3>3.2 Operation Flow: CSMA/CA — Avoidance by Reservation, Step by Step</h3>
+<details class="interactive-toggle"><summary>Why can&#39;t Wi-Fi use collision `detection`?</summary><div class="toggle-content"><p>A transmitting radio deafens its own receiver, so it cannot hear a collision while sending.
+Hidden terminals also collide at the AP unheard, since senders out of range sense false silence.
+Tiny example: A and C both hear B but not each other, so both send and collide at B.</p>
+</div></details><h3>3.2 Operation Flow: CSMA/CA — Avoidance by Reservation, Step by Step</h3>
 <ol>
 <li>Sense: idle for <strong>DIFS</strong> → may transmit; busy → <strong>binary exponential backoff</strong> (like Ethernet&#39;s, but no abort mid-frame — the frame always completes).</li>
 <li>Optional <strong>RTS/CTS handshake</strong>: sender&#39;s RTS (with duration) → AP&#39;s CTS (echoing duration) silences <em>all</em> hearers — including nodes hidden from the sender. Short control frames collide cheaply instead of long data frames.</li>
 <li>Receiver <strong>ACKs</strong> every data frame (wireless loss is normal — errors, not just collisions — so link-layer ACKs + retransmission are mandatory here, unlike wired Ethernet).</li>
 </ol>
-<h3>3.3 Packet Structure: The 802.11 Frame &amp; Joining a Network</h3>
-<p>Four address fields (vs. Ethernet&#39;s two — relaying through the AP needs source, destination, transmitter, <em>and</em> receiver addresses), sequence control, duration field (reserves the channel in everyone&#39;s NAV timer). Joining: <strong>scan</strong> (passive listen / active probe) → <strong>associate</strong> (AP assigns association ID) → <strong>authenticate</strong>; moving between APs = <strong>handoff/reassociation</strong> (same subnet: Layer-2 handoff; across subnets: Mobile IP territory).</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Wireless Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>No CD (self-deaf + hidden) → <strong>CA with RTS/CTS + backoff + per-frame ACKs</strong> · hidden = can&#39;t hear each other, collide at AP · exposed = silenced needlessly · <strong>4 address fields</strong> (AP relaying) · join = <strong>scan → associate → authenticate</strong> · errors normal ⇒ <strong>link ACKs mandatory</strong>.</p>
+<details class="interactive-toggle"><summary>What do `RTS`, `CTS` and `NAV` do?</summary><div class="toggle-content"><p><code>RTS</code> announces a coming frame with its duration, <code>CTS</code> echoes it from the AP to the whole cell.
+Every hearer sets its <code>NAV</code> silence timer for that duration, including nodes hidden from the sender.
+Tiny example: A sends <code>RTS</code>, B echoes <code>CTS</code>, hidden C hears only <code>CTS</code> yet stays silent through data plus <code>ACK</code>.</p>
+</div></details><h3>3.3 Packet Structure: The 802.11 Frame &amp; Joining a Network</h3>
+<p>Four address fields (vs. Ethernet&#39;s two — relaying through the AP needs source, destination, transmitter, <em>and</em> receiver addresses), sequence control, duration field (reserves the channel in everyone&#39;s NAV timer). Joining: <strong>scan</strong> (passive listen / active probe) → <strong>authenticate</strong> → <strong>associate</strong> (AP assigns association ID); moving between APs = <strong>handoff/reassociation</strong> (same subnet: Layer-2 handoff; across subnets: Mobile IP territory).</p>
+<details class="interactive-toggle"><summary>Why four addresses and per-frame `ACK`?</summary><div class="toggle-content"><p>802.11 needs source, destination, transmitter and receiver addresses because frames relay through the AP.
+Per-frame <code>ACK</code> plus retransmission is mandatory because radio bit errors are routine, not rare.
+Tiny example: A to AP to B uses all four roles, and each data frame waits for its link ACK.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Wireless Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>No CD (self-deaf + hidden) → <strong>CA with RTS/CTS + backoff + per-frame ACKs</strong> · hidden = can&#39;t hear each other, collide at AP · exposed = silenced needlessly · <strong>4 address fields</strong> (AP relaying) · join = <strong>scan → authenticate → associate</strong> · errors normal ⇒ <strong>link ACKs mandatory</strong>.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: RTS/CTS Reserves, It Doesn&#39;t Detect</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>RTS/CTS never <em>detects</em> a collision — it <em>prices</em> collisions down (short control frames risk the channel instead of 1500-byte data frames) and <em>informs</em> hidden nodes via the CTS echo. Any option claiming CTS &quot;measures collisions&quot; confuses the mechanism&#39;s purpose.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
@@ -421,7 +430,7 @@
 </tr>
 </tbody></table>
 <p><strong>Watch out:</strong> (1) &quot;CTS detects collisions&quot; — it reserves airtime. (2) Skipping per-frame ACKs on Wi-Fi — radio bit errors make them mandatory. (3) Using RTS/CTS for every tiny frame — reservation overhead must beat collision cost to pay off.</p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Radio kills CD (self-deaf + hidden terminals) → 802.11 uses CA: DIFS sense + backoff, RTS/CTS reservation (CTS echo sets hidden NAVs), mandatory per-frame ACKs. 4-address frames (source/destination/transmitter/receiver). Join = scan → associate → authenticate; AP moves = handoff (same subnet L2, cross-subnet Mobile IP).</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Radio kills CD (self-deaf + hidden terminals) → 802.11 uses CA: DIFS sense + backoff, RTS/CTS reservation (CTS echo sets hidden NAVs), mandatory per-frame ACKs. 4-address frames (source/destination/transmitter/receiver). Join = scan → authenticate → associate; AP moves = handoff (same subnet L2, cross-subnet Mobile IP).</p>
 </div></details><p><strong>Active-recall checklist:</strong> What two facts kill CD on radio? What does C hear in an A→B exchange, and what does it do? Why four addresses? Why are link ACKs mandatory here but not on Ethernet?</p>
 <p><a id="self-check"></a></p>
 <h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>

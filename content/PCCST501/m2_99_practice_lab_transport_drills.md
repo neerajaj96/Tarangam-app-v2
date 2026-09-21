@@ -39,9 +39,27 @@ Each scenario chains one module idea end to end — demultiplexing keys (M2.1), 
 
 A server hosts HTTP (port 80), DNS (53/UDP), and FTP-control (21). At one instant: 200 browser clients hold HTTP connections, 50 DNS queries are in flight, 3 admins hold FTP sessions. Count the server's sockets and state each one's demux key: HTTP → 200 connection sockets (4-tuples; clients' source ports differ) + 1 welcoming socket; DNS → 1 socket (2-tuple port 53 shared by all 50 queries); FTP → 3 control sockets + 0 data (idle between transfers). Total: **205 sockets**, three keying disciplines on one machine.
 
+::: toggle What is the `4-tuple` vs `2-tuple` census?
+A TCP `4-tuple` adds source IP and port, so 200 HTTP clients need 200 connection sockets plus 1 welcoming socket.
+A UDP `2-tuple` keys only on destination, so 50 DNS queries share 1 port-53 socket.
+Tiny example: HTTP counts 201, DNS counts 1, and 3 FTP sessions add 3 control sockets for 205 total.
+:::
+
 ### Scenario 2: Timeout Arithmetic Under Pressure
 
 SRTT = 200 ms, DevRTT = 25 ms, fresh SampleRTT = 320 ms ($\alpha=0.125$, $\beta=0.25$). New SRTT $= 0.875(200) + 0.125(320) = 175 + 40 = 215$ ms. Deviation $|215-320| = 105$; new DevRTT $= 0.75(25) + 0.25(105) = 18.75 + 26.25 = 45$ ms. Timeout $= 215 + 4(45) = \mathbf{395}$ ms — one slow sample nearly doubled the safety margin (jitter reacts faster than delay, by design).
+
+::: toggle Why does `Karn` forbid sampling retransmissions?
+`Karn` ambiguity means one ACK for a twice-sent segment could answer either the original or the copy.
+Why it matters: an unattributable start time would poison `SRTT` and `DevRTT` with phantom delays.
+Tiny example: SampleRTT 320 from a retransmitted copy must be discarded even though the number looks fresh.
+:::
+
+::: toggle What does Reno do on duplicate ACKs vs timeout?
+Reno halves `cwnd` with fast recovery on triple duplicate ACKs, but resets `cwnd` to 1 on timeout.
+Both events halve `ssthresh`, so the remembered danger line ratchets down either way.
+Tiny example: `cwnd` 30 halves to 15 on duplicate ACKs, later timeout at 20 resets to 1 with `ssthresh` 10.
+:::
 
 ### Scenario 3: Loss Showdown (GBN vs. SR, Same Bad Luck)
 

@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 11 MIN READ</span>
+    <span class="badge">⏱️ 12 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -363,7 +363,13 @@
 <td>The boundary contract between adjacent layers: what the lower layer offers, what the upper layer may assume.</td>
 </tr>
 </tbody></table>
-<p><a id="the-math"></a></p>
+<details class="interactive-toggle"><summary>What does `protocol` mean?</summary><div class="toggle-content"><p>A <code>protocol</code> defines message format, message order, and actions on send or receive.
+Format says what bits go where, order says who speaks when, actions say what each side does next.
+Tiny example: asking the time expects a time as the reply, not a song.</p>
+</div></details><details class="interactive-toggle"><summary>What does `layer` mean?</summary><div class="toggle-content"><p>A <code>layer</code> is one horizontal slice of the networking job, such as routing or reliable delivery.
+Each layer talks only to the layers directly above and below it through a fixed interface.
+Why it helps: swapping copper for fiber changes one layer while the rest keep working.</p>
+</div></details><p><a id="the-math"></a></p>
 <h2 id="3-purpose-the-two-models-then-what-travels-on-the-wire">3. Purpose — The Two Models, Then What Travels on the Wire</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 The OSI Reference Model (7 Layers)</h3>
@@ -438,7 +444,13 @@
     G --&gt; F2
 </code></pre>
 <p>On the receiving side, the process reverses exactly: each layer reads only <em>its own</em> header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.</p>
-<p><a id="worked-example"></a></p>
+<details class="interactive-toggle"><summary>What does `encapsulation` mean?</summary><div class="toggle-content"><p><code>Encapsulation</code> is each layer wrapping the payload from above in its own header on the way down.
+What goes in: the upper-layer message; what comes out: a larger unit with a new header added.
+Tiny example: an HTTP message gains a TCP header, then an IP header, then a MAC header.</p>
+</div></details><details class="interactive-toggle"><summary>Why is a `Segment` different from a `Datagram` or `Frame`?</summary><div class="toggle-content"><p>The name records how far down the stack the data has travelled and which header is outermost.
+<code>Segment</code> is the transport unit, <code>Datagram</code> the network unit, <code>Frame</code> the link unit.
+So the same HTTP bytes are called a message, then segment, then datagram, then frame.</p>
+</div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
 <p class="secnav"><a href="#3-purpose-the-two-models-then-what-travels-on-the-wire">← 3. Purpose — The Two Models, Then …</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
 <h3>4.1 Toy Example (30 seconds)</h3>

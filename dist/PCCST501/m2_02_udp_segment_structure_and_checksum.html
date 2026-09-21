@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -388,14 +388,23 @@
 </tr>
 </tbody></table>
 <p>No sequence numbers, no acknowledgment numbers, no window fields — the header&#39;s tiny size <em>is</em> the entire design philosophy: minimum mechanism, maximum speed.</p>
-<h3>3.2 Operation Flow: Checksum — 1s-Complement Sum (+ Pseudoheader)</h3>
+<details class="interactive-toggle"><summary>What are the four UDP header fields?</summary><div class="toggle-content"><p>The four fields are <code>source port</code>, <code>destination port</code>, <code>length</code>, and <code>checksum</code>, each 2 bytes for 8 total.
+<code>Ports</code> steer to processes, <code>length</code> gives header plus data bytes, <code>checksum</code> detects errors.
+Tiny example: a DNS query to destination port 53 carries its reply port, total length, and checksum in 8 bytes.</p>
+</div></details><h3>3.2 Operation Flow: Checksum — 1s-Complement Sum (+ Pseudoheader)</h3>
 <ol>
 <li>Arrange the segment (with checksum field set to 0) as a sequence of 16-bit words, <strong>prefixed by a 12-byte pseudoheader</strong> (source IP, destination IP, protocol number, UDP length).</li>
 <li>Add all words using <strong>1s-complement arithmetic</strong> (end-around carry: overflow bits wrap back into the sum).</li>
 <li>Take the <strong>1s complement</strong> (flip every bit) of the result — that value goes in the checksum field.</li>
 <li>The receiver repeats the sum <em>including</em> the received checksum: a correct segment sums to all-1s (<code>0xFFFF</code>); anything else means corruption → the datagram is <strong>silently discarded</strong> (no notification, no retransmission — the application must cope).</li>
 </ol>
-<p><em>Standard note:</em> the UDP checksum is optional in IPv4 (a zero field means &quot;unchecked&quot;) but mandatory in IPv6 — so &quot;UDP always checksums&quot; needs the version qualifier.</p>
+<details class="interactive-toggle"><summary>What is `1s-complement` addition with `end-around carry`?</summary><div class="toggle-content"><p><code>1s-complement</code> addition adds 16-bit words as binary, then wraps any overflow carry-out back into the sum.
+<code>End-around carry</code> is that wrap step, and the final sum is bit-flipped (<code>complement</code>) into the checksum field.
+Tiny example: <code>1</code> plus <code>1</code> in one bit gives <code>0</code> carry <code>1</code>, wraps to <code>1</code>, then complements to <code>0</code>.</p>
+</div></details><details class="interactive-toggle"><summary>What is the `pseudoheader`?</summary><div class="toggle-content"><p>The <code>pseudoheader</code> is a 12-byte virtual prefix with source IP, destination IP, protocol number, and UDP length.
+Why it matters: including it in the checksum catches misdelivery to the wrong host at the transport layer.
+Tiny example: a datagram delivered to the wrong IP fails the receiver checksum because its addresses differ.</p>
+</div></details><p><em>Standard note:</em> the UDP checksum is optional in IPv4 (a zero field means &quot;unchecked&quot;) but mandatory in IPv6 — so &quot;UDP always checksums&quot; needs the version qualifier.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Checksum in 4 Steps</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Zero the field → add pseudoheader + all 16-bit words with <strong>end-around carry</strong> → <strong>complement</strong> into the field → receiver re-sums expecting <strong>all-1s</strong>. Corrupt ⇒ <strong>silent discard</strong>. The favourite numerical: given 3 words <code>0110011001100000</code>, <code>0101010101010101</code>, <code>1000111100001100</code>, sum them (wrap the carry!), complement, and state the receiver&#39;s verdict.</p>
 </div></details><h3>3.3 When UDP Wins (exam framing)</h3>
 <ul>

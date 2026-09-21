@@ -68,8 +68,20 @@ Dropping the highway now: cwnd = congestion window (allowed unacknowledged bytes
 
 Each flow keeps a **congestion window** `cwnd` (bytes it may have unACKed) and adjusts per RTT (Round-Trip Time) with no explicit network signal — only loss as the congestion alarm:
 
+::: toggle What is `cwnd` and `MSS`?
+`cwnd` is the congestion window, the sender-side cap on unacknowledged bytes protecting the network.
+`MSS` is the Maximum Segment Size, the largest TCP payload per segment and the unit of window growth.
+Tiny example: `cwnd` 8 `MSS` allows 8 segments in flight, then grows by about 1 `MSS` per clean round trip.
+:::
+
 * **Additive increase:** no loss for an RTT → `cwnd += 1 MSS` (gentle probe upward).
 * **Multiplicative decrease:** loss detected → `cwnd /= 2` (hard back-off).
+
+::: toggle What does `AIMD` do each RTT?
+`AIMD` adds about 1 `MSS` to `cwnd` per loss-free round trip, then halves `cwnd` on loss.
+Why this shape: gentle probing finds capacity while hard back-off drains queues fast across all flows.
+Tiny example: `cwnd` 8 grows to 9 clean, then halves to 4 on loss, tracing the sawtooth.
+:::
 
 ```text
 cwnd ^
@@ -94,6 +106,12 @@ Repeated across competing flows with similar RTTs and synchronized loss signals,
 * **Slow start:** despite the name, *exponential* growth — `cwnd` doubles per RTT from 1 MSS until first loss or `ssthresh`. Used at connection birth and after heavy loss (Tahoe).
 * **ssthresh:** the remembered danger line, set to `cwnd/2` at each loss event; below it grow fast (slow start), above it grow gently (congestion avoidance).
 * **On loss:** **Tahoe** resets `cwnd = 1` and slow-starts (treats every loss as catastrophe); **Reno** distinguishes: **triple duplicate ACKs** (mild, isolated loss) → halve and continue (**fast recovery**, no slow start); **timeout** (severe, total silence) → Tahoe-style reset to 1 MSS.
+
+::: toggle What are `slow start`, `ssthresh`, Tahoe and Reno?
+`Slow start` doubles `cwnd` per RTT from 1 `MSS`, while `ssthresh` remembers half the pre-loss window as the danger line.
+`Tahoe` resets to 1 on any loss, `Reno` halves on triple duplicate ACKs with fast recovery and resets only on timeout.
+Tiny example: `cwnd` 24 hit by duplicate ACKs becomes 12 under Reno but 1 under Tahoe.
+:::
 
 ::: callout-formula KTU Formula Vault: Congestion in 6 Lines
 Costs: **retransmit waste + buffer delay + premature dupes**. AIMD: **+1 MSS/RTT**, **halve on loss** → sawtooth → **fairness (similar-RTT flows)**. Slow start: **double per RTT** to ssthresh. ssthresh = **cwnd/2 at loss**. Tahoe: **any loss → cwnd=1**. Reno: **3 dup-ACKs → halve + fast recovery**; **timeout → cwnd=1**.

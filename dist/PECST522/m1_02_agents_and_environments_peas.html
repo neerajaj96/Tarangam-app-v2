@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -295,10 +295,20 @@
 <h2 id="2-basic-building-blocks-percepts-sequences-function-vs-progr">2. Basic Building Blocks: Percepts, Sequences, Function vs. Program</h2>
 <p class="secnav"><a href="#1-start-from-zero-you-are-an-agent">← 1. Start From Zero: You Are an Age…</a><span class="secnav-sep">·</span><a href="#3-formal-model-the-peas-contract-method">3. Formal Model: The PEAS Contract… →</a></p>
 <p><strong>Data/state:</strong> a <strong>percept</strong> is one sensor snapshot right now (one camera frame). A <strong>percept sequence</strong> is the full history of percepts since startup. An <strong>action</strong> is one actuator command (brake 15%).</p>
-<p><strong>Meaning then variables then formula:</strong> the <strong>agent function</strong>, written <code>f</code>, is the abstract rule saying which action follows each possible history. Meaning: &quot;for this past, do that.&quot; Variables: <code>P*</code> (the set of all possible percept sequences — <code>*</code> means any length history), <code>A</code> (the set of all possible actions):</p>
+<details class="interactive-toggle"><summary>What does `percept sequence` mean?</summary><div class="toggle-content"><ul>
+<li>A <code>percept</code> is one snapshot now, like one camera frame showing a red light.</li>
+<li>A <code>percept sequence</code> is every snapshot since startup, like all frames plus all speed readings so far.</li>
+<li>Why history matters: the same snapshot can need different actions depending on what came before.</li>
+</ul>
+</div></details><p><strong>Meaning then variables then formula:</strong> the <strong>agent function</strong>, written <code>f</code>, is the abstract rule saying which action follows each possible history. Meaning: &quot;for this past, do that.&quot; Variables: <code>P*</code> (the set of all possible percept sequences — <code>*</code> means any length history), <code>A</code> (the set of all possible actions):</p>
 <p>$$f: P^* \rightarrow A$$</p>
 <p>So <code>f(history) = action</code>. The <strong>agent program</strong> is the concrete software (Python/C++) running on real hardware (CPU/GPU) that computes <code>f</code> under memory and time limits. Function is mathematics; program is engineering.</p>
-<pre><code class="language-text">Environment --percepts--&gt; Sensors --&gt; Agent Program --&gt; Actuators --actions--&gt; Environment
+<details class="interactive-toggle"><summary>What do `f`, `P*`, `A` and the arrow mean?</summary><div class="toggle-content"><ul>
+<li><code>f</code> is the abstract rule itself, like the idea that dirty history means suck.</li>
+<li><code>P*</code> is every possible sensor history of any length; <code>A</code> is every possible action.</li>
+<li>The arrow maps each history to one action, so <code>f([dirty, dirty]) = suck</code> is one entry of that rule.</li>
+</ul>
+</div></details><pre><code class="language-text">Environment --percepts--&gt; Sensors --&gt; Agent Program --&gt; Actuators --actions--&gt; Environment
 </code></pre>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: The Agent Function, Symbol by Symbol</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p><code>f</code> = the rule. <code>P*</code> = every possible history of sensor readings. <code>A</code> = every possible action. Arrow = maps each history to one action. Exam line: function is abstract and total; program is physical and resource-limited.</p>
 </div></details><p><a id="formal-model"></a></p>
@@ -320,7 +330,12 @@ Factory picker   | correct bins, speed      | belt, parts            | arm, grip
 English tutor    | scores, engagement       | student, test agency   | screen display             | keyboard, microphone
 Vacuum world     | clean room, low energy   | room, dirt, furniture  | wheels, suction            | dirt, bump sensors
 </code></pre>
-<p><a id="worked-example"></a></p>
+<details class="interactive-toggle"><summary>What does each `PEAS` letter ask?</summary><div class="toggle-content"><ul>
+<li><code>P</code> asks what counts as winning in the world, like safe arrival for a taxi.</li>
+<li><code>E</code> asks what the agent cannot control, like roads and pedestrians.</li>
+<li><code>A</code> asks what changes the world, like steering, while <code>S</code> asks what reads it, like a camera.</li>
+</ul>
+</div></details><p><a id="worked-example"></a></p>
 <h2 id="4-worked-example-the-vacuum-paradox-and-limitations">4. Worked Example: The Vacuum Paradox and Limitations</h2>
 <p class="secnav"><a href="#3-formal-model-the-peas-contract-method">← 3. Formal Model: The PEAS Contract…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
 <p><strong>Procedure: how to write PEAS in exams (steps then trace).</strong> Step 1: name the performance in measurable world terms. Step 2: list environment items the agent cannot control. Step 3: list actuators (things that change the world). Step 4: list sensors (things that read the world). Trace on a poker bot: performance = money won under official rules; environment = cards, opponents, table software; actuators = click fold/call/raise; sensors = card reader plus bet display. Money is performance, clicking is actuation, reading cards is sensing.</p>

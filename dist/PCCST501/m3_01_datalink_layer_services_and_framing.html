@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -366,16 +366,25 @@
 <li><strong>Framing:</strong> wrapping each network datagram in a frame (header + payload + trailer) so the receiver knows where it starts and ends.</li>
 <li><strong>Link access:</strong> arbitrating a <em>shared</em> medium (who talks now?) via a MAC protocol — the heart of the next topics.</li>
 <li><strong>Reliable delivery:</strong> ACKs + retransmissions across <em>one</em> link (used on error-prone links like Wi-Fi; usually skipped on fiber, where TCP&#39;s end-to-end recovery suffices).</li>
-<li><strong>Error detection/correction:</strong> parity, checksums, CRC (Cyclic Redundancy Check) (entire next topic) — implemented in adapter hardware at line speed.</li>
 </ul>
-<h3>3.2 Operation Flow: Framing — Finding the Edges</h3>
+<details class="interactive-toggle"><summary>Why is per-hop reliability different from TCP?</summary><div class="toggle-content"><p>Per-hop reliability uses link ACKs and retransmission across one noisy link for fast local repair.
+TCP owns end-to-end correctness across all hops, so clean fibre skips per-hop machinery as pure overhead.
+Tiny example: Wi-Fi retransmits a lost frame locally, while fibre lets rare losses wait for TCP.</p>
+</div></details>
+* **Error detection/correction:** parity, checksums, CRC (Cyclic Redundancy Check) (entire next topic) — implemented in adapter hardware at line speed.<h3>3.2 Operation Flow: Framing — Finding the Edges</h3>
 <p>The receiver must locate frame boundaries in a raw bit stream. Three classic methods, oldest first:</p>
 <ol>
 <li><strong>Character count:</strong> header states the frame length — simple, but one corrupted count desynchronizes <em>everything</em> after it.</li>
 <li><strong>Byte stuffing:</strong> flag bytes (e.g. <code>FLAG</code>) delimit frames; any <code>FLAG</code> byte <em>inside</em> data is escaped (<code>ESC FLAG</code>, and <code>ESC</code> itself is escaped). Overhead grows with unlucky payloads.</li>
 <li><strong>Bit stuffing:</strong> flag <code>01111110</code> delimits; the sender inserts a <code>0</code> after any five consecutive data <code>1</code>s, the receiver strips it — the standard HDLC/USB approach, self-synchronizing after any error burst.</li>
 </ol>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Framing Methods</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Count (fragile) · <strong>byte stuffing</strong> (escape FLAG/ESC bytes) · <strong>bit stuffing</strong> (0 after five 1s, flag 01111110). Exam pattern: &quot;stuff this bitstream&quot; — scan left to right, insert 0 after every run of five 1s <em>in the data</em>, then wrap with flags.</p>
+<details class="interactive-toggle"><summary>What is byte `stuffing` with `FLAG` and `ESC`?</summary><div class="toggle-content"><p>Byte <code>stuffing</code> wraps frames with <code>FLAG</code> bytes and prefixes any data <code>FLAG</code> or <code>ESC</code> byte with an <code>ESC</code>.
+Why it matters: the receiver can tell boundary flags from data bytes that happen to look like flags.
+Tiny example: data containing <code>FLAG</code> transmits as <code>ESC FLAG</code>, which the receiver strips back to <code>FLAG</code>.</p>
+</div></details><details class="interactive-toggle"><summary>What is bit `stuffing` with `01111110`?</summary><div class="toggle-content"><p>Bit <code>stuffing</code> wraps frames with flag <code>01111110</code> and inserts a <code>0</code> after any five data <code>1</code>s.
+The receiver strips that <code>0</code>, so stuffed payload can never contain a false flag pattern.
+Tiny example: data <code>11111</code> transmits as <code>111110</code> and destuffs back to <code>11111</code>.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Framing Methods</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Count (fragile) · <strong>byte stuffing</strong> (escape FLAG/ESC bytes) · <strong>bit stuffing</strong> (0 after five 1s, flag 01111110). Exam pattern: &quot;stuff this bitstream&quot; — scan left to right, insert 0 after every run of five 1s <em>in the data</em>, then wrap with flags.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Reliable per Hop ≠ Reliable End to End</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Link-layer ACKs protect <em>one hop</em>; a frame correctly delivered across link 3 of 5 can still die at link 4&#39;s router queue. End-to-end correctness always remains TCP&#39;s job — link reliability is a <em>performance</em> optimization (fast local recovery on lossy media), never a substitute.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>

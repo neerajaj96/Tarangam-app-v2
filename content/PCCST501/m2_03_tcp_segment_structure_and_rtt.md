@@ -64,6 +64,12 @@ Dropping the manuscript now: sequence number = first byte's number in this segme
 * **Sequence number:** the byte-stream number of the *first* data byte in this segment (initial ISN chosen at handshake, then counting bytes, not segments).
 * **Acknowledgment number:** the *next* byte the receiver expects — i.e. "everything before this has arrived intact." ACKs are **cumulative**: one ACK for byte 5001 confirms bytes 0–5000, however many segments carried them.
 
+::: toggle What do `sequence number` and `acknowledgment number` mean?
+A `sequence number` is the byte-stream number of the first data byte carried in this segment.
+An `acknowledgment number` is the next byte the receiver expects, confirming everything before it.
+Tiny example: a 1000-byte segment starting at 5000 earns ACK 6000, confirming bytes 5000 through 5999.
+:::
+
 ### 3.2 Packet Structure: The Header Fields That Earn Marks (20 bytes minimum)
 
 Source/destination ports (multiplexing), **sequence + acknowledgment numbers** (ordering/reliability), header length, flags (**SYN** — synchronize, **ACK** — acknowledgment, **FIN** — finish, **RST** — reset: connection control), **receive window** `rwnd` (flow control, next topic), **checksum** (always computed in TCP; contrast UDP, where it is optional in IPv4 and mandatory in IPv6), urgent pointer.
@@ -100,6 +106,18 @@ $\text{SRTT}_{new} = 0.875\cdot\text{SRTT} + 0.125\cdot\text{Sample}$ · $\text{
 ### 3.4 Fast Retransmit: Don't Wait for the Timer
 
 Three **duplicate ACKs** for the same byte mean the next segment probably vanished while later ones arrived — TCP re-sends it immediately, well before TimeoutInterval expires. The timer is the safety net; duplicate ACKs are the early-warning radar.
+
+::: toggle What are `SampleRTT`, `SRTT`, `DevRTT` and `TimeoutInterval`?
+`SampleRTT` is one measured send-to-ACK delay, taken only on segments sent exactly once.
+`SRTT` smooths samples with weight 0.125 new, `DevRTT` smooths deviation with weight 0.25, and `TimeoutInterval` equals `SRTT` plus 4 times `DevRTT`.
+Tiny example: `SRTT` 100 and `DevRTT` 12 with sample 140 give new timeout 176 ms.
+:::
+
+::: toggle What is `fast retransmit` on triple duplicate ACKs?
+`Fast retransmit` resends the missing segment as soon as three duplicate ACKs arrive, without waiting for the timer.
+Why it helps: duplicate ACKs prove later data still arrives, so one isolated loss is near certain.
+Tiny example: ACK 5003 repeated three times triggers immediate resend from byte 5003.
+:::
 
 ::: callout-pitfall Sequence Numbers Count Bytes, ACKs Confirm Bytes
 The two eternal confusions: (1) sequence numbers increment by *payload bytes*, so a 1000-byte segment starting at 5000 makes the next sequence 6000 — *not* 5001; (2) "ACK 6000" means "send from 6000 onward," i.e. bytes *below* 6000 are confirmed. Read every ACK as "everything before me is safe."

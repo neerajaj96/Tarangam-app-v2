@@ -68,12 +68,30 @@ Pure P2P (no always-on server) versus the client-server Web/FTP of M1.4–M1.5 �
 
 **Overlay** (logical links atop TCP), **tracker** (introduces peers; magnet/DHT links decentralize even this), **torrent** (metadata + piece hashes), **peers/leeches** (downloading), **seeds** (complete, uploading). **Rarest-first** piece selection keeps diversity high (no last-piece starvation); **tit-for-tat/choking** uploads to the fastest reciprocators (optimistic unchoke probes newcomers) — freeloaders get choked by design.
 
+::: toggle What do `swarm`, `tracker` and `seed` mean?
+A `swarm` is all peers sharing one file right now, linked by an `overlay` of logical TCP connections.
+A `tracker` only introduces peers to each other and never carries file bytes, while a `seed` holds the full file and uploads only.
+Tiny example: a new peer asks the tracker for 50 neighbours, then downloads pieces from them, not from the tracker.
+:::
+
+::: toggle What do `rarest-first` and `tit-for-tat` fix?
+`Rarest-first` always fetches the piece fewest neighbours hold, so no last rare piece starves the swarm.
+`Tit-for-tat` uploads preferentially to peers that upload back, choking freeloaders, with `optimistic unchoke` probing newcomers.
+Tiny example: a peer with only common pieces hunts the one rare chunk first, and a leecher that shares nothing soon gets choked.
+:::
+
 ### 3.2 Distribution-Time Bound — Symbols First
 
 Symbols: $F$ = file size (bits), $u_s$ = server/seed upload rate (bits/s), $u_i$ = upload rate of peer $i$, $N$ = number of peers, $d_{min}$ = slowest peer download rate.
 
 * Client-server lower bound: $D_{cs} \ge \max(NF/u_s, F/d_{min})$. Term 1: the lone server must push $N$ copies. Term 2: the slowest downloader cannot finish before one file's worth at its own rate.
 * P2P lower bound: $D_{p2p} \ge \max(F/u_s, F/d_{min}, NF/(u_s + \sum u_i))$. Terms 1–2 as above (seed must inject one copy; slowest peer still slowest). Term 3 is the potluck: *aggregate* upload (server + all peers) absorbs the crowd's $N$ copies.
+
+::: toggle What do `F`, `u_s`, `u_i` and `D` mean?
+`F` is file size in bits, `u_s` is the server or seed upload rate, each `u_i` is peer `i` upload rate, and `D` is seconds until the last peer finishes.
+Why they matter: client-server needs `N` copies from `u_s` alone, while P2P spreads `N` copies over `u_s` plus all `u_i`.
+Tiny example: `F` 6 units with `u_s` 2 and three peers at 1 gives P2P `max(3, 3.6)` equals 3.6 seconds.
+:::
 
 ::: callout-formula KTU Formula Vault: P2P
 Tracker introduces, DHT decentralizes · rarest-first diversifies · tit-for-tat rewards reciprocators, chokes freeloaders · $D_{p2p} \ge \max(F/u_s, NF/(u_s+\sum u_i))$ (downloads ample).

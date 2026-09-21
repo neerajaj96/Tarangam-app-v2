@@ -60,6 +60,12 @@ Dropping the relay now: frame = header + payload + trailer with findable edges; 
 * **Framing:** wrapping each network datagram in a frame (header + payload + trailer) so the receiver knows where it starts and ends.
 * **Link access:** arbitrating a *shared* medium (who talks now?) via a MAC protocol — the heart of the next topics.
 * **Reliable delivery:** ACKs + retransmissions across *one* link (used on error-prone links like Wi-Fi; usually skipped on fiber, where TCP's end-to-end recovery suffices).
+
+::: toggle Why is per-hop reliability different from TCP?
+Per-hop reliability uses link ACKs and retransmission across one noisy link for fast local repair.
+TCP owns end-to-end correctness across all hops, so clean fibre skips per-hop machinery as pure overhead.
+Tiny example: Wi-Fi retransmits a lost frame locally, while fibre lets rare losses wait for TCP.
+:::
 * **Error detection/correction:** parity, checksums, CRC (Cyclic Redundancy Check) (entire next topic) — implemented in adapter hardware at line speed.
 
 ### 3.2 Operation Flow: Framing — Finding the Edges
@@ -69,6 +75,18 @@ The receiver must locate frame boundaries in a raw bit stream. Three classic met
 1. **Character count:** header states the frame length — simple, but one corrupted count desynchronizes *everything* after it.
 2. **Byte stuffing:** flag bytes (e.g. `FLAG`) delimit frames; any `FLAG` byte *inside* data is escaped (`ESC FLAG`, and `ESC` itself is escaped). Overhead grows with unlucky payloads.
 3. **Bit stuffing:** flag `01111110` delimits; the sender inserts a `0` after any five consecutive data `1`s, the receiver strips it — the standard HDLC/USB approach, self-synchronizing after any error burst.
+
+::: toggle What is byte `stuffing` with `FLAG` and `ESC`?
+Byte `stuffing` wraps frames with `FLAG` bytes and prefixes any data `FLAG` or `ESC` byte with an `ESC`.
+Why it matters: the receiver can tell boundary flags from data bytes that happen to look like flags.
+Tiny example: data containing `FLAG` transmits as `ESC FLAG`, which the receiver strips back to `FLAG`.
+:::
+
+::: toggle What is bit `stuffing` with `01111110`?
+Bit `stuffing` wraps frames with flag `01111110` and inserts a `0` after any five data `1`s.
+The receiver strips that `0`, so stuffed payload can never contain a false flag pattern.
+Tiny example: data `11111` transmits as `111110` and destuffs back to `11111`.
+:::
 
 ::: callout-formula KTU Formula Vault: Framing Methods
 Count (fragile) · **byte stuffing** (escape FLAG/ESC bytes) · **bit stuffing** (0 after five 1s, flag 01111110). Exam pattern: "stuff this bitstream" — scan left to right, insert 0 after every run of five 1s *in the data*, then wrap with flags.

@@ -59,6 +59,12 @@ Dropping the cashier now: parity = 1-bit odd/even tally; checksum = 1s-complemen
 * **Single parity bit:** even parity makes the total 1-count even. Catches any **odd** number of bit errors; **blind to even** flips (two errors cancel). Overhead: 1 bit per byte/word.
 * **2D parity:** arrange data in rows/columns, add a parity bit per row *and* per column. Catches all 1-, 2-, and 3-bit errors and *most* bursts; a 4-bit rectangle of errors (even per row *and* column) slips through — the classic counterexample to memorize.
 
+::: toggle What does parity miss vs `2D parity` rectangle?
+Single parity catches odd numbers of flips but even flips cancel and pass silently.
+`2D parity` adds row plus column tallies, catching 1 to 3 bit errors, except a 4-bit even rectangle.
+Tiny example: two flips in one byte fool single parity, but disturb column tallies unless they form a rectangle.
+:::
+
 ### 3.2 Internet Checksum (Module 2 Reused)
 
 1s-complement sum of 16-bit words + pseudoheader; receiver expects all-1s. Lightweight, software-friendly — and weak: swapped 16-bit words produce the *identical* sum (reordering invisible), and many multi-bit patterns cancel.
@@ -67,9 +73,21 @@ Dropping the cashier now: parity = 1-bit odd/even tally; checksum = 1s-complemen
 
 Treat bits as coefficients of a binary polynomial (all arithmetic mod 2 = XOR, no carries). With an $r+1$-bit **generator** $G$ (symbols: $D$ = data bits, $r$ = CRC length, $R$ = remainder):
 
+::: toggle What is `GF(2)` XOR division in CRC?
+`GF(2)` arithmetic means addition and subtraction are both `XOR` with no carries or borrows.
+CRC appends `r` zeros to data `D`, divides by generator `G` with XOR long division, and transmits remainder `R`.
+Tiny example: data `101` with generator `11` appends one zero, divides to remainder `0`, and sends `1010`.
+:::
+
 1. Append $r$ zero bits to data $D$.
 2. Divide by $G$ (XOR long division, aligning $G$ under each leading 1); the $r$-bit **remainder** $R$ is the CRC.
 3. Transmit $\langle D, R \rangle$. Receiver divides the whole thing by $G$: remainder **zero** = intact.
+
+::: toggle What does remainder `zero` vs nonzero mean?
+Receiver remainder `zero` means the frame looks intact and is accepted, subject to a tiny `2^-r` leak.
+Nonzero remainder means corruption is certain, so the frame is discarded for retransmission elsewhere.
+Tiny example: transmitted `1010001101 01110` divides to `00000` accept, while any single flipped bit gives nonzero discard.
+:::
 4. Power: catches **all single-bit errors**, all **odd-count** errors (standard generators include an $(x+1)$ factor, which is exactly the condition that guarantees odd-count detection), all bursts shorter than $r+1$ bits, and all but a $2^{-r}$ fraction of longer bursts.
 
 ::: callout-formula KTU Formula Vault: Detection Ladder

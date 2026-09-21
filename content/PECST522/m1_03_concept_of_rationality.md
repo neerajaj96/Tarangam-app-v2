@@ -32,6 +32,12 @@ You look both ways at a green crossing and step out. A freak falling branch inju
 
 **Definition:** a **rational agent** selects the action expected to maximize its performance measure, given its percept sequence and built-in knowledge. Rationality judges the **decision process**, not the retrospective outcome.
 
+::: toggle What does `rational` mean here?
+- `rational` means the best expected call on the percepts available at decision time.
+- Why it differs from success: a careful crossing can still fail through unforeseeable luck.
+- How to test: replay what the agent knew then, never what the examiner knows now.
+:::
+
 ::: callout-intuition Core Mental Model: Rationality Is Not Magic
 Crossing carefully and still failing separates three ideas: rational (best expected call), successful (good actual outcome), omniscient (foresaw everything). Drop the story after this; the technical test is always "what did the percept sequence justify at decision time?"
 :::
@@ -63,6 +69,12 @@ $$\text{Action}^* = \arg\max_{a \in A} \sum_{s'} P(s' \mid \text{percept sequenc
 
 Symbol by symbol: `Action*` is the winning action; `argmax` means "the action achieving the largest value"; the sum weighs each future state's utility by its probability. Intuition: bet on the action whose probability-weighted future is brightest.
 
+::: toggle What do `Action*`, `argmax`, `P(s' | history, a)` and `U(s')` mean?
+- `Action*` is the winning action; `argmax` picks whichever action scores highest.
+- `P(s' | history, a)` is the chance of landing in future state `s'` after action `a`.
+- `U(s')` is that future state's goodness number; tiny case: `0.9 x 10 + 0.1 x 0 = 9` beats `0.5 x 10 + 0.5 x 0 = 5`.
+:::
+
 ::: callout-formula Formal Definition of a Rational Agent
 For each percept sequence, pick the action maximizing expected performance given that sequence plus built-in knowledge. The formula above is that sentence in mathematics — memorize both forms.
 :::
@@ -87,6 +99,12 @@ INITIAL PERCEPTS --> EXPLORE AND SENSE --> LEARN DYNAMICS --> RATIONAL ACTS
 ```
 
 **Autonomy:** an agent is **autonomous** to the extent its behavior comes from its **own experience** rather than only designer assumptions. The *Sphex* wasp (a digger wasp studied in ethology) repeats one rigid burrow-check ritual even when experimenters move its prey mid-ritual — zero autonomy, pure preprogramming. A delivery robot that revises its map after slips is autonomous: it survives broken designer assumptions.
+
+::: toggle What does `autonomy` mean here?
+- `autonomy` means behaviour shaped by the agent's own percept history, not only built-in rules.
+- Why it matters: designer maps are incomplete, so experience must repair broken assumptions.
+- Tiny contrast: the `Sphex` wasp repeats its ritual blindly, while a learning delivery robot updates its map after slips.
+:::
 
 | Similar pair | Distinction |
 |---|---|

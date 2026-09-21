@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -359,7 +359,10 @@
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Why Pipeline: Utilization Math</h3>
 <p>With stop-and-wait, the sender transmits for $L/R$ seconds then idles a full RTT (Round-Trip Time). Utilization $U = \frac{L/R}{\text{RTT} + L/R}$ — on a 1 Gbps, 30 ms link with 1 KB packets, $U \approx 0.00027$: the link is busy <strong>0.027%</strong> of the time. Pipelining $N$ unacknowledged packets multiplies utilization toward $N \times U$ — the entire economic case for windows.</p>
-<h3>3.2 Operation Flow: Go-Back-N (GBN)</h3>
+<details class="interactive-toggle"><summary>What do `pipelining` and `utilization` mean?</summary><div class="toggle-content"><p><code>Pipelining</code> keeps <code>N</code> packets unacknowledged in flight so transmission overlaps with waiting for ACKs.
+<code>Utilization</code> is the fraction of time the link transmits, near zero for stop-and-wait on fast long links.
+Tiny example: 1 KB packets on 1 Gbps with 30 ms RTT give 0.027 percent use, times <code>N</code> when pipelined.</p>
+</div></details><h3>3.2 Operation Flow: Go-Back-N (GBN)</h3>
 <p>Numbered steps of the sender algorithm:</p>
 <ol>
 <li>Allow up to $N$ unACKed packets in flight (window <code>[base, base+N-1]</code>); sequence numbers need at least $N+1$ values ($k$ bits ⇒ $2^k \ge N+1$).</li>
@@ -367,7 +370,10 @@
 <li>On timeout of the oldest unACKed packet, <strong>retransmit everything from that packet onward</strong> — even packets that arrived fine.</li>
 <li>The receiver stays simple: it discards out-of-order packets and re-ACKs the last in-order one.</li>
 </ol>
-<pre><code class="language-text">GBN sender, window N=4, base=2 (packets 2,3,4,5 in flight):
+<details class="interactive-toggle"><summary>What does Go-Back-N do on loss?</summary><div class="toggle-content"><p>Go-Back-N uses cumulative ACKs and one timer for the oldest unacknowledged packet.
+On timeout it resends everything from the lost packet onward, and the receiver discards out-of-order arrivals.
+Tiny example: window 4 with packet 2 lost resends 2, 3, 4 and 5 for 8 total transmissions.</p>
+</div></details><pre><code class="language-text">GBN sender, window N=4, base=2 (packets 2,3,4,5 in flight):
 
  0   1  |  2   3   4   5  |  6   7   8 ...
         |&lt;--- window ---&gt;|
@@ -405,7 +411,10 @@
 <li>Only the actually-lost packet&#39;s timer expires, so only it is retransmitted.</li>
 <li>Price: sequence numbers need $2N$ values ($2^k \ge 2N$) — sending and receiving windows must never overlap numerically, or a restarted receiver confuses new packets with old retransmissions.</li>
 </ol>
-<p><em>TCP note:</em> real TCP is GBN-flavored (cumulative ACKs, single retransmission timer) with SR-flavored helpers (receiver buffering plus Selective-ACK — SACK — options) — a pragmatic mix, not a textbook copy of either.</p>
+<details class="interactive-toggle"><summary>Why does Selective Repeat need `2N` sequence numbers?</summary><div class="toggle-content"><p>Selective Repeat buffers out-of-order packets with individual ACKs and per-packet timers, resending only the lost one.
+It needs twice the window in numbers so sender and receiver windows never overlap numerically after a restart.
+Tiny example: window 4 needs 8 numbers, while Go-Back-N needs only 5, or a new packet looks like an old retransmission.</p>
+</div></details><p><em>TCP note:</em> real TCP is GBN-flavored (cumulative ACKs, single retransmission timer) with SR-flavored helpers (receiver buffering plus Selective-ACK — SACK — options) — a pragmatic mix, not a textbook copy of either.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: GBN vs SR in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Window $N$: GBN needs $2^k \ge$ <strong>$N+1$</strong>, SR needs $2^k \ge$ <strong>$2N$</strong>. ACKs: <strong>cumulative</strong> vs <strong>individual</strong>. Timers: <strong>one</strong> vs <strong>per-packet</strong>. Loss cost: <strong>whole window</strong> vs <strong>single packet</strong>. Receiver: <strong>discards</strong> out-of-order vs <strong>buffers</strong> them. Memory line to memorize: <em>&quot;GBN repeats, SR selects.&quot;</em></p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Window-Size Trap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With too few sequence numbers, SR breaks catastrophically while GBN merely wastes: if sender and receiver windows overlap numerically, the receiver cannot tell a <em>new</em> packet from a <em>retransmission</em> of an old one. That is exactly why SR demands twice the sequence space — the single most-tested &quot;why&quot; of this topic.</p>
 </div></details><p><a id="worked-example"></a></p>

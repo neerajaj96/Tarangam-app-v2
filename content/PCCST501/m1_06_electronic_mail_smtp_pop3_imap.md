@@ -63,6 +63,18 @@ Same client-server paradigm as HTTP/FTP (M1.3–M1.5), but store-and-forward thr
 | **SPF/DKIM/DMARC (Sender Policy Framework / DomainKeys Identified Mail / Domain-based Message Authentication)** | Later bolt-on standards that let receivers verify a sender's legitimacy — patches over SMTP's trusting origins. |
 | **HELO** | The SMTP greeting command opening the dialogue ("hello, I am …"). |
 
+::: toggle What does `SMTP` mean?
+`SMTP` is the push protocol that moves mail from the sender toward the recipient's server.
+It runs over TCP port 25, with the sender speaking first through commands.
+Tiny example: `MAIL FROM`, `RCPT TO`, `DATA`, then `QUIT` delivers one message.
+:::
+
+::: toggle What do `POP3` and `IMAP` mean?
+Both pull mail from your mailbox to your device, but with different state models.
+`POP3` on port 110 usually downloads and deletes, suiting one device only.
+`IMAP` on port 143 keeps server-side folders so phone and laptop stay in sync.
+:::
+
 <a id="the-math"></a>
 ## 3. Purpose — Push Dialogue, Message Shape, Pull Choice
 

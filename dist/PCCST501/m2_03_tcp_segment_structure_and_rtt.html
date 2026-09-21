@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -374,7 +374,10 @@
 <li><strong>Sequence number:</strong> the byte-stream number of the <em>first</em> data byte in this segment (initial ISN chosen at handshake, then counting bytes, not segments).</li>
 <li><strong>Acknowledgment number:</strong> the <em>next</em> byte the receiver expects — i.e. &quot;everything before this has arrived intact.&quot; ACKs are <strong>cumulative</strong>: one ACK for byte 5001 confirms bytes 0–5000, however many segments carried them.</li>
 </ul>
-<h3>3.2 Packet Structure: The Header Fields That Earn Marks (20 bytes minimum)</h3>
+<details class="interactive-toggle"><summary>What do `sequence number` and `acknowledgment number` mean?</summary><div class="toggle-content"><p>A <code>sequence number</code> is the byte-stream number of the first data byte carried in this segment.
+An <code>acknowledgment number</code> is the next byte the receiver expects, confirming everything before it.
+Tiny example: a 1000-byte segment starting at 5000 earns ACK 6000, confirming bytes 5000 through 5999.</p>
+</div></details><h3>3.2 Packet Structure: The Header Fields That Earn Marks (20 bytes minimum)</h3>
 <p>Source/destination ports (multiplexing), <strong>sequence + acknowledgment numbers</strong> (ordering/reliability), header length, flags (<strong>SYN</strong> — synchronize, <strong>ACK</strong> — acknowledgment, <strong>FIN</strong> — finish, <strong>RST</strong> — reset: connection control), <strong>receive window</strong> <code>rwnd</code> (flow control, next topic), <strong>checksum</strong> (always computed in TCP; contrast UDP, where it is optional in IPv4 and mandatory in IPv6), urgent pointer.</p>
 <pre><code class="language-text"> 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -401,7 +404,13 @@
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: The Timeout Triple</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>$\text{SRTT}<em>{new} = 0.875\cdot\text{SRTT} + 0.125\cdot\text{Sample}$ · $\text{Dev}</em>{new} = 0.75\cdot\text{Dev} + 0.25\cdot|\text{SRTT}-\text{Sample}|$ · <strong>Timeout = SRTT + 4·DevRTT</strong>. The classic numerical hands you a SampleRTT plus old estimates and asks for the new timeout — apply all three lines in order. Never measure SampleRTT on a <em>retransmitted</em> segment (which transmission is the ACK for? — Karn&#39;s ambiguity).</p>
 </div></details><h3>3.4 Fast Retransmit: Don&#39;t Wait for the Timer</h3>
 <p>Three <strong>duplicate ACKs</strong> for the same byte mean the next segment probably vanished while later ones arrived — TCP re-sends it immediately, well before TimeoutInterval expires. The timer is the safety net; duplicate ACKs are the early-warning radar.</p>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Sequence Numbers Count Bytes, ACKs Confirm Bytes</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The two eternal confusions: (1) sequence numbers increment by <em>payload bytes</em>, so a 1000-byte segment starting at 5000 makes the next sequence 6000 — <em>not</em> 5001; (2) &quot;ACK 6000&quot; means &quot;send from 6000 onward,&quot; i.e. bytes <em>below</em> 6000 are confirmed. Read every ACK as &quot;everything before me is safe.&quot;</p>
+<details class="interactive-toggle"><summary>What are `SampleRTT`, `SRTT`, `DevRTT` and `TimeoutInterval`?</summary><div class="toggle-content"><p><code>SampleRTT</code> is one measured send-to-ACK delay, taken only on segments sent exactly once.
+<code>SRTT</code> smooths samples with weight 0.125 new, <code>DevRTT</code> smooths deviation with weight 0.25, and <code>TimeoutInterval</code> equals <code>SRTT</code> plus 4 times <code>DevRTT</code>.
+Tiny example: <code>SRTT</code> 100 and <code>DevRTT</code> 12 with sample 140 give new timeout 176 ms.</p>
+</div></details><details class="interactive-toggle"><summary>What is `fast retransmit` on triple duplicate ACKs?</summary><div class="toggle-content"><p><code>Fast retransmit</code> resends the missing segment as soon as three duplicate ACKs arrive, without waiting for the timer.
+Why it helps: duplicate ACKs prove later data still arrives, so one isolated loss is near certain.
+Tiny example: ACK 5003 repeated three times triggers immediate resend from byte 5003.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Sequence Numbers Count Bytes, ACKs Confirm Bytes</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The two eternal confusions: (1) sequence numbers increment by <em>payload bytes</em>, so a 1000-byte segment starting at 5000 makes the next sequence 6000 — <em>not</em> 5001; (2) &quot;ACK 6000&quot; means &quot;send from 6000 onward,&quot; i.e. bytes <em>below</em> 6000 are confirmed. Read every ACK as &quot;everything before me is safe.&quot;</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
 <p class="secnav"><a href="#3-purpose-numbering-header-timeout-triple">← 3. Purpose — Numbering, Header, Ti…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>

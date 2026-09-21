@@ -249,7 +249,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -297,8 +297,14 @@
 <p><strong>Problem.</strong> Assign each input to one discrete label.</p>
 <p><strong>Data.</strong> Labelled pairs $(x_i,y_i)$ with $y_i$ in ${0,1}$ or ${+1,-1}$. Here $x_i$ is a feature vector, $y_i$ is its class. Query $q$ is an unlabelled newcomer.</p>
 <p><strong>Goal.</strong> Low zero-one (0/1) loss on future queries. The 0/1 loss is non-differentiable and hard to optimise directly, so training optimises a smooth surrogate (cross-entropy, hinge, Gini impurity) and reports 0/1 accuracy. Train the surrogate, judge with 0/1; never confuse the two.</p>
-<p>Distance symbol: Euclidean distance $d(q,x)=\sqrt{\sum_j(q_j-x_j)^2}$. Features must share scale first, or metres-versus-kilograms voting goes absurd.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Fences vs. Thermometers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Regression is a <strong>thermometer</strong> (how much?). Classification is a <strong>fence</strong> (which side?). Fitting a thermometer where a fence belongs fails absurdly: least squares happily predicts &quot;diabetes = 1.7&quot; or lets one far-away outlier drag the whole line across the fence. And the fence itself can be lazy genius: <strong>k-NN</strong> builds no model at all — to label a newcomer, just ask its $k$ nearest labeled neighbors and take a vote. No training, all memory; the training set <em>is</em> the model.</p>
+<details class="interactive-toggle"><summary>What is `0/1 loss` — and why can&#39;t we train on it?</summary><div class="toggle-content"><p><code>0/1 loss</code> = 1 if the verdict is wrong, 0 if right: the honest judge, counting mistakes with no partial credit.
+It is a flat staircase (steps, no slope), so gradients are zero almost everywhere and undefined at the jumps — gradient descent has nothing to follow.
+Fix: train a smooth <code>surrogate</code> (cross-entropy, hinge) that slopes toward correctness, then report <code>0/1</code> accuracy. Two games: slope to learn, steps to grade.</p>
+</div></details><p>Distance symbol: Euclidean distance $d(q,x)=\sqrt{\sum_j(q_j-x_j)^2}$. Features must share scale first, or metres-versus-kilograms voting goes absurd.</p>
+<details class="interactive-toggle"><summary>Expand every symbol in `d(q,x) = √Σ(q_j − x_j)²`</summary><div class="toggle-content"><p><code>q</code> = query (the unlabelled newcomer); <code>x</code> = one stored training point. <code>j</code> = feature index (height <code>j=1</code>, weight <code>j=2</code>, …). <code>−</code> = per-feature gap; <code>²</code> kills signs and punishes big gaps; <code>Σ</code> adds across features; <code>√</code> returns to original units.
+Tiny numbers: <code>q = (2,2)</code>, <code>B = (2,3)</code>: gaps <code>(0,−1)</code> → squares <code>(0,1)</code> → sum <code>1</code> → root <code>1.0</code> — the <code>1.0</code> in §4&#39;s trace.
+Scale first: a kilograms feature swings hundreds while metres swing ones — unscaled, kilograms elect every neighbour alone.</p>
+</div></details><details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Fences vs. Thermometers</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Regression is a <strong>thermometer</strong> (how much?). Classification is a <strong>fence</strong> (which side?). Fitting a thermometer where a fence belongs fails absurdly: least squares happily predicts &quot;diabetes = 1.7&quot; or lets one far-away outlier drag the whole line across the fence. And the fence itself can be lazy genius: <strong>k-NN</strong> builds no model at all — to label a newcomer, just ask its $k$ nearest labeled neighbors and take a vote. No training, all memory; the training set <em>is</em> the model.</p>
 </div></details><p><a id="the-math"></a></p>
 <h2 id="3-method-model-and-training-formal-theory">3. Method, Model and Training (Formal Theory)</h2>
 <p class="secnav"><a href="#2-data-goal-and-symbols-basic-understanding">← 2. Data, Goal and Symbols (Basic U…</a><span class="secnav-sep">·</span><a href="#4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step →</a></p>
@@ -317,7 +323,10 @@
 <li>Choose $k$, metric, and scaling by validation.</li>
 </ol>
 <p>Choices that matter: $k$ (small means jagged, noise-fitting boundaries, high variance; large means smooth, detail-erasing, high bias), distance metric (standardise features first), and price: $O(nd)$ memory plus $O(nd)$ per query. Training is free; prediction is expensive (KD-trees help).</p>
-<table>
+<details class="interactive-toggle"><summary>Why is small `k` high-variance and large `k` high-bias?</summary><div class="toggle-content"><p>Small <code>k</code> (e.g. 1): one noisy neighbour flips the verdict — jagged boundaries that memorise quirks. §4&#39;s <code>k = 1</code> verdict hinges on an arbitrary tie-break: variance on display.
+Large <code>k</code> (e.g. all points): the majority class always wins — smooth boundaries that erase real detail, including small genuine clusters.
+Tune <code>k</code> on validation: grow it until the held-out error bottoms — the bias–variance U-curve with a concrete dial.</p>
+</div></details><table>
 <thead>
 <tr>
 <th>Similar pair</th>
@@ -338,7 +347,7 @@
 </tr>
 </tbody></table>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Classification Facts</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Boundary = <strong>region surface</strong> · judge with <strong>0/1 loss</strong>, train with <strong>surrogates</strong> · regression-on-labels breaks via <strong>leverage + meaningless outputs</strong> · k-NN: <strong>store all, vote k nearest</strong> · small $k$ = <strong>variance</strong>, large $k$ = <strong>bias</strong> · cost per query <strong>$O(nd)$</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: k-NN Has No Training Error Worth Quoting</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With $k=1$, training accuracy is <em>always</em> 100% (every point is its own nearest neighbor) — a meaningless perfect score. k-NN can only be assessed on held-out data (last module&#39;s discipline, sharpest here). Any &quot;my 1-NN achieves 100%&quot; claim confesses overfitting, not success.</p>
+</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: k-NN Has No Training Error Worth Quoting</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>With $k=1$, training accuracy is <em>always</em> 100% on consistent data (no two identical training points with conflicting labels), because every point is its own nearest neighbor — a meaningless perfect score. k-NN can only be assessed on held-out data (last module&#39;s discipline, sharpest here). Any &quot;my 1-NN achieves 100%&quot; claim confesses overfitting, not success.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-ktu-worked-example-step-by-step">4. KTU Worked Example Step by Step</h2>
 <p class="secnav"><a href="#3-method-model-and-training-formal-theory">← 3. Method, Model and Training (For…</a><span class="secnav-sep">·</span><a href="#5-watch-out-limitations-and-exam-recap">5. Watch Out, Limitations and Exam… →</a></p>

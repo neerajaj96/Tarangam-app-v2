@@ -61,6 +61,18 @@ Dropping the airport now: a **protocol** is the formal version of conversational
 | **Decapsulation** | Each layer reading and stripping only its own header as data ascends the receiver's stack. |
 | **Interface / service** | The boundary contract between adjacent layers: what the lower layer offers, what the upper layer may assume. |
 
+::: toggle What does `protocol` mean?
+A `protocol` defines message format, message order, and actions on send or receive.
+Format says what bits go where, order says who speaks when, actions say what each side does next.
+Tiny example: asking the time expects a time as the reply, not a song.
+:::
+
+::: toggle What does `layer` mean?
+A `layer` is one horizontal slice of the networking job, such as routing or reliable delivery.
+Each layer talks only to the layers directly above and below it through a fixed interface.
+Why it helps: swapping copper for fiber changes one layer while the rest keep working.
+:::
+
 <a id="the-math"></a>
 ## 3. Purpose — The Two Models, Then What Travels on the Wire
 
@@ -123,6 +135,18 @@ flowchart LR
 ```
 
 On the receiving side, the process reverses exactly: each layer reads only *its own* header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.
+
+::: toggle What does `encapsulation` mean?
+`Encapsulation` is each layer wrapping the payload from above in its own header on the way down.
+What goes in: the upper-layer message; what comes out: a larger unit with a new header added.
+Tiny example: an HTTP message gains a TCP header, then an IP header, then a MAC header.
+:::
+
+::: toggle Why is a `Segment` different from a `Datagram` or `Frame`?
+The name records how far down the stack the data has travelled and which header is outermost.
+`Segment` is the transport unit, `Datagram` the network unit, `Frame` the link unit.
+So the same HTTP bytes are called a message, then segment, then datagram, then frame.
+:::
 
 <a id="worked-example"></a>
 ## 4. Examples — Tiny First, Then Exam-Level

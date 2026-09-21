@@ -61,6 +61,12 @@ Dropping the theatre now: MAC = 48-bit flat factory address; ARP = broadcast que
 
 Six hex bytes (`AA:BB:CC:DD:EE:FF`), globally unique per adapter, first half = manufacturer OUI. **Flat** (no structure encoding location — unlike hierarchical IP prefixes), **portable** (moves with the device), and valid only **within one broadcast domain** — routers never forward by MAC.
 
+::: toggle What is a `MAC` address vs IP?
+A `MAC` address is a 48-bit flat factory identity burned into the adapter, with the first half naming the maker.
+An IP address is hierarchical and routable worldwide, while `MAC` works only inside one broadcast domain.
+Tiny example: laptop `AA` keeps its `MAC` across rooms but changes IP from `192.168.1.10` to `10.0.0.5`.
+:::
+
 ### 3.2 Operation Flow: ARP — The Binding Protocol, Step by Step
 
 To send an IP datagram to 192.168.1.5 on the local LAN, the sender needs the *destination MAC*:
@@ -69,10 +75,22 @@ To send an IP datagram to 192.168.1.5 on the local LAN, the sender needs the *de
 2. Miss → **broadcast** an ARP query ("who has 192.168.1.5? tell 192.168.1.1") to `FF:FF:FF:FF:FF:FF`.
 3. Only the owner replies (**unicast** with its MAC); sender caches it. Gratuitous ARP (claiming your own mapping unprompted) also detects IP conflicts and poisons... legitimately updates stale caches.
 
+::: toggle What do ARP `query`, `reply` and cache do?
+An ARP `query` broadcasts `who has X` to all LAN hosts when the cache misses.
+Only the owner sends a unicast `reply` with its MAC, which the sender caches with TTL aging.
+Tiny example: A broadcasts for `.20`, B unicasts back `BB`, and A caches `.20` to `BB` for next frames.
+:::
+
 ### 3.3 Hubs vs. Switches (Collision Domains Die Here)
 
 * **Hub:** physical-layer repeater — every bit out of every port. One **collision domain** for all; CSMA/CD mandatory; half-duplex.
 * **Switch:** link-layer device with per-port buffers + a **self-learning forwarding table** (source MAC → ingress port, learned from passing traffic, aged out). Forwards *only* to the destination's port (floods unknown destinations); each port is its **own collision domain** — full-duplex, no collisions, no CD needed.
+
+::: toggle What does a switch learn vs hub vs `VLAN`?
+A switch learns source `MAC` to ingress port from passing traffic and forwards only to the destination port.
+A hub repeats every bit out every port, while a `VLAN` tags one switch into separate broadcast domains.
+Tiny example: first frame to unknown `BB` floods once, the reply teaches the table, later frames go port to port.
+:::
 
 ### 3.4 VLANs: Many LANs, One Switch
 

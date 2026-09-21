@@ -59,6 +59,12 @@ Dropping the workshop now: window = allowed unacknowledged packets in flight; GB
 
 With stop-and-wait, the sender transmits for $L/R$ seconds then idles a full RTT (Round-Trip Time). Utilization $U = \frac{L/R}{\text{RTT} + L/R}$ — on a 1 Gbps, 30 ms link with 1 KB packets, $U \approx 0.00027$: the link is busy **0.027%** of the time. Pipelining $N$ unacknowledged packets multiplies utilization toward $N \times U$ — the entire economic case for windows.
 
+::: toggle What do `pipelining` and `utilization` mean?
+`Pipelining` keeps `N` packets unacknowledged in flight so transmission overlaps with waiting for ACKs.
+`Utilization` is the fraction of time the link transmits, near zero for stop-and-wait on fast long links.
+Tiny example: 1 KB packets on 1 Gbps with 30 ms RTT give 0.027 percent use, times `N` when pipelined.
+:::
+
 ### 3.2 Operation Flow: Go-Back-N (GBN)
 
 Numbered steps of the sender algorithm:
@@ -67,6 +73,12 @@ Numbered steps of the sender algorithm:
 2. On receiving ACK $n$ (**cumulative**: confirms *all* packets through $n$), slide `base` past $n$, restart the single timer for the new oldest unACKed packet.
 3. On timeout of the oldest unACKed packet, **retransmit everything from that packet onward** — even packets that arrived fine.
 4. The receiver stays simple: it discards out-of-order packets and re-ACKs the last in-order one.
+
+::: toggle What does Go-Back-N do on loss?
+Go-Back-N uses cumulative ACKs and one timer for the oldest unacknowledged packet.
+On timeout it resends everything from the lost packet onward, and the receiver discards out-of-order arrivals.
+Tiny example: window 4 with packet 2 lost resends 2, 3, 4 and 5 for 8 total transmissions.
+:::
 
 ```text
 GBN sender, window N=4, base=2 (packets 2,3,4,5 in flight):
@@ -88,6 +100,12 @@ Watch the sender window glide forward as cumulative ACKs arrive — four packets
 2. The receiver **buffers** out-of-order arrivals instead of discarding them, ACKing each.
 3. Only the actually-lost packet's timer expires, so only it is retransmitted.
 4. Price: sequence numbers need $2N$ values ($2^k \ge 2N$) — sending and receiving windows must never overlap numerically, or a restarted receiver confuses new packets with old retransmissions.
+
+::: toggle Why does Selective Repeat need `2N` sequence numbers?
+Selective Repeat buffers out-of-order packets with individual ACKs and per-packet timers, resending only the lost one.
+It needs twice the window in numbers so sender and receiver windows never overlap numerically after a restart.
+Tiny example: window 4 needs 8 numbers, while Go-Back-N needs only 5, or a new packet looks like an old retransmission.
+:::
 
 *TCP note:* real TCP is GBN-flavored (cumulative ACKs, single retransmission timer) with SR-flavored helpers (receiver buffering plus Selective-ACK — SACK — options) — a pragmatic mix, not a textbook copy of either.
 

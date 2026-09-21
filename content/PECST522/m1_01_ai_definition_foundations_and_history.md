@@ -31,6 +31,12 @@ Imagine two machines. A room thermostat measures temperature and flips the air c
 
 **Definition for beginners:** Artificial Intelligence (AI) is the branch of computer science that builds systems which **perceive** their surroundings, **reason** under uncertainty, and **act** to achieve goals.
 
+::: toggle What do `perceive`, `reason` and `act` mean here?
+- `perceive` means reading the world through sensors, like a spam filter reading email words.
+- `reason` means combining those readings under uncertainty, like estimating spam probability.
+- `act` means changing the world toward a goal, like moving the mail to spam.
+:::
+
 The basic loop every AI system follows is:
 
 ```text
@@ -67,6 +73,12 @@ Pioneers split definitions along two axes: **thought (internal reasoning) versus
 - **3. Thinking Rationally:** correct inference via formal logic. Example syllogism: "Socrates is a man; all men are mortal; therefore Socrates is mortal." Limitation: real knowledge is uncertain and hard to encode without explosive computation.
 - **4. Acting Rationally:** choose the action with the best **expected outcome** given available information. Example: a navigation agent rerouting around traffic. **Modern AI engineering is predominantly built on this rational-agent view** — not because it copies humans, but because it optimizes a performance measure.
 
+::: toggle What does `rational` mean here?
+- `rational` means picking the action with the best expected score on the available information.
+- Why not copy humans: human-like behaviour keeps human flaws, while rational behaviour optimises the goal.
+- How to test: ask what the percepts justified at decision time, not whether the outcome was lucky.
+:::
+
 ::: callout-pitfall Rationality vs. Omniscience
 **Rational** means best decision given available information. **Omniscient** means knowing actual future outcomes in advance (impossible). Examiners love this trap: a rational car that stops at a red light is still rational even if another driver rear-ends it.
 :::
@@ -79,6 +91,12 @@ Pioneers split definitions along two axes: **thought (internal reasoning) versus
 $$EU(a) = \sum_{o} P(o \mid a) \cdot U(o)$$
 
 Symbol by symbol: `EU(a)` is the score of action `a`; the sum ranges over all outcomes; each term multiplies likelihood by desirability. The agent picks the `a` with the largest `EU(a)`.
+
+::: toggle What do `EU(a)`, `P(o | a)`, `U(o)` and `+` mean?
+- `EU(a)` is the total score of action `a`; `P(o | a)` is how likely outcome `o` is after `a`.
+- `U(o)` is the desirability number of `o`; `+` (the sum) adds likelihood-times-value over all outcomes.
+- Tiny example: `EU(umbrella) = 0.5 x 10 + 0.5 x -2 = 4`, so carry when the rival action scores 3.
+:::
 
 **Foundations (each parent discipline defined):** Philosophy (logic, mind, knowledge as justified true belief); Mathematics (Boolean algebra, computability, Bayes' rule for updating probabilities, optimization); Economics (Decision Theory combining probability with utility; Game Theory — Von Neumann and Morgenstern — for multi-agent competition); Neuroscience (how biological neurons fire; inspiration for ANNs); Psychology (cognitive psychology treats the brain as an information processor); Computer Engineering (Central Processing Units (CPUs), Graphics Processing Units (GPUs), Tensor Processing Units (TPUs) that make training feasible); Control Theory and Cybernetics (feedback loops minimizing error); Linguistics (Noam Chomsky's syntax theory; basis of NLP).
 

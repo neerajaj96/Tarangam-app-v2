@@ -60,14 +60,32 @@ Dropping the table now: TDMA (Time Division Multiple Access) = time slots; FDMA 
 * **FDMA:** band split into sub-bands per node. Same trade, frequency-flavored (classic radio/TV).
 * **CDMA:** all share time *and* frequency; orthogonal codes separate speakers (each receiver filters by its code). No idle waste from scheduling, but needs code agreement and power control (the near-far problem).
 
+::: toggle What do `TDMA`, `FDMA` and `CDMA` mean?
+`TDMA` splits time into repeating slots per node, `FDMA` splits frequency into sub-bands per node.
+`CDMA` shares time and frequency with orthogonal codes, decoded by filtering on each receiver code.
+Tiny example: 3 steady nodes get every third slot under `TDMA`, one sub-band each under `FDMA`, or one code each.
+:::
+
 ### 3.2 Operation Flow: Random Access — Collisions Managed, Not Prevented
 
 Numbered etiquette ladder, each rung shrinking the vulnerable window:
 
 1. **Pure Aloha:** transmit whenever; frames collide partially → max efficiency only **18%** ($1/2e$).
 2. **Slotted Aloha:** transmit only at slot starts (needs clock sync); collisions are total-or-nothing → efficiency doubles to **37%** ($1/e$) — the price of collision *vulnerability windows*.
+
+::: toggle Why is pure Aloha `18 percent` and slotted `37 percent`?
+Pure Aloha collides with frames in a two-frame vulnerable window, slotted Aloha only with same-slot rivals.
+Halving the vulnerable window from two frames to one doubles peak efficiency from `1/2e` to `1/e`.
+Tiny example: 4 stations at `p` 0.25 succeed in about 42 percent of slots, near the large-population 37 ceiling.
+:::
 3. **CSMA:** **listen before talk** — defer while the channel sounds busy. Collisions still happen (propagation delay: two nodes can both hear silence and start together), but far less often.
 4. **CSMA/CD (classic Ethernet):** listen *while* talking; on collision detection, **abort + jam signal + binary exponential backoff** (wait random $0..2^k-1$ slot times after $k$th collision). Minimum frame size exists precisely so a sender is *still transmitting* when the collision echo returns ($2\tau$ rule: frame time ≥ worst round-trip propagation).
+
+::: toggle What is `binary exponential backoff` and the `2tau` rule?
+After `k` collisions the sender waits a uniform random 0 to `2^k` minus 1 slot times before retrying.
+The `2tau` rule makes frames long enough that the sender still transmits when the collision echo returns.
+Tiny example: after 3 collisions wait 0 to 7 slots, and short frames would otherwise finish deaf to collision.
+:::
 
 ::: callout-formula KTU Formula Vault: Efficiency Ladder
 Pure Aloha **18%** ($1/2e$) · slotted Aloha **37%** ($1/e$) · CSMA better (carrier sense shrinks the vulnerable window to propagation delay) · CSMA/CD best on wire (abort + backoff). Binary backoff after $k$ collisions: uniform in $[0, 2^k-1]$ slots. Min-frame rule: transmission time $\ge 2\tau_{max}$.

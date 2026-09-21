@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -288,7 +288,12 @@
 <h2 id="1-start-from-zero-why-tables-fail">1. Start From Zero: Why Tables Fail</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-layer-reflex-agents-no-memory-then-memory">2. Basic Layer: Reflex Agents (No … →</a></p>
 <p><strong>Problem first:</strong> a table-driven agent stores one action per percept history. With <code>|P|</code> possible percepts and horizon <code>t</code>, size is <code>|P|^t</code> (percept count to the power of time steps). Tiny numbers: 10 percepts over 20 steps needs 10^20 rows — physically impossible for a taxi. So agents compute instead of memorizing.</p>
-<p><strong>Foundation:</strong> <code>Agent = Architecture + Program</code>. Architecture is the hardware (sensors, processors, memory, actuators). Program is the software mapping histories to actions. The five architectures below are five program designs of increasing power.</p>
+<details class="interactive-toggle"><summary>What do `|P|`, `t` and `|P|^t` mean?</summary><div class="toggle-content"><ul>
+<li><code>|P|</code> counts the distinct percepts possible at one step, like 10 sensor patterns.</li>
+<li><code>t</code> counts the time steps of history, like 20 steps of driving.</li>
+<li><code>|P|^t</code> multiplies choices per step, so 10 percepts over 2 steps need 100 rows, and over 20 steps need 10^20.</li>
+</ul>
+</div></details><p><strong>Foundation:</strong> <code>Agent = Architecture + Program</code>. Architecture is the hardware (sensors, processors, memory, actuators). Program is the software mapping histories to actions. The five architectures below are five program designs of increasing power.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Basic Thermostat</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A thermostat fires <code>IF cold THEN heat</code> on the current reading only — no memory of yesterday. Feel &quot;react now&quot; here, then drop the device; the technical idea is condition-action rules without history.</p>
 </div></details><p><a id="basics"></a></p>
 <h2 id="2-basic-layer-reflex-agents-no-memory-then-memory">2. Basic Layer: Reflex Agents (No Memory, Then Memory)</h2>
@@ -306,7 +311,12 @@
 <p><strong>Architecture 2 — Model-Based Reflex:</strong> keeps an <strong>internal state</strong> (memory of unobserved aspects) updated by a transition model (how the world evolves) and a sensor model (how actions affect sensing):</p>
 <p>$$S_t = \text{Update}(S_{t-1}, A_{t-1}, P_t)$$</p>
 <p>Symbol by symbol: <code>S_t</code> = current internal state estimate; <code>S_{t-1}</code> = previous estimate; <code>A_{t-1}</code> = last action taken; <code>P_t</code> = newest percept. Intuition: remember where you were, account for what you did, correct with what you now see.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Driving Through a Mountain Tunnel</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>GPS drops in a tunnel, but the car propagates &quot;60 km/h straight for 3 s means still centered&quot; until signals return. Memory bridges blindness. Drop the tunnel after this; the equation above is the examinable content.</p>
+<details class="interactive-toggle"><summary>What do `S_t`, `S_{t-1}`, `A_{t-1}` and `P_t` mean?</summary><div class="toggle-content"><ul>
+<li><code>S_t</code> is the current guess about the hidden world, like still being centred in the tunnel.</li>
+<li><code>S_{t-1}</code> is the previous guess and <code>A_{t-1}</code> is what the agent just did, like driving straight for 3 s.</li>
+<li><code>P_t</code> is the newest percept correcting that prediction once GPS or vision returns.</li>
+</ul>
+</div></details><details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: Driving Through a Mountain Tunnel</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>GPS drops in a tunnel, but the car propagates &quot;60 km/h straight for 3 s means still centered&quot; until signals return. Memory bridges blindness. Drop the tunnel after this; the equation above is the examinable content.</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: The Fatal Flaw of Pure Reflex</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Simple reflex fails under partial observability because identical percepts can demand different actions. The fix is internal state, not more rules.</p>
 </div></details><p><a id="formal-model"></a></p>
 <h2 id="3-formal-layer-goals-utilities-learning">3. Formal Layer: Goals, Utilities, Learning</h2>
@@ -317,7 +327,12 @@
 <p>meaning function <code>U</code> maps each state <code>S</code> to a real number (its desirability). The agent picks:</p>
 <p>$$a^* = \arg\max_{a \in A} \sum_{s&#39;} P(s&#39; \mid s, a) \cdot U(s&#39;)$$</p>
 <p>Symbols: <code>a*</code> = best action; <code>A</code> = action set; <code>s&#39;</code> = possible next state; <code>P</code> = transition probability; <code>U(s&#39;)</code> = next-state score. Tiny numbers: Route A (25 min, $30, risky) scores 60; Route B (30 min, $0, safe) scores 85 — goal-based calls both &quot;arrive,&quot; utility-based picks B.</p>
-<p><strong>Architecture 5 — Learning Agent (four parts):</strong> starts with little knowledge and improves. (1) <strong>Performance element</strong> selects actions. (2) <strong>Critic</strong> grades against the external performance standard. (3) <strong>Learning element</strong> rewrites rules/models/utilities from that feedback. (4) <strong>Problem generator</strong> proposes exploratory actions (explore vs. exploit).</p>
+<details class="interactive-toggle"><summary>What do `U`, `S`, `R` and `argmax` mean?</summary><div class="toggle-content"><ul>
+<li><code>U</code> is the utility function scoring states; <code>S</code> is the set of states being scored.</li>
+<li><code>R</code> means real numbers, so every state gets a numeric desirability like 60 or 85.</li>
+<li><code>argmax</code> picks the action with the best expected score, which is why safe route B beats merely arriving route A.</li>
+</ul>
+</div></details><p><strong>Architecture 5 — Learning Agent (four parts):</strong> starts with little knowledge and improves. (1) <strong>Performance element</strong> selects actions. (2) <strong>Critic</strong> grades against the external performance standard. (3) <strong>Learning element</strong> rewrites rules/models/utilities from that feedback. (4) <strong>Problem generator</strong> proposes exploratory actions (explore vs. exploit).</p>
 <pre><code class="language-text">Sensors --&gt; PERFORMANCE ELEMENT --&gt; Actuators --&gt; Environment
               ^    |__ CRITIC --&gt; LEARNING ELEMENT --&gt; PROBLEM GENERATOR __|
 </code></pre>

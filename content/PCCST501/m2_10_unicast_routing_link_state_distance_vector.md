@@ -77,6 +77,12 @@ Distances lock smallest-first and stay locked — the settling contract the trac
 
 **Distance-vector (gossip with neighbours only):**
 
+::: toggle What are `link-state` and `distance-vector`?
+`Link-state` floods every `LSA` until all routers hold the same map, then each runs `Dijkstra` locally.
+`Distance-vector` shares only best distances with neighbours and applies Bellman-Ford `D_x(y)` updates.
+Tiny example: two routers agree in one flood round by map, but gossip needs rounds of `I reach X in 5`.
+:::
+
 1. Each router keeps a vector of best-known distances $D_x(y)$ to every destination $y$.
 2. Periodically (and on change — triggered updates) it shares the vector with direct neighbours only.
 3. On hearing neighbour $v$'s vector, it applies Bellman-Ford: $D_x(y) = \min_v \{c(x,v) + D_v(y)\}$, where $c(x,v)$ is the direct link cost to $v$.
@@ -85,6 +91,12 @@ Distances lock smallest-first and stay locked — the settling contract the trac
 ### 3.2 Failure Modes
 
 LS: flooding storms on flapping links (mitigated by dampening/areas). DV: **count-to-infinity** — stale good news recirculates upward after a cost increase ($3 \to 4 \to 5 \dots$ until holddown/poison intervenes); triggered updates + poison limit it to larger loops, never fully cure gossip's optimism.
+
+::: toggle What are `count-to-infinity` and `poisoned reverse`?
+`Count-to-infinity` is stale distance rumours climbing upward after a link cost rises or fails.
+`Poisoned reverse` advertises infinity back toward the neighbour used as next hop, while `split horizon` never advertises back.
+Tiny example: B hearing stale `3` via A goes `4`, then A goes `5`, unless B had poisoned A with infinity.
+:::
 
 ::: callout-formula KTU Formula Vault: Routing
 LS $=$ flood + Dijkstra, $O(E\log V)$ each · DV: $D_x(y) = \min_v(c + D_v)$ · RIP $16 = \infty$ · poisoned reverse breaks pairs · BGP $=$ path-vector + policy.
@@ -111,6 +123,12 @@ default via 192.168.1.1 dev eth0 proto dhcp metric 100
 ```
 
 Read it column by column: destination prefix (`default` means `0.0.0.0/0` — last resort); `via` = next-hop gateway; `dev` = outgoing interface; `proto` = who installed it (`kernel` = directly connected, `dhcp`, `static`, or a routing daemon); `metric` = tie-break cost (lower wins among equal-length prefixes); `scope link` = reachable directly without a gateway; `src` = preferred source address.
+
+::: toggle What do `via`, `dev` and `metric` mean in `ip route show`?
+`ip route show` lists destination prefixes with the next-hop gateway after `via` and the outgoing interface after `dev`.
+`metric` breaks ties only among equal-length prefixes, with lower cost winning, while longest prefix still wins first.
+Tiny example: `10.10.0.0/16 via 10.10.0.1 dev eth1` beats `default` for `10.10.5.9` by longer match.
+:::
 
 ### 4.2 Longest-Prefix Match, Live
 

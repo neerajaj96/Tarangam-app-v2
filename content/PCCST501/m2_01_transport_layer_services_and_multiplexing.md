@@ -61,6 +61,18 @@ Exam trap: multiplexing, reliability, and congestion control are implemented **o
 | **Port number** | 16-bit process identifier; 0–1023 are **well-known** (HTTP 80, HTTPS 443, FTP-control 21, DNS 53, SMTP 25); clients use ephemeral high ports. |
 | **2-tuple / 4-tuple** | The demultiplexing key: UDP uses (destination IP, destination port); TCP uses (source IP, source port, destination IP, destination port). |
 
+::: toggle What do `multiplexing` and `demultiplexing` mean?
+`Multiplexing` gathers chunks from several sender sockets, adds transport headers, and hands them to the network layer.
+`Demultiplexing` inspects each arrival's port identifiers and steers the payload up to the correct receiver socket.
+Tiny example: a browser and a mail client send together, and ports sort their replies back apart on arrival.
+:::
+
+::: toggle What is a `2-tuple` vs a `4-tuple`?
+A UDP `2-tuple` keys only on destination IP and destination port, so two senders share one socket.
+A TCP `4-tuple` adds source IP and source port, so each client connection gets its own socket.
+Tiny example: two clients on source ports 5001 and 5002 share server port 80 but use two different 4-tuples.
+:::
+
 <a id="the-math"></a>
 ## 3. Purpose — Sorting Rules, Then the Numbers
 
@@ -90,6 +102,12 @@ flowchart LR
 ### 3.2 Sockets, Ports, and Well-Known Numbers
 
 A **socket** is the programming interface between an application process and the transport layer, named by `(IP address, port number)`. Ports 0–1023 are **well-known** (HTTP 80, HTTPS — HyperText Transfer Protocol Secure — 443, FTP-control 21, DNS 53, SMTP 25); servers listen on them while clients use ephemeral high ports.
+
+::: toggle What is a `socket` and a `well-known port`?
+A `socket` is the `IP:port` doorway where one application process sends and receives transport data.
+A `well-known port` is a fixed low number below 1024 where a standard service listens, such as 80 for HTTP.
+Tiny example: a browser uses ephemeral port 49152 to talk to server `IP:80`, and the reply reverses the pair.
+:::
 
 <a id="worked-example"></a>
 ## 4. Examples — Tiny First, Then Exam-Level

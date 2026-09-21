@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -362,17 +362,26 @@
 <li><strong>Single parity bit:</strong> even parity makes the total 1-count even. Catches any <strong>odd</strong> number of bit errors; <strong>blind to even</strong> flips (two errors cancel). Overhead: 1 bit per byte/word.</li>
 <li><strong>2D parity:</strong> arrange data in rows/columns, add a parity bit per row <em>and</em> per column. Catches all 1-, 2-, and 3-bit errors and <em>most</em> bursts; a 4-bit rectangle of errors (even per row <em>and</em> column) slips through — the classic counterexample to memorize.</li>
 </ul>
-<h3>3.2 Internet Checksum (Module 2 Reused)</h3>
+<details class="interactive-toggle"><summary>What does parity miss vs `2D parity` rectangle?</summary><div class="toggle-content"><p>Single parity catches odd numbers of flips but even flips cancel and pass silently.
+<code>2D parity</code> adds row plus column tallies, catching 1 to 3 bit errors, except a 4-bit even rectangle.
+Tiny example: two flips in one byte fool single parity, but disturb column tallies unless they form a rectangle.</p>
+</div></details><h3>3.2 Internet Checksum (Module 2 Reused)</h3>
 <p>1s-complement sum of 16-bit words + pseudoheader; receiver expects all-1s. Lightweight, software-friendly — and weak: swapped 16-bit words produce the <em>identical</em> sum (reordering invisible), and many multi-bit patterns cancel.</p>
 <h3>3.3 Operation Flow: CRC — Polynomial Division in Hardware, Step by Step</h3>
 <p>Treat bits as coefficients of a binary polynomial (all arithmetic mod 2 = XOR, no carries). With an $r+1$-bit <strong>generator</strong> $G$ (symbols: $D$ = data bits, $r$ = CRC length, $R$ = remainder):</p>
-<ol>
+<details class="interactive-toggle"><summary>What is `GF(2)` XOR division in CRC?</summary><div class="toggle-content"><p><code>GF(2)</code> arithmetic means addition and subtraction are both <code>XOR</code> with no carries or borrows.
+CRC appends <code>r</code> zeros to data <code>D</code>, divides by generator <code>G</code> with XOR long division, and transmits remainder <code>R</code>.
+Tiny example: data <code>101</code> with generator <code>11</code> appends one zero, divides to remainder <code>0</code>, and sends <code>1010</code>.</p>
+</div></details><ol>
 <li>Append $r$ zero bits to data $D$.</li>
 <li>Divide by $G$ (XOR long division, aligning $G$ under each leading 1); the $r$-bit <strong>remainder</strong> $R$ is the CRC.</li>
 <li>Transmit $\langle D, R \rangle$. Receiver divides the whole thing by $G$: remainder <strong>zero</strong> = intact.</li>
-<li>Power: catches <strong>all single-bit errors</strong>, all <strong>odd-count</strong> errors (standard generators include an $(x+1)$ factor, which is exactly the condition that guarantees odd-count detection), all bursts shorter than $r+1$ bits, and all but a $2^{-r}$ fraction of longer bursts.</li>
 </ol>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Detection Ladder</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Parity: odd-count only · 2D parity: +bursts except even-rectangles · checksum: cheap, blind to word swaps · <strong>CRC</strong>: single + odd + bursts $&lt; r+1$, misses only $2^{-r}$ of longer ones. Exam numerical = CRC division (below) or &quot;which errors escape 2D parity&quot; (the 4-bit rectangle).</p>
+<details class="interactive-toggle"><summary>What does remainder `zero` vs nonzero mean?</summary><div class="toggle-content"><p>Receiver remainder <code>zero</code> means the frame looks intact and is accepted, subject to a tiny <code>2^-r</code> leak.
+Nonzero remainder means corruption is certain, so the frame is discarded for retransmission elsewhere.
+Tiny example: transmitted <code>1010001101 01110</code> divides to <code>00000</code> accept, while any single flipped bit gives nonzero discard.</p>
+</div></details>
+4. Power: catches **all single-bit errors**, all **odd-count** errors (standard generators include an $(x+1)$ factor, which is exactly the condition that guarantees odd-count detection), all bursts shorter than $r+1$ bits, and all but a $2^{-r}$ fraction of longer bursts.<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Detection Ladder</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Parity: odd-count only · 2D parity: +bursts except even-rectangles · checksum: cheap, blind to word swaps · <strong>CRC</strong>: single + odd + bursts $&lt; r+1$, misses only $2^{-r}$ of longer ones. Exam numerical = CRC division (below) or &quot;which errors escape 2D parity&quot; (the 4-bit rectangle).</p>
 </div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Detection ≠ Correction (and Remainder ≠ Error Location)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A failed check says <em>corrupt</em>, never <em>where</em> — none of these codes locate or fix bits (that needs Hamming/Reed-Solomon territory). And CRC&#39;s zero-remainder verdict is probabilistic armor ($2^{-r}$ leak), not a proof of intactness.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>

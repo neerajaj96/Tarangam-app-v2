@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 11 MIN READ</span>
+    <span class="badge">⏱️ 12 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -360,7 +360,13 @@
 <td>A flood of bogus requests from many machines meant to overwhelm a server — the weaponized form of the client-server bottleneck.</td>
 </tr>
 </tbody></table>
-<p><a id="the-math"></a></p>
+<details class="interactive-toggle"><summary>What does `client` vs `server` mean?</summary><div class="toggle-content"><p>A <code>client</code> requests a service and a <code>server</code> supplies it, so the words name roles, not device types.
+The <code>server</code> is usually always-on with a fixed address so clients can find it.
+Tiny example: a browser is the client, the web machine answering on port 80 is the server.</p>
+</div></details><details class="interactive-toggle"><summary>What does `P2P` mean?</summary><div class="toggle-content"><p><code>P2P</code> means peer-to-peer: every peer is both client and server at once, with no central server.
+Each newcomer adds demand and also upload capacity, so the system self-scales.
+Tiny example: in BitTorrent each downloader re-uploads pieces to other downloaders.</p>
+</div></details><p><a id="the-math"></a></p>
 <h2 id="3-purpose-the-two-architectures-and-the-shared-addressing-tr">3. Purpose — The Two Architectures and the Shared Addressing Trick</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Client-Server Architecture</h3>
@@ -421,7 +427,13 @@
 </tr>
 </tbody></table>
 <p>A Web Server process, for example, conventionally listens on <strong>Port 80</strong> — so even though many processes may be running on the same machine, the port number ensures an incoming HTTP request reaches the right one.</p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The Two-Part Address</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The 2-mark &quot;why isn&#39;t IP enough?&quot; answer is always: <strong>IP address finds the host, port number finds the process</strong> — together they name a <strong>socket</strong> (<code>IP:port</code>). Any option claiming one identifier suffices, or that ports replace IPs, is the planted distractor.</p>
+<details class="interactive-toggle"><summary>What does `port` mean?</summary><div class="toggle-content"><p>A <code>port</code> is a 16-bit number naming which process on a host should receive the data.
+The IP address finds the host, the port finds the process on that host.
+Tiny example: port 80 steers an arrival to the web process, not the music app.</p>
+</div></details><details class="interactive-toggle"><summary>What does `socket` mean?</summary><div class="toggle-content"><p>A <code>socket</code> is the software doorway between a process and the network, named as <code>IP:port</code>.
+To send, a process passes bytes through its socket down to the transport layer below.
+Tiny example: browser socket <code>192.0.2.5:5001</code> talking to server socket <code>93.184.216.34:80</code>.</p>
+</div></details><details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The Two-Part Address</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The 2-mark &quot;why isn&#39;t IP enough?&quot; answer is always: <strong>IP address finds the host, port number finds the process</strong> — together they name a <strong>socket</strong> (<code>IP:port</code>). Any option claiming one identifier suffices, or that ports replace IPs, is the planted distractor.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
 <p class="secnav"><a href="#3-purpose-the-two-architectures-and-the-shared-addressing-tr">← 3. Purpose — The Two Architectures…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>

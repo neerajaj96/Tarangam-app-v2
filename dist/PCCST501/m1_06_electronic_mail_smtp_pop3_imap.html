@@ -371,7 +371,13 @@
 <td>The SMTP greeting command opening the dialogue (&quot;hello, I am …&quot;).</td>
 </tr>
 </tbody></table>
-<p><a id="the-math"></a></p>
+<details class="interactive-toggle"><summary>What does `SMTP` mean?</summary><div class="toggle-content"><p><code>SMTP</code> is the push protocol that moves mail from the sender toward the recipient&#39;s server.
+It runs over TCP port 25, with the sender speaking first through commands.
+Tiny example: <code>MAIL FROM</code>, <code>RCPT TO</code>, <code>DATA</code>, then <code>QUIT</code> delivers one message.</p>
+</div></details><details class="interactive-toggle"><summary>What do `POP3` and `IMAP` mean?</summary><div class="toggle-content"><p>Both pull mail from your mailbox to your device, but with different state models.
+<code>POP3</code> on port 110 usually downloads and deletes, suiting one device only.
+<code>IMAP</code> on port 143 keeps server-side folders so phone and laptop stay in sync.</p>
+</div></details><p><a id="the-math"></a></p>
 <h2 id="3-purpose-push-dialogue-message-shape-pull-choice">3. Purpose — Push Dialogue, Message Shape, Pull Choice</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Operation Flow: SMTP Dialogue and Message Shape</h3>

@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -394,9 +394,18 @@
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 Operation Flow: Trees and Protocols</h3>
 <p>Two tree shapes: <strong>source-based</strong> (one shortest-path tree per source — DVMRP flood-and-prune, MOSPF) and <strong>group-shared</strong> (one rendezvous/core tree per group — CBT, PIM-SM). Intra-domain: DVMRP, MOSPF, PIM-DM/SM; inter-domain: MBGP carries multicast routes, MSDP shares active sources across domains. <strong>RPF check</strong>: forward a multicast packet only if it arrived on the interface the router would use to unicast <em>back</em> to the source — else drop (loop-killer, duplicate-killer).</p>
-<h3>3.2 IGMP&#39;s Role</h3>
+<details class="interactive-toggle"><summary>What do `unicast`, `broadcast` and `multicast` mean?</summary><div class="toggle-content"><p><code>Unicast</code> sends one copy to one receiver, repeated <code>N</code> times for <code>N</code> receivers from the source.
+<code>Broadcast</code> sends to everyone on a network, while <code>multicast</code> sends once to only Class-D group subscribers.
+Tiny example: a lecture to 10000 students needs 1 multicast send, not 10000 unicasts or planet-wide broadcast.</p>
+</div></details><details class="interactive-toggle"><summary>What is the `RPF` check?</summary><div class="toggle-content"><p><code>RPF</code> forwards a multicast packet only if it arrived on the interface used for unicast back to the source.
+Why it matters: arrivals on any other interface must be looping duplicates, so dropping them kills loops.
+Tiny example: best path to source via eth0 means the eth0 copy fans out while the eth1 duplicate dies.</p>
+</div></details><h3>3.2 IGMP&#39;s Role</h3>
 <p>Hosts join/leave groups with IGMP membership reports to their local router; routers query periodically and prune branches with zero members. Group state lives at the edge; the core forwards by tree, never by member list.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Multicast</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Class D $= 224/4$ · IGMP joins at edge · RPF: arrival $\in$ best-path-to-source else drop · source trees (flood-prune) vs shared trees (core) · intra (PIM/DVMRP) vs inter (MBGP/MSDP).</p>
+<details class="interactive-toggle"><summary>What is `IGMP` and source vs shared tree?</summary><div class="toggle-content"><p><code>IGMP</code> lets hosts join and leave groups with membership reports to the local router at the edge.
+A source tree builds one shortest path tree per sender with flood-and-prune, a shared tree uses one core tree per group.
+Tiny example: edge joins via <code>IGMP</code>, inside the domain <code>PIM-SM</code> grows the tree, across domains <code>MBGP</code> plus <code>MSDP</code> share sources.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Multicast</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Class D $= 224/4$ · IGMP joins at edge · RPF: arrival $\in$ best-path-to-source else drop · source trees (flood-prune) vs shared trees (core) · intra (PIM/DVMRP) vs inter (MBGP/MSDP).</p>
 </div></details><p>RPF reuses the <em>unicast</em> table — no separate multicast topology needed for the check, which is why every multicast protocol leans on whatever unicast routing already computed.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Broadcast Confusion</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Broadcast hits all hosts on a LAN (one subnet, ARP-style); multicast crosses routers to <em>subscribers only</em>, group-addressed. An option delivering &quot;to every host on the Internet&quot; describes neither — multicast scope is membership, never everybody.</p>
 </div></details><p><a id="worked-example"></a></p>

@@ -65,9 +65,27 @@ On-tree arrival fans out once per member link; the looped duplicate fails its RP
 
 Two tree shapes: **source-based** (one shortest-path tree per source — DVMRP flood-and-prune, MOSPF) and **group-shared** (one rendezvous/core tree per group — CBT, PIM-SM). Intra-domain: DVMRP, MOSPF, PIM-DM/SM; inter-domain: MBGP carries multicast routes, MSDP shares active sources across domains. **RPF check**: forward a multicast packet only if it arrived on the interface the router would use to unicast *back* to the source — else drop (loop-killer, duplicate-killer).
 
+::: toggle What do `unicast`, `broadcast` and `multicast` mean?
+`Unicast` sends one copy to one receiver, repeated `N` times for `N` receivers from the source.
+`Broadcast` sends to everyone on a network, while `multicast` sends once to only Class-D group subscribers.
+Tiny example: a lecture to 10000 students needs 1 multicast send, not 10000 unicasts or planet-wide broadcast.
+:::
+
+::: toggle What is the `RPF` check?
+`RPF` forwards a multicast packet only if it arrived on the interface used for unicast back to the source.
+Why it matters: arrivals on any other interface must be looping duplicates, so dropping them kills loops.
+Tiny example: best path to source via eth0 means the eth0 copy fans out while the eth1 duplicate dies.
+:::
+
 ### 3.2 IGMP's Role
 
 Hosts join/leave groups with IGMP membership reports to their local router; routers query periodically and prune branches with zero members. Group state lives at the edge; the core forwards by tree, never by member list.
+
+::: toggle What is `IGMP` and source vs shared tree?
+`IGMP` lets hosts join and leave groups with membership reports to the local router at the edge.
+A source tree builds one shortest path tree per sender with flood-and-prune, a shared tree uses one core tree per group.
+Tiny example: edge joins via `IGMP`, inside the domain `PIM-SM` grows the tree, across domains `MBGP` plus `MSDP` share sources.
+:::
 
 ::: callout-formula KTU Formula Vault: Multicast
 Class D $= 224/4$ · IGMP joins at edge · RPF: arrival $\in$ best-path-to-source else drop · source trees (flood-prune) vs shared trees (core) · intra (PIM/DVMRP) vs inter (MBGP/MSDP).

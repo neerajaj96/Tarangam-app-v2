@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 10 MIN READ</span>
+    <span class="badge">⏱️ 11 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -364,7 +364,13 @@
 <td>Reliable, ordered, connection-oriented transport service HTTP/1.0, HTTP/1.1, and HTTP/2 run over. (HTTP/3 instead runs over QUIC, a UDP-based protocol — so &quot;HTTP always uses TCP&quot; is true only up to HTTP/2.)</td>
 </tr>
 </tbody></table>
-<p><a id="the-math"></a></p>
+<details class="interactive-toggle"><summary>What does `HTTP` mean?</summary><div class="toggle-content"><p><code>HTTP</code> is the web&#39;s request-and-response protocol: the browser asks for an object, the server answers.
+It runs at the application layer and, up to HTTP/2, uses TCP for reliable ordered delivery.
+Tiny example: <code>GET /index.html HTTP/1.1</code> asks the server to return that one file.</p>
+</div></details><details class="interactive-toggle"><summary>What does `stateless` mean?</summary><div class="toggle-content"><p><code>Stateless</code> means the server keeps no memory of past requests between connections.
+Each request is handled as if brand new, even from the same browser seconds later.
+That is why logins need cookies: the protocol itself remembers nothing.</p>
+</div></details><p><a id="the-math"></a></p>
 <h2 id="3-purpose-connection-economy-then-message-structure">3. Purpose — Connection Economy, Then Message Structure</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 HTTP Fundamentals</h3>
@@ -441,7 +447,13 @@
 <li><strong>Header Lines:</strong> <code>Date:</code>, <code>Server:</code>, <code>Content-Length:</code>, <code>Content-Type:</code></li>
 <li><strong>Data (Body):</strong> the actual requested object.</li>
 </ul>
-<h3>3.4 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
+<details class="interactive-toggle"><summary>What do `GET`, `POST`, and status `200 OK` mean?</summary><div class="toggle-content"><p><code>GET</code> asks the server to return an object, while <code>POST</code> carries form data up in the body.
+<code>200 OK</code> means the request succeeded, and <code>404 Not Found</code> means no such object exists.
+Tiny example: <code>GET /index.html</code> returns the page, <code>POST /login</code> submits a form.</p>
+</div></details><details class="interactive-toggle"><summary>What does `cookie` mean?</summary><div class="toggle-content"><p>A <code>cookie</code> is a small ID the server issues with <code>Set-cookie</code> for the browser to store.
+The browser resends it on later requests so the server can look up that client&#39;s state.
+The protocol stays stateless; the ID plus server-side lookup restores sessions.</p>
+</div></details><h3>3.4 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
 <pre><code class="language-mermaid">sequenceDiagram
     participant Br as Browser
     participant Sv as Server

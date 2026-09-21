@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -397,9 +397,18 @@
 <li>Local ↔ authoritative: query + final answer = $2$.</li>
 </ol>
 <p>Total $= 8$. The iterative variant returns referrals instead of answers, shifting work to the requester. Every record carries a <strong>TTL</strong> — cache lifetime, the staleness-vs-load dial.</p>
-<h3>3.2 Records and Transport</h3>
+<details class="interactive-toggle"><summary>What do `recursive` and `iterative` queries mean?</summary><div class="toggle-content"><p>A <code>recursive</code> query asks the local resolver to chase the full answer and return only the final address.
+An <code>iterative</code> reply returns the next referral instead, so the requester does the next climb step itself.
+Tiny example: cold <code>mail.ktu.edu</code> needs 8 messages recursive, with referrals at root and TLD along the way.</p>
+</div></details><details class="interactive-toggle"><summary>What does `TTL` mean?</summary><div class="toggle-content"><p><code>TTL</code> is Time To Live in seconds, how long a cached DNS record may be reused before refetching.
+Why it matters: long <code>TTL</code> cuts queries but risks stale answers, short <code>TTL</code> stays fresh but reloads the hierarchy.
+Tiny example: a cached TLD address skips its 2-message round trip, so 8 messages collapse to 6.</p>
+</div></details><h3>3.2 Records and Transport</h3>
 <p><code>A</code> (name→IPv4), <code>AAAA</code> (→IPv6), <code>NS</code> (zone&#39;s servers), <code>CNAME</code> (alias→canonical), <code>MX</code> (mail exchanger — email&#39;s reunion with the previous note). UDP/53 normally, TCP/53 for zone transfers and oversized replies. Single point of failure dodged by replication: $13$ root identities, anycast instances worldwide.</p>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: DNS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Root → TLD → authoritative · worst case $8$ messages · TTL prices cache life · <code>A/AAAA/NS/CNAME/MX</code> · UDP/$53$ (TCP for bulk).</p>
+<details class="interactive-toggle"><summary>What do `A`, `AAAA`, `CNAME`, `MX` and `NS` mean?</summary><div class="toggle-content"><p><code>A</code> maps a name to an IPv4 address and <code>AAAA</code> to an IPv6 address, the final answers a browser needs.
+<code>CNAME</code> maps an alias to its canonical name, <code>MX</code> names the mail server, <code>NS</code> names the zone&#39;s servers.
+Tiny example: <code>www</code> uses <code>CNAME</code> to <code>web</code>, <code>web</code> uses <code>A</code> to its IPv4, and mail uses <code>MX</code> to find port-25 target.</p>
+</div></details><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: DNS</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Root → TLD → authoritative · worst case $8$ messages · TTL prices cache life · <code>A/AAAA/NS/CNAME/MX</code> · UDP/$53$ (TCP for bulk).</p>
 </div></details><p>DNS runs over UDP because queries fit one packet and retries are cheap — reliability via timeout-and-retry, not connections.</p>
 <details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Resolver vs Authoritative</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The local <strong>resolver</strong> asks on your behalf (recursive, caches); <strong>authoritative</strong> servers answer for their zone only (never recurse for strangers). An option sending end-users straight to the root mistakes the branch office for head office — roots would melt under that load.</p>
 </div></details><p><a id="worked-example"></a></p>

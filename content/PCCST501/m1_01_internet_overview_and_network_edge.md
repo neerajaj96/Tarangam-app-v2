@@ -63,6 +63,18 @@ Dropping the highway now: the technical terms above are the ones the exam uses, 
 | **ISP (Internet Service Provider)** | The company (e.g. your broadband or mobile operator) that runs that first router and sells you access. |
 | **Guided / unguided media** | Guided = signals travel *along* a solid path (copper, glass fiber). Unguided = signals travel through open air or space (radio, satellite). |
 
+::: toggle What does `packet` mean?
+A `packet` is one small chunk of a larger message, with address headers attached.
+Splitting matters because switches forward short uniform pieces without waiting for a whole file.
+Tiny example: a 1 MB video becomes roughly a thousand 1 KB packets, each routed independently.
+:::
+
+::: toggle What do `host` and `client` mean here?
+A `host` is any computer at the network edge that runs applications, so it originates or consumes data.
+A `client` is the role of requesting data, while a `server` is the role of supplying it.
+One laptop is a `client` when streaming and a `server` when sharing a file to a peer.
+:::
+
 <a id="the-math"></a>
 ## 3. Purpose — Why Two Views of One Internet
 
@@ -122,6 +134,18 @@ Bits must travel across some physical medium — electromagnetic waves or light 
 * **Unguided Media** (waves propagate through open air/space):
   * *Terrestrial Radio* — Wi-Fi, AM/FM broadcast.
   * *Satellite Radio* — geosynchronous satellites or Low Earth Orbit (LEO) constellations.
+
+::: toggle What does `transmission rate` mean?
+`Transmission rate` is bits per second the link can push, also called `bandwidth` here.
+Why it matters: every link in the video path has its own rate, and the slowest one bounds the stream.
+Tiny example: a 10 Mbps link delivers about 10 million bits per second, so a 40 Mb clip needs at least 4 seconds.
+:::
+
+::: toggle What does `guided` vs `unguided` mean?
+`Guided` means waves travel along a solid path such as copper wire or glass fiber.
+`Unguided` means waves propagate through open air or space, such as Wi-Fi or satellite radio.
+Use it as: FTTH fiber is guided, the last hop of home Wi-Fi is unguided.
+:::
 
 <a id="worked-example"></a>
 ## 4. Examples — Tiny First, Then Exam-Level
