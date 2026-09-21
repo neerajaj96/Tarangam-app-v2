@@ -1,0 +1,45 @@
+name: CI quality gate
+
+# Automated quality gate: every push and pull request is checked against the
+# project's existing integrity, build, performance, accessibility,
+# responsive, PWA, assessment, learner-state, and backup/restore suites.
+# The workflow delegates all logic to the existing deterministic commands
+# (npm test / npm run build:notes / npm run lint) and duplicates none of
+# scripts/check.js. Any failing command fails the job. No deployment here;
+# GitHub Pages release/deployment hardening remains a later phase.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Matches the project's current development/runtime toolchain
+          # (local Node v22, @types/node ^22).
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies (reproducible)
+        run: npm ci
+
+      - name: Run test suites
+        run: npm test
+
+      - name: Build notes and run content QA gate
+        # Runs scripts/build.js (generates dist/) then scripts/check.js,
+        # which verifies dist/ output, performance budgets, PWA assets,
+        # learner-state integrity, and backup/restore safeguards.
+        run: npm run build:notes
+
+      - name: Lint (typecheck)
+        run: npm run lint
