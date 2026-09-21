@@ -106,6 +106,7 @@ describe('required commands and suites stay wired', () => {
       'responsive-ux.test.js',
       'assessment.test.js',
       'ci-quality-gate.test.js',
+      'generated-site-smoke.test.js',
     ]) {
       assert.ok(pkg.scripts.test.includes(name), `suite must keep ${name}`);
     }

@@ -252,6 +252,9 @@ for (const course of courses) {
 // 4. Post-build dist validation (skipped when dist/ absent, e.g. fresh clone).
 // Every relative *.html link inside dist/ must resolve to a built file —
 // this catches nav/prev-next/dashboard rewrite breakage in both Pages modes.
+// Local JS/CSS/manifest/icon/image/data refs must resolve inside dist/,
+// root-absolute paths are rejected (Pages-incompatible), and the published
+// manifest must match the generated topic pages exactly (no orphans).
 if (fs.existsSync('dist')) {
   const walk = (dir) =>
     fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -260,6 +263,10 @@ if (fs.existsSync('dist')) {
     });
   const pages = walk('dist').filter((f) => f.endsWith('.html'));
   if (!pages.length) fail('dist/ exists but contains no .html pages');
+  // Required entry pages of the generated application.
+  for (const entry of ['dist/index.html', 'dist/dashboard.html', 'dist/explorer.html', 'dist/course.html', 'dist/assessment.html', 'dist/offline.html']) {
+    if (!fs.existsSync(entry)) fail(`dist: expected generated page ${entry} — actual: missing (run npm run build:notes)`);
+  }
   for (const page of pages) {
     const html = fs.readFileSync(page, 'utf-8');
     for (const m of html.matchAll(/href="([^"#]+?\.html)"/g)) {
@@ -267,6 +274,29 @@ if (fs.existsSync('dist')) {
       if (/^(https?:)?\/\//.test(href) || href.startsWith('mailto:')) continue;
       const target = path.normalize(path.join(path.dirname(page), href));
       if (!fs.existsSync(target)) fail(`dist broken link: ${page} -> ${href}`);
+    }
+  }
+  // Local static asset refs (JS/CSS/manifest/icons/images/data) used by
+  // generated pages must resolve to files inside dist/.
+  for (const page of pages) {
+    const html = fs.readFileSync(page, 'utf-8');
+    for (const m of html.matchAll(/(href|src)="([^"]+)"/g)) {
+      const ref = m[2];
+      if (!ref || ref.startsWith('#') || ref.startsWith('data:') || ref.startsWith('blob:')) continue;
+      if (/^(https?:)?\/\//.test(ref) || ref.startsWith('mailto:') || ref.startsWith('tel:')) continue;
+      const clean = ref.split('#')[0].split('?')[0];
+      if (!clean || clean.endsWith('.html') || clean.endsWith('/')) continue;
+      if (!/\.(js|css|png|svg|ico|webmanifest|json|xml|woff2?|ttf)$/.test(clean)) continue;
+      if (clean.startsWith('/')) {
+        fail(`dist root-absolute asset: ${page} -> ${ref} (must stay Pages-relative)`);
+        continue;
+      }
+      const target = path.normalize(path.join(path.dirname(page), clean));
+      if (!target.startsWith(`dist${path.sep}`)) {
+        fail(`dist asset escapes dist/: ${page} -> ${ref}`);
+      } else if (!fs.existsSync(target)) {
+        fail(`dist missing asset: ${page} -> ${ref} (missing ${target})`);
+      }
     }
   }
   // dist/index.html must be standalone (no dist/ prefixes — artifact root).
@@ -277,6 +307,36 @@ if (fs.existsSync('dist')) {
   for (const page of pages) {
     if (/href="\.\.\/\.\.|src="\.\.\/\.\./.test(fs.readFileSync(page, 'utf-8'))) {
       fail(`dist depth escape (../../) in ${page} — must be ../ for artifact root`);
+    }
+    // Root-absolute local paths break the Pages project subpath.
+    for (const m of fs.readFileSync(page, 'utf-8').matchAll(/(href|src)="(\/[^"]*)"/g)) {
+      fail(`dist root-absolute path: ${page} -> ${m[2]} (must stay Pages-relative)`);
+    }
+  }
+  // Published data must match the generated pages: every manifest topic
+  // needs its HTML file, and no topic HTML may be orphaned from the manifest.
+  for (const dataFile of ['dist/data/topic-manifest.json', 'dist/data/assessments.json']) {
+    if (!fs.existsSync(dataFile)) fail(`dist: expected generated file ${dataFile} — actual: missing (run npm run build:notes)`);
+  }
+  if (fs.existsSync('dist/data/topic-manifest.json')) {
+    let distManifest = null;
+    try {
+      distManifest = JSON.parse(fs.readFileSync('dist/data/topic-manifest.json', 'utf-8'));
+    } catch (e) {
+      fail(`dist: dist/data/topic-manifest.json is not valid JSON (${(e && e.message) || e})`);
+    }
+    if (distManifest && Array.isArray(distManifest.topics)) {
+      const expected = new Set(distManifest.topics.map((t) => path.normalize(path.join('dist', t.courseCode, String(t.filename || '').replace(/\.md$/, '.html')))));
+      for (const target of [...expected].sort()) {
+        if (!fs.existsSync(target)) fail(`dist manifest without HTML: ${target} has no generated page`);
+      }
+      const onDisk = new Set(pages.map((f) => path.normalize(f)).filter((f) => path.relative('dist', f).includes(path.sep)));
+      if (onDisk.size !== expected.size) {
+        fail(`dist: expected ${expected.size} topic pages from the manifest — actual: ${onDisk.size} on disk`);
+      }
+      for (const file of [...onDisk].sort()) {
+        if (!expected.has(file)) fail(`dist orphaned topic page with no manifest entry: ${file}`);
+      }
     }
   }
 }
