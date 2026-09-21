@@ -1,6 +1,6 @@
 /**
  * Shared build output — dist/ directory management and all generated-file
- * writes (topic HTML, navigation_index.json, sitemap.xml, style.css,
+ * writes (topic HTML, sitemap.xml, style.css,
  * .nojekyll, dashboard subject-detail injection into index.html,
  * standalone dist/index.html, assets/media copies), used by
  * scripts/build.js. ES module style like the rest of scripts/.
@@ -40,9 +40,11 @@ export function writeTopicHtml(courseOutDir, filename, html) {
   fs.writeFileSync(targetPath, html, 'utf-8');
 }
 
-export function writeNavigationIndex(outputDir, coursesData) {
-  fs.writeFileSync(path.join(outputDir, 'navigation_index.json'), JSON.stringify(coursesData, null, 2), 'utf-8');
-}
+// NOTE: no navigation_index.json is published. It was previously written
+// to dist/ but nothing — no page, script, test, sitemap, or doc — ever
+// reads it, so shipping 125KB of duplicated catalog data served no
+// learner. coursesData is still built in memory for the sitemap and
+// dashboard injection below.
 
 // Sitemap for SEO (relative URLs; Pages serves dist/ as root).
 export function writeSitemap(outputDir, coursesData) {

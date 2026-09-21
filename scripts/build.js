@@ -25,7 +25,6 @@ import {
   cleanOutputDir,
   ensureCourseDir,
   writeTopicHtml,
-  writeNavigationIndex,
   writeSitemap,
   writeTopicManifest,
   writeStaticRootFiles,
@@ -220,8 +219,8 @@ export function buildSite() {
 
   // Generated-file writes, sitemap, static files, dashboard injection,
   // standalone index, and asset copies live in scripts/output.js.
-  writeNavigationIndex(OUTPUT_DIR, coursesData);
-
+  // (navigation_index.json is intentionally not published: nothing reads
+  // it, so it would only duplicate catalog bytes in dist/.)
   writeSitemap(OUTPUT_DIR, coursesData);
 
   // Static topic manifest from the validated graph (fails loudly on

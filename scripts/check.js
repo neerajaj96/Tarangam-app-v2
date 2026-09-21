@@ -1281,6 +1281,38 @@ if (fs.existsSync('dist')) {
   if (!fs.existsSync('docs/offline-reliability.md')) fail('pwa: expected developer doc docs/offline-reliability.md — actual: missing');
 }
 
+// 23. Performance budgets: deterministic audit over dist/ with practical
+// limits from the measured baseline — no synthetic scores, no behavior
+// changes. Any breached budget fails the build with exact diagnostics.
+{
+  let audit = null;
+  try {
+    const { auditPerformance, PERFORMANCE_BUDGETS } = await import('./performance-budget.js');
+    audit = auditPerformance('dist');
+    if (!audit || !Array.isArray(audit.results) || !audit.results.length) {
+      fail('performance: audit returned no results — expected per-budget pass/fail rows');
+    } else {
+      for (const row of audit.results) {
+        if (typeof row.actual !== 'number' || typeof row.budget !== 'number') {
+          fail(`performance: budget "${row.key}" did not measure numbers`);
+        } else if (!row.pass) {
+          fail(`performance: budget "${row.key}" breached — actual ${row.actual} bytes over budget ${row.budget} bytes${row.detail ? ` (${row.detail})` : ''}`);
+        }
+      }
+      const keys = audit.results.map((r) => r.key);
+      for (const key of ['totalTopicHtmlBytes', 'maxTopicPageBytes', 'sharedCssBytes', 'totalJsBytes', 'manifestBytes', 'bankBytes', 'topicPageCount']) {
+        if (!keys.includes(key)) fail(`performance: audit is missing required budget "${key}"`);
+      }
+      if (!keys.some((k) => k.startsWith('initialPayloadBytes:'))) {
+        fail('performance: audit must report per-surface initial payloads');
+      }
+    }
+    void PERFORMANCE_BUDGETS;
+  } catch (e) {
+    fail(`performance: audit could not run (${(e && e.message) || e})`);
+  }
+}
+
 for (const w of warnings) console.warn('WARN: ' + w);
 if (errors.length) {
   for (const e of errors) console.error('FAIL: ' + e);
