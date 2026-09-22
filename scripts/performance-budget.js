@@ -25,8 +25,13 @@ import path from 'node:path';
 export const PERFORMANCE_BUDGETS = {
   // Generated topic HTML: total across all topic pages.
   totalTopicHtmlBytes: 22 * 1024 * 1024,
-  // Largest single generated topic page.
-  maxTopicPageBytes: 75 * 1024,
+  // Largest single generated topic page. Raised deliberately (Sep 2026)
+  // from 75 KiB to 160 KiB: S5 lessons are being expanded to teach every
+  // smallest meaningful concept in place — complete explanations, worked
+  // examples, diagrams, protocol flows, and exam-oriented material (e.g.
+  // the comprehensive PCCST501 m4_01 SNMP lesson at ~150 KiB). The gate
+  // stays active; this is headroom for intentional depth, not a bypass.
+  maxTopicPageBytes: 160 * 1024,
   // Shared stylesheet.
   sharedCssBytes: 50 * 1024,
   // All shipped runtime JavaScript, in total.
