@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 25 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -306,20 +306,21 @@
     <a href="#key-terms" class="jump-pill">key-terms</a>
     <a href="#the-math" class="jump-pill">📐 Framework</a>
     <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
-    <a href="#exam-recap" class="jump-pill">exam-recap</a>
+    <a href="#distinctions" class="jump-pill">distinctions</a>
     <a href="#self-check" class="jump-pill">⚡ Self Check</a>
   </div>
 </div>
 <h1>Network Management &amp; SNMP Architecture</h1>
-<p><strong>Managing-agent model, SMI/MIB structure, SNMP operations and versions, and why management traffic rides the very network it manages.</strong></p>
+<p><strong>Manager–agent model, SMI/MIB/OID naming, all seven operations, polling versus notifications, and v3 security.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
-<p>A campus runs 500 routers, switches, printers, and servers. Nobody can stand beside each one watching blinking lights — yet a failed link at 3 AM must page someone within seconds, and a technician must read any device&#39;s counters and push fixes from one desk.</p>
-<p>The problem before the solution: monitor and control thousands of devices <em>remotely</em>, through a uniform language cheap enough to embed in every device — even while the network being managed is itself sick. SNMP (Simple Network Management Protocol) is that language, spoken between manager stations and per-device agents.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Hospital Monitor Wall</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A hospital&#39;s nurses can&#39;t stand beside every bed — instead each bed has a <strong>monitor</strong> (agent) reporting pulse and oxygen to a <strong>central wall</strong> (manager), which raises alarms and occasionally pushes new dosage settings back. Network management is identical: every router/switch/host runs a lightweight <strong>agent</strong> process exposing counters and knobs; <strong>manager</strong> stations poll readings, receive alarm <strong>traps</strong>, and push configurations — all <em>over the same network being watched</em> (in-band management, with all the irony that implies when the network itself is what&#39;s broken).</p>
-<p>Dropping the hospital now: agent = per-device reporter/responder; manager/NMS (Network Management System) = central console; SMI (Structure of Management Information) = grammar; MIB (Management Information Base) = OID-addressed dictionary; Trap = unsolicited alarm.</p>
-</div></details><p><a id="key-terms"></a></p>
+<p>A campus runs 500 routers, switches, printers, and servers across ten buildings. Nobody can stand beside each box — yet a failed link at 3 AM must page someone within seconds, and a technician must read any device&#39;s counters and push a fix from one desk.</p>
+<p>The problem before the solution: monitor and control thousands of heterogeneous devices <em>remotely</em>, in one language cheap enough for a printer — while the managed network is itself sick. That language is SNMP (Simple Network Management Protocol), spoken between manager stations and per-device agents. &quot;Simple&quot; is a requirement: agents must fit on tiny CPUs, so messages stay short, stateless, and ride UDP (User Datagram Protocol).</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Hospital Monitor Wall</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Nurses cannot stand beside every bed — each bed has a <strong>monitor</strong> (agent) reporting pulse to a <strong>central wall</strong> (manager), which raises alarms and pushes dosage changes back. Networks match: each device runs a lightweight <strong>agent</strong> exposing counters and knobs; <strong>managers</strong> poll readings, receive <strong>traps</strong>, push configurations — all <em>over the same network being watched</em> (in-band management).
+Dropping the hospital now: agent = per-device reporter; manager/NMS (Network Management System) = console; SMI (Structure of Management Information) = grammar; MIB (Management Information Base) = OID dictionary; Trap = unconfirmed alarm; Inform = alarm with receipt.</p>
+</div></details><p>Almost every exam trap here is a swapped pair — SMI/MIB, Trap/Inform, polling/notification, v2c/v3 — each taught in the main prose; toggles hold only optional depth.</p>
+<p><a id="key-terms"></a></p>
 <h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
 <p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-model-naming-operations-versions">3. Purpose — Model, Naming, Operat… →</a></p>
 <table>
@@ -330,98 +331,179 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>NMS (Network Management System) / managing entity</strong></td>
-<td>The manager application (human console + analytics) that monitors and controls.</td>
+<td><strong>Network management</strong></td>
+<td>Remotely monitoring (reading state) and controlling (writing settings) devices from a central station.</td>
+</tr>
+<tr>
+<td><strong>NMS (Network Management System) / manager</strong></td>
+<td>The application, console, and analytics. SNMP is its language.</td>
 </tr>
 <tr>
 <td><strong>Managed device + agent</strong></td>
-<td>A router/switch/server/printer hosting an agent process that maintains local management data and answers the manager.</td>
+<td>A router/switch/server/printer hosting an <strong>agent</strong> process that answers the manager and emits alarms.</td>
+</tr>
+<tr>
+<td><strong>Managed object</strong></td>
+<td>One exposed variable — uptime, packets forwarded, interface status — each with one OID.</td>
 </tr>
 <tr>
 <td><strong>SNMP (Simple Network Management Protocol)</strong></td>
-<td>The query/response/alarm language between manager and agents — deliberately simple so agents stay embeddable everywhere.</td>
+<td>The query/response/alarm language between manager and agents; application-layer, usually over UDP.</td>
 </tr>
 <tr>
 <td><strong>SMI (Structure of Management Information)</strong></td>
-<td>The <em>grammar</em>: data types (counters that wrap, gauges, timeticks) and rules for defining objects.</td>
+<td>The <em>grammar</em>: allowed data types (wrapping counters, gauges, timeticks) and definition rules.</td>
 </tr>
 <tr>
 <td><strong>MIB (Management Information Base)</strong></td>
-<td>The <em>dictionary</em>: a virtual tree where each variable has a unique numeric address — the OID (Object Identifier, e.g. <code>1.3.6.1.2.1…</code>). The agent maps OIDs to live device state on demand (no real &quot;database&quot;).</td>
+<td>The <em>dictionary</em>: SMI-written definitions in a tree. Values come from live state per request — no stored &quot;database&quot;.</td>
 </tr>
 <tr>
-<td><strong>Trap</strong></td>
-<td>The only unsolicited agent→manager message (link down, overheat) — fast, unacknowledged, unreliable by design.</td>
+<td><strong>OID (Object Identifier)</strong></td>
+<td>One object&#39;s numeric tree address, e.g. <code>1.3.6.1.2.1.1.1.0</code>.</td>
+</tr>
+<tr>
+<td><strong>ASN.1 (Abstract Syntax Notation One) / BER (Basic Encoding Rules)</strong></td>
+<td>The type language SNMP borrows, and its Tag–Length–Value wire stamping. SMI is the restricted subset.</td>
+</tr>
+<tr>
+<td><strong>Polling / notification</strong></td>
+<td>Manager-scheduled repeated reads vs. agent-initiated alarms.</td>
+</tr>
+<tr>
+<td><strong>GetRequest / GetNextRequest / GetBulkRequest</strong></td>
+<td>Reads: one named variable / next variable in OID order / a whole chunk at once.</td>
+</tr>
+<tr>
+<td><strong>SetRequest / Response</strong></td>
+<td>A configuration write; the answer (values or error) to any request — also the receipt for an Inform.</td>
+</tr>
+<tr>
+<td><strong>Trap / InformRequest</strong></td>
+<td>Unsolicited alarms: fire-and-forget (fast, losable) vs. receipt-demanding with retries.</td>
 </tr>
 <tr>
 <td><strong>Community string</strong></td>
-<td>The v1/v2c cleartext password (&quot;public&quot;/&quot;private&quot;) — sniffable, lab-only.</td>
+<td>v1/v2c cleartext password (&quot;public&quot;/&quot;private&quot;) — lab-only.</td>
 </tr>
 <tr>
-<td><strong>USM / VACM (User-based Security Model / View-based Access Control Model)</strong></td>
-<td>SNMPv3&#39;s authentication + encryption layer and its who-may-touch-what access rules.</td>
+<td><strong>USM (User-based Security Model) / VACM (View-based Access Control Model)</strong></td>
+<td>SNMPv3&#39;s per-user authentication + encryption layer and its who-may-touch-what rules.</td>
+</tr>
+<tr>
+<td><strong>UDP ports 161 / 162</strong></td>
+<td>Requests go to agents on 161; Trap/Inform notifications go to managers on 162.</td>
 </tr>
 </tbody></table>
 <p><a id="the-math"></a></p>
 <h2 id="3-purpose-model-naming-operations-versions">3. Purpose — Model, Naming, Operations, Versions</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
-<h3>3.1 The Managing/Managed Model</h3>
-<ul>
-<li><strong>Managing entity:</strong> the NMS application (human console + analytics) that monitors and controls.</li>
-<li><strong>Managed devices:</strong> routers, switches, servers, printers — each hosting an <strong>agent</strong> that maintains local management data and answers the manager.</li>
-<li><strong>Management protocol (SNMP):</strong> the language between them — deliberately simple so agents stay cheap enough to embed in <em>every</em> device.</li>
-</ul>
-<h3>3.2 SMI and MIB: Naming Everything</h3>
-<ul>
-<li><strong>SMI (Structure of Management Information):</strong> the <em>grammar</em> — data types (counters that wrap, gauges, timeticks) and rules for defining objects.</li>
-<li><strong>MIB (Management Information Base):</strong> the <em>dictionary</em> — a virtual tree (OID hierarchy, e.g. <code>1.3.6.1.2.1…</code>) where each managed variable (packets forwarded, interface status, uptime) has a unique numeric address. The agent doesn&#39;t store a real &quot;database&quot; — it maps OIDs to live device state on demand.</li>
-</ul>
-<h3>3.3 Operation Flow: SNMP Operations and Versions</h3>
+<h3>3.1 Network management and why it is needed</h3>
+<p>Network management is the continuous remote supervision of a network — observing state (is the link up? how many packets dropped?), detecting faults, measuring performance, changing configuration — from a management station instead of by visiting each box. It is unavoidable for three reasons: <em>scale</em> (hundreds of devices cannot be watched by hand), <em>speed</em> (a dead link must page someone in seconds), and <em>heterogeneity</em> (one vendor-neutral language beats a dozen proprietary consoles). The mechanism is always the same loop: each device&#39;s agent exposes standard variables, the NMS reads them on a schedule (<strong>polling</strong>), receives alarms the moment things break (<strong>notifications</strong>), and writes settings back (<strong>configuration</strong>). Example: a switch port starts dropping packets at 2 AM — a Trap pages the operator in seconds, a confirming poll shows the error counters, and a Set pushes the fix. Interpretation: the Trap gives one fact fast, polling gives the full picture, the Set closes the loop.</p>
+<h3>3.2 NMS/manager, managed device, and agent</h3>
+<p>The <strong>managing entity</strong> (manager, NMS) is the central software — dashboards, graphs, alert rules, operator console. The <strong>managed device</strong> is any supervised element; the <strong>agent</strong> is the small process <em>on</em> it that speaks SNMP, translating &quot;what is OID X?&quot; into live hardware/software reads. The split keeps intelligence centralised and cost distributed: one NMS stores history and analytics while thousands of cheap agents only map OIDs to local state — which is why SNMP must be &quot;simple&quot; enough for a printer&#39;s CPU. Only three interaction patterns exist: manager asks, agent answers (<code>Get</code>/<code>Set</code> plus <code>Response</code>); agent shouts unasked (<code>Trap</code>); agent shouts and waits for a receipt (<code>InformRequest</code> plus its <code>Response</code>). Example: manager 10.0.0.5 sends a read to UDP 161 on router 10.0.0.1; the agent reads its interface register and replies. Interpretation: the manager never touches hardware — every observation passes through the agent&#39;s OID mapping.</p>
+<h3>3.3 SNMP meaning and purpose</h3>
+<p>SNMP is an application-layer request/response/alarm protocol: fixed message types (PDUs — Protocol Data Units) carrying OID–value pairs called variable bindings (&quot;varbinds&quot;), each message bearing a request identifier so replies match requests. It exists because every vendor once had its own management protocol; SNMP standardises the <em>language</em> (operations), <em>naming</em> (OIDs), and <em>grammar</em> (SMI) once, so any manager talks to any agent. It runs over connectionless UDP — requests to port 161, notifications to port 162 — deliberately: no connection setup, tiny headers, fails fast on sick networks. The price is unreliability, handled explicitly: managers retry unanswered requests, and confirmed notifications (<code>Inform</code>) exist for alarms that must not die silently. Traffic normally travels <em>in-band</em> — over the links it supervises — so during a total outage management messages may die with everything else. Example: reading uptime costs one UDP packet each way. Interpretation: the round trip is cheap, so polling thousands of objects every few minutes is practical.</p>
+<h3>3.4 SNMP architecture and message flow</h3>
+<p>Four pieces plus the wire: (1) manager/NMS, (2) agent per device, (3) managed objects addressed by OIDs, (4) the MIB definitions both sides share — with SNMP messages as the only traffic between (1) and (2), encoded/decoded by each side&#39;s protocol entity. Objects are standardised separately from operations, so new device types add MIB modules without changing the protocol. A request carries: version, community string (v1/v2c) or v3 security parameters, PDU type, request-id, error fields (zero on the way out), and a varbind list (OIDs bare for reads, OID + value for writes). The agent checks access, reads or writes each OID&#39;s live state, fills values — or an error status plus the failing varbind&#39;s index — echoes the request-id, and returns the <code>Response</code>. A Trap/Inform flows the other way to port 162 bearing the alarm OID plus context varbinds (which interface, what state). Trace of one exchange:</p>
+<pre><code class="language-text">Manager ──GetRequest[req=7, sysUpTime.0]──&gt; Agent (UDP 161)
+Manager &lt;──Response[req=7, ok, 3801224100]── Agent
+</code></pre>
+<p>Interpretation: the echoed <code>req=7</code> matches reply to request; <code>ok</code> plus the filled value means success, while any nonzero error status with an error index names the exact varbind that failed.</p>
+<h3>3.5 Managed objects</h3>
+<p>A managed object is one variable the agent exposes — a counter (bytes in), a status (interface up/down), a setting (hostname). Each OBJECT-TYPE definition states its syntax, access (read-only, read-write, not-accessible), status, and description. They exist to carve a stable, cross-vendor <em>reportable and settable</em> subset out of thousands of internal registers. Two shapes: <em>scalar</em> objects have one instance (uptime, hostname), addressed by appending <code>.0</code>; <em>tabular</em> objects have one row per entry (interfaces, routes) — each value addressed by appending the row index, e.g. <code>ifDescr.2</code> is row 2&#39;s description. Example: <code>sysUpTime.0</code> returns <code>3801224100</code> (hundredths of a second since reboot); <code>ifOperStatus.2</code> returns <code>down(2)</code>. Interpretation: the OID names <em>which</em> variable, the trailing instance names <em>which copy</em>, the typed value is the reading.</p>
+<h3>3.6 SMI — what it is and why it exists</h3>
+<p>SMI is the rulebook for <em>defining</em> managed objects: allowed base types, OBJECT-TYPE declarations, table INDEX clauses — the &quot;grammar of the dictionary&quot;. SMIv1 serves SNMPv1 MIBs; SMIv2 adds Counter64, MODULE-IDENTITY, NOTIFICATION-TYPE, and sharper access labels. It exists for interoperability-by-subtraction: full ASN.1 is too expressive for tiny parsers, so SMI permits only INTEGER/Integer32, Unsigned32, Counter32, Counter64 (SMIv2), Gauge32, TimeTicks, IpAddress, OCTET STRING, OBJECT IDENTIFIER, plus SEQUENCE scaffolding. A definition states SYNTAX, MAX-ACCESS, STATUS, DESCRIPTION, and any INDEX. The classic distinction is Counter versus Gauge: a Counter only rises and wraps to zero (bytes sent — <em>differences</em> between polls give the rate), a Gauge floats (queue length — the value itself is the reading). Example: <code>ifInOctets</code> is Counter32 — polls of 4,000,000 then 4,090,000 mean 90,000 bytes arrived between polls.</p>
+<h3>3.7 MIB — what it is and how it differs from SMI</h3>
+<p>A MIB module is a text file of SMI definitions for one subject — MIB-2 (standard device objects), IF-MIB (interfaces), vendor modules; collectively &quot;the MIB&quot; is the OID tree an agent implements. SMI alone names nothing; the MIB publishes the shared vocabulary, so <code>1.3.6.1.2.1.1.1</code> means &quot;system description&quot; on every vendor&#39;s box. The distinction: <strong>SMI</strong> = rules for writing definitions (grammar); <strong>MIB</strong> = the definitions (dictionary entries); <strong>OID</strong> = one entry&#39;s address. Alphabet versus book versus page number. Managers load MIB modules to turn numbers into names (<code>sysDescr</code>) and learn types and access before Sets. Example: the MIB declares <code>sysDescr</code> read-only OCTET STRING at <code>1.3.6.1.2.1.1.1</code>; polling <code>…1.1.1.0</code> returns <code>&quot;Cisco IOS 15.2&quot;</code> — the definition set expectations, the live string came from the device.</p>
+<h3>3.8 OID hierarchy with a simple example</h3>
+<p>The OID tree is a global naming hierarchy: each arc (number) descends one level and the full dotted path is unique. The standard prefix <code>1.3.6.1</code> = iso(1).org(3).dod(6).internet(1); below sit <code>mgmt(2)</code> (standard MIBs) and <code>private(4)</code> (vendor subtrees). Hierarchy prevents collisions and delegates allocation — IANA assigns enterprise numbers under <code>1.3.6.1.4.1</code>, vendors extend below, standard objects stay fixed. Read left to right, then the instance: <code>1.3.6.1.2.1.1.1.0</code> = iso.org.dod.internet.mgmt.mib-2.system.sysDescr.instance-0, answering <code>&quot;Router U-plink, IOS 15.2&quot;</code> (OCTET STRING, read-only); table columns append the row index — <code>1.3.6.1.2.1.2.2.1.2.2</code> = …ifDescr.row-2. The wire carries numbers; managers display names by loading MIBs. Interpretation: each arc narrows exactly one level, and the trailing <code>.0</code> turns &quot;the sysDescr object&quot; into &quot;the one value of sysDescr on this device&quot;.</p>
+<h3>3.9 ASN.1 relationship where relevant</h3>
+<p>ASN.1 is the general type-description standard; BER is its wire encoding (each value stamped Tag–Length–Value). SNMP reuses both: PDU layouts and MIB syntaxes are specified in ASN.1 and every message travels BER-encoded. That is <em>why</em> SMI exists: full ASN.1 is too expressive for tiny agents, so SMI permits only the subset management data needs. For this note only three facts matter: SMI types are borrowed ASN.1 types; values travel as BER TLV bytes; full byte layouts (e.g. INTEGER 5 as <code>02 01 05</code>) live in the companion ASN.1/SMI/MIB note.</p>
+<h3>3.10 GetRequest</h3>
+<p>The manager sends <code>GetRequest</code> to read <em>named</em> OIDs it already knows — the routine &quot;current value?&quot; operation. Per varbind the agent checks access, reads live state, and fills the value; any unknown or inaccessible OID yields a <code>Response</code> with an error status and the failing varbind&#39;s index. One <code>Response</code> echoes the request-id with all values. Flow: <code>Manager ──GetRequest[req=11, sysUpTime.0, sysName.0]──&gt; Agent</code> → agent reads clock and hostname → <code>Manager &lt;──Response[req=11, ok, 3801224100, &quot;core-sw-1&quot;]── Agent</code>. Interpretation: two known scalars in, two typed values out.</p>
+<h3>3.11 GetNextRequest</h3>
+<p>The manager sends <code>GetNextRequest</code> when it knows a <em>starting point</em> but not the next name — the discovery operation: walking unknown-length tables, finding the first object under a subtree, recovering when a documented OID is absent here. Per varbind the agent returns the <em>lexicographically next implemented instance</em> after the supplied OID, not that OID&#39;s value. An empty/table OID yields the first leaf below it; the last leaf of a subtree yields the first leaf of the next subtree — the &quot;walk finished&quot; signal. Repeating GetNext with each reply&#39;s OID crawls one leaf per exchange. Walk over three interfaces wanting all descriptions: <code>GetNext[ifDescr] → ifDescr.1=&quot;eth0&quot; → GetNext[ifDescr.1] → ifDescr.2=&quot;eth1&quot; → GetNext[ifDescr.2] → ifDescr.3=&quot;eth2&quot; → GetNext[ifDescr.3] → ifInOctets.1</code> — stop, the prefix left <code>ifDescr</code>. Interpretation: the manager never knew there were three interfaces; the OID prefix change is the standard end-of-table signal.</p>
+<h3>3.12 GetBulkRequest</h3>
+<p>The manager sends <code>GetBulkRequest</code> (v2c/v3 only — absent in v1) to pull <em>many</em> leaves in one round trip — the efficient table-download operation. Two parameters steer it: N (NonRepeaters — first N varbinds act like GetNext) and M (MaxRepetitions — each remaining varbind returns up to M successive leaves); the agent packs what fits, truncating on size limits. One large <code>Response</code> carries up to N + M-per-repeater values; overshoot past the table end is normal and stops at the prefix change like GetNext. Example: <code>GetBulk[N=0, M=4, ifDescr]</code> on the 3-interface agent returns <code>ifDescr.1/.2/.3</code> plus the next leaf beyond in a single reply. Interpretation: four round trips collapse into one; the extra value is the terminator, not an error. Exam rule: hundreds of rows always means GetBulk.</p>
+<h3>3.13 SetRequest</h3>
+<p>The manager sends <code>SetRequest</code> to <em>write</em> configuration — hostname, interface up/down, route entry; the only state-changing operation. The agent validates every varbind <em>before</em> touching anything: exists, writable, correct type, in range, principal authorised — applying all-or-nothing, else rejecting with noAccess, wrongType, wrongValue, or notWritable naming the culprit via the error index. The <code>Response</code> echoes OIDs with new values on success, an error otherwise. Flow: <code>Manager ──SetRequest[req=21, sysName.0=&quot;core-sw-2&quot;]──&gt; Agent</code> → agent checks writable, applies → <code>Manager &lt;──Response[req=21, ok, &quot;core-sw-2&quot;]── Agent</code>. Interpretation: the echoed value is the commit confirmation. Security consequence: Sets reconfigure routers, so production restricts them to SNMPv3 with write views — a v2c &quot;private&quot; string hands attackers the keys.</p>
+<h3>3.14 Response</h3>
+<p>The agent sends <code>Response</code> to answer Get/GetNext/GetBulk/Set; any receiver of an <code>InformRequest</code> (manager or agent) sends one as its receipt. Nothing else generates a Response — Traps never get one. It carries the echoed request-id, an error-status (ok, tooBig, noSuchObject, noSuchInstance, noAccess, wrongType, genErr), an error-index pointing at the offending varbind, and the varbind list (values on success). Example: <code>Response[req=11, err=noSuchInstance, index=2]</code> means &quot;your second OID names no instance here&quot;. Interpretation: read error-status first — values are meaningless when nonzero, and the index says which OID to fix.</p>
+<h3>3.15 Trap</h3>
+<p>The agent sends <code>Trap</code> the instant something noteworthy happens (linkDown, linkUp, coldStart, authenticationFailure) — the &quot;don&#39;t wait for the next poll&quot; path: agent-to-manager, UDP 162, no prior request. It fires the PDU (trap OID plus context varbinds: which interface, what state) and forgets it — no timer, no retry, no acknowledgement. Delivery rides connectionless UDP with no receipt, so a Trap can die in the very outage it reports. Flow: <code>02:14:07 eth1 drops → Agent ──Trap[linkDown, ifIndex=2]──&gt; Manager</code> (no reply). Interpretation: the manager learns in milliseconds instead of at the next 5-minute poll — but must <em>confirm by polling</em> (<code>Get ifOperStatus.2</code>). Version footnote: v1 Traps use a special Trap-PDU layout; v2c/v3 unify them into the standard PDU shape (Trapv2) — same purpose, uniform parsing.</p>
+<h3>3.16 InformRequest</h3>
+<p>Either an agent (alarm needing proof) or a manager (forwarding events up a hierarchy) sends <code>InformRequest</code> when the event is important enough to confirm — the reliable notification, new in v2c and kept in v3. The receiver logs the event and returns a <code>Response</code> echoing the request-id; silence means loss, so the sender retransmits until the receipt arrives or a retry limit hits. Cost: two-plus packets with sender-side timers, versus one fire-and-forget Trap. Flow: <code>Agent ──Inform[req=55, linkDown, ifIndex=2]──&gt; Manager</code> (lost) → retry with same id → <code>Manager &lt;──Response[req=55, ok]── Agent</code>. Interpretation: the duplicate request-id marks the retry; delivery is now <em>confirmed</em> — the guarantee Trap cannot give.</p>
+<h3>3.17 Polling versus notifications</h3>
+<p>Polling = manager asks on a schedule (Get families). Notifications = agent speaks up alone (Trap/Inform). Every deployment uses both, because polling sees everything but late and at a cost (packets × objects × devices per cycle), while notifications are instant but narrow (one event each) and — for Traps — losable. Robust design treats Traps as <em>hints</em> and polling as <em>truth</em>: the Trap accelerates detection, the confirming poll establishes state, continued polling heals any lost Trap within one cycle. Poll state you must eventually know exactly (link status, counters); notify events you must know fast (linkDown, reboot) — Inform where confirmation is worth the overhead, Trap plus polling backstop otherwise. Example: 5-minute polls, link dies 02:14:07 — Trap arrives 02:14:08, confirming Get at 02:14:09 reads <code>down</code>; had the Trap died, the 02:15:00 poll still catches it — late, never silently missed.</p>
+<h3>3.18 Complete manager-agent examples</h3>
+<p>Read each line as who-sends → why → agent-does → result. Trace A is the manager-driven poll/configure loop; Trace B the agent-triggered notify/verify loop.</p>
+<pre><code class="language-text">Trace A — supervision plus a write:
+1. Manager ──GetRequest[req=31, sysUpTime.0]──&gt; Agent
+   Manager &lt;──Response[req=31, 3801224100]── Agent
+2. Manager ──GetBulk[N=0,M=10, ifDescr, ifOperStatus]──&gt; Agent
+   Manager &lt;──Response[5 descr + 5 status]── Agent; ifOperStatus.3 = down(2)
+3. Manager ──SetRequest[req=33, ifAdminStatus.3=up(1)]──&gt; Agent
+   Manager &lt;──Response[req=33, up(1)]── Agent
+4. Manager ──GetRequest[req=34, ifOperStatus.3]──&gt; Agent
+   Manager &lt;──Response[req=34, up(1)]── Agent
+
+Trace B — 3 AM link failure:
+1. 03:00:12 eth1 drops → Agent ──Trap[linkDown, ifIndex=2]──&gt; Manager
+2. Manager ──GetRequest[req=41, ifOperStatus.2]──&gt; Agent
+   Manager &lt;──Response[req=41, down(2)]── Agent
+3. Fibre fixed → Agent ──Inform[req=56, linkUp, ifIndex=2]──&gt; Manager
+   Manager &lt;──Response[req=56, err=ok]── Agent
+</code></pre>
+<p>Interpretation: Trace A downloads a table in one round trip, writes, and verifies; Trace B detects in seconds and confirms — the manager polls <em>after</em> every Trap.</p>
+<h3>3.19 SNMPv1, v2c, and v3</h3>
+<p>Three generations sharing the same objects but differing in operations and security. SNMPv1 (1988): Get/GetNext/Set/Response/Trap, community strings, 32-bit counters, distinct Trap-PDU, sparse errors. SNMPv2c (1996, &quot;community-based v2&quot;): same communities plus GetBulk and Inform, Counter64, richer errors, unified Trapv2 PDU. SNMPv3 (1998/2004): all v2c operations, communities replaced by users, engine IDs, cryptographic parameters — USM plus VACM. v1 crawled tables one leaf per round trip, wrapped 32-bit counters in minutes on fast links, and could not confirm alarms — v2c fixed <em>efficiency</em>; cleartext passwords — v3 fixed <em>security</em>. Tell them apart: GetBulk or Inform → v2c+ (never v1); Counter64, Trapv2 → v2c+; users, auth/priv, USM, VACM → v3; &quot;public/private&quot; → v1/v2c.</p>
 <table>
 <thead>
 <tr>
-<th>Operation</th>
-<th>Direction</th>
-<th>Purpose</th>
+<th>Generation</th>
+<th>Operations</th>
+<th>Counters</th>
+<th>Trap shape</th>
+<th>Security</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>GetRequest</code> / <code>GetNextRequest</code></td>
-<td>manager → agent</td>
-<td>Read one variable / walk a table row by row</td>
+<td>SNMPv1</td>
+<td>Get/GetNext/Set/Response/Trap</td>
+<td>32-bit only</td>
+<td>Special Trap-PDU (enterprise, agent-addr, generic/specific, timestamp)</td>
+<td>Community, cleartext</td>
 </tr>
 <tr>
-<td><code>SetRequest</code></td>
-<td>manager → agent</td>
-<td>Write a configuration value</td>
+<td>SNMPv2c</td>
+<td>Adds GetBulk + Inform; richer errors</td>
+<td>Adds Counter64</td>
+<td>Unified Trapv2/Notification PDU</td>
+<td>Community, cleartext (same weakness)</td>
 </tr>
 <tr>
-<td><code>Response</code></td>
-<td>agent → manager</td>
-<td>Answer (or error) to any request</td>
-</tr>
-<tr>
-<td><code>Trap</code></td>
-<td>agent → manager</td>
-<td><strong>Unsolicited</strong> alarm (link down, overheat) — no polling delay</td>
+<td>SNMPv3</td>
+<td>Same PDUs as v2c</td>
+<td>Same as v2c</td>
+<td>Same Trapv2/Inform as v2c</td>
+<td>USM auth + privacy, VACM views, 3 levels</td>
 </tr>
 </tbody></table>
-<ul>
-<li><strong>SNMPv1/v2c:</strong> <code>Get/Set/Trap</code> with <strong>community strings</strong> (&quot;public&quot;/&quot;private&quot;) sent in cleartext — trivially sniffed; fine for labs, negligent in production.</li>
-<li><strong>SNMPv3:</strong> adds <strong>authentication + encryption</strong> (USM) and access control (VACM) — the version any security-conscious exam answer must name.</li>
-</ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: SNMP in 6 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agents <strong>expose</strong>, managers <strong>poll/configure</strong> · SMI = <strong>grammar</strong>, MIB = <strong>OID tree dictionary</strong> · ops: <strong>Get/GetNext/Set/Response + Trap</strong> (trap = only unsolicited one) · v1/v2c = <strong>cleartext communities</strong> · v3 = <strong>auth + encryption</strong>.</p>
-</div></details><details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Traps Are Unreliable by Design (and That&#39;s Fine)</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Traps fire over connectionless UDP (User Datagram Protocol) with <strong>no acknowledgment</strong> — a trap can itself die in the outage it reports. Managers therefore <em>also</em> poll critical state; traps are early warnings, never the record of truth. Any &quot;trap guarantees delivery&quot; option is wrong.</p>
+<p>Example: a 10 Gbps interface moves ~1.25 GB/s, wrapping a 32-bit byte counter in under 4 seconds — 5-minute polls alias badly, while Counter64 lasts centuries.</p>
+<h3>3.20 Authentication, integrity, encryption/privacy, and access control</h3>
+<p>Four distinct jobs, tested as a set. <em>Authentication</em> = proving who sent it (really from manager Alice). <em>Integrity</em> = proving it was not altered or replayed (keyed hash plus engine-time checks). <em>Confidentiality/privacy</em> = keeping content unreadable to eavesdroppers (encryption — SNMP&#39;s word is &quot;privacy&quot;). <em>Authorization/access control</em> = deciding what the principal may do (Alice reads interface stats but never writes hostnames) — enforced by VACM views. Without integrity an attacker flips &quot;up&quot; to &quot;down&quot; mid-flight; without privacy configs leak; without access control every authenticated user reconfigures every router. USM provides the first three (HMAC-MD5/SHA authentication, DES/AES privacy, engine-ID plus time-window replay protection); VACM provides the fourth (users → groups → MIB views → read/write/notify rights). Three security levels select per-message protection: noAuthNoPriv (username only), authNoPriv (authenticated, still readable), authPriv (authenticated plus encrypted). Example: sniffing a v2c Set exposes &quot;private&quot; — game over, the attacker forges Sets. Against v3 authPriv the sniffer sees ciphertext, cannot forge (no auth key), cannot replay (engine time rejects), cannot escalate (VACM denies the view).</p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: SNMP in 10 Lines</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agents <strong>expose</strong>, managers <strong>poll/configure</strong> (UDP 161/162) · SMI = <strong>grammar</strong>, MIB = <strong>dictionary</strong>, OID = <strong>address</strong> · <strong>Get</strong> (known) / <strong>GetNext</strong> (discover) / <strong>GetBulk</strong> (chunk, v2c+) · <strong>Set</strong> writes · <strong>Response</strong> answers · <strong>Trap</strong> (unconfirmed) / <strong>Inform</strong> (confirmed) · notify fast, <strong>poll to confirm</strong> · v1/v2c = <strong>cleartext</strong> · v3 = <strong>USM auth+priv, VACM</strong>.</p>
 </div></details><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
 <p class="secnav"><a href="#3-purpose-model-naming-operations-versions">← 3. Purpose — Model, Naming, Operat…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
 <h3>4.1 Toy Example (30 seconds)</h3>
-<p>One router, one manager. Manager: <code>GetRequest</code> uptime → <code>Response 42 days</code>. Link dies → agent fires <code>Trap linkDown</code> instantly. Manager then polls <code>GetRequest ifOperStatus</code> to confirm, and pushes the fix with <code>SetRequest</code> — all over SNMPv3 in production.</p>
+<p>One router, one manager. <code>GetRequest</code> uptime → <code>Response 440 days</code>. Unknown 3-port table: one <code>GetBulk</code> returns all descriptions plus statuses at once. Link dies → <code>Trap linkDown</code>; manager confirms <code>Get ifOperStatus.2 = down</code>, pushes <code>Set ifAdminStatus.2 = up</code> — over SNMPv3 authPriv in production.</p>
 <h3>4.2 KTU-Style Worked Example</h3>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An NMS must (a) read a router&#39;s current input-octet counter, (b) discover <em>all</em> interface descriptions without knowing how many exist, (c) push a new hostname, and (d) learn instantly if a link fails. Name the SNMP operation(s) per task and the versions that secure them.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Mapping Tasks to Operations</div><div class="step-content"><p>(a) Single known OID → <strong>GetRequest</strong>. (b) Unknown table length → repeated <strong>GetNextRequest</strong> (walk until the OID prefix changes — the standard table-crawl idiom). (c) Write → <strong>SetRequest</strong> (with a write community / v3 credentials). (d) Instant alarm → agent <strong>Trap</strong> on link-down — plus continued polling as backstop, since traps are unacknowledged.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Four tasks, four idioms: Get (known reads), GetNext-walk (unknown tables), Set (writes), Trap + poll (alarms). And every Set/Trap in production rides <strong>SNMPv3</strong> — v2c cleartext communities fail any question mentioning security.</p>
-</div></div><p><a id="exam-recap"></a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An NMS must (a) read one counter, (b) discover all interface descriptions of unknown count, (c) download a 500-row table fast, (d) push a new hostname, (e) learn of link failure instantly with confirmation. Name each operation and the securing version.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Mapping Tasks to Operations</div><div class="step-content"><p>(a) Known OID → <strong>GetRequest</strong>. (b) Unknown length → <strong>GetNextRequest</strong> walk (stop at the prefix change) or GetBulk. (c) 500 rows → <strong>GetBulkRequest</strong> (v2c+). (d) Write → <strong>SetRequest</strong> on sysName.0. (e) Instant alarm → <strong>Trap</strong> for speed, <strong>InformRequest</strong> where confirmation is demanded — plus polling backstop.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Get (reads), GetNext-walk (discovery), GetBulk (bulk, v2c+), Set (writes), Trap/Inform plus poll (fast vs confirmed alarms). Production rides <strong>SNMPv3</strong> — v2c cleartext fails any security question.</p>
+</div></div><p><a id="distinctions"></a></p>
 <h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
 <p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
 <table>
@@ -432,39 +514,53 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>SMI vs. MIB</td>
-<td>Grammar for defining objects vs. OID tree of actual variables.</td>
+<td>SMI vs. MIB vs. OID</td>
+<td>Grammar for defining objects vs. OID tree of definitions vs. address of one object.</td>
 </tr>
 <tr>
-<td>Get vs. GetNext vs. Trap</td>
-<td>Known read vs. table walk vs. unsolicited (unreliable) alarm.</td>
+<td>Get vs. GetNext vs. GetBulk</td>
+<td>Known-OID read vs. next-OID discovery walk (one leaf, any version) vs. multi-leaf chunk (v2c+, N/M).</td>
 </tr>
 <tr>
-<td>Poll vs. trap truth</td>
-<td>Polls = present-tense state; traps = event rumors (fast, losable).</td>
+<td>Trap vs. Inform</td>
+<td>Unconfirmed fire-and-forget alarm (no Response) vs. confirmed alarm with Response receipt and retries.</td>
+</tr>
+<tr>
+<td>Polling vs. notification</td>
+<td>Scheduled reads (complete, late, costly) vs. agent alarms (instant, narrow; Trap losable). Hints vs. truth.</td>
+</tr>
+<tr>
+<td>SNMP vs. NMS</td>
+<td>Protocol language vs. the managing system that speaks it.</td>
 </tr>
 <tr>
 <td>v2c vs. v3</td>
-<td>Cleartext communities vs. auth + encryption + access control.</td>
+<td>Same operations (Bulk/Inform/Counter64 in both); different security — cleartext vs. USM auth+priv with VACM.</td>
+</tr>
+<tr>
+<td>Authentication vs. authorization vs. confidentiality vs. integrity</td>
+<td>Who sent it (USM auth) vs. what they may do (VACM) vs. who can read it (privacy) vs. was it altered/replayed (hash + engine time).</td>
 </tr>
 </tbody></table>
-<p><strong>Watch out:</strong> (1) Trusting a trap as guaranteed delivery — always pair with polling. (2) Swapping SMI/MIB roles — alphabet vs. dictionary entries. (3) Allowing v2c where security is mentioned — v3 is the only acceptable answer.</p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agents expose, managers poll/configure (in-band). SMI = grammar (counters/gauges/timeticks); MIB = OID dictionary mapped to live state. Idioms: Get (reads), GetNext-walk (tables), Set (writes), Trap (unsolicited, unacknowledged alarms). v1/v2c = cleartext communities (lab-only); v3 = USM auth/priv + VACM.</p>
-</div></details><p><strong>Active-recall checklist:</strong> Which operation walks an unknown-length table? Why do managers poll if traps exist? What crosses the wire in v2c that must never cross in production? What does an agent store — a database or a mapping?</p>
-<p><a id="self-check"></a></p>
+<p><strong>Common misconceptions:</strong> (1) The MIB is a stored database — it is a <em>virtual</em> naming agreement over live state. (2) Trap is the only unsolicited message — since v2c, Inform is equally unsolicited; the difference is confirmation. (3) Traps guarantee delivery — they are unacknowledged by design; Inform confirms, polling eventually discovers. (4) GetNext reads the next row — it returns the next OID in <em>lexicographic order</em>. (5) GetBulk is just faster GetNext — it changes round-trip complexity and needs N/M plus overshoot handling. (6) SMI adds types — it <em>removes</em> them for compatibility. (7) v2c is secure — its security equals v1&#39;s; only v3 adds auth/priv/access control. (8) Authentication implies authorization — VACM&#39;s separate job.</p>
+<p><strong>Watch out:</strong> (1) Trusting a Trap as delivered — pair with polling or use Inform. (2) Swapping SMI/MIB — grammar versus dictionary. (3) GetNext where hundreds of rows stress efficiency — that asks GetBulk. (4) v2c where security is mentioned — v3 authPriv only. (5) Setting a read-only object — check MAX-ACCESS first.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Agents expose, managers poll/configure in-band over UDP 161/162. SMI = grammar (counters wrap, gauges float); MIB = OID dictionary on live state (scalars end .0, tables append row indices). Idioms: Get (reads), GetNext-walk (discovery), GetBulk with N/M (bulk, v2c+), Set (writes), Response (values or error + index), Trap (unconfirmed), Inform (confirmed, retried). v1/v2c = cleartext (lab-only); v3 = USM auth + privacy with VACM views.</p>
+</div></details><p><strong>Active-recall checklist:</strong> Which operation walks a table one leaf at a time, and which downloads it in chunks? What signal ends both walks? Which alarm is acknowledged, and what answers it? Why poll if Traps exist? What must never cross the wire in production? Mapping or database — what does an agent store?</p>
+<details class="interactive-toggle"><summary>Counter32 wrap arithmetic (optional depth)</summary><div class="toggle-content"><p>Counter32 holds 0 to 4294967295 then wraps; rate from two polls is <code>(new - old) mod 2^32 / seconds</code>. At 10 Gbps a byte counter wraps in seconds, so v2c added Counter64.</p>
+</div></details><p><a id="self-check"></a></p>
 <h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">What is the difference between SMI and MIB, and why do both exist?</span>
+    <span class="quiz-category">What is the difference between SMI, MIB, and OID, and why do all three exist?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They are rival protocols competing for market share</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>SMI is the grammar/rules for defining management objects; MIB is the OID-addressed dictionary of actual variables — language versus book written in it</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>MIB defines syntax while SMI stores live values</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>SMI replaced MIB entirely in SNMPv3</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Three competing protocols, one runs at a time</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>SMI = defining grammar, MIB = OID-addressed dictionary, OID = one object&#39;s address</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>MIB defines syntax; SMI stores live values</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>SMI replaced MIB in SNMPv3</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -476,20 +572,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>SMI standardizes <em>how to specify</em> objects (types, status, access); the MIB <em>uses</em> those rules to name every counter/knob in a global OID tree. Confusing them is confusing the dictionary&#39;s alphabet with its entries.</p><pre><code>&lt;/div&gt;
+      <p>SMI standardizes specification (allowed types, OBJECT-TYPE fields, INDEX rules); each MIB module declares real counters and knobs in those rules; each declaration&#39;s OID addresses it globally.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A link fails at 3 AM. The NMS learns about it within seconds without having polled. Which mechanism, and what is its built-in weakness?</span>
+    <span class="quiz-category">A manager must download a 500-row table quickly and discover an unknown number of interfaces. Which operations fit?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>GetNextRequest walk — weakness: it only runs hourly</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>An agent Trap — unsolicited alarm; weakness: unacknowledged UDP delivery, so it can die in the very outage it reports (polling remains the backstop)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>SetRequest — weakness: managers can&#39;t send them at night</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Community-string rotation — weakness: strings expire monthly</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>GetRequest for both, one OID at a time</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>GetBulkRequest for the 500 rows, GetNextRequest walking for discovery — both stop at the OID prefix change</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>SetRequest for both, then read back the echo</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Trap for both, since traps are fastest</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -501,7 +597,32 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Trap is SNMP&#39;s only manager-bound unsolicited message — the speed comes from skipping the poll cycle. The price is unreliability by design; robust NMS designs treat traps as hints and polling as truth.</p><pre><code>&lt;/div&gt;
+      <p>Get reads known OIDs only. GetNext discovers one leaf per exchange — hundreds of round trips for 500 rows. GetBulk (v2c/v3 only) packs up to MaxRepetitions leaves per reply; the prefix change ends either walk. Traps never carry table contents.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A link fails at 3 AM. The NMS must learn within seconds AND be sure the alarm arrived. Which mechanism, and how does it differ from a Trap?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>GetNextRequest walk running continuously</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>InformRequest — unsolicited but demands a Response receipt with retries; Traps fire unacknowledged</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>SetRequest — write the link back up first</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Community-string rotation triggering alarms</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Trap gives speed without confirmation; Inform gives speed with confirmation (receipt plus retries, costing state and packets). Use Trap hints plus polling truth, and Inform where one lost alarm is unacceptable.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -512,7 +633,7 @@
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>v3 transmits data faster than v2c</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>v1/v2c community strings cross the wire in cleartext (sniffable passwords granting device control); v3 adds authentication, encryption, and access control</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>v1/v2c communities cross the wire in cleartext with no encryption or access control; v3 adds USM auth plus privacy and VACM views</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>v3 uses fewer packets per operation</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>v2c cannot address more than 256 devices</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -526,7 +647,7 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Functionally v2c suffices; <em>security-wise</em> it ships the keys with the locks — anyone sniffing learns &quot;private&quot; and can SetRequest your routers. v3&#39;s USM (auth/priv) + VACM (who-may-touch-what) closes exactly that hole.</p><pre><code>&lt;/div&gt;
+      <p>Functionally v2c suffices; security-wise it ships keys with locks. USM fixes who-sent-it, was-it-altered (hash plus engine-time checks), can-anyone-read-it (DES/AES); VACM fixes what-they-may-do (views). Levels: noAuthNoPriv, authNoPriv, authPriv.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
