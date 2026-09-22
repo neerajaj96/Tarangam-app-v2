@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 13 MIN READ</span>
+    <span class="badge">⏱️ 37 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -311,22 +311,22 @@
   </div>
 </div>
 <h1>Internet Overview &amp; The Network Edge</h1>
-<p><strong>End systems and hosts, access networks and physical media, and the two complementary ways of defining &quot;the Internet.&quot;</strong></p>
+<p><strong>End systems and hosts, the Internet vs the Web, access networks and physical media, packet switching, the four nodal delays, and why protocols are layered.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
 <p>You tap a video on your phone. A fraction of a second later, it plays. Nothing visibly travels to you — yet a copy of that video&#39;s data has just crossed thousands of kilometres of glass, copper, and air, hopping through a dozen or more relay stations on the way.</p>
-<p>Here is the problem this note solves: <strong>how is &quot;the Internet&quot; organized so that any two computers on Earth can exchange data?</strong> Engineers answer with two complementary views. The <strong>nuts-and-bolts view</strong> (how is it built?) names the physical parts: computers at the edges, wires and radio links between them, and relay boxes that forward data. The <strong>services view</strong> (what does it do for me?) hides all of that and says: the Internet is a platform that moves bytes between any two programs, anywhere. Both views describe the same system; you need both, because exams test whether you can switch between them.</p>
+<p>Here is the problem this note solves: <strong>how is &quot;the Internet&quot; organized so that any two computers on Earth can exchange data, how long does each hop take, and what rules keep the chaos interoperable?</strong> Engineers answer with two complementary views. The <strong>nuts-and-bolts view</strong> (how is it built?) names the physical parts: computers at the edges, wires and radio links between them, and relay boxes that forward data. The <strong>services view</strong> (what does it do for me?) hides all of that and says: the Internet is a platform that moves bytes between any two programs, anywhere. Both views describe the same system; you need both, because exams test whether you can switch between them — and then quantify the trip with delay mathematics.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Global Highway System</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Imagine a global highway network. Cars don&#39;t teleport between cities — they travel on physical roads, pass through intersections, and eventually arrive at a driveway belonging to a house or office. The Internet works the same way, except it moves <strong>data</strong> instead of cars.</p>
 <ul>
 <li>Your laptop, phone, or a streaming server is a <strong>house</strong> — an <em>end system</em> where a trip begins or ends.</li>
 <li>The fiber, copper, or radio link connecting you to the network is the <strong>road</strong> — a <em>communication link</em>.</li>
 <li>A router is an <strong>intersection</strong> — a <em>packet switch</em> that looks at an arriving chunk of data and forwards it toward the right road out.</li>
 </ul>
-<p>Dropping the highway now: the technical terms above are the ones the exam uses, and the rest of this note defines each of them precisely.</p>
+<p>Dropping the highway now: the technical terms above are the ones the exam uses, and the rest of this note defines each of them precisely — then measures the trip (delays) and names the traffic rules (protocols).</p>
 </div></details><p><a id="key-terms"></a></p>
 <h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
-<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-why-two-views-of-one-internet">3. Purpose — Why Two Views of One … →</a></p>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-views-edge-core-delays-rules">3. Purpose — Views, Edge, Core, De… →</a></p>
 <table>
 <thead>
 <tr>
@@ -339,8 +339,16 @@
 <td>Any computer at the <em>edge</em> of the network that runs application programs (laptop, phone, server, smart TV, sensor). &quot;Host&quot; = it <em>hosts</em> (runs) applications.</td>
 </tr>
 <tr>
+<td><strong>Process</strong></td>
+<td>One running program on a host (a browser tab&#39;s renderer, a web server worker). A single host runs many processes at once.</td>
+</tr>
+<tr>
+<td><strong>Client / server</strong></td>
+<td><em>Roles</em>, not device types: the side that <em>requests</em> data vs. the side that <em>supplies</em> it. One laptop plays both across two apps.</td>
+</tr>
+<tr>
 <td><strong>Packet</strong></td>
-<td>One small chunk of a larger message. Long messages are split so links and switches handle short, uniform pieces.</td>
+<td>One small chunk of a larger message, with address headers attached. Long messages are split so links handle short, uniform pieces.</td>
 </tr>
 <tr>
 <td><strong>Packet switch</strong></td>
@@ -370,6 +378,14 @@
 <td><strong>Guided / unguided media</strong></td>
 <td>Guided = signals travel <em>along</em> a solid path (copper, glass fiber). Unguided = signals travel through open air or space (radio, satellite).</td>
 </tr>
+<tr>
+<td><strong>Forwarding / routing</strong></td>
+<td>Forwarding = one router moving a packet from input port to output port. Routing = the network-wide computation of paths that fills forwarding tables.</td>
+</tr>
+<tr>
+<td><strong>Nodal delay</strong></td>
+<td>Total time a packet spends at one node: processing + queuing + transmission + propagation delay.</td>
+</tr>
 </tbody></table>
 <details class="interactive-toggle"><summary>What does `packet` mean?</summary><div class="toggle-content"><p>A <code>packet</code> is one small chunk of a larger message, with address headers attached.
 Splitting matters because switches forward short uniform pieces without waiting for a whole file.
@@ -378,7 +394,7 @@ Tiny example: a 1 MB video becomes roughly a thousand 1 KB packets, each routed 
 A <code>client</code> is the role of requesting data, while a <code>server</code> is the role of supplying it.
 One laptop is a <code>client</code> when streaming and a <code>server</code> when sharing a file to a peer.</p>
 </div></details><p><a id="the-math"></a></p>
-<h2 id="3-purpose-why-two-views-of-one-internet">3. Purpose — Why Two Views of One Internet</h2>
+<h2 id="3-purpose-views-edge-core-delays-rules">3. Purpose — Views, Edge, Core, Delays, Rules</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
 <h3>3.1 The &quot;Nuts and Bolts&quot; View (how it is built)</h3>
 <table>
@@ -401,64 +417,230 @@ One laptop is a <code>client</code> when streaming and a <code>server</code> whe
 <td>Routers and switches; take packets arriving on one link and forward them out of another.</td>
 </tr>
 </tbody></table>
+<p>This view tells you <em>what parts exist and how they connect</em>. It answers &quot;what is the machine?&quot; but says nothing about what the machine is <em>for</em> — that is the services view&#39;s job.</p>
 <h3>3.2 The &quot;Services&quot; View (what applications get)</h3>
-<p>From this angle the Internet is a <strong>distributed application platform</strong>: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between. Your video app never learns which routers carried its frames — and never needs to.</p>
-<h3>3.3 The Network Edge: Clients and Servers Are Roles</h3>
-<p>The network edge is where end systems physically attach. Hosts here split into two functional roles:</p>
-<ul>
-<li><strong>Clients</strong> — desktops, mobile devices, laptops that <em>request</em> information.</li>
-<li><strong>Servers</strong> — always-on, powerful machines that <em>supply</em> information (web pages, video streams, email), typically housed in large data centers today.</li>
-</ul>
-<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Client and Server Are Roles, Not Device Types</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exams love this trap: a &quot;server&quot; is not a special kind of computer — it is a <em>role</em> an end system plays. Your laptop is a client when it streams video, but the moment it serves a file to a peer (or runs a local development server), it is acting as a <strong>server</strong>. Classify by <em>behavior</em> (requesting vs. supplying), never by hardware size.</p>
-</div></details><h3>3.4 Access Networks — Getting From the Edge to the First Router</h3>
+<p>From this angle the Internet is a <strong>distributed application platform</strong>: an infrastructure that lets applications (browsers, streaming clients, social apps) exchange data without either endpoint needing to understand the physical path in between. Your video app never learns which routers carried its frames — and never needs to. This view tells you <em>what guarantees programmers can rely on</em> (send bytes from process A to process B) while hiding the machinery.</p>
+<h3>3.3 The Complete Path: Host → Access → ISP → Core → Destination</h3>
+<p>Every trip follows the same skeleton, and every exam path-tracing question is answered by walking it:</p>
 <pre><code class="language-mermaid">flowchart LR
-    H[&quot;Host&lt;br/&gt;(your laptop/phone)&quot;] --&gt;|Access Network| ER[&quot;Edge Router&lt;br/&gt;(first hop into the network core)&quot;]
-    ER --&gt; CORE[&quot;Network Core&lt;br/&gt;(routers, backbone links)&quot;]
-
-    subgraph AccessTypes[&quot;Common Access Network Types&quot;]
-        direction TB
-        DSL[&quot;DSL / Cable / FTTH&lt;br/&gt;(Home Networks)&quot;]
-        ENET[&quot;Ethernet&lt;br/&gt;(Enterprise Networks)&quot;]
-        WIFI[&quot;Wi-Fi&lt;br/&gt;(Wireless LAN)&quot;]
-        CELL[&quot;4G/5G&lt;br/&gt;(Wide-Area Wireless)&quot;]
-    end
+    accTitle: End-to-end Internet path from host to destination
+    accDescr: A home host reaches an ISP edge router over an access network, crosses core routers, and arrives at the destination server network.
+    H[&quot;Home host&lt;br/&gt;(laptop/phone)&quot;] --&gt;|Access network&lt;br/&gt;(DSL/cable/fiber/Wi-Fi)| ER[&quot;ISP edge router&lt;br/&gt;(first core hop)&quot;]
+    ER --&gt; R1[&quot;Core router&quot;] --&gt; R2[&quot;Core router&quot;] --&gt; SRV[&quot;Destination network&lt;br/&gt;(server host)&quot;]
+</code></pre>
+<p><em>What</em> happens: your host hands data to its access network; the access network delivers it to the ISP&#39;s edge router (the first router of the core); core routers forward it hop by hop; the destination&#39;s access network drops it at the server. <em>Why</em> this shape: no single organization owns the planet&#39;s wires, so local access providers hand off to long-haul core networks — hierarchy is what makes global scale possible. <em>Example</em>: a Kochi laptop&#39;s request reaches a Mumbai server by laptop → home fiber → ISP edge router → 6–10 core routers → data-center router → server.</p>
+<h3>3.4 Internet vs. Web — Infrastructure vs. One Application</h3>
+<ul>
+<li><strong>What they are.</strong> The <strong>Internet</strong> is the global infrastructure: links, routers, IP (Internet Protocol) addresses, and packet-switching rules. The <strong>World Wide Web (Web)</strong> is <em>one</em> distributed application running <em>on top of</em> that infrastructure, using HTTP/HTTPS (HyperText Transfer Protocol / Secure) between a <strong>browser</strong> (the client program rendering pages) and a <strong>web server</strong> (the program supplying pages).</li>
+<li><strong>Why the distinction exists.</strong> Confusing them makes every other statement wrong: email (SMTP — Simple Mail Transfer Protocol), file transfer (FTP — File Transfer Protocol), voice calls (VoIP — Voice over IP), name lookup (DNS — Domain Name System), and gaming are all Internet applications that are <em>not</em> the Web.</li>
+<li><strong>How to keep them straight.</strong> The Internet is the highway system (roads, intersections, signs); the Web is one delivery-truck company driving on it — alongside buses (email) and ambulances (VoIP). Saying &quot;the Web is a layer of the Internet&quot; is misleading: the Web is not a network layer, it is an <em>application using</em> the network.</li>
+<li><strong>When/where tested.</strong> Any question naming HTTP, a URL, HTML, or a browser is asking about the Web (application); any question naming IP addresses, routers, or packets is asking about the Internet (infrastructure).</li>
+<li><strong>Example.</strong> Typing <code>www.example.com</code>: DNS (Internet infrastructure service) resolves the name to an IP address; then HTTP (Web application protocol) fetches the page <em>over</em> that infrastructure.</li>
+</ul>
+<h3>3.5 The Network Edge: Hosts, Processes, Clients, Servers</h3>
+<p>The network edge is where end systems physically attach. Three ideas, each earning marks:</p>
+<ul>
+<li><strong>Host / end system.</strong> <em>What:</em> any edge computer running applications. <em>Why the names:</em> &quot;host&quot; because it <em>hosts</em> programs; &quot;end system&quot; because it sits at a communication endpoint. <em>Example:</em> phone, laptop, data-center machine, sensor.</li>
+<li><strong>Process and simultaneity.</strong> <em>What:</em> a process is one running program. <em>Why it matters:</em> a host runs dozens of processes (browser, mail sync, OS updates) sharing one access link — the operating system multiplexes them, which is exactly why one laptop can stream (client), seed a torrent (server), and back up photos at the same time. <em>Result:</em> &quot;client&quot; and &quot;server&quot; describe <em>processes and behaviors</em>, never the box.</li>
+<li><strong>Client vs. server roles.</strong> <em>What:</em> the side initiating a request vs. the side waiting to serve it. <em>Where used:</em> client processes usually run on personal devices with intermittently-changing (often dynamic) addresses; server processes usually run on well-provisioned machines with stable, reachable addresses (frequently static, but static addresses are common practice, not a law — avoid claiming servers <em>always</em> have them).</li>
+</ul>
+<pre><code class="language-mermaid">flowchart LR
+    accTitle: Client-server and peer-to-peer communication patterns
+    accDescr: In client-server mode the client requests and the server responds; in peer-to-peer mode two hosts exchange data as equals.
+    C[&quot;Client&lt;br/&gt;(phone/laptop)&quot;] --&gt;|Request&lt;br/&gt;(e.g. HTTP GET)| S[&quot;Server&lt;br/&gt;(data-center host)&quot;]
+    S --&gt;|Response&lt;br/&gt;(e.g. page/video)| C
+    P1[&quot;Peer A&quot;] &lt;--&gt;|Equal exchange| P2[&quot;Peer B&quot;]
+</code></pre>
+<details class="callout callout-pitfall" open><summary class="callout-header"><span class="callout-title">⚠️ Common Exam Trap: Client and Server Are Roles, Not Device Types</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Exams love this trap: a &quot;server&quot; is not a special kind of computer — it is a <em>role</em> an end system plays. Your laptop is a client when it streams video, but the moment it serves a file to a peer (or runs a local development server), it is acting as a <strong>server</strong>. Classify by <em>behavior</em> (requesting vs. supplying), never by hardware size.</p>
+</div></details><h3>3.6 Access Networks — Getting From the Edge to the First Router</h3>
+<p>An access network connects your host to the ISP&#39;s edge router. Six technologies, each taught as WHAT → HOW → WHY → characteristics → example. Speeds below are <em>representative, deployment-dependent</em> figures — nominal link rates, not guaranteed application throughput, which is always lower (sharing, overhead, distance).</p>
+<p><strong>DSL (Digital Subscriber Line).</strong></p>
+<ul>
+<li><em>What:</em> Internet over the existing copper telephone line to a home.</li>
+<li><em>How:</em> Frequency-division splits one wire into parallel channels: roughly 0–4 kHz stays voice, higher bands carry data upstream (~25–138 kHz) and downstream (~138 kHz–1.1 MHz) in classic ADSL (Asymmetric DSL) — numbers are illustrative of the ADSL standard, not every DSL variant.</li>
+<li><em>Why it exists:</em> reuses the phone wiring already in every house; the copper pair is <em>dedicated</em> (your bits are not shared with neighbors).</li>
+<li><em>Characteristics/example:</em> typically asymmetric (representative ADSL: ~24 Mbps down, ~1–3 Mbps up) because homes download more than they upload; rate falls sharply with distance from the telephone central office (a few km limit).</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: DSL home access architecture
+    accDescr: A house splitter separates voice and data over a dedicated copper pair reaching the central-office DSLAM, which splits voice to the phone network and data to the Internet core.
+    HOME[&quot;House&lt;br/&gt;(PC + phone + splitter)&quot;] --&gt;|Dedicated copper pair&lt;br/&gt;(voice + data bands)| CO[&quot;Central office&lt;br/&gt;(DSLAM)&quot;]
+    CO --&gt;|Voice| PSTN[&quot;Phone network&quot;]
+    CO --&gt;|Data| CORE[&quot;Internet core&quot;]
+</code></pre>
+<p><strong>Cable / HFC (Hybrid Fiber-Coax).</strong></p>
+<ul>
+<li><em>What:</em> Internet over the cable-TV company&#39;s wiring.</li>
+<li><em>How:</em> fiber runs from the cable headend to a neighborhood node; coaxial copper cable fans out from the node to each home; DOCSIS (Data Over Cable Service Interface Specification) encodes data as radio-frequency signals on the coax.</li>
+<li><em>Why it exists:</em> reuses TV cable plant with fiber doing the long haul (fiber&#39;s capacity) and coax doing the last hop (cheap to homes).</li>
+<li><em>Characteristics/example:</em> the neighborhood coax segment is <em>shared</em> — at 8 PM fifty neighbors streaming 4K contend for the same capacity, so evening speeds dip. This dedicated-vs-shared contrast with DSL is a favorite exam question.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: Hybrid fiber-coax cable access architecture
+    accDescr: Fiber connects the headend to a neighborhood node, and one shared coaxial segment serves several homes.
+    HE[&quot;Cable headend&quot;] --&gt;|Fiber| NODE[&quot;Neighborhood node&quot;]
+    NODE --&gt;|Shared coax| H1[&quot;Home 1&quot;]
+    NODE --&gt;|Shared coax| H2[&quot;Home 2&quot;]
+    NODE --&gt;|Shared coax| H3[&quot;Home 3&quot;]
+</code></pre>
+<p><strong>FTTH (Fiber to the Home).</strong></p>
+<ul>
+<li><em>What:</em> glass fiber running from the central office all the way into the home (an ONT — Optical Network Terminal — converts light back to electrical frames).</li>
+<li><em>How:</em> two deployment styles — AON (Active Optical Network, powered neighborhood switches route light per home) vs. PON (Passive Optical Network, unpowered optical splitters divide one feeder fiber among up to ~64 homes).</li>
+<li><em>Why it exists:</em> removes copper&#39;s distance/bandwidth ceiling entirely.</li>
+<li><em>Characteristics/example:</em> typically symmetric with commonly offered rates around hundreds of Mbps to ~1 Gbps (multi-gigabit in some deployments) and very low latency.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: Fiber-to-the-home access with passive splitter
+    accDescr: One feeder fiber from the central office terminal is divided by an unpowered splitter to serve several homes.
+    OLT[&quot;Central office&lt;br/&gt;(OLT)&quot;] --&gt;|One feeder fiber| SPL[&quot;Passive splitter&lt;br/&gt;(no power)&quot;]
+    SPL --&gt; ONT1[&quot;Home 1 (ONT)&quot;]
+    SPL --&gt; ONT2[&quot;Home 2 (ONT)&quot;]
+</code></pre>
+<p><strong>Enterprise Ethernet + Wi-Fi and Cellular access.</strong></p>
+<ul>
+<li><em>Ethernet (IEEE 802.3, wired):</em> WHAT office PCs wired to a switch; HOW Cat5e/Cat6A twisted-pair frames to an institutional switch with fiber uplink; WHY cheap, full-rate, low-interference indoor links (representative: 100 Mbps–1 Gbps desktop, 10 Gbps uplinks).</li>
+<li><em>Wi-Fi (IEEE 802.11, wireless LAN):</em> WHAT laptops/phones via an access point (AP); HOW radio frames over tens of meters indoors to an AP bridged into the wired network; WHY mobility without cabling (Wi-Fi 5/6/7 generations raise rate and efficiency; walls and contention lower real throughput).</li>
+<li><em>Cellular (4G/5G, wide-area wireless):</em> WHAT phones/vehicles via a tower kilometers away; HOW radio to a base station (eNodeB in 4G LTE, gNodeB in 5G) into the mobile core; WHY coverage where no wire reaches. Qualify generations: 3G brought basic mobile data (few Mbps); 4G LTE is all-IP packet data (representative tens–hundreds of Mbps); 5G raises peak rates (multi-Gbps under ideal conditions) and lowers latency (single-digit ms only in ideal deployments) — never present one vendor&#39;s figures as universal.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: Enterprise and cellular access networks
+    accDescr: Office devices reach an Ethernet switch directly or through a Wi-Fi access point, while phones reach a cellular base station by radio.
+    PC[&quot;Office PC&quot;] --&gt;|Ethernet cable| SW[&quot;Enterprise switch&quot;]
+    LAP[&quot;Laptop&quot;] --&gt;|Wi-Fi radio| AP[&quot;Access point&quot;]
+    AP --&gt; SW
+    SW --&gt;|Fiber uplink| ER2[&quot;Enterprise edge router&quot;]
+    PH[&quot;Smartphone&quot;] --&gt;|Cellular radio| BS[&quot;Base station&lt;br/&gt;(tower)&quot;]
+    BS --&gt; CORE2[&quot;Mobile core&quot;]
+</code></pre>
+<h3>3.7 Physical Media — What the Bits Ride On (and Why Properties Differ)</h3>
+<p>Bits travel as voltages, light pulses, or radio waves. Media split into guided (waves confined to a solid path) vs. unguided (waves spread through air/space) — and each medium&#39;s <em>physics</em> explains its performance:</p>
+<ul>
+<li><strong>Twisted-pair copper.</strong> <em>Why twisted:</em> adjacent pairs induce crosstalk (electromagnetic interference between neighbors); twisting cancels most of it. <em>Result:</em> cheapest indoor medium (Cat5e ~1 Gbps/100 m; Cat6A ~10 Gbps), but attenuation and crosstalk cap distance and rate.</li>
+<li><strong>Coaxial cable.</strong> <em>Why better than bare pair:</em> a concentric metal shield confines the field and blocks outside noise. <em>Result:</em> higher, cleaner bandwidth over longer runs — the reason TV/cable plants chose it.</li>
+<li><strong>Fiber optics.</strong> <em>Why superior:</em> light pulses in high-purity glass reflect internally (total internal reflection) with tiny attenuation and zero electromagnetic interference (it carries photons, not current). <em>Result:</em> enormous capacity and 100+ km repeater spacing — the transoceanic backbone. Qualification: still subject to attenuation and physical cuts; &quot;immune to interference&quot; never means &quot;indestructible.&quot;</li>
+<li><strong>Terrestrial radio (Wi-Fi, Bluetooth, cellular).</strong> <em>Why different:</em> unguided waves broadcast — anyone in range on that frequency can receive them (convenient for mobility, costly for security and contention). <em>Result:</em> mobility at the price of interference, shared airtime, and eavesdroppability.</li>
+<li><strong>Satellite radio.</strong> <em>Why delay differs by orbit:</em> waves always travel at light speed (~3×10⁸ m/s) — delay comes from <em>distance</em>, not slow waves. GEO (geostationary, ~35,786 km) round trips run ~240–280 ms; LEO (low-earth orbit, ~500–1,500 km) constellations run ~20–40 ms typically. <em>Result:</em> LEO suits interactive use; GEO suits broadcast/backhaul.</li>
+</ul>
+<h3>3.8 Packet Switching — From First Principles</h3>
+<ul>
+<li><strong>What it is.</strong> The network core&#39;s forwarding discipline: application data → chopped into addressed packets → each packet transmitted link by link through routers → reassembled at the destination.</li>
+<li><strong>How one message travels.</strong> (1) <em>Packetization:</em> the source splits a message (say a 10 MB image) into small packets. (2) <em>Headers:</em> each packet gets source/destination addresses. (3) <em>Hop-by-hop forwarding:</em> every router reads the destination and pushes the packet onto the next link. (4) <em>Reassembly:</em> the destination strips headers, reorders, and rebuilds the message.</li>
+<li><strong>Why packets, not whole messages.</strong> Short uniform pieces keep any single transfer from monopolizing a link, let routers interleave many flows, and bound the damage of one lost chunk to a retransmission of that chunk — not the whole file.</li>
+<li><strong>Circuit switching contrast.</strong> Old telephone networks <em>reserved</em> an end-to-end circuit per call: guaranteed rate, zero queuing — but silence on the line still burned reserved capacity, and only ~10 users fit a 1 Mbps link at 100 Kbps each. Packet switching <em>shares</em> capacity on demand (statistical multiplexing): with each of 35 users active only 10% of the time, the chance that more than 10 transmit at once is under 0.04% — so 35 users comfortably share that same 1 Mbps link. <em>Result:</em> far higher utilization at the cost of variable delay and possible loss.</li>
+<li><strong>When/where.</strong> The entire Internet core is packet-switched; circuits survive only in niche guaranteed-rate services. Exam cue: &quot;dedicated/reserved&quot; → circuit; &quot;shared/on-demand/statistical&quot; → packet.</li>
+</ul>
+<h3>3.9 Store-and-Forward — The Rule That Creates Delay</h3>
+<ul>
+<li><strong>What it is.</strong> A router must receive <em>the entire packet</em> (all L bits) into its buffer before transmitting its first bit onward (simplified model used throughout this syllabus).</li>
+<li><strong>Why it exists.</strong> A router cannot pick the correct output link until it has read the header — and the header is meaningless without its packet. Receiving-then-forwarding is the price of per-packet routing decisions (plus error checks).</li>
+<li><strong>How delay follows.</strong> Pushing L bits onto a link of rate R takes L/R seconds <em>per hop</em>. For one packet over N identical links (ignoring other delays): d_end-to-end = N × L/R. <em>Example:</em> L = 6,000 bits, R = 3 Mbps → 2 ms per link; over N = 3 links → 6 ms. <em>Interpretation:</em> store-and-forward multiplies transmission cost by hop count — the fundamental reason path length matters.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart LR
+    accTitle: Packet journey with store-and-forward routers
+    accDescr: The source transmits a full packet to router 1, which stores it completely before forwarding to router 2 and on to the destination.
+    SRC[&quot;Source host&quot;] --&gt;|Transmit L bits&lt;br/&gt;(takes L/R)| R1[&quot;Router 1&lt;br/&gt;(store full packet,&lt;br/&gt;then forward)&quot;]
+    R1 --&gt;|Transmit L bits&lt;br/&gt;(takes L/R)| R2[&quot;Router 2&lt;br/&gt;(store full packet,&lt;br/&gt;then forward)&quot;]
+    R2 --&gt; DST[&quot;Destination host&quot;]
+</code></pre>
+<h3>3.10 Forwarding vs. Routing — Local Action vs. Global Computation</h3>
+<p>This distinction must be razor sharp — it recurs in every later module:</p>
+<ul>
+<li><strong>FORWARDING (data plane, local).</strong> <em>What:</em> moving one arriving packet from a router&#39;s input port to the correct output port, <em>right now</em>, via a table lookup. <em>How:</em> read destination address → longest-prefix match in the local forwarding table → emit on the listed port — in microseconds, per packet, in hardware.</li>
+<li><strong>ROUTING (control plane, global).</strong> <em>What:</em> computing the end-to-end paths across all routers and <em>filling</em> those forwarding tables. <em>How:</em> routing protocols (OSPF inside an ISP, BGP between ISPs) exchange reachability information in the background and continuously update tables.</li>
+<li><strong>Concrete example.</strong> Packet for 10.0.0.5 arrives; the table says prefix 10.0.0.0/8 → port 2; the packet leaves on port 2 (forwarding). That table row exists because routing protocols earlier discovered &quot;10.0.0.0/8 is reachable via port 2&quot; (routing). GPS analogy: routing plans the whole New York→Los Angeles route; forwarding takes Exit 14B at this interchange.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: Routing builds the table that forwarding uses
+    accDescr: Routing protocols populate the forwarding table; each arriving packet is looked up to select its output port.
+    RP[&quot;Routing protocols&lt;br/&gt;(OSPF, BGP)&quot;] --&gt;|Build and update| FT[&quot;Forwarding table&lt;br/&gt;(prefix to port)&quot;]
+    PKT[&quot;Arriving packet&lt;br/&gt;(dest 10.0.0.5)&quot;] --&gt;|Lookup 10.0.0.0/8| FT
+    FT --&gt;|Port 2| OUT2[&quot;Output port 2&quot;]
+</code></pre>
+<h3>3.11 The Four Nodal Delays — Four Different Physical Causes</h3>
+<p>At every node a packet suffers d_nodal = d_proc + d_queue + d_trans + d_prop. These are <em>different physics</em>, not four names for one thing:</p>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: The four components of nodal delay in order
+    accDescr: Processing, then queuing, then transmission, then propagation sum to the total nodal delay.
+    IN[&quot;Packet arrives&quot;] --&gt; P[&quot;1. Processing&lt;br/&gt;(header check, table lookup)&quot;]
+    P --&gt; QU[&quot;2. Queuing&lt;br/&gt;(wait for the link)&quot;]
+    QU --&gt; T[&quot;3. Transmission&lt;br/&gt;(push L bits: L/R)&quot;]
+    T --&gt; PR[&quot;4. Propagation&lt;br/&gt;(travel distance: d/s)&quot;]
+    PR --&gt; NX[&quot;Next node&quot;]
 </code></pre>
 <ul>
-<li><strong>Home Networks:</strong> DSL (Digital Subscriber Line, over copper telephone wire), Cable (over coaxial TV cable), or FTTH (Fiber to the Home).</li>
-<li><strong>Enterprise Networks:</strong> Devices connect via Ethernet switches, which connect to an institutional router — common in companies and universities.</li>
-<li><strong>Wireless Access Networks:</strong><ul>
-<li><strong>Wi-Fi (Wireless Local Area Network, WLAN):</strong> short range, within a building, to a local access point.</li>
-<li><strong>Cellular (4G/5G):</strong> long range, to a cell tower kilometers away.</li>
+<li><strong>Processing delay (d_proc).</strong> <em>What:</em> header error-check + forwarding-table lookup time. <em>Why small:</em> done in hardware; typically microseconds or less — negligible beside the others, but examiners still list it.</li>
+<li><strong>Queuing delay (d_queue).</strong> <em>What:</em> time waiting in the output buffer because the link is busy. <em>Why variable:</em> zero when the link is idle, huge under congestion — the only component that changes packet to packet (see §3.12).</li>
+<li><strong>Transmission delay (d_trans = L / R).</strong> <em>What:</em> time to <em>push</em> all packet bits onto the wire. L = packet length in <strong>bits</strong>; R = link transmission rate in <strong>bits/second</strong>; result in <strong>seconds</strong>. <em>Why it works:</em> a rate of R bits/s needs L/R seconds to emit L bits — a serialization cost, independent of distance. <em>Example:</em> L = 8,000 bits (1,000 bytes × 8), R = 1 Mbps = 1,000,000 bits/s → d_trans = 8,000/1,000,000 = 0.008 s = <strong>8 ms</strong>. <em>Common mistake:</em> forgetting the ×8 bytes→bits conversion, or using megabytes (10⁶) vs. mebibytes — state your convention.</li>
+<li><strong>Propagation delay (d_prop = d / s).</strong> <em>What:</em> time for <em>one bit</em> to travel the physical distance. d = link length in <strong>meters</strong>; s = signal speed in the medium in <strong>meters/second</strong> (≈ 2×10⁸ m/s in copper/fiber, ~2/3 of light speed c ≈ 3×10⁸ m/s); result in <strong>seconds</strong>. <em>Why it works:</em> distance divided by wave speed — a travel cost, independent of packet size. <em>Example:</em> d = 2,000 km = 2,000,000 m of fiber, s = 2×10⁸ m/s → d_prop = 2,000,000/200,000,000 = 0.01 s = <strong>10 ms</strong>. <em>Common mistake:</em> mixing km with m, or thinking bigger packets propagate slower — they don&#39;t; propagation ignores L entirely.</li>
 </ul>
-</li>
-</ul>
-<h3>3.5 Physical Media — What the Bits Ride On</h3>
-<p>Bits must travel across some physical medium — electromagnetic waves or light pulses.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Transmission delay (d_trans)</th>
+<th>Propagation delay (d_prop)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Definition</td>
+<td>Time to push ALL bits onto the wire</td>
+<td>Time for ONE bit to cross the distance</td>
+</tr>
+<tr>
+<td>Formula</td>
+<td>L / R</td>
+<td>d / s</td>
+</tr>
+<tr>
+<td>Depends on</td>
+<td>Packet length, link rate</td>
+<td>Distance, medium wave speed</td>
+</tr>
+<tr>
+<td>Analogy</td>
+<td>Toll booth releasing a 10-car caravan</td>
+<td>One car driving 100 km of highway</td>
+</tr>
+</tbody></table>
+<p><strong>Combined nodal example (all four, with steps).</strong> Packet L = 10,000 bits; link R = 2 Mbps; distance d = 2,500 km fiber (s = 2.5×10⁸ m/s); d_proc = 1 ms; d_queue = 4 ms.</p>
+<ol>
+<li>d_trans = 10,000 / 2,000,000 = 0.005 s = <strong>5 ms</strong>.</li>
+<li>d_prop = 2,500,000 / 250,000,000 = 0.01 s = <strong>10 ms</strong>.</li>
+<li>d_nodal = 1 + 4 + 5 + 10 = <strong>20 ms</strong>. <em>Interpretation:</em> on long links propagation dominates; on slow links transmission dominates; under load queuing dominates — read which term is largest before diagnosing.</li>
+</ol>
+<h3>3.12 Queuing, Traffic Intensity, and Packet Loss</h3>
 <ul>
-<li><strong>Guided Media</strong> (waves travel along a solid path):<ul>
-<li><em>Twisted-Pair Copper</em> — cheapest, used in most Ethernet cabling (Cat5/Cat6 categories).</li>
-<li><em>Coaxial Cable</em> — two concentric copper conductors, supports high download speeds.</li>
-<li><em>Fiber Optics</em> — pulses of light through glass fiber; extremely fast and unaffected by electromagnetic interference (it carries light, not electric current), though signals still weaken with distance and the glass itself can be cut or damaged. It is the backbone of long-haul transoceanic links.</li>
+<li><strong>Queue formation.</strong> <em>What happens:</em> packets arrive at an output buffer faster than the link drains it. <em>How it grows:</em> each arrival while the link is busy waits behind earlier packets; waiting time = backlog ahead ÷ R. <em>Why delay varies:</em> arrivals are bursty — an idle gap empties the queue (d_queue → 0), a burst refills it (d_queue → large). <em>Result:</em> queuing is the only delay component with memory of recent traffic.</li>
+<li><strong>Traffic intensity (I = L·a / R).</strong> L = packet size (<strong>bits</strong>), a = mean arrival rate (<strong>packets/second</strong>), so L·a = mean arriving bit-rate (<strong>bits/second</strong>); R = link rate (<strong>bits/second</strong>); I is <strong>dimensionless</strong>. <em>Meaning:</em> the fraction of time the link would need to stay busy serving arrivals. <em>Why I→1 hurts:</em> near saturation, tiny bursts build long backlogs and delay climbs steeply; sustained I &gt; 1 means arrivals outrun service so the queue grows without bound. <em>Qualification (exam trap):</em> I is a <em>pressure gauge</em>, not a magic loss threshold — real loss depends on burstiness and finite buffer size, so never claim &quot;loss begins exactly at I = 1.&quot;</li>
+<li><strong>Worked example.</strong> L = 8,000 bits, a = 1,000 packets/s → L·a = 8 Mbps; R = 10 Mbps → I = 0.8 (busy but sustainable). If arrivals rise to a = 1,500 → I = 1.2: the queue grows unboundedly while this persists.</li>
+<li><strong>Packet loss.</strong> <em>What:</em> router buffers are finite; a packet arriving at a <em>full</em> queue is discarded (dropped). <em>Why different from delay:</em> delay slows a packet; loss deletes it. <em>Recovery (conceptual):</em> the sender learns of the gap (e.g., a missing acknowledgment) and <em>retransmits</em> a copy — the mechanism reliable transport (TCP, next modules) is built on; loss-tolerant apps (live voice/video) instead skip the missing piece. No TCP internals here — that belongs to the transport module.</li>
 </ul>
-</li>
-<li><strong>Unguided Media</strong> (waves propagate through open air/space):<ul>
-<li><em>Terrestrial Radio</em> — Wi-Fi, AM/FM broadcast.</li>
-<li><em>Satellite Radio</em> — geosynchronous satellites or Low Earth Orbit (LEO) constellations.</li>
+<pre><code class="language-mermaid">flowchart LR
+    accTitle: Queue buildup and packet loss at a full buffer
+    accDescr: Arrivals faster than the link rate fill the finite buffer; packets arriving at a full buffer are dropped.
+    ARR[&quot;Arriving packets&lt;br/&gt;(rate L·a)&quot;] --&gt; Q[&quot;Finite buffer&lt;br/&gt;(waiting packets)&quot;]
+    Q --&gt;|Transmit at rate R| OUT[&quot;Outgoing link&quot;]
+    Q --&gt;|Buffer full| DROP[&quot;Dropped packet&lt;br/&gt;(loss)&quot;]
+</code></pre>
+<h3>3.13 Protocols — Format, Order, Meaning, Action</h3>
+<ul>
+<li><strong>What a protocol is.</strong> A protocol defines, for communication between entities: (1) <em>message format/syntax</em> — field layout in headers (where source, destination, checksum bits sit); (2) <em>order/timing</em> — which message goes first, second, and what timers mean; (3) <em>meaning/semantics</em> — what each field value signifies (SYN = &quot;open a connection&quot;); (4) <em>actions</em> — what each side must <em>do</em> on sending/receiving (retransmit on timeout, deliver upward on receipt).</li>
+<li><strong>Human analogy first.</strong> Two strangers meeting: &quot;Hello!&quot; → expect &quot;Hello!&quot; back (order + meaning); asking &quot;what time is it?&quot; → expect a time, not a joke (semantics); silence after a question → repeat it (timeout action). Break any rule and communication fails — networks formalize the same contract in bits.</li>
+<li><strong>Network example.</strong> Opening a web page: TCP SYN → SYN-ACK → ACK (order), then HTTP GET /index.html → 200 OK + HTML (semantics + action: render the page). Every arrow in every diagram in this course is one protocol-governed step.</li>
 </ul>
-</li>
+<h3>3.14 Why Layering — Managing Complexity Without Duplicating m1_02</h3>
+<ul>
+<li><strong>Why needed.</strong> Networks entangle cables, radio physics, kernels, routing math, crypto, and apps. Layering attacks <em>complexity</em> through: <strong>modularity</strong> (each layer is one manageable job), <strong>abstraction</strong> (a layer uses only the service below it — HTTP never touches radio waves), <strong>interoperability</strong> (any vendor&#39;s layer-N works with any other&#39;s layer-N if the interface holds), and <strong>independent evolution</strong> (swap Ethernet for Wi-Fi and HTTP/TCP keep working untouched — the Wi-Fi-upgrade example).</li>
+<li><strong>Where used.</strong> Every standard in this course (HTTP, TCP, IP, Ethernet, Wi-Fi) lives at exactly one layer and leans on the rest.</li>
+<li><strong>Bridge — do not learn the stack here.</strong> The full five-layer Internet stack (application, transport, network, link, physical), the OSI reference model, encapsulation, and service models are the <em>entire subject</em> of the next topic. Carry forward one sentence: <em>layering lets each protocol solve one problem while borrowing everything below it</em> — then open <strong>m1_02 Protocol Layering / OSI / TCP-IP</strong>.</li>
 </ul>
-<details class="interactive-toggle"><summary>What does `transmission rate` mean?</summary><div class="toggle-content"><p><code>Transmission rate</code> is bits per second the link can push, also called <code>bandwidth</code> here.
-Why it matters: every link in the video path has its own rate, and the slowest one bounds the stream.
-Tiny example: a 10 Mbps link delivers about 10 million bits per second, so a 40 Mb clip needs at least 4 seconds.</p>
-</div></details><details class="interactive-toggle"><summary>What does `guided` vs `unguided` mean?</summary><div class="toggle-content"><p><code>Guided</code> means waves travel along a solid path such as copper wire or glass fiber.
-<code>Unguided</code> means waves propagate through open air or space, such as Wi-Fi or satellite radio.
-Use it as: FTTH fiber is guided, the last hop of home Wi-Fi is unguided.</p>
-</div></details><p><a id="worked-example"></a></p>
+<p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
-<p class="secnav"><a href="#3-purpose-why-two-views-of-one-internet">← 3. Purpose — Why Two Views of One …</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<p class="secnav"><a href="#3-purpose-views-edge-core-delays-rules">← 3. Purpose — Views, Edge, Core, De…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
 <h3>4.1 Toy Example (30 seconds)</h3>
 <p>One laptop, one home router, one video server. The laptop (client end system) asks over Wi-Fi (unguided access link); the home router (first packet switch) forwards the request onto fiber (guided link) toward the core; core routers forward it to the server (server end system), which sends video packets back along the reverse chain. Three parts — ends, links, switches — and nothing else is involved.</p>
-<h3>4.2 KTU-Style Worked Example</h3>
+<h3>4.2 KTU-Style Worked Example: Tracing One Video Frame</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>You stream a movie on a smart TV connected over Wi-Fi to your home router, which uses a Fiber-to-the-Home (FTTH) connection to your ISP (Internet Service Provider). Identify every &quot;nuts and bolts&quot; component involved in getting one video frame from the streaming server to your TV screen.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Tracing the Path</div><div class="step-content"><ol>
 <li><strong>End Systems:</strong> The streaming server (a host, acting as <em>server</em>) and your smart TV (a host, acting as <em>client</em>).</li>
@@ -468,6 +650,14 @@ Use it as: FTTH fiber is guided, the last hop of home Wi-Fi is unguided.</p>
 <li><strong>Final Hop:</strong> Your router forwards the packets over <strong>Wi-Fi</strong> (unguided medium, terrestrial radio) to the smart TV.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>A single video frame crosses <em>multiple</em> communication links (fiber, backbone links, Wi-Fi) and passes through <em>multiple</em> packet switches, yet the &quot;services view&quot; hides all of this: your smart TV&#39;s app simply sees a continuous stream of video data arriving, as if the underlying nuts-and-bolts complexity didn&#39;t exist.</p>
+</div></div><h3>4.3 Worked Calculation: Transmission vs. Propagation</h3>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Reading the Question</div><div class="step-content"><p>A host sends a 1,000-byte packet over a 2,000 km fiber link (s = 2×10⁸ m/s) with transmission rate R = 4 Mbps. Compute d_trans and d_prop, and state which dominates.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Converting and Computing</div><div class="step-content"><ol>
+<li><strong>Bits:</strong> L = 1,000 × 8 = <strong>8,000 bits</strong> (never divide bytes by a bits/s rate).</li>
+<li><strong>Transmission:</strong> d_trans = 8,000 / 4,000,000 = 0.002 s = <strong>2 ms</strong>.</li>
+<li><strong>Propagation:</strong> d = 2,000 km = 2,000,000 m; d_prop = 2,000,000 / 200,000,000 = 0.01 s = <strong>10 ms</strong>.</li>
+</ol>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Interpretation</div><div class="step-content"><p>Propagation (10 ms) dominates transmission (2 ms) here — typical of long links. On a short slow link the verdict flips: always compute both before concluding.</p>
 </div></div><p><a id="exam-recap"></a></p>
 <h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
 <p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
@@ -483,6 +673,10 @@ Use it as: FTTH fiber is guided, the last hop of home Wi-Fi is unguided.</p>
 <td>Hosts at the edge run applications (originate/consume data); switches inside forward packets (never originate application data).</td>
 </tr>
 <tr>
+<td>Internet vs. Web</td>
+<td>Global infrastructure (links/routers/IP) vs. one HTTP application running on top of it.</td>
+</tr>
+<tr>
 <td>Client vs. server</td>
 <td>Roles (requesting vs. supplying), not device types — one laptop plays both across two apps.</td>
 </tr>
@@ -495,13 +689,41 @@ Use it as: FTTH fiber is guided, the last hop of home Wi-Fi is unguided.</p>
 <td>Solid path (copper/coax/fiber) vs. open air/space (radio/satellite).</td>
 </tr>
 <tr>
-<td>DSL vs. FTTH</td>
-<td>Copper telephone wire vs. fiber to the premises (far higher rate).</td>
+<td>DSL vs. cable (HFC)</td>
+<td>Dedicated copper pair vs. shared neighborhood coax — sharing explains evening slowdowns.</td>
+</tr>
+<tr>
+<td>AON vs. PON (FTTH)</td>
+<td>Powered neighborhood switching vs. unpowered optical splitters.</td>
+</tr>
+<tr>
+<td>Packet vs. circuit switching</td>
+<td>On-demand shared capacity (statistical multiplexing) vs. reserved end-to-end circuit.</td>
+</tr>
+<tr>
+<td>Store-and-forward cost</td>
+<td>One packet over N links costs N × L/R (plus other delays).</td>
+</tr>
+<tr>
+<td>Forwarding vs. routing</td>
+<td>Local per-packet port selection (data plane) vs. global path computation filling tables (control plane).</td>
+</tr>
+<tr>
+<td>Transmission vs. propagation delay</td>
+<td>L/R (push bits onto wire) vs. d/s (one bit crosses distance) — different physics.</td>
+</tr>
+<tr>
+<td>Traffic intensity vs. loss threshold</td>
+<td>I = L·a/R measures congestion <em>pressure</em>; loss depends on bursts and finite buffers, not a magic I = 1 tripwire.</td>
+</tr>
+<tr>
+<td>Protocol vs. layering</td>
+<td>One communication contract (format/order/meaning/action) vs. the modular stack organizing many contracts.</td>
 </tr>
 </tbody></table>
-<p><strong>Watch out:</strong> (1) &quot;Server&quot; as hardware — always test role vs. device. (2) Calling the access link &quot;the Internet&quot; — it is only the first hop; the core lies beyond the edge router. (3) Fiber &quot;immune to everything&quot; — unaffected by electromagnetic interference, but still subject to attenuation and physical damage.</p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Internet = end systems at the edge + packet switches and links in the core. Two views: nuts-and-bolts (parts) and services (platform). Edge roles client/server are behavioral. Access: DSL/cable/FTTH (home), Ethernet (enterprise), Wi-Fi/cellular (wireless). Media: guided (twisted pair, coax, fiber) vs. unguided (terrestrial/satellite radio).</p>
-</div></details><p><strong>Active-recall checklist</strong> (answer aloud, then check against the quizzes below): What makes a device an &quot;end system&quot;? What three parts does the nuts-and-bolts view name? Why can a laptop be both client and server? Which access network serves homes vs. enterprises? Which guided medium suits transoceanic links, and with what qualification?</p>
+<p><strong>Watch out:</strong> (1) &quot;Server&quot; as hardware — always test role vs. device; servers usually have stable addresses, not <em>always</em> static ones. (2) Calling the access link &quot;the Internet&quot; — it is only the first hop; the core lies beyond the edge router. (3) Fiber &quot;immune to everything&quot; — unaffected by electromagnetic interference, but still subject to attenuation and physical damage. (4) Bigger packet ⇒ bigger <em>transmission</em> delay only — propagation never depends on L. (5) Bytes vs. bits — convert (×8) before dividing by R. (6) Nominal link rates (5G peaks, Wi-Fi generations) are deployment-dependent, never universal constants. (7) The Web is an application <em>on</em> the Internet, never &quot;a layer&quot; of it.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Internet = end systems at the edge + packet switches and links in the core; the Web is one HTTP application on top. Two views: nuts-and-bolts (parts) and services (platform). Edge roles client/server are behavioral; one host runs many processes. Access: DSL (dedicated copper, asymmetric) / cable-HFC (shared coax) / FTTH (AON vs PON) / Ethernet / Wi-Fi / cellular. Media: guided (twisted pair, coax, fiber) vs. unguided (terrestrial/satellite radio) — physics explains performance. Core: packet switching with store-and-forward (N × L/R); forwarding (local, data plane) vs. routing (global, control plane). Delays: d_proc + d_queue + d_trans (L/R) + d_prop (d/s); I = L·a/R gauges congestion pressure; finite buffers mean loss, handled by retransmission. Protocols define format/order/meaning/action; layering manages complexity — full stack in m1_02.</p>
+</div></details><p><strong>Active-recall checklist</strong> (answer aloud, then check against the quizzes below): What makes a device an &quot;end system&quot;? How does the services view differ from nuts-and-bolts? Why is the Web not &quot;a layer&quot; of the Internet? Why can one host be client and server at once? DSL vs. cable — which is shared, and why does it matter at 8 PM? Why does twisting copper help? Why is LEO faster than GEO? What four steps carry one message across a packet-switched core? Why does store-and-forward multiply delay by N? Forwarding or routing — which one reads the table per packet? Which delay ignores packet length? What are the units of I? Why is I = 1 not a loss tripwire? What four things must a protocol specify?</p>
 <p><a id="self-check"></a></p>
 <h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
@@ -581,6 +803,110 @@ Use it as: FTTH fiber is guided, the last hop of home Wi-Fi is unguided.</p>
     </summary>
     <div class="quiz-explanation-content">
       <p>Fiber optics carry data as light pulses through glass, which suffers far less signal degradation and interference over long distances than electrical signals in copper, making it the backbone medium of choice for undersea and cross-continental links.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q4: Delay Calculation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A 1,000-byte packet crosses a 2,000 km fiber link (s = 2×10⁸ m/s) with R = 4 Mbps. What are d_trans and d_prop?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>d_trans = 16 ms, d_prop = 10 ms (forgot nothing — bytes equal bits)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>d_trans = 2 ms, d_prop = 10 ms — convert bytes to bits first (8,000 bits), then L/R and d/s</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>d_trans = 10 ms, d_prop = 2 ms (formulas swapped)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>d_trans = 2 ms, d_prop = 1 ms (kilometers used as meters)</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>L = 1,000 × 8 = 8,000 bits, so d_trans = 8,000/4,000,000 = 2 ms. With d = 2,000,000 m, d_prop = 2,000,000/200,000,000 = 10 ms. Propagation dominates on long links. The distractors show the three classic errors: skipping ×8, swapping the formulas, and mixing km with m.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q5: Forwarding vs Routing</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A packet for 10.0.0.5 arrives at a router whose table maps 10.0.0.0/8 to port 2, and leaves on port 2. Which part was forwarding, and which part was routing?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Both are routing, because both involve the table</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The per-packet table lookup and port-2 emission is forwarding (data plane); the earlier computation that installed the 10.0.0.0/8 row was routing (control plane)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The lookup is routing and the emission is forwarding</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Neither — single-router hops need no routing</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Forwarding is the local, per-packet act (match destination, pick port); routing is the global, background computation (OSPF/BGP discovering paths) that populates the table. GPS analogy: routing plans the whole trip, forwarding takes this exit.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q6: Traffic Intensity and Loss</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Traffic arrives at a 10 Mbps link at a = 1,500 packets/s with L = 8,000 bits/packet, sustained. What does I say, and what happens?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>I = 0.8, so the link is safe forever</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>I = 1.2, so arrivals outrun service — the queue grows while this persists and finite buffers will drop packets</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>I = 1.2, which guarantees exactly 20% packet loss</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Queuing delay stays zero because R is large</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>I = (8,000 × 1,500)/10,000,000 = 1.2 &gt; 1, so backlog grows without bound during the overload and drops follow when buffers fill. But I is a pressure gauge, not a tripwire: it never predicts an exact loss percentage — burstiness and buffer size decide that.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q7: Protocol and Layering Bridge</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Why does the Internet use protocol layering, and what belongs to the next topic rather than this one?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Layering makes every protocol faster; the 5-layer stack details belong here</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Layering manages complexity via modularity, abstraction, interoperability, and independent evolution (e.g. swapping Ethernet for Wi-Fi without touching HTTP/TCP); the full OSI/TCP-IP stack, encapsulation, and service models belong to m1_02</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Layering replaces the need for packet switching</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Each layer encrypts the one below it</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>A protocol specifies format, order, meaning, and actions; layering organizes many such contracts so each solves one problem using the service below. The complete stack model, its layers, and encapsulation are m1_02&#39;s subject — this note only motivates the <em>why</em>.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
