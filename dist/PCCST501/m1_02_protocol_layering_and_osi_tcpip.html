@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 12 MIN READ</span>
+    <span class="badge">⏱️ 33 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -311,7 +311,7 @@
   </div>
 </div>
 <h1>Protocol Layering &amp; OSI/TCP-IP Models</h1>
-<p><strong>Protocols, the rationale for layered architecture, the 7-layer OSI model, the 5-layer TCP/IP model, and encapsulation/decapsulation.</strong></p>
+<p><strong>Protocols, services and interfaces, the 7-layer OSI model, the TCP/IP suite, PDU names, encapsulation/decapsulation, MAC/IP/port addressing, and the end-to-end browser trace.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
@@ -322,7 +322,7 @@
 <p>Dropping the airport now: a <strong>protocol</strong> is the formal version of conversational etiquette, and <strong>layering</strong> is the formal version of the ticket/baggage/boarding split — the rest of this note names the actual layers.</p>
 </div></details><p><a id="key-terms"></a></p>
 <h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
-<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-the-two-models-then-what-travels-on-the-wire">3. Purpose — The Two Models, Then … →</a></p>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-why-layers-then-what-travels-on-the-wire">3. Purpose — Why Layers, Then What… →</a></p>
 <table>
 <thead>
 <tr>
@@ -335,6 +335,18 @@
 <td>The rules for one conversation: message <strong>format</strong>, message <strong>order</strong>, and the <strong>actions</strong> taken on send/receive.</td>
 </tr>
 <tr>
+<td><strong>Service</strong></td>
+<td>What a layer <em>offers</em> the layer directly above it (e.g. &quot;deliver these bytes reliably&quot;) — the vertical promise.</td>
+</tr>
+<tr>
+<td><strong>Interface (SAP — Service Access Point)</strong></td>
+<td>The boundary contract through which the upper layer <em>calls</em> the lower layer&#39;s service on the same machine.</td>
+</tr>
+<tr>
+<td><strong>Peer entities</strong></td>
+<td>The two matching layer-N programs on different machines (your TCP ↔ the server&#39;s TCP) that converse <em>logically</em> via a protocol.</td>
+</tr>
+<tr>
 <td><strong>Layer / layered architecture</strong></td>
 <td>One horizontal slice of the networking job (e.g. routing), implemented independently and talking only to adjacent layers.</td>
 </tr>
@@ -344,11 +356,19 @@
 </tr>
 <tr>
 <td><strong>TCP/IP (Transmission Control Protocol / Internet Protocol) suite</strong></td>
-<td>The 5-layer practical stack the Internet actually runs on.</td>
+<td>The practical protocol family the Internet actually runs on — described with 4 or 5 layers depending on the textbook.</td>
 </tr>
 <tr>
 <td><strong>PDU (Protocol Data Unit)</strong></td>
-<td>What a layer calls its packaged data: Message, Segment, Datagram, Frame, Bits.</td>
+<td>What a layer calls its packaged data: Message, Segment/Datagram, Packet/Datagram, Frame, Bits.</td>
+</tr>
+<tr>
+<td><strong>SDU (Service Data Unit) / payload</strong></td>
+<td>The untouched upper-layer data a layer receives — to layer N, layer N+1&#39;s whole PDU is just opaque payload bytes.</td>
+</tr>
+<tr>
+<td><strong>Header / trailer</strong></td>
+<td>Control metadata a layer <em>prepends</em> (header) or <em>appends</em> (trailer, mainly link layer for error checks) to the payload.</td>
 </tr>
 <tr>
 <td><strong>Encapsulation</strong></td>
@@ -358,10 +378,6 @@
 <td><strong>Decapsulation</strong></td>
 <td>Each layer reading and stripping only its own header as data ascends the receiver&#39;s stack.</td>
 </tr>
-<tr>
-<td><strong>Interface / service</strong></td>
-<td>The boundary contract between adjacent layers: what the lower layer offers, what the upper layer may assume.</td>
-</tr>
 </tbody></table>
 <details class="interactive-toggle"><summary>What does `protocol` mean?</summary><div class="toggle-content"><p>A <code>protocol</code> defines message format, message order, and actions on send or receive.
 Format says what bits go where, order says who speaks when, actions say what each side does next.
@@ -370,92 +386,303 @@ Tiny example: asking the time expects a time as the reply, not a song.</p>
 Each layer talks only to the layers directly above and below it through a fixed interface.
 Why it helps: swapping copper for fiber changes one layer while the rest keep working.</p>
 </div></details><p><a id="the-math"></a></p>
-<h2 id="3-purpose-the-two-models-then-what-travels-on-the-wire">3. Purpose — The Two Models, Then What Travels on the Wire</h2>
+<h2 id="3-purpose-why-layers-then-what-travels-on-the-wire">3. Purpose — Why Layers, Then What Travels on the Wire</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
-<h3>3.1 The OSI Reference Model (7 Layers)</h3>
-<p>Created by ISO as a conceptual, vendor-neutral framework. Rarely implemented exactly as-is in software, but universally used by engineers as a shared troubleshooting vocabulary.</p>
+<h3>3.1 Why Protocol Layering Exists (First Principles)</h3>
+<p>One web request combines wildly different responsibilities: application meaning (what is this page?), representation/encryption (bytes, TLS), reliable delivery (resend what was lost), addressing (which host? which app?), routing (which path?), framing (who speaks on this wire?), and physical transmission (voltages, light, radio).</p>
+<ul>
+<li><strong>Why one giant protocol fails.</strong> A monolith fuses every concern: a radio retune would ripple into the browser, two vendors could never interoperate on half the system, a single bug would be undebuggable, and testing would mean testing <em>everything</em> at once. Complexity grows faster than the sum of its parts.</li>
+<li><strong>Why layering fixes it.</strong> Each layer owns one sub-problem and offers a <em>service</em> upward: <strong>modularity</strong> (small testable pieces), <strong>abstraction</strong> (HTTP never sees radio waves), <strong>interoperability</strong> (any vendor&#39;s layer-N works with any other&#39;s if the interface holds), <strong>independent evolution</strong> (Wi-Fi replaces Ethernet underneath an untouched TCP/HTTP), <strong>easier troubleshooting</strong> (check the cable light before blaming routing tables), and <strong>easier implementation</strong> (write one layer, reuse the rest).</li>
+<li><strong>What layering precisely guarantees — and does not.</strong> It guarantees <em>change isolation through stable interfaces</em>: swapping a layer&#39;s internals is safe <em>if</em> its service contract holds. It does <strong>not</strong> make anything faster, does <strong>not</strong> remove header overhead (each layer <em>adds</em> bytes), and does <strong>not</strong> mean applications survive <em>any</em> lower-layer change — only changes that preserve the promised service. &quot;Changing Wi-Fi requires rewriting the browser&quot; is false <em>because</em> the service (deliver frames) is preserved, not because layers are magic.</li>
+</ul>
 <pre><code class="language-mermaid">flowchart TB
-    L7[&quot;Layer 7 — Application&lt;br/&gt;(HTTP, FTP, SMTP)&quot;]
-    L6[&quot;Layer 6 — Presentation&lt;br/&gt;(encryption, JPEG, SSL/TLS)&quot;]
-    L5[&quot;Layer 5 — Session&lt;br/&gt;(establish/terminate connections)&quot;]
-    L4[&quot;Layer 4 — Transport&lt;br/&gt;(TCP, UDP — end-to-end delivery)&quot;]
-    L3[&quot;Layer 3 — Network&lt;br/&gt;(IP, ICMP — path determination)&quot;]
-    L2[&quot;Layer 2 — Data Link&lt;br/&gt;(Ethernet, Wi-Fi — MAC addressing)&quot;]
-    L1[&quot;Layer 1 — Physical&lt;br/&gt;(cables, hubs — raw bits)&quot;]
-    L7 --&gt; L6 --&gt; L5 --&gt; L4 --&gt; L3 --&gt; L2 --&gt; L1
+    accTitle: Why layering manages networking complexity
+    accDescr: Combined responsibilities are split into layers, each offering a service upward, giving modularity and independent evolution.
+    PROB[&quot;One request mixes apps,&lt;br/&gt;crypto, routing, radio physics&quot;] --&gt; SPLIT[&quot;Split into layers,&lt;br/&gt;each with one job&quot;]
+    SPLIT --&gt; SVC[&quot;Each layer offers&lt;br/&gt;a service upward&quot;]
+    SVC --&gt; M[&quot;Modularity&quot;]
+    SVC --&gt; A[&quot;Abstraction&quot;]
+    SVC --&gt; I[&quot;Interoperability&quot;]
+    SVC --&gt; E[&quot;Independent evolution&quot;]
 </code></pre>
-<blockquote>
-<p><strong>Mnemonic (bottom to top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</p>
-</blockquote>
-<p>SSL/TLS (Secure Sockets Layer / Transport Layer Security) provides encryption; JPEG is an image format handled at the presentation layer; MAC (Media Access Control) addresses name adapters on one link; IP (Internet Protocol) and ICMP (Internet Control Message Protocol) handle global addressing and error reporting; TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) are the two transport personalities.</p>
-<h3>3.2 The TCP/IP Model (5 Layers) — Packet Structure Names</h3>
-<p>The Internet actually runs on the simpler, practical TCP/IP suite, which merges OSI&#39;s top three layers into one:</p>
+<h3>3.2 Protocol vs. Service vs. Interface (With Concrete Example)</h3>
+<ul>
+<li><strong>Protocol — WHAT:</strong> rules used by <em>peer entities</em> (same layer, different machines) to communicate. <em>Why:</em> two independent implementations must agree bit-for-bit. <em>How:</em> format + order + actions (M1T1 §3.13). <em>Example:</em> your TCP and the server&#39;s TCP agree on sequence numbers and retransmission.</li>
+<li><strong>Service — WHAT:</strong> functionality one layer <em>provides to the layer above it</em> on the same machine. <em>Why:</em> lets the upper layer stay ignorant of lower mechanics. <em>Example:</em> TCP offers the browser &quot;a reliable byte stream&quot; — the browser never sees packets, losses, or retransmissions.</li>
+<li><strong>Interface (SAP) — WHAT:</strong> the boundary mechanism (function calls, primitives like request/indication) through which the upper layer <em>accesses</em> that service. <em>Why:</em> freezes the contract so either side&#39;s internals can be rewritten safely. <em>Example:</em> the socket API between your app and TCP — the OS can replace its whole TCP engine and your browser keeps calling the same socket functions.</li>
+</ul>
 <table>
 <thead>
 <tr>
-<th>TCP/IP Layer</th>
-<th>Corresponds to OSI</th>
-<th>Protocol Data Unit (PDU)</th>
+<th>Aspect</th>
+<th>Protocol</th>
+<th>Service</th>
+<th>Interface</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Application</td>
-<td>Layers 5, 6, 7 combined</td>
-<td><strong>Message</strong></td>
+<td>Direction</td>
+<td>Horizontal (peer to peer, across machines)</td>
+<td>Vertical (lower layer to upper layer, same machine)</td>
+<td>Vertical boundary on one machine</td>
 </tr>
 <tr>
-<td>Transport</td>
-<td>Layer 4</td>
-<td><strong>Segment</strong></td>
+<td>Answers</td>
+<td>&quot;How do equals converse?&quot;</td>
+<td>&quot;What do I get?&quot;</td>
+<td>&quot;How do I ask for it?&quot;</td>
 </tr>
 <tr>
-<td>Network</td>
-<td>Layer 3</td>
-<td><strong>Datagram</strong> (Packet)</td>
+<td>Example</td>
+<td>TCP rules between two hosts</td>
+<td>Reliable byte stream for the browser</td>
+<td>Socket API calls</td>
 </tr>
 <tr>
-<td>Link</td>
-<td>Layer 2</td>
-<td><strong>Frame</strong></td>
-</tr>
-<tr>
-<td>Physical</td>
-<td>Layer 1</td>
-<td><strong>Bits</strong></td>
+<td>Changes when</td>
+<td>Either peer&#39;s wire behavior changes</td>
+<td>Promised capability changes</td>
+<td>Function signatures change</td>
 </tr>
 </tbody></table>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PDU Names per Layer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Memorize top-down: <strong>M</strong>essage (Application) → <strong>S</strong>egment (Transport) → <strong>D</strong>atagram (Network) → <strong>F</strong>rame (Link) → <strong>B</strong>its (Physical). The classic 3-mark question gives the five names scrambled and asks you to match each to its layer — rehearse it in both directions.</p>
-</div></details><h3>3.3 Operation Flow: Encapsulation and Decapsulation</h3>
-<p>As data descends the sender&#39;s stack, each layer wraps the payload from the layer above inside its own header — like nesting a letter inside progressively larger envelopes.</p>
+<h3>3.3 Protocol Data Units — Names Earn Marks</h3>
+<ul>
+<li><strong>What a PDU is.</strong> The packaged unit <em>exchanged between peer entities at one layer</em> — payload plus that layer&#39;s control metadata.</li>
+<li><strong>Why PDUs exist.</strong> Each layer needs somewhere to put its own instructions (addresses, ports, checksums) without corrupting the upper layer&#39;s data — so it wraps the payload and names the bundle.</li>
+<li><strong>Payload / header / trailer.</strong> The <em>payload</em> (SDU) is the upper layer&#39;s untouched bundle; the <em>header</em> is prepended control data (addresses, sequence numbers, flags); the <em>trailer</em> is appended control data, used mainly at the link layer for error checks (Ethernet FCS — Frame Check Sequence / CRC — Cyclic Redundancy Check).</li>
+<li><strong>Names per layer (TCP/IP view).</strong> Application → <strong>Message</strong>; Transport → <strong>Segment</strong> (TCP) or <strong>Datagram</strong> (UDP); Network → <strong>Packet</strong> (also called datagram in IP/RFC usage); Data Link → <strong>Frame</strong>; Physical → <strong>Bits/signals</strong>.</li>
+<li><strong>Terminology caution.</strong> &quot;Packet&quot; is used <em>generically</em> for any bundled chunk and <em>specifically</em> for the network-layer PDU — read which meaning the question intends from context (a &quot;packet sniffer&quot; captures frames; an &quot;IP packet&quot; is layer 3). Likewise &quot;datagram&quot; names both UDP&#39;s transport PDU and IP&#39;s network PDU in different RFCs. Never claim every textbook uses identical names — qualify by layer.</li>
+</ul>
+<h3>3.4 Encapsulation — Down the Sender&#39;s Stack (HTTP Example)</h3>
+<p>Teach it as a pipeline: application data → transport header + data → network header + transport PDU → link header/trailer + network PDU → bits. At <em>every</em> stage know four things: what is added, why, who will use it, and what the bundle is now called.</p>
+<ol>
+<li><strong>Application:</strong> browser builds HTTP GET — added: nothing yet (raw message); used by: server&#39;s HTTP process; called: <strong>Message</strong>.</li>
+<li><strong>Transport (TCP):</strong> adds H_tcp with source/destination <strong>ports</strong> + sequence numbers — why: direct bytes to the right <em>process</em> and order them; used by: receiver&#39;s TCP; called: <strong>Segment</strong>.</li>
+<li><strong>Network (IP):</strong> adds H_ip with source/destination <strong>IP addresses</strong> — why: route across networks to the right <em>host</em>; used by: routers + receiver&#39;s IP; called: <strong>Packet</strong>.</li>
+<li><strong>Link (Ethernet/Wi-Fi):</strong> adds H_link with source/destination <strong>MAC addresses</strong> + trailer with FCS — why: deliver to the right <em>neighbor on this wire</em> and detect bit errors; used by: next-hop NIC; called: <strong>Frame</strong>.</li>
+<li><strong>Physical:</strong> converts the frame to voltages/light/radio — why: nothing travels until bits become signals; called: <strong>Bits</strong>.</li>
+</ol>
 <pre><code class="language-mermaid">flowchart LR
-    subgraph Sender[&quot;Sender: Encapsulation (going down)&quot;]
+    accTitle: Encapsulation down the sender stack and decapsulation up the receiver stack
+    accDescr: Each sender layer wraps the payload with its header going down; each receiver layer strips only its own header going up.
+    subgraph Sender[&quot;Sender: encapsulation (down)&quot;]
         direction TB
-        M[&quot;Application: Message&quot;] --&gt; S[&quot;Transport adds header → Segment&quot;]
-        S --&gt; D[&quot;Network adds IP header → Datagram&quot;]
-        D --&gt; F[&quot;Link adds MAC header/trailer → Frame&quot;]
+        M[&quot;Application&lt;br/&gt;Message&quot;] --&gt; S[&quot;Transport adds header&lt;br/&gt;Segment&quot;]
+        S --&gt; D[&quot;Network adds IP header&lt;br/&gt;Packet&quot;]
+        D --&gt; F[&quot;Link adds header/trailer&lt;br/&gt;Frame&quot;]
     end
-    F --&gt;|&quot;Bits travel across physical medium&quot;| G[&quot; &quot;]
-    subgraph Receiver[&quot;Receiver: Decapsulation (going up)&quot;]
+    F --&gt;|Bits on the medium| G[&quot;Receiver link&quot;]
+    subgraph Receiver[&quot;Receiver: decapsulation (up)&quot;]
         direction BT
-        F2[&quot;Link reads/strips header → Datagram&quot;] --&gt; D2[&quot;Network reads/strips header → Segment&quot;]
-        D2 --&gt; S2[&quot;Transport reads/strips header → Message&quot;]
-        S2 --&gt; M2[&quot;Application: Message delivered&quot;]
+        F2[&quot;Link strips header&lt;br/&gt;Packet&quot;] --&gt; D2[&quot;Network strips header&lt;br/&gt;Segment&quot;]
+        D2 --&gt; S2[&quot;Transport strips header&lt;br/&gt;Message&quot;]
+        S2 --&gt; M2[&quot;Application&lt;br/&gt;Message delivered&quot;]
     end
     G --&gt; F2
 </code></pre>
-<p>On the receiving side, the process reverses exactly: each layer reads only <em>its own</em> header, strips it off, and passes the remaining payload up to the next layer — which never needs to inspect headers from any layer other than its own peer.</p>
+<p><strong>Overhead math (worked).</strong> HTTP payload 1,000 bytes + 20-byte TCP header + 20-byte IPv4 header + 18-byte Ethernet header/trailer (14 + 4) → total frame = 1,058 bytes; overhead = 58 bytes ≈ <strong>5.48%</strong>; efficiency (goodput) = 1,000/1,058 ≈ <strong>94.52%</strong>. <em>Interpretation:</em> headers cost single-digit percent on large transfers — the price of layering&#39;s services, and why tiny payloads (e.g. VoIP) feel overhead most.</p>
 <details class="interactive-toggle"><summary>What does `encapsulation` mean?</summary><div class="toggle-content"><p><code>Encapsulation</code> is each layer wrapping the payload from above in its own header on the way down.
 What goes in: the upper-layer message; what comes out: a larger unit with a new header added.
 Tiny example: an HTTP message gains a TCP header, then an IP header, then a MAC header.</p>
 </div></details><details class="interactive-toggle"><summary>Why is a `Segment` different from a `Datagram` or `Frame`?</summary><div class="toggle-content"><p>The name records how far down the stack the data has travelled and which header is outermost.
 <code>Segment</code> is the transport unit, <code>Datagram</code> the network unit, <code>Frame</code> the link unit.
 So the same HTTP bytes are called a message, then segment, then datagram, then frame.</p>
-</div></details><p><a id="worked-example"></a></p>
+</div></details><h3>3.5 Decapsulation — Up the Receiver&#39;s Stack</h3>
+<p>The exact reverse, with one strict rule: each layer reads and strips <strong>only its own peer&#39;s header</strong>, treating everything inside as opaque payload.</p>
+<ol>
+<li><strong>Physical:</strong> signals → bits, reassemble the frame.</li>
+<li><strong>Link:</strong> verify FCS trailer (discard on error), match destination MAC to this NIC, strip header/trailer → hand the <strong>packet</strong> up.</li>
+<li><strong>Network:</strong> match destination IP to this host, strip IP header → hand the <strong>segment</strong> up.</li>
+<li><strong>Transport:</strong> read destination port → correct process, reorder/reassemble, strip header → deliver the <strong>message</strong> to the app.</li>
+<li><strong>Application:</strong> server process (e.g. Nginx) parses the HTTP request.</li>
+</ol>
+<p><em>Result:</em> the receiver&#39;s layer-N interprets exactly the headers the sender&#39;s layer-N created — layers never peek into each other&#39;s envelopes.</p>
+<h3>3.6 Peer-Layer Communication — Logical vs. Physical Paths</h3>
+<ul>
+<li><strong>Physical movement</strong> is vertical-then-horizontal-then-vertical: down the sender&#39;s stack, across wires and middleboxes, up the receiver&#39;s stack. Bits never leap sideways between two application processes.</li>
+<li><strong>Logical peer communication</strong> is horizontal: sender Transport ↔ receiver Transport converse <em>conceptually</em> in TCP (sequence numbers, ACKs), sender Network ↔ receiver Network in IP — even though every one of those &quot;conversations&quot; physically rides inside lower-layer envelopes.</li>
+<li><em>Why the distinction matters:</em> exam diagrams showing a straight Transport↔Transport arrow test whether you know the arrow is <em>logical</em> — the bits actually travel down, across, and up. Confusing the two is a classic trap.</li>
+</ul>
+<h3>3.7 The OSI 7-Layer Model — Every Layer, Then the Recap Table</h3>
+<p>ISO&#39;s reference framework: vocabulary and design guide, rarely implemented literally. Read bottom-up (bits → apps), and for <em>each</em> layer learn purpose → problem → handling → PDU/addressing → examples → misconception.</p>
+<p><strong>L1 Physical — WHAT:</strong> transmits raw bits as signals over a medium. <em>Problem:</em> bits must become physics (voltages, light pulses, radio waves, connector shapes, timing). <em>Handles:</em> no addresses, no PDU beyond <strong>bits</strong>. <em>Examples:</em> RJ45 copper, fiber, radio, hubs, repeaters. <em>Misconception:</em> &quot;the physical layer is the cable&quot; — it is the <em>signaling standards and bit transmission</em>, of which the cable is only the medium.</p>
+<p><strong>L2 Data Link — WHAT:</strong> node-to-node frame delivery over <em>one</em> link. <em>Problem:</em> wires are noisy and shared; bits need framing, local addressing, error detection, and medium access. <em>Handles:</em> <strong>frames</strong>, <strong>MAC addresses</strong> (48-bit NIC identifiers, local-link scope), FCS error detection, access rules (CSMA/CD on classic Ethernet, CSMA/CA on Wi-Fi). Sub-layers: LLC (top half, talks to L3) and MAC (bottom half, talks to hardware). <em>Examples:</em> Ethernet (IEEE 802.3), Wi-Fi (IEEE 802.11), PPP; switches, NICs. <em>Misconception:</em> MAC addresses route across the Internet — they never leave their local link.</p>
+<p><strong>L3 Network — WHAT:</strong> host-to-host delivery across <em>many</em> networks. <em>Problem:</em> endpoints live on different links worldwide. <em>Handles:</em> <strong>packets</strong>, logical <strong>IP addresses</strong> (global scope), routing (computing paths: OSPF, BGP) and forwarding (per-packet port selection). <em>Examples:</em> IPv4, IPv6, ICMP, IPsec; routers. <em>Misconception:</em> routing and forwarding are synonyms — routing fills tables (control plane), forwarding uses them per packet (data plane), as drilled in M1T1.</p>
+<p><strong>L4 Transport — WHAT:</strong> process-to-process delivery between apps. <em>Problem:</em> one host runs dozens of networked processes sharing one IP address. <em>Handles:</em> <strong>segments</strong> (TCP) / <strong>datagrams</strong> (UDP), 16-bit <strong>port numbers</strong> for multiplexing/demultiplexing, plus reliability, flow-control, and congestion-control <em>concepts</em> (full TCP/UDP mechanics belong to later transport topics — not here). <em>Examples:</em> TCP (reliable, connection-oriented), UDP (fast, connectionless). <em>Misconception:</em> ports identify machines — they identify <em>processes on</em> a machine.</p>
+<p><strong>L5 Session — WHAT:</strong> manages dialogs between apps: establishing, maintaining, synchronizing, terminating sessions. <em>Problem:</em> long exchanges need structure and recovery points. <em>Handles:</em> session setup/teardown, checkpoint markers (resume a 2 GB transfer from the last checkpoint, not byte zero). <em>Examples:</em> RPC, NetBIOS, SQL sessions. <em>Misconception (critical):</em> modern browsers open &quot;OSI session layers&quot; — they don&#39;t; see §3.7&#39;s mapping note.</p>
+<p><strong>L6 Presentation — WHAT:</strong> data representation: syntax, encoding, compression, encryption. <em>Problem:</em> hosts disagree on formats (ASCII vs. Unicode, byte order) and need secrecy. <em>Handles:</em> character sets, image formats (JPEG/PNG), compression (gzip), crypto (TLS/SSL concepts). <em>Examples:</em> TLS, ASN.1, MIME types. <em>Misconception (critical):</em> TLS sits neatly &quot;at layer 6&quot; — in deployed stacks TLS is a library/shim used <em>by</em> applications, roughly between application and transport, not a standalone wire layer.</p>
+<p><strong>L7 Application — WHAT:</strong> network services directly for user software. <em>Problem:</em> every app needs a standard way to ask the network for things. <em>Handles:</em> <strong>messages</strong> in app protocols. <em>Examples:</em> HTTP/HTTPS, SMTP, DNS, FTP, SSH. <em>Misconception:</em> &quot;application layer&quot; means phone/laptop apps themselves — it means the <em>network-facing protocols</em> those apps speak.</p>
+<p><strong>Session/Presentation/Application in the real Internet — the honest mapping.</strong> Modern stacks do <em>not</em> implement three separate wire layers: session-like duties (cookies, tokens, reconnect logic) live <em>inside</em> applications; presentation-like duties (JSON/HTML encoding, TLS encryption, gzip) live in <em>libraries the application calls</em>. So: learn the three OSI roles for vocabulary, but never claim a browser emits distinct &quot;session PDUs&quot; — exam answers about the real Internet fold all three into the application.</p>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: The seven OSI layers from application to physical
+    accDescr: Application, presentation, session, transport, network, data link, and physical layers stacked top to bottom.
+    L7[&quot;Layer 7 — Application&lt;br/&gt;(HTTP, FTP, SMTP)&quot;]
+    L6[&quot;Layer 6 — Presentation&lt;br/&gt;(encryption, JPEG, TLS)&quot;]
+    L5[&quot;Layer 5 — Session&lt;br/&gt;(dialog control, checkpoints)&quot;]
+    L4[&quot;Layer 4 — Transport&lt;br/&gt;(TCP, UDP, ports)&quot;]
+    L3[&quot;Layer 3 — Network&lt;br/&gt;(IP, routing)&quot;]
+    L2[&quot;Layer 2 — Data Link&lt;br/&gt;(Ethernet, Wi-Fi, MAC)&quot;]
+    L1[&quot;Layer 1 — Physical&lt;br/&gt;(cables, hubs, bits)&quot;]
+    L7 --&gt; L6 --&gt; L5 --&gt; L4 --&gt; L3 --&gt; L2 --&gt; L1
+</code></pre>
+<blockquote>
+<p><strong>Mnemonic (bottom to top):</strong> <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way (top-down: <strong>A</strong>ll <strong>P</strong>eople <strong>S</strong>eem <strong>T</strong>o <strong>N</strong>eed <strong>D</strong>ata <strong>P</strong>rocessing).</p>
+</blockquote>
+<h3>3.8 TCP/IP — 4 Layers or 5? (Not a Contradiction)</h3>
+<ul>
+<li><strong>Why two counts.</strong> The historical 4-layer TCP/IP model (Application, Transport, Internet, Network Access/Link) was designed <em>after</em> working protocols existed and never split wires from signals. Teachers add a 5th split (…Network, Data Link, Physical) to reuse OSI&#39;s crisp L1/L2 separation. Same protocols, different grouping granularity — a pedagogical choice, not a standards war.</li>
+<li><strong>The 5-layer teaching stack used in this course:</strong> Application (HTTP, DNS, SMTP, FTP, SSH) → Transport (TCP, UDP) → Network (IPv4, IPv6, ICMP, OSPF, BGP) → Data Link (Ethernet 802.3, Wi-Fi 802.11, PPP) → Physical (copper, fiber, radio, hubs).</li>
+<li><strong>Suite placement logic.</strong> Ask &quot;what job does it do?&quot;: names/URLs and mail → Application; process delivery and reliability choices → Transport (TCP reliable/bytestream, UDP fast/datagram); global host addressing and path computation → Internet/Network (IP, ICMP for error reporting, OSPF/BGP for routing); one-hop neighbor delivery → Link (Ethernet, Wi-Fi); raw bit signaling → Physical.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: Five-layer teaching stack with example protocols
+    accDescr: Application, transport, network, data link, and physical layers with their representative protocols.
+    A5[&quot;5 Application&lt;br/&gt;(HTTP, DNS, SMTP, FTP)&quot;]
+    T4[&quot;4 Transport&lt;br/&gt;(TCP, UDP)&quot;]
+    N3[&quot;3 Network&lt;br/&gt;(IP, ICMP, OSPF, BGP)&quot;]
+    L2[&quot;2 Data Link&lt;br/&gt;(Ethernet, Wi-Fi)&quot;]
+    P1[&quot;1 Physical&lt;br/&gt;(copper, fiber, radio)&quot;]
+    A5 --&gt; T4 --&gt; N3 --&gt; L2 --&gt; P1
+</code></pre>
+<h3>3.9 OSI ↔ TCP/IP Mapping</h3>
+<p>OSI is the <em>reference model</em> (designed first, theoretically); TCP/IP is the <em>running suite</em> (designed from working code). They never align perfectly because TCP/IP folds OSI&#39;s top three into one application layer and never implemented session/presentation as wire protocols.</p>
+<pre><code class="language-mermaid">flowchart LR
+    accTitle: Mapping between OSI layers and TCP IP layers
+    accDescr: OSI application presentation and session map to TCP IP application; transport to transport; network to internet; data link and physical to network access.
+    subgraph OSI[&quot;OSI 7&quot;]
+        direction TB
+        O7[&quot;7 Application&quot;]
+        O6[&quot;6 Presentation&quot;]
+        O5[&quot;5 Session&quot;]
+        O4[&quot;4 Transport&quot;]
+        O3[&quot;3 Network&quot;]
+        O2[&quot;2 Data Link&quot;]
+        O1[&quot;1 Physical&quot;]
+    end
+    subgraph TCP[&quot;TCP/IP 4&quot;]
+        direction TB
+        T4[&quot;Application&quot;]
+        T3[&quot;Transport&quot;]
+        T2[&quot;Internet&quot;]
+        T1[&quot;Network Access&quot;]
+    end
+    O7 -.-&gt; T4
+    O6 -.-&gt; T4
+    O5 -.-&gt; T4
+    O4 -.-&gt; T3
+    O3 -.-&gt; T2
+    O2 -.-&gt; T1
+    O1 -.-&gt; T1
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>OSI layers</th>
+<th>TCP/IP (5-layer teaching)</th>
+<th>TCP/IP (4-layer historic)</th>
+<th>PDU</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7 Application, 6 Presentation, 5 Session</td>
+<td>Application</td>
+<td>Application</td>
+<td><strong>Message</strong></td>
+</tr>
+<tr>
+<td>4 Transport</td>
+<td>Transport</td>
+<td>Transport</td>
+<td><strong>Segment</strong> (TCP) / Datagram (UDP)</td>
+</tr>
+<tr>
+<td>3 Network</td>
+<td>Network</td>
+<td>Internet</td>
+<td><strong>Packet</strong> (Datagram)</td>
+</tr>
+<tr>
+<td>2 Data Link</td>
+<td>Data Link</td>
+<td>Network Access / Link</td>
+<td><strong>Frame</strong></td>
+</tr>
+<tr>
+<td>1 Physical</td>
+<td>Physical</td>
+<td>(folded into Network Access)</td>
+<td><strong>Bits</strong></td>
+</tr>
+</tbody></table>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: PDU Names per Layer</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Memorize top-down: <strong>M</strong>essage (Application) → <strong>S</strong>egment (Transport) → <strong>D</strong>atagram (Network) → <strong>F</strong>rame (Link) → <strong>B</strong>its (Physical). The classic 3-mark question gives the five names scrambled and asks you to match each to its layer — rehearse it in both directions.</p>
+</div></details><h3>3.10 Addressing at Different Layers — One Example, Every Value Explained</h3>
+<p>Four identifiers, four scopes — <strong>not interchangeable</strong>: MAC = <em>which neighbor on this wire</em>; IP = <em>which host on the planet</em>; port = <em>which process on that host</em>; application name = <em>which service for the human</em>.</p>
+<p>Concrete session (illustrative documentation addresses, not universal): client 192.0.2.10 (TEST-NET-1 block reserved for examples) picks ephemeral port 50000; server 198.51.100.20 (TEST-NET-2) listens on port 443 (HTTPS).</p>
+<ul>
+<li><strong>Application identifier:</strong> the URL/domain (e.g. <code>https://example.com</code>) names the <em>service</em>; DNS resolves it to 198.51.100.20 before any packet is built.</li>
+<li><strong>Port numbers:</strong> 16-bit transport IDs (0–65535). Source 50000 = OS-picked ephemeral port identifying <em>this browser tab&#39;s socket</em>; destination 443 = well-known HTTPS port identifying the <em>server process</em>. Both stay constant end-to-end.</li>
+<li><strong>IP addresses:</strong> source 192.0.2.10 → destination 198.51.100.20. Both stay constant across standard routers (NAT aside).</li>
+<li><strong>MAC addresses:</strong> 48-bit hex NIC IDs (e.g. <code>AA:AA:…</code> → gateway <code>BB:BB:…</code>). Rewritten <em>every hop</em> to address the next local neighbor.</li>
+</ul>
+<pre><code class="language-mermaid">flowchart LR
+    accTitle: Addressing scopes across layers for one session
+    accDescr: URL names the service, ports name the processes, IP addresses name the hosts end to end, and MAC addresses name each local hop.
+    URL[&quot;URL&lt;br/&gt;(service name)&quot;] --&gt; PRT[&quot;Ports 50000 to 443&lt;br/&gt;(processes, end to end)&quot;]
+    PRT --&gt; IP[&quot;IP 192.0.2.10 to 198.51.100.20&lt;br/&gt;(hosts, end to end)&quot;]
+    IP --&gt; MAC[&quot;MAC host to gateway&lt;br/&gt;(neighbors, per hop)&quot;]
+</code></pre>
+<h3>3.11 Hosts, Switches, and Routers — Layer Responsibilities</h3>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: Protocol layers implemented by hosts switches and routers
+    accDescr: Hosts implement all five layers, routers implement the bottom three, and switches implement the bottom two.
+    H[&quot;Host&lt;br/&gt;(all 5 layers)&quot;] --&gt; APP[&quot;Apps, TCP/UDP,&lt;br/&gt;IP, link, physical&quot;]
+    R[&quot;Router&lt;br/&gt;(bottom 3 layers)&quot;] --&gt; RIP[&quot;IP forwarding,&lt;br/&gt;link, physical&quot;]
+    S[&quot;Switch&lt;br/&gt;(bottom 2 layers)&quot;] --&gt; SMAC[&quot;MAC forwarding,&lt;br/&gt;link, physical&quot;]
+</code></pre>
+<ul>
+<li><strong>HOST:</strong> runs applications and implements <em>all</em> layers — originates/terminates traffic, resolves names, multiplexes ports, routes via its own table, frames bits.</li>
+<li><strong>LAYER-2 SWITCH:</strong> examines <em>link</em> headers, learns source MACs into a table, forwards frames to the port of the destination MAC <em>within its network</em>; never needs IP or ports for its core job.</li>
+<li><strong>LAYER-3 ROUTER:</strong> strips each incoming frame, reads the destination <em>IP</em>, selects the next hop from routing-derived tables, and re-encapsulates the unchanged IP packet in a <em>new</em> frame per hop.</li>
+<li><strong>Anti-oversimplification (exam-safe).</strong> Real boxes blur lines: &quot;Layer-3 switches&quot; route in hardware, home routers run DHCP/DNS apps, managed switches carry IP stacks for administration. So phrase answers functionally — &quot;a switch <em>forwards on MAC addresses</em>; a router <em>forwards on IP addresses</em>&quot; — never &quot;a switch <em>contains only</em> layers 1–2.&quot;</li>
+</ul>
+<h3>3.12 Complete End-to-End Trace — Browser to Web Server</h3>
+<p>User enters a URL; follow every meaningful transition (client 192.0.2.10:50000 → server 198.51.100.20:443, gateway MACs as in §3.10):</p>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: End-to-end browser to web server trace
+    accDescr: Client encapsulates HTTP down to bits, switch forwards the frame locally, router reframes toward the server, and the server decapsulates up to the application.
+    C1[&quot;Client app&lt;br/&gt;HTTP GET&quot;] --&gt; C2[&quot;Client TCP&lt;br/&gt;ports 50000 to 443&quot;]
+    C2 --&gt; C3[&quot;Client IP&lt;br/&gt;192.0.2.10 to 198.51.100.20&quot;]
+    C3 --&gt; C4[&quot;Client link&lt;br/&gt;MAC to gateway&quot;]
+    C4 --&gt; SW[&quot;Switch&lt;br/&gt;forward by MAC&quot;]
+    SW --&gt; RT[&quot;Router&lt;br/&gt;strip frame, read IP,&lt;br/&gt;build new frame&quot;]
+    RT --&gt; SRV[&quot;Server link plus IP plus TCP&lt;br/&gt;decapsulate upward&quot;]
+    SRV --&gt; APP[&quot;Server app&lt;br/&gt;HTTP request received&quot;]
+    APP --&gt; RESP[&quot;Response reverses&lt;br/&gt;the whole path&quot;]
+</code></pre>
+<ol>
+<li><strong>App:</strong> browser builds <code>GET /index.html</code> (Message).</li>
+<li><strong>Transport:</strong> TCP adds ports 50000→443 + sequence numbers (Segment).</li>
+<li><strong>Network:</strong> IP adds 192.0.2.10→198.51.100.20 (Packet).</li>
+<li><strong>Link:</strong> Ethernet adds host-MAC→gateway-MAC + FCS (Frame) → bits on copper.</li>
+<li><strong>Switch:</strong> converts signals, matches gateway MAC in its table, forwards the <em>unchanged</em> frame; never touches IP.</li>
+<li><strong>Router:</strong> strips the frame, verifies FCS, reads destination IP, routes toward the server, builds a <em>new</em> frame with its own MAC → next-hop MAC.</li>
+<li><strong>Core + server link:</strong> repeats per hop until the server NIC accepts its MAC, strips link/IP/TCP headers in turn, and hands the HTTP request to the web process (e.g. Nginx).</li>
+<li><strong>Response:</strong> <code>200 OK</code> + HTML retraces the same logic in reverse (server ports swap to 443→50000).</li>
+</ol>
+<h3>3.13 Intermediate Hops — Frames Die, Packets Survive</h3>
+<p>The critical beginner concept: the <strong>IP packet generally continues unchanged</strong> toward the destination while <strong>each link frame is local-only and replaced per hop.</strong> Two-router example — laptop → router R1 → router R2 → server:</p>
+<ul>
+<li>Hop 1 frame: MAC laptop→R1-in; IP 192.0.2.10→198.51.100.20.</li>
+<li>R1 strips hop-1 frame, routes on the <em>unchanged</em> destination IP, builds hop-2 frame: MAC R1-out→R2-in; same IPs.</li>
+<li>R2 repeats: MAC R2-out→server; same IPs. Only the frame headers churn; the packet payload (and TCP ports) ride through untouched.</li>
+<li><em>Qualification:</em> NAT (Network Address Translation) devices <em>do</em> rewrite IPs at borders — the &quot;IPs never change&quot; rule holds for standard routing; name NAT as the exception when questions involve home gateways.</li>
+</ul>
+<p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
-<p class="secnav"><a href="#3-purpose-the-two-models-then-what-travels-on-the-wire">← 3. Purpose — The Two Models, Then …</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<p class="secnav"><a href="#3-purpose-why-layers-then-what-travels-on-the-wire">← 3. Purpose — Why Layers, Then What…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
 <h3>4.1 Toy Example (30 seconds)</h3>
-<p>You send the 3-letter message &quot;HI!&quot;. The application layer holds a <strong>Message</strong> (&quot;HI!&quot;). Transport adds its header → <strong>Segment</strong>. Network adds the IP (Internet Protocol) header → <strong>Datagram</strong>. Link adds its header and trailer → <strong>Frame</strong>. Physical sends <strong>bits</strong>. Same three characters, five names — the name tells you how far down the stack the data has travelled.</p>
-<h3>4.2 KTU-Style Worked Example</h3>
+<p>You send the 3-letter message &quot;HI!&quot;. The application layer holds a <strong>Message</strong> (&quot;HI!&quot;). Transport adds its header → <strong>Segment</strong>. Network adds the IP header → <strong>Datagram</strong>. Link adds its header and trailer → <strong>Frame</strong>. Physical sends <strong>bits</strong>. Same three characters, five names — the name tells you how far down the stack the data has travelled.</p>
+<h3>4.2 KTU-Style Worked Example: Tracing an HTTP GET</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>A browser sends an HTTP (HyperText Transfer Protocol) GET request for a web page. Trace what the message is called at each layer of the TCP/IP stack as it travels down the sender&#39;s stack and is transmitted onto the wire.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Encapsulation Layer by Layer</div><div class="step-content"><ol>
 <li><strong>Application layer:</strong> The browser constructs the HTTP GET request — this is a <strong>Message</strong>.</li>
@@ -465,6 +692,14 @@ So the same HTTP bytes are called a message, then segment, then datagram, then f
 <li><strong>Physical layer:</strong> The frame is converted into a stream of <strong>bits</strong> — electrical signals, light pulses, or radio waves — and transmitted onto the medium.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The same logical HTTP request is renamed at every layer (Message → Segment → Datagram → Frame → Bits) as successive headers are added. At the receiving web server, this exact sequence runs in reverse: bits are reassembled into a frame, the frame&#39;s header is stripped to reveal a datagram, the datagram&#39;s header is stripped to reveal a segment, and finally the segment&#39;s header is stripped to reveal the original HTTP Message, which is handed to the server&#39;s application process.</p>
+</div></div><h3>4.3 Worked Calculation: Protocol Overhead</h3>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Reading the Question</div><div class="step-content"><p>A 1,400-byte file chunk is sent with a 20-byte TCP header, a 20-byte IP header, and a 26-byte Wi-Fi header/trailer. Find total frame size, overhead ratio, and efficiency.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Adding and Dividing</div><div class="step-content"><ol>
+<li><strong>Total:</strong> 1,400 + 20 + 20 + 26 = <strong>1,466 bytes</strong>.</li>
+<li><strong>Overhead:</strong> 66 bytes → 66/1,466 × 100 ≈ <strong>4.50%</strong>.</li>
+<li><strong>Efficiency:</strong> 1,400/1,466 × 100 ≈ <strong>95.50%</strong>.</li>
+</ol>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Interpretation</div><div class="step-content"><p>Over 95% of the wire carries user data here — headers cost single digits on large transfers, which is exactly why tiny real-time payloads feel overhead most.</p>
 </div></div><p><a id="exam-recap"></a></p>
 <h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
 <p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
@@ -476,8 +711,12 @@ So the same HTTP bytes are called a message, then segment, then datagram, then f
 </tr>
 </thead>
 <tbody><tr>
-<td>OSI 7 vs. TCP/IP 5</td>
-<td>OSI is the reference vocabulary (Presentation/Session named separately); TCP/IP is the running code (top three merged into Application).</td>
+<td>OSI 7 vs. TCP/IP 5 (or 4)</td>
+<td>OSI is the reference vocabulary (Presentation/Session named separately); TCP/IP is the running code (top three merged into Application; 4-vs-5 is granularity, not contradiction).</td>
+</tr>
+<tr>
+<td>Protocol vs. service vs. interface</td>
+<td>Horizontal peer rules vs. vertical capability offered upward vs. the call boundary between adjacent layers.</td>
 </tr>
 <tr>
 <td>Encapsulation vs. decapsulation</td>
@@ -485,16 +724,32 @@ So the same HTTP bytes are called a message, then segment, then datagram, then f
 </tr>
 <tr>
 <td>Segment vs. datagram vs. frame</td>
-<td>Transport vs. network vs. link PDU — layer identity, not size.</td>
+<td>Transport vs. network vs. link PDU — layer identity, not size; &quot;packet&quot; is generic in prose, specific at L3.</td>
 </tr>
 <tr>
-<td>Protocol vs. interface</td>
-<td>Protocol = rules <em>within</em> a layer across machines; interface = contract <em>between</em> adjacent layers on one machine.</td>
+<td>MAC vs. IP vs. port</td>
+<td>Local neighbor (rewritten per hop) vs. global host (end-to-end) vs. process on a host (end-to-end).</td>
+</tr>
+<tr>
+<td>Switch vs. router</td>
+<td>Forwards on MACs within a network vs. forwards on IPs between networks — functionally, not &quot;contains only layers X–Y&quot;.</td>
+</tr>
+<tr>
+<td>Routing vs. forwarding</td>
+<td>Global path computation filling tables vs. local per-packet port selection.</td>
+</tr>
+<tr>
+<td>Physical vs. logical path</td>
+<td>Bits travel down-across-up; peer entities converse <em>conceptually</em> side to side.</td>
+</tr>
+<tr>
+<td>Internet vs. OSI</td>
+<td>The Internet runs TCP/IP; OSI is the teaching/reference framework, not a deployed competitor.</td>
 </tr>
 </tbody></table>
-<p><strong>Watch out:</strong> (1) Assigning PDU names to the wrong layer (the #1 scramble question — drill both directions). (2) Saying the receiver &quot;reads all headers at once&quot; — each layer touches only its peer&#39;s header. (3) Calling OSI &quot;the Internet&#39;s stack&quot; — the Internet runs TCP/IP; OSI is the reference model.</p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Protocol = format + order + actions. Layering buys modularity (change one layer, keep its service). OSI 7 bottom-up: Physical, Data Link, Network, Transport, Session, Presentation, Application. TCP/IP 5: Application, Transport, Network, Link, Physical. PDU order top-down: Message → Segment → Datagram → Frame → Bits. Encapsulation descends (wrap), decapsulation ascends (strip own header only).</p>
-</div></details><p><strong>Active-recall checklist:</strong> What three things does a protocol define? Why does layering let Wi-Fi replace Ethernet transparently? Recite the PDU names top-down and bottom-up. Which header does the network layer strip on receipt?</p>
+<p><strong>Watch out:</strong> (1) Assigning PDU names to the wrong layer (the #1 scramble question — drill both directions). (2) Saying the receiver &quot;reads all headers at once&quot; — each layer touches only its peer&#39;s header. (3) Calling OSI &quot;the Internet&#39;s stack&quot; — the Internet runs TCP/IP; OSI is the reference model. (4) Claiming TLS/session boxes are wire layers — in deployed stacks they live in application libraries. (5) &quot;IPs change at every router&quot; — frames change, IPs (normally) don&#39;t; NAT is the named exception. (6) Presenting 4-vs-5-layer counts as a contradiction — it is grouping granularity.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Protocol = format + order + actions; service = what a layer offers upward; interface = how the upper layer calls it. Layering buys modularity, abstraction, interoperability, independent evolution. OSI 7 bottom-up: Physical, Data Link, Network, Transport, Session, Presentation, Application. TCP/IP: 5 teaching layers (or historic 4) with the top three OSI layers merged. PDU order top-down: Message → Segment → Datagram → Frame → Bits. Encapsulation descends (wrap), decapsulation ascends (strip own header only); peers converse logically while bits travel physically. MAC = per-hop neighbor, IP = end-to-end host, port = end-to-end process; switches forward frames by MAC, routers forward packets by IP into fresh frames.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What three things does a protocol define, and how do service and interface differ? Why does layering let Wi-Fi replace Ethernet transparently — and what does it <em>not</em> guarantee? Recite the PDU names top-down and bottom-up. Which header does the network layer strip on receipt? Why do session/presentation have no wire PDUs in real browsers? What stays constant across router hops — MACs or IPs? Which address delivers a reply to your browser tab instead of your music app?</p>
 <p><a id="self-check"></a></p>
 <h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
@@ -573,7 +828,111 @@ So the same HTTP bytes are called a message, then segment, then datagram, then f
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The Presentation layer (Layer 6) handles how data is represented, encoded, and secured — including encryption/decryption (SSL/TLS) and format conversions (JPEG) — distinct from the Application layer, which deals with the actual network process (like HTTP or FTP).</p><pre><code>&lt;/div&gt;
+      <p>The Presentation layer (Layer 6) handles how data is represented, encoded, and secured — including encryption/decryption (SSL/TLS) and format conversions (JPEG) — distinct from the Application layer, which deals with the actual network process (like HTTP or FTP). In deployed stacks these duties live in application libraries rather than a separate wire layer.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q4: Overhead Calculation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A 1,400-byte chunk is sent with 20-byte TCP + 20-byte IP + 26-byte Wi-Fi headers/trailers. What are total size, overhead, and efficiency?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>1,440 bytes, 2.8%, 97.2% (forgot the Wi-Fi trailer)</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>1,466 bytes, ≈4.50% overhead, ≈95.50% efficiency — sum all headers, then divide by the total</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>1,466 bytes, 95.50% overhead (ratio inverted)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>1,400 bytes exactly — headers don&#39;t count on the wire</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Total = 1,400 + 20 + 20 + 26 = 1,466 bytes; overhead = 66/1,466 ≈ 4.50%; efficiency = 1,400/1,466 ≈ 95.50%. Headers always ride the wire — small payloads feel them most.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q5: Addressing</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A reply must reach a browser tab (not a music app) on host 192.0.2.10. Which identifier delivers it to the right process?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>The destination MAC address</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The destination port number — the OS demultiplexes by port to the owning socket/process</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The destination IP address alone</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The URL in the HTTP body</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>IP gets the packet to the <em>host</em>; the URL named the <em>service</em> before sending; the MAC only crossed the last wire. Only the 16-bit destination port tells the kernel <em>which process</em> owns the data — the browser tab&#39;s socket, not the music app&#39;s.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q6: Intermediate Hops</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A packet crosses two routers toward its server. What changes hop by hop, and what stays the same?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>IP addresses change; MAC addresses stay constant</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each link frame (MAC headers) is stripped and rebuilt per hop; source/destination IPs continue unchanged</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Port numbers are rewritten by every router</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The TCP payload is decrypted and re-encrypted at each hop</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Frames are local envelopes: each router discards the old one and builds a fresh frame for the next neighbor. The IP packet (and the ports and payload inside) rides through untouched under standard routing — NAT middleboxes are the named exception.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q7: Peer Communication</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>Your TCP and a server&#39;s TCP exchange sequence numbers and ACKs. What path do these messages physically take?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Horizontally, straight from your transport layer to the server&#39;s</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Logically peer-to-peer, but physically down your stack, across links and routers, and up the server&#39;s stack</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Through a dedicated TCP wire bypassing IP entirely</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>They don&#39;t travel at all — both sides guess the numbers</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Peer-layer arrows are <em>logical</em>: TCP speaks to TCP using its protocol rules, but every such message physically descends as payload through IP and link layers, crosses the network, and ascends the far stack. Confusing the logical arrow with the physical path is the classic trap.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
