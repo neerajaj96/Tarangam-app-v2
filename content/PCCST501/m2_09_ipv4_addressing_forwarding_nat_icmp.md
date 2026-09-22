@@ -123,6 +123,17 @@ Network $192.168.10.0/24$ split into $4$ equal subnets. (a) New prefix length an
 $/26$ quartets of $62$ usable; $.75 \to$ R2 by longest match. Specificity beats order — table sequence is irrelevant, prefix length decides, which is why default routes sit harmlessly last.
 :::
 
+### 4.3 Interactive Walkthrough: Subnetting One Address End to End
+
+::: viz stepper Subnet 192.168.10.75/26: from CIDR to usable range
+1. Split the CIDR: `/26` means 26 network bits and 32 − 26 = 6 host bits
+2. Build the mask: last octet `11000000` = 128 + 64 = 192, so mask `255.255.255.192`
+3. Find the network: 75 = `01001011`; keep the top 2 bits, zero the 6 host bits → `01000000` = 64, so network `192.168.10.64`
+4. Find the broadcast: set all 6 host bits to 1 → `01111111` = 127, so broadcast `192.168.10.127`
+5. Carve the usable range: drop both ends → `192.168.10.65` through `192.168.10.126`, which is 64 − 2 = 62 usable hosts
+6. Place the address: 75 sits inside 65–126, so `192.168.10.75` is a usable host on this subnet — and the toy example's R2 entry was its gateway all along
+:::
+
 <a id="exam-recap"></a>
 ## 5. Distinctions, Watch-Outs, and Exam Recap
 

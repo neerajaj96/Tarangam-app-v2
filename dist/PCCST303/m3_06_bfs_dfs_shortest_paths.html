@@ -257,7 +257,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 3</span>
-    <span class="badge">⏱️ 3 MIN READ</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -298,7 +298,64 @@
 <li>Distances: $d = 0,1,1,2,3$. Path $1\to2\to4\to5$ ($3$ hops; $1\to3\to4\to5$ ties — first-parent wins).</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Queue states per layer are the trace; parents give paths. BFS answers always pair order + distances — one without the other is half marks.</p>
-</div></div><hr>
+</div></div><h3>3.1 Interactive Walkthrough: Ripple, Queue States, and the String Contrast</h3>
+<div class="video-studio">
+  <div class="video-studio-header">
+    <span class="video-tag">✨ ANIMATED DIAGRAM &middot; Ripple Expansion Order</span>
+  </div>
+  <div class="video-frame-wrap">
+    <svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Animated breadth-first expansion lighting nodes layer by layer">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<line class="eg e1" x1="110" y1="150" x2="250" y2="80"/><line class="eg e1" x1="110" y1="150" x2="250" y2="220"/>
+<line class="eg e2" x1="250" y1="80" x2="400" y2="60"/><line class="eg e2" x1="250" y1="80" x2="400" y2="140"/><line class="eg e2" x1="250" y1="220" x2="400" y2="240"/>
+<line class="eg e3" x1="400" y1="60" x2="540" y2="110"/><line class="eg e3" x1="400" y1="240" x2="540" y2="190"/>
+<g class="nd a1"><circle cx="110" cy="150" r="22"/><text x="110" y="156">s</text></g>
+<g class="nd a2"><circle cx="250" cy="80" r="22"/><text x="250" y="86">a</text></g><g class="nd a2"><circle cx="250" cy="220" r="22"/><text x="250" y="226">b</text></g>
+<g class="nd a3"><circle cx="400" cy="60" r="22"/><text x="400" y="66">c</text></g><g class="nd a3"><circle cx="400" cy="140" r="22"/><text x="400" y="146">d</text></g><g class="nd a3"><circle cx="400" cy="240" r="22"/><text x="400" y="246">e</text></g>
+<g class="nd a4"><circle cx="540" cy="110" r="22"/><text x="540" y="116">f</text></g><g class="nd a4"><circle cx="540" cy="190" r="22"/><text x="540" y="196">g</text></g>
+<text class="animnote a5" x="320" y="282" text-anchor="middle">layers finish in order: s → a,b → c,d,e → f,g (nondecreasing distance)</text>
+</svg>
+  </div>
+  <div class="video-studio-foot">
+    <p class="video-caption"><strong>Key Insight:</strong> Ripple Expansion Order</p>
+    <div class="video-observations"><strong>What to observe:</strong> Watch layers ignite in order — s, then a and b, then c, d and e, then f and g. No node lights before every node nearer the source: nondecreasing distance, animated.</div>
+  </div>
+</div><div class="viz viz-stepper" data-viz="stepper" data-steps="5">
+  <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; BFS on 1-2-3-4-5: queue contents at every dequeue</span></div>  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>Visit 1 (distance 0); queue holds [1]</p>
+</li>
+<li class="viz-step" data-i="1"><p>Dequeue 1, discover 2 and 3; queue holds [2, 3]; distances 1 and 1</p>
+</li>
+<li class="viz-step" data-i="2"><p>Dequeue 2, discover 4; queue holds [3, 4]; distance of 4 is 2</p>
+</li>
+<li class="viz-step" data-i="3"><p>Dequeue 3: neighbour 4 already discovered, so skip it; queue holds [4]</p>
+</li>
+<li class="viz-step" data-i="4"><p>Dequeue 4, discover 5; dequeue 5 — done. Order 1, 2, 3, 4, 5; shortest path 1 → 2 → 4 → 5</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="BFS on 1-2-3-4-5: queue contents at every dequeue: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">5 steps &mdash; use Prev and Next to walk through</p>
+</div><div class="viz viz-compare" data-viz="compare">
+  <div class="viz-head"><span class="viz-tag">Interactive comparison &middot; Ripple versus string on the same graph</span></div>
+  <div class="viz-cols">
+    <section class="viz-col" aria-label="BFS (ripple)"><p class="viz-colhead"><strong>BFS (ripple)</strong></p><div class="viz-colbody"><ul>
+<li>Visit order: 1, 2, 3, 4, 5</li>
+<li>Structure: queue; layers equal distances</li>
+</ul>
+</div><p class="viz-count" hidden><strong>Order 1, 2, 3, 4, 5 with distances 0, 1, 1, 2, 3</strong></p></section>
+<section class="viz-col" aria-label="DFS (string)"><p class="viz-colhead"><strong>DFS (string)</strong></p><div class="viz-colbody"><ul>
+<li>Visit order: 1, 2, 4, 3</li>
+<li>Structure: stack; plunge plus backtrack</li>
+</ul>
+</div><p class="viz-count" hidden><strong>Order 1, 2, 4, 3 with no distances claimed</strong></p></section>
+  </div>
+  <label class="viz-toggle"><input type="checkbox" class="viz-count-toggle"> Show counts</label>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

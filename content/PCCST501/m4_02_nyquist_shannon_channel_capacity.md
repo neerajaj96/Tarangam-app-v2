@@ -105,6 +105,15 @@ A $3$ kHz telephone channel: (a) noiseless, binary signaling — max rate? (b) n
 Three numbers, one verdict: levels buy linear-ish gains (6 → 18 kbps), noise sets the absolute roof ($\approx 30$ kbps here). Every capacity question in the exam is this exact dance — convert dB, compute both laws, take the min.
 :::
 
+### 4.3 Interactive Exploration: What Moves the Shannon Ceiling
+
+::: viz stepper Shannon scenarios on a 3 kHz line: bandwidth versus noise
+1. Baseline at 30 dB SNR: ratio 1000, log₂(1001) ≈ 9.97, so C ≈ 3000 × 9.97 ≈ 30 kbps
+2. Double the bandwidth to 6 kHz at the same SNR: C ≈ 6000 × 9.97 ≈ 60 kbps — capacity scales linearly with B
+3. Drop noise margin to 20 dB SNR instead: ratio 100, log₂(101) ≈ 6.66, so C ≈ 3000 × 6.66 ≈ 20 kbps — ten times the noise power costs only a third of capacity
+4. Lesson: bandwidth buys linearly, SNR buys logarithmically — and the verdict is always min(Nyquist, Shannon), never either law alone
+:::
+
 <a id="exam-recap"></a>
 ## 5. Distinctions, Watch-Outs, and Exam Recap
 

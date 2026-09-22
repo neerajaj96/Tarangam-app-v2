@@ -392,9 +392,30 @@ Tiny example: a 1000-byte segment starting at 5000 earns ACK 6000, confirming by
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  flow ctrl
 |            Checksum           |         Urgent Pointer        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                    20 bytes minimum (options may extend)
+                     20 bytes minimum (options may extend)
 </code></pre>
-<h3>3.3 Operation Flow: Learning the RTT — SRTT, DevRTT, Timeout, Symbol by Symbol</h3>
+<h3>3.2a Interactive Walkthrough: Reading the 20 Bytes Row by Row</h3>
+<div class="viz viz-stepper" data-viz="stepper" data-steps="5">
+  <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; Walk the TCP header four bytes at a time</span></div>  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>Bytes 0–3: source port, destination port — who talks to whom (multiplexing, as in UDP)</p>
+</li>
+<li class="viz-step" data-i="1"><p>Bytes 4–7: sequence number — first payload byte&#39;s number in the stream</p>
+</li>
+<li class="viz-step" data-i="2"><p>Bytes 8–11: acknowledgment number — next byte expected, cumulative</p>
+</li>
+<li class="viz-step" data-i="3"><p>Bytes 12–15: header length, flags (SYN/ACK/FIN/RST), receive window — control plus flow control</p>
+</li>
+<li class="viz-step" data-i="4"><p>Bytes 16–19: checksum (mandatory, unlike UDP&#39;s qualified case) plus urgent pointer — 20 bytes minimum, options only extend it</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="Walk the TCP header four bytes at a time: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">5 steps &mdash; use Prev and Next to walk through</p>
+</div><h3>3.3 Operation Flow: Learning the RTT — SRTT, DevRTT, Timeout, Symbol by Symbol</h3>
 <p>TCP cannot be born knowing the network&#39;s delay — it measures each segment&#39;s <strong>SampleRTT</strong> (send time → ACK arrival, measured only for once-transmitted segments) and smooths it. Symbols: $\alpha = 0.125$ (weight of the new sample), $\beta = 0.25$ (weight of the new deviation):</p>
 <ul>
 <li><strong>EstimatedRTT (SRTT):</strong> exponential weighted moving average, $\text{SRTT} = (1-\alpha)\cdot\text{SRTT} + \alpha\cdot\text{SampleRTT}$, typically $\alpha = 0.125$ — mostly history, slightly present.</li>

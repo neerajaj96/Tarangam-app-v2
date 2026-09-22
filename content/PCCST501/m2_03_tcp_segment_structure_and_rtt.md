@@ -88,8 +88,18 @@ Source/destination ports (multiplexing), **sequence + acknowledgment numbers** (
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  flow ctrl
 |            Checksum           |         Urgent Pointer        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                    20 bytes minimum (options may extend)
+                     20 bytes minimum (options may extend)
 ```
+
+### 3.2a Interactive Walkthrough: Reading the 20 Bytes Row by Row
+
+::: viz stepper Walk the TCP header four bytes at a time
+1. Bytes 0–3: source port, destination port — who talks to whom (multiplexing, as in UDP)
+2. Bytes 4–7: sequence number — first payload byte's number in the stream
+3. Bytes 8–11: acknowledgment number — next byte expected, cumulative
+4. Bytes 12–15: header length, flags (SYN/ACK/FIN/RST), receive window — control plus flow control
+5. Bytes 16–19: checksum (mandatory, unlike UDP's qualified case) plus urgent pointer — 20 bytes minimum, options only extend it
+:::
 
 ### 3.3 Operation Flow: Learning the RTT — SRTT, DevRTT, Timeout, Symbol by Symbol
 

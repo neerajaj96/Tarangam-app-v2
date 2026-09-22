@@ -71,6 +71,16 @@ The four fields are `source port`, `destination port`, `length`, and `checksum`,
 Tiny example: a DNS query to destination port 53 carries its reply port, total length, and checksum in 8 bytes.
 :::
 
+### 3.1a Interactive Walkthrough: Reading the 8 Bytes by Offset
+
+::: viz stepper Walk the UDP header two bytes at a time
+1. Bytes 0–1: source port — where replies go (optional in requests)
+2. Bytes 2–3: destination port — the demultiplexing key, e.g. 53 for DNS
+3. Bytes 4–5: length — whole segment in bytes, header plus data
+4. Bytes 6–7: checksum — error detection over header, data, and pseudoheader
+5. Total: 4 fields × 2 bytes = 8 — nothing else exists to read, which is exactly why the header is the philosophy
+:::
+
 ### 3.2 Operation Flow: Checksum — 1s-Complement Sum (+ Pseudoheader)
 
 1. Arrange the segment (with checksum field set to 0) as a sequence of 16-bit words, **prefixed by a 12-byte pseudoheader** (source IP, destination IP, protocol number, UDP length).

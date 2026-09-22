@@ -75,6 +75,31 @@ Graph: $1$ links $2,3$; $2$ links $4$; $3$ links $4$; $4$ links $5$. BFS from $1
 Queue states per layer are the trace; parents give paths. BFS answers always pair order + distances — one without the other is half marks.
 :::
 
+### 3.1 Interactive Walkthrough: Ripple, Queue States, and the String Contrast
+
+::: anim bfs-layers Ripple Expansion Order
+Watch layers ignite in order — s, then a and b, then c, d and e, then f and g. No node lights before every node nearer the source: nondecreasing distance, animated.
+:::
+
+::: viz stepper BFS on 1-2-3-4-5: queue contents at every dequeue
+1. Visit 1 (distance 0); queue holds [1]
+2. Dequeue 1, discover 2 and 3; queue holds [2, 3]; distances 1 and 1
+3. Dequeue 2, discover 4; queue holds [3, 4]; distance of 4 is 2
+4. Dequeue 3: neighbour 4 already discovered, so skip it; queue holds [4]
+5. Dequeue 4, discover 5; dequeue 5 — done. Order 1, 2, 3, 4, 5; shortest path 1 → 2 → 4 → 5
+:::
+
+::: viz compare Ripple versus string on the same graph
+## BFS (ripple)
+- Visit order: 1, 2, 3, 4, 5
+- Structure: queue; layers equal distances
+= Order 1, 2, 3, 4, 5 with distances 0, 1, 1, 2, 3
+## DFS (string)
+- Visit order: 1, 2, 4, 3
+- Structure: stack; plunge plus backtrack
+= Order 1, 2, 4, 3 with no distances claimed
+:::
+
 ---
 
 <a id="self-check"></a>

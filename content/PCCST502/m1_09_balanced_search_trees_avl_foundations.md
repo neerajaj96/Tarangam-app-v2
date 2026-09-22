@@ -97,6 +97,16 @@ $BF(x) = 3 - 1 = 2$ by definition.
 $BF = 2$ violates $|BF| \le 1$ — left-heavy beyond tolerance. A real AVL tree would rotate at once (some left-side rotation, next note) to restore $|BF| \le 1$ before proceeding.
 :::
 
+### 3.1 Interactive Walkthrough: Auditing One Small Tree Bottom-Up
+
+::: viz stepper Audit 20 over 10 (over 5) and 30: heights then balance factors
+1. Leaves first: 5 and 30 have no children, so height 0 each and BF (−1) − (−1) = 0 — empty children count as height −1
+2. Node 10: left height 0 (node 5), right height −1 (empty) — BF = 0 − (−1) = +1, legal, height becomes 1
+3. Node 30: leaf once more — BF 0, legal, height 0
+4. Root 20: left height 1, right height 0 — BF = 1 − 0 = +1, legal, so the whole tree is a valid AVL with no rotation owed
+5. Lesson: always audit leaves-up; the first ±2 met while climbing is the rotation site, and everything below it was already sound
+:::
+
 ---
 
 <a id="watch-out"></a>

@@ -70,6 +70,16 @@ List $10\to20\to30$. Insert $25$ after $20$, then delete the node after $10$. Sh
 $10\to25\to30$. Every list-manipulation answer is arrows-before/after pairs — draw both states, never just the finale.
 :::
 
+### 3.1 Interactive Walkthrough: The Same Surgery, Arrow by Arrow
+
+::: viz stepper Insert 25 after 20, then delete after 10: watch the arrows
+1. Start state: `head → [10|•] → [20|•] → [30|/]` — three nodes, tail points at NULL (`/`)
+2. New node first: set `q(25)->next` to 20's old next — `q → [30]`, and the list itself is still `10 → 20 → 30`
+3. Link the predecessor: set `20->next = q` — now `head → [10|•] → [20|•] → [25|•] → [30|/]`
+4. Bypass after 10: 20 sits after 10, so set `10->next` past it — `head → [10|•] → [25|•] → [30|/]`, with 20 detached but still allocated
+5. Free the orphan: `free(20)` — finale `head → [10|•] → [25|•] → [30|/]`, no leak, costs O(n) to reach plus O(1) surgery
+:::
+
 ---
 
 <a id="self-check"></a>

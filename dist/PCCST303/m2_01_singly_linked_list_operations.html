@@ -257,7 +257,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 3 MIN READ</span>
+    <span class="badge">⏱️ 4 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -294,7 +294,28 @@
 <li>After $10$ sits $20$: bypass → $10\to25\to30$; free $20$.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>$10\to25\to30$. Every list-manipulation answer is arrows-before/after pairs — draw both states, never just the finale.</p>
-</div></div><hr>
+</div></div><h3>3.1 Interactive Walkthrough: The Same Surgery, Arrow by Arrow</h3>
+<div class="viz viz-stepper" data-viz="stepper" data-steps="5">
+  <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; Insert 25 after 20, then delete after 10: watch the arrows</span></div>  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>Start state: <code>head → [10|•] → [20|•] → [30|/]</code> — three nodes, tail points at NULL (<code>/</code>)</p>
+</li>
+<li class="viz-step" data-i="1"><p>New node first: set <code>q(25)-&gt;next</code> to 20&#39;s old next — <code>q → [30]</code>, and the list itself is still <code>10 → 20 → 30</code></p>
+</li>
+<li class="viz-step" data-i="2"><p>Link the predecessor: set <code>20-&gt;next = q</code> — now <code>head → [10|•] → [20|•] → [25|•] → [30|/]</code></p>
+</li>
+<li class="viz-step" data-i="3"><p>Bypass after 10: 20 sits after 10, so set <code>10-&gt;next</code> past it — <code>head → [10|•] → [25|•] → [30|/]</code>, with 20 detached but still allocated</p>
+</li>
+<li class="viz-step" data-i="4"><p>Free the orphan: <code>free(20)</code> — finale <code>head → [10|•] → [25|•] → [30|/]</code>, no leak, costs O(n) to reach plus O(1) surgery</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="Insert 25 after 20, then delete after 10: watch the arrows: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">5 steps &mdash; use Prev and Next to walk through</p>
+</div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

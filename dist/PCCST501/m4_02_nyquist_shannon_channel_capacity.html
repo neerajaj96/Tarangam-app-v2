@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 4</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 9 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -381,7 +381,26 @@
 (c) SNR $= 10^{30/10} = 1000$. Shannon: $3000 \times \log_2(1001) \approx 3000 \times 9.97 \approx 29{,}902$ bps $\approx 30$ kbps.
 (d) Noiseless claims (6 / 18 kbps) assume perfection; with real $30$ dB noise the Shannon $30$ kbps binds above the 8-level Nyquist $18$ kbps — so 8-level signaling at $18$ kbps is achievable, and no scheme on this line exceeds $\approx 30$ kbps error-free.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Three numbers, one verdict: levels buy linear-ish gains (6 → 18 kbps), noise sets the absolute roof ($\approx 30$ kbps here). Every capacity question in the exam is this exact dance — convert dB, compute both laws, take the min.</p>
-</div></div><p><a id="exam-recap"></a></p>
+</div></div><h3>4.3 Interactive Exploration: What Moves the Shannon Ceiling</h3>
+<div class="viz viz-stepper" data-viz="stepper" data-steps="4">
+  <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; Shannon scenarios on a 3 kHz line: bandwidth versus noise</span></div>  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>Baseline at 30 dB SNR: ratio 1000, log₂(1001) ≈ 9.97, so C ≈ 3000 × 9.97 ≈ 30 kbps</p>
+</li>
+<li class="viz-step" data-i="1"><p>Double the bandwidth to 6 kHz at the same SNR: C ≈ 6000 × 9.97 ≈ 60 kbps — capacity scales linearly with B</p>
+</li>
+<li class="viz-step" data-i="2"><p>Drop noise margin to 20 dB SNR instead: ratio 100, log₂(101) ≈ 6.66, so C ≈ 3000 × 6.66 ≈ 20 kbps — ten times the noise power costs only a third of capacity</p>
+</li>
+<li class="viz-step" data-i="3"><p>Lesson: bandwidth buys linearly, SNR buys logarithmically — and the verdict is always min(Nyquist, Shannon), never either law alone</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="Shannon scenarios on a 3 kHz line: bandwidth versus noise: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">4 steps &mdash; use Prev and Next to walk through</p>
+</div><p><a id="exam-recap"></a></p>
 <h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
 <p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
 <table>
