@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 11 MIN READ</span>
+    <span class="badge">⏱️ 25 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -311,19 +311,19 @@
   </div>
 </div>
 <h1>The World Wide Web and HTTP</h1>
-<p><strong>HTTP request/response structure, non-persistent vs. persistent connections, statelessness, and cookies.</strong></p>
+<p><strong>Web vs. Internet, URL anatomy, HTTP request/response structure, methods and status codes, statelessness and cookies, non-persistent vs. persistent connections with RTT math, and HTTP versions.</strong></p>
 <p><a id="the-intuition"></a></p>
 <h2 id="1-the-real-world-situation-start-from-zero">1. The Real-World Situation — Start From Zero</h2>
 <p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-words-first-every-term-defined">2. Words First — Every Term Define… →</a></p>
-<p>You click a link. Your browser fetches a page made of a dozen pieces — text, images, style files — and assembles them faster than you can blink. Behind that click is one question answered by a protocol called HTTP (HyperText Transfer Protocol): <strong>how should a browser ask a server for objects, and how should the server reply?</strong></p>
-<p>Two design puzzles dominate. First, should the browser open a fresh transport connection for <em>every</em> object, or reuse one connection for all of them? Second, the server deliberately remembers <em>nothing</em> between requests — so how do logins and shopping carts survive? This note solves both: connection reuse first, memory-outside-the-protocol second.</p>
+<p>You type <code>http://www.example.com/index.html</code>, press Enter, and a page appears. Behind that instant are three prior lessons working together: M1T1&#39;s hosts and links carry the bits, M1T2&#39;s layers wrap them (your request travels as one HTTP <em>Message</em> inside TCP/IP envelopes), and M1T3&#39;s client-server roles, sockets, and statelessness set the rules of engagement. This note answers the one remaining question: <strong>how exactly do a browser and a server converse — what do the messages look like, how many connections do they cost, and how does anything get remembered?</strong></p>
+<p>Two design puzzles dominate. First, should the browser open a fresh transport connection for <em>every</em> object, or reuse one connection for all of them? Second, the server deliberately remembers <em>nothing</em> between requests — so how do logins and shopping carts survive? This note solves both: connection reuse first, memory-outside-the-protocol second — then prices everything in round trips.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Amnesiac Waiter</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Picture a waiter with total amnesia — every time you order, they treat you as a brand-new customer, with zero memory of anything you ordered a minute ago. This is exactly how <strong>HTTP</strong> behaves: it is <strong>stateless</strong>. Every request is handled in complete isolation from every previous one, even from the same browser, even seconds apart.</p>
 <p>Now imagine fetching a webpage that has text plus ten embedded images. Should the waiter make a brand-new trip to the kitchen (open a brand-new connection) for <em>every single item</em>, or should they keep one open channel and bring everything back over it? Early HTTP (1.0) did the former — <strong>non-persistent</strong>, closing and reopening a TCP (Transmission Control Protocol) connection per object, wasting time on repeated handshakes. Modern HTTP (1.1) does the latter — <strong>persistent</strong>, reusing one open connection for many objects in a row.</p>
 <p>But if the waiter forgets everything, how does a shopping cart or login session survive? The restaurant hands you a <strong>cookie</strong> — a small claim-check with a unique ID — the moment you first sit down. Every time you order again, you show that claim-check, and the amnesiac waiter looks up your ID in a notebook to instantly recall your entire history, without ever &quot;remembering&quot; anything on their own.</p>
 <p>Dropping the restaurant now: stateless = server keeps no per-client memory; persistent = one TCP connection reused; cookie = client-held ID the server looks up.</p>
 </div></details><p><a id="key-terms"></a></p>
 <h2 id="2-words-first-every-term-defined">2. Words First — Every Term Defined</h2>
-<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-connection-economy-then-message-structure">3. Purpose — Connection Economy, T… →</a></p>
+<p class="secnav"><a href="#1-the-real-world-situation-start-from-zero">← 1. The Real-World Situation — Star…</a><span class="secnav-sep">·</span><a href="#3-purpose-architecture-messages-memory-timing">3. Purpose — Architecture, Message… →</a></p>
 <table>
 <thead>
 <tr>
@@ -337,7 +337,23 @@
 </tr>
 <tr>
 <td><strong>Web page / object / URL (Uniform Resource Locator)</strong></td>
-<td>A page is a document (usually HTML — HyperText Markup Language) referencing objects (single files: images, style sheets, scripts); a URL is an object&#39;s address (hostname + path).</td>
+<td>A page is a document (usually HTML — HyperText Markup Language) referencing objects (single files: images, style sheets, scripts); a URL is an object&#39;s address (protocol + hostname + port + path).</td>
+</tr>
+<tr>
+<td><strong>Browser / web server</strong></td>
+<td>The client <em>process</em> rendering pages (Chrome, Firefox) vs. the server <em>process</em> supplying objects (Apache, Nginx) — roles from M1T3, applied.</td>
+</tr>
+<tr>
+<td><strong>Method</strong></td>
+<td>The verb in a request line stating intent: <code>GET</code> (fetch), <code>POST</code> (submit), <code>HEAD</code> (headers only).</td>
+</tr>
+<tr>
+<td><strong>Idempotent</strong></td>
+<td>Safe to repeat with the same effect: fetching twice changes nothing; submitting twice may charge twice.</td>
+</tr>
+<tr>
+<td><strong>Status code</strong></td>
+<td>The server&#39;s 3-digit verdict in a response (2xx success, 3xx redirect, 4xx client error, 5xx server error).</td>
 </tr>
 <tr>
 <td><strong>Stateless protocol</strong></td>
@@ -349,7 +365,7 @@
 </tr>
 <tr>
 <td><strong>Persistent connection</strong></td>
-<td>One TCP connection reused for many objects in sequence (HTTP/1.1 default).</td>
+<td>One TCP connection reused for many objects in sequence (HTTP/1.1 default), optionally pipelined.</td>
 </tr>
 <tr>
 <td><strong>RTT (Round-Trip Time)</strong></td>
@@ -371,18 +387,35 @@ Tiny example: <code>GET /index.html HTTP/1.1</code> asks the server to return th
 Each request is handled as if brand new, even from the same browser seconds later.
 That is why logins need cookies: the protocol itself remembers nothing.</p>
 </div></details><p><a id="the-math"></a></p>
-<h2 id="3-purpose-connection-economy-then-message-structure">3. Purpose — Connection Economy, Then Message Structure</h2>
+<h2 id="3-purpose-architecture-messages-memory-timing">3. Purpose — Architecture, Messages, Memory, Timing</h2>
 <p class="secnav"><a href="#2-words-first-every-term-defined">← 2. Words First — Every Term Define…</a><span class="secnav-sep">·</span><a href="#4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exa… →</a></p>
-<h3>3.1 HTTP Fundamentals</h3>
+<h3>3.1 Web Architecture: Internet vs. Web, Client vs. Server</h3>
 <ul>
-<li><strong>Transport:</strong> HTTP/1.0, HTTP/1.1, and HTTP/2 run over <strong>TCP</strong>, never plain UDP (User Datagram Protocol), to guarantee reliable, in-order delivery. The modern exception is <strong>HTTP/3</strong>, which runs over QUIC (a reliable protocol built on UDP) — so qualify any &quot;HTTP = TCP&quot; claim with the version.</li>
-<li><strong>Statelessness:</strong> the server retains <strong>no memory</strong> of past requests. Identical requests seconds apart are treated as entirely new.</li>
+<li><strong>What they are.</strong> The <strong>Internet</strong> is the infrastructure (routers, links, IP addresses); the <strong>Web</strong> is one <em>application</em> on top of it — interlinked documents fetched with HTTP. Email (SMTP) and file transfer (FTP) rode the same infrastructure years before Tim Berners-Lee proposed the Web in 1989.</li>
+<li><strong>Why it matters.</strong> Every &quot;is the Web the Internet?&quot; option on an exam is decided here: HTTP/URL/HTML/browser questions are Web questions; router/packet/IP questions are Internet questions.</li>
+<li><strong>The actors.</strong> A <strong>web page</strong> = one base HTML file plus embedded <strong>objects</strong> (images, CSS — Cascading Style Sheets, scripts). The <strong>browser</strong> (client process) requests, receives, and <em>renders</em>; the <strong>web server</strong> (server process such as Apache/Nginx) stores objects and responds. HTTP never renders anything and never executes code — rendering is the browser engine&#39;s job, script execution the JavaScript engine&#39;s.</li>
 </ul>
-<h3>3.2 Operation Flow: Non-Persistent vs. Persistent Connections</h3>
+<h3>3.2 URL Anatomy — Read Every Address Part by Part</h3>
+<pre><code>      Protocol          Host Name            Port Number           Path
+     http://    www.example.edu           :80         /cs/courses/index.html
+</code></pre>
+<ul>
+<li><strong>Protocol (<code>http://</code>).</strong> <em>What:</em> which application protocol to speak. <em>Why:</em> the same host may serve HTTP, FTP, and more — the scheme picks the conversation.</li>
+<li><strong>Host Name (<code>www.example.edu</code>).</strong> <em>What:</em> the server&#39;s domain name. <em>Why:</em> humans can&#39;t dial IPs; DNS (Domain Name System, M1T3) resolves this to an IP address before any HTTP flows.</li>
+<li><strong>Port (<code>:80</code>).</strong> <em>What:</em> the server <em>process</em> to contact (M1T3 sockets). <em>Why:</em> one machine hosts many services; HTTP defaults to 80, HTTPS to 443, and the port may be omitted when default.</li>
+<li><strong>Path (<code>/cs/courses/index.html</code>).</strong> <em>What:</em> which object on that server. <em>Why:</em> the server&#39;s disk holds millions of files — the path selects one.</li>
+<li><em>Result of misreading:</em> swapping host and path, or calling the URL &quot;the protocol&quot;, fails every trace question. Read left to right: <em>how → which machine → which process → which file</em>.</li>
+</ul>
+<h3>3.3 HTTP Fundamentals</h3>
+<ul>
+<li><strong>Transport:</strong> HTTP/1.0, HTTP/1.1, and HTTP/2 run over <strong>TCP</strong>, never plain UDP (User Datagram Protocol), because a single corrupt byte can scramble a page or script — reliable in-order delivery is mandatory. The modern exception is <strong>HTTP/3</strong>, which runs over QUIC (a reliable protocol built on UDP) — so qualify any &quot;HTTP = TCP&quot; claim with the version. (M1T3&#39;s QUIC lesson is the reason this exception exists.)</li>
+<li><strong>Statelessness:</strong> the server retains <strong>no memory</strong> of past requests <em>at the HTTP layer</em>. Identical requests seconds apart are treated as entirely new. Session memory (carts, logins) lives <em>outside</em> HTTP — in cookies plus server databases, as §3.7 shows. This is M1T3&#39;s stateless-interaction lesson applied to one specific protocol.</li>
+<li><strong>Message format:</strong> plain human-readable ASCII text (American Standard Code for Information Interchange) with lines ending in CRLF (<code>\r\n</code> — carriage return + line feed). A lone blank <code>\r\n</code> line separates headers from body — the single most parse-tested detail.</li>
+</ul>
+<h3>3.4 Operation Flow: Non-Persistent vs. Persistent Connections</h3>
 <pre><code class="language-mermaid">sequenceDiagram
     participant B as Browser
     participant W as Web Server
-    rect rgb(40,40,60)
     Note over B,W: Non-Persistent HTTP (HTTP/1.0)
     B-&gt;&gt;W: Open TCP connection
     B-&gt;&gt;W: GET index.html
@@ -392,12 +425,10 @@ That is why logins need cookies: the protocol itself remembers nothing.</p>
     B-&gt;&gt;W: GET image1.jpg
     W-&gt;&gt;B: image1.jpg
     Note over B,W: Connection closes (repeat per object!)
-    end
 </code></pre>
 <pre><code class="language-mermaid">sequenceDiagram
     participant B as Browser
     participant W as Web Server
-    rect rgb(40,60,40)
     Note over B,W: Persistent HTTP (HTTP/1.1)
     B-&gt;&gt;W: Open TCP connection (once)
     B-&gt;&gt;W: GET index.html
@@ -407,7 +438,6 @@ That is why logins need cookies: the protocol itself remembers nothing.</p>
     B-&gt;&gt;W: GET image2.jpg
     W-&gt;&gt;B: image2.jpg
     Note over B,W: Same connection reused for all objects
-    end
 </code></pre>
 <table>
 <thead>
@@ -433,19 +463,39 @@ That is why logins need cookies: the protocol itself remembers nothing.</p>
 <td>Lower</td>
 </tr>
 </tbody></table>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Connection-Count Rule</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For a page with $N$ objects (HTML + embedded): <strong>non-persistent needs $N$ TCP connections</strong> (one per object, each paying a handshake), <strong>persistent needs 1</strong> (reused). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.</p>
-</div></details><h3>3.3 Packet Structure: HTTP Message Structure</h3>
-<p><strong>Request Message:</strong></p>
 <ul>
-<li><strong>Request Line:</strong> method (<code>GET</code>, <code>POST</code>, <code>HEAD</code>, <code>PUT</code>, <code>DELETE</code>) + URL path + version, e.g. <code>GET /index.html HTTP/1.1</code></li>
-<li><strong>Header Lines:</strong> <code>Host:</code>, <code>User-Agent:</code>, <code>Accept-Language:</code>, etc.</li>
-<li><strong>Entity Body:</strong> used mainly by <code>POST</code> to carry form data/payloads.</li>
+<li><strong>Pipelining modes (HTTP/1.1).</strong> <em>Without pipelining</em> (default): one request outstanding at a time — each extra object costs another RTT. <em>With pipelining:</em> fire all requests back-to-back without waiting — all extra objects cost ~1 RTT combined. (HTTP/2 later replaces this with multiplexed binary framing; §3.9.)</li>
 </ul>
-<p><strong>Response Message:</strong></p>
+<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Connection-Count and RTT Rules</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For a page with $N$ objects (HTML + embedded): <strong>non-persistent needs $N$ TCP connections</strong> (one per object, each paying a handshake), <strong>persistent needs 1</strong> (reused). Timing with negligible transmission (RTT = round-trip time): non-persistent ≈ $2(N+1)$ RTTs (2 per object: handshake + request); persistent without pipelining ≈ $(N+2)$ RTTs (2 for the first object, 1 per extra); pipelined ≈ 3 RTTs (2 + 1 for everything pipelined). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.</p>
+</div></details><h3>3.5 Packet Structure: HTTP Message Structure</h3>
+<p><strong>Request Message (line by line):</strong></p>
+<pre><code>GET /department/cs/index.html HTTP/1.1\r\n
+Host: www.university.edu\r\n
+User-Agent: Mozilla/5.0\r\n
+Accept: text/html\r\n
+Connection: keep-alive\r\n
+\r\n
+</code></pre>
 <ul>
-<li><strong>Status Line:</strong> version + status code + status message, e.g. <code>HTTP/1.1 200 OK</code> or <code>HTTP/1.1 404 Not Found</code></li>
-<li><strong>Header Lines:</strong> <code>Date:</code>, <code>Server:</code>, <code>Content-Length:</code>, <code>Content-Type:</code></li>
-<li><strong>Data (Body):</strong> the actual requested object.</li>
+<li><strong>Request Line:</strong> method + path + version (<code>GET /department/cs/index.html HTTP/1.1</code>). <em>Why first:</em> it states intent before any metadata.</li>
+<li><strong>Header Lines:</strong> <code>Host:</code> (mandatory in HTTP/1.1 — lets one server host many sites, i.e. virtual hosting), <code>User-Agent:</code> (browser/OS identity for tailored content), <code>Accept:</code>/<code>Accept-Language:</code> (formats the client understands), <code>Connection: keep-alive</code> (asks to reuse the TCP connection = persistence).</li>
+<li><strong>Blank <code>\r\n</code> line:</strong> ends headers; body (if any) follows.</li>
+<li><strong>Entity Body:</strong> carries payload for <code>POST</code> (form data, uploads); empty for <code>GET</code>.</li>
+</ul>
+<p><strong>Response Message (line by line):</strong></p>
+<pre><code>HTTP/1.1 200 OK\r\n
+Date: Tue, 22 Sep 2026 12:00:00 GMT\r\n
+Server: Apache/2.4.41\r\n
+Last-Modified: Mon, 15 Sep 2026 08:30:00 GMT\r\n
+Content-Length: 1024\r\n
+Content-Type: text/html\r\n
+\r\n
+(object bytes follow)
+</code></pre>
+<ul>
+<li><strong>Status Line:</strong> version + numeric code + reason phrase (<code>HTTP/1.1 200 OK</code>). <em>Why first:</em> the verdict before the evidence.</li>
+<li><strong>Header Lines:</strong> <code>Date:</code> (send time), <code>Server:</code> (software identity), <code>Last-Modified:</code> (drives caching — refetch only if changed), <code>Content-Length:</code> (body size in bytes), <code>Content-Type:</code> (MIME — Multipurpose Internet Mail Extensions — type telling the browser how to render, e.g. <code>text/html</code>).</li>
+<li><strong>Body:</strong> the object bytes themselves (HTML text or image binary).</li>
 </ul>
 <details class="interactive-toggle"><summary>What do `GET`, `POST`, and status `200 OK` mean?</summary><div class="toggle-content"><p><code>GET</code> asks the server to return an object, while <code>POST</code> carries form data up in the body.
 <code>200 OK</code> means the request succeeded, and <code>404 Not Found</code> means no such object exists.
@@ -453,28 +503,129 @@ Tiny example: <code>GET /index.html</code> returns the page, <code>POST /login</
 </div></details><details class="interactive-toggle"><summary>What does `cookie` mean?</summary><div class="toggle-content"><p>A <code>cookie</code> is a small ID the server issues with <code>Set-cookie</code> for the browser to store.
 The browser resends it on later requests so the server can look up that client&#39;s state.
 The protocol stays stateless; the ID plus server-side lookup restores sessions.</p>
-</div></details><h3>3.4 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
+</div></details><h3>3.6 Methods and Status Codes — The Exam Core</h3>
+<p><strong>Methods (verbs):</strong></p>
+<pre><code class="language-mermaid">flowchart LR
+    accTitle: HTTP methods from client to server
+    accDescr: GET fetches data, POST submits data, HEAD fetches headers only.
+    C[&quot;Client Browser&quot;] --&gt;|GET /index.html&lt;br/&gt;(fetch object)| S[&quot;Web Server&quot;]
+    C --&gt;|POST /login&lt;br/&gt;(submit form body)| S
+    C --&gt;|HEAD /big.zip&lt;br/&gt;(headers only)| S
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>GET</th>
+<th>POST</th>
+<th>HEAD</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Purpose</td>
+<td>Retrieve an object</td>
+<td>Submit data (forms, logins)</td>
+<td>Headers only (existence, size, date)</td>
+</tr>
+<tr>
+<td>Request body</td>
+<td>Empty (parameters in URL)</td>
+<td>Carries the payload</td>
+<td>Empty</td>
+</tr>
+<tr>
+<td>Response body</td>
+<td>The object</td>
+<td>Result/confirmation</td>
+<td>Always empty</td>
+</tr>
+<tr>
+<td>Idempotent?</td>
+<td>Yes (repeat = same effect)</td>
+<td>No (repeat may double-charge)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Browsing</td>
+<td>Form submission</td>
+<td>Cache checks, link verification</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>Why HEAD exists.</strong> Checking <code>Last-Modified</code>/<code>Content-Length</code> of a huge file before downloading it — one headers-only round trip instead of gigabytes.</li>
+<li><strong>Idempotency consequence.</strong> Browsers may safely retry GETs; retrying POSTs is dangerous — the double-payment exam scenario.</li>
+</ul>
+<p><strong>Status codes (five classes + the tested seven):</strong></p>
+<pre><code class="language-mermaid">flowchart TB
+    accTitle: HTTP status code classes and key codes
+    accDescr: Five classes from informational to server error, with the seven most tested codes.
+    ROOT[&quot;Status codes&quot;] --&gt; C1[&quot;1xx Informational&quot;]
+    ROOT --&gt; C2[&quot;2xx Success: S200 OK&quot;]
+    ROOT --&gt; C3[&quot;3xx Redirection: S301 Moved Permanently&quot;]
+    ROOT --&gt; C4[&quot;4xx Client error: S400 Bad Request, S401 Unauthorized, S403 Forbidden, S404 Not Found&quot;]
+    ROOT --&gt; C5[&quot;5xx Server error: S500 Internal Server Error&quot;]
+</code></pre>
+<ul>
+<li><strong>1xx</strong> informational (received, continuing); <strong>2xx</strong> success; <strong>3xx</strong> redirection (new URL in <code>Location:</code>, browser follows automatically); <strong>4xx</strong> client error (bad syntax, can&#39;t fulfill); <strong>5xx</strong> server error (valid-looking request the server failed on).</li>
+<li><strong>The tested seven.</strong> <code>200 OK</code> (here is your object); <code>301 Moved Permanently</code> (new address in <code>Location:</code>); <code>400 Bad Request</code> (malformed syntax); <code>401 Unauthorized</code> = <em>unauthenticated</em> (&quot;who are you? log in&quot;); <code>403 Forbidden</code> = authenticated but <em>unauthorized</em> (&quot;I know you; you may not enter&quot;); <code>404 Not Found</code> (no such path); <code>500 Internal Server Error</code> (server-side crash).</li>
+<li><strong>401 vs. 403 — the beloved trap.</strong> No login at all → 401. Logged in as a student eyeing admin grades → 403. One word decides: <em>authentication</em> (identity) vs. <em>authorization</em> (permission).</li>
+</ul>
+<h3>3.7 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
+<p>Absolute-beginner build-up (M1T3 taught stateless <em>interactions</em>; here is HTTP&#39;s instance): the server keeps nothing per client <em>inside HTTP</em> — so consecutive clicks arrive with no built-in memory linking them. Four cooperating pieces supply the missing memory, each living somewhere explicit:</p>
+<ol>
+<li><strong><code>Set-cookie</code> response header</strong> (server → browser): issues the ID, e.g. <code>session_id=8329</code>.</li>
+<li><strong>Browser cookie store</strong> (client disk): keeps the ID per domain and auto-attaches it (<code>Cookie: session_id=8329</code>) to later requests.</li>
+<li><strong>Server database</strong> (server disk): maps ID → real state (cart items, login flag).</li>
+<li><strong>Lookup on arrival</strong>: server reads the ID, queries its database, personalizes the response — HTTP itself never &quot;remembered&quot; anything.</li>
+</ol>
 <pre><code class="language-mermaid">sequenceDiagram
     participant Br as Browser
     participant Sv as Server
-    Br-&gt;&gt;Sv: First-ever request (no cookie)
-    Sv-&gt;&gt;Sv: Create unique ID (e.g. 1678), save in DB
-    Sv-&gt;&gt;Br: Response + Set-cookie: 1678
+    Br-&gt;&gt;Sv: First request (no cookie)
+    Sv-&gt;&gt;Sv: Create ID 8329, save in DB
+    Sv-&gt;&gt;Br: Response + Set-cookie: 8329
     Note over Br: Browser stores cookie locally
-    Br-&gt;&gt;Sv: Next request + Cookie: 1678
-    Sv-&gt;&gt;Sv: Look up 1678 in DB → retrieve state
+    Br-&gt;&gt;Sv: Next request + Cookie: 8329
+    Sv-&gt;&gt;Sv: Look up 8329 in DB, retrieve state
     Sv-&gt;&gt;Br: Personalized response
 </code></pre>
+<p><em>Result:</em> protocol stays 100% stateless; <em>application</em> behaves statefully. Sessions, JWTs (JSON Web Tokens), and tokens from M1T3 are the same pattern with different ID formats. Exam phrasing that earns marks: &quot;cookies don&#39;t make HTTP stateful — they let stateless messages <em>carry</em> the key to server-side state.&quot;</p>
+<h3>3.8 RTT Timing — Pricing a Page in Round Trips</h3>
+<ul>
+<li><strong>Definitions.</strong> RTT = one small packet there and back = 2 × propagation delay (M1T1 delays). TCP handshake ≈ 1 RTT (SYN out, SYN-ACK back; the final ACK rides with the request). One request/response exchange ≈ 1 RTT + object transmission time.</li>
+<li><strong>Formulas (N = embedded objects; T_html, T_obj = transmission times).</strong><ul>
+<li>Non-persistent: $(2·RTT + T_{html}) + N·(2·RTT + T_{obj})$ → ≈ $2(N+1)$ RTTs when transmission ≈ 0.</li>
+<li>Persistent, no pipelining: $(2·RTT + T_{html}) + N·(1·RTT + T_{obj})$ → ≈ $(N+2)$ RTTs.</li>
+<li>Persistent, pipelined: $(2·RTT + T_{html}) + (1·RTT + N·T_{obj})$ → ≈ 3 RTTs.</li>
+</ul>
+</li>
+<li><strong>Why each term.</strong> Every <em>new</em> connection pays a handshake (1 RTT) plus its request exchange (1 RTT) = 2; a reused connection pays only the exchange (1); pipelining batches all exchanges into roughly one.</li>
+<li><strong>Worked exam numbers (RTT = 50 ms, N = 5, T = 10 ms each).</strong> Non-persistent: base 2·50+10 = 110 ms; each image 110 ms × 5 = 550 ms; <strong>total 660 ms</strong>. Persistent: 110 + 5·(50+10) = 110 + 300 = <strong>410 ms</strong>. Pipelined: 110 + (50 + 5·10) = 110 + 100 = <strong>210 ms</strong>. <em>Interpretation:</em> same page, same network — connection discipline alone cuts 660 → 210 ms. Verify every term before trusting a total.</li>
+<li><strong>Common mistakes.</strong> Forgetting the base HTML in N (N counts <em>embedded</em> objects; total objects = N+1); dropping the initial handshake&#39;s extra RTT in persistent mode (first object still costs 2); treating pipelined objects as zero-cost (they still share ~1 RTT).</li>
+</ul>
+<h3>3.9 Versions — History vs. Modern Reality (Exam-Controlled)</h3>
+<ul>
+<li><strong>HTTP/1.0 (1996):</strong> non-persistent default, one object per connection.</li>
+<li><strong>HTTP/1.1 (1997/1999):</strong> persistent default, mandatory <code>Host:</code> header, pipelining option — but pipelined head-of-line blocking (one stuck response stalls everything behind it) kept it little-used.</li>
+<li><strong>HTTP/2 (2015):</strong> binary framing + multiplexing many interleaved streams over <em>one</em> TCP connection, header compression — head-of-line blocking <em>within</em> the stream solved at HTTP layer (TCP-level blocking remains).</li>
+<li><strong>HTTP/3:</strong> drops TCP for QUIC over UDP — no handshake tax, no TCP-level blocking. (This is M1T3&#39;s QUIC lesson arriving on schedule.)</li>
+<li><strong>Exam rule, stated once.</strong> Answer classical questions with HTTP/1.0 vs. 1.1 definitions <em>unless the question names</em> HTTP/2 or HTTP/3. Modern facts never override the version asked about.</li>
+</ul>
 <p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
-<p class="secnav"><a href="#3-purpose-connection-economy-then-message-structure">← 3. Purpose — Connection Economy, T…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
+<p class="secnav"><a href="#3-purpose-architecture-messages-memory-timing">← 3. Purpose — Architecture, Message…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
 <h3>4.1 Toy Example (30 seconds)</h3>
 <p>A page has exactly 2 objects: <code>a.html</code> and <code>b.jpg</code>. Non-persistent: open connection, fetch <code>a.html</code>, close; open connection, fetch <code>b.jpg</code>, close — 2 handshakes for 2 objects. Persistent: open once, fetch both, close — 1 handshake. Now scale 2 to any $N$.</p>
-<h3>4.2 KTU-Style Worked Example</h3>
+<h3>4.2 KTU-Style Worked Example: Counting Connections</h3>
 <div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>An HTML page references 5 embedded images. Compute the total number of TCP connections required to fully load this page under (a) Non-Persistent HTTP and (b) Persistent HTTP.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting Connections</div><div class="step-content"><p><strong>Non-Persistent:</strong> the HTML file itself requires 1 connection. Each of the 5 images then requires its <em>own</em> new connection (opened and closed individually) = 5 more connections. Total = 1 + 5 = <strong>6 separate TCP connections</strong>.
 <strong>Persistent:</strong> a single TCP connection is opened once, and the HTML file plus all 5 images are transferred sequentially over that same connection before it closes. Total = <strong>1 TCP connection</strong>.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Non-Persistent HTTP needs 6× as many TCP connections as Persistent HTTP for this page — each extra connection costs a full TCP three-way handshake&#39;s worth of round-trip latency. This is precisely why HTTP/1.1&#39;s persistent connections became the default: dramatically less overhead for pages with many embedded objects, which describes nearly every modern web page.</p>
+</div></div><h3>4.3 Worked Calculation: Pricing the Same Page Three Ways</h3>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Reading the Numbers</div><div class="step-content"><p>Base HTML + 5 images (N = 5), RTT = 50 ms, every transmission 10 ms. Price the page under all three HTTP modes.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Adding Round Trips</div><div class="step-content"><p><strong>Non-persistent:</strong> (2·50 + 10) + 5·(2·50 + 10) = 110 + 550 = <strong>660 ms</strong>. <strong>Persistent:</strong> 110 + 5·(50 + 10) = 110 + 300 = <strong>410 ms</strong>. <strong>Pipelined:</strong> 110 + (50 + 5·10) = 110 + 100 = <strong>210 ms</strong>.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Interpretation</div><div class="step-content"><p>Connection discipline alone moves 660 → 410 → 210 ms on identical hardware. Persistent reuses the handshake; pipelining additionally batches the exchanges — memorize <em>why each RTT count holds</em>, not the three totals.</p>
 </div></div><p><a id="exam-recap"></a></p>
 <h2 id="5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and Exam Recap</h2>
 <p class="secnav"><a href="#4-examples-tiny-first-then-exam-level">← 4. Examples — Tiny First, Then Exa…</a><span class="secnav-sep">·</span><a href="#6-active-recall-quizzes">6. Active Recall Quizzes →</a></p>
@@ -486,8 +637,20 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 </tr>
 </thead>
 <tbody><tr>
+<td>Internet vs. Web</td>
+<td>Infrastructure (routers/IP) vs. one HTTP application on top (invented 1989, after email/FTP).</td>
+</tr>
+<tr>
+<td>Browser vs. server</td>
+<td>Client process renders/fetches vs. server process stores/responds — M1T3 roles applied.</td>
+</tr>
+<tr>
+<td>URL parts</td>
+<td>Protocol (how) vs. host (which machine, via DNS) vs. port (which process) vs. path (which file).</td>
+</tr>
+<tr>
 <td>Non-persistent vs. persistent</td>
-<td>$N$ connections (one per object) vs. 1 reused connection.</td>
+<td>$N$ connections (one per object) vs. 1 reused connection; pipelining batches exchanges.</td>
 </tr>
 <tr>
 <td>Stateless vs. stateful</td>
@@ -495,16 +658,28 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 </tr>
 <tr>
 <td>Cookie vs. session memory</td>
-<td>Cookie = client-held ID; actual state lives in the server&#39;s database, keyed by that ID.</td>
+<td>Cookie = client-held ID (<code>Set-cookie</code>/<code>Cookie</code> headers); actual state lives in the server&#39;s database, keyed by that ID.</td>
+</tr>
+<tr>
+<td>GET vs. POST vs. HEAD</td>
+<td>Fetch (idempotent, empty body) vs. submit (non-idempotent, body) vs. headers-only (idempotent, always empty body).</td>
+</tr>
+<tr>
+<td>401 vs. 403</td>
+<td>Unauthenticated (who are you?) vs. authenticated-but-forbidden (not allowed).</td>
 </tr>
 <tr>
 <td>HTTP/1.1 vs. HTTP/3 transport</td>
 <td>Classical HTTP runs over TCP; HTTP/3 runs over QUIC (UDP-based).</td>
 </tr>
+<tr>
+<td>Transmission vs. RTT math</td>
+<td>Object bytes priced in ms via rate; handshake/exchange priced in RTTs — count both.</td>
+</tr>
 </tbody></table>
-<p><strong>Watch out:</strong> (1) Writing &quot;HTTP never uses UDP&quot; without the HTTP/3 qualification. (2) Counting only embedded images and forgetting the base HTML file ($N$ includes it). (3) Saying cookies &quot;make HTTP stateful&quot; — the protocol stays stateless; cookies store the ID that lets the server <em>look up</em> state.</p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>HTTP = stateless request/response over TCP (up to HTTP/2; HTTP/3 uses QUIC over UDP). Non-persistent (1.0): one TCP connection per object. Persistent (1.1): one connection reused. Request = request line + headers + body; response = status line + headers + data. Cookies (<code>Set-cookie</code> ID + server-side lookup) restore sessions without changing statelessness.</p>
-</div></details><p><strong>Active-recall checklist:</strong> Why does non-persistent cost $N$ handshakes? What three parts does each message type carry? How does a cookie let an amnesiac server remember you? Which HTTP version breaks the &quot;always TCP&quot; rule?</p>
+<p><strong>Watch out:</strong> (1) Writing &quot;HTTP never uses UDP&quot; without the HTTP/3 qualification. (2) Counting only embedded images and forgetting the base HTML file ($N$ includes it in totals via $N+1$). (3) Saying cookies &quot;make HTTP stateful&quot; — the protocol stays stateless; cookies store the ID that lets the server <em>look up</em> state. (4) Answering modern-version facts to a classical-version question — match the version asked. (5) &quot;POST has no length limit&quot; stated absolutely — servers routinely cap body sizes; say &quot;no protocol-imposed URL-length ceiling like GET&#39;s&quot;. (6) Calling the URL &quot;the protocol&quot; — the scheme is one component of four.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>HTTP = stateless request/response over TCP (up to HTTP/2; HTTP/3 uses QUIC over UDP). URL = protocol + host + port + path. Request = request line + headers + body; response = status line + headers + data. Methods: GET (fetch, idempotent), POST (submit, non-idempotent), HEAD (headers only). Codes: 200/301/400/401 (who are you?) /403 (not allowed) /404/500. Non-persistent (1.0): one TCP connection per object. Persistent (1.1): one connection reused; pipelining batches. Timing: 2(N+1) / (N+2) / 3 RTTs. Cookies (<code>Set-cookie</code> ID + server-side lookup) restore sessions without changing statelessness.</p>
+</div></details><p><strong>Active-recall checklist:</strong> What four parts does a URL carry, and what breaks if each is wrong? Which header lets one server host many sites? Why does non-persistent cost $N$ handshakes? What three parts does each message type carry? GET or POST for a payment — and what happens on retry? HEAD&#39;s response body contains what? 401 or 403 for a stranger vs. a student at the admin page? How does a cookie let an amnesiac server remember you — and where does the memory actually live? Which HTTP version breaks the &quot;always TCP&quot; rule, and when may you cite it?</p>
 <p><a id="self-check"></a></p>
 <h2 id="6-active-recall-quizzes">6. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#5-distinctions-watch-outs-and-exam-recap">← 5. Distinctions, Watch-Outs, and E…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
@@ -584,6 +759,84 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
     </summary>
     <div class="quiz-explanation-content">
       <p><code>Set-cookie</code> doesn&#39;t change HTTP&#39;s fundamentally stateless nature — it works <em>around</em> it. The server issues a unique ID, the browser stores and automatically resends it, and the server uses that ID as a lookup key into its own database to reconstruct &quot;memory&quot; of that specific client.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q4: RTT Calculation</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A page holds base HTML + 3 images (N = 3) with negligible transmission time. How many RTTs under non-persistent vs. persistent-no-pipelining vs. pipelined HTTP?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>4 / 4 / 4 — connections don&#39;t affect timing</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>8 / 5 / 3 — from 2(N+1), (N+2), and 3 with N = 3</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>6 / 4 / 2 — forgetting the base HTML&#39;s handshake</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>8 / 5 / 1 — pipelining removes even the first handshake</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Non-persistent: 4 objects × 2 RTTs = 8. Persistent: first object 2 RTTs + 3 × 1 = 5. Pipelined: 2 + 1 = 3. Distractor (C) drops the base page&#39;s handshake; (D) pretends pipelining skips connection setup — it never does.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q5: Methods</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A crawler wants only a file&#39;s size and modification date without downloading 2 GB. Which method, and why not GET or POST?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>POST with an empty body</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>HEAD — identical to GET except the server must omit the body, returning only status line and headers like Content-Length and Last-Modified</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>GET with a Range cap, which is the same thing</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>DELETE, which previews before removing</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>HEAD exists precisely for metadata inspection: same semantics as GET, guaranteed empty body. GET would transfer all 2 GB; POST submits data (wrong intent, non-idempotent). Check Content-Length/Last-Modified and decide — one cheap round trip.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">Q6: Status Codes</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"><p>A stranger with no login hits an admin dashboard; a logged-in student follows. Which codes, in order?</p>
+</div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>403 then 401</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>401 then 403 — no credentials means unauthenticated; known-but-unpermitted means forbidden</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>404 then 500</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>200 then 301</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>401 = &quot;who are you? log in&quot; (authentication missing). 403 = &quot;I know you; you&#39;re not allowed&quot; (authorization denied). The order follows the server&#39;s checks: identity first, permission second.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div>
