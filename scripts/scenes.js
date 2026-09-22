@@ -1745,6 +1745,33 @@ ${msg(380, 130, 580, 130, 'open once', 120, 'a3')}
 ${msg(380, 180, 580, 180, 'GET, GET, GET…', 170, 'a4')}
 <text class="animnote a4" x="480" y="262" text-anchor="middle">each extra handshake costs round trips</text>
 </svg>`
+  },
+  'web-layers': {
+    title: 'Internet Infrastructure Versus Web Application',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Bottom layer of routers links and hosts as Internet infrastructure, top layer of browser HTTP and server as Web application">
+${defs}
+<text class="animcap a1" x="320" y="30" text-anchor="middle">WEB APPLICATION (browser · HTTP · URL · server)</text>
+${node(170, 100, 'browser', 'a1')}${node(470, 100, 'server', 'a1')}
+${msg(192, 100, 448, 100, 'HTTP over the Internet', 90, 'a2')}
+<text class="animcap a3" x="320" y="170" text-anchor="middle">INTERNET INFRASTRUCTURE (routers · links · hosts)</text>
+${node(110, 240, 'R1', 'a3')}${node(320, 240, 'R2', 'a3')}${node(530, 240, 'host', 'a3')}
+${edge(132, 240, 298, 240, 'a3')}${edge(342, 240, 508, 240, 'a3')}
+<text class="animnote a4" x="320" y="285" text-anchor="middle">the Web runs on top of the Internet — it is not the Internet</text>
+</svg>`
+  },
+
+  'http-full': {
+    title: 'Browser Request to Rendered Page',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Browser requests, server processes, response returns, browser renders">
+${defs}
+<rect class="host" x="40" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="110" y="55">Browser</text>
+<rect class="host" x="460" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="530" y="55">Server</text>
+${msg(180, 95, 460, 95, '1 · GET /index.html', 85, 'a1')}
+<text class="animcap a2" x="530" y="140" text-anchor="middle">2 · process</text>
+${msg(460, 180, 180, 180, '3 · 200 OK + bytes', 170, 'a3')}
+<text class="animcap a4" x="110" y="225" text-anchor="middle">4 · render page</text>
+<text class="animnote a4" x="320" y="262" text-anchor="middle">request → process → respond → render</text>
+</svg>`
   }
 };
 

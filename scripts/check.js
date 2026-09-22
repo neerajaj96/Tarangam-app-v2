@@ -236,18 +236,28 @@ for (const course of courses) {
       if (!SCENE_IDS.includes(m[1])) fail(`${course}/${f}: unknown anim scene '${m[1]}' (registry: ${SCENE_IDS.join(', ')})`);
     }
 
-    // 2e2. Viz widgets (`::: viz flow|stepper`, see scripts/widgets.js):
-    // known types only, plus at least 2 steps (a single step needs no
-    // staged controls). Flow scene ids resolve in scripts/scenes.js when
-    // the first head word names one; otherwise it is title text.
+    // 2e2. Viz widgets (`::: viz flow|stepper|tabs|compare|rtt`, see
+    // scripts/widgets.js): known types only (above); flow/stepper need at
+    // least 2 steps; tabs need at least 2 `Label :: content` lines; compare
+    // needs two `## Heading` sections. Flow/tabs scene ids resolve in
+    // scripts/scenes.js when the first head word names one; otherwise it
+    // is title text.
     for (const m of t.matchAll(/^::: viz (\S+)(.*)$/gm)) {
-      if (m[1] !== 'flow' && m[1] !== 'stepper') {
-        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow or stepper`);
+      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt'].includes(m[1])) {
+        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, or rtt`);
       }
     }
     for (const b of t.matchAll(/::: viz (?:flow|stepper)(.*?)\n([\s\S]*?)\n:::/g)) {
       const lines = b[2].split('\n').map((l) => l.trim()).filter(Boolean);
-      if (lines.length < 2) fail(`${course}/${f}: ::: viz block needs at least 2 steps — actual: ${lines.length}`);
+      if (lines.length < 2) fail(`${course}/${f}: ::: viz step block needs at least 2 steps — actual: ${lines.length}`);
+    }
+    for (const b of t.matchAll(/::: viz tabs(.*?)\n([\s\S]*?)\n:::/g)) {
+      const tabs = b[2].split('\n').map((l) => l.trim()).filter((l) => l.includes(' :: '));
+      if (tabs.length < 2) fail(`${course}/${f}: ::: viz tabs block needs at least 2 "Label :: content" lines — actual: ${tabs.length}`);
+    }
+    for (const b of t.matchAll(/::: viz compare(.*?)\n([\s\S]*?)\n:::/g)) {
+      const heads = (b[2].match(/^\s*##\s+/gm) || []).length;
+      if (heads < 2) fail(`${course}/${f}: ::: viz compare block needs two "## Heading" sections — actual: ${heads}`);
     }
   }
 }

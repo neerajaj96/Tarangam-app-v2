@@ -99,6 +99,11 @@ That is why logins need cookies: the protocol itself remembers nothing.
 - **Why it matters.** Every "is the Web the Internet?" option on an exam is decided here: HTTP/URL/HTML/browser questions are Web questions; router/packet/IP questions are Internet questions.
 - **The actors.** A **web page** = one base HTML file plus embedded **objects** (images, CSS — Cascading Style Sheets, scripts). The **browser** (client process) requests, receives, and *renders*; the **web server** (server process such as Apache/Nginx) stores objects and responds. HTTP never renders anything and never executes code — rendering is the browser engine's job, script execution the JavaScript engine's.
 
+::: viz tabs web-layers Internet or application: reveal each layer
+Infrastructure (Internet) :: Routers, links, hosts, and IP addresses move packets — down here there is no notion of pages, browsers, or shopping carts.
+Application (Web) :: Browsers, servers, HTTP, and URLs turn those packets into pages — up here nothing knows about router hops or retransmissions.
+:::
+
 ### 3.2 URL Anatomy — Read Every Address Part by Part
 
 ```
@@ -110,7 +115,16 @@ That is why logins need cookies: the protocol itself remembers nothing.
 - **Host Name (`www.example.edu`).** *What:* the server's domain name. *Why:* humans can't dial IPs; DNS (Domain Name System, M1T3) resolves this to an IP address before any HTTP flows.
 - **Port (`:80`).** *What:* the server *process* to contact (M1T3 sockets). *Why:* one machine hosts many services; HTTP defaults to 80, HTTPS to 443, and the port may be omitted when default.
 - **Path (`/cs/courses/index.html`).** *What:* which object on that server. *Why:* the server's disk holds millions of files — the path selects one.
-- *Result of misreading:* swapping host and path, or calling the URL "the protocol", fails every trace question. Read left to right: *how → which machine → which process → which file*.
+- *Result of misreading:* swapping host and path, or calling the URL "the protocol", fails every trace question. Read left to right: *how → which machine → which process → which file*. Two further parts appear in real URLs: a **query** (`?q=ktu+notes` — parameters the server-side app reads) and a **fragment** (`#section2` — a same-page anchor the browser uses locally and never sends to the server).
+
+::: viz tabs URL anatomy: click each part
+scheme :: `http://` — picks the application protocol the browser will speak.
+hostname :: `www.example.edu` — names the server machine; DNS resolves it to an IP before any HTTP flows.
+port :: `:80` — picks the server process (M1T3 sockets); 80 for HTTP and 443 for HTTPS are assumed when omitted.
+path :: `/cs/courses/index.html` — picks which object on that server.
+query :: `?q=ktu+notes` — extra parameters for the server-side app; part of the request target.
+fragment :: `#section2` — same-page anchor used locally by the browser; never sent to the server.
+:::
 
 ### 3.3 HTTP Fundamentals
 
@@ -158,6 +172,17 @@ sequenceDiagram
 
 - **Pipelining modes (HTTP/1.1).** *Without pipelining* (default): one request outstanding at a time — each extra object costs another RTT. *With pipelining:* fire all requests back-to-back without waiting — all extra objects cost ~1 RTT combined. (HTTP/2 later replaces this with multiplexed binary framing; §3.9.)
 
+::: viz compare Non-persistent vs persistent: connections per page
+## Non-persistent (HTTP/1.0)
+- Object 1: open connection, transfer, close
+- Object 2: new connection, transfer, close
+= 2 connections for 2 objects
+## Persistent (HTTP/1.1)
+- Connection opens once
+- Object 1 transfers, then object 2, then close
+= 1 connection for 2 objects
+:::
+
 ::: callout-formula KTU Formula Vault: Connection-Count and RTT Rules
 For a page with $N$ objects (HTML + embedded): **non-persistent needs $N$ TCP connections** (one per object, each paying a handshake), **persistent needs 1** (reused). Timing with negligible transmission (RTT = round-trip time): non-persistent ≈ $2(N+1)$ RTTs (2 per object: handshake + request); persistent without pipelining ≈ $(N+2)$ RTTs (2 for the first object, 1 per extra); pipelined ≈ 3 RTTs (2 + 1 for everything pipelined). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.
 :::
@@ -178,6 +203,13 @@ Connection: keep-alive\r\n
 - **Blank `\r\n` line:** ends headers; body (if any) follows.
 - **Entity Body:** carries payload for `POST` (form data, uploads); empty for `GET`.
 
+::: viz tabs Request message: click each section
+Request line :: Method + path + version (`GET /index.html HTTP/1.1`) — states intent before any metadata.
+Headers :: `Host:`, `User-Agent:`, `Accept:`, `Connection:` — one fact per line about client, target, or connection wishes.
+Blank line :: A lone `\r\n` — the separator telling the server headers are over and the body (if any) begins.
+Body :: Payload for `POST` (form data, uploads); empty for `GET`.
+:::
+
 **Response Message (line by line):**
 ```
 HTTP/1.1 200 OK\r\n
@@ -193,6 +225,13 @@ Content-Type: text/html\r\n
 - **Header Lines:** `Date:` (send time), `Server:` (software identity), `Last-Modified:` (drives caching — refetch only if changed), `Content-Length:` (body size in bytes), `Content-Type:` (MIME — Multipurpose Internet Mail Extensions — type telling the browser how to render, e.g. `text/html`).
 - **Body:** the object bytes themselves (HTML text or image binary).
 
+::: viz tabs Response message: click each section
+Status line :: Version + numeric code + reason phrase (`HTTP/1.1 200 OK`) — the verdict before the evidence.
+Headers :: `Date:`, `Server:`, `Last-Modified:`, `Content-Length:`, `Content-Type:` — facts about timing, software, caching, size, and rendering.
+Blank line :: A lone `\r\n` — the separator telling the client headers are over and the body begins.
+Body :: The object bytes themselves — HTML text to render or image binary to display.
+:::
+
 ::: toggle What do `GET`, `POST`, and status `200 OK` mean?
 `GET` asks the server to return an object, while `POST` carries form data up in the body.
 `200 OK` means the request succeeded, and `404 Not Found` means no such object exists.
@@ -203,6 +242,14 @@ Tiny example: `GET /index.html` returns the page, `POST /login` submits a form.
 A `cookie` is a small ID the server issues with `Set-cookie` for the browser to store.
 The browser resends it on later requests so the server can look up that client's state.
 The protocol stays stateless; the ID plus server-side lookup restores sessions.
+:::
+
+::: viz flow http-full Click to walk: request to rendered page
+1. Browser builds `GET /index.html` — intent fixed before any bytes move
+2. Request travels down the stack, across links and routers, and up the server stack
+3. Server processes the request: reads the path, fetches the object bytes
+4. `200 OK` plus the bytes travel back across the network to the browser
+5. Browser parses the bytes and renders the visible page
 :::
 
 ### 3.6 Methods and Status Codes — The Exam Core
@@ -229,6 +276,12 @@ flowchart LR
 - **Why HEAD exists.** Checking `Last-Modified`/`Content-Length` of a huge file before downloading it — one headers-only round trip instead of gigabytes.
 - **Idempotency consequence.** Browsers may safely retry GETs; retrying POSTs is dangerous — the double-payment exam scenario.
 
+::: viz tabs Methods: click one to inspect it
+GET :: Purpose: fetch an object. Example: `GET /index.html`. Response body: the object itself. Idempotent: yes — repeating changes nothing.
+POST :: Purpose: submit data (forms, logins). Example: `POST /login` with credentials in the body. Response body: result or confirmation. Idempotent: no — repeating may double-charge.
+HEAD :: Purpose: metadata only. Example: `HEAD /big.zip` returns `Content-Length` and `Last-Modified`. Response body: always empty. Idempotent: yes.
+:::
+
 **Status codes (five classes + the tested seven):**
 
 ```mermaid
@@ -245,6 +298,15 @@ flowchart TB
 - **1xx** informational (received, continuing); **2xx** success; **3xx** redirection (new URL in `Location:`, browser follows automatically); **4xx** client error (bad syntax, can't fulfill); **5xx** server error (valid-looking request the server failed on).
 - **The tested seven.** `200 OK` (here is your object); `301 Moved Permanently` (new address in `Location:`); `400 Bad Request` (malformed syntax); `401 Unauthorized` = *unauthenticated* ("who are you? log in"); `403 Forbidden` = authenticated but *unauthorized* ("I know you; you may not enter"); `404 Not Found` (no such path); `500 Internal Server Error` (server-side crash).
 - **401 vs. 403 — the beloved trap.** No login at all → 401. Logged in as a student eyeing admin grades → 403. One word decides: *authentication* (identity) vs. *authorization* (permission).
+
+::: viz tabs Status classes: click a class for examples
+1xx :: Informational — request received, continuing. Rarely tested beyond the class meaning.
+2xx :: Success — e.g. `200 OK`: here is your object in the body.
+3xx :: Redirection — e.g. `301 Moved Permanently`: fetch the new URL in the `Location:` header instead.
+4xx :: Client error — e.g. `400 Bad Request` (malformed syntax), `404 Not Found` (no such path).
+5xx :: Server error — e.g. `500 Internal Server Error`: your request looked fine; the server failed.
+401 vs 403 vs 404 :: `401` = stranger, log in (unauthenticated); `403` = known user, not allowed (unauthorized); `404` = no such object at all.
+:::
 
 ### 3.7 Cookies: Faking Statefulness on Top of a Stateless Protocol
 
@@ -275,6 +337,10 @@ Absolute-beginner build-up (M1T3 taught stateless *interactions*; here is HTTP's
 - **Worked exam numbers (RTT = 50 ms, N = 5, T = 10 ms each).** Non-persistent: base 2·50+10 = 110 ms; each image 110 ms × 5 = 550 ms; **total 660 ms**. Persistent: 110 + 5·(50+10) = 110 + 300 = **410 ms**. Pipelined: 110 + (50 + 5·10) = 110 + 100 = **210 ms**. *Interpretation:* same page, same network — connection discipline alone cuts 660 → 210 ms. Verify every term before trusting a total.
 - **Common mistakes.** Forgetting the base HTML in N (N counts *embedded* objects; total objects = N+1); dropping the initial handshake's extra RTT in persistent mode (first object still costs 2); treating pipelined objects as zero-cost (they still share ~1 RTT).
 
+::: viz rtt Timing lab: price your own page
+Change the inputs and watch the three textbook totals move. Defaults match the worked example: N = 5 objects, RTT = 50 ms, transfer = 10 ms per object → 660 / 410 / 210 ms.
+:::
+
 ::: viz stepper Pricing one page three ways (RTT = 50 ms, N = 5, T = 10 ms)
 1. Pay the handshake once: opening any TCP connection costs ~1 RTT before the first byte
 2. Non-persistent: every object pays handshake + exchange — (110 ms base) + 5 × 110 ms = 660 ms
@@ -289,6 +355,13 @@ Absolute-beginner build-up (M1T3 taught stateless *interactions*; here is HTTP's
 - **HTTP/2 (2015):** binary framing + multiplexing many interleaved streams over *one* TCP connection, header compression — head-of-line blocking *within* the stream solved at HTTP layer (TCP-level blocking remains).
 - **HTTP/3:** drops TCP for QUIC over UDP — no handshake tax, no TCP-level blocking. (This is M1T3's QUIC lesson arriving on schedule.)
 - **Exam rule, stated once.** Answer classical questions with HTTP/1.0 vs. 1.1 definitions *unless the question names* HTTP/2 or HTTP/3. Modern facts never override the version asked about.
+
+::: viz flow HTTP versions in four steps
+1. HTTP/1.0 (1996): non-persistent by default — one object per connection
+2. HTTP/1.1 (1997/1999): persistent by default, Host header, rare pipelining
+3. HTTP/2 (2015): binary multiplexed streams over one TCP connection
+4. HTTP/3: QUIC over UDP — no handshake tax, no TCP-level blocking
+:::
 
 <a id="worked-example"></a>
 ## 4. Examples — Tiny First, Then Exam-Level

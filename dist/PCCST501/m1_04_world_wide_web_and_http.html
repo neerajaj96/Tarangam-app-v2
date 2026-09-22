@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 25 MIN READ</span>
+    <span class="badge">⏱️ 30 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -395,7 +395,25 @@ That is why logins need cookies: the protocol itself remembers nothing.</p>
 <li><strong>Why it matters.</strong> Every &quot;is the Web the Internet?&quot; option on an exam is decided here: HTTP/URL/HTML/browser questions are Web questions; router/packet/IP questions are Internet questions.</li>
 <li><strong>The actors.</strong> A <strong>web page</strong> = one base HTML file plus embedded <strong>objects</strong> (images, CSS — Cascading Style Sheets, scripts). The <strong>browser</strong> (client process) requests, receives, and <em>renders</em>; the <strong>web server</strong> (server process such as Apache/Nginx) stores objects and responds. HTTP never renders anything and never executes code — rendering is the browser engine&#39;s job, script execution the JavaScript engine&#39;s.</li>
 </ul>
-<h3>3.2 URL Anatomy — Read Every Address Part by Part</h3>
+<div class="viz viz-tabs" data-viz="tabs" data-tabs="2">
+  <div class="viz-head"><span class="viz-tag">Interactive tabs &middot; Internet or application: reveal each layer</span></div>
+  <div class="viz-diagram"><div class="video-frame-wrap"><svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Bottom layer of routers links and hosts as Internet infrastructure, top layer of browser HTTP and server as Web application">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<text class="animcap a1" x="320" y="30" text-anchor="middle">WEB APPLICATION (browser · HTTP · URL · server)</text>
+<g class="nd a1"><circle cx="170" cy="100" r="22"/><text x="170" y="106">browser</text></g><g class="nd a1"><circle cx="470" cy="100" r="22"/><text x="470" y="106">server</text></g>
+<g class="msg a2"><line x1="192" y1="100" x2="448" y2="100" marker-end="url(#ah)"/><text x="320" y="90" text-anchor="middle">HTTP over the Internet</text></g>
+<text class="animcap a3" x="320" y="170" text-anchor="middle">INTERNET INFRASTRUCTURE (routers · links · hosts)</text>
+<g class="nd a3"><circle cx="110" cy="240" r="22"/><text x="110" y="246">R1</text></g><g class="nd a3"><circle cx="320" cy="240" r="22"/><text x="320" y="246">R2</text></g><g class="nd a3"><circle cx="530" cy="240" r="22"/><text x="530" y="246">host</text></g>
+<line class="eg a3" x1="132" y1="240" x2="298" y2="240"/><line class="eg a3" x1="342" y1="240" x2="508" y2="240"/>
+<text class="animnote a4" x="320" y="285" text-anchor="middle">the Web runs on top of the Internet — it is not the Internet</text>
+</svg></div></div>
+  <div class="viz-tablist" role="tablist" aria-label="Internet or application: reveal each layer"><button type="button" role="tab" id="vizt1-tab-0" aria-controls="vizt1-panel-0" aria-selected="true" tabindex="0" class="viz-tab">Infrastructure (Internet)</button>
+<button type="button" role="tab" id="vizt1-tab-1" aria-controls="vizt1-panel-1" aria-selected="false" tabindex="-1" class="viz-tab">Application (Web)</button></div>
+  <div id="vizt1-panel-0" role="tabpanel" aria-labelledby="vizt1-tab-0" class="viz-panel"><p>Routers, links, hosts, and IP addresses move packets — down here there is no notion of pages, browsers, or shopping carts.</p>
+</div>
+<div id="vizt1-panel-1" role="tabpanel" aria-labelledby="vizt1-tab-1" class="viz-panel" hidden><p>Browsers, servers, HTTP, and URLs turn those packets into pages — up here nothing knows about router hops or retransmissions.</p>
+</div>
+</div><h3>3.2 URL Anatomy — Read Every Address Part by Part</h3>
 <pre><code>      Protocol          Host Name            Port Number           Path
      http://    www.example.edu           :80         /cs/courses/index.html
 </code></pre>
@@ -404,9 +422,28 @@ That is why logins need cookies: the protocol itself remembers nothing.</p>
 <li><strong>Host Name (<code>www.example.edu</code>).</strong> <em>What:</em> the server&#39;s domain name. <em>Why:</em> humans can&#39;t dial IPs; DNS (Domain Name System, M1T3) resolves this to an IP address before any HTTP flows.</li>
 <li><strong>Port (<code>:80</code>).</strong> <em>What:</em> the server <em>process</em> to contact (M1T3 sockets). <em>Why:</em> one machine hosts many services; HTTP defaults to 80, HTTPS to 443, and the port may be omitted when default.</li>
 <li><strong>Path (<code>/cs/courses/index.html</code>).</strong> <em>What:</em> which object on that server. <em>Why:</em> the server&#39;s disk holds millions of files — the path selects one.</li>
-<li><em>Result of misreading:</em> swapping host and path, or calling the URL &quot;the protocol&quot;, fails every trace question. Read left to right: <em>how → which machine → which process → which file</em>.</li>
+<li><em>Result of misreading:</em> swapping host and path, or calling the URL &quot;the protocol&quot;, fails every trace question. Read left to right: <em>how → which machine → which process → which file</em>. Two further parts appear in real URLs: a <strong>query</strong> (<code>?q=ktu+notes</code> — parameters the server-side app reads) and a <strong>fragment</strong> (<code>#section2</code> — a same-page anchor the browser uses locally and never sends to the server).</li>
 </ul>
-<h3>3.3 HTTP Fundamentals</h3>
+<div class="viz viz-tabs" data-viz="tabs" data-tabs="6">
+  <div class="viz-head"><span class="viz-tag">Interactive tabs &middot; URL anatomy: click each part</span></div>  <div class="viz-tablist" role="tablist" aria-label="URL anatomy: click each part"><button type="button" role="tab" id="vizt2-tab-0" aria-controls="vizt2-panel-0" aria-selected="true" tabindex="0" class="viz-tab">scheme</button>
+<button type="button" role="tab" id="vizt2-tab-1" aria-controls="vizt2-panel-1" aria-selected="false" tabindex="-1" class="viz-tab">hostname</button>
+<button type="button" role="tab" id="vizt2-tab-2" aria-controls="vizt2-panel-2" aria-selected="false" tabindex="-1" class="viz-tab">port</button>
+<button type="button" role="tab" id="vizt2-tab-3" aria-controls="vizt2-panel-3" aria-selected="false" tabindex="-1" class="viz-tab">path</button>
+<button type="button" role="tab" id="vizt2-tab-4" aria-controls="vizt2-panel-4" aria-selected="false" tabindex="-1" class="viz-tab">query</button>
+<button type="button" role="tab" id="vizt2-tab-5" aria-controls="vizt2-panel-5" aria-selected="false" tabindex="-1" class="viz-tab">fragment</button></div>
+  <div id="vizt2-panel-0" role="tabpanel" aria-labelledby="vizt2-tab-0" class="viz-panel"><p><code>http://</code> — picks the application protocol the browser will speak.</p>
+</div>
+<div id="vizt2-panel-1" role="tabpanel" aria-labelledby="vizt2-tab-1" class="viz-panel" hidden><p><code>www.example.edu</code> — names the server machine; DNS resolves it to an IP before any HTTP flows.</p>
+</div>
+<div id="vizt2-panel-2" role="tabpanel" aria-labelledby="vizt2-tab-2" class="viz-panel" hidden><p><code>:80</code> — picks the server process (M1T3 sockets); 80 for HTTP and 443 for HTTPS are assumed when omitted.</p>
+</div>
+<div id="vizt2-panel-3" role="tabpanel" aria-labelledby="vizt2-tab-3" class="viz-panel" hidden><p><code>/cs/courses/index.html</code> — picks which object on that server.</p>
+</div>
+<div id="vizt2-panel-4" role="tabpanel" aria-labelledby="vizt2-tab-4" class="viz-panel" hidden><p><code>?q=ktu+notes</code> — extra parameters for the server-side app; part of the request target.</p>
+</div>
+<div id="vizt2-panel-5" role="tabpanel" aria-labelledby="vizt2-tab-5" class="viz-panel" hidden><p><code>#section2</code> — same-page anchor used locally by the browser; never sent to the server.</p>
+</div>
+</div><h3>3.3 HTTP Fundamentals</h3>
 <ul>
 <li><strong>Transport:</strong> HTTP/1.0, HTTP/1.1, and HTTP/2 run over <strong>TCP</strong>, never plain UDP (User Datagram Protocol), because a single corrupt byte can scramble a page or script — reliable in-order delivery is mandatory. The modern exception is <strong>HTTP/3</strong>, which runs over QUIC (a reliable protocol built on UDP) — so qualify any &quot;HTTP = TCP&quot; claim with the version. (M1T3&#39;s QUIC lesson is the reason this exception exists.)</li>
 <li><strong>Statelessness:</strong> the server retains <strong>no memory</strong> of past requests <em>at the HTTP layer</em>. Identical requests seconds apart are treated as entirely new. Session memory (carts, logins) lives <em>outside</em> HTTP — in cookies plus server databases, as §3.7 shows. This is M1T3&#39;s stateless-interaction lesson applied to one specific protocol.</li>
@@ -466,7 +503,22 @@ That is why logins need cookies: the protocol itself remembers nothing.</p>
 <ul>
 <li><strong>Pipelining modes (HTTP/1.1).</strong> <em>Without pipelining</em> (default): one request outstanding at a time — each extra object costs another RTT. <em>With pipelining:</em> fire all requests back-to-back without waiting — all extra objects cost ~1 RTT combined. (HTTP/2 later replaces this with multiplexed binary framing; §3.9.)</li>
 </ul>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Connection-Count and RTT Rules</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For a page with $N$ objects (HTML + embedded): <strong>non-persistent needs $N$ TCP connections</strong> (one per object, each paying a handshake), <strong>persistent needs 1</strong> (reused). Timing with negligible transmission (RTT = round-trip time): non-persistent ≈ $2(N+1)$ RTTs (2 per object: handshake + request); persistent without pipelining ≈ $(N+2)$ RTTs (2 for the first object, 1 per extra); pipelined ≈ 3 RTTs (2 + 1 for everything pipelined). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.</p>
+<div class="viz viz-compare" data-viz="compare">
+  <div class="viz-head"><span class="viz-tag">Interactive comparison &middot; Non-persistent vs persistent: connections per page</span></div>
+  <div class="viz-cols">
+    <section class="viz-col" aria-label="Non-persistent (HTTP/1.0)"><p class="viz-colhead"><strong>Non-persistent (HTTP/1.0)</strong></p><div class="viz-colbody"><ul>
+<li>Object 1: open connection, transfer, close</li>
+<li>Object 2: new connection, transfer, close</li>
+</ul>
+</div><p class="viz-count" hidden><strong>2 connections for 2 objects</strong></p></section>
+<section class="viz-col" aria-label="Persistent (HTTP/1.1)"><p class="viz-colhead"><strong>Persistent (HTTP/1.1)</strong></p><div class="viz-colbody"><ul>
+<li>Connection opens once</li>
+<li>Object 1 transfers, then object 2, then close</li>
+</ul>
+</div><p class="viz-count" hidden><strong>1 connection for 2 objects</strong></p></section>
+  </div>
+  <label class="viz-toggle"><input type="checkbox" class="viz-count-toggle"> Show counts</label>
+</div><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: KTU Formula Vault: Connection-Count and RTT Rules</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>For a page with $N$ objects (HTML + embedded): <strong>non-persistent needs $N$ TCP connections</strong> (one per object, each paying a handshake), <strong>persistent needs 1</strong> (reused). Timing with negligible transmission (RTT = round-trip time): non-persistent ≈ $2(N+1)$ RTTs (2 per object: handshake + request); persistent without pipelining ≈ $(N+2)$ RTTs (2 for the first object, 1 per extra); pipelined ≈ 3 RTTs (2 + 1 for everything pipelined). The worked example below is $N = 6 \to$ 6 vs. 1 — learn the pattern, not the instance.</p>
 </div></details><h3>3.5 Packet Structure: HTTP Message Structure</h3>
 <p><strong>Request Message (line by line):</strong></p>
 <pre><code>GET /department/cs/index.html HTTP/1.1\r\n
@@ -482,7 +534,20 @@ Connection: keep-alive\r\n
 <li><strong>Blank <code>\r\n</code> line:</strong> ends headers; body (if any) follows.</li>
 <li><strong>Entity Body:</strong> carries payload for <code>POST</code> (form data, uploads); empty for <code>GET</code>.</li>
 </ul>
-<p><strong>Response Message (line by line):</strong></p>
+<div class="viz viz-tabs" data-viz="tabs" data-tabs="4">
+  <div class="viz-head"><span class="viz-tag">Interactive tabs &middot; Request message: click each section</span></div>  <div class="viz-tablist" role="tablist" aria-label="Request message: click each section"><button type="button" role="tab" id="vizt3-tab-0" aria-controls="vizt3-panel-0" aria-selected="true" tabindex="0" class="viz-tab">Request line</button>
+<button type="button" role="tab" id="vizt3-tab-1" aria-controls="vizt3-panel-1" aria-selected="false" tabindex="-1" class="viz-tab">Headers</button>
+<button type="button" role="tab" id="vizt3-tab-2" aria-controls="vizt3-panel-2" aria-selected="false" tabindex="-1" class="viz-tab">Blank line</button>
+<button type="button" role="tab" id="vizt3-tab-3" aria-controls="vizt3-panel-3" aria-selected="false" tabindex="-1" class="viz-tab">Body</button></div>
+  <div id="vizt3-panel-0" role="tabpanel" aria-labelledby="vizt3-tab-0" class="viz-panel"><p>Method + path + version (<code>GET /index.html HTTP/1.1</code>) — states intent before any metadata.</p>
+</div>
+<div id="vizt3-panel-1" role="tabpanel" aria-labelledby="vizt3-tab-1" class="viz-panel" hidden><p><code>Host:</code>, <code>User-Agent:</code>, <code>Accept:</code>, <code>Connection:</code> — one fact per line about client, target, or connection wishes.</p>
+</div>
+<div id="vizt3-panel-2" role="tabpanel" aria-labelledby="vizt3-tab-2" class="viz-panel" hidden><p>A lone <code>\r\n</code> — the separator telling the server headers are over and the body (if any) begins.</p>
+</div>
+<div id="vizt3-panel-3" role="tabpanel" aria-labelledby="vizt3-tab-3" class="viz-panel" hidden><p>Payload for <code>POST</code> (form data, uploads); empty for <code>GET</code>.</p>
+</div>
+</div><p><strong>Response Message (line by line):</strong></p>
 <pre><code>HTTP/1.1 200 OK\r\n
 Date: Tue, 22 Sep 2026 12:00:00 GMT\r\n
 Server: Apache/2.4.41\r\n
@@ -497,13 +562,57 @@ Content-Type: text/html\r\n
 <li><strong>Header Lines:</strong> <code>Date:</code> (send time), <code>Server:</code> (software identity), <code>Last-Modified:</code> (drives caching — refetch only if changed), <code>Content-Length:</code> (body size in bytes), <code>Content-Type:</code> (MIME — Multipurpose Internet Mail Extensions — type telling the browser how to render, e.g. <code>text/html</code>).</li>
 <li><strong>Body:</strong> the object bytes themselves (HTML text or image binary).</li>
 </ul>
-<details class="interactive-toggle"><summary>What do `GET`, `POST`, and status `200 OK` mean?</summary><div class="toggle-content"><p><code>GET</code> asks the server to return an object, while <code>POST</code> carries form data up in the body.
+<div class="viz viz-tabs" data-viz="tabs" data-tabs="4">
+  <div class="viz-head"><span class="viz-tag">Interactive tabs &middot; Response message: click each section</span></div>  <div class="viz-tablist" role="tablist" aria-label="Response message: click each section"><button type="button" role="tab" id="vizt4-tab-0" aria-controls="vizt4-panel-0" aria-selected="true" tabindex="0" class="viz-tab">Status line</button>
+<button type="button" role="tab" id="vizt4-tab-1" aria-controls="vizt4-panel-1" aria-selected="false" tabindex="-1" class="viz-tab">Headers</button>
+<button type="button" role="tab" id="vizt4-tab-2" aria-controls="vizt4-panel-2" aria-selected="false" tabindex="-1" class="viz-tab">Blank line</button>
+<button type="button" role="tab" id="vizt4-tab-3" aria-controls="vizt4-panel-3" aria-selected="false" tabindex="-1" class="viz-tab">Body</button></div>
+  <div id="vizt4-panel-0" role="tabpanel" aria-labelledby="vizt4-tab-0" class="viz-panel"><p>Version + numeric code + reason phrase (<code>HTTP/1.1 200 OK</code>) — the verdict before the evidence.</p>
+</div>
+<div id="vizt4-panel-1" role="tabpanel" aria-labelledby="vizt4-tab-1" class="viz-panel" hidden><p><code>Date:</code>, <code>Server:</code>, <code>Last-Modified:</code>, <code>Content-Length:</code>, <code>Content-Type:</code> — facts about timing, software, caching, size, and rendering.</p>
+</div>
+<div id="vizt4-panel-2" role="tabpanel" aria-labelledby="vizt4-tab-2" class="viz-panel" hidden><p>A lone <code>\r\n</code> — the separator telling the client headers are over and the body begins.</p>
+</div>
+<div id="vizt4-panel-3" role="tabpanel" aria-labelledby="vizt4-tab-3" class="viz-panel" hidden><p>The object bytes themselves — HTML text to render or image binary to display.</p>
+</div>
+</div><details class="interactive-toggle"><summary>What do `GET`, `POST`, and status `200 OK` mean?</summary><div class="toggle-content"><p><code>GET</code> asks the server to return an object, while <code>POST</code> carries form data up in the body.
 <code>200 OK</code> means the request succeeded, and <code>404 Not Found</code> means no such object exists.
 Tiny example: <code>GET /index.html</code> returns the page, <code>POST /login</code> submits a form.</p>
 </div></details><details class="interactive-toggle"><summary>What does `cookie` mean?</summary><div class="toggle-content"><p>A <code>cookie</code> is a small ID the server issues with <code>Set-cookie</code> for the browser to store.
 The browser resends it on later requests so the server can look up that client&#39;s state.
 The protocol stays stateless; the ID plus server-side lookup restores sessions.</p>
-</div></details><h3>3.6 Methods and Status Codes — The Exam Core</h3>
+</div></details><div class="viz viz-flow" data-viz="flow" data-steps="5">
+  <div class="viz-head"><span class="viz-tag">Interactive flow &middot; Click to walk: request to rendered page</span></div>
+  <div class="viz-diagram"><div class="video-frame-wrap"><svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="Browser requests, server processes, response returns, browser renders">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="host" x="40" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="110" y="55">Browser</text>
+<rect class="host" x="460" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="530" y="55">Server</text>
+<g class="msg a1"><line x1="180" y1="95" x2="460" y2="95" marker-end="url(#ah)"/><text x="320" y="85" text-anchor="middle">1 · GET /index.html</text></g>
+<text class="animcap a2" x="530" y="140" text-anchor="middle">2 · process</text>
+<g class="msg a3"><line x1="460" y1="180" x2="180" y2="180" marker-end="url(#ah)"/><text x="320" y="170" text-anchor="middle">3 · 200 OK + bytes</text></g>
+<text class="animcap a4" x="110" y="225" text-anchor="middle">4 · render page</text>
+<text class="animnote a4" x="320" y="262" text-anchor="middle">request → process → respond → render</text>
+</svg></div></div>
+  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>Browser builds <code>GET /index.html</code> — intent fixed before any bytes move</p>
+</li>
+<li class="viz-step" data-i="1"><p>Request travels down the stack, across links and routers, and up the server stack</p>
+</li>
+<li class="viz-step" data-i="2"><p>Server processes the request: reads the path, fetches the object bytes</p>
+</li>
+<li class="viz-step" data-i="3"><p><code>200 OK</code> plus the bytes travel back across the network to the browser</p>
+</li>
+<li class="viz-step" data-i="4"><p>Browser parses the bytes and renders the visible page</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="Click to walk: request to rendered page: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">5 steps &mdash; use Prev and Next to walk through</p>
+</div><h3>3.6 Methods and Status Codes — The Exam Core</h3>
 <p><strong>Methods (verbs):</strong></p>
 <pre><code class="language-mermaid">flowchart LR
     accTitle: HTTP methods from client to server
@@ -556,7 +665,17 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 <li><strong>Why HEAD exists.</strong> Checking <code>Last-Modified</code>/<code>Content-Length</code> of a huge file before downloading it — one headers-only round trip instead of gigabytes.</li>
 <li><strong>Idempotency consequence.</strong> Browsers may safely retry GETs; retrying POSTs is dangerous — the double-payment exam scenario.</li>
 </ul>
-<p><strong>Status codes (five classes + the tested seven):</strong></p>
+<div class="viz viz-tabs" data-viz="tabs" data-tabs="3">
+  <div class="viz-head"><span class="viz-tag">Interactive tabs &middot; Methods: click one to inspect it</span></div>  <div class="viz-tablist" role="tablist" aria-label="Methods: click one to inspect it"><button type="button" role="tab" id="vizt5-tab-0" aria-controls="vizt5-panel-0" aria-selected="true" tabindex="0" class="viz-tab">GET</button>
+<button type="button" role="tab" id="vizt5-tab-1" aria-controls="vizt5-panel-1" aria-selected="false" tabindex="-1" class="viz-tab">POST</button>
+<button type="button" role="tab" id="vizt5-tab-2" aria-controls="vizt5-panel-2" aria-selected="false" tabindex="-1" class="viz-tab">HEAD</button></div>
+  <div id="vizt5-panel-0" role="tabpanel" aria-labelledby="vizt5-tab-0" class="viz-panel"><p>Purpose: fetch an object. Example: <code>GET /index.html</code>. Response body: the object itself. Idempotent: yes — repeating changes nothing.</p>
+</div>
+<div id="vizt5-panel-1" role="tabpanel" aria-labelledby="vizt5-tab-1" class="viz-panel" hidden><p>Purpose: submit data (forms, logins). Example: <code>POST /login</code> with credentials in the body. Response body: result or confirmation. Idempotent: no — repeating may double-charge.</p>
+</div>
+<div id="vizt5-panel-2" role="tabpanel" aria-labelledby="vizt5-tab-2" class="viz-panel" hidden><p>Purpose: metadata only. Example: <code>HEAD /big.zip</code> returns <code>Content-Length</code> and <code>Last-Modified</code>. Response body: always empty. Idempotent: yes.</p>
+</div>
+</div><p><strong>Status codes (five classes + the tested seven):</strong></p>
 <pre><code class="language-mermaid">flowchart TB
     accTitle: HTTP status code classes and key codes
     accDescr: Five classes from informational to server error, with the seven most tested codes.
@@ -571,7 +690,26 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 <li><strong>The tested seven.</strong> <code>200 OK</code> (here is your object); <code>301 Moved Permanently</code> (new address in <code>Location:</code>); <code>400 Bad Request</code> (malformed syntax); <code>401 Unauthorized</code> = <em>unauthenticated</em> (&quot;who are you? log in&quot;); <code>403 Forbidden</code> = authenticated but <em>unauthorized</em> (&quot;I know you; you may not enter&quot;); <code>404 Not Found</code> (no such path); <code>500 Internal Server Error</code> (server-side crash).</li>
 <li><strong>401 vs. 403 — the beloved trap.</strong> No login at all → 401. Logged in as a student eyeing admin grades → 403. One word decides: <em>authentication</em> (identity) vs. <em>authorization</em> (permission).</li>
 </ul>
-<h3>3.7 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
+<div class="viz viz-tabs" data-viz="tabs" data-tabs="6">
+  <div class="viz-head"><span class="viz-tag">Interactive tabs &middot; Status classes: click a class for examples</span></div>  <div class="viz-tablist" role="tablist" aria-label="Status classes: click a class for examples"><button type="button" role="tab" id="vizt6-tab-0" aria-controls="vizt6-panel-0" aria-selected="true" tabindex="0" class="viz-tab">1xx</button>
+<button type="button" role="tab" id="vizt6-tab-1" aria-controls="vizt6-panel-1" aria-selected="false" tabindex="-1" class="viz-tab">2xx</button>
+<button type="button" role="tab" id="vizt6-tab-2" aria-controls="vizt6-panel-2" aria-selected="false" tabindex="-1" class="viz-tab">3xx</button>
+<button type="button" role="tab" id="vizt6-tab-3" aria-controls="vizt6-panel-3" aria-selected="false" tabindex="-1" class="viz-tab">4xx</button>
+<button type="button" role="tab" id="vizt6-tab-4" aria-controls="vizt6-panel-4" aria-selected="false" tabindex="-1" class="viz-tab">5xx</button>
+<button type="button" role="tab" id="vizt6-tab-5" aria-controls="vizt6-panel-5" aria-selected="false" tabindex="-1" class="viz-tab">401 vs 403 vs 404</button></div>
+  <div id="vizt6-panel-0" role="tabpanel" aria-labelledby="vizt6-tab-0" class="viz-panel"><p>Informational — request received, continuing. Rarely tested beyond the class meaning.</p>
+</div>
+<div id="vizt6-panel-1" role="tabpanel" aria-labelledby="vizt6-tab-1" class="viz-panel" hidden><p>Success — e.g. <code>200 OK</code>: here is your object in the body.</p>
+</div>
+<div id="vizt6-panel-2" role="tabpanel" aria-labelledby="vizt6-tab-2" class="viz-panel" hidden><p>Redirection — e.g. <code>301 Moved Permanently</code>: fetch the new URL in the <code>Location:</code> header instead.</p>
+</div>
+<div id="vizt6-panel-3" role="tabpanel" aria-labelledby="vizt6-tab-3" class="viz-panel" hidden><p>Client error — e.g. <code>400 Bad Request</code> (malformed syntax), <code>404 Not Found</code> (no such path).</p>
+</div>
+<div id="vizt6-panel-4" role="tabpanel" aria-labelledby="vizt6-tab-4" class="viz-panel" hidden><p>Server error — e.g. <code>500 Internal Server Error</code>: your request looked fine; the server failed.</p>
+</div>
+<div id="vizt6-panel-5" role="tabpanel" aria-labelledby="vizt6-tab-5" class="viz-panel" hidden><p><code>401</code> = stranger, log in (unauthenticated); <code>403</code> = known user, not allowed (unauthorized); <code>404</code> = no such object at all.</p>
+</div>
+</div><h3>3.7 Cookies: Faking Statefulness on Top of a Stateless Protocol</h3>
 <p>Absolute-beginner build-up (M1T3 taught stateless <em>interactions</em>; here is HTTP&#39;s instance): the server keeps nothing per client <em>inside HTTP</em> — so consecutive clicks arrive with no built-in memory linking them. Four cooperating pieces supply the missing memory, each living somewhere explicit:</p>
 <ol>
 <li><strong><code>Set-cookie</code> response header</strong> (server → browser): issues the ID, e.g. <code>session_id=8329</code>.</li>
@@ -621,7 +759,22 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 <li><strong>Worked exam numbers (RTT = 50 ms, N = 5, T = 10 ms each).</strong> Non-persistent: base 2·50+10 = 110 ms; each image 110 ms × 5 = 550 ms; <strong>total 660 ms</strong>. Persistent: 110 + 5·(50+10) = 110 + 300 = <strong>410 ms</strong>. Pipelined: 110 + (50 + 5·10) = 110 + 100 = <strong>210 ms</strong>. <em>Interpretation:</em> same page, same network — connection discipline alone cuts 660 → 210 ms. Verify every term before trusting a total.</li>
 <li><strong>Common mistakes.</strong> Forgetting the base HTML in N (N counts <em>embedded</em> objects; total objects = N+1); dropping the initial handshake&#39;s extra RTT in persistent mode (first object still costs 2); treating pipelined objects as zero-cost (they still share ~1 RTT).</li>
 </ul>
-<div class="viz viz-stepper" data-viz="stepper" data-steps="4">
+<div class="viz viz-rtt" data-viz="rtt">
+  <div class="viz-head"><span class="viz-tag">Interactive lab &middot; Timing lab: price your own page</span></div>
+  <div class="viz-inputs">
+    <label class="viz-field" for="vizr7-n">Objects N<input id="vizr7-n" data-in="n" type="number" min="0" step="1" value="5" inputmode="numeric"></label>
+    <label class="viz-field" for="vizr7-rtt">RTT (ms)<input id="vizr7-rtt" data-in="rtt" type="number" min="0" step="1" value="50" inputmode="numeric"></label>
+    <label class="viz-field" for="vizr7-t">Transfer per object (ms)<input id="vizr7-t" data-in="t" type="number" min="0" step="1" value="10" inputmode="numeric"></label>
+  </div>
+  <div class="viz-results">
+    <div class="viz-result"><span>Non-persistent</span><output data-out="nonpersistent" for="vizr7-n vizr7-rtt vizr7-t">—</output></div>
+    <div class="viz-result"><span>Persistent</span><output data-out="persistent" for="vizr7-n vizr7-rtt vizr7-t">—</output></div>
+    <div class="viz-result"><span>Pipelined</span><output data-out="pipelined" for="vizr7-n vizr7-rtt vizr7-t">—</output></div>
+  </div>
+  <p class="viz-status" role="status">Textbook comparison model — not a measurement of real browser performance.</p>
+  <div class="viz-notes"><p>Change the inputs and watch the three textbook totals move. Defaults match the worked example: N = 5 objects, RTT = 50 ms, transfer = 10 ms per object → 660 / 410 / 210 ms.</p>
+</div>
+</div><div class="viz viz-stepper" data-viz="stepper" data-steps="4">
   <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; Pricing one page three ways (RTT = 50 ms, N = 5, T = 10 ms)</span></div>  <ol class="viz-steps">
     <li class="viz-step" data-i="0"><p>Pay the handshake once: opening any TCP connection costs ~1 RTT before the first byte</p>
 </li>
@@ -647,7 +800,25 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 <li><strong>HTTP/3:</strong> drops TCP for QUIC over UDP — no handshake tax, no TCP-level blocking. (This is M1T3&#39;s QUIC lesson arriving on schedule.)</li>
 <li><strong>Exam rule, stated once.</strong> Answer classical questions with HTTP/1.0 vs. 1.1 definitions <em>unless the question names</em> HTTP/2 or HTTP/3. Modern facts never override the version asked about.</li>
 </ul>
-<p><a id="worked-example"></a></p>
+<div class="viz viz-flow" data-viz="flow" data-steps="4">
+  <div class="viz-head"><span class="viz-tag">Interactive flow &middot; HTTP versions in four steps</span></div>  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>HTTP/1.0 (1996): non-persistent by default — one object per connection</p>
+</li>
+<li class="viz-step" data-i="1"><p>HTTP/1.1 (1997/1999): persistent by default, Host header, rare pipelining</p>
+</li>
+<li class="viz-step" data-i="2"><p>HTTP/2 (2015): binary multiplexed streams over one TCP connection</p>
+</li>
+<li class="viz-step" data-i="3"><p>HTTP/3: QUIC over UDP — no handshake tax, no TCP-level blocking</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="HTTP versions in four steps: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">4 steps &mdash; use Prev and Next to walk through</p>
+</div><p><a id="worked-example"></a></p>
 <h2 id="4-examples-tiny-first-then-exam-level">4. Examples — Tiny First, Then Exam-Level</h2>
 <p class="secnav"><a href="#3-purpose-architecture-messages-memory-timing">← 3. Purpose — Architecture, Message…</a><span class="secnav-sep">·</span><a href="#5-distinctions-watch-outs-and-exam-recap">5. Distinctions, Watch-Outs, and E… →</a></p>
 <h3>4.1 Toy Example (30 seconds)</h3>

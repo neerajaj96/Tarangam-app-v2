@@ -126,7 +126,102 @@ export function bindViz(root, { timer = { set: (fn, ms) => setInterval(fn, ms), 
 export function initViz(scope) {
   if (typeof document === 'undefined') return [];
   const base = scope && typeof scope.querySelectorAll === 'function' ? scope : document;
-  return Array.from(base.querySelectorAll('.viz[data-viz]'))
-    .map((root) => bindViz(root))
-    .filter(Boolean);
+  const bound = [];
+  base.querySelectorAll('.viz[data-viz]').forEach((root) => {
+    const kind = root.getAttribute('data-viz');
+    if (kind === 'flow' || kind === 'stepper') bound.push(bindViz(root));
+    else if (kind === 'tabs') bound.push(bindTabs(root));
+    else if (kind === 'compare') bound.push(bindCompare(root));
+    else if (kind === 'rtt') bound.push(bindRtt(root));
+  });
+  return bound.filter(Boolean);
+}
+
+// Textbook RTT comparison model (HTTP showcase): n objects, rtt ms per
+// round trip, t ms transfer per object. Returns totals in ms. Pure and
+// unit-tested; the numbers compare connection disciplines, never real
+// browser performance.
+export function calcRtt(n, rtt, t) {
+  const objs = Math.max(0, Math.floor(Number(n) || 0));
+  const round = Math.max(0, Number(rtt) || 0);
+  const xfer = Math.max(0, Number(t) || 0);
+  const base = 2 * round + xfer;
+  return {
+    nonpersistent: base + objs * (2 * round + xfer),
+    persistent: base + objs * (round + xfer),
+    pipelined: base + (round + objs * xfer),
+  };
+}
+
+// Tabbed panels: click/tap to select; arrows/Home/End move; roving
+// tabindex keeps one tab stop. No animation, so reduced motion is moot.
+export function bindTabs(root) {
+  if (!root || typeof root.querySelectorAll !== 'function') return null;
+  const tabs = Array.from(root.querySelectorAll('.viz-tab'));
+  const panels = Array.from(root.querySelectorAll('.viz-panel'));
+  if (tabs.length < 2 || panels.length !== tabs.length) return null;
+  const select = (i) => {
+    const k = Math.max(0, Math.min(tabs.length - 1, i));
+    tabs.forEach((tab, j) => {
+      const on = j === k;
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      tab.setAttribute('tabindex', on ? '0' : '-1');
+      if (panels[j]) { if (on) panels[j].removeAttribute('hidden'); else panels[j].setAttribute('hidden', ''); }
+    });
+    return k;
+  };
+  let current = 0;
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => { current = select(i); });
+  });
+  if (typeof root.addEventListener === 'function') {
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); current = select(current + 1); tabs[current].focus(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); current = select(current - 1); tabs[current].focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); current = select(0); tabs[current].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); current = select(tabs.length - 1); tabs[current].focus(); }
+    });
+  }
+  root.classList.add('is-live');
+  select(0);
+  return { root, select, get current() { return current; } };
+}
+
+// Comparison count reveal: one checkbox toggles author-written badges.
+export function bindCompare(root) {
+  if (!root || typeof root.querySelector !== 'function') return null;
+  const toggle = root.querySelector('.viz-count-toggle');
+  const badges = root.querySelectorAll ? Array.from(root.querySelectorAll('.viz-count')) : [];
+  if (!toggle || !badges.length) return null;
+  const apply = () => {
+    const show = !!(toggle.checked !== undefined ? toggle.checked : toggle.getAttribute('checked'));
+    badges.forEach((b) => { if (show) b.removeAttribute('hidden'); else b.setAttribute('hidden', ''); });
+  };
+  toggle.addEventListener('change', apply);
+  root.classList.add('is-live');
+  apply();
+  return { root, apply };
+}
+
+// RTT lab: number inputs recompute the three textbook totals instantly.
+export function bindRtt(root) {
+  if (!root || typeof root.querySelector !== 'function') return null;
+  const get = (key) => root.querySelector(`[data-in="${key}"]`);
+  const nEl = get('n');
+  const rttEl = get('rtt');
+  const tEl = get('t');
+  const outs = root.querySelectorAll ? Array.from(root.querySelectorAll('[data-out]')) : [];
+  if (!nEl || !rttEl || !tEl || !outs.length) return null;
+  const recompute = () => {
+    const r = calcRtt(nEl.value, rttEl.value, tEl.value);
+    outs.forEach((o) => {
+      const v = r[o.getAttribute('data-out')];
+      o.textContent = typeof v === 'number' ? `${v} ms` : '—';
+    });
+    return r;
+  };
+  [nEl, rttEl, tEl].forEach((el) => el.addEventListener('input', recompute));
+  root.classList.add('is-live');
+  recompute();
+  return { root, recompute };
 }

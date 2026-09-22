@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { transformCustomWidgets } from './widgets.js';
 import { SCENES, SCENE_IDS } from './scenes.js';
-import { createStepper, bindViz, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
+import { createStepper, bindViz, bindTabs, bindCompare, bindRtt, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
 
 const read = (f) => fs.readFileSync(f, 'utf-8');
 
@@ -255,5 +255,210 @@ describe('stylesheet and template contracts', () => {
     assert.ok(tpl.includes('../assets/viz.js'), 'topic template loads viz engine');
     assert.ok(tpl.includes('initViz'), 'engine initializes on topic pages');
     assert.ok(fs.existsSync('assets/viz.js'), 'engine source exists for copyAssetDirs');
+  });
+
+  it('styles tabs, comparisons, and the RTT lab for all themes', () => {
+    const css = read('style.css');
+    for (const sel of [
+      '.viz-tablist', '.viz-tab[aria-selected="true"]', '.viz-tabs.is-live .viz-panel[hidden]',
+      '.viz-cols', '.viz-compare.is-live .viz-count[hidden]', '.viz-toggle',
+      '.viz-inputs', '.viz-result output', '.viz-field input:focus-visible',
+    ]) {
+      assert.ok(css.includes(sel), `stylesheet covers ${sel}`);
+    }
+    assert.ok(css.includes('@media (max-width: 640px)'), 'narrow-viewport rules present');
+    assert.ok(!/width:\s*100vw/.test(css), 'no viewport-width traps introduced');
+  });
+});
+
+describe('viz tabs transform', () => {
+  it('renders labeled tabs with wired panels and roving tabindex', () => {
+    const out = transformCustomWidgets(
+      '::: viz tabs URL anatomy\nscheme :: picks the protocol\nport :: picks the process\n:::'
+    );
+    assert.ok(out.includes('class="viz viz-tabs"'), 'tabs shell class');
+    assert.ok(out.includes('role="tablist"'), 'tablist semantics');
+    assert.ok(out.includes('role="tab"') && out.includes('role="tabpanel"'), 'tab semantics');
+    assert.ok(out.includes('aria-selected="true"') && out.includes('aria-selected="false"'), 'first tab selected');
+    assert.ok(out.includes('tabindex="0"') && out.includes('tabindex="-1"'), 'roving tabindex');
+    assert.ok(out.includes('aria-controls="vizt1-panel-0"'), 'tab controls panel');
+    assert.ok(out.includes('URL anatomy'), 'title rendered');
+  });
+
+  it('embeds a scene when the head word names one', () => {
+    const out = transformCustomWidgets('::: viz tabs web-layers Two views\nInfra :: routers\nApp :: browser\n:::');
+    assert.ok(out.includes('class="anim-stage"'), 'scene embedded');
+    assert.ok(out.includes('Two views'), 'remaining words form the title');
+  });
+
+  it('leaves malformed tab blocks raw for check.js', () => {
+    const raw = '::: viz tabs Lonely\nJust one line without separator\nAnother plain line\n:::';
+    assert.equal(transformCustomWidgets(raw), raw, 'needs Label :: content lines');
+  });
+});
+
+describe('viz compare transform', () => {
+  it('renders two columns with hidden count badges and a toggle', () => {
+    const out = transformCustomWidgets(
+      '::: viz compare Modes\n## Non-persistent\n- Open, fetch, close\n= 2 connections\n## Persistent\n- Open once, fetch all\n= 1 connection\n:::'
+    );
+    assert.ok(out.includes('class="viz viz-compare"'), 'compare shell class');
+    assert.ok(out.includes('Non-persistent') && out.includes('Persistent'), 'headings rendered');
+    assert.ok(out.includes('class="viz-count" hidden'), 'badges hidden until toggled live');
+    assert.ok(out.includes('2 connections') && out.includes('1 connection'), 'counts authored, not invented');
+    assert.ok(out.includes('type="checkbox"') && out.includes('Show counts'), 'native toggle control');
+  });
+
+  it('leaves single-section compares raw for check.js', () => {
+    const raw = '::: viz compare Thin\n## Only one\n- Point\n:::';
+    assert.equal(transformCustomWidgets(raw), raw, 'needs two sections');
+  });
+});
+
+describe('viz rtt transform', () => {
+  it('renders labeled inputs, result rows, and the model disclaimer', () => {
+    const out = transformCustomWidgets('::: viz rtt Timing lab\nAssumes textbook mode.\n:::');
+    assert.ok(out.includes('class="viz viz-rtt"'), 'rtt shell class');
+    for (const key of ['n', 'rtt', 't']) {
+      assert.ok(out.includes(`data-in="${key}"`), `input ${key} present`);
+    }
+    for (const key of ['nonpersistent', 'persistent', 'pipelined']) {
+      assert.ok(out.includes(`data-out="${key}"`), `result ${key} present`);
+    }
+    assert.ok(out.includes('not a measurement of real browser performance'), 'disclaimer fixed in output');
+    assert.ok(out.includes('Assumes textbook mode'), 'author notes rendered');
+    assert.ok(out.includes('type="number"'), 'native number inputs for mobile keyboards');
+  });
+});
+
+describe('RTT comparison model', () => {
+  it('prices the textbook page at 660, 410, and 210 ms', () => {
+    assert.deepEqual(calcRtt(5, 50, 10), { nonpersistent: 660, persistent: 410, pipelined: 210 });
+  });
+
+  it('reduces to 8, 5, 3 RTTs with zero transfer time', () => {
+    assert.deepEqual(calcRtt(3, 1, 0), { nonpersistent: 8, persistent: 5, pipelined: 3 });
+  });
+
+  it('clamps nonsense inputs instead of producing NaN', () => {
+    const r = calcRtt(-2, 'abc', null);
+    assert.deepEqual(r, { nonpersistent: 0, persistent: 0, pipelined: 0 });
+  });
+});
+
+function stubTabs(count) {
+  const tabs = Array.from({ length: count }, (_, i) => stubEl({}));
+  const panels = Array.from({ length: count }, () => stubEl({}));
+  const listeners = {};
+  return {
+    tabs,
+    panels,
+    addEventListener(t, fn) { (listeners[t] = listeners[t] || []).push(fn); },
+    fire(t, e = {}) { (listeners[t] || []).forEach((fn) => fn({ preventDefault() {}, ...e })); },
+    classList: { add() {} },
+    querySelectorAll(sel) {
+      if (sel === '.viz-tab') return tabs;
+      if (sel === '.viz-panel') return panels;
+      return [];
+    },
+  };
+}
+
+describe('tabs binding on stub DOM', () => {
+  it('selects panels on click with roving tabindex', () => {
+    const root = stubTabs(3);
+    const bound = bindTabs(root);
+    assert.ok(bound, 'multi-tab widget binds');
+    assert.equal(root.tabs[0].getAttribute('aria-selected'), 'true');
+    assert.equal(root.panels[1].getAttribute('hidden'), '');
+    root.tabs[2].fire('click');
+    assert.equal(bound.current, 2);
+    assert.equal(root.tabs[2].getAttribute('aria-selected'), 'true');
+    assert.equal(root.tabs[0].getAttribute('tabindex'), '-1');
+    assert.equal(root.panels[2].getAttribute('hidden'), null);
+  });
+
+  it('moves with arrows, Home, and End', () => {
+    const root = stubTabs(3);
+    let focused = -1;
+    root.tabs.forEach((t, i) => { t.focus = () => { focused = i; }; });
+    bindTabs(root);
+    root.fire('keydown', { key: 'ArrowRight' });
+    assert.equal(focused, 1, 'right arrow advances and focuses');
+    root.fire('keydown', { key: 'End' });
+    assert.equal(focused, 2, 'End jumps last');
+    root.fire('keydown', { key: 'ArrowLeft' });
+    assert.equal(focused, 1, 'left arrow retreats');
+    root.fire('keydown', { key: 'Home' });
+    assert.equal(focused, 0, 'Home jumps first');
+  });
+
+  it('rejects mismatched tab and panel counts', () => {
+    const root = stubTabs(2);
+    root.querySelectorAll = (sel) => (sel === '.viz-tab' ? root.tabs : []);
+    assert.equal(bindTabs(root), null, 'needs matching panels');
+  });
+});
+
+describe('compare and rtt bindings on stub DOM', () => {
+  it('reveals count badges only while the toggle is checked', () => {
+    const badges = [stubEl({}), stubEl({})];
+    badges.forEach((b) => b.setAttribute('hidden', ''));
+    const toggle = stubEl({});
+    toggle.checked = false;
+    const listeners = {};
+    toggle.addEventListener = (t, fn) => { (listeners[t] = listeners[t] || []).push(fn); };
+    const root = {
+      classList: { add() {} },
+      querySelector: (sel) => (sel === '.viz-count-toggle' ? toggle : null),
+      querySelectorAll: (sel) => (sel === '.viz-count' ? badges : []),
+    };
+    const bound = bindCompare(root);
+    assert.ok(bound, 'compare binds');
+    assert.equal(badges[0].getAttribute('hidden'), '', 'hidden by default once live');
+    toggle.checked = true;
+    listeners.change.forEach((fn) => fn());
+    assert.equal(badges[0].getAttribute('hidden'), null, 'revealed on toggle');
+  });
+
+  it('recomputes all three totals on any input', () => {
+    const mk = (v) => {
+      const el = stubEl({});
+      el.value = v;
+      return el;
+    };
+    const inputs = { n: mk('5'), rtt: mk('50'), t: mk('10') };
+    const outs = ['nonpersistent', 'persistent', 'pipelined'].map((k) => {
+      const o = stubEl({});
+      o.getAttribute = (a) => (a === 'data-out' ? k : null);
+      return o;
+    });
+    const listeners = {};
+    Object.values(inputs).forEach((el) => {
+      el.addEventListener = (t, fn) => { (listeners[t] = listeners[t] || []).push(fn); };
+    });
+    const root = {
+      classList: { add() {} },
+      querySelector: (sel) => {
+        const m = /^\[data-in="([a-z]+)"\]$/.exec(sel);
+        return m && inputs[m[1]] ? inputs[m[1]] : null;
+      },
+      querySelectorAll: (sel) => (sel === '[data-out]' ? outs : []),
+    };
+    const bound = bindRtt(root);
+    assert.ok(bound, 'rtt lab binds');
+    assert.equal(outs[0].textContent, '660 ms');
+    assert.equal(outs[1].textContent, '410 ms');
+    assert.equal(outs[2].textContent, '210 ms');
+    inputs.n.value = '3';
+    inputs.rtt.value = '1';
+    inputs.t.value = '0';
+    listeners.input.forEach((fn) => fn());
+    assert.equal(outs[0].textContent, '8 ms', 'recomputes on input');
+  });
+
+  it('refuses to bind without inputs and outputs', () => {
+    assert.equal(bindRtt({ querySelector: () => null, querySelectorAll: () => [] }), null);
+    assert.equal(bindCompare({ querySelector: () => null, querySelectorAll: () => [] }), null);
   });
 });
