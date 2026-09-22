@@ -196,7 +196,7 @@ describe('live repo graph', () => {
   it('computes chain depths', () => {
     assert.equal(built.nodes.get('GAMAT301/m1_01_random_variables_pmf_cdf').depth, 0);
     assert.equal(built.nodes.get('GAMAT301/m1_06_expectation_functions_m1_drill').depth, 2);
-    assert.equal(built.nodes.get('PCCST501/m1_07_domain_name_system_dns').depth, 5);
+    assert.equal(built.nodes.get('PCCST501/m1_07_domain_name_system_dns').depth, 6);
     assert.equal(built.nodes.get('GXEST104/m2_09_m2_mixed_drill').depth, 8);
     assert.equal(built.nodes.get('GZPHT121/m2_07_module2_mixed_numerical_drill').depth, 4);
     assert.equal(built.nodes.get('PCCST303/m4_07_m4_mixed_drill').depth, 5);

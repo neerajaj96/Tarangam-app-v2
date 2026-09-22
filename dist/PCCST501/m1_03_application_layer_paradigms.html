@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 32 MIN READ</span>
+    <span class="badge">⏱️ 35 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -318,7 +318,7 @@
 <p>You open two apps: a news website and a file-sharing program. The website always fetches articles from the company&#39;s own computers. The file-sharing app fetches pieces of a movie from <em>other users&#39;</em> laptops. Same Internet underneath — but two opposite organizations of <em>who serves whom</em>.</p>
 <p>The problem before the solution: an application designer must decide where the data lives and who does the work of serving it. Put everything on one central machine and you get control — but also a single bottleneck every user hammers. Spread the work across all users and you get scale — but lose control. This note names the answers (client-server, peer-to-peer, and their hybrid), then shows the machinery all three share: <strong>processes</strong>, <strong>protocols</strong>, <strong>sockets</strong>, and the <strong>transport service</strong> beneath them.</p>
 <details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model: The Restaurant vs. The Potluck</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>A <strong>Client-Server</strong> application is like a restaurant: there&#39;s one always-open kitchen (the server) that every customer (client) relies on. Customers never cook for each other — every request goes to the kitchen and every dish comes back from the kitchen. If the restaurant gets too popular, the kitchen becomes a bottleneck; the only fix is a bigger kitchen (or many kitchens acting as one, like a data center).</p>
-<p>A <strong>Peer-to-Peer (P2P)</strong> application is like a potluck dinner: there&#39;s no dedicated kitchen at all. Every guest brings a dish (uploads something) and takes food from others (downloads something) — everyone is simultaneously a &quot;customer&quot; and a &quot;cook.&quot; The more guests that show up, the more food is on the table too, so a potluck doesn&#39;t get bottlenecked the way a single restaurant would; it <em>self-scales</em>.</p>
+<p>A <strong>Peer-to-Peer (P2P)</strong> application is like a potluck dinner: there&#39;s no dedicated kitchen at all. Every guest brings a dish (uploads something) and takes food from others (downloads something) — everyone is simultaneously a &quot;customer&quot; and a &quot;cook.&quot; The more guests that show up, the more food is on the table too, so a potluck doesn&#39;t bottleneck <em>at a single kitchen</em> the way a restaurant would; it <em>self-scales</em> — though the dining room itself can still get crowded (slow peers, thin uplinks, and scarce chunks still congest).</p>
 <p>A <strong>hybrid</strong> design hires a coordinator for the guest list but lets guests swap dishes directly — central control where it matters, peer exchange where scale matters.</p>
 <p>Whichever paradigm is chosen, the developer never writes code for the routers in between — only for the <strong>end systems</strong>. And underneath every paradigm, communication between two specific programs always happens through the same low-level interface: a <strong>socket</strong>.</p>
 <p>Dropping the food now: restaurant = central server with a stable address; potluck = symmetric peers that each serve and consume; coordinator-plus-potluck = hybrid; socket = the numbered door a program sends through.</p>
@@ -354,7 +354,7 @@
 </tr>
 <tr>
 <td><strong>Peer</strong></td>
-<td>An ordinary end-user machine acting as both consumer and supplier.</td>
+<td>A participating application process (running on some host) acting as both consumer and supplier — the role matters, not the box.</td>
 </tr>
 <tr>
 <td><strong>Process</strong></td>
@@ -431,12 +431,12 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
     P2 &lt;--&gt; P4
 </code></pre>
 <ul>
-<li><strong>Peer defined.</strong> An ordinary user&#39;s machine running software that is client and server <em>simultaneously</em>: downloading a chunk from peer B (client role) while uploading a chunk to peer C (server role).</li>
+<li><strong>Peer defined.</strong> A peer is a participating <em>application process</em> — software running on some host that is client and server <em>simultaneously</em>: downloading a chunk from peer B (client role) while uploading a chunk to peer C (server role). The host is just the machine it happens to run on.</li>
 <li><strong>Resource sharing.</strong> Each peer donates disk and, crucially, <em>upload bandwidth</em> — the swarm&#39;s total serving capacity is the sum of its members.</li>
 <li><strong>Peer discovery.</strong> Newcomers must <em>find</em> peers first: via a tracker, a DHT (Distributed Hash Table — a decentralized lookup spread over peers), or peer exchange. Pure &quot;no-server&quot; operation still needs this bootstrap step.</li>
 <li><strong>Direct communication.</strong> Data chunks travel peer-to-peer without passing through a central application server.</li>
 <li><strong>Scalability and availability.</strong> Self-scaling: each arrival adds demand <em>and</em> capacity. Availability follows churn (peers joining/leaving unpredictably with changing, often dynamic addresses) — popular content is highly available; rare content can vanish.</li>
-<li><strong>Advantages/limitations.</strong> Plus: no big server bill, massive aggregate capacity, no central point of congestion. Minus: harder security (rogue/poisoned peers), unpredictable performance (bounded by strangers&#39; uplinks), NAT/firewall traversal pain.</li>
+<li><strong>Advantages/limitations.</strong> Plus: no big server bill, massive aggregate capacity, no single mandatory serving bottleneck. Minus: harder security (rogue/poisoned peers), unpredictable performance (bounded by strangers&#39; uplinks), NAT/firewall traversal pain — and congestion still strikes access links, slow peers, and scarce chunks. P2P removes the <em>central</em> bottleneck, not bottlenecks as such.</li>
 <li><strong>Not necessarily decentralized.</strong> Practical P2P is <em>rarely</em> pure: BitTorrent leans on trackers/DHT bootstrap nodes, blockchains lean on seed nodes and relays. Say &quot;decentralized <em>data transfer</em> with (usually) some centralized <em>coordination</em>&quot; — the unqualified &quot;fully decentralized&quot; claim is an exam trap.</li>
 </ul>
 <h3>3.4 Hybrid Architectures</h3>
@@ -519,9 +519,9 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
 <h3>3.7 IP Addresses, Ports, and Socket Identification</h3>
 <ul>
 <li><strong>IP address — WHAT:</strong> the host&#39;s network-layer number (which <em>machine</em>, globally). <strong>Port — WHAT:</strong> a 16-bit transport number (which <em>process</em> on that machine). <em>Why both:</em> one host runs dozens of processes — IP alone picks the building, port picks the apartment. Neither replaces the other.</li>
-<li><strong>Port ranges (IANA).</strong> Well-known 0–1023 (HTTP 80, HTTPS 443, SSH 22, DNS 53 — servers listen here); registered 1024–49151 (MySQL 3306, alternating HTTP 8080); dynamic/ephemeral 49152–65535 (client OS picks a temporary source port per outbound request).</li>
+<li><strong>Port ranges (IANA).</strong> Well-known 0–1023 (HTTP 80, HTTPS 443, SSH 22, DNS 53 — servers listen here); registered 1024–49151 (MySQL 3306, alternating HTTP 8080); dynamic/private 49152–65535 — the IANA <em>recommended</em> ephemeral range, not a universal law: real operating systems pick their own defaults (classic Linux uses 32768–60999; modern Windows follows the IANA range; older Windows used 1025–5000). Say &quot;an OS-assigned ephemeral port&quot;, never &quot;always above 49152&quot;.</li>
 <li><strong>Port ≠ machine.</strong> A port identifies a <em>transport/application endpoint</em>; thousands of ports live on one IP, and one service can listen on several.</li>
-<li><strong>UDP endpoint (2-tuple).</strong> Connectionless delivery keys on <em>(destination IP, destination port)</em> only: every datagram for port 53 reaches the same DNS socket regardless of sender — no per-client socket objects.</li>
+<li><strong>UDP endpoint (2-tuple, by default).</strong> <em>Unconnected</em> UDP delivery keys on <em>(destination IP, destination port)</em>: a datagram for port 53 reaches whichever socket is bound there. But that is the default, not the whole story — a UDP socket may be <em>connected</em> to one peer (via <code>connect()</code>), after which the kernel associates that socket with the peer&#39;s source IP/port and routes only that peer&#39;s datagrams to it. Servers routinely hold one such connected socket per peer (games, VoIP, QUIC-style designs track peers by source address). So &quot;regardless of sender&quot; holds only for unconnected sockets — per-peer UDP associations are common and legitimate.</li>
 <li><strong>TCP connection (4-tuple).</strong> Each connection is uniquely <em>(source IP, source port, destination IP, destination port)</em>: thousands of clients can share destination 443 because their source halves differ.</li>
 <li><strong>Careful note.</strong> &quot;2-tuple/4-tuple&quot; is a <em>teaching model</em> of kernel demultiplexing, not a literal socket-API struct layout — say &quot;identified by&quot;, never &quot;the API struct is&quot;.</li>
 <li><strong>Concrete example.</strong> Laptop 192.0.2.10 (Chrome) → server 198.51.100.20 (Nginx, port 443): client socket (192.0.2.10, ephemeral 50000); connection 4-tuple (192.0.2.10, 50000, 198.51.100.20, 443). A second tab gets ephemeral 50001 → a <em>different</em> 4-tuple → replies demultiplex to the right tab. Two tabs from <em>different</em> hosts may reuse source port 51001 with zero ambiguity, because source IPs differ.</li>
@@ -533,7 +533,7 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
     PLUS --&gt; SOCK[&quot;Socket&lt;br/&gt;(endpoint)&quot;]
     SOCK --&gt; TUP[&quot;TCP 4-tuple&lt;br/&gt;(src IP, src port,&lt;br/&gt;dst IP, dst port)&quot;]
 </code></pre>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The Two-Part Address</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The 2-mark &quot;why isn&#39;t IP enough?&quot; answer is always: <strong>IP address finds the host, port number finds the process</strong> — together they name a <strong>socket</strong> (<code>IP:port</code>). TCP refines this to a 4-tuple per connection; UDP demultiplexes on the 2-tuple. Any option claiming one identifier suffices is the planted distractor.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: The Two-Part Address</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>The 2-mark &quot;why isn&#39;t IP enough?&quot; answer is always: <strong>IP address finds the host, port number finds the process</strong> — together they name a <strong>socket</strong> (<code>IP:port</code>). TCP refines this to a 4-tuple per connection; unconnected UDP demultiplexes on the 2-tuple, while a connected UDP socket associates with one peer. Any option claiming one identifier suffices is the planted distractor.</p>
 </div></details><h3>3.8 Application-Protocol Structure — Types, Syntax, Semantics, Timing</h3>
 <p>Every application protocol specifies four things (the M1T1 protocol definition, applied):</p>
 <ol>
@@ -549,9 +549,10 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
 <h3>3.9 Stateful vs. Stateless Interaction</h3>
 <ul>
 <li><strong>State — WHAT:</strong> server-side memory <em>about a client</em> kept <em>between</em> requests (shopping cart, login session, FTP&#39;s current directory). Distinct from transport connection state (sequence numbers) — confusing the two layers is a standard trap.</li>
-<li><strong>Stateless — WHAT/HOW:</strong> server keeps nothing per client; every request carries everything needed (auth token, parameters) and is processed in isolation. <em>Examples:</em> baseline HTTP, DNS. <em>Result:</em> crash recovery = just reboot and re-receive; any load-balanced replica can serve any request (massive scalability); price = repeated headers/tokens per request (bandwidth overhead) and no built-in continuity.</li>
-<li><strong>Stateful — WHAT/HOW:</strong> server holds session tables across requests; later commands depend on earlier ones (<code>USER</code> → <code>PASS</code> → <code>RETR</code> in FTP). <em>Examples:</em> FTP sessions, DB connections, SSH. <em>Result:</em> lean follow-up messages, but per-client memory + timeouts (complexity, overhead), sticky-session load balancing, and crash = lost sessions forcing reconnects.</li>
-<li><strong>Critical clarification.</strong> &quot;Stateless&quot; never means &quot;the system stores nothing&quot; — databases, caches, and files persist just fine; it means <em>requests carry their own context</em> so <em>servers</em> hold no per-client session memory. Modern &quot;stateful web&quot; (cookies, session tokens, JWTs — JSON Web Tokens) is application-layer state <em>smuggled inside stateless HTTP</em> — the protocol stays stateless while the app simulates sessions.</li>
+<li><strong>Scope warning first:</strong> stateful/stateless classifies <em>one interaction mechanism at one layer</em>, never an entire application. A single real system routinely mixes both: stateless HTTP exchanges carrying a stateful shopping cart (via cookies), over stateful TCP connections, against a persistent database. Always name <em>which</em> interaction you are classifying.</li>
+<li><strong>Stateless — WHAT/HOW:</strong> server keeps nothing per client <em>for this interaction</em>; every request carries everything needed (auth token, parameters) and is processed in isolation. <em>Examples:</em> a baseline HTTP exchange, a DNS query. <em>Result:</em> crash recovery = just reboot and re-receive; any load-balanced replica can serve any request (massive scalability); price = repeated headers/tokens per request (bandwidth overhead) and no built-in continuity.</li>
+<li><strong>Stateful — WHAT/HOW:</strong> server holds session tables across requests <em>of this interaction</em>; later commands depend on earlier ones (<code>USER</code> → <code>PASS</code> → <code>RETR</code> in an FTP control session). <em>Examples:</em> an FTP control session, a DB connection, an SSH login session. <em>Result:</em> lean follow-up messages, but per-client memory + timeouts (complexity, overhead), sticky-session load balancing, and crash = lost sessions forcing reconnects.</li>
+<li><strong>Critical clarification.</strong> &quot;Stateless&quot; never means &quot;the system stores nothing&quot; — databases, caches, and files persist just fine; it means <em>these requests</em> carry their own context so <em>these servers</em> hold no per-client session memory. Modern &quot;stateful web&quot; (cookies, session tokens, JWTs — JSON Web Tokens) is application-layer state <em>smuggled inside stateless HTTP exchanges</em> — each HTTP interaction stays stateless while the overall application behaves statefully. Classify the interaction and the layer, never the whole app.</li>
 </ul>
 <table>
 <thead>
@@ -625,15 +626,15 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
 <td>8 bytes, no handshake</td>
 </tr>
 <tr>
-<td>Fits</td>
-<td>Web, mail, files, SSH — correctness first</td>
-<td>DNS, VoIP, games, live streams, HTTP/3 (QUIC) — latency first</td>
+<td>Fits (typical, not destiny)</td>
+<td>Correctness-first transfers (web, mail, files, SSH)</td>
+<td>Latency-first exchanges (DNS, VoIP, games, live streams) — chosen per requirements below, not per app name</td>
 </tr>
 </tbody></table>
 <ul>
 <li><strong>&quot;UDP is faster&quot; — corrected.</strong> UDP has <em>less mechanism</em> (no handshake/ACKs), so it <em>can</em> deliver sooner on a clean path — but it is not &quot;inherently faster&quot;: on lossy paths TCP&#39;s retransmission <em>completes</em> transfers UDP would leave broken, and bulk throughput is bounded by the network, not the protocol. Correct phrasing: <em>lower overhead/latency, zero delivery promises</em>.</li>
 <li><strong>Security placement.</strong> TCP/UDP provide <em>no</em> encryption or authentication; confidentiality/integrity come from TLS over TCP (HTTPS), DTLS (Datagram TLS) over UDP, or app-level crypto (QUIC bakes TLS 1.3 inside). Any &quot;TCP encrypts&quot; option is wrong.</li>
-<li><strong>Why each app fits.</strong> HTTP/FTP/SMTP over TCP: one wrong byte corrupts pages, binaries, mail. DNS over UDP (+TCP fallback): one tiny query deserves one datagram, not a handshake. VoIP/games over UDP: a late retransmitted phoneme is worse than a dropped one. QUIC/HTTP-3 over UDP: custom loss recovery without head-of-line blocking.</li>
+<li><strong>Why each app fits — requirements, not categories.</strong> HTTP/FTP/SMTP usually ride TCP because <em>their requirement</em> is zero-loss ordering (one wrong byte corrupts pages, binaries, mail). DNS usually rides UDP because <em>its requirement</em> is one tiny fast exchange, not a handshake. VoIP/games usually ride UDP because <em>their requirement</em> is low delay (a late retransmitted phoneme is worse than a dropped one). But these are tendencies, not laws: buffered video streams ride TCP just fine (latency-tolerant real-time), and <strong>QUIC/HTTP-3 delivers a reliable, ordered, congestion-controlled transport <em>over UDP</em></strong> — custom loss recovery without head-of-line blocking. QUIC proves reliability is a <em>service design choice</em>, not a TCP monopoly: match the transport to the requirements, never to the app&#39;s name.</li>
 </ul>
 <h3>3.11 Distribution-Time Model — Client-Server vs. P2P, Derived</h3>
 <p>Distribute file F bits to N hosts. Symbols: F = file size (<strong>bits</strong>); N = number of receivers; u_s = server upload rate (<strong>bits/s</strong>); u_i = peer i upload rate (<strong>bits/s</strong>); d_min = slowest receiver download rate (<strong>bits/s</strong>).</p>
@@ -704,7 +705,7 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
 </tr>
 <tr>
 <td>UDP 2-tuple vs. TCP 4-tuple</td>
-<td>(dst IP, dst port) per socket vs. (src IP, src port, dst IP, dst port) per connection.</td>
+<td>Unconnected UDP keys on (dst IP, dst port), with connected UDP sockets associating per peer — vs. TCP&#39;s always-per-connection (src IP, src port, dst IP, dst port).</td>
 </tr>
 <tr>
 <td>Syntax vs. semantics</td>
@@ -712,7 +713,7 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
 </tr>
 <tr>
 <td>Stateful vs. stateless</td>
-<td>Server remembers client across requests vs. every request self-contained (≠ &quot;stores nothing&quot;).</td>
+<td>For one interaction: server remembers client across its requests vs. every request self-contained (≠ &quot;stores nothing&quot;, ≠ a whole-app label).</td>
 </tr>
 <tr>
 <td>TCP vs. UDP</td>
@@ -727,8 +728,8 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
 <td>P2P capacity grows with users but is bounded by users&#39; uploads — scaling, not magic.</td>
 </tr>
 </tbody></table>
-<p><strong>Watch out:</strong> (1) Calling a laptop &quot;a client device&quot; — roles, not hardware; servers need <em>stable</em> addresses, not always static ones. (2) &quot;IP is enough&quot; — one host runs many processes; the port is mandatory. (3) &quot;P2P = fully decentralized&quot; — trackers/DHT/bootstrap nodes coordinate most real swarms. (4) &quot;UDP is faster&quot; — lower overhead, zero promises; throughput is network-bounded. (5) &quot;TCP encrypts&quot; — encryption lives in TLS/DTLS/app layers, never TCP/UDP. (6) Socket as a wire/packet — it is the API <em>handle</em>; one listening socket spawns many connected ones. (7) Transport connection state vs. application session state — different layers, don&#39;t merge them. (8) Quoting D_CS/D_P2P bounds as exact schedules — they assume fluid data, full cooperation, no churn.</p>
-<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>App = whole program; protocol = its conversation rules (types, syntax, semantics, timing). Client-server = asymmetric, stable server, bottleneck at scale (data centers mitigate); P2P = symmetric, self-scaling, churn-prone, rarely fully decentralized; hybrid = central directory + peer transfer. Processes talk via sockets: IP finds the host, port finds the process; TCP identifies connections by 4-tuple, UDP endpoints by 2-tuple. Stateless = self-contained requests (cookies/JWTs simulate sessions); stateful = server-held sessions (resilient vs. costly). TCP = reliable ordered stream; UDP = lightweight datagrams — neither encrypts (that&#39;s TLS/DTLS). Distribution: D_CS = max(NF/u_s, F/d_min) grows ∝ N; D_P2P = max(F/u_s, F/d_min, NF/(u_s + Σu_i)) flattens as peers contribute upload.</p>
+<p><strong>Watch out:</strong> (1) Calling a laptop &quot;a client device&quot; — roles, not hardware; servers need <em>stable</em> addresses, not always static ones. (2) &quot;IP is enough&quot; — one host runs many processes; the port is mandatory. (3) &quot;P2P = fully decentralized&quot; — trackers/DHT/bootstrap nodes coordinate most real swarms. (4) &quot;UDP is faster&quot; — lower overhead, zero promises; throughput is network-bounded. (5) &quot;TCP encrypts&quot; — encryption lives in TLS/DTLS/app layers, never TCP/UDP. (6) Socket as a wire/packet — it is the API <em>handle</em>; one listening socket spawns many connected ones. (7) Transport connection state vs. application session state — different layers, don&#39;t merge them. (8) Quoting D_CS/D_P2P bounds as exact schedules — they assume fluid data, full cooperation, no churn. (9) Labeling a whole application &quot;stateless&quot;/&quot;stateful&quot; — classify one interaction at one layer; real apps mix stateless exchanges, stateful sessions, and persistent storage.</p>
+<details class="callout callout-exam" open><summary class="callout-header"><span class="callout-title">🎯 KTU Exam Focus: KTU Exam Focus: One-Paragraph Recap</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>App = whole program; protocol = its conversation rules (types, syntax, semantics, timing). Client-server = asymmetric, stable server, bottleneck at scale (data centers mitigate); P2P = symmetric, self-scaling with no central serving bottleneck (links and peers can still congest), churn-prone, rarely fully decentralized; hybrid = central directory + peer transfer. Processes talk via sockets: IP finds the host, port finds the process; TCP identifies connections by 4-tuple, UDP endpoints by 2-tuple. Stateless = self-contained requests (cookies/JWTs simulate sessions); stateful = server-held sessions (resilient vs. costly). TCP = reliable ordered stream; UDP = lightweight datagrams — choose by requirements, noting QUIC builds reliability over UDP; neither encrypts (that&#39;s TLS/DTLS). Distribution: D_CS = max(NF/u_s, F/d_min) grows ∝ N; D_P2P = max(F/u_s, F/d_min, NF/(u_s + Σu_i)) flattens as peers contribute upload.</p>
 </div></details><p><strong>Active-recall checklist:</strong> App vs. protocol — which is Chrome, which is HTTP? Why does each new P2P peer add capacity? What coordinates a &quot;decentralized&quot; swarm? What two numbers name a socket, and what does each select? How many server sockets serve 3 tabs, and why do the 4-tuples differ? Valid syntax, 404 outcome — syntax or semantics failure? Stateless server reboots mid-day — who notices? Which transport for a bank transfer vs. a voice call, and why is &quot;UDP is faster&quot; the wrong reason? Which D term dominates at N = 1000, and what assumption makes it a bound, not a schedule?</p>
 <details class="interactive-toggle"><summary>Sockets in code: what do `bind`, `listen`, and `accept` do? (optional depth)</summary><div class="toggle-content"><p><code>bind</code> claims a local IP/port for the socket; <code>listen</code> marks a TCP socket as waiting and sizes its backlog queue; <code>accept</code> pulls one pending client off that queue into a brand-new connected socket. Extra example: a web server <code>bind</code>s 443 once, <code>listen</code>s once, then <code>accept</code>s thousands of times — one listening socket, thousands of connected ones.</p>
 </div></details><details class="interactive-toggle"><summary>Cookie-based sessions ride on stateless HTTP (optional depth)</summary><div class="toggle-content"><p>A server sends <code>Set-Cookie: sess=abc</code>; the browser stores it and replays <code>Cookie: sess=abc</code> per request; the server looks up <code>abc</code> in its session store. Extra exam trap: the <em>protocol</em> stays stateless (each request self-describes) while the <em>application</em> is stateful — classify the layer being asked about.</p>
@@ -758,7 +759,7 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>In client-server, more clients only ever add <em>load</em> to a fixed-capacity server. In P2P, every new peer simultaneously contributes upload capacity back to the network — so the system&#39;s total capacity naturally grows alongside its total demand.</p><pre><code>&lt;/div&gt;
+      <p>In client-server, more clients only ever add <em>load</em> to a fixed-capacity server. In P2P, every new peer simultaneously contributes upload capacity back to the network — so the swarm&#39;s total serving capacity grows alongside its total demand (individual links and slow peers can still congest).</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -810,7 +811,7 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Because peers are ordinary users&#39; machines rather than dedicated infrastructure, they often sit behind dynamic IPs (assigned by an ISP or home router) and offer wildly different upload speeds — making P2P performance and addressing far less predictable than a professionally managed, always-on client-server setup.</p><pre><code>&lt;/div&gt;
+      <p>Because peer processes run on ordinary users&#39; machines rather than dedicated infrastructure, they often sit behind dynamic IPs (assigned by an ISP or home router) and offer wildly different upload speeds — making P2P performance and addressing far less predictable than a professionally managed, always-on client-server setup.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
@@ -844,7 +845,7 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
     <span class="quiz-category">Q5: Stateful vs Stateless</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>A server farm reboots one replica at noon with zero user-visible impact. Which design explains it, and what was the price?</p>
+  <div class="quiz-prompt"><p>A server farm reboots one replica at noon with zero user-visible impact. Which interaction style explains it, and what was the price?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>Stateful — sessions live on that replica, so nothing is lost</span></button>
@@ -870,11 +871,11 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
     <span class="quiz-category">Q6: Transport Selection</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
-  <div class="quiz-prompt"><p>A bank transfer and a live voice call need transport services. Which pairing is correct, and why is &quot;UDP is faster&quot; wrong?</p>
+  <div class="quiz-prompt"><p>A bank transfer needs every byte, in order; a live voice call needs low delay above all. Which transport reasoning is correct, and why is &quot;UDP is faster&quot; wrong?</p>
 </div>
   <div class="quiz-options">
     <button class="quiz-option-btn" data-correct="false"><span>UDP for the bank (speed!), TCP for voice (safety)</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>TCP for the bank (every byte must arrive, in order) and UDP for voice (a late retransmitted phoneme is worse than a dropped one); UDP has lower overhead, not higher speed — throughput is network-bounded</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>TCP for the bank (its requirement is zero-loss ordering) and UDP for voice (its requirement is low delay — a late retransmitted phoneme is worse than a dropped one); UDP has lower overhead, not higher speed — throughput is network-bounded</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>TCP for both, since UDP is obsolete</span></button>
 <button class="quiz-option-btn" data-correct="false"><span>UDP for both, with TLS added inside UDP for the bank</span></button>  </div>
   <details class="quiz-explanation-dropdown">
@@ -888,7 +889,7 @@ Tiny example: in BitTorrent each downloader re-uploads pieces to other downloade
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>Correctness-first data (money, files, pages) needs TCP&#39;s ACKs and ordering; latency-first media needs UDP&#39;s fire-and-forget. &quot;Faster&quot; misleads: UDP skips handshakes/ACKs (lower delay, tinier header) but completes nothing by itself. And neither encrypts — the bank&#39;s secrecy comes from TLS <em>above</em> TCP, not from TCP.</p><pre><code>&lt;/div&gt;
+      <p>Match transport to <em>requirements</em>, not app names: correctness-first data (money, files, pages) needs TCP&#39;s ACKs and ordering; latency-first media fits UDP&#39;s fire-and-forget. &quot;Faster&quot; misleads: UDP skips handshakes/ACKs (lower delay, tinier header) but completes nothing by itself. And neither encrypts — the bank&#39;s secrecy comes from TLS <em>above</em> TCP, not from TCP. Caveat for the exam: QUIC shows reliability can also be built over UDP, so &quot;reliable ⇒ must be TCP&quot; is outdated.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">

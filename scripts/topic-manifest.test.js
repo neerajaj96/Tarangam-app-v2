@@ -53,12 +53,14 @@ describe('manifest contents', () => {
     const ids = (topics) => topics.map((t) => t.id);
     assert.deepEqual(ids(getPrerequisites(manifest, 'PCCST501', 'm1_08_peer_to_peer_bittorrent')),
       ['m1_04_world_wide_web_and_http', 'm1_05_file_transfer_protocol_ftp']);
-    assert.equal(getTopic(manifest, 'PCCST501', 'm1_07_domain_name_system_dns').prerequisiteDepth, 5);
+    assert.equal(getTopic(manifest, 'PCCST501', 'm1_07_domain_name_system_dns').prerequisiteDepth, 6);
   });
 
   it('getDependents() reverses prerequisite edges', () => {
     const ids = getDependents(manifest, 'PCCST501', 'm1_01_internet_overview_and_network_edge').map((t) => t.id).sort();
-    assert.deepEqual(ids, ['m1_02_protocol_layering_and_osi_tcpip', 'm1_03_application_layer_paradigms', 'm1_99_practice_lab_application_layer_drills']);
+    assert.deepEqual(ids, ['m1_02_protocol_layering_and_osi_tcpip', 'm1_99_practice_lab_application_layer_drills']);
+    assert.deepEqual(getDependents(manifest, 'PCCST501', 'm1_02_protocol_layering_and_osi_tcpip').map((t) => t.id).sort(),
+      ['m1_03_application_layer_paradigms']);
     const gamat = getDependents(manifest, 'GAMAT301', 'm1_01_random_variables_pmf_cdf').map((t) => t.id).sort();
     assert.deepEqual(gamat, [
       'm1_02_expectation_mean_variance',

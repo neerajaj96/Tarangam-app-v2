@@ -273,6 +273,7 @@ describe('live 486-topic repository', () => {
     assert.equal(manifest.topics.length, 486);
     assert.deepEqual(ids(getAncestors(manifest, 'PCCST501', 'm1_07_domain_name_system_dns')),
       ['PCCST501/m1_01_internet_overview_and_network_edge',
+        'PCCST501/m1_02_protocol_layering_and_osi_tcpip',
         'PCCST501/m1_03_application_layer_paradigms',
         'PCCST501/m1_04_world_wide_web_and_http',
         'PCCST501/m1_05_file_transfer_protocol_ftp',

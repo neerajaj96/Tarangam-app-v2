@@ -173,8 +173,8 @@ describe('live 486-topic repository', () => {
     assert.ok(root && root.isRoot && root.chain.length === 1);
     const mid = buildStudyContextModel(manifest, none, 'PCCST501', 'm1_07_domain_name_system_dns');
     assert.equal(mid.prereqs.length, 1);
-    assert.equal(mid.chain.length, 6);
-    assert.equal(mid.remainingDependencies, 5);
+    assert.equal(mid.chain.length, 7);
+    assert.equal(mid.remainingDependencies, 6);
     const leaf = buildStudyContextModel(manifest, none, 'GXEST104', 'm2_09_m2_mixed_drill');
     assert.ok(leaf && leaf.isLeaf && leaf.chain.length === 10);
     for (const model of [root, mid, leaf]) {

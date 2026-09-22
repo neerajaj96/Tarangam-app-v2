@@ -479,7 +479,7 @@ describe('live 486-topic repository', () => {
     assert.equal(explorer.isReady, true);
     const study = buildStudyContextModel(manifest, none, 'PCCST501', 'm1_07_domain_name_system_dns');
     assert.equal(study.prereqs.length, 1);
-    assert.equal(study.chain.length, 6);
-    assert.equal(study.remainingDependencies, 5);
+    assert.equal(study.chain.length, 7);
+    assert.equal(study.remainingDependencies, 6);
   });
 });
