@@ -172,5 +172,46 @@ export function transformCustomWidgets(markdownText) {
 </div>`;
   });
 
+  // 7. Interactive visualization shell (progressive enhancement engine in
+  // assets/viz.js). Syntax: `::: viz <flow|stepper> [scene-id] <title>`
+  // with one step per body line (`1. text` / `- text` markers stripped).
+  // If the first head word names a scripts/scenes.js scene, its SVG is
+  // embedded above the steps. Without JS the full step list (plus any
+  // diagram) renders as static content; viz.js adds staged Prev/Next/Play
+  // controls, keyboard support, and live step announcements. Unknown types
+  // are left raw so scripts/check.js can fail them loudly.
+  const vizPattern = /::: viz (flow|stepper)(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(vizPattern, (match, type, head, rawBody) => {
+    const words = head.trim().split(/\s+/).filter(Boolean);
+    let sceneId = null;
+    if (words.length && Object.prototype.hasOwnProperty.call(SCENES, words[0])) {
+      sceneId = words.shift();
+    }
+    const title = words.join(' ') || (sceneId ? SCENES[sceneId].title : 'Visualization');
+    const safeTitle = escapeHtml(title);
+    const steps = rawBody.split('\n').map((l) => l.trim()).filter(Boolean)
+      .map((l) => l.replace(/^(\d+[.)]|[-*])\s+/, ''));
+    if (!steps.length) return match;
+    const items = steps.map((s, i) =>
+      `<li class="viz-step" data-i="${i}">${renderMarkdown(s)}</li>`).join('\n');
+    const diagram = sceneId
+      ? `<div class="viz-diagram"><div class="video-frame-wrap">${SCENES[sceneId].svg.replace('<svg ', '<svg class="anim-stage" ')}</div></div>`
+      : '';
+    return `<div class="viz viz-${type}" data-viz="${type}" data-steps="${steps.length}">
+  <div class="viz-head"><span class="viz-tag">Interactive ${type} &middot; ${safeTitle}</span></div>
+  ${diagram}
+  <ol class="viz-steps">
+    ${items}
+  </ol>
+  <div class="viz-controls" role="group" aria-label="${safeTitle}: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">${steps.length} steps &mdash; use Prev and Next to walk through</p>
+</div>`;
+  });
+
   return markdownText;
 }

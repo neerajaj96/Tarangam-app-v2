@@ -255,18 +255,12 @@ Absolute-beginner build-up (M1T3 taught stateless *interactions*; here is HTTP's
 3. **Server database** (server disk): maps ID → real state (cart items, login flag).
 4. **Lookup on arrival**: server reads the ID, queries its database, personalizes the response — HTTP itself never "remembered" anything.
 
-```mermaid
-sequenceDiagram
-    participant Br as Browser
-    participant Sv as Server
-    Br->>Sv: First request (no cookie)
-    Sv->>Sv: Create ID 8329, save in DB
-    Sv->>Br: Response + Set-cookie: 8329
-    Note over Br: Browser stores cookie locally
-    Br->>Sv: Next request + Cookie: 8329
-    Sv->>Sv: Look up 8329 in DB, retrieve state
-    Sv->>Br: Personalized response
-```
+::: viz flow http-cookie Cookie lifecycle: first visit to remembered regular
+1. First request carries no cookie — the server sees a stranger
+2. Server creates ID 8329, saves it in its database, and replies `Set-cookie: 8329`
+3. Browser stores the ID and resends it as `Cookie: 8329` on the next request
+4. Server looks up 8329, retrieves the state, and returns a personalized page
+:::
 
 *Result:* protocol stays 100% stateless; *application* behaves statefully. Sessions, JWTs (JSON Web Tokens), and tokens from M1T3 are the same pattern with different ID formats. Exam phrasing that earns marks: "cookies don't make HTTP stateful — they let stateless messages *carry* the key to server-side state."
 
@@ -280,6 +274,13 @@ sequenceDiagram
 - **Why each term.** Every *new* connection pays a handshake (1 RTT) plus its request exchange (1 RTT) = 2; a reused connection pays only the exchange (1); pipelining batches all exchanges into roughly one.
 - **Worked exam numbers (RTT = 50 ms, N = 5, T = 10 ms each).** Non-persistent: base 2·50+10 = 110 ms; each image 110 ms × 5 = 550 ms; **total 660 ms**. Persistent: 110 + 5·(50+10) = 110 + 300 = **410 ms**. Pipelined: 110 + (50 + 5·10) = 110 + 100 = **210 ms**. *Interpretation:* same page, same network — connection discipline alone cuts 660 → 210 ms. Verify every term before trusting a total.
 - **Common mistakes.** Forgetting the base HTML in N (N counts *embedded* objects; total objects = N+1); dropping the initial handshake's extra RTT in persistent mode (first object still costs 2); treating pipelined objects as zero-cost (they still share ~1 RTT).
+
+::: viz stepper Pricing one page three ways (RTT = 50 ms, N = 5, T = 10 ms)
+1. Pay the handshake once: opening any TCP connection costs ~1 RTT before the first byte
+2. Non-persistent: every object pays handshake + exchange — (110 ms base) + 5 × 110 ms = 660 ms
+3. Persistent: pay the handshake once, then 1 RTT per exchange — 110 ms + 5 × 60 ms = 410 ms
+4. Pipelined: batch all exchanges into ~1 shared RTT — 110 ms + 100 ms = 210 ms
+:::
 
 ### 3.9 Versions — History vs. Modern Reality (Exam-Controlled)
 

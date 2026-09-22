@@ -1705,6 +1705,46 @@ ${node(470, 150, 'WET', 'a1')}
 <text class="crcres a4" x="320" y="262" text-anchor="middle">0.43×0.4 = 0.57×0.3 ✓ balanced</text>
 <text class="animnote a5" x="320" y="285" text-anchor="middle">arrivals refill departures nightly — crowd converges to these shares</text>
 </svg>`
+  },
+  'http-exchange': {
+    title: 'HTTP Request and Response',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Browser sends GET request, server returns 200 OK with the page, over one reused connection">
+${defs}
+<rect class="host" x="40" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="110" y="55">Browser</text>
+<rect class="host" x="460" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="530" y="55">Server</text>
+${msg(180, 110, 460, 110, '1 · GET /index.html', 100, 'a1')}
+${msg(460, 165, 180, 165, '2 · 200 OK + page bytes', 155, 'a2')}
+${msg(180, 220, 460, 220, '3 · GET /logo.png (same connection)', 210, 'a3')}
+<text class="animnote a4" x="320" y="262" text-anchor="middle">one persistent connection serves every object in turn</text>
+</svg>`
+  },
+
+  'http-cookie': {
+    title: 'Cookie Lifecycle',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="First request without cookie, server replies Set-cookie, browser resends Cookie, server returns personalized page">
+${defs}
+<rect class="host" x="40" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="110" y="55">Browser</text>
+<rect class="host" x="460" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="530" y="55">Server + DB</text>
+${msg(180, 95, 460, 95, '1 · GET (no cookie)', 85, 'a1')}
+${msg(460, 145, 180, 145, '2 · Set-cookie: id=8329', 135, 'a2')}
+${msg(180, 195, 460, 195, '3 · GET + Cookie: 8329', 185, 'a3')}
+${msg(460, 240, 180, 240, '4 · personalized page', 232, 'a4')}
+</svg>`
+  },
+
+  'http-timing': {
+    title: 'Non-Persistent Versus Persistent Timing',
+    svg: `<svg viewBox="0 0 640 300" role="img" aria-label="Non-persistent mode opens a new connection per object while persistent mode reuses one connection">
+${defs}
+<text class="animcap a1" x="160" y="30" text-anchor="middle">NON-PERSISTENT · 1 conn/object</text>
+${msg(60, 100, 260, 100, 'open, GET, close', 90, 'a1')}
+${msg(60, 160, 260, 160, 'open, GET, close', 150, 'a2')}
+${msg(60, 220, 260, 220, 'open, GET, close', 210, 'a2')}
+<text class="animcap a3" x="480" y="30" text-anchor="middle">PERSISTENT · 1 conn total</text>
+${msg(380, 130, 580, 130, 'open once', 120, 'a3')}
+${msg(380, 180, 580, 180, 'GET, GET, GET…', 170, 'a4')}
+<text class="animnote a4" x="480" y="262" text-anchor="middle">each extra handshake costs round trips</text>
+</svg>`
   }
 };
 

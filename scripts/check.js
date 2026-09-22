@@ -235,6 +235,20 @@ for (const course of courses) {
     for (const m of t.matchAll(/::: anim (\S+)/g)) {
       if (!SCENE_IDS.includes(m[1])) fail(`${course}/${f}: unknown anim scene '${m[1]}' (registry: ${SCENE_IDS.join(', ')})`);
     }
+
+    // 2e2. Viz widgets (`::: viz flow|stepper`, see scripts/widgets.js):
+    // known types only, plus at least 2 steps (a single step needs no
+    // staged controls). Flow scene ids resolve in scripts/scenes.js when
+    // the first head word names one; otherwise it is title text.
+    for (const m of t.matchAll(/^::: viz (\S+)(.*)$/gm)) {
+      if (m[1] !== 'flow' && m[1] !== 'stepper') {
+        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow or stepper`);
+      }
+    }
+    for (const b of t.matchAll(/::: viz (?:flow|stepper)(.*?)\n([\s\S]*?)\n:::/g)) {
+      const lines = b[2].split('\n').map((l) => l.trim()).filter(Boolean);
+      if (lines.length < 2) fail(`${course}/${f}: ::: viz block needs at least 2 steps — actual: ${lines.length}`);
+    }
   }
 }
 

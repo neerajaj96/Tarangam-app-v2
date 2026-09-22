@@ -945,3 +945,57 @@ img, video, svg, canvas { max-width: 100%; height: auto; }
   .quiz-explanation-dropdown { border: 1px solid #999; }
   .quiz-explanation-dropdown:not([open]) .quiz-explanation-content { display: block; }
 }
+
+/* ---------- Interactive visualization shell (`::: viz`, assets/viz.js) ---
+   Static-first: without JS every .viz-step is visible. viz.js adds
+   .is-live, then hides non-current steps explicitly. Theme-aware via the
+   shared --surface/--ink/--accent tokens, so all four themes inherit it. */
+.viz {
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  background: var(--surface); margin: 20px 0; overflow: hidden;
+}
+.viz-head { padding: 10px 16px; border-bottom: 1px solid var(--border-soft); }
+.viz-tag { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--accent); }
+.viz-diagram { padding: 12px 16px 0; }
+.viz-steps { list-style: none; margin: 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.viz-step {
+  border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+  background: var(--surface-2); padding: 10px 14px; margin: 0;
+}
+.viz-step > :first-child { margin-top: 0; }
+.viz-step > :last-child { margin-bottom: 0; }
+.viz-flow .viz-steps { counter-reset: vizstep; }
+.viz-flow .viz-step { position: relative; padding-left: 44px; }
+.viz-flow .viz-step::before {
+  counter-increment: vizstep; content: counter(vizstep);
+  position: absolute; left: 12px; top: 10px;
+  width: 22px; height: 22px; border-radius: var(--radius-full);
+  background: var(--surface-3); color: var(--ink); font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.viz-flow .viz-step:not(:last-child)::after {
+  content: "\2193"; position: absolute; left: 20px; top: 100%;
+  color: var(--ink-faint); font-size: 14px; line-height: 10px;
+}
+.viz.is-live .viz-step { border-color: var(--border-soft); }
+.viz.is-live .viz-step[aria-current="step"] { border-color: var(--accent); background: var(--surface-3); }
+.viz.is-live .viz-step[hidden] { display: none; }
+.viz-controls { display: none; flex-wrap: wrap; gap: 8px; padding: 0 16px 12px; }
+.viz.is-live .viz-controls { display: flex; }
+.viz-btn {
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--ink);
+  border-radius: var(--radius-md); padding: 8px 14px; font-family: var(--font-body); font-size: 14px;
+  cursor: pointer;
+}
+.viz-btn:hover:not([disabled]) { border-color: var(--accent); background: var(--surface-3); }
+.viz-btn[disabled] { opacity: 0.45; cursor: default; }
+.viz-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.viz-status { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); margin: 0; padding: 0 16px 12px; }
+@media (max-width: 640px) {
+  .viz-controls { gap: 6px; }
+  .viz-btn { padding: 8px 10px; font-size: 13px; }
+}
+@media print {
+  .viz-controls { display: none !important; }
+  .viz.is-live .viz-step[hidden] { display: list-item; }
+}

@@ -579,18 +579,35 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 <li><strong>Server database</strong> (server disk): maps ID → real state (cart items, login flag).</li>
 <li><strong>Lookup on arrival</strong>: server reads the ID, queries its database, personalizes the response — HTTP itself never &quot;remembered&quot; anything.</li>
 </ol>
-<pre><code class="language-mermaid">sequenceDiagram
-    participant Br as Browser
-    participant Sv as Server
-    Br-&gt;&gt;Sv: First request (no cookie)
-    Sv-&gt;&gt;Sv: Create ID 8329, save in DB
-    Sv-&gt;&gt;Br: Response + Set-cookie: 8329
-    Note over Br: Browser stores cookie locally
-    Br-&gt;&gt;Sv: Next request + Cookie: 8329
-    Sv-&gt;&gt;Sv: Look up 8329 in DB, retrieve state
-    Sv-&gt;&gt;Br: Personalized response
-</code></pre>
-<p><em>Result:</em> protocol stays 100% stateless; <em>application</em> behaves statefully. Sessions, JWTs (JSON Web Tokens), and tokens from M1T3 are the same pattern with different ID formats. Exam phrasing that earns marks: &quot;cookies don&#39;t make HTTP stateful — they let stateless messages <em>carry</em> the key to server-side state.&quot;</p>
+<div class="viz viz-flow" data-viz="flow" data-steps="4">
+  <div class="viz-head"><span class="viz-tag">Interactive flow &middot; Cookie lifecycle: first visit to remembered regular</span></div>
+  <div class="viz-diagram"><div class="video-frame-wrap"><svg class="anim-stage" viewBox="0 0 640 300" role="img" aria-label="First request without cookie, server replies Set-cookie, browser resends Cookie, server returns personalized page">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="host" x="40" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="110" y="55">Browser</text>
+<rect class="host" x="460" y="30" width="140" height="240" rx="10"/><text class="hostlbl" x="530" y="55">Server + DB</text>
+<g class="msg a1"><line x1="180" y1="95" x2="460" y2="95" marker-end="url(#ah)"/><text x="320" y="85" text-anchor="middle">1 · GET (no cookie)</text></g>
+<g class="msg a2"><line x1="460" y1="145" x2="180" y2="145" marker-end="url(#ah)"/><text x="320" y="135" text-anchor="middle">2 · Set-cookie: id=8329</text></g>
+<g class="msg a3"><line x1="180" y1="195" x2="460" y2="195" marker-end="url(#ah)"/><text x="320" y="185" text-anchor="middle">3 · GET + Cookie: 8329</text></g>
+<g class="msg a4"><line x1="460" y1="240" x2="180" y2="240" marker-end="url(#ah)"/><text x="320" y="232" text-anchor="middle">4 · personalized page</text></g>
+</svg></div></div>
+  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>First request carries no cookie — the server sees a stranger</p>
+</li>
+<li class="viz-step" data-i="1"><p>Server creates ID 8329, saves it in its database, and replies <code>Set-cookie: 8329</code></p>
+</li>
+<li class="viz-step" data-i="2"><p>Browser stores the ID and resends it as <code>Cookie: 8329</code> on the next request</p>
+</li>
+<li class="viz-step" data-i="3"><p>Server looks up 8329, retrieves the state, and returns a personalized page</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="Cookie lifecycle: first visit to remembered regular: step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">4 steps &mdash; use Prev and Next to walk through</p>
+</div><p><em>Result:</em> protocol stays 100% stateless; <em>application</em> behaves statefully. Sessions, JWTs (JSON Web Tokens), and tokens from M1T3 are the same pattern with different ID formats. Exam phrasing that earns marks: &quot;cookies don&#39;t make HTTP stateful — they let stateless messages <em>carry</em> the key to server-side state.&quot;</p>
 <h3>3.8 RTT Timing — Pricing a Page in Round Trips</h3>
 <ul>
 <li><strong>Definitions.</strong> RTT = one small packet there and back = 2 × propagation delay (M1T1 delays). TCP handshake ≈ 1 RTT (SYN out, SYN-ACK back; the final ACK rides with the request). One request/response exchange ≈ 1 RTT + object transmission time.</li>
@@ -604,7 +621,25 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 <li><strong>Worked exam numbers (RTT = 50 ms, N = 5, T = 10 ms each).</strong> Non-persistent: base 2·50+10 = 110 ms; each image 110 ms × 5 = 550 ms; <strong>total 660 ms</strong>. Persistent: 110 + 5·(50+10) = 110 + 300 = <strong>410 ms</strong>. Pipelined: 110 + (50 + 5·10) = 110 + 100 = <strong>210 ms</strong>. <em>Interpretation:</em> same page, same network — connection discipline alone cuts 660 → 210 ms. Verify every term before trusting a total.</li>
 <li><strong>Common mistakes.</strong> Forgetting the base HTML in N (N counts <em>embedded</em> objects; total objects = N+1); dropping the initial handshake&#39;s extra RTT in persistent mode (first object still costs 2); treating pipelined objects as zero-cost (they still share ~1 RTT).</li>
 </ul>
-<h3>3.9 Versions — History vs. Modern Reality (Exam-Controlled)</h3>
+<div class="viz viz-stepper" data-viz="stepper" data-steps="4">
+  <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; Pricing one page three ways (RTT = 50 ms, N = 5, T = 10 ms)</span></div>  <ol class="viz-steps">
+    <li class="viz-step" data-i="0"><p>Pay the handshake once: opening any TCP connection costs ~1 RTT before the first byte</p>
+</li>
+<li class="viz-step" data-i="1"><p>Non-persistent: every object pays handshake + exchange — (110 ms base) + 5 × 110 ms = 660 ms</p>
+</li>
+<li class="viz-step" data-i="2"><p>Persistent: pay the handshake once, then 1 RTT per exchange — 110 ms + 5 × 60 ms = 410 ms</p>
+</li>
+<li class="viz-step" data-i="3"><p>Pipelined: batch all exchanges into ~1 shared RTT — 110 ms + 100 ms = 210 ms</p>
+</li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="Pricing one page three ways (RTT = 50 ms, N = 5, T = 10 ms): step controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">4 steps &mdash; use Prev and Next to walk through</p>
+</div><h3>3.9 Versions — History vs. Modern Reality (Exam-Controlled)</h3>
 <ul>
 <li><strong>HTTP/1.0 (1996):</strong> non-persistent default, one object per connection.</li>
 <li><strong>HTTP/1.1 (1997/1999):</strong> persistent default, mandatory <code>Host:</code> header, pipelining option — but pipelined head-of-line blocking (one stuck response stalls everything behind it) kept it little-used.</li>
@@ -1097,6 +1132,10 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
   <script type="module">
     import { initStudyContext } from '../assets/topic-study-context.js';
     initStudyContext({ courseCode: "PCCST501", topicId: "m1_04_world_wide_web_and_http" });
+  </script>
+  <script type="module">
+    import { initViz } from '../assets/viz.js';
+    initViz();
   </script>
   <script>
 
