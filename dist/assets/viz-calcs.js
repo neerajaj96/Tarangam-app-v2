@@ -18,8 +18,9 @@
  *   above every lab using this calculation.
  * - inputs[]: {key, label, unit, min, max, step, sliderStep, def, int,
  *   slider, desc}. `slider:false` means number-input only (precision).
- *   Slider and number always share min/max/step so paired controls can
- *   never drift out of sync.
+ *   Paired sliders share the input's min/max but may step more coarsely;
+ *   the number field is always the single source of truth, so the pair
+ *   cannot drift — and an invalid number never rewrites the slider.
  * - outputs[]: {key, label, unit, fmt ('int' | 'num2'), meaning}.
  * - disclaimer: fixed textbook-model honesty line.
  * - validate(values) -> {errors, clean}: missing/non-numeric/range
@@ -38,10 +39,12 @@ export function formatInt(n) {
 }
 
 export function formatNum2(n) {
+  // Three significant figures: keeps mid-range values readable (6.66)
+  // without collapsing small-but-nonzero ratios (0.001) to a bare "0".
   const v = Number(n);
   if (!Number.isFinite(v)) return '—';
-  const r = Math.round(v * 100) / 100;
-  return String(r);
+  if (v === 0) return '0';
+  return String(Number(v.toPrecision(3)));
 }
 
 function checkInput(spec, raw, errors, clean) {

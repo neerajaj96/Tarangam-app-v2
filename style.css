@@ -1097,9 +1097,10 @@ img, video, svg, canvas { max-width: 100%; height: auto; }
 }
 
 /* ---------- Generalized lab (viz-calcs registry, assets/viz.js) ---
-   Same shell/tokens as every viz widget. Number + range inputs always
-   share min/max/step so the pair cannot drift; validation messages are
-   per-input with aria wiring from the parser. No animation anywhere. */
+   Same shell/tokens as every viz widget. The number field is the single
+   source of truth; the paired slider mirrors valid values only, so the
+   pair cannot drift and invalid input never rewrites the slider.
+   Per-input validation messages carry full aria wiring. No animation. */
 .viz-formula { padding: 12px 16px 0; font-size: 15px; overflow-x: auto; }
 .viz-formula > :first-child { margin-top: 0; }
 .viz-formula > :last-child { margin-bottom: 0; }

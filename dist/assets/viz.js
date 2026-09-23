@@ -229,10 +229,13 @@ export function bindLab(root, labId) {
   const resetBtn = root.querySelector ? root.querySelector('[data-act="reset"]') : null;
   const summary = (results) => spec.outputs
     .map((o) => `${o.label} ${formatOutput(spec, o.key, results[o.key])}`).join(' · ');
-  const recompute = () => {
+  const readValues = () => {
     const values = {};
     spec.inputs.forEach((inp) => { values[inp.key] = numbers[inp.key].value; });
-    const { errors: bad, clean } = validateLab(id, values);
+    return values;
+  };
+  const recompute = () => {
+    const { errors: bad, clean } = validateLab(id, readValues());
     let failed = 0;
     spec.inputs.forEach((inp) => {
       const msg = bad[inp.key];
@@ -269,7 +272,13 @@ export function bindLab(root, labId) {
     numbers[key].value = ranges[key].value;
   };
   spec.inputs.forEach((inp) => {
-    numbers[inp.key].addEventListener('input', () => { syncFromNumber(inp.key); recompute(); });
+    // Slider follows only valid numbers: an invalid entry keeps its error
+    // state while the slider stays parked at the last good value — the two
+    // controls never silently disagree.
+    numbers[inp.key].addEventListener('input', () => {
+      if (!validateLab(id, readValues()).errors[inp.key]) syncFromNumber(inp.key);
+      recompute();
+    });
     if (ranges[inp.key]) ranges[inp.key].addEventListener('input', () => { syncFromRange(inp.key); recompute(); });
   });
   if (resetBtn) {

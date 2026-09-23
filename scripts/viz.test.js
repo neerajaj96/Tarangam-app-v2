@@ -863,3 +863,52 @@ describe('generic lab binding', () => {
     assert.ok(out.includes('Assume ideal coding'), 'author notes rendered');
   });
 });
+
+describe('lab registry structural guarantees', () => {
+  it('keeps every default valid and every bound coherent', () => {
+    for (const id of LAB_IDS) {
+      const spec = getLab(id);
+      for (const inp of spec.inputs) {
+        assert.ok(inp.min <= inp.def && inp.def <= inp.max, `${id}.${inp.key} default inside [min, max]`);
+        assert.ok(inp.step > 0 && inp.sliderStep > 0, `${id}.${inp.key} positive steps`);
+        assert.ok(inp.desc && inp.desc.length > 0, `${id}.${inp.key} explains itself`);
+        assert.ok(inp.unit && inp.unit.length > 0, `${id}.${inp.key} declares a unit`);
+      }
+      for (const o of spec.outputs) {
+        assert.ok(o.unit !== undefined && o.meaning, `${id} output ${o.key} has unit and meaning`);
+        assert.ok(o.fmt === 'int' || o.fmt === 'num2', `${id} output ${o.key} declares a formatter`);
+      }
+      const { errors } = validateLab(id, Object.fromEntries(spec.inputs.map((i) => [i.key, String(i.def)])));
+      assert.deepEqual(errors, {}, `${id} defaults validate clean`);
+      assert.ok(spec.disclaimer.length > 0 && spec.formula.length > 0, `${id} shows formula and limits`);
+    }
+  });
+
+  it('issues distinct ids for repeated labs on one page', () => {
+    const out = transformCustomWidgets('::: viz lab rtt One\nN defaults.\n:::\n\n::: viz lab rtt Two\nN defaults.\n:::');
+    const ids = [...out.matchAll(/for="vizl(\d+)-n"/g)].map((m) => m[1]);
+    assert.deepEqual(ids, ['1', '2'], 'per-widget id counter keeps aria wiring distinct');
+  });
+});
+
+describe('lab hardening: formatting, sync, fallback', () => {
+  it('keeps small-but-nonzero ratios readable', () => {
+    assert.equal(formatNum2(0.001), '0.001', 'vanishing SNR still prints');
+    assert.equal(formatNum2(6.658), '6.66', 'mid-range stays short');
+    assert.equal(formatNum2(1000), '1000', 'integers stay plain');
+    assert.equal(formatNum2(0), '0', 'true zero prints as zero');
+  });
+
+  it('never parks the slider on an invalid number', () => {
+    const root = stubLabRoot('rtt', { n: '5', rtt: '50', t: '10' });
+    bindLab(root);
+    root.ranges.rtt.value = '50';
+    root.inputs.rtt.value = '-20';
+    root.fireIn('rtt');
+    assert.equal(root.ranges.rtt.value, '50', 'slider keeps last good value');
+    assert.equal(root.inputs.rtt.getAttribute('aria-invalid'), 'true', 'number flagged instead');
+    root.inputs.rtt.value = '60';
+    root.fireIn('rtt');
+    assert.equal(root.ranges.rtt.value, '60', 'valid numbers still sync');
+  });
+});
