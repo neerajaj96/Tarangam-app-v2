@@ -14,7 +14,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { transformCustomWidgets } from './widgets.js';
 import { SCENES, SCENE_IDS } from './scenes.js';
-import { createStepper, bindViz, bindTabs, bindCompare, bindRtt, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
+import { createStepper, bindViz, bindTabs, bindCompare, bindRtt, bindLab, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
+import { LABS, LAB_IDS, getLab, validateLab, computeLab, formatInt, formatNum2 } from './viz-calcs.js';
 
 const read = (f) => fs.readFileSync(f, 'utf-8');
 
@@ -315,10 +316,11 @@ describe('viz compare transform', () => {
   });
 });
 
-describe('viz rtt transform', () => {
-  it('renders labeled inputs, result rows, and the model disclaimer', () => {
+describe('viz lab transform (generic registry + legacy rtt)', () => {
+  it('renders the legacy rtt form through the generic lab', () => {
     const out = transformCustomWidgets('::: viz rtt Timing lab\nAssumes textbook mode.\n:::');
-    assert.ok(out.includes('class="viz viz-rtt"'), 'rtt shell class');
+    assert.ok(out.includes('class="viz viz-lab"'), 'generic lab shell class');
+    assert.ok(out.includes('data-lab="rtt"'), 'legacy form maps to the rtt calculation');
     for (const key of ['n', 'rtt', 't']) {
       assert.ok(out.includes(`data-in="${key}"`), `input ${key} present`);
     }
@@ -328,6 +330,23 @@ describe('viz rtt transform', () => {
     assert.ok(out.includes('not a measurement of real browser performance'), 'disclaimer fixed in output');
     assert.ok(out.includes('Assumes textbook mode'), 'author notes rendered');
     assert.ok(out.includes('type="number"'), 'native number inputs for mobile keyboards');
+    assert.ok(out.includes('660 ms') && out.includes('410 ms') && out.includes('210 ms'), 'defaults precomputed at build');
+    assert.ok(out.includes('Worked example (defaults)'), 'static worked example present');
+    assert.ok(out.includes('data-act="reset"'), 'reset control present');
+  });
+
+  it('renders any registered calculation with formula and paired sliders', () => {
+    const out = transformCustomWidgets('::: viz lab shannon Shannon lab\nAssume ideal coding.\n:::');
+    assert.ok(out.includes('data-lab="shannon"'), 'lab id wired');
+    assert.ok(out.includes('data-in="b"') && out.includes('data-in="db"') && out.includes('data-in="levels"'), 'inputs present');
+    assert.ok(out.includes('type="range"'), 'sliders paired where the spec asks');
+    assert.ok(out.includes('29,902 bps'), 'Shannon default precomputed');
+    assert.ok(out.includes('aria-describedby'), 'inputs describe themselves for screen readers');
+  });
+
+  it('leaves unknown calculation ids raw for check.js', () => {
+    const raw = '::: viz lab quark Lab\n1. One\n2. Two\n:::';
+    assert.equal(transformCustomWidgets(raw), raw, 'unknown id untouched');
   });
 });
 
@@ -439,14 +458,15 @@ describe('compare and rtt bindings on stub DOM', () => {
     });
     const root = {
       classList: { add() {} },
+      getAttribute: () => null,
       querySelector: (sel) => {
         const m = /^\[data-in="([a-z]+)"\]$/.exec(sel);
         return m && inputs[m[1]] ? inputs[m[1]] : null;
       },
       querySelectorAll: (sel) => (sel === '[data-out]' ? outs : []),
     };
-    const bound = bindRtt(root);
-    assert.ok(bound, 'rtt lab binds');
+    const bound = bindLab(root, 'rtt');
+    assert.ok(bound, 'generic lab binds legacy rtt markup');
     assert.equal(outs[0].textContent, '660 ms');
     assert.equal(outs[1].textContent, '410 ms');
     assert.equal(outs[2].textContent, '210 ms');
@@ -458,7 +478,7 @@ describe('compare and rtt bindings on stub DOM', () => {
   });
 
   it('refuses to bind without inputs and outputs', () => {
-    assert.equal(bindRtt({ querySelector: () => null, querySelectorAll: () => [] }), null);
+    assert.equal(bindLab({ getAttribute: () => null, querySelector: () => null, querySelectorAll: () => [] }), null);
     assert.equal(bindCompare({ querySelector: () => null, querySelectorAll: () => [] }), null);
   });
 });
@@ -657,5 +677,189 @@ describe('structure stylesheet hardening', () => {
     assert.ok(!/#[0-9a-fA-F]{3,8}/.test(block), 'theme variables only, all modes inherit');
     assert.ok(block.includes('.viz-field:focus-visible'), 'visible keyboard focus');
     assert.ok(block.includes('.viz-struct.is-live .viz-fexp'), 'live collapse rule present');
+  });
+});
+
+describe('lab calculation registry', () => {
+  it('registers exactly the rtt and shannon families with complete specs', () => {
+    assert.deepEqual(LAB_IDS, ['rtt', 'shannon']);
+    assert.equal(getLab('quark'), null, 'unknown id resolves to null');
+    for (const id of LAB_IDS) {
+      const spec = getLab(id);
+      assert.ok(typeof spec.formula === 'string' && spec.formula.length > 0, `${id} shows its formula`);
+      assert.ok(typeof spec.disclaimer === 'string' && spec.disclaimer.length > 0, `${id} states its limits`);
+      assert.ok(spec.inputs.length > 0 && spec.outputs.length > 0, `${id} declares inputs and outputs`);
+      for (const inp of spec.inputs) {
+        for (const k of ['key', 'label', 'unit', 'min', 'max', 'step', 'def', 'desc']) {
+          assert.ok(inp[k] !== undefined, `${id}.${inp.key} declares ${k}`);
+        }
+        assert.ok(inp.min <= inp.def && inp.def <= inp.max, `${id}.${inp.key} default inside bounds`);
+      }
+      for (const o of spec.outputs) {
+        for (const k of ['key', 'label', 'unit', 'meaning']) {
+          assert.ok(o[k] !== undefined, `${id} output ${o.key} declares ${k}`);
+        }
+      }
+      assert.ok(typeof spec.validate === 'function' && typeof spec.compute === 'function', `${id} separates validation from math`);
+      assert.ok(typeof spec.explain === 'function', `${id} explains worked numbers`);
+    }
+  });
+
+  it('contains no eval or generated-code execution', () => {
+    for (const f of ['assets/viz-calcs.js', 'assets/viz.js']) {
+      const src = read(f);
+      assert.ok(!/eval\s*\(/.test(src), `${f} has no eval`);
+      assert.ok(!/new\s+Function\s*\(/.test(src), `${f} has no Function constructor`);
+    }
+  });
+});
+
+describe('Shannon calculation correctness', () => {
+  it('matches the lesson worked example: 29,902 vs 18,000, Nyquist binds', () => {
+    const { errors, clean } = validateLab('shannon', { b: '3000', db: '30', levels: '8' });
+    assert.deepEqual(errors, {}, 'lesson defaults validate clean');
+    const r = computeLab('shannon', clean);
+    assert.equal(r.snr, 1000, '30 dB converts to a linear ratio of 1000');
+    assert.equal(Math.round(r.shannon), 29902, 'Shannon capacity rounds to the lesson value');
+    assert.equal(r.nyquist, 18000, 'Nyquist ceiling exact');
+    assert.equal(r.verdict, 18000, 'lower ceiling governs');
+  });
+
+  it('scales linearly with bandwidth and logarithmically with SNR', () => {
+    const base = computeLab('shannon', { b: 3000, db: 30, levels: 1024 });
+    const doubled = computeLab('shannon', { b: 6000, db: 30, levels: 1024 });
+    assert.ok(Math.abs(doubled.shannon - 2 * base.shannon) < 1, 'doubling B doubles capacity');
+    const low = computeLab('shannon', { b: 3000, db: 20, levels: 1024 });
+    assert.ok(low.shannon < base.shannon && low.shannon > base.shannon / 2, 'tenfold SNR power costs a fraction of capacity');
+  });
+});
+
+describe('lab input validation', () => {
+  it('rejects missing, non-numeric, fractional, and out-of-range inputs', () => {
+    assert.ok(validateLab('rtt', { n: '', rtt: '50', t: '10' }).errors.n.includes('Enter'), 'missing flagged');
+    assert.ok(validateLab('rtt', { n: 'abc', rtt: '50', t: '10' }).errors.n.includes('number'), 'non-numeric flagged');
+    assert.ok(validateLab('rtt', { n: '2.5', rtt: '50', t: '10' }).errors.n.includes('whole'), 'fractional integer flagged');
+    assert.ok(validateLab('rtt', { n: '-1', rtt: '50', t: '10' }).errors.n.includes('between'), 'negative flagged');
+    assert.ok(validateLab('shannon', { b: '0', db: '30', levels: '8' }).errors.b, 'zero bandwidth invalid');
+    assert.ok(validateLab('shannon', { b: '3000', db: '30', levels: '1' }).errors.levels, 'single level invalid');
+    assert.ok(validateLab('shannon', { b: '3000', db: '200', levels: '8' }).errors.db, 'absurd SNR invalid');
+  });
+
+  it('never coerces: invalid inputs produce no numbers', () => {
+    const { errors, clean } = validateLab('shannon', { b: 'nope', db: '30', levels: '8' });
+    assert.ok(errors.b && !('b' in clean), 'bad input excluded from clean values');
+  });
+});
+
+describe('deterministic formatting', () => {
+  it('groups thousands without locale dependence', () => {
+    assert.equal(formatInt(29902), '29,902');
+    assert.equal(formatInt(8), '8');
+    assert.equal(formatNum2(1000), '1000');
+    assert.equal(formatNum2(6.658), '6.66');
+  });
+});
+
+function stubLabRoot(specId, values) {
+  const spec = getLab(specId);
+  const listeners = {};
+  const inputs = {};
+  const ranges = {};
+  const errs = {};
+  for (const inp of spec.inputs) {
+    const num = stubEl({});
+    num.value = String(values[inp.key]);
+    num.addEventListener = (t, fn) => { (listeners[`in:${inp.key}:${t}`] = listeners[`in:${inp.key}:${t}`] || []).push(fn); };
+    inputs[inp.key] = num;
+    const range = stubEl({});
+    range.value = String(values[inp.key]);
+    range.addEventListener = (t, fn) => { (listeners[`range:${inp.key}:${t}`] = listeners[`range:${inp.key}:${t}`] || []).push(fn); };
+    ranges[inp.key] = range;
+    errs[inp.key] = stubEl({});
+    errs[inp.key].setAttribute('hidden', '');
+  }
+  const outs = spec.outputs.map((o) => {
+    const el = stubEl({});
+    el.getAttribute = (a) => (a === 'data-out' ? o.key : null);
+    return el;
+  });
+  const status = stubEl({});
+  const reset = stubEl({});
+  reset.addEventListener = (t, fn) => { (listeners[`reset:${t}`] = listeners[`reset:${t}`] || []).push(fn); };
+  return {
+    spec, inputs, ranges, errs, outs, status, reset, listeners,
+    classList: { add() {} },
+    getAttribute: (a) => (a === 'data-lab' ? specId : null),
+    querySelector: (sel) => {
+      let m = /^\[data-in="([a-z]+)"\]$/.exec(sel);
+      if (m && inputs[m[1]]) return inputs[m[1]];
+      m = /^\[data-range="([a-z]+)"\]$/.exec(sel);
+      if (m && ranges[m[1]]) return ranges[m[1]];
+      m = /^\[data-err="([a-z]+)"\]$/.exec(sel);
+      if (m && errs[m[1]]) return errs[m[1]];
+      if (sel === '.viz-status') return status;
+      if (sel === '[data-act="reset"]') return reset;
+      return null;
+    },
+    querySelectorAll: (sel) => (sel === '[data-out]' ? outs : []),
+    fireIn: (key) => { (listeners[`in:${key}:input`] || []).forEach((fn) => fn()); },
+    fireRange: (key) => { (listeners[`range:${key}:input`] || []).forEach((fn) => fn()); },
+    fireReset: () => { (listeners['reset:click'] || []).forEach((fn) => fn()); },
+  };
+}
+
+describe('generic lab binding', () => {
+  it('shows validation errors instead of misleading numbers', () => {
+    const root = stubLabRoot('rtt', { n: '5', rtt: '50', t: '10' });
+    const bound = bindLab(root);
+    assert.ok(bound, 'lab binds');
+    root.inputs.n.value = '-3';
+    root.fireIn('n');
+    assert.equal(root.errs.n.getAttribute('hidden'), null, 'error revealed');
+    assert.ok(root.errs.n.textContent.includes('between'), 'message states the bounds');
+    assert.equal(root.inputs.n.getAttribute('aria-invalid'), 'true', 'input flagged invalid');
+    assert.equal(root.outs[0].textContent, '—', 'no misleading output');
+    assert.ok(root.status.textContent.includes('Fix 1'), 'status counts the problem');
+  });
+
+  it('keeps paired number and range controls in sync both ways', () => {
+    const root = stubLabRoot('rtt', { n: '5', rtt: '50', t: '10' });
+    bindLab(root);
+    root.ranges.rtt.value = '100';
+    root.fireRange('rtt');
+    assert.equal(root.inputs.rtt.value, '100', 'slider writes the number field');
+    assert.equal(root.outs[0].textContent, '1,260 ms', 'outputs follow the slider');
+    root.inputs.rtt.value = '50';
+    root.fireIn('rtt');
+    assert.equal(root.ranges.rtt.value, '50', 'number field writes the slider back');
+  });
+
+  it('reset restores spec defaults and clears errors', () => {
+    const root = stubLabRoot('shannon', { b: '3000', db: '30', levels: '8' });
+    bindLab(root);
+    root.inputs.db.value = '9999';
+    root.fireIn('db');
+    assert.equal(root.outs[1].textContent, '—', 'invalid blanks outputs');
+    root.fireReset();
+    assert.equal(root.inputs.db.value, '30', 'default restored');
+    assert.equal(root.outs[1].textContent, '29,902 bps', 'defaults recomputed');
+    assert.equal(root.errs.db.getAttribute('hidden'), '', 'errors cleared');
+  });
+
+  it('labels every control and wires accessible output', () => {
+    const out = transformCustomWidgets('::: viz lab shannon Lab\n:::');
+    assert.ok(out.includes('aria-describedby'), 'inputs reference descriptions and errors');
+    assert.ok(out.includes('role="status"'), 'summary announced politely');
+    assert.ok(out.includes('for="vizl'), 'labels target their inputs');
+    assert.ok(out.includes('<button type="button"'), 'reset is a native button');
+  });
+
+  it('static output carries formula, meanings, worked numbers, and defaults', () => {
+    const out = transformCustomWidgets('::: viz lab shannon Lab\nAssume ideal coding.\n:::');
+    assert.ok(out.includes('log_2'), 'governing formula present without JS');
+    assert.ok(out.includes('Channel bandwidth'), 'input meanings present without JS');
+    assert.ok(out.includes('Worked example (defaults)'), 'worked example present without JS');
+    assert.ok(out.includes('29,902 bps'), 'default result precomputed without JS');
+    assert.ok(out.includes('Assume ideal coding'), 'author notes rendered');
   });
 });

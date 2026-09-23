@@ -105,6 +105,12 @@ A $3$ kHz telephone channel: (a) noiseless, binary signaling — max rate? (b) n
 Three numbers, one verdict: levels buy linear-ish gains (6 → 18 kbps), noise sets the absolute roof ($\approx 30$ kbps here). Every capacity question in the exam is this exact dance — convert dB, compute both laws, take the min.
 :::
 
+### 4.3 Interactive Exploration: Move Bandwidth Against Noise
+
+::: viz lab shannon Shannon explorer: bandwidth versus noise
+Assumes ideal coding at the Shannon limit with no protocol overhead. Try doubling B against raising SNR by 10 dB and watch which ceiling moves — bandwidth buys linearly, noise buys logarithmically.
+:::
+
 ### 4.3 Interactive Exploration: What Moves the Shannon Ceiling
 
 ::: viz stepper Shannon scenarios on a 3 kHz line: bandwidth versus noise

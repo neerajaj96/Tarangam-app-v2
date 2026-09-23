@@ -132,26 +132,22 @@ export function initViz(scope) {
     if (kind === 'flow' || kind === 'stepper') bound.push(bindViz(root));
     else if (kind === 'tabs') bound.push(bindTabs(root));
     else if (kind === 'compare') bound.push(bindCompare(root));
-    else if (kind === 'rtt') bound.push(bindRtt(root));
+    else if (kind === 'rtt') bound.push(bindLab(root, 'rtt'));
+    else if (kind === 'lab') bound.push(bindLab(root));
     else if (kind === 'struct') bound.push(bindStruct(root));
   });
   return bound.filter(Boolean);
 }
 
-// Textbook RTT comparison model (HTTP showcase): n objects, rtt ms per
-// round trip, t ms transfer per object. Returns totals in ms. Pure and
-// unit-tested; the numbers compare connection disciplines, never real
-// browser performance.
+import { getLab, validateLab, computeLab, formatOutput } from './viz-calcs.js';
+
+// Legacy RTT entry kept for compatibility: the generic lab owns the math
+// now (see viz-calcs.js); this wrapper preserves the old clamping
+// semantics exactly, so long-standing callers and tests keep passing.
 export function calcRtt(n, rtt, t) {
-  const objs = Math.max(0, Math.floor(Number(n) || 0));
-  const round = Math.max(0, Number(rtt) || 0);
-  const xfer = Math.max(0, Number(t) || 0);
-  const base = 2 * round + xfer;
-  return {
-    nonpersistent: base + objs * (2 * round + xfer),
-    persistent: base + objs * (round + xfer),
-    pipelined: base + (round + objs * xfer),
-  };
+  const coerce = (v) => Math.max(0, Number(v) || 0);
+  const c = computeLab('rtt', { n: Math.floor(coerce(n)), rtt: coerce(rtt), t: coerce(t) });
+  return { nonpersistent: c.nonpersistent, persistent: c.persistent, pipelined: c.pipelined };
 }
 
 // Tabbed panels: click/tap to select; arrows/Home/End move; roving
@@ -204,27 +200,97 @@ export function bindCompare(root) {
   return { root, apply };
 }
 
-// RTT lab: number inputs recompute the three textbook totals instantly.
-export function bindRtt(root) {
+// Generalized lab binder: one engine for every registered calculation.
+// Reads validated inputs (number + optional paired range sharing min/max/
+// step, so the pair cannot drift), shows per-input error messages instead
+// of silently coercing, recomputes instantly, announces a compact summary,
+// and resets to the spec defaults. No timers, no animation.
+export function bindLab(root, labId) {
   if (!root || typeof root.querySelector !== 'function') return null;
-  const get = (key) => root.querySelector(`[data-in="${key}"]`);
-  const nEl = get('n');
-  const rttEl = get('rtt');
-  const tEl = get('t');
+  const id = labId || (root.getAttribute ? root.getAttribute('data-lab') : null);
+  const spec = getLab(id);
+  if (!spec) return null;
+  const byKey = (attr, key) => root.querySelector(`[${attr}="${key}"]`);
+  const numbers = {};
+  const ranges = {};
+  const errors = {};
+  for (const inp of spec.inputs) {
+    const num = byKey('data-in', inp.key);
+    if (!num) return null;
+    numbers[inp.key] = num;
+    const range = byKey('data-range', inp.key);
+    if (range) ranges[inp.key] = range;
+    const err = root.querySelector(`[data-err="${inp.key}"]`);
+    if (err) errors[inp.key] = err;
+  }
   const outs = root.querySelectorAll ? Array.from(root.querySelectorAll('[data-out]')) : [];
-  if (!nEl || !rttEl || !tEl || !outs.length) return null;
+  if (!outs.length) return null;
+  const status = root.querySelector ? root.querySelector('.viz-status') : null;
+  const resetBtn = root.querySelector ? root.querySelector('[data-act="reset"]') : null;
+  const summary = (results) => spec.outputs
+    .map((o) => `${o.label} ${formatOutput(spec, o.key, results[o.key])}`).join(' · ');
   const recompute = () => {
-    const r = calcRtt(nEl.value, rttEl.value, tEl.value);
-    outs.forEach((o) => {
-      const v = r[o.getAttribute('data-out')];
-      o.textContent = typeof v === 'number' ? `${v} ms` : '—';
+    const values = {};
+    spec.inputs.forEach((inp) => { values[inp.key] = numbers[inp.key].value; });
+    const { errors: bad, clean } = validateLab(id, values);
+    let failed = 0;
+    spec.inputs.forEach((inp) => {
+      const msg = bad[inp.key];
+      const num = numbers[inp.key];
+      if (msg) {
+        failed += 1;
+        num.setAttribute('aria-invalid', 'true');
+        if (errors[inp.key]) {
+          errors[inp.key].textContent = msg;
+          errors[inp.key].removeAttribute('hidden');
+        }
+      } else {
+        num.removeAttribute('aria-invalid');
+        if (errors[inp.key]) {
+          errors[inp.key].textContent = '';
+          errors[inp.key].setAttribute('hidden', '');
+        }
+      }
     });
-    return r;
+    if (failed) {
+      outs.forEach((o) => { o.textContent = '—'; });
+      if (status) status.textContent = `Fix ${failed} highlighted field${failed === 1 ? '' : 's'}.`;
+      return null;
+    }
+    const results = computeLab(id, clean);
+    outs.forEach((o) => { o.textContent = formatOutput(spec, o.getAttribute('data-out'), results[o.getAttribute('data-out')]); });
+    if (status) status.textContent = summary(results);
+    return results;
   };
-  [nEl, rttEl, tEl].forEach((el) => el.addEventListener('input', recompute));
+  const syncFromNumber = (key) => {
+    if (ranges[key]) ranges[key].value = numbers[key].value;
+  };
+  const syncFromRange = (key) => {
+    numbers[key].value = ranges[key].value;
+  };
+  spec.inputs.forEach((inp) => {
+    numbers[inp.key].addEventListener('input', () => { syncFromNumber(inp.key); recompute(); });
+    if (ranges[inp.key]) ranges[inp.key].addEventListener('input', () => { syncFromRange(inp.key); recompute(); });
+  });
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      spec.inputs.forEach((inp) => {
+        numbers[inp.key].value = String(inp.def);
+        syncFromNumber(inp.key);
+      });
+      recompute();
+    });
+  }
   root.classList.add('is-live');
   recompute();
-  return { root, recompute };
+  return { root, spec, recompute };
+}
+
+// Legacy RTT binder: the generic lab supersedes it (same registry math,
+// plus validation, reset, and paired sliders). Kept routing so any stale
+// markup still binds instead of failing silently.
+export function bindRtt(root) {
+  return bindLab(root, 'rtt');
 }
 
 // Annotated structure viewer: exactly one field selected at a time (or

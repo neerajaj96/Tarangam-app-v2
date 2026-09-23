@@ -9,6 +9,7 @@ import path from 'path';
 import os from 'os';
 import { execFileSync } from 'child_process';
 import { SCENE_IDS } from './scenes.js';
+import { LAB_IDS as LAB_CALC_IDS } from './viz-calcs.js';
 import {
   CURRICULUM_PATH,
   loadCurriculum,
@@ -243,8 +244,8 @@ for (const course of courses) {
     // scripts/scenes.js when the first head word names one; otherwise it
     // is title text.
     for (const m of t.matchAll(/^::: viz (\S+)(.*)$/gm)) {
-      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt', 'structure'].includes(m[1])) {
-        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, rtt, or structure`);
+      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt', 'structure', 'lab'].includes(m[1])) {
+        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, rtt, structure, or lab`);
       }
     }
     for (const b of t.matchAll(/::: viz (?:flow|stepper)(.*?)\n([\s\S]*?)\n:::/g)) {
@@ -259,8 +260,7 @@ for (const course of courses) {
       const heads = (b[2].match(/^\s*##\s+/gm) || []).length;
       if (heads < 2) fail(`${course}/${f}: ::: viz compare block needs two "## Heading" sections — actual: ${heads}`);
     }
-    for (const b of t.matchAll(/::: viz structure(.*?)\n([\s\S]*?)\n:::/g)) {
-      const fields = b[2].split('\n').map((l) => l.trim()).filter((l) => l.toLowerCase().startsWith('field |'));
+    for (const b of t.matchAll(/::: viz structure(.*?)\n([\s\S]*?)\n:::/g)) {      const fields = b[2].split('\n').map((l) => l.trim()).filter((l) => l.toLowerCase().startsWith('field |'));
       if (!fields.length) fail(`${course}/${f}: ::: viz structure block needs at least one "field | Name | bits | meaning" line`);
       fields.forEach((l) => {
         const parts = l.split('|').map((p) => p.trim());
@@ -269,6 +269,9 @@ for (const course of courses) {
           fail(`${course}/${f}: malformed viz structure field (need "field | Name | positive-integer bits | meaning") — actual: "${l.slice(0, 60)}"`);
         }
       });
+    }
+    for (const m of t.matchAll(/^::: viz lab (\S+)/gm)) {
+      if (!LAB_CALC_IDS.includes(m[1])) fail(`${course}/${f}: unknown viz lab calculation '${m[1]}' — registry: ${LAB_CALC_IDS.join(', ')}`);
     }
   }
 }

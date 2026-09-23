@@ -381,7 +381,30 @@
 (c) SNR $= 10^{30/10} = 1000$. Shannon: $3000 \times \log_2(1001) \approx 3000 \times 9.97 \approx 29{,}902$ bps $\approx 30$ kbps.
 (d) Noiseless claims (6 / 18 kbps) assume perfection; with real $30$ dB noise the Shannon $30$ kbps binds above the 8-level Nyquist $18$ kbps — so 8-level signaling at $18$ kbps is achievable, and no scheme on this line exceeds $\approx 30$ kbps error-free.</p>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Three numbers, one verdict: levels buy linear-ish gains (6 → 18 kbps), noise sets the absolute roof ($\approx 30$ kbps here). Every capacity question in the exam is this exact dance — convert dB, compute both laws, take the min.</p>
-</div></div><h3>4.3 Interactive Exploration: What Moves the Shannon Ceiling</h3>
+</div></div><h3>4.3 Interactive Exploration: Move Bandwidth Against Noise</h3>
+<div class="viz viz-lab" data-viz="lab" data-lab="shannon">
+  <div class="viz-head"><span class="viz-tag">Interactive lab &middot; Shannon explorer: bandwidth versus noise</span></div>
+  <div class="viz-formula"><p>Shannon $C = B\log_2(1 + SNR)$, $SNR = 10^{dB/10}$ · Nyquist $C = 2B\log_2 L$ · binding limit $= \min(\text{Shannon}, \text{Nyquist})$</p>
+</div>
+  <div class="viz-inputs">
+    <div class="viz-control"><label class="viz-flabel" for="vizl1-b">Bandwidth B <span class="viz-unit">(Hz, 1–20000)</span></label><p class="viz-desc" id="vizl1-b-desc">Channel bandwidth in hertz.</p><div class="viz-inrow"><input id="vizl1-b" data-in="b" type="number" min="1" max="20000" step="1" value="3000" inputmode="decimal" aria-describedby="vizl1-b-desc vizl1-b-err"><input id="vizl1-b-range" data-range="b" type="range" min="1" max="20000" step="1" value="3000" aria-label="Bandwidth B slider"></div><p class="viz-err" data-err="b" id="vizl1-b-err" hidden></p></div>
+<div class="viz-control"><label class="viz-flabel" for="vizl1-db">SNR <span class="viz-unit">(dB, -30–100)</span></label><p class="viz-desc" id="vizl1-db-desc">Signal-to-noise ratio in decibels (converted before use).</p><div class="viz-inrow"><input id="vizl1-db" data-in="db" type="number" min="-30" max="100" step="1" value="30" inputmode="decimal" aria-describedby="vizl1-db-desc vizl1-db-err"><input id="vizl1-db-range" data-range="db" type="range" min="-30" max="100" step="1" value="30" aria-label="SNR slider"></div><p class="viz-err" data-err="db" id="vizl1-db-err" hidden></p></div>
+<div class="viz-control"><label class="viz-flabel" for="vizl1-levels">Signal levels L <span class="viz-unit">(levels, 2–1024)</span></label><p class="viz-desc" id="vizl1-levels-desc">Discrete signaling levels for the Nyquist ceiling.</p><div class="viz-inrow"><input id="vizl1-levels" data-in="levels" type="number" min="2" max="1024" step="1" value="8" inputmode="decimal" aria-describedby="vizl1-levels-desc vizl1-levels-err"></div><p class="viz-err" data-err="levels" id="vizl1-levels-err" hidden></p></div>
+  </div>
+  <div class="viz-results">
+    <div class="viz-result"><span>SNR (linear) <small class="viz-meaning">Converted from decibels for the formula.</small></span><output data-out="snr" for="vizl1-b vizl1-db vizl1-levels">1000 ratio</output></div>
+<div class="viz-result"><span>Shannon capacity <small class="viz-meaning">Noisy-channel law: nothing exceeds it error-free.</small></span><output data-out="shannon" for="vizl1-b vizl1-db vizl1-levels">29,902 bps</output></div>
+<div class="viz-result"><span>Nyquist ceiling <small class="viz-meaning">Noiseless ideal for these levels.</small></span><output data-out="nyquist" for="vizl1-b vizl1-db vizl1-levels">18,000 bps</output></div>
+<div class="viz-result"><span>Binding limit <small class="viz-meaning">The lower ceiling governs.</small></span><output data-out="verdict" for="vizl1-b vizl1-db vizl1-levels">18,000 bps</output></div>
+  </div>
+  <p class="viz-status" role="status">SNR (linear) 1000 ratio · Shannon capacity 29,902 bps · Nyquist ceiling 18,000 bps · Binding limit 18,000 bps</p>
+  <div class="viz-controls"><button type="button" class="viz-btn" data-act="reset">Reset</button></div>
+  <div class="viz-worked"><p><strong>Worked example (defaults).</strong></p><p>With B=3,000 Hz, SNR=30 dB (linear 1000), L=8: Shannon 29,902 bps vs Nyquist 18,000 bps — Nyquist binds at 18,000 bps.</p>
+</div>
+  <p class="viz-disclaimer">Textbook laws with ideal assumptions — not measured modem throughput.</p>
+  <div class="viz-notes"><p>Assumes ideal coding at the Shannon limit with no protocol overhead. Try doubling B against raising SNR by 10 dB and watch which ceiling moves — bandwidth buys linearly, noise buys logarithmically.</p>
+</div>
+</div><h3>4.3 Interactive Exploration: What Moves the Shannon Ceiling</h3>
 <div class="viz viz-stepper" data-viz="stepper" data-steps="4">
   <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; Shannon scenarios on a 3 kHz line: bandwidth versus noise</span></div>  <ol class="viz-steps">
     <li class="viz-step" data-i="0"><p>Baseline at 30 dB SNR: ratio 1000, log₂(1001) ≈ 9.97, so C ≈ 3000 × 9.97 ≈ 30 kbps</p>

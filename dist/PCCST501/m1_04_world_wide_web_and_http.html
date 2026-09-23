@@ -759,19 +759,25 @@ The protocol stays stateless; the ID plus server-side lookup restores sessions.<
 <li><strong>Worked exam numbers (RTT = 50 ms, N = 5, T = 10 ms each).</strong> Non-persistent: base 2·50+10 = 110 ms; each image 110 ms × 5 = 550 ms; <strong>total 660 ms</strong>. Persistent: 110 + 5·(50+10) = 110 + 300 = <strong>410 ms</strong>. Pipelined: 110 + (50 + 5·10) = 110 + 100 = <strong>210 ms</strong>. <em>Interpretation:</em> same page, same network — connection discipline alone cuts 660 → 210 ms. Verify every term before trusting a total.</li>
 <li><strong>Common mistakes.</strong> Forgetting the base HTML in N (N counts <em>embedded</em> objects; total objects = N+1); dropping the initial handshake&#39;s extra RTT in persistent mode (first object still costs 2); treating pipelined objects as zero-cost (they still share ~1 RTT).</li>
 </ul>
-<div class="viz viz-rtt" data-viz="rtt">
+<div class="viz viz-lab" data-viz="lab" data-lab="rtt">
   <div class="viz-head"><span class="viz-tag">Interactive lab &middot; Timing lab: price your own page</span></div>
+  <div class="viz-formula"><p>Non-persistent $= (2\cdot RTT + T) + N\cdot(2\cdot RTT + T)$ · Persistent $= (2\cdot RTT + T) + N\cdot(RTT + T)$ · Pipelined $= (2\cdot RTT + T) + (RTT + N\cdot T)$</p>
+</div>
   <div class="viz-inputs">
-    <label class="viz-field" for="vizr7-n">Objects N<input id="vizr7-n" data-in="n" type="number" min="0" step="1" value="5" inputmode="numeric"></label>
-    <label class="viz-field" for="vizr7-rtt">RTT (ms)<input id="vizr7-rtt" data-in="rtt" type="number" min="0" step="1" value="50" inputmode="numeric"></label>
-    <label class="viz-field" for="vizr7-t">Transfer per object (ms)<input id="vizr7-t" data-in="t" type="number" min="0" step="1" value="10" inputmode="numeric"></label>
+    <div class="viz-control"><label class="viz-flabel" for="vizl7-n">Objects N <span class="viz-unit">(objects, 0–32)</span></label><p class="viz-desc" id="vizl7-n-desc">Embedded objects on the page (the base HTML is counted by the formulas).</p><div class="viz-inrow"><input id="vizl7-n" data-in="n" type="number" min="0" max="32" step="1" value="5" inputmode="decimal" aria-describedby="vizl7-n-desc vizl7-n-err"><input id="vizl7-n-range" data-range="n" type="range" min="0" max="32" step="1" value="5" aria-label="Objects N slider"></div><p class="viz-err" data-err="n" id="vizl7-n-err" hidden></p></div>
+<div class="viz-control"><label class="viz-flabel" for="vizl7-rtt">RTT <span class="viz-unit">(ms, 0–1000)</span></label><p class="viz-desc" id="vizl7-rtt-desc">One small-packet round trip between client and server.</p><div class="viz-inrow"><input id="vizl7-rtt" data-in="rtt" type="number" min="0" max="1000" step="1" value="50" inputmode="decimal" aria-describedby="vizl7-rtt-desc vizl7-rtt-err"><input id="vizl7-rtt-range" data-range="rtt" type="range" min="0" max="1000" step="1" value="50" aria-label="RTT slider"></div><p class="viz-err" data-err="rtt" id="vizl7-rtt-err" hidden></p></div>
+<div class="viz-control"><label class="viz-flabel" for="vizl7-t">Transfer per object <span class="viz-unit">(ms, 0–1000)</span></label><p class="viz-desc" id="vizl7-t-desc">Transmission time of a single object.</p><div class="viz-inrow"><input id="vizl7-t" data-in="t" type="number" min="0" max="1000" step="1" value="10" inputmode="decimal" aria-describedby="vizl7-t-desc vizl7-t-err"><input id="vizl7-t-range" data-range="t" type="range" min="0" max="1000" step="1" value="10" aria-label="Transfer per object slider"></div><p class="viz-err" data-err="t" id="vizl7-t-err" hidden></p></div>
   </div>
   <div class="viz-results">
-    <div class="viz-result"><span>Non-persistent</span><output data-out="nonpersistent" for="vizr7-n vizr7-rtt vizr7-t">—</output></div>
-    <div class="viz-result"><span>Persistent</span><output data-out="persistent" for="vizr7-n vizr7-rtt vizr7-t">—</output></div>
-    <div class="viz-result"><span>Pipelined</span><output data-out="pipelined" for="vizr7-n vizr7-rtt vizr7-t">—</output></div>
+    <div class="viz-result"><span>Non-persistent <small class="viz-meaning">Fresh handshake per object.</small></span><output data-out="nonpersistent" for="vizl7-n vizl7-rtt vizl7-t">660 ms</output></div>
+<div class="viz-result"><span>Persistent <small class="viz-meaning">One handshake, reused connection.</small></span><output data-out="persistent" for="vizl7-n vizl7-rtt vizl7-t">410 ms</output></div>
+<div class="viz-result"><span>Pipelined <small class="viz-meaning">Batched exchanges share one round trip.</small></span><output data-out="pipelined" for="vizl7-n vizl7-rtt vizl7-t">210 ms</output></div>
   </div>
-  <p class="viz-status" role="status">Textbook comparison model — not a measurement of real browser performance.</p>
+  <p class="viz-status" role="status">Non-persistent 660 ms · Persistent 410 ms · Pipelined 210 ms</p>
+  <div class="viz-controls"><button type="button" class="viz-btn" data-act="reset">Reset</button></div>
+  <div class="viz-worked"><p><strong>Worked example (defaults).</strong></p><p>With N=5, RTT=50 ms, T=10 ms: Non-persistent 660 ms · Persistent 410 ms · Pipelined 210 ms.</p>
+</div>
+  <p class="viz-disclaimer">Textbook comparison model — not a measurement of real browser performance.</p>
   <div class="viz-notes"><p>Change the inputs and watch the three textbook totals move. Defaults match the worked example: N = 5 objects, RTT = 50 ms, transfer = 10 ms per object → 660 / 410 / 210 ms.</p>
 </div>
 </div><div class="viz viz-stepper" data-viz="stepper" data-steps="4">

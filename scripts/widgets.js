@@ -12,6 +12,7 @@
  */
 import { SCENES } from './scenes.js';
 import { escapeHtml, renderMarkdown } from './markdown.js';
+import { getLab, computeLab, formatOutput } from './viz-calcs.js';
 
 export function transformCustomWidgets(markdownText) {
   // Per-page counter for unique viz widget ids (aria wiring). Deterministic:
@@ -291,37 +292,75 @@ export function transformCustomWidgets(markdownText) {
 </div>`;
   });
 
-  // 7d. RTT timing lab (HTTP showcase; pure textbook model). Syntax:
-  // `::: viz rtt <title>` with an optional assumptions note as the body.
-  // Fixed inputs (objects N, RTT ms, transfer ms) feed calcRtt() in
-  // assets/viz.js; a fixed disclaimer states the model is comparative,
-  // never a measurement of real browser performance.
-  const vizRttPattern = /::: viz rtt(.*?)\n([\s\S]*?)\n:::/g;
-  markdownText = markdownText.replace(vizRttPattern, (match, head, rawBody) => {
-    const title = head.trim() || 'RTT timing lab';
-    const safeTitle = escapeHtml(title);
+  // 7d. Generalized interactive lab (calculation registry in
+  // assets/viz-calcs.js, single source for build-time static output and
+  // browser interactivity). Syntax: `::: viz lab <calc-id> <title>` with an
+  // optional assumptions note as the body. The legacy `::: viz rtt <title>`
+  // form maps to the `rtt` calculation, so existing content keeps working
+  // with zero markdown changes. Static output always contains the formula,
+  // every input's meaning and bounds, the worked example at defaults with
+  // precomputed results, and the disclaimer; viz.js adds live inputs.
+  // Unknown calculation ids stay raw for scripts/check.js.
+  const vizLab = (calcId, title, rawBody) => {
+    const spec = getLab(calcId);
+    if (!spec) return null;
+    const safeTitle = escapeHtml(title.trim() || 'Interactive lab');
     vizUid += 1;
-    const uid = `vizr${vizUid}`;
+    const uid = `vizl${vizUid}`;
+    const defValues = {};
+    spec.inputs.forEach((inp) => { defValues[inp.key] = inp.def; });
+    const defResults = computeLab(calcId, defValues);
+    const fields = spec.inputs.map((inp) => {
+      const slider = inp.slider
+        ? `<input id="${uid}-${inp.key}-range" data-range="${inp.key}" type="range" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.def}" aria-label="${escapeHtml(inp.label)} slider">`
+        : '';
+      return `<div class="viz-control">`
+        + `<label class="viz-flabel" for="${uid}-${inp.key}">${escapeHtml(inp.label)} <span class="viz-unit">(${escapeHtml(inp.unit)}, ${inp.min}–${inp.max})</span></label>`
+        + `<p class="viz-desc" id="${uid}-${inp.key}-desc">${escapeHtml(inp.desc)}</p>`
+        + `<div class="viz-inrow">`
+        + `<input id="${uid}-${inp.key}" data-in="${inp.key}" type="number" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.def}" inputmode="decimal" aria-describedby="${uid}-${inp.key}-desc ${uid}-${inp.key}-err">`
+        + `${slider}</div>`
+        + `<p class="viz-err" data-err="${inp.key}" id="${uid}-${inp.key}-err" hidden></p>`
+        + `</div>`;
+    }).join('\n');
+    const rows = spec.outputs.map((o) =>
+      `<div class="viz-result"><span>${escapeHtml(o.label)} <small class="viz-meaning">${escapeHtml(o.meaning)}</small></span><output data-out="${o.key}" for="${spec.inputs.map((i) => `${uid}-${i.key}`).join(' ')}">${escapeHtml(formatOutput(spec, o.key, defResults[o.key]))}</output></div>`).join('\n');
     const notes = rawBody.trim() ? `<div class="viz-notes">${renderMarkdown(rawBody.trim())}</div>` : '';
-    const field = (key, label, value, min) =>
-      `<label class="viz-field" for="${uid}-${key}">${label}<input id="${uid}-${key}" data-in="${key}" type="number" min="${min}" step="1" value="${value}" inputmode="numeric"></label>`;
-    const row = (key, label) =>
-      `<div class="viz-result"><span>${label}</span><output data-out="${key}" for="${uid}-n ${uid}-rtt ${uid}-t">—</output></div>`;
-    return `<div class="viz viz-rtt" data-viz="rtt">
+    return `<div class="viz viz-lab" data-viz="lab" data-lab="${calcId}">
   <div class="viz-head"><span class="viz-tag">Interactive lab &middot; ${safeTitle}</span></div>
+  <div class="viz-formula">${renderMarkdown(spec.formula)}</div>
   <div class="viz-inputs">
-    ${field('n', 'Objects N', 5, 0)}
-    ${field('rtt', 'RTT (ms)', 50, 0)}
-    ${field('t', 'Transfer per object (ms)', 10, 0)}
+    ${fields}
   </div>
   <div class="viz-results">
-    ${row('nonpersistent', 'Non-persistent')}
-    ${row('persistent', 'Persistent')}
-    ${row('pipelined', 'Pipelined')}
+    ${rows}
   </div>
-  <p class="viz-status" role="status">Textbook comparison model — not a measurement of real browser performance.</p>
+  <p class="viz-status" role="status">${escapeHtml(statusSummary(spec, defResults))}</p>
+  <div class="viz-controls"><button type="button" class="viz-btn" data-act="reset">Reset</button></div>
+  <div class="viz-worked"><p><strong>Worked example (defaults).</strong></p>${renderMarkdown(spec.explain(defValues, defResults))}</div>
+  <p class="viz-disclaimer">${escapeHtml(spec.disclaimer)}</p>
   ${notes}
 </div>`;
+  };
+  const statusSummary = (spec, results) => spec.outputs
+    .map((o) => `${o.label} ${formatOutput(spec, o.key, results[o.key])}`).join(' · ');
+  const vizLabPattern = /::: viz lab (\S+)(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(vizLabPattern, (match, calcId, head, rawBody) => {
+    const out = vizLab(calcId, head, rawBody);
+    return out === null ? match : out;
+  });
+  // Body-less labs (`::: viz lab <id> <title>` closed immediately): the
+  // assumptions note is optional, so these render with empty notes rather
+  // than leaking raw syntax.
+  const vizLabBarePattern = /::: viz lab (\S+)([^\n]*)\n:::/g;
+  markdownText = markdownText.replace(vizLabBarePattern, (match, calcId, head) => {
+    const out = vizLab(calcId, head, '');
+    return out === null ? match : out;
+  });
+  const vizRttLegacyPattern = /::: viz rtt(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(vizRttLegacyPattern, (match, head, rawBody) => {
+    const out = vizLab('rtt', head, rawBody);
+    return out === null ? match : out;
   });
 
   // 7e. Annotated structure viewer (fields with sizes and meanings).

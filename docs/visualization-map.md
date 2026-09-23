@@ -39,7 +39,7 @@ Principle (binding): **every concept should use the representation that best sup
 | Topic | Concept | Rep | Why | Complexity | Needs |
 |---|---|---|---|---|---|
 | PCCST501/m2_09_ipv4_addressing_forwarding_nat_icmp | Subnet arithmetic | H | The classic interactive calculation; static tables cannot drill it | M | lab-generalized |
-| PCCST501/m4_02_nyquist_shannon_channel_capacity | Channel-capacity formulas | H | User-varying inputs are the canonical lab | M | lab-generalized |
+| PCCST501/m4_02_nyquist_shannon_channel_capacity | Channel-capacity formulas | H | Served by the viz lab primitive (Session 7 lab session) | M | lab (shipped) |
 | PCCST501/m2_02_udp_segment_structure_and_checksum | UDP header layout | J | Spatial field layout must be seen and probed | M | struct |
 | PCCST501/m2_03_tcp_segment_structure_and_rtt | TCP header layout | J | Same as above (RTT estimation can ride the lab later) | M | struct |
 | PCCST303/m2_01_singly_linked_list_operations | Pointer surgery | F | Execution order IS the concept | S | — (stepper exists) |
@@ -64,7 +64,7 @@ Tree visualizer demand (BST/heaps/parse/decision trees, 8 topics), code-trace de
 | Primitive | Verdict | Reason |
 |---|---|---|
 | Timeline | **Not needed** | Chronology is staging; `flow` covers it (M1T4 evolution proves the pattern) |
-| Graph / generalized lab | **Needed later** | `rtt` proves the pattern; generalize to formula-driven inputs for P0/P1 H rows (subnet, Shannon, ALOHA, backprop) |
+| Graph / generalized lab | **Implemented (generalized lab session)** | `::: viz lab <id>` over the viz-calcs registry with RTT + Shannon/Nyquist families; subnetting deliberately stays a stepper (procedural representation already wins there) |
 | Annotated structure (`struct`) | **Implemented (Session 7B)** | `::: viz structure` shipped with UDP/TCP reference implementations; registers/memory and overflow rows can now use it |
 | Tree visualizer | **Needed later** | 8 topics; stepper text suffices until then |
 | Code execution/trace viewer | **Needed later** | Lab-course scope; larger than a widget extension |
@@ -105,7 +105,7 @@ Viz-planning metadata must **not** go in topic front matter: `data/topic-schema.
 
 - **Session A (no new primitives):** wire unused scenes (`dv-count`→m2_10, `bfs-layers`→m3_06); flows for FTP/SMTP/handshake-upgrade/ARP/I2C; steppers for linked lists, AVL foundations, merge/topo sort, RSA, A*, resolution, Kruskal/Prim.
 - **Session B (done in 7B: `struct` primitive):** UDP/TCP headers shipped; registers/memory map, VLAN/AES overflow from P1/P2 can now use it.
-- **Session C (generalized `lab`):** subnetting, Shannon/Nyquist, ALOHA, backprop, TCP RTO.
+- **Session C (done: generalized `lab` with RTT + Shannon/Nyquist families):** ALOHA, backprop, TCP RTO remain future families; subnetting stays a stepper by evaluation.
 - **Session D (later, on demand):** tree visualizer, code-trace viewer, state-machine visualizer — only when a session's P-row requires them.
 - Never a "visualize everything" pass: each session picks rows from `data/viz-map.json` and stops.
 
