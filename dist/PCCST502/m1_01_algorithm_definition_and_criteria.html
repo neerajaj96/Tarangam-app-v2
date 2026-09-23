@@ -273,97 +273,305 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 8 MIN READ</span>
+    <span class="badge">⏱️ 37 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
   <div class="quick-jump-bar">
-    <a href="#the-intuition" class="jump-pill">💡 Intuition</a>
-    <a href="#the-math" class="jump-pill">📐 Framework</a>
-    <a href="#worked-example" class="jump-pill">🧪 Worked Example</a>
-    <a href="#watch-out" class="jump-pill">watch-out</a>
-    <a href="#self-check" class="jump-pill">⚡ Self Check</a>
+    <a href="#bridge-from-overview" class="jump-pill">bridge-from-overview</a>
+    <a href="#what-is-an-algorithm" class="jump-pill">what-is-an-algorithm</a>
+    <a href="#five-characteristics" class="jump-pill">five-characteristics</a>
+    <a href="#correctness" class="jump-pill">correctness</a>
+    <a href="#input-output" class="jump-pill">input-output</a>
+    <a href="#effectiveness-deep" class="jump-pill">effectiveness-deep</a>
   </div>
 </div>
 <h1>Algorithms: Characteristics &amp; Analysis Criteria</h1>
-<p><strong>Finiteness, definiteness, input, output, effectiveness, space vs time efficiency, and RAM model of computation.</strong></p>
-<p><a id="the-intuition"></a></p>
-<h2 id="1-start-from-zero-the-problem-first">1. Start from zero — the problem first</h2>
-<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-basic-idea-then-formal-theory">2. Basic idea, then formal theory →</a></p>
-<p><strong>Problem first.</strong> Before comparing algorithms, we must agree on what counts as one. &quot;Keep guessing until it looks right&quot; is advice, not an algorithm: two people following it do different things, and it might never finish. A computer needs instructions so precise that <em>no interpretation</em> is possible and finishing is <em>guaranteed</em>.</p>
-<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of an algorithm like a recipe for making tea. A real recipe must: (1) actually end — never &quot;keep stirring forever&quot;, (2) make every instruction crystal clear — &quot;add 2 teaspoons of sugar&quot;, not &quot;add sugar&quot;, (3) name its ingredients up front (input) — you cannot make tea from nothing, (4) produce tea at the end (output) — a recipe producing nothing is useless, and (5) use only steps you can <em>actually perform</em> with what you have (effectiveness) — &quot;add a pinch of moon dust&quot; fails because moon dust is not obtainable. Drop the food analogy now: the five technical criteria below are the exact, testable version of this intuition.</p>
-</div></details><p><strong>Tiny toy example.</strong> &quot;To find the biggest of 3 numbers: compare the first two, keep the winner, compare it with the third, return the winner.&quot; Finite (2 comparisons, then stop), definite (every step says exactly what to compare), has input (3 numbers) and output (the biggest), and every step is executable. That is an algorithm. Replace &quot;compare&quot; with &quot;stare at them until the biggest becomes obvious&quot; and it stops being one.</p>
-<hr>
-<p><a id="the-math"></a></p>
-<h2 id="2-basic-idea-then-formal-theory">2. Basic idea, then formal theory</h2>
-<p class="secnav"><a href="#1-start-from-zero-the-problem-first">← 1. Start from zero — the problem f…</a><span class="secnav-sep">·</span><a href="#3-worked-example-testing-a-procedure-step-by-step">3. Worked example — testing a proc… →</a></p>
-<p><strong>Definition.</strong> An algorithm is a <em>finite</em> sequence of well-defined, unambiguous instructions to solve a problem or perform a computation. All five criteria below must hold:</p>
+<p><strong>What an algorithm is, the five properties every algorithm must satisfy, how to tell an algorithm apart from vague advice, and the simple model we use to compare algorithms fairly.</strong></p>
+<p><a id="bridge-from-overview"></a></p>
+<h2 id="1-bridge-from-the-module-map-to-the-first-real-question">1. Bridge — from the module map to the first real question</h2>
+<p class="secnav"><a href="#content">↑ Top</a><span class="secnav-sep">·</span><a href="#2-the-definition-one-word-at-a-time">2. The definition, one word at a t… →</a></p>
+<p>In the previous topic, we mapped the whole of Module 1: first define what an algorithm even is, then define how to count its work, then learn a compact notation for that work, then calculate it for loops and recursion, and finally apply it all to AVL trees. That map also gave us the module&#39;s standing rule: analysis always asks &quot;how does the work grow as input size $n$ grows?&quot; — never &quot;how many seconds on my laptop?&quot;.</p>
+<p>Here, $n$ simply means input size — for example, the number of elements in a list. If a list has 5 numbers, $n = 5$.</p>
+<p>This topic answers the map&#39;s very first question: <strong>what qualifies as an algorithm at all?</strong> Before we can count any algorithm&#39;s work, we must agree on which sets of instructions deserve the name. Everything in this topic is assumed by every later topic, so read it as the foundation, not as trivia.</p>
+<details class="callout callout-intuition" open><summary class="callout-header"><span class="callout-title">💡 The Intuition: Core Mental Model</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Think of an algorithm like a recipe for making tea. A real recipe must: (1) actually end — never &quot;keep stirring forever&quot;, (2) make every instruction crystal clear — &quot;add 2 teaspoons of sugar&quot;, not &quot;add some sugar&quot;, (3) name its ingredients up front (input) — you cannot make tea from nothing without saying so, (4) produce tea at the end (output) — a recipe producing nothing is useless, and (5) use only steps you can actually perform with what you have (effectiveness) — &quot;add a pinch of moon dust&quot; fails because moon dust is not obtainable. Drop the food analogy now: the five technical criteria in §3 are the exact, testable version of this intuition.</p>
+</div></details><p><strong>Tiny toy example.</strong> &quot;To find the biggest of 3 numbers: compare the first two, keep the winner, compare it with the third, return the winner.&quot; It ends after 2 comparisons (finite), every step says exactly what to compare (definite), it starts from 3 given numbers (input), it returns the biggest (output), and every step is something you can actually do (effective). That is an algorithm. Replace &quot;compare&quot; with &quot;stare at them until the biggest becomes obvious&quot; and it stops being one — you will see exactly why in §3.</p>
+<p><a id="what-is-an-algorithm"></a></p>
+<h2 id="2-the-definition-one-word-at-a-time">2. The definition, one word at a time</h2>
+<p class="secnav"><a href="#1-bridge-from-the-module-map-to-the-first-real-question">← 1. Bridge — from the module map to…</a><span class="secnav-sep">·</span><a href="#3-the-five-classical-characteristics">3. The five classical characterist… →</a></p>
+<p><strong>The definition.</strong> An algorithm is a finite sequence of well-defined instructions for solving a problem.</p>
+<p>That sentence is short, but every word carries weight. A beginner who memorises it without unpacking it will misuse it, so unpack it we must — word by word.</p>
+<p><strong>Finite.</strong> In ordinary language, &quot;finite&quot; means &quot;it ends&quot; — as opposed to &quot;infinite&quot;, which goes on forever. For an algorithm, finite means: no matter which valid input you give it, the instructions run for some limited number of steps and then stop. Why does a computer need this? Because a procedure that might never stop can never hand you an answer — you would wait forever. Finite example: &quot;compare two numbers, return the bigger, stop&quot; — 1 comparison, then done. Non-finite example: &quot;keep guessing numbers until one feels right&quot; — there is no point at which stopping is guaranteed.</p>
+<details class="interactive-toggle"><summary>What does `valid input` mean here?</summary><div class="toggle-content"><p><code>Valid input</code> = an input the problem statement allows. If the problem is &quot;find the biggest of a list of numbers&quot;, a list of numbers is valid input; the instruction manual failing on a shopping list is not the algorithm&#39;s fault. Finiteness only promises termination for inputs the problem covers — every valid one, without exception.</p>
+</div></details><p><strong>Sequence.</strong> In ordinary language, a sequence is things in an order — first this, then that. For an algorithm, sequence means the instructions come in a fixed, followable order: step 1, then step 2, then step 3. Why it matters: order changes meaning. &quot;Crack the egg, then heat the pan&quot; and &quot;heat the pan, then crack the egg into it&quot; are different procedures with different outcomes. An algorithm&#39;s steps run in the stated order unless an instruction explicitly says to repeat or branch (more on the words for that in §7).</p>
+<p><strong>Instruction.</strong> In ordinary language, an instruction tells someone to do one thing. For an algorithm, an instruction is a single step the executor — a computer, or you with pencil and paper — can carry out without needing further invention. &quot;Compare these two numbers&quot; is an instruction. &quot;Be clever about it&quot; is not, because the executor must invent what &quot;be clever&quot; means.</p>
+<p><strong>Well-defined.</strong> In ordinary language, &quot;well-defined&quot; means &quot;stated so precisely that nobody can misunderstand it&quot;. For an algorithm, it means each instruction has exactly one possible meaning — two people following it do exactly the same thing. &quot;Add 2 teaspoons of sugar&quot; is well-defined. &quot;Add sugar&quot; is not: one person adds a pinch, another adds a cup. A computer cannot ask you what you meant, so every step must survive without clarification.</p>
+<p><strong>Problem.</strong> In ordinary language, a problem is just something bothering you. For an algorithm, a problem is a precisely stated task with two parts: what may be given (the allowed inputs) and what counts as a solution (the required output condition — how you would check the answer is right). &quot;Find the biggest number in a list&quot; is a problem: input = a list of numbers, solution check = the answer is in the list and nothing in the list is bigger. &quot;Make the numbers nice&quot; is not a problem yet, because nobody can check whether &quot;nice&quot; was achieved.</p>
+<p><strong>Solving.</strong> In ordinary language, solving means producing the answer. For an algorithm, solving means producing an output that passes the problem&#39;s solution check — every time, for every valid input. Not &quot;usually right&quot;. Not &quot;right on the examples I tried&quot;. Always right, checkably right.</p>
+<p><strong>Putting it back together.</strong> An algorithm is a finite (it always stops) sequence (ordered steps) of well-defined (exactly one meaning each) instructions (executable steps) for solving (always producing a checkably correct answer to) a problem (a task with stated inputs and a solution check). If any one of those words fails, you have advice, a goal, or a broken procedure — not an algorithm.</p>
+<table>
+<thead>
+<tr>
+<th>It says &quot;algorithm&quot;</th>
+<th>It is actually</th>
+<th>Why it fails the definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&quot;Keep guessing until it looks right.&quot;</td>
+<td>Vague advice</td>
+<td>Not finite (may never stop), not well-defined (&quot;looks right&quot; means different things to different people)</td>
+</tr>
+<tr>
+<td>&quot;Find the largest number.&quot;</td>
+<td>A goal, not a method</td>
+<td>No instructions at all — it states what is wanted, not how to get it</td>
+</tr>
+<tr>
+<td>&quot;Set max to the first element. Compare each remaining element with max; if larger, update max. Return max.&quot;</td>
+<td>An algorithm</td>
+<td>Finite, ordered, unambiguous, executable, and always returns the true maximum</td>
+</tr>
+</tbody></table>
+<p><a id="five-characteristics"></a></p>
+<h2 id="3-the-five-classical-characteristics">3. The five classical characteristics</h2>
+<p class="secnav"><a href="#2-the-definition-one-word-at-a-time">← 2. The definition, one word at a t…</a><span class="secnav-sep">·</span><a href="#4-correctness-stopping-is-not-the-same-as-succeeding">4. Correctness — stopping is not t… →</a></p>
+<p>Textbooks test five properties. Each one below follows the same pattern: plain meaning, technical meaning, why it matters, a passing example, a failing example, and the trap beginners fall into.</p>
+<p><strong>3.1. Finiteness — it must end.</strong></p>
+<p>Plain meaning: the instructions come to a stop. Technical meaning: for every valid input, the algorithm terminates after some finite number of steps. Why it matters: a non-terminating procedure never delivers an answer, so nothing can be checked, compared, or used. Passing example: finding the maximum of $n$ numbers takes exactly $n - 1$ comparisons (for $n = 5$, that is 4 comparisons) and then stops. Failing example: &quot;repeat step 2 forever, noting each result&quot; — by construction it never stops. Trap: beginners confuse &quot;runs for a long time&quot; with &quot;infinite&quot;. An algorithm that takes a million steps on a huge input is still finite — it stops. Finiteness is about <em>guaranteed stopping</em>, not speed.</p>
+<details class="interactive-toggle"><summary>Is an operating system an algorithm, then?</summary><div class="toggle-content"><p>Strictly speaking, no — and this is the classic exam trap. An operating system&#39;s main loop is <em>designed</em> never to terminate (&quot;keep serving users until switched off&quot;). Such never-ending procedures are called <code>computational procedures</code>: they satisfy every characteristic except finiteness. In this strict classical sense, &quot;algorithm&quot; requires termination; an OS main loop is a computational procedure, not an algorithm. Remember the one-word difference: terminates versus runs-forever-by-design.</p>
+</div></details><p><strong>3.2. Definiteness — every step has exactly one meaning.</strong></p>
+<p>Plain meaning: nobody can read a step two ways. Technical meaning: each instruction is precisely and unambiguously specified; execution is deterministic — the same state always leads to the same next step. Why it matters: computers cannot resolve ambiguity. If a step can be read two ways, two machines (or two runs) do different things, and correctness becomes uncheckable. Passing example: &quot;if the element is larger than max, set max to the element&quot; — the condition and the action are both exact. Failing example: &quot;repeat until the result looks good enough&quot; — &quot;good enough&quot; has no checkable meaning. Trap: beginners think definiteness is about <em>detail</em> (&quot;longer instructions are more definite&quot;). It is about <em>uniqueness of meaning</em>: one short sentence with one meaning beats a paragraph with two meanings.</p>
+<p><strong>3.3. Input — what is supplied from outside.</strong></p>
+<p>Plain meaning: the ingredients handed to the procedure. Technical meaning: zero or more quantities supplied externally, before or during execution. Why it matters: the input contract fixes what the algorithm may assume exists — without it, there is nothing to work on and nothing the correctness promise ranges over. Passing example: the list of numbers handed to a maximum-finding algorithm. Failing example (a broken contract, not a broken rule): running maximum-finding with no list supplied when the problem requires one — the algorithm is fine, the caller broke the contract. Trap: &quot;zero or more&quot; surprises beginners — an algorithm may take <em>no</em> input at all (see §5). Zero input is allowed; zero output is not.</p>
+<p><strong>3.4. Output — what is produced, and it must solve the problem.</strong></p>
+<p>Plain meaning: the dish that comes out. Technical meaning: at least one quantity is produced, and it must stand in the specified relationship to the inputs — it must actually satisfy the problem&#39;s solution check. Why it matters: an algorithm exists to solve the problem. Output that is unrelated to the input (or wrong) means the problem is unsolved however elegantly the steps ran. Passing example: returning the largest element of the list — checkable: it is in the list, nothing exceeds it. Failing example: a &quot;sorting&quot; procedure that returns the numbers in whatever order they arrived — it produces something, but the output violates the sortedness the problem demands. Trap: beginners think any output counts. It does not: output must satisfy the specification (§4 works this out fully).</p>
+<p><strong>3.5. Effectiveness — every step must be actually doable.</strong></p>
+<p>Plain meaning: each step is something you could really carry out. Technical meaning: every operation is basic enough to be performed exactly, in finite time, by the executor — classically, &quot;with pencil and paper in finite time&quot;. Why it matters: a step can be perfectly clear yet impossible, and an impossible step can never run. Passing example: &quot;add these two numbers&quot;, &quot;compare these two numbers&quot;, &quot;store this value&quot;. Failing example: &quot;guess the password&quot;, &quot;divide by zero to obtain the answer&quot;, &quot;teleport the data to the server&quot;. Trap: confusing effectiveness with definiteness — handled head-on in §6, because this is the single most examined confusion in this topic.</p>
+<p><strong>Compact table — all five at a glance.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Characteristic</th>
+<th>One-line test</th>
+<th>Passes</th>
+<th>Fails</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Finiteness</td>
+<td>Does it always stop?</td>
+<td>Max of $n$ numbers: $n - 1$ comparisons, then stop</td>
+<td>&quot;Keep improving the guess forever&quot;</td>
+</tr>
+<tr>
+<td>Definiteness</td>
+<td>Does each step mean exactly one thing?</td>
+<td>&quot;Add 2 teaspoons&quot;</td>
+<td>&quot;Add sugar&quot; / &quot;until it looks good&quot;</td>
+</tr>
+<tr>
+<td>Input</td>
+<td>Is the outside supply stated (possibly zero)?</td>
+<td>&quot;Given a list of $n$ numbers …&quot;</td>
+<td>Caller supplies nothing when a list is required</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>Is at least one result produced that solves the problem?</td>
+<td>Returns the true maximum</td>
+<td>Returns numbers unsorted from a &quot;sort&quot;</td>
+</tr>
+<tr>
+<td>Effectiveness</td>
+<td>Can each step actually be executed?</td>
+<td>Add, compare, store</td>
+<td>&quot;Guess&quot;, &quot;divide by zero&quot;, &quot;teleport&quot;</td>
+</tr>
+</tbody></table>
+<p><a id="correctness"></a></p>
+<h2 id="4-correctness-stopping-is-not-the-same-as-succeeding">4. Correctness — stopping is not the same as succeeding</h2>
+<p class="secnav"><a href="#3-the-five-classical-characteristics">← 3. The five classical characterist…</a><span class="secnav-sep">·</span><a href="#5-input-and-output-contracts-including-zero-input">5. Input and output contracts, inc… →</a></p>
+<p>Two different promises are easy to blur:</p>
+<ul>
+<li>&quot;The algorithm terminates&quot; = it stops. That is finiteness (§3.1). It says nothing about the answer.</li>
+<li>&quot;The algorithm is correct&quot; = whenever it stops, the output satisfies the problem&#39;s specification — for <em>every</em> valid input. It says the answer is right.</li>
+</ul>
+<p>An algorithm can keep the first promise and break the second: it finishes, hands you an answer, and the answer is wrong. That is the whole point of correctness as a separate idea.</p>
+<p><strong>Concrete case.</strong> Problem: &quot;find the largest number in a list&quot;. Algorithm: &quot;set max to 0; compare each element with max; if larger, update max; return max.&quot; It always terminates — finite, definite, effective steps. Now run it on the list $[-5, -2, -9]$: no element exceeds 0, so it returns 0. But 0 is not even in the list, and $-2$ (the true maximum) is larger than nothing here — the output violates the specification. Terminating: yes. Correct: no. The fix (set max to the <em>first element</em> instead of 0) is a one-word change with a correctness-sized consequence — which is exactly why correctness is checked against the specification, not against &quot;it ran without crashing&quot;.</p>
+<details class="interactive-toggle"><summary>What does `specification` mean, precisely?</summary><div class="toggle-content"><p>The <code>specification</code> is the problem&#39;s contract: the allowed inputs plus the exact condition the output must satisfy. For maximum-finding: input = a non-empty list of numbers; output condition = the answer belongs to the list AND no list element exceeds it. Correctness means: for every allowed input, the output meets that condition. &quot;Usually works&quot; or &quot;works on my examples&quot; is not correctness — proof over all valid inputs is.</p>
+</div></details><p><strong>Where this leads (and where it stops).</strong> Full correctness <em>proofs</em> — formal arguments covering all inputs — belong to later study, not to this topic. Here you need only the distinction and the habit: after &quot;does it stop?&quot;, always ask &quot;is the answer right on every input, including hostile ones like all-negative lists and single-element lists?&quot;. Those hostile inputs have a name you will meet in M1T2: they are the beginning of worst-case thinking.</p>
+<p><a id="input-output"></a></p>
+<h2 id="5-input-and-output-contracts-including-zero-input">5. Input and output contracts, including zero input</h2>
+<p class="secnav"><a href="#4-correctness-stopping-is-not-the-same-as-succeeding">← 4. Correctness — stopping is not t…</a><span class="secnav-sep">·</span><a href="#6-effectiveness-and-why-it-is-not-definiteness">6. Effectiveness, and why it is no… →</a></p>
+<p><strong>Input.</strong> Zero or more quantities from outside. Most algorithms take input: a list to search, numbers to add. But &quot;zero&quot; is genuinely allowed: an algorithm that prints the first 100 prime numbers takes no outside supply — the task is fully self-contained. What zero-input does <em>not</em> mean is &quot;nothing to work with&quot;: the problem statement itself supplies the task (&quot;first 100 primes&quot;), and constants written inside the instructions (100, the number 2 to start testing from) are part of the procedure, not external input.</p>
+<p><strong>Output.</strong> At least one quantity, satisfying the specification. This is mandatory — unlike input. A procedure that takes a list, does arithmetic, and returns nothing has no checkable result; no examiner, user, or later algorithm can verify or use it. Even &quot;print the first 100 primes&quot; has output: the printed numbers, checkable against primality.</p>
+<p><strong>INPUT is not OUTPUT, and &quot;no input&quot; is not &quot;no result&quot;.</strong> Read both halves carefully, because exams probe exactly this sentence: an algorithm <em>can</em> have no input (self-contained task, e.g. generate primes) but <em>cannot</em> have no useful result. &quot;No input&quot; describes where material comes from (nowhere outside); &quot;no result&quot; would describe a procedure that achieves nothing. A prime-generator has the first property and must never have the second.</p>
+<table>
+<thead>
+<tr>
+<th>Edge case</th>
+<th>Verdict</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prime-generator with no external input</td>
+<td>Valid input contract</td>
+<td>Zero inputs are allowed when the task is self-contained</td>
+</tr>
+<tr>
+<td>Sorting routine that returns nothing</td>
+<td>Invalid output contract</td>
+<td>At least one output satisfying the specification is mandatory</td>
+</tr>
+<tr>
+<td>Max-finder called with no list</td>
+<td>Caller error, not algorithm error</td>
+<td>The problem requires a list; the contract was broken by the caller</td>
+</tr>
+</tbody></table>
+<p><a id="effectiveness-deep"></a></p>
+<h2 id="6-effectiveness-and-why-it-is-not-definiteness">6. Effectiveness, and why it is not definiteness</h2>
+<p class="secnav"><a href="#5-input-and-output-contracts-including-zero-input">← 5. Input and output contracts, inc…</a><span class="secnav-sep">·</span><a href="#7-goal-versus-procedure-find-the-largest-is-not-an-algorithm">7. Goal versus procedure — &quot;find t… →</a></p>
+<p>Effectiveness asks: <em>can this step actually be executed?</em> Definiteness asks: <em>does this step mean exactly one thing?</em> Different questions — and a step can pass one while failing the other in both directions:</p>
+<ul>
+<li>Clear but impossible (passes definiteness, fails effectiveness): &quot;add a pinch of moon dust&quot; — one exact meaning, unobtainable ingredient. &quot;Teleport the sorted array to the server&quot; — unambiguous, physically unexecutable as a computational step.</li>
+<li>Executable but ambiguous (passes effectiveness, fails definiteness): &quot;sort the numbers somehow and return them&quot; — every candidate action (compare, swap) is doable, but <em>which</em> actions in <em>which</em> order is unspecified, so two executors do different things.</li>
+</ul>
+<p>Only &quot;compare these two numbers and keep the larger&quot; passes both: one meaning, really doable. In an exam, when asked to distinguish the two, use exactly this two-direction table — one example each way earns full marks; a single vague sentence does not.</p>
+<p><a id="vague-vs-algorithm"></a></p>
+<h2 id="7-goal-versus-procedure-find-the-largest-is-not-an-algorithm">7. Goal versus procedure — &quot;find the largest&quot; is not an algorithm</h2>
+<p class="secnav"><a href="#6-effectiveness-and-why-it-is-not-definiteness">← 6. Effectiveness, and why it is no…</a><span class="secnav-sep">·</span><a href="#8-pseudocode-just-enough-to-read-every-example-in-this-cours">8. Pseudocode — just enough to rea… →</a></p>
+<p>Consider two texts side by side:</p>
+<ul>
+<li>Text A: &quot;Find the largest number.&quot;</li>
+<li>Text B: &quot;Set max to the first element. For each remaining element in turn: compare it with max; if it is larger, set max to it. After the last element, return max.&quot;</li>
+</ul>
+<p>Text A is a goal: it names the desired result and gives no method. Nothing in it can be executed, counted, or checked step by step. Text B is an algorithm: finite (stops after the last element), definite (each action exact), with input (the list), output (max, checkable), and effective steps (compare, assign, return). This is why the course counts Text B&#39;s work in M1T2 and has nothing to count in Text A — &quot;find the largest&quot; contains no operations.</p>
+<p>Every keyword in Text B is ordinary words doing precise jobs — full pseudocode reading follows in §8, but preview the pattern here: state is held in a named place (<code>max</code>), repetition is explicit (<code>for each remaining element</code>), choice is explicit (<code>if it is larger</code>), and delivery is explicit (<code>return max</code>).</p>
+<p><a id="pseudocode"></a></p>
+<h2 id="8-pseudocode-just-enough-to-read-every-example-in-this-cours">8. Pseudocode — just enough to read every example in this course</h2>
+<p class="secnav"><a href="#7-goal-versus-procedure-find-the-largest-is-not-an-algorithm">← 7. Goal versus procedure — &quot;find t…</a><span class="secnav-sep">·</span><a href="#9-the-ram-model-a-fair-ruler-for-comparing-algorithms">9. The RAM model — a fair ruler fo… →</a></p>
+<p><strong>What it is.</strong> Pseudocode is a half-formal notation between plain English and real code: loops and choices written plainly, no compiler, no language to install. You read it; nothing runs it.</p>
+<p><strong>Why it exists.</strong> Tying an algorithm to one programming language would drag in that language&#39;s quirks — and stopwatch-style machine dependence the module overview already rejected. Pseudocode describes the <em>idea</em> once, readably, so analysis (starting M1T2) counts the idea&#39;s operations instead of one laptop&#39;s seconds.</p>
+<p><strong>The notation used in this topic&#39;s examples.</strong> Only five keyword shapes appear, and each means exactly what it says:</p>
+<ul>
+<li><code>name = value</code> — store a value under a name. <code>max = first element</code> means &quot;remember the first element under the name max&quot;. Note: <code>=</code> here means <em>store</em>, not the mathematical equality test — read it as &quot;becomes&quot;.</li>
+<li><code>for each X in &lt;collection&gt;:</code> — do the following indented steps once per item, in order. <code>for each remaining element in the list:</code> visits element 2, then 3, and so on to the end.</li>
+<li><code>if &lt;condition&gt;, &lt;action&gt;</code> — do the action only when the condition holds. <code>if it is larger than max, set max to it</code> compares first, updates only on success.</li>
+<li><code>return X</code> — stop the algorithm and deliver X as the output. Nothing after <code>return</code> runs.</li>
+<li>Indentation (the extra spaces at line starts) shows which steps belong inside the <code>for each</code> or the <code>if</code>. Same rule as an outline: indented lines are sub-steps.</li>
+</ul>
+<pre><code>Set max to the first element of the list.
+For each remaining element in the list, in order:
+    If the element is larger than max:
+        Set max to the element.
+Return max.
+</code></pre>
+<p>Read it aloud: &quot;remember the first; walk the rest one by one; whenever you see a bigger one, remember it instead; at the end, hand back what you remember.&quot; Trace it on $[4, 1, 7, 3]$: max $= 4$; 1 is not larger; 7 is larger, max $= 7$; 3 is not larger; return 7. Four elements, three comparisons — and that count, $n - 1$ for $n$ elements, is the seed of everything M1T2 will teach.</p>
+<p><a id="ram-model"></a></p>
+<h2 id="9-the-ram-model-a-fair-ruler-for-comparing-algorithms">9. The RAM model — a fair ruler for comparing algorithms</h2>
+<p class="secnav"><a href="#8-pseudocode-just-enough-to-read-every-example-in-this-cours">← 8. Pseudocode — just enough to rea…</a><span class="secnav-sep">·</span><a href="#10-time-efficiency-versus-space-efficiency-the-first-look">10. Time efficiency versus space e… →</a></p>
+<p><strong>Why we need a model at all.</strong> Recall the module overview&#39;s verdict: stopwatch timing is unfair — a slow algorithm on a fast laptop beats a fast algorithm on a tired phone, saying nothing about the ideas. To compare <em>algorithms</em> instead of <em>machines</em>, analysis imagines one standard, simplified computer and counts operations on it. That imaginary computer is the RAM model.</p>
+<details class="interactive-toggle"><summary>What does `RAM` stand for, and what does `random access` mean?</summary><div class="toggle-content"><p><code>RAM</code> = Random Access Machine. <code>Random</code> here does not mean &quot;haphazard&quot; — it means &quot;any cell immediately&quot;: memory is imagined as numbered cells $1, 2, 3, \ldots$, and reading <em>any</em> cell costs the same single unit of time, whether it is cell 2 or cell 2,000,000. Real machines approximate this (caches and disks blur it), but the model deliberately assumes it exactly, so that position in memory never distorts the comparison.</p>
+</div></details><p><strong>What the model represents.</strong> Three assumptions, each a deliberate simplification:</p>
 <ol>
-<li><strong>Finiteness</strong> — terminates after finitely many steps, for every valid input. A process that may run forever (like an operating system&#39;s main loop) is a &quot;computational procedure&quot;, not an algorithm in this strict sense.</li>
-<li><strong>Definiteness</strong> — every instruction is precisely specified; nobody can interpret a step two ways.</li>
-<li><strong>Input</strong> — zero or more quantities supplied externally, before or during execution.</li>
-<li><strong>Output</strong> — at least one quantity produced, with a specified, provable relationship to the inputs (it must actually solve the stated problem).</li>
-<li><strong>Effectiveness</strong> — every operation is basic enough to do exactly, in finite time, with pencil and paper. &quot;Guess the answer&quot; is not effective; &quot;add two numbers&quot; is.</li>
+<li><strong>Numbered memory cells, each readable in one unit.</strong> Storage is a row of cells; reaching any cell costs 1.</li>
+<li><strong>Basic operations cost one unit each.</strong> A basic operation is one indivisible step the model counts: add, subtract, compare two values, store (assign) a value, read one array element. Each costs exactly 1 unit — regardless of number sizes. Why unit cost? Because the model&#39;s job is comparing <em>growth</em> (how work scales with $n$), not predicting seconds; giving every basic step price 1 keeps the ruler identical for every algorithm.</li>
+<li><strong>Steps run one at a time, in order.</strong> No parallelism, no overlapping — one operation completes before the next begins, so &quot;total work&quot; is just the count.</li>
 </ol>
-<details class="interactive-toggle"><summary>What do `finite`, `definite`, and `effective` mean in one breath each?</summary><div class="toggle-content"><p><code>Finite</code> = the instructions must end (a stopping point exists for every valid input — &quot;keep stirring forever&quot; fails). <code>Definite</code> = each instruction has exactly one meaning (no interpretation possible — &quot;add sugar&quot; fails, &quot;add 2 teaspoons&quot; passes). <code>Effective</code> = each step is actually doable with basic means (pencil-and-paper doable — &quot;add moon dust&quot; is clear but unobtainable, so it fails effectiveness, not definiteness).</p>
-</div></details><details class="interactive-toggle"><summary>What is the `RAM model` and what is `pseudocode`?</summary><div class="toggle-content"><p>RAM (Random Access Machine) model = an imaginary simplified computer (numbered memory cells, one-unit basic operations, sequential steps) used so analysis compares algorithms, not machines. Pseudocode = half-formal recipe notation between English and code (loops and conditions written plainly, no compiler needed) — precise enough to count operations from, readable without knowing any language.</p>
-</div></details><p><strong>Symbols and abbreviations used here:</strong> $n$ = input size (e.g. number of list elements); $O(1)$ = constant work, independent of $n$ (defined fully in the asymptotics note).</p>
-<p><strong>The RAM (Random Access Machine) model.</strong> To analyse algorithms fairly, we imagine a simplified ideal computer: unlimited memory of numbered cells, each readable in one unit of time (&quot;random access&quot;, hence the name); basic operations — addition, subtraction, comparison, assignment, array indexing — each cost exactly one unit ($O(1)$), regardless of number sizes; instructions run sequentially, with no parallelism. This deliberately ignores caches, pipelining, and memory hierarchy so that analysis does not depend on any physical machine.</p>
-<p><strong>Space vs time efficiency.</strong> <em>Time efficiency</em> asks &quot;how many basic operations, as a function of $n$?&quot; <em>Space efficiency</em> asks &quot;how much extra memory beyond the input, as a function of $n$?&quot; They often trade off: <em>memoization</em> (storing precomputed results) spends space to save time; recomputing on the fly spends time to save space. Neither is always better — it depends on which resource is scarcer.</p>
-<details class="interactive-toggle"><summary>What do `input`, `output`, and `correctness` mean for an algorithm?</summary><div class="toggle-content"><p><code>Input</code> = zero or more quantities supplied from outside before or during execution (the ingredients — possibly none). <code>Output</code> = at least one produced quantity with a provable relationship to the input (the dish — mandatory, unlike input). Correctness = the output always satisfies the problem&#39;s specification for every valid input (not &quot;usually works&quot; — proven for all inputs).</p>
-</div></details><hr>
-<p><a id="worked-example"></a></p>
-<h2 id="3-worked-example-testing-a-procedure-step-by-step">3. Worked example — testing a procedure step by step</h2>
-<p class="secnav"><a href="#2-basic-idea-then-formal-theory">← 2. Basic idea, then formal theory</a><span class="secnav-sep">·</span><a href="#4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam r… →</a></p>
-<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Consider: &quot;To find the largest number in a list, keep guessing numbers until you feel confident you have found the biggest one.&quot; Check whether this qualifies as an algorithm.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying Core Algorithm</div><div class="step-content"><p>Finiteness — &quot;until you feel confident&quot; has no guaranteed stopping point. Definiteness — &quot;feel confident&quot; is not checkable; two runs stop differently. Input — the list is given, fine. Output — a number is produced, fine. Effectiveness — &quot;guessing&quot; with no rule is not mechanically executable.</p>
-</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Fails Finiteness, Definiteness, and Effectiveness — <em>not</em> a valid algorithm. A valid version: &quot;Set max = first element. For each remaining element, if it exceeds max, set max to it. Return max.&quot; It terminates after exactly $n-1$ comparisons (finite), is unambiguous at every step (definite), and uses only compare-and-assign (effective).</p>
-</div></div><hr>
-<p><a id="watch-out"></a></p>
-<h2 id="4-watch-out-distinctions-exam-recap">4. Watch out, distinctions, exam recap</h2>
-<p class="secnav"><a href="#3-worked-example-testing-a-procedure-step-by-step">← 3. Worked example — testing a proc…</a><span class="secnav-sep">·</span><a href="#5-active-recall-quizzes">5. Active Recall Quizzes →</a></p>
+<p><strong>Tiny concrete example.</strong> Maximum-finding on $n$ numbers under this ruler: each element-vs-max test is one comparison costing 1 unit; there are $n - 1$ of them (every element except the first is compared once). Total comparison-work: $n - 1$ units. For $n = 5$: 4 units. For $n = 1{,}000{,}000$: 999,999 units. No seconds, no laptop, no language — just counts, comparable across all machines. Counting carefully case by case (lucky inputs, unlucky inputs, typical inputs) is M1T2&#39;s entire job; this topic only establishes the ruler.</p>
+<p><strong>What the model is not.</strong> It is an analytical simplification, not a photograph of hardware: real machines have caches, pipelines, and memory hierarchies the model ignores. Never convert &quot;5 units&quot; into milliseconds, and never claim the model describes every real machine perfectly. Its promise is narrower and exactly what analysis needs: the <em>same</em> ruler for every algorithm.</p>
+<p><a id="time-vs-space"></a></p>
+<h2 id="10-time-efficiency-versus-space-efficiency-the-first-look">10. Time efficiency versus space efficiency — the first look</h2>
+<p class="secnav"><a href="#9-the-ram-model-a-fair-ruler-for-comparing-algorithms">← 9. The RAM model — a fair ruler fo…</a><span class="secnav-sep">·</span><a href="#11-worked-examples-four-tests-of-the-foundation">11. Worked examples — four tests o… →</a></p>
+<p><strong>Ordinary language first.</strong> Time efficiency asks &quot;how much <em>work</em> does it do?&quot; — the number of basic operations. Space efficiency asks &quot;how much <em>room</em> does it need while working?&quot; — the number of extra memory cells beyond the input itself. The input must exist regardless (the list is given), so space analysis counts only the <em>extra</em> working room: named values like <code>max</code>, temporary copies, and similar.</p>
+<p><strong>Connected to analysis.</strong> Both are measured as functions of $n$: &quot;for bigger inputs, how do work and room grow?&quot; Maximum-finding&#39;s one-pass version does $n - 1$ comparisons (work grows with $n$) and keeps one extra value, <code>max</code> (room stays constant no matter how big $n$ gets). That pairing — work-growing, room-constant — is the kind of statement M1T2 will make precise for every algorithm.</p>
+<p><strong>A first trade-off.</strong> Work and room can pull in opposite directions. Compare two maximum-finding strategies on $n$ numbers:</p>
+<ul>
+<li>One-pass (remember the winner): $n - 1$ comparisons, 1 extra cell (<code>max</code>). For $n = 100$: 99 comparisons, 1 cell.</li>
+<li>All-pairs (compare every pair, count each element&#39;s wins): no extra cell at all, but every pair is compared — that is $n \times (n - 1) / 2$ comparisons, where $n \times (n - 1) / 2$ counts the pairs ($n$ choices for the first element, $n - 1$ for the second, divided by 2 because pair $(a, b)$ is the same as pair $(b, a)$). For $n = 100$: $100 \times 99 / 2 = 4{,}950$ comparisons, 0 cells.</li>
+</ul>
+<p>Fewer cells, far more work — or slightly more cells, far less work. Neither strategy is &quot;better&quot; in the abstract; it depends on which resource is scarcer. Storing previously computed results to save recomputation has a general name — memoization — which later topics use heavily; for now, keep only the intuition: <strong>time and space trade off, and choosing means deciding which resource matters more here.</strong> Turning these plain counts into a compact mathematical language is the job of the asymptotics topic (M1T3); splitting counts into lucky, unlucky, and typical cases is the job of the very next topic, M1T2.</p>
+<p><a id="worked-examples"></a></p>
+<h2 id="11-worked-examples-four-tests-of-the-foundation">11. Worked examples — four tests of the foundation</h2>
+<p class="secnav"><a href="#10-time-efficiency-versus-space-efficiency-the-first-look">← 10. Time efficiency versus space e…</a><span class="secnav-sep">·</span><a href="#12-watch-out-distinctions-exam-recap">12. Watch out, distinctions, exam … →</a></p>
+<div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Example 1 — qualification test. Consider: &quot;To find the largest number in a list, keep guessing numbers until you feel confident you have found the biggest one.&quot; What is asked: does this qualify as an algorithm? Given: the instruction text, and the five criteria from §3. Concept tested: qualification against all five characteristics — and why it is relevant: this is the single most examined skill of this topic, and the exact shape of a KTU short answer.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Applying the five criteria</div><div class="step-content"><p>Why criterion-by-criterion: the definition demands all five (§2&#39;s table), so one failure each is enough to disqualify, and naming each failure precisely is what earns marks. Finiteness — &quot;until you feel confident&quot; sets no guaranteed stopping point; a guesser may stop early or never stop, so termination is unpromised. Definiteness — &quot;feel confident&quot; is not checkable: two people following it stop at different points on the same list. Input — the list is supplied, so this criterion passes. Output — a number is produced, so this criterion passes. Effectiveness — &quot;guessing&quot; names no executable rule; there is no mechanical step to perform.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Fails finiteness, definiteness, and effectiveness — not a valid algorithm, though input and output pass. Valid replacement: &quot;Set max to the first element. For each remaining element, if it exceeds max, set max to it. Return max.&quot; — terminates after exactly $n - 1$ comparisons, unambiguous at every step, executable throughout. Beginner mistake: answering &quot;it fails effectiveness&quot; alone — true but incomplete; examiners award one mark per correctly tested criterion, so test all five every time.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Example 2 — vague goal into algorithm. Consider the instruction &quot;find the largest number&quot;. What is asked: transform it into a well-defined algorithm. Given: nothing but the goal sentence. Concept tested: goal versus procedure (§7) — relevant because it practices definiteness and effectiveness constructively instead of just spotting violations.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Building the procedure</div><div class="step-content"><p>Why each addition: every gap in the goal must be closed with an explicit mechanism. First, name the input the goal omitted: &quot;given a non-empty list of numbers&quot;. Second, create state to track progress: &quot;set max to the first element&quot; — without stored state, comparisons leave no trace. Third, cover every candidate exactly once: &quot;for each remaining element in order&quot; — &quot;each&quot; guarantees none skipped, &quot;in order&quot; removes traversal ambiguity. Fourth, make the update rule exact: &quot;if the element is larger than max, set max to it&quot;. Fifth, deliver: &quot;return max after the last element&quot;. Each step answers a question the goal left open: what do we start from, what do we repeat, when do we change our answer, when do we stop, what do we hand back.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>The five-line pseudocode of §8 — finite (ends at the last element), definite (one reading), effective (compare-and-store only), with stated input and checkable output. Beginner mistake: writing &quot;compare all numbers and pick the biggest&quot; and calling it done — that restates the goal with the word &quot;all&quot;; it still says nothing about tracking, order, or stopping.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Example 3 — terminates but wrong. Consider: &quot;Set max to 0. For each element in the list, if it is larger than max, set max to it. Return max.&quot; What is asked: is this algorithm correct? Given: the procedure plus the specification (input: non-empty list; output: an element of the list no element exceeds). Concept tested: correctness versus termination (§4) — relevant because &quot;it runs fine&quot; is the most dangerous false evidence in programming.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Testing against hostile inputs</div><div class="step-content"><p>Why hostile inputs: correctness ranges over <em>every</em> valid input, so friendly examples prove nothing — one counterexample disproves. Run $[4, 1, 7, 3]$: max goes $0 \to 4 \to 7$, returns 7 — correct here. Run $[-5, -2, -9]$: no element exceeds 0, returns 0 — but 0 is not in the list, violating the output condition. One counterexample suffices: the algorithm terminates on all inputs yet is incorrect. Diagnosis: the initial value 0 smuggles in the assumption &quot;inputs are non-negative&quot;, which the specification never states.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Terminating but incorrect — the §4 distinction in the flesh. Fix: initialise max to the first element, which carries no hidden assumption. Beginner mistake: testing only friendly inputs and declaring correctness — always test boundaries: negatives, single-element lists ($[7]$ must return 7), and all-equal lists ($[5, 5, 5]$ must return 5).</p>
+</div></div><div class="step-card"><div class="step-badge">Step 1: Setup</div><div class="step-title">Formulating the Problem</div><div class="step-content"><p>Example 4 — counting basic operations. Consider the §8 maximum algorithm on a list of $n$ numbers. What is asked: identify its basic operations conceptually (no asymptotics — that language arrives in M1T3). Given: the pseudocode and the RAM model&#39;s unit costs (§9). Concept tested: basic-operation counting intuition — relevant because M1T2&#39;s entire case analysis counts exactly these.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 2: Execution</div><div class="step-title">Counting under the RAM ruler</div><div class="step-content"><p>Why per-line: the RAM model prices each basic step at 1 unit, so walk the lines. &quot;Set max to the first element&quot;: one store — 1 unit, once. The loop visits each of the remaining $n - 1$ elements once. Per visit: one comparison (element versus max) — 1 unit each, so $n - 1$ units total; plus at most one store per visit when a new larger value appears (at most $n - 1$ stores, fewer on friendly inputs — note this input-dependence without analysing cases; cases are M1T2&#39;s job). &quot;Return max&quot;: delivery, 1 unit. Total comparison-work: exactly $n - 1$ units regardless of input values. Tiny numbers: $n = 4$ ($[4, 1, 7, 3]$) → 3 comparisons; $n = 100$ → 99 comparisons.</p>
+</div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Comparison count $n - 1$ always; store count varies with the input (at most $n - 1$ extra). Interpretation: the algorithm&#39;s work grows with $n$ in a way we can state exactly — and &quot;varies with the input&quot; is precisely the observation M1T2 splits into best, worst, and average cases. Beginner mistake: counting the loop header or <code>return</code> as free in one line and costly in another — under the RAM ruler every basic operation costs 1; consistency beats cleverness.</p>
+</div></div><p><a id="watch-out"></a></p>
+<h2 id="12-watch-out-distinctions-exam-recap">12. Watch out, distinctions, exam recap</h2>
+<p class="secnav"><a href="#11-worked-examples-four-tests-of-the-foundation">← 11. Worked examples — four tests o…</a><span class="secnav-sep">·</span><a href="#13-active-recall-quizzes">13. Active Recall Quizzes →</a></p>
 <p><strong>Common confusions (watch out):</strong></p>
 <ul>
-<li>&quot;Zero inputs allowed&quot; does not mean &quot;no output allowed&quot;: input may be empty, but at least one output is mandatory.</li>
-<li>Definiteness vs effectiveness: definiteness is about <em>clarity of the instruction</em> (&quot;add 2 teaspoons&quot;); effectiveness is about <em>executability of the operation</em> (&quot;moon dust&quot; is clear but unobtainable — it fails effectiveness, not definiteness).</li>
-<li>The RAM model counts <em>operations</em>, not seconds — never convert &quot;5 operations&quot; into milliseconds.</li>
+<li>&quot;Runs long&quot; is not &quot;infinite&quot;: a million steps that stop is finite. Finiteness is guaranteed stopping, not speed.</li>
+<li>Definiteness is uniqueness of meaning, not amount of detail: one short unambiguous sentence beats a long two-ways-readable paragraph.</li>
+<li>Zero input is allowed; zero output is not: &quot;no input&quot; means self-contained task, never &quot;no result&quot;.</li>
+<li>&quot;It ran without crashing&quot; is not correctness: Example 3 terminates on every input and is still wrong on negatives.</li>
+<li>RAM units are not seconds: never convert operation counts into milliseconds.</li>
+<li>The RAM model is a ruler, not a photograph: caches and pipelines exist; the model ignores them on purpose.</li>
 </ul>
 <table>
 <thead>
 <tr>
 <th>Similar pair</th>
-<th>Distinction that earns marks</th>
+<th>Distinction that earns marks (with example)</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Definiteness vs effectiveness</td>
-<td>Unambiguous wording vs physically executable operation</td>
+<td>Finiteness vs definiteness</td>
+<td>Always-stops vs exactly-one-meaning: &quot;keep guessing forever&quot; fails the first; &quot;until it looks good&quot; (stops, but subjectively) fails the second</td>
 </tr>
 <tr>
-<td>Time vs space efficiency</td>
-<td>Operation count vs extra memory, both as functions of $n$</td>
+<td>Definiteness vs effectiveness</td>
+<td>One meaning vs really doable: &quot;teleport the data&quot; is clear but unexecutable (fails effectiveness); &quot;sort somehow&quot; is doable-step-wise but unspecified (fails definiteness)</td>
+</tr>
+<tr>
+<td>Algorithm vs vague instruction</td>
+<td>Executable ordered steps vs stated goal: Text B (§7) vs Text A (§7)</td>
 </tr>
 <tr>
 <td>Algorithm vs computational procedure</td>
-<td>Must terminate (finite) vs allowed to run forever (OS loop)</td>
+<td>Must terminate vs runs forever by design: max-finder vs OS main loop</td>
+</tr>
+<tr>
+<td>Input vs output</td>
+<td>Outside supply (possibly zero) vs mandatory checkable result: prime-generator&#39;s empty input vs its 100 primes</td>
+</tr>
+<tr>
+<td>Terminates vs correct</td>
+<td>Stops vs stops-with-the-right-answer: Example 3 on $[-5, -2, -9]$</td>
+</tr>
+<tr>
+<td>Time vs space efficiency</td>
+<td>Operation count vs extra working memory, both as functions of $n$: 99 comparisons + 1 cell vs 4,950 comparisons + 0 cells (§10)</td>
 </tr>
 </tbody></table>
-<p><strong>Exam recap (facts an examiner rewards):</strong> name all five criteria (finiteness, definiteness, input, output, effectiveness); RAM = one-unit basic operations, random access, sequential execution; time/space trade-off example is memoization versus recomputation.</p>
-<hr>
+<p><strong>Exam recap (facts an examiner rewards):</strong> state the definition with all six words unpacked (finite, sequence, well-defined, instructions, solving, problem); name all five characteristics with one passing and one failing example each; the OS-main-loop trap (computational procedure, not algorithm); terminates-versus-correct with the all-negative-list counterexample; zero-input allowed, zero-output forbidden; RAM = numbered cells, unit-cost basic operations, sequential execution, random access meaning any-cell-same-cost; time/space trade-off in plain numbers; honest scope note — no asymptotic notation, no case analysis, no recurrences in this topic&#39;s answers; those are M1T2/M1T3 territory, and naming them as &quot;next&quot; shows course awareness.</p>
 <p><a id="self-check"></a></p>
-<h2 id="5-active-recall-quizzes">5. Active Recall Quizzes</h2>
-<p class="secnav"><a href="#4-watch-out-distinctions-exam-recap">← 4. Watch out, distinctions, exam r…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<h2 id="13-active-recall-quizzes">13. Active Recall Quizzes</h2>
+<p class="secnav"><a href="#12-watch-out-distinctions-exam-recap">← 12. Watch out, distinctions, exam …</a><span class="secnav-sep">·</span><a href="#14-where-next-the-bridge-to-m1t2">14. Where next — the bridge to M1T… →</a></p>
 <div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">A set of instructions that includes the step &quot;repeat until the result looks good enough&quot; fails which criterion of a valid algorithm?</span>
+    <span class="quiz-category">An operating system&#39;s main loop (&quot;keep serving users until switched off&quot;) satisfies every algorithm characteristic except one. Which one, and what is such a procedure called?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Input</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Output</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>Definiteness (and possibly Finiteness, since &quot;good enough&quot; has no guaranteed stopping point)</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Effectiveness only</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>Definiteness — it is called a heuristic</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Finiteness — it is called a computational procedure</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Effectiveness — it is called an approximation</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Input — it is called a service routine</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -375,20 +583,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>&quot;Looks good enough&quot; is subjective and not precisely specified — two executions could stop at different points, or never stop at all. This directly violates Definiteness, and since there&#39;s no guarantee it ever terminates, it also threatens Finiteness.</p><pre><code>&lt;/div&gt;
+      <p>The loop is perfectly precise and executable, but it is designed never to terminate, so it fails finiteness — the always-stops requirement. The technical name for a would-be algorithm that never ends by design is a computational procedure. &quot;Heuristic&quot; (a practical rule of thumb, not studied here) and &quot;approximation&quot; (a near-answer method from Module 4) are different ideas entirely.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">In the RAM model of computation, an operation like adding two numbers or comparing two array elements is assumed to take:</span>
+    <span class="quiz-category">The step &quot;sort the numbers somehow and return them&quot; fails definiteness, while &quot;teleport the sorted array to the server&quot; fails effectiveness. What is the exact difference being tested?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>Time proportional to the size of the numbers involved</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>A constant amount of time, $O(1)$, regardless of input size</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Time proportional to the total memory available on the machine</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>An unpredictable, machine-dependent amount of time</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>The first step is longer than the second</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>The first step can be read many ways (which sort, in which order) while the second has one clear meaning but cannot actually be executed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Both steps fail for the same reason and the labels are interchangeable</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The first step fails because sorting is impossible</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -400,20 +608,20 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>The RAM model&#39;s whole purpose is to give a hardware-independent baseline: it assumes basic operations (arithmetic, comparison, assignment, memory access) each cost exactly one unit of time, so that analysis of an algorithm&#39;s growth rate isn&#39;t muddied by real machine quirks like cache misses or clock speed.</p><pre><code>&lt;/div&gt;
+      <p>Definiteness = exactly one meaning: &quot;sort somehow&quot; leaves the method and order unspecified, so two executors differ. Effectiveness = really executable: teleportation has a single clear meaning but no executable computational step. The labels are not interchangeable — each names a different broken promise, and the exam awards marks for placing the failure correctly.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
 </div><div class="quiz-widget">
   <div class="quiz-header">
-    <span class="quiz-category">Which statement best captures the relationship between time efficiency and space efficiency?</span>
+    <span class="quiz-category">A maximum-finding procedure initialised with max = 0 returns 0 on the input [-5, -2, -9]. It always terminates. What is the correct verdict?</span>
     <span class="quiz-xp">+10 XP</span>
   </div>
   <div class="quiz-prompt"></div>
   <div class="quiz-options">
-    <button class="quiz-option-btn" data-correct="false"><span>They always improve together — a faster algorithm always uses less memory</span></button>
-<button class="quiz-option-btn" data-correct="true"><span>They often trade off against each other — using extra memory to store precomputed results can save time, and vice versa</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Space efficiency is irrelevant in modern computing and can be ignored</span></button>
-<button class="quiz-option-btn" data-correct="false"><span>Time efficiency only matters for recursive algorithms</span></button>  </div>
+    <button class="quiz-option-btn" data-correct="false"><span>It is correct because it terminates on every input</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It terminates but is incorrect, because 0 is not in the list and violates the output specification</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It fails finiteness because negative numbers take longer</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It fails input because negative numbers are invalid inputs</span></button>  </div>
   <details class="quiz-explanation-dropdown">
     <summary class="quiz-explanation-toggle">
       <div class="insight-badge-wrap">
@@ -425,10 +633,89 @@
       </div>
     </summary>
     <div class="quiz-explanation-content">
-      <p>A classic example is memoization: storing (caching) previously computed results uses more space, but saves the time of recomputing them. Conversely, recomputing values on the fly instead of storing them saves memory at the cost of extra computation time. Good algorithm design often means consciously choosing where on this trade-off you want to sit.</p><pre><code>&lt;/div&gt;
+      <p>Termination (finiteness) and correctness are separate promises: correctness requires the output to satisfy the specification for every valid input. Here the output 0 is not even a list member, so the specification is violated — one counterexample disproves correctness. Negative numbers are perfectly valid inputs, and speed has nothing to do with finiteness.</p><pre><code>&lt;/div&gt;
 </code></pre>
   </details>
-</div>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">A prime-generating algorithm takes no external input but prints the first 100 primes. Which statement is right?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>It is invalid because every algorithm needs input</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>It is valid: zero inputs are allowed, and the printed primes are the mandatory output</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It is valid but has no output since nothing was supplied</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>It is invalid because constants like 100 count as external input</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The input contract allows zero or more external quantities — a self-contained task needs none. But the output contract is mandatory: the printed primes are checkable results. Constants written inside the instructions belong to the procedure, not to external input, and &quot;no input&quot; never excuses &quot;no result&quot;.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">In the RAM model, reading memory cell 2 and reading memory cell 2,000,000:</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Cost different amounts because higher cells are farther away</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>Each cost exactly one unit — any cell costs the same (random access)</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cannot be compared without knowing the laptop&#39;s clock speed</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Cost zero because reads are not basic operations</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>Random access means any-cell-same-cost: the model assumes every cell read costs 1 unit regardless of address, and memory reads are basic operations. Clock speed is exactly the machine-dependence the model exists to exclude, and distance-based costing describes real hardware quirks the ruler deliberately ignores.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><div class="quiz-widget">
+  <div class="quiz-header">
+    <span class="quiz-category">One-pass maximum-finding uses 99 comparisons and 1 extra cell on 100 numbers; all-pairs comparison uses 4,950 comparisons and 0 extra cells. What does this show?</span>
+    <span class="quiz-xp">+10 XP</span>
+  </div>
+  <div class="quiz-prompt"></div>
+  <div class="quiz-options">
+    <button class="quiz-option-btn" data-correct="false"><span>Time efficiency and space efficiency always improve together</span></button>
+<button class="quiz-option-btn" data-correct="true"><span>A time-space trade-off: spending one cell saves thousands of operations, and vice versa</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>Space efficiency is irrelevant so the second version is strictly better</span></button>
+<button class="quiz-option-btn" data-correct="false"><span>The comparison counts prove the first version is incorrect</span></button>  </div>
+  <details class="quiz-explanation-dropdown">
+    <summary class="quiz-explanation-toggle">
+      <div class="insight-badge-wrap">
+        <span class="insight-badge">💡 Pedagogical Insight</span>
+      </div>
+      <div class="insight-action-text">
+        <span class="insight-toggle-hint">Click to view/hide</span>
+        <span class="insight-toggle-arrow">&#9662;</span>
+      </div>
+    </summary>
+    <div class="quiz-explanation-content">
+      <p>The two versions trade resources: one extra cell of room buys ~50x fewer operations (4,950 down to 99). Neither dominates — the right choice depends on which resource is scarcer. Correctness is untouched (both return the true maximum), and space is never irrelevant: it is half of the efficiency question M1T2 will measure.</p><pre><code>&lt;/div&gt;
+</code></pre>
+  </details>
+</div><p><a id="bridge-to-m1t2"></a></p>
+<h2 id="14-where-next-the-bridge-to-m1t2">14. Where next — the bridge to M1T2</h2>
+<p class="secnav"><a href="#13-active-recall-quizzes">← 13. Active Recall Quizzes</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>
+<p>You now own the vocabulary every later topic speaks: what an algorithm is, the five tests anything must pass to bear the name, why &quot;it stopped&quot; never implies &quot;it is right&quot;, how to read the pseudocode examples, the RAM ruler that makes comparisons fair, and the two resources — work and room — whose growth is worth measuring.</p>
+<p>The next topic, M1T2 (Time &amp; Space Complexity: Best, Worst, and Average Cases), takes the counts you met here and asks the question Example 4 left hanging: the store-count <em>varied with the input</em> — so which input do we report? The luckiest (best case), the unluckiest (worst case), or the typical one (average case)? Go there knowing what an algorithm is, how its steps are counted, and what its contracts promise — M1T2 will do the measuring.</p>
 
     </main>
 
