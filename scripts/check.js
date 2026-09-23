@@ -240,12 +240,13 @@ for (const course of courses) {
     // 2e2. Viz widgets (`::: viz flow|stepper|tabs|compare|rtt`, see
     // scripts/widgets.js): known types only (above); flow/stepper need at
     // least 2 steps; tabs need at least 2 `Label :: content` lines; compare
-    // needs two `## Heading` sections. Flow/tabs scene ids resolve in
+    // needs two `## Heading` sections; trace needs 2+ `state |` lines, 1+
+    // `op |` line, and must start with a state. Flow/tabs scene ids resolve in
     // scripts/scenes.js when the first head word names one; otherwise it
     // is title text.
     for (const m of t.matchAll(/^::: viz (\S+)(.*)$/gm)) {
-      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt', 'structure', 'lab'].includes(m[1])) {
-        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, rtt, structure, or lab`);
+      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt', 'structure', 'lab', 'trace'].includes(m[1])) {
+        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, rtt, structure, lab, or trace`);
       }
     }
     for (const b of t.matchAll(/::: viz (?:flow|stepper)(.*?)\n([\s\S]*?)\n:::/g)) {
@@ -272,6 +273,17 @@ for (const course of courses) {
     }
     for (const m of t.matchAll(/^::: viz lab (\S+)/gm)) {
       if (!LAB_CALC_IDS.includes(m[1])) fail(`${course}/${f}: unknown viz lab calculation '${m[1]}' — registry: ${LAB_CALC_IDS.join(', ')}`);
+    }
+    for (const b of t.matchAll(/::: viz trace(.*?)\n([\s\S]*?)\n:::/g)) {
+      const lines = b[2].split('\n').map((l) => l.trim()).filter(Boolean);
+      const states = lines.filter((l) => l.toLowerCase().startsWith('state |'));
+      const ops = lines.filter((l) => l.toLowerCase().startsWith('op |'));
+      if (states.length < 2) fail(`${course}/${f}: ::: viz trace block needs at least 2 "state |" lines — actual: ${states.length}`);
+      if (!ops.length) fail(`${course}/${f}: ::: viz trace block needs at least 1 "op |" line`);
+      if (lines.length && !lines[0].toLowerCase().startsWith('state |')) fail(`${course}/${f}: ::: viz trace block must start with a state line`);
+      [...states, ...ops].forEach((l) => {
+        if (!l.split('|').slice(1).join('|').trim()) fail(`${course}/${f}: empty viz trace line — actual: "${l.slice(0, 40)}"`);
+      });
     }
   }
 }

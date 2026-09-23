@@ -8,7 +8,7 @@
  *
  * Deterministic cache-version strategy: TARANGAM_CACHE_VERSION names
  * every cache this worker owns. At build time scripts/output.js replaces
- * tarangam-ee8af102d10e with `tarangam-<12 hex chars>`, a content hash over
+ * tarangam-e70009c25cdc with `tarangam-<12 hex chars>`, a content hash over
  * the shell file list below plus curriculum data, templates, entry pages,
  * and topic content (see computeServiceWorkerVersion). Any deploy that
  * changes what the user sees therefore mints a new version, activates it
@@ -23,7 +23,7 @@
  * responses. No IndexedDB, no backend, no sync, no polling.
  */
 
-const TARANGAM_CACHE_VERSION = 'tarangam-ee8af102d10e';
+const TARANGAM_CACHE_VERSION = 'tarangam-e70009c25cdc';
 const SHELL_CACHE = `${TARANGAM_CACHE_VERSION}::shell`;
 const CONTENT_CACHE = `${TARANGAM_CACHE_VERSION}::content`;
 const DATA_CACHE = `${TARANGAM_CACHE_VERSION}::data`;

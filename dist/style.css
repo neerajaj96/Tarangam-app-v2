@@ -1057,7 +1057,27 @@ img, video, svg, canvas { max-width: 100%; height: auto; }
   .viz-tabs .viz-panel[hidden] { display: block; }
   .viz-compare .viz-count[hidden] { display: block; }
   .viz-toggle { display: none !important; }
+  .viz-trace li[hidden] { display: list-item !important; }
+  .viz-trace .viz-controls { display: none !important; }
 }
+
+/* Interactive state trace (`::: viz trace`): static-first like steps. */
+.viz-trace-list { list-style: none; margin: 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.viz-tstate {
+  border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+  background: var(--surface-2); padding: 10px 14px; margin: 0;
+}
+.viz-tstate[aria-current="step"] { border-color: var(--accent); background: var(--surface-3); }
+.viz-slabel { display: block; font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.viz-sbody > :first-child, .viz-obody > :first-child { margin-top: 0; }
+.viz-sbody > :last-child, .viz-obody > :last-child { margin-bottom: 0; }
+.viz-top { display: flex; gap: 10px; align-items: baseline; margin: 0; padding: 2px 16px 2px 20px; font-size: 14px; color: var(--ink-dim); }
+.viz-olabel { color: var(--accent-warm); font-weight: 700; }
+.viz-obody > :first-child { margin-top: 0; }
+.viz-obody > :last-child { margin-bottom: 0; }
+.viz-trace li[hidden] { display: list-item; }
+.viz-trace.is-live li[hidden] { display: none; }
+.viz-trace mark { background: var(--accent-glow); color: inherit; border-radius: 4px; padding: 0 3px; }
 
 /* ---------- Annotated structure viewer (`::: viz structure`) ---
    Same static-first contract: every field shows name, size, and meaning

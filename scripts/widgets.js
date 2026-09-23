@@ -434,5 +434,78 @@ export function transformCustomWidgets(markdownText) {
 </div>`;
   });
 
+  // 7f. State-trace viewer: the SAME state mutating across operations.
+  // `flow`/`stepper` cover sequences of independent stages; trace covers
+  // state → op → state chains where each state must be read against the
+  // previous one. Syntax: `::: viz trace <title>` with alternating lines:
+  //   state | <markdown: full state at this point>
+  //   op    | <markdown: operation producing the NEXT state>
+  // Rules: first non-empty line must be a state; at least 2 states and 1
+  // op required; other non-empty lines become notes below. `==...==`
+  // highlights changed portions (<mark>), applied outside code spans and
+  // `$` math spans so `a == b` in code or formulas is never corrupted.
+  // Without JS the full ordered trace renders statically (only the first
+  // state is unhidden, and CSS reveals the rest); viz.js stages it
+  // cumulatively — states 0..k plus the ops producing them. Malformed
+  // blocks stay raw for scripts/check.js.
+  const markSpots = (s) => {
+    const kept = [];
+    const stash = (m) => { kept.push(m); return `\0${kept.length - 1}\0`; };
+    const shielded = s
+      .replace(/`[^`\n]*`/g, stash)
+      .replace(/\$\$[^$]*\$\$|\$[^$\n]*\$/g, stash);
+    return shielded
+      .replace(/==([^=\n]+?)==/g, '<mark>$1</mark>')
+      .replace(/\0(\d+)\0/g, (_, i) => kept[Number(i)]);
+  };
+  const vizTracePattern = /::: viz trace(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(vizTracePattern, (match, head, rawBody) => {
+    const title = head.trim() || 'State trace';
+    const safeTitle = escapeHtml(title);
+    const items = [];
+    for (const raw of rawBody.split('\n')) {
+      const l = raw.trim();
+      if (!l) continue;
+      const low = l.toLowerCase();
+      if (low.startsWith('state |')) items.push({ kind: 'state', md: l.slice(7).trim() });
+      else if (low.startsWith('op |')) items.push({ kind: 'op', md: l.slice(4).trim() });
+      else items.push({ kind: 'note', md: l });
+    }
+    const states = items.filter((it) => it.kind === 'state');
+    const ops = items.filter((it) => it.kind === 'op');
+    const first = items.find((it) => it.kind !== 'note');
+    if (states.length < 2 || !ops.length || !first || first.kind !== 'state') return match;
+    if (states.some((s) => !s.md) || ops.some((o) => !o.md)) return match;
+    let si = 0;
+    let oi = 0;
+    const lis = items.filter((it) => it.kind !== 'note').map((it) => {
+      const body = renderMarkdown(markSpots(it.md));
+      if (it.kind === 'state') {
+        const li = `<li class="viz-tstate" data-i="${si}"${si === 0 ? '' : ' hidden'}><span class="viz-slabel">State ${si}</span><div class="viz-sbody">${body}</div></li>`;
+        si += 1;
+        return li;
+      }
+      const li = `<li class="viz-top" data-i="${oi}" hidden><span class="viz-olabel" aria-hidden="true">&darr;</span><div class="viz-obody">${body}</div></li>`;
+      oi += 1;
+      return li;
+    }).join('\n');
+    const notes = items.filter((it) => it.kind === 'note');
+    const notesHtml = notes.length ? `<div class="viz-notes">${renderMarkdown(notes.map((n) => n.md).join('\n'))}</div>` : '';
+    return `<div class="viz viz-trace" data-viz="trace" data-states="${states.length}">
+  <div class="viz-head"><span class="viz-tag">Interactive trace &middot; ${safeTitle}</span></div>
+  <ol class="viz-trace-list">
+    ${lis}
+  </ol>
+  <div class="viz-controls" role="group" aria-label="${safeTitle}: trace controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">State 1 of ${states.length}</p>
+  ${notesHtml}
+</div>`;
+  });
+
   return markdownText;
 }

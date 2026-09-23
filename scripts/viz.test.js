@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { transformCustomWidgets } from './widgets.js';
 import { SCENES, SCENE_IDS } from './scenes.js';
-import { createStepper, bindViz, bindTabs, bindCompare, bindRtt, bindLab, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
+import { createStepper, bindViz, bindTrace, bindTabs, bindCompare, bindRtt, bindLab, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
 import { LABS, LAB_IDS, getLab, validateLab, computeLab, formatInt, formatNum2 } from './viz-calcs.js';
 
 const read = (f) => fs.readFileSync(f, 'utf-8');
@@ -910,5 +910,207 @@ describe('lab hardening: formatting, sync, fallback', () => {
     root.inputs.rtt.value = '60';
     root.fireIn('rtt');
     assert.equal(root.ranges.rtt.value, '60', 'valid numbers still sync');
+  });
+});
+
+function stubTraceRoot(stateCount) {
+  const states = Array.from({ length: stateCount }, (_, i) => stubEl({ 'data-i': String(i) }));
+  const ops = Array.from({ length: Math.max(0, stateCount - 1) }, (_, i) => stubEl({ 'data-i': String(i) }));
+  const status = stubEl();
+  const buttons = ['prev', 'play', 'next', 'reset'].map((act) => stubEl({ 'data-act': act }));
+  const controls = stubEl();
+  controls.querySelectorAll = () => buttons;
+  const listeners = {};
+  return {
+    states,
+    ops,
+    buttons,
+    status,
+    controls,
+    addEventListener(t, fn) { (listeners[t] = listeners[t] || []).push(fn); },
+    fire(t, e = {}) { (listeners[t] || []).forEach((fn) => fn({ preventDefault() {}, ...e })); },
+    classList: { add() {} },
+    querySelector(sel) {
+      if (sel === '.viz-status') return status;
+      if (sel === '.viz-controls') return controls;
+      return null;
+    },
+    querySelectorAll(sel) {
+      if (sel === '.viz-tstate') return states;
+      if (sel === '.viz-top') return ops;
+      return [];
+    },
+  };
+}
+
+const BUBBLE_TRACE = '::: viz trace Bubble pass on [5, 2, 4]\n'
+  + 'state | `[5, 2, 4]` — start of pass\n'
+  + 'op | Compare indices 0 and 1: 5 > 2, so swap\n'
+  + 'state | [==2==, ==5==, 4] — exchanged\n'
+  + 'op | Compare indices 1 and 2: 5 > 4, so swap\n'
+  + 'state | [2, ==4==, ==5==] — exchanged\n:::';
+
+describe('viz trace transform', () => {
+  it('renders states, ops, highlights, controls, and live status', () => {
+    const out = transformCustomWidgets(BUBBLE_TRACE);
+    assert.ok(out.includes('class="viz viz-trace"'), 'trace shell class');
+    assert.ok(out.includes('data-states="3"'), 'state count advertised');
+    assert.ok(out.includes('Bubble pass on [5, 2, 4]'), 'title rendered');
+    assert.ok(out.includes('State 0') && out.includes('State 2'), 'states labeled in order');
+    assert.ok(out.includes('<mark>2</mark>') && out.includes('<mark>5</mark>'), 'changed portions emphasized');
+    assert.ok(out.includes('class="viz-top"'), 'operation rows rendered');
+    assert.ok(out.includes('State 1 of 3'), 'initial status names the first state');
+    for (const act of ['prev', 'play', 'next', 'reset']) {
+      assert.ok(out.includes(`data-act="${act}"`), `control ${act} present`);
+    }
+    assert.ok(out.includes('role="status"'), 'polite live status region');
+    assert.ok(!/^:::\n:::/m.test(out), 'no consecutive closers');
+  });
+
+  it('never corrupts == inside code spans or math', () => {
+    const out = transformCustomWidgets(
+      '::: viz trace Guards\nstate | Start `if (a == b)` here\nop | Check `$x == y$` next\nstate | End `if (a == b)` done\n:::'
+    );
+    assert.ok(out.includes('<code>if (a == b)</code>'), 'code span intact');
+    assert.ok(!out.includes('<mark>'), 'no highlight invented inside code or math');
+    assert.ok(out.includes('$x == y$'), 'math intact');
+  });
+
+  it('leaves malformed traces raw for check.js', () => {
+    assert.equal(transformCustomWidgets('::: viz trace Lonely\nstate | Only one\nop | No second state\n:::'),
+      '::: viz trace Lonely\nstate | Only one\nop | No second state\n:::', 'single state untouched');
+    assert.equal(transformCustomWidgets('::: viz trace NoOps\nstate | A\nstate | B\n:::'),
+      '::: viz trace NoOps\nstate | A\nstate | B\n:::', 'op-less trace untouched');
+    assert.equal(transformCustomWidgets('::: viz trace OpFirst\nop | Before anything\nstate | A\nstate | B\n:::'),
+      '::: viz trace OpFirst\nop | Before anything\nstate | A\nstate | B\n:::', 'op-first untouched');
+    assert.equal(transformCustomWidgets('::: viz trace Empty\nstate | \nop | x\nstate | B\n:::'),
+      '::: viz trace Empty\nstate | \nop | x\nstate | B\n:::', 'empty state untouched');
+  });
+
+  it('renders trailing notes below the widget', () => {
+    const out = transformCustomWidgets('::: viz trace T\nstate | A\nop | Go\nstate | B\nRead this after.\n:::');
+    assert.ok(out.includes('viz-notes') && out.includes('Read this after'), 'notes rendered');
+  });
+});
+
+describe('trace binding on stub DOM', () => {
+  it('reveals cumulatively with aria-current only on the newest state', () => {
+    const root = stubTraceRoot(3);
+    const bound = bindTrace(root);
+    assert.ok(bound, 'multi-state trace binds');
+    assert.equal(root.status.textContent, 'State 1 of 3');
+    assert.equal(root.states[0].getAttribute('aria-current'), 'step');
+    assert.equal(root.states[1].getAttribute('hidden'), '');
+    assert.equal(root.ops[0].getAttribute('hidden'), '');
+    bound.actions.next();
+    assert.equal(root.status.textContent, 'State 2 of 3');
+    assert.equal(root.states[0].getAttribute('hidden'), null, 'earlier states stay visible');
+    assert.equal(root.states[0].getAttribute('aria-current'), null, 'only newest state is current');
+    assert.equal(root.states[1].getAttribute('aria-current'), 'step');
+    assert.equal(root.ops[0].getAttribute('hidden'), null, 'producing op revealed');
+    assert.equal(root.ops[1].getAttribute('hidden'), '', 'future op hidden');
+    bound.actions.reset();
+    assert.equal(root.status.textContent, 'State 1 of 3');
+    assert.equal(root.ops[0].getAttribute('hidden'), '', 'reset hides ops again');
+  });
+
+  it('clamps at both ends and disables edge buttons', () => {
+    const root = stubTraceRoot(2);
+    const bound = bindTrace(root);
+    const byAct = {};
+    root.buttons.forEach((b) => { byAct[b.getAttribute('data-act')] = b; });
+    assert.equal(byAct.prev.getAttribute('disabled'), '', 'prev disabled at first state');
+    bound.actions.prev();
+    assert.equal(root.status.textContent, 'State 1 of 2', 'prev clamps');
+    byAct.next.fire('click');
+    assert.equal(root.status.textContent, 'State 2 of 2');
+    assert.equal(byAct.next.getAttribute('disabled'), '', 'next disabled at last state');
+    byAct.next.fire('click');
+    assert.equal(root.status.textContent, 'State 2 of 2', 'next clamps');
+  });
+
+  it('moves with arrows, Home, and End without stealing Space', () => {
+    const root = stubTraceRoot(3);
+    bindTrace(root);
+    let prevented = 0;
+    const key = (k) => root.fire('keydown', { key: k, preventDefault() { prevented += 1; } });
+    key('ArrowRight');
+    assert.equal(root.status.textContent, 'State 2 of 3');
+    key('End');
+    assert.equal(root.status.textContent, 'State 3 of 3', 'End jumps to last state');
+    key('ArrowRight');
+    assert.equal(root.status.textContent, 'State 3 of 3', 'End clamps, not wraps');
+    key('Home');
+    assert.equal(root.status.textContent, 'State 1 of 3');
+    key('ArrowLeft');
+    assert.equal(root.status.textContent, 'State 1 of 3', 'Home clamps, not wraps');
+    assert.equal(prevented, 5, 'handled keys stay local');
+  });
+
+  it('autoplays through states and stops at the last one', () => {
+    const root = stubTraceRoot(3);
+    const bound = bindTrace(root, { timer: { set: (fn) => { fn(); fn(); fn(); return 7; }, clear: () => {} } });
+    const byAct = {};
+    root.buttons.forEach((b) => { byAct[b.getAttribute('data-act')] = b; });
+    byAct.play.fire('click');
+    assert.equal(root.status.textContent, 'State 3 of 3');
+    assert.equal(bound.machine.playing, false, 'parked after final tick');
+  });
+
+  it('removes Play entirely under prefers-reduced-motion', () => {
+    const realWindow = globalThis.window;
+    globalThis.window = { matchMedia: () => ({ matches: true }) };
+    try {
+      const root = stubTraceRoot(2);
+      bindTrace(root);
+      const byAct = {};
+      root.buttons.forEach((b) => { byAct[b.getAttribute('data-act')] = b; });
+      assert.equal(byAct.play.removed, true, 'no autoplay surface under reduced motion');
+      byAct.next.fire('click');
+      assert.equal(root.status.textContent, 'State 2 of 2', 'manual stepping still instant');
+    } finally {
+      if (realWindow === undefined) delete globalThis.window;
+      else globalThis.window = realWindow;
+    }
+  });
+
+  it('leaves single-state traces static with dead controls hidden', () => {
+    const root = stubTraceRoot(1);
+    assert.equal(bindTrace(root), null, 'nothing to stage');
+    assert.equal(root.controls.getAttribute('hidden'), '', 'useless controls hidden');
+    assert.equal(root.states[0].getAttribute('hidden'), null, 'sole state stays visible');
+  });
+
+  it('keeps widgets independent on one page', () => {
+    const first = stubTraceRoot(3);
+    const second = stubTraceRoot(2);
+    const a = bindTrace(first);
+    const b = bindTrace(second);
+    a.actions.next();
+    a.actions.next();
+    assert.equal(first.status.textContent, 'State 3 of 3');
+    assert.equal(second.status.textContent, 'State 1 of 2', 'second widget untouched');
+    b.actions.next();
+    assert.equal(first.status.textContent, 'State 3 of 3', 'first widget untouched');
+  });
+});
+
+describe('trace machine and stylesheet contract', () => {
+  it('parks the machine on last() without wrapping', () => {
+    const m = createStepper(3);
+    assert.equal(m.last(), 2, 'last jumps to final index');
+    assert.equal(m.playing, false, 'last never starts playback');
+    assert.equal(m.play(), false, 'play at end stays off');
+  });
+
+  it('styles trace states, ops, marks, and print fallback', () => {
+    const css = read('style.css');
+    for (const sel of [
+      '.viz-trace-list', '.viz-tstate[aria-current="step"]', '.viz-top',
+      '.viz-slabel', '.viz-trace mark', '.viz-trace.is-live li[hidden]',
+    ]) {
+      assert.ok(css.includes(sel), `stylesheet covers ${sel}`);
+    }
+    assert.ok(!/width:\s*100vw/.test(css), 'no viewport-width traps introduced');
   });
 });

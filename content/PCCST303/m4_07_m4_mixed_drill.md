@@ -69,6 +69,18 @@ The 9-marker is a sort trace (passes with the working zone marked) plus hashing 
 Shifts counted, probes halved, chains appended — one verb per machine, all visible in the trace.
 :::
 
+### 3.1 Interactive trace demo (one bubble pass)
+
+The drill above practices reading exact intermediate states; the widget below stages the same skill on one bubble pass over $[5, 2, 4]$ — each state must be read against the previous one, with the exchanged pair highlighted.
+
+::: viz trace Bubble pass on [5, 2, 4]
+state | `[5, 2, 4]` — start of pass
+op | Compare indices 0 and 1: 5 > 2, so swap
+state | [==2==, ==5==, 4] — exchanged pair highlighted
+op | Compare indices 1 and 2: 5 > 4, so swap
+state | [2, ==4==, ==5==] — exchanged pair highlighted
+:::
+
 ---
 
 <a id="self-check"></a>

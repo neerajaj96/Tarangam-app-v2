@@ -293,7 +293,29 @@
 <li>$7\bmod5 = 2$; $12\bmod5 = 2$ → chain at slot $2$: $[7,12]$.</li>
 </ol>
 </div></div><div class="step-card"><div class="step-badge">Step 3: Conclusion</div><div class="step-title">Final Result</div><div class="step-content"><p>Shifts counted, probes halved, chains appended — one verb per machine, all visible in the trace.</p>
-</div></div><hr>
+</div></div><h3>3.1 Interactive trace demo (one bubble pass)</h3>
+<p>The drill above practices reading exact intermediate states; the widget below stages the same skill on one bubble pass over $[5, 2, 4]$ — each state must be read against the previous one, with the exchanged pair highlighted.</p>
+<div class="viz viz-trace" data-viz="trace" data-states="3">
+  <div class="viz-head"><span class="viz-tag">Interactive trace &middot; Bubble pass on [5, 2, 4]</span></div>
+  <ol class="viz-trace-list">
+    <li class="viz-tstate" data-i="0"><span class="viz-slabel">State 0</span><div class="viz-sbody"><p><code>[5, 2, 4]</code> — start of pass</p>
+</div></li>
+<li class="viz-top" data-i="0" hidden><span class="viz-olabel" aria-hidden="true">&darr;</span><div class="viz-obody"><p>Compare indices 0 and 1: 5 &gt; 2, so swap</p>
+</div></li>
+<li class="viz-tstate" data-i="1" hidden><span class="viz-slabel">State 1</span><div class="viz-sbody"><p>[<mark>2</mark>, <mark>5</mark>, 4] — exchanged pair highlighted</p>
+</div></li>
+<li class="viz-top" data-i="1" hidden><span class="viz-olabel" aria-hidden="true">&darr;</span><div class="viz-obody"><p>Compare indices 1 and 2: 5 &gt; 4, so swap</p>
+</div></li>
+<li class="viz-tstate" data-i="2" hidden><span class="viz-slabel">State 2</span><div class="viz-sbody"><p>[2, <mark>4</mark>, <mark>5</mark>] — exchanged pair highlighted</p>
+</div></li>
+  </ol>
+  <div class="viz-controls" role="group" aria-label="Bubble pass on [5, 2, 4]: trace controls">
+    <button type="button" class="viz-btn" data-act="prev">&larr; Prev</button>
+    <button type="button" class="viz-btn" data-act="play">Play</button>
+    <button type="button" class="viz-btn" data-act="next">Next &rarr;</button>
+    <button type="button" class="viz-btn" data-act="reset">Reset</button>
+  </div>
+  <p class="viz-status" role="status">State 1 of 3</p></div><hr>
 <p><a id="self-check"></a></p>
 <h2 id="4-active-recall-quizzes">4. Active Recall Quizzes</h2>
 <p class="secnav"><a href="#3-worked-example-step-by-step-scenario">← 3. Worked Example / Step-by-Step S…</a><span class="secnav-sep">·</span><a href="#pagefoot">↓ Next topic</a></p>

@@ -1,20 +1,20 @@
 /**
  * Tarangam visualization engine — progressive enhancement for the
- * `::: viz flow|stepper` Markdown widgets (see scripts/widgets.js).
+ * `::: viz flow|stepper|trace` Markdown widgets (see scripts/widgets.js).
  *
  * Static-first contract: without JavaScript every step stays visible as a
  * plain numbered list with its diagram, so no information is ever locked
  * behind interaction. When this module runs, each widget gains staged
  * Prev/Next/Play/Reset controls, arrow-key support, and polite live
- * announcements of the current step. No dependencies, no framework, no
+ * announcements of the current position. No dependencies, no framework, no
  * global animation loops; one interval per playing widget at most, always
  * cleared at the last step.
  *
  * Accessibility + motion contract:
  * - Controls are native <button> elements (keyboard usable by default);
- *   Left/Right arrows on the widget move steps without stealing Space.
- * - The current step keeps aria-current; others use `hidden`; a
- *   role="status" line announces "Step k of n" politely.
+ *   Left/Right arrows on the widget move without stealing Space.
+ * - The current item keeps aria-current; others use `hidden`; a
+ *   role="status" line announces position politely.
  * - Under prefers-reduced-motion the Play control is removed entirely —
  *   stepping stays instant (there are no transitions to disable) and no
  *   autoplay can start.
@@ -40,6 +40,7 @@ export function createStepper(count) {
     next() { i = Math.min(n - 1, i + 1); playing = false; return i; },
     prev() { i = Math.max(0, i - 1); playing = false; return i; },
     reset() { i = 0; playing = false; return i; },
+    last() { i = n - 1; playing = false; return i; },
     play() { playing = i < n - 1; return playing; },
     pause() { playing = false; return playing; },
     tick() {
@@ -61,50 +62,66 @@ function prefersReducedMotion() {
 export function bindViz(root, { timer = { set: (fn, ms) => setInterval(fn, ms), clear: (id) => clearInterval(id) } } = {}) {
   if (!root || typeof root.querySelectorAll !== 'function') return null;
   const steps = Array.from(root.querySelectorAll('.viz-step'));
-  const status = root.querySelector('.viz-status');
-  const controls = root.querySelector('.viz-controls');
-  if (steps.length < 2 || !status || !controls) {
+  if (steps.length < 2) {
     // Single-step (or malformed) widget: leave fully static, hide dead controls.
+    const controls = root.querySelector ? root.querySelector('.viz-controls') : null;
     if (controls) controls.setAttribute('hidden', '');
     return null;
   }
   const machine = createStepper(steps.length);
-  const btns = {};
-  controls.querySelectorAll('.viz-btn').forEach((b) => { btns[b.getAttribute('data-act')] = b; });
-  let timerId = null;
-  const stop = () => {
-    if (timerId !== null) { timer.clear(timerId); timerId = null; }
-    machine.pause();
-    if (btns.play) btns.play.textContent = 'Play';
-  };
-  const apply = () => {
-    const i = machine.index;
+  const apply = (i) => {
     steps.forEach((li, k) => {
       if (k === i) { li.removeAttribute('hidden'); li.setAttribute('aria-current', 'step'); }
       else { li.setAttribute('hidden', ''); li.removeAttribute('aria-current'); }
     });
-    status.textContent = `Step ${i + 1} of ${machine.count}`;
+  };
+  return wireStaged(root, machine, apply, 'Step', timer);
+}
+
+// Shared staged-controls wiring for step-like widgets: Prev/Next/Play/
+// Reset buttons, arrow/Home/End keys, polite position announcements, and
+// reduced-motion handling live here once — bindViz (single visible item)
+// and bindTrace (cumulative states) differ only in their apply() painter.
+function wireStaged(root, machine, apply, label, timer) {
+  const clock = timer || { set: (fn, ms) => setInterval(fn, ms), clear: (id) => clearInterval(id) };
+  const status = root.querySelector('.viz-status');
+  const controls = root.querySelector('.viz-controls');
+  if (!status || !controls) {
+    if (controls) controls.setAttribute('hidden', '');
+    return null;
+  }
+  const btns = {};
+  controls.querySelectorAll('.viz-btn').forEach((b) => { btns[b.getAttribute('data-act')] = b; });
+  let timerId = null;
+  const stop = () => {
+    if (timerId !== null) { clock.clear(timerId); timerId = null; }
+    machine.pause();
+    if (btns.play) btns.play.textContent = 'Play';
+  };
+  const paint = () => {
+    apply(machine.index);
+    status.textContent = `${label} ${machine.index + 1} of ${machine.count}`;
     if (btns.prev) { if (machine.index === 0) btns.prev.setAttribute('disabled', ''); else btns.prev.removeAttribute('disabled'); }
     if (btns.next) { if (machine.index === machine.count - 1) btns.next.setAttribute('disabled', ''); else btns.next.removeAttribute('disabled'); }
   };
   // Reduced motion: no autoplay surface at all; manual stepping stays instant.
   if (prefersReducedMotion() && btns.play) btns.play.remove();
   const actions = {
-    prev: () => { stop(); machine.prev(); apply(); },
-    next: () => { stop(); machine.next(); apply(); },
-    reset: () => { stop(); machine.reset(); apply(); },
+    prev: () => { stop(); machine.prev(); paint(); },
+    next: () => { stop(); machine.next(); paint(); },
+    reset: () => { stop(); machine.reset(); paint(); },
     play: () => {
       if (!btns.play || btns.play.isConnected === false) return;
-      if (machine.playing) { stop(); apply(); return; }
+      if (machine.playing) { stop(); paint(); return; }
       if (machine.play()) {
         btns.play.textContent = 'Pause';
-        timerId = timer.set(() => {
+        timerId = clock.set(() => {
           machine.tick();
-          apply();
+          paint();
           if (!machine.playing) stop();
         }, VIZ_PLAY_INTERVAL_MS);
       } else {
-        apply();
+        paint();
       }
     },
   };
@@ -116,11 +133,44 @@ export function bindViz(root, { timer = { set: (fn, ms) => setInterval(fn, ms), 
       if (e.key === 'ArrowRight') { e.preventDefault(); actions.next(); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); actions.prev(); }
       else if (e.key === 'Home') { e.preventDefault(); actions.reset(); }
+      else if (e.key === 'End') { e.preventDefault(); stop(); machine.last(); paint(); }
     });
   }
   root.classList.add('is-live');
-  apply();
+  paint();
   return { root, machine, actions, stop };
+}
+
+// State-trace binding: cumulative reveal — states 0..k plus the ops that
+// produced them stay visible, so each state reads against its history.
+// Only the newest state carries aria-current; ops never take it.
+export function bindTrace(root, { timer } = {}) {
+  if (!root || typeof root.querySelectorAll !== 'function') return null;
+  const states = Array.from(root.querySelectorAll('.viz-tstate'));
+  const ops = Array.from(root.querySelectorAll('.viz-top'));
+  if (states.length < 2) {
+    const controls = root.querySelector ? root.querySelector('.viz-controls') : null;
+    if (controls) controls.setAttribute('hidden', '');
+    return null;
+  }
+  const machine = createStepper(states.length);
+  const apply = (i) => {
+    states.forEach((li, k) => {
+      if (k <= i) {
+        li.removeAttribute('hidden');
+        if (k === i) li.setAttribute('aria-current', 'step');
+        else li.removeAttribute('aria-current');
+      } else {
+        li.setAttribute('hidden', '');
+        li.removeAttribute('aria-current');
+      }
+    });
+    ops.forEach((li, j) => {
+      if (j < i) li.removeAttribute('hidden');
+      else li.setAttribute('hidden', '');
+    });
+  };
+  return wireStaged(root, machine, apply, 'State', timer);
 }
 
 export function initViz(scope) {
@@ -130,6 +180,7 @@ export function initViz(scope) {
   base.querySelectorAll('.viz[data-viz]').forEach((root) => {
     const kind = root.getAttribute('data-viz');
     if (kind === 'flow' || kind === 'stepper') bound.push(bindViz(root));
+    else if (kind === 'trace') bound.push(bindTrace(root));
     else if (kind === 'tabs') bound.push(bindTabs(root));
     else if (kind === 'compare') bound.push(bindCompare(root));
     else if (kind === 'rtt') bound.push(bindLab(root, 'rtt'));
