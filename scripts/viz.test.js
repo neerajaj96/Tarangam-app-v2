@@ -913,9 +913,9 @@ describe('lab hardening: formatting, sync, fallback', () => {
   });
 });
 
-function stubTraceRoot(stateCount) {
+function stubTraceDOM(stateCount, opCount) {
   const states = Array.from({ length: stateCount }, (_, i) => stubEl({ 'data-i': String(i) }));
-  const ops = Array.from({ length: Math.max(0, stateCount - 1) }, (_, i) => stubEl({ 'data-i': String(i) }));
+  const ops = Array.from({ length: opCount }, (_, i) => stubEl({ 'data-i': String(i) }));
   const status = stubEl();
   const buttons = ['prev', 'play', 'next', 'reset'].map((act) => stubEl({ 'data-act': act }));
   const controls = stubEl();
@@ -941,6 +941,10 @@ function stubTraceRoot(stateCount) {
       return [];
     },
   };
+}
+
+function stubTraceRoot(stateCount) {
+  return stubTraceDOM(stateCount, Math.max(0, stateCount - 1));
 }
 
 const BUBBLE_TRACE = '::: viz trace Bubble pass on [5, 2, 4]\n'
@@ -976,20 +980,73 @@ describe('viz trace transform', () => {
     assert.ok(out.includes('$x == y$'), 'math intact');
   });
 
-  it('leaves malformed traces raw for check.js', () => {
-    assert.equal(transformCustomWidgets('::: viz trace Lonely\nstate | Only one\nop | No second state\n:::'),
-      '::: viz trace Lonely\nstate | Only one\nop | No second state\n:::', 'single state untouched');
-    assert.equal(transformCustomWidgets('::: viz trace NoOps\nstate | A\nstate | B\n:::'),
-      '::: viz trace NoOps\nstate | A\nstate | B\n:::', 'op-less trace untouched');
-    assert.equal(transformCustomWidgets('::: viz trace OpFirst\nop | Before anything\nstate | A\nstate | B\n:::'),
-      '::: viz trace OpFirst\nop | Before anything\nstate | A\nstate | B\n:::', 'op-first untouched');
-    assert.equal(transformCustomWidgets('::: viz trace Empty\nstate | \nop | x\nstate | B\n:::'),
-      '::: viz trace Empty\nstate | \nop | x\nstate | B\n:::', 'empty state untouched');
+  it('leaves structurally invalid traces raw for check.js', () => {
+    const cases = {
+      'single state': '::: viz trace Solo\nstate | Only one\n:::',
+      'two states plus zero ops': '::: viz trace NoOps\nstate | A\nstate | B\n:::',
+      'two states plus two ops': '::: viz trace ExtraOp\nstate | A\nop | One\nstate | B\nop | Two\n:::',
+      'three states plus one op': '::: viz trace ShortOps\nstate | A\nop | One\nstate | B\nstate | C\n:::',
+      'three states plus three ops': '::: viz trace ManyOps\nstate | A\nop | One\nstate | B\nop | Two\nstate | C\nop | Three\n:::',
+      'starts with op': '::: viz trace OpFirst\nop | Before anything\nstate | A\nop | Go\nstate | B\n:::',
+      'ends with op': '::: viz trace OpLast\nstate | A\nop | One\nstate | B\nop | Trailing\n:::',
+      'consecutive states': '::: viz trace TwoStates\nstate | A\nop | One\nstate | B\nstate | C\nop | Two\nstate | D\n:::',
+      'consecutive ops': '::: viz trace TwoOps\nstate | A\nop | One\nop | Two\nstate | B\n:::',
+      'empty state': '::: viz trace EmptyState\nstate | \nop | x\nstate | B\n:::',
+      'empty operation': '::: viz trace EmptyOp\nstate | A\nop | \nstate | B\n:::',
+      'unknown line': '::: viz trace Mystery\nstate | A\nRemember this step\nop | Go\nstate | B\n:::',
+      'unknown prefix': '::: viz trace Weird\nstate | A\nfoo | bar\nop | Go\nstate | B\n:::',
+    };
+    for (const [label, raw] of Object.entries(cases)) {
+      const out = transformCustomWidgets(raw);
+      assert.equal(out, raw, `${label} stays raw: ${raw.slice(0, 60)}`);
+      assert.ok(!out.includes('viz-trace'), `${label} receives no live trace shell`);
+      assert.ok(!out.includes('data-act='), `${label} receives no live trace controls`);
+    }
   });
 
-  it('renders trailing notes below the widget', () => {
-    const out = transformCustomWidgets('::: viz trace T\nstate | A\nop | Go\nstate | B\nRead this after.\n:::');
-    assert.ok(out.includes('viz-notes') && out.includes('Read this after'), 'notes rendered');
+  it('accepts the minimal valid trace: 2 states plus 1 operation', () => {
+    const out = transformCustomWidgets('::: viz trace Minimal\nstate | A\nop | Go\nstate | B\n:::');
+    assert.ok(out.includes('class="viz viz-trace"'), 'trace shell class');
+    assert.ok(out.includes('data-states="2"'), 'state count advertised');
+    assert.ok(out.includes('State 0') && out.includes('State 1'), 'both states labeled');
+    assert.ok(out.includes('class="viz-top"'), 'single operation row rendered');
+    assert.ok(out.includes('State 1 of 2'), 'status names the first of two states');
+  });
+
+  it('accepts 3 states plus 2 operations', () => {
+    const out = transformCustomWidgets(
+      '::: viz trace Three\nstate | A\nop | First\nstate | B\nop | Second\nstate | C\n:::'
+    );
+    assert.ok(out.includes('data-states="3"'), 'state count advertised');
+    assert.ok(out.includes('State 0') && out.includes('State 2'), 'states labeled in order');
+    assert.equal((out.match(/class="viz-top"/g) || []).length, 2, 'exactly two operation rows');
+    assert.ok(out.includes('State 1 of 3'), 'status names the first of three states');
+  });
+
+  it('renders multiple independent traces on one page', () => {
+    const out = transformCustomWidgets(
+      '::: viz trace First\nstate | A\nop | Go\nstate | B\n:::\n\n::: viz trace Second\nstate | C\nop | Run\nstate | D\n:::'
+    );
+    assert.ok(out.includes('First') && out.includes('Second'), 'both titles rendered');
+    assert.equal((out.match(/class="viz viz-trace"/g) || []).length, 2, 'two live trace shells');
+    assert.equal((out.match(/data-states="2"/g) || []).length, 2, 'each trace advertises its own count');
+  });
+
+  it('renders explicit notes below the widget without affecting the sequence', () => {
+    const out = transformCustomWidgets(
+      '::: viz trace T\nstate | A\nop | Go\nstate | B\nnote | Read this after.\n:::'
+    );
+    assert.ok(out.includes('viz-notes') && out.includes('Read this after'), 'explicit note rendered below');
+    assert.ok(out.includes('data-states="2"'), 'notes do not inflate the state count');
+    assert.equal((out.match(/class="viz-top"/g) || []).length, 1, 'notes do not become ops');
+  });
+
+  it('keeps interleaved notes outside the state/op alternation', () => {
+    const out = transformCustomWidgets(
+      '::: viz trace T\nnote | Setup context\nstate | A\nnote | Mid context\nop | Go\nnote | Between\nstate | B\nnote | Closing\n:::'
+    );
+    assert.ok(out.includes('data-states="2"'), 'notes anywhere keep the trace valid');
+    assert.ok(out.includes('Setup context') && out.includes('Closing'), 'all notes rendered');
   });
 });
 
@@ -1092,6 +1149,27 @@ describe('trace binding on stub DOM', () => {
     assert.equal(second.status.textContent, 'State 1 of 2', 'second widget untouched');
     b.actions.next();
     assert.equal(first.status.textContent, 'State 3 of 3', 'first widget untouched');
+  });
+
+  it('fails safely when op counts mismatch the state invariant', () => {
+    const mismatched = [[2, 0], [2, 2], [3, 1], [3, 3]];
+    for (const [s, o] of mismatched) {
+      const root = stubTraceDOM(s, o);
+      assert.equal(bindTrace(root), null, `${s} states plus ${o} ops does not bind`);
+      assert.equal(root.controls.getAttribute('hidden'), '', `${s}/${o}: dead controls hidden`);
+      assert.equal(root.states[0].getAttribute('hidden'), null, `${s}/${o}: first state stays readable`);
+    }
+  });
+
+  it('leaves existing flow, stepper, lab, and structure widgets unaffected', () => {
+    const flow = transformCustomWidgets('::: viz flow Tour\n1. One\n2. Two\n:::');
+    assert.ok(flow.includes('class="viz viz-flow"') && flow.includes('data-steps="2"'), 'flow still enhances');
+    const stepper = transformCustomWidgets('::: viz stepper Tour\n- One\n- Two\n:::');
+    assert.ok(stepper.includes('class="viz viz-stepper"'), 'stepper still enhances');
+    const lab = transformCustomWidgets('::: viz lab rtt Lab\nNotes.\n:::');
+    assert.ok(lab.includes('class="viz viz-lab"') && lab.includes('data-lab="rtt"'), 'lab still enhances');
+    const struct = transformCustomWidgets('::: viz structure T\nfield | A | 8 | meaning\n:::');
+    assert.ok(struct.includes('class="viz viz-struct"'), 'structure still enhances');
   });
 });
 

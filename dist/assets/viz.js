@@ -144,11 +144,16 @@ function wireStaged(root, machine, apply, label, timer) {
 // State-trace binding: cumulative reveal — states 0..k plus the ops that
 // produced them stay visible, so each state reads against its history.
 // Only the newest state carries aria-current; ops never take it.
+// Defensive: the static builder (scripts/widgets.js) only emits traces with
+// states.length ≥ 2 and ops.length === states.length − 1. If malformed DOM
+// somehow reaches here (hand-written markup, stale dist), fail safely:
+// hide the dead controls, never add is-live, and return null so the full
+// static list stays readable. No Markdown parsing here — DOM counts only.
 export function bindTrace(root, { timer } = {}) {
   if (!root || typeof root.querySelectorAll !== 'function') return null;
   const states = Array.from(root.querySelectorAll('.viz-tstate'));
   const ops = Array.from(root.querySelectorAll('.viz-top'));
-  if (states.length < 2) {
+  if (states.length < 2 || ops.length !== states.length - 1) {
     const controls = root.querySelector ? root.querySelector('.viz-controls') : null;
     if (controls) controls.setAttribute('hidden', '');
     return null;

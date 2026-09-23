@@ -14,6 +14,39 @@ import { SCENES } from './scenes.js';
 import { escapeHtml, renderMarkdown } from './markdown.js';
 import { getLab, computeLab, formatOutput } from './viz-calcs.js';
 
+// Strict structural validator for `::: viz trace` bodies, shared by the
+// parser below and scripts/check.js so both enforce one identical grammar:
+// alternating state → op → state … chains with exactly states.length − 1
+// operations. Notes (`note | …`) ride outside the sequence and never affect
+// it. Returns { ok:true, items:[{kind,md}] } or { ok:false, reason } —
+// never throws, never coerces.
+export function parseTraceBody(rawBody) {
+  const items = [];
+  for (const raw of String(rawBody).split('\n')) {
+    const l = raw.trim();
+    if (!l) continue;
+    const low = l.toLowerCase();
+    if (low.startsWith('state |')) items.push({ kind: 'state', md: l.slice(7).trim() });
+    else if (low.startsWith('op |')) items.push({ kind: 'op', md: l.slice(4).trim() });
+    else if (low.startsWith('note |')) items.push({ kind: 'note', md: l.slice(6).trim() });
+    else return { ok: false, reason: `unknown trace line (expected "state |", "op |", or "note |") — actual: "${l.slice(0, 40)}"` };
+  }
+  for (const it of items) {
+    if (!it.md) return { ok: false, reason: `empty ${it.kind} entry is invalid` };
+  }
+  const seq = items.filter((it) => it.kind !== 'note');
+  const states = seq.filter((it) => it.kind === 'state');
+  if (!seq.length || seq[0].kind !== 'state') return { ok: false, reason: 'trace must begin with a state line' };
+  for (let k = 1; k < seq.length; k += 1) {
+    const want = seq[k - 1].kind === 'state' ? 'op' : 'state';
+    if (seq[k].kind !== want) return { ok: false, reason: `broken alternation at line ${k + 1}: expected ${want} after ${seq[k - 1].kind}` };
+  }
+  if (states.length < 2) return { ok: false, reason: `trace needs at least 2 states — actual: ${states.length}` };
+  const ops = seq.length - states.length;
+  if (ops !== states.length - 1) return { ok: false, reason: `operations must number states − 1 — actual: ${ops} ops for ${states.length} states` };
+  return { ok: true, items };
+}
+
 export function transformCustomWidgets(markdownText) {
   // Per-page counter for unique viz widget ids (aria wiring). Deterministic:
   // widgets transform in document order, so ids are stable across builds.
@@ -440,9 +473,11 @@ export function transformCustomWidgets(markdownText) {
   // previous one. Syntax: `::: viz trace <title>` with alternating lines:
   //   state | <markdown: full state at this point>
   //   op    | <markdown: operation producing the NEXT state>
-  // Rules: first non-empty line must be a state; at least 2 states and 1
-  // op required; other non-empty lines become notes below. `==...==`
-  // highlights changed portions (<mark>), applied outside code spans and
+  //   note  | <markdown: aside below the widget, outside the sequence>
+  // Strict grammar (see parseTraceBody): at least 2 states, exactly
+  // states.length − 1 ops, must begin with a state, strict state/op
+  // alternation, no empty entries, and no unknown non-empty lines.
+  // `==...==` highlights changed portions (<mark>), applied outside code
   // `$` math spans so `a == b` in code or formulas is never corrupted.
   // Without JS the full ordered trace renders statically (only the first
   // state is unhidden, and CSS reveals the rest); viz.js stages it
@@ -462,20 +497,10 @@ export function transformCustomWidgets(markdownText) {
   markdownText = markdownText.replace(vizTracePattern, (match, head, rawBody) => {
     const title = head.trim() || 'State trace';
     const safeTitle = escapeHtml(title);
-    const items = [];
-    for (const raw of rawBody.split('\n')) {
-      const l = raw.trim();
-      if (!l) continue;
-      const low = l.toLowerCase();
-      if (low.startsWith('state |')) items.push({ kind: 'state', md: l.slice(7).trim() });
-      else if (low.startsWith('op |')) items.push({ kind: 'op', md: l.slice(4).trim() });
-      else items.push({ kind: 'note', md: l });
-    }
+    const parsed = parseTraceBody(rawBody);
+    if (!parsed.ok) return match;
+    const items = parsed.items;
     const states = items.filter((it) => it.kind === 'state');
-    const ops = items.filter((it) => it.kind === 'op');
-    const first = items.find((it) => it.kind !== 'note');
-    if (states.length < 2 || !ops.length || !first || first.kind !== 'state') return match;
-    if (states.some((s) => !s.md) || ops.some((o) => !o.md)) return match;
     let si = 0;
     let oi = 0;
     const lis = items.filter((it) => it.kind !== 'note').map((it) => {

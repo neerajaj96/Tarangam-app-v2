@@ -10,6 +10,7 @@ import os from 'os';
 import { execFileSync } from 'child_process';
 import { SCENE_IDS } from './scenes.js';
 import { LAB_IDS as LAB_CALC_IDS } from './viz-calcs.js';
+import { parseTraceBody } from './widgets.js';
 import {
   CURRICULUM_PATH,
   loadCurriculum,
@@ -240,8 +241,10 @@ for (const course of courses) {
     // 2e2. Viz widgets (`::: viz flow|stepper|tabs|compare|rtt`, see
     // scripts/widgets.js): known types only (above); flow/stepper need at
     // least 2 steps; tabs need at least 2 `Label :: content` lines; compare
-    // needs two `## Heading` sections; trace needs 2+ `state |` lines, 1+
-    // `op |` line, and must start with a state. Flow/tabs scene ids resolve in
+    // needs two `## Heading` sections; trace needs the strict state/op
+    // grammar enforced by parseTraceBody (≥2 states, exactly states − 1
+    // ops, starts with a state, strict alternation, explicit `note |`
+    // asides only, no empty or unknown lines). Flow/tabs scene ids resolve in
     // scripts/scenes.js when the first head word names one; otherwise it
     // is title text.
     for (const m of t.matchAll(/^::: viz (\S+)(.*)$/gm)) {
@@ -275,15 +278,8 @@ for (const course of courses) {
       if (!LAB_CALC_IDS.includes(m[1])) fail(`${course}/${f}: unknown viz lab calculation '${m[1]}' — registry: ${LAB_CALC_IDS.join(', ')}`);
     }
     for (const b of t.matchAll(/::: viz trace(.*?)\n([\s\S]*?)\n:::/g)) {
-      const lines = b[2].split('\n').map((l) => l.trim()).filter(Boolean);
-      const states = lines.filter((l) => l.toLowerCase().startsWith('state |'));
-      const ops = lines.filter((l) => l.toLowerCase().startsWith('op |'));
-      if (states.length < 2) fail(`${course}/${f}: ::: viz trace block needs at least 2 "state |" lines — actual: ${states.length}`);
-      if (!ops.length) fail(`${course}/${f}: ::: viz trace block needs at least 1 "op |" line`);
-      if (lines.length && !lines[0].toLowerCase().startsWith('state |')) fail(`${course}/${f}: ::: viz trace block must start with a state line`);
-      [...states, ...ops].forEach((l) => {
-        if (!l.split('|').slice(1).join('|').trim()) fail(`${course}/${f}: empty viz trace line — actual: "${l.slice(0, 40)}"`);
-      });
+      const parsed = parseTraceBody(b[2]);
+      if (!parsed.ok) fail(`${course}/${f}: ::: viz trace ${parsed.reason}`);
     }
   }
 }
