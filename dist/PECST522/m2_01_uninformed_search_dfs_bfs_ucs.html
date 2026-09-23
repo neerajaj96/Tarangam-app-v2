@@ -269,7 +269,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 9 MIN READ</span>
+    <span class="badge">⏱️ 10 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -312,7 +312,15 @@
 [D]     [E] level 2
 Queue: [A] -&gt; [B,C] -&gt; [C,D,E] -&gt; ...
 </code></pre>
-<details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: BFS Performance, With Qualifications</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Time <code>O(b^d)</code>, space <code>O(b^d)</code>. Complete only if <code>b</code> is finite. Optimal only if all step costs are equal (finds fewest steps, which equals cheapest only under uniform cost). Memory is the bottleneck: b=10, d=8 stores ~10^8 nodes.</p>
+<p>The same branching as an explorable tree: the root is the start state, each edge is one move, and siblings are the alternatives at that step. Select any node to read its parent and children.</p>
+<div class="viz viz-tree" data-viz="tree" data-nodes="6">
+  <div class="viz-head"><span class="viz-tag">Interactive tree &middot; Tiny search tree: Start branches to A and B</span></div>
+  <div class="viz-tree-diagram"><svg class="viz-tree-svg" viewBox="0 0 336 276" aria-hidden="true" focusable="false"><line class="viz-tedge" x1="198" y1="66" x2="108" y2="118"/><line class="viz-tedge" x1="198" y1="66" x2="288" y2="118"/><line class="viz-tedge" x1="108" y1="162" x2="48" y2="214"/><line class="viz-tedge" x1="108" y1="162" x2="168" y2="214"/><line class="viz-tedge" x1="288" y1="162" x2="288" y2="214"/><g class="viz-tnode" data-node="start"><circle cx="198" cy="44" r="22"/><text x="198" y="49">Start</text></g><g class="viz-tnode" data-node="a"><circle cx="108" cy="140" r="22"/><text x="108" y="145">A</text></g><g class="viz-tnode" data-node="b"><circle cx="288" cy="140" r="22"/><text x="288" y="145">B</text></g><g class="viz-tnode" data-node="c"><circle cx="48" cy="236" r="22"/><text x="48" y="241">C</text></g><g class="viz-tnode" data-node="d"><circle cx="168" cy="236" r="22"/><text x="168" y="241">D</text></g><g class="viz-tnode" data-node="e"><circle cx="288" cy="236" r="22"/><text x="288" y="241">E</text></g></svg></div>
+  <ul class="viz-tree-list">
+    <li><button type="button" class="viz-treenode" data-node="start" aria-pressed="false"><span class="viz-tnid">Start</span><span class="viz-tnmeta">root · level 0 · 2 children</span></button><ul><li><button type="button" class="viz-treenode" data-node="a" aria-pressed="false"><span class="viz-tnid">A</span><span class="viz-tnmeta">child of Start · level 1 · 2 children</span></button><ul><li><button type="button" class="viz-treenode" data-node="c" aria-pressed="false"><span class="viz-tnid">C</span><span class="viz-tnmeta">child of A · level 2 · leaf</span></button></li><li><button type="button" class="viz-treenode" data-node="d" aria-pressed="false"><span class="viz-tnid">D</span><span class="viz-tnmeta">child of A · level 2 · leaf</span></button></li></ul></li><li><button type="button" class="viz-treenode" data-node="b" aria-pressed="false"><span class="viz-tnid">B</span><span class="viz-tnmeta">child of Start · level 1 · 1 child</span></button><ul><li><button type="button" class="viz-treenode" data-node="e" aria-pressed="false"><span class="viz-tnid">E</span><span class="viz-tnmeta">child of B · level 2 · leaf</span></button></li></ul></li></ul></li>
+  </ul>
+  <p class="viz-status" role="status">Select a node to inspect its parent and children.</p>
+</div><details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: BFS Performance, With Qualifications</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Time <code>O(b^d)</code>, space <code>O(b^d)</code>. Complete only if <code>b</code> is finite. Optimal only if all step costs are equal (finds fewest steps, which equals cheapest only under uniform cost). Memory is the bottleneck: b=10, d=8 stores ~10^8 nodes.</p>
 </div></details><p><strong>DFS:</strong> expands deepest node first (LIFO stack / recursion). Dives A-B-D before ever trying C.</p>
 <details class="callout callout-formula" open><summary class="callout-header"><span class="callout-title">📐 KTU Formula Vault: DFS Performance, With Qualifications</span><span class="callout-chevron">&#9662;</span></summary><div class="callout-body"><p>Time <code>O(b^m)</code>, space <code>O(b*m)</code> (only the active path plus siblings — linear). Incomplete in infinite spaces or with loops unless repeated-state checks are added. Never optimal in general (returns the first goal stumbled upon, possibly deep and pricey).</p>
 </div></details><p><a id="formal-model"></a></p>

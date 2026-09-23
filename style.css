@@ -1147,3 +1147,28 @@ img, video, svg, canvas { max-width: 100%; height: auto; }
 @media (max-width: 640px) {
   .viz-inrow { grid-template-columns: 1fr; }
 }
+
+/* ---------- Hierarchical tree viewer (`::: viz tree`) ---
+   Static-first: the SVG diagram plus the nested node list render fully
+   without JS; viz.js adds select-to-inspect (aria-pressed, live status,
+   mirrored SVG highlight). Theme tokens only; the diagram scrolls
+   horizontally on narrow screens; print keeps diagram and list. No
+   animation, so reduced motion is inherently satisfied. */
+.viz-tree-diagram { margin: 12px 16px 0; overflow-x: auto; border: 1px solid var(--border-soft); border-radius: var(--radius-md); background: var(--surface); }
+.viz-tree-svg { display: block; width: 100%; height: auto; min-width: 320px; }
+.viz-tree-svg .viz-tedge { stroke: var(--ink-faint); stroke-width: 2; }
+.viz-tree-svg .viz-tnode circle { fill: var(--surface-2); stroke: var(--border); stroke-width: 2; }
+.viz-tree-svg .viz-tnode text { fill: var(--ink); font-family: var(--font-mono); font-size: 13px; text-anchor: middle; }
+.viz-tree-svg .viz-tnode.is-selected circle { stroke: var(--accent); stroke-width: 3; fill: var(--accent-glow); }
+.viz-tree-list, .viz-tree-list ul { list-style: none; margin: 0; padding: 0; }
+.viz-tree-list { padding: 12px 16px 0; display: flex; flex-direction: column; gap: 6px; }
+.viz-tree-list ul { padding-left: 22px; margin-top: 6px; display: flex; flex-direction: column; gap: 6px; border-left: 2px solid var(--border-soft); }
+.viz-treenode { width: 100%; text-align: left; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-2); color: var(--ink); padding: 8px 10px; font-size: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
+.viz-treenode:hover { border-color: var(--accent); }
+.viz-treenode[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-3); }
+.viz-treenode:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.viz-tnid { font-weight: 600; }
+.viz-tnmeta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+@media print {
+  .viz-tree-diagram { overflow: visible; }
+}

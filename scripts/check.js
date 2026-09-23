@@ -10,7 +10,7 @@ import os from 'os';
 import { execFileSync } from 'child_process';
 import { SCENE_IDS } from './scenes.js';
 import { LAB_IDS as LAB_CALC_IDS } from './viz-calcs.js';
-import { parseTraceBody } from './widgets.js';
+import { parseTraceBody, parseTreeBody } from './widgets.js';
 import {
   CURRICULUM_PATH,
   loadCurriculum,
@@ -244,12 +244,15 @@ for (const course of courses) {
     // needs two `## Heading` sections; trace needs the strict state/op
     // grammar enforced by parseTraceBody (≥2 states, exactly states − 1
     // ops, starts with a state, strict alternation, explicit `note |`
-    // asides only, no empty or unknown lines). Flow/tabs scene ids resolve in
+    // asides only, no empty or unknown lines); tree needs the strict
+    // hierarchy enforced by parseTreeBody (≥1 node, exactly one root,
+    // existing parents, no duplicates/cycles/disconnects, no empty ids or
+    // labels). Flow/tabs scene ids resolve in
     // scripts/scenes.js when the first head word names one; otherwise it
     // is title text.
     for (const m of t.matchAll(/^::: viz (\S+)(.*)$/gm)) {
-      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt', 'structure', 'lab', 'trace'].includes(m[1])) {
-        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, rtt, structure, lab, or trace`);
+      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt', 'structure', 'lab', 'trace', 'tree'].includes(m[1])) {
+        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, rtt, structure, lab, trace, or tree`);
       }
     }
     for (const b of t.matchAll(/::: viz (?:flow|stepper)(.*?)\n([\s\S]*?)\n:::/g)) {
@@ -280,6 +283,10 @@ for (const course of courses) {
     for (const b of t.matchAll(/::: viz trace(.*?)\n([\s\S]*?)\n:::/g)) {
       const parsed = parseTraceBody(b[2]);
       if (!parsed.ok) fail(`${course}/${f}: ::: viz trace ${parsed.reason}`);
+    }
+    for (const b of t.matchAll(/::: viz tree(.*?)\n([\s\S]*?)\n:::/g)) {
+      const parsed = parseTreeBody(b[2]);
+      if (!parsed.ok) fail(`${course}/${f}: ::: viz tree ${parsed.reason}`);
     }
   }
 }

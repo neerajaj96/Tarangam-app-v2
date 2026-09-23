@@ -1,6 +1,6 @@
 /**
  * Tarangam visualization engine — progressive enhancement for the
- * `::: viz flow|stepper|trace` Markdown widgets (see scripts/widgets.js).
+ * `::: viz flow|stepper|trace|tree` Markdown widgets (see scripts/widgets.js).
  *
  * Static-first contract: without JavaScript every step stays visible as a
  * plain numbered list with its diagram, so no information is ever locked
@@ -191,6 +191,7 @@ export function initViz(scope) {
     else if (kind === 'rtt') bound.push(bindLab(root, 'rtt'));
     else if (kind === 'lab') bound.push(bindLab(root));
     else if (kind === 'struct') bound.push(bindStruct(root));
+    else if (kind === 'tree') bound.push(bindTree(root));
   });
   return bound.filter(Boolean);
 }
@@ -395,6 +396,63 @@ export function bindStruct(root) {
       else if (e.key === 'ArrowLeft') { e.preventDefault(); current = select(current - 1 < 0 ? fields.length - 1 : current - 1); fields[current].focus(); }
       else if (e.key === 'Home') { e.preventDefault(); current = select(0); fields[current].focus(); }
       else if (e.key === 'End') { e.preventDefault(); current = select(fields.length - 1); fields[current].focus(); }
+      else if (e.key === 'Escape') { e.preventDefault(); current = select(null); }
+    });
+  }
+  root.classList.add('is-live');
+  select(null);
+  return { root, select, get current() { return current; } };
+}
+
+// Hierarchical tree viewer: select-to-inspect over the static nested list
+// (scripts/widgets.js only emits trees with ≥1 node plus a live status
+// line). Click/tap — or Enter/Space on a focused node button — selects one
+// node; arrows/Home/End move the selection in document order; Escape
+// clears it. Selection is exposed through aria-pressed on exactly one
+// button, a mirrored highlight on the SVG diagram node, and a polite
+// status sentence naming the node's label, parent, and children — never
+// color-only. No timers, no animation, so reduced motion is inherently
+// satisfied. Malformed DOM (no nodes or no status) fails safely: no
+// is-live class, null return, and the static list stays untouched. No
+// Markdown parsing here — DOM state only.
+export function bindTree(root) {
+  if (!root || typeof root.querySelectorAll !== 'function') return null;
+  const nodes = Array.from(root.querySelectorAll('.viz-treenode'));
+  const panel = root.querySelector ? root.querySelector('.viz-status') : null;
+  if (!nodes.length || !panel) return null;
+  const prompt = panel.textContent;
+  const dots = Array.from(root.querySelectorAll('.viz-tnode'));
+  const describe = (btn) => {
+    const name = btn.querySelector ? btn.querySelector('.viz-tnid') : null;
+    const meta = btn.querySelector ? btn.querySelector('.viz-tnmeta') : null;
+    const parts = [name && name.textContent, meta && meta.textContent]
+      .map((s) => (s || '').trim()).filter(Boolean);
+    return parts.join(' — ');
+  };
+  const select = (i) => {
+    const k = i === null ? -1 : Math.max(0, Math.min(nodes.length - 1, i));
+    const id = k < 0 || !nodes[k].getAttribute ? null : nodes[k].getAttribute('data-node');
+    nodes.forEach((btn, j) => {
+      btn.setAttribute('aria-pressed', j === k ? 'true' : 'false');
+    });
+    dots.forEach((g) => {
+      if (!g.classList) return;
+      if (id !== null && g.getAttribute && g.getAttribute('data-node') === id) g.classList.add('is-selected');
+      else g.classList.remove('is-selected');
+    });
+    panel.textContent = k < 0 ? prompt : `Selected ${describe(nodes[k])}.`;
+    return k;
+  };
+  let current = -1;
+  nodes.forEach((btn, i) => {
+    btn.addEventListener('click', () => { current = select(i); });
+  });
+  if (typeof root.addEventListener === 'function') {
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); current = select(current + 1 > nodes.length - 1 ? 0 : current + 1); nodes[current].focus(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); current = select(current - 1 < 0 ? nodes.length - 1 : current - 1); nodes[current].focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); current = select(0); nodes[current].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); current = select(nodes.length - 1); nodes[current].focus(); }
       else if (e.key === 'Escape') { e.preventDefault(); current = select(null); }
     });
   }

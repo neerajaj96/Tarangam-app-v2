@@ -72,6 +72,17 @@ Branching factor `b` = most successors any node has (maze junctions ≈ 3–4). 
 Queue: [A] -> [B,C] -> [C,D,E] -> ...
 ```
 
+The same branching as an explorable tree: the root is the start state, each edge is one move, and siblings are the alternatives at that step. Select any node to read its parent and children.
+
+::: viz tree Tiny search tree: Start branches to A and B
+node | start | Start
+node | a | A | start
+node | b | B | start
+node | c | C | a
+node | d | D | a
+node | e | E | b
+:::
+
 ::: callout-formula BFS Performance, With Qualifications
 Time `O(b^d)`, space `O(b^d)`. Complete only if `b` is finite. Optimal only if all step costs are equal (finds fewest steps, which equals cheapest only under uniform cost). Memory is the bottleneck: b=10, d=8 stores ~10^8 nodes.
 :::

@@ -47,6 +47,87 @@ export function parseTraceBody(rawBody) {
   return { ok: true, items };
 }
 
+// Strict structural validator for `::: viz tree` bodies, shared by the
+// parser below and scripts/check.js so both enforce one identical grammar:
+//   node | <id> | <label>            → root candidate (exactly one per tree)
+//   node | <id> | <label> | <parent> → child of an existing node
+// Direction labels are deliberately omitted: child order follows document
+// order, which keeps the grammar minimal and the layout deterministic.
+// Labels are plain text (escaped, never Markdown-rendered) so the SVG
+// diagram and the static list always show identical strings. Returns
+// { ok:true, nodes, root, children, depth, order } or { ok:false, reason }
+// — never throws, never coerces, never guesses a parent.
+export function parseTreeBody(rawBody) {
+  const nodes = [];
+  const seen = new Set();
+  for (const raw of String(rawBody).split('\n')) {
+    const l = raw.trim();
+    if (!l) continue;
+    if (!l.toLowerCase().startsWith('node |')) {
+      return { ok: false, reason: `unknown tree line (expected "node | id | label [| parent]") — actual: "${l.slice(0, 40)}"` };
+    }
+    const parts = l.split('|').map((p) => p.trim());
+    if (parts.length !== 3 && parts.length !== 4) {
+      return { ok: false, reason: `malformed tree line (need "node | id | label" or "node | id | label | parent") — actual: "${l.slice(0, 40)}"` };
+    }
+    const id = parts[1];
+    const label = parts[2];
+    const parent = parts.length === 4 ? parts[3] : null;
+    if (!id) return { ok: false, reason: 'empty tree node id is invalid' };
+    if (!label) return { ok: false, reason: `empty tree node label is invalid (node "${id.slice(0, 20)}")` };
+    if (parent !== null && !parent) return { ok: false, reason: `empty tree parent is invalid (node "${id.slice(0, 20)}")` };
+    if (seen.has(id)) return { ok: false, reason: `duplicate tree node id "${id.slice(0, 20)}" — each node must be declared once` };
+    seen.add(id);
+    nodes.push({ id, label, parent });
+  }
+  if (!nodes.length) return { ok: false, reason: 'tree needs at least 1 node — actual: 0' };
+  const roots = nodes.filter((n) => n.parent === null);
+  if (roots.length !== 1) return { ok: false, reason: `tree needs exactly one root — actual: ${roots.length}` };
+  const root = roots[0];
+  const byId = new Map(nodes.map((n) => [n.id, n]));
+  for (const n of nodes) {
+    if (n.parent === null) continue;
+    if (!byId.has(n.parent)) return { ok: false, reason: `unknown tree parent "${n.parent.slice(0, 20)}" for node "${n.id.slice(0, 20)}"` };
+    if (n.parent === n.id) return { ok: false, reason: `tree node "${n.id.slice(0, 20)}" cannot be its own parent` };
+  }
+  // Children in document order; depth via BFS from the root. A parent
+  // chain that loops is a cycle; a node the root can never reach is
+  // disconnected — both are rejected rather than guessed. (With exactly one
+  // root and all parents existing, any unreachable component necessarily
+  // contains a loop, so the cycle check runs first for the sharper message
+  // and reachability remains as the backstop.)
+  const children = new Map(nodes.map((n) => [n.id, []]));
+  for (const n of nodes) {
+    if (n.parent !== null) children.get(n.parent).push(n.id);
+  }
+  for (const n of nodes) {
+    const chain = new Set([n.id]);
+    let cur = n.parent;
+    while (cur !== null) {
+      if (chain.has(cur)) return { ok: false, reason: `tree cycle detected at node "${cur.slice(0, 20)}"` };
+      chain.add(cur);
+      cur = byId.get(cur).parent;
+    }
+  }
+  const depth = new Map([[root.id, 0]]);
+  const queue = [root.id];
+  while (queue.length) {
+    const cur = queue.shift();
+    for (const kid of children.get(cur)) {
+      if (!depth.has(kid)) {
+        depth.set(kid, depth.get(cur) + 1);
+        queue.push(kid);
+      }
+    }
+  }
+  if (depth.size !== nodes.length) {
+    const stray = nodes.map((n) => n.id).find((id) => !depth.has(id));
+    return { ok: false, reason: `disconnected tree node "${String(stray).slice(0, 20)}" — every node must descend from the root` };
+  }
+  const order = nodes.map((n) => n.id);
+  return { ok: true, nodes, root, children, depth, order };
+}
+
 export function transformCustomWidgets(markdownText) {
   // Per-page counter for unique viz widget ids (aria wiring). Deterministic:
   // widgets transform in document order, so ids are stable across builds.
@@ -529,6 +610,84 @@ export function transformCustomWidgets(markdownText) {
   </div>
   <p class="viz-status" role="status">State 1 of ${states.length}</p>
   ${notesHtml}
+</div>`;
+  });
+
+  // 7g. Hierarchical tree viewer: parent → child branching (search trees,
+  // BSTs, decision/expression/recursion trees). `flow`/`stepper` cover
+  // linear sequences, `trace` covers one evolving state, `structure` covers
+  // fixed-width fields — tree covers branching relationships. Syntax:
+  // `::: viz tree <title>` with one line per node:
+  //   node | <id> | <label>            (the single root)
+  //   node | <id> | <label> | <parent> (every other node, parent by id)
+  // Strict grammar (see parseTreeBody): at least 1 node, exactly one root,
+  // unique non-empty ids, non-empty plain-text labels, existing parents, no
+  // self-parents, no cycles, no disconnected nodes. Child order follows
+  // document order, so rendering is deterministic for identical input.
+  // Labels are plain text (escaped, no Markdown) so the SVG diagram and the
+  // static list always agree. Static fallback: the SVG diagram plus a nested
+  // semantic list carrying parent/level/children facts per node — fully
+  // readable without JS. viz.js adds select-to-inspect (native buttons,
+  // aria-pressed, live status, SVG highlight mirror). Malformed blocks stay
+  // raw for scripts/check.js. Intentionally NOT supported: general graphs,
+  // zoom/pan/drag, editing, search, animation.
+  const vizTreePattern = /::: viz tree(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(vizTreePattern, (match, head, rawBody) => {
+    const title = head.trim() || 'Tree';
+    const safeTitle = escapeHtml(title);
+    const parsed = parseTreeBody(rawBody);
+    if (!parsed.ok) return match;
+    const { nodes, root, children, depth } = parsed;
+    const byId = new Map(nodes.map((n) => [n.id, n]));
+    // Deterministic tidy layout: leaves take sequential x slots in document
+    // order; each parent centers over its children's span. y follows depth.
+    const pos = new Map();
+    let nextX = 0;
+    const place = (id) => {
+      const kids = children.get(id);
+      if (!kids.length) {
+        pos.set(id, nextX);
+        nextX += 1;
+      } else {
+        kids.forEach(place);
+        pos.set(id, (pos.get(kids[0]) + pos.get(kids[kids.length - 1])) / 2);
+      }
+    };
+    place(root.id);
+    const X_STEP = 120;
+    const Y_STEP = 96;
+    const MARGIN_X = 48;
+    const TOP = 44;
+    const BOTTOM = 40;
+    const NODE_R = 22;
+    const maxDepth = Math.max(...nodes.map((n) => depth.get(n.id)));
+    const width = Math.max(1, nextX - 1) * X_STEP + MARGIN_X * 2;
+    const height = maxDepth * Y_STEP + TOP + BOTTOM;
+    const cx = (id) => MARGIN_X + pos.get(id) * X_STEP;
+    const cy = (id) => TOP + depth.get(id) * Y_STEP;
+    const edges = nodes.filter((n) => n.parent !== null).map((n) =>
+      `<line class="viz-tedge" x1="${cx(n.parent)}" y1="${cy(n.parent) + NODE_R}" x2="${cx(n.id)}" y2="${cy(n.id) - NODE_R}"/>`).join('');
+    const dots = nodes.map((n) =>
+      `<g class="viz-tnode" data-node="${escapeHtml(n.id)}"><circle cx="${cx(n.id)}" cy="${cy(n.id)}" r="${NODE_R}"/><text x="${cx(n.id)}" y="${cy(n.id) + 5}">${escapeHtml(n.label)}</text></g>`).join('');
+    const meta = (n) => {
+      const kids = children.get(n.id);
+      const tail = kids.length === 0 ? 'leaf' : `${kids.length} child${kids.length === 1 ? '' : 'ren'}`;
+      const head = n.parent === null ? 'root' : `child of ${byId.get(n.parent).label}`;
+      return `${head} · level ${depth.get(n.id)} · ${tail}`;
+    };
+    const renderList = (id) => {
+      const n = byId.get(id);
+      const kids = children.get(id);
+      const sub = kids.length ? `<ul>${kids.map(renderList).join('')}</ul>` : '';
+      return `<li><button type="button" class="viz-treenode" data-node="${escapeHtml(n.id)}" aria-pressed="false"><span class="viz-tnid">${escapeHtml(n.label)}</span><span class="viz-tnmeta">${escapeHtml(meta(n))}</span></button>${sub}</li>`;
+    };
+    return `<div class="viz viz-tree" data-viz="tree" data-nodes="${nodes.length}">
+  <div class="viz-head"><span class="viz-tag">Interactive tree &middot; ${safeTitle}</span></div>
+  <div class="viz-tree-diagram"><svg class="viz-tree-svg" viewBox="0 0 ${width} ${height}" aria-hidden="true" focusable="false">${edges}${dots}</svg></div>
+  <ul class="viz-tree-list">
+    ${renderList(root.id)}
+  </ul>
+  <p class="viz-status" role="status">Select a node to inspect its parent and children.</p>
 </div>`;
   });
 

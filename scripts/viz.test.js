@@ -12,9 +12,9 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { transformCustomWidgets } from './widgets.js';
+import { transformCustomWidgets, parseTraceBody, parseTreeBody } from './widgets.js';
 import { SCENES, SCENE_IDS } from './scenes.js';
-import { createStepper, bindViz, bindTrace, bindTabs, bindCompare, bindRtt, bindLab, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
+import { createStepper, bindViz, bindTrace, bindTree, bindTabs, bindCompare, bindRtt, bindLab, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
 import { LABS, LAB_IDS, getLab, validateLab, computeLab, formatInt, formatNum2 } from './viz-calcs.js';
 
 const read = (f) => fs.readFileSync(f, 'utf-8');
@@ -1190,5 +1190,278 @@ describe('trace machine and stylesheet contract', () => {
       assert.ok(css.includes(sel), `stylesheet covers ${sel}`);
     }
     assert.ok(!/width:\s*100vw/.test(css), 'no viewport-width traps introduced');
+  });
+});
+
+const SEARCH_TREE = '::: viz tree Tiny search tree\n'
+  + 'node | start | Start\n'
+  + 'node | a | A | start\n'
+  + 'node | b | B | start\n'
+  + 'node | c | C | a\n'
+  + 'node | d | D | a\n'
+  + 'node | e | E | b\n:::';
+
+describe('viz tree transform (valid)', () => {
+  it('renders a one-node tree with no edges', () => {
+    const out = transformCustomWidgets('::: viz tree Solo\nnode | s | Only\n:::');
+    assert.ok(out.includes('class="viz viz-tree"'), 'tree shell class');
+    assert.ok(out.includes('data-nodes="1"'), 'node count advertised');
+    assert.ok(out.includes('Only'), 'label rendered');
+    assert.ok(!out.includes('viz-tedge'), 'no edges without children');
+    assert.ok(out.includes('role="status"'), 'polite live status region');
+    assert.ok(out.includes('<button type="button" class="viz-treenode"'), 'native button for keyboard use');
+  });
+
+  it('renders root plus children with parent-child edges', () => {
+    const out = transformCustomWidgets('::: viz tree T\nnode | r | Root\nnode | a | A | r\nnode | b | B | r\n:::');
+    assert.ok(out.includes('data-nodes="3"'), 'node count advertised');
+    assert.equal((out.match(/class="viz-tedge"/g) || []).length, 2, 'one edge per non-root node');
+    assert.equal((out.match(/class="viz-treenode"/g) || []).length, 3, 'one button per node');
+    assert.ok(out.includes('child of Root'), 'parent relationship stated in the static list');
+    assert.ok(out.includes('2 children'), 'branching stated in the static list');
+  });
+
+  it('renders multiple levels with depth facts', () => {
+    const out = transformCustomWidgets(SEARCH_TREE);
+    assert.ok(out.includes('data-nodes="6"'), 'node count advertised');
+    assert.equal((out.match(/class="viz-tedge"/g) || []).length, 5, 'edges number nodes minus one');
+    assert.ok(out.includes('level 0') && out.includes('level 2'), 'depth levels stated');
+    assert.ok(out.includes('leaf'), 'leaves identified');
+    for (const label of ['Start', '>A<', '>B<', '>C<', '>D<', '>E<']) {
+      assert.ok(out.includes(label), `node value ${label} present`);
+    }
+  });
+
+  it('renders deterministically with document-order siblings', () => {
+    const a = transformCustomWidgets(SEARCH_TREE);
+    const b = transformCustomWidgets(SEARCH_TREE);
+    assert.equal(a, b, 'identical input renders identically');
+    const swapped = transformCustomWidgets(SEARCH_TREE.replace('node | a | A | start\nnode | b | B | start', 'node | b | B | start\nnode | a | A | start'));
+    assert.ok(swapped.indexOf('data-node="b"') < swapped.indexOf('data-node="a"'), 'sibling order follows document order');
+  });
+
+  it('escapes labels instead of injecting markup', () => {
+    const out = transformCustomWidgets('::: viz tree T\nnode | r | <b>Root</b>\nnode | a | A & B | r\n:::');
+    assert.ok(!out.includes('<b>Root</b>'), 'no raw markup injected');
+    assert.ok(out.includes('&lt;b&gt;Root&lt;/b&gt;') && out.includes('A &amp; B'), 'labels escaped in diagram and list');
+  });
+
+  it('uses the tiny AI search-tree reference shape', () => {
+    const t = read('content/PECST522/m2_01_uninformed_search_dfs_bfs_ucs.md');
+    const block = t.match(/::: viz tree([\s\S]*?)\n:::/);
+    assert.ok(block, 'reference block present in the uninformed-search note');
+    const out = transformCustomWidgets(block[0]);
+    assert.ok(out.includes('class="viz viz-tree"'), 'reference renders live');
+    assert.ok(out.includes('data-nodes="6"'), 'reference has six nodes');
+    assert.equal((out.match(/class="viz-tedge"/g) || []).length, 5, 'reference edges number nodes minus one');
+  });
+});
+
+describe('viz tree transform (invalid stays raw)', () => {
+  it('rejects every non-tree shape without guessing', () => {
+    const cases = {
+      'zero nodes': '::: viz tree Empty\n\n\n:::',
+      'duplicate ids': '::: viz tree Dup\nnode | r | R\nnode | a | A | r\nnode | a | Again | r\n:::',
+      'duplicate parent relationship': '::: viz tree Reparent\nnode | r | R\nnode | a | A | r\nnode | b | B | r\nnode | a | A | b\n:::',
+      'missing parent': '::: viz tree Orphan\nnode | r | R\nnode | a | A | ghost\n:::',
+      'multiple roots': '::: viz tree Forest\nnode | a | A\nnode | b | B\n:::',
+      'cycle': '::: viz tree Loop\nnode | r | R\nnode | a | A | r\nnode | x | X | y\nnode | y | Y | x\n:::',
+      'disconnected component': '::: viz tree Stray\nnode | r | R\nnode | a | A | r\nnode | x | X | y\nnode | y | Y | z\nnode | z | Z | y\n:::',
+      'empty id': '::: viz tree NoId\nnode |  | Nameless\nnode | r | R\n:::',
+      'empty label': '::: viz tree NoLabel\nnode | r | \n:::',
+      'empty parent': '::: viz tree NoParent\nnode | r | R\nnode | a | A | \n:::',
+      'self-parent': '::: viz tree Self\nnode | r | R\nnode | x | X | x\n:::',
+      'unknown line': '::: viz tree Mystery\nnode | r | R\nremember this\nnode | a | A | r\n:::',
+      'two columns': '::: viz tree Short\nnode | r\n:::',
+      'five columns': '::: viz tree Long\nnode | r | R | x | extra\n:::',
+    };
+    for (const [label, raw] of Object.entries(cases)) {
+      const out = transformCustomWidgets(raw);
+      assert.equal(out, raw, `${label} stays raw`);
+      assert.ok(!out.includes('viz-tree'), `${label} receives no live tree shell`);
+      assert.ok(!out.includes('viz-treenode'), `${label} receives no node controls`);
+    }
+  });
+
+  it('exposes precise reasons through the shared validator', () => {
+    assert.match(parseTreeBody('').reason, /at least 1 node/, 'zero nodes');
+    assert.match(parseTreeBody('node | a | A\nnode | a | B').reason, /duplicate/, 'duplicate ids');
+    assert.match(parseTreeBody('node | r | R\nnode | a | A | ghost').reason, /unknown tree parent/, 'missing parent');
+    assert.match(parseTreeBody('node | a | A\nnode | b | B').reason, /exactly one root/, 'multiple roots');
+    assert.match(parseTreeBody('node | r | R\nnode | x | X | y\nnode | y | Y | x').reason, /cycle/, 'cycle');
+    assert.match(parseTreeBody('node |  | X').reason, /empty tree node id/, 'empty id');
+    assert.match(parseTreeBody('node | a | ').reason, /empty tree node label/, 'empty label');
+    assert.match(parseTreeBody('node | r | R\nnode | x | X | x').reason, /own parent/, 'self-parent');
+    assert.match(parseTreeBody('node | r | R\nplain words').reason, /unknown tree line/, 'unknown line');
+  });
+});
+
+function stubTreeNode(id, label, meta) {
+  const btn = stubEl({ 'data-node': id });
+  btn.querySelector = (sel) => {
+    if (sel === '.viz-tnid') return { textContent: label };
+    if (sel === '.viz-tnmeta') return { textContent: meta };
+    return null;
+  };
+  let focused = false;
+  btn.focus = () => { focused = true; };
+  btn.isFocused = () => focused;
+  return btn;
+}
+
+function stubTreeDot(id) {
+  const dot = stubEl({ 'data-node': id });
+  const classes = new Set();
+  dot.classList = {
+    add: (c) => classes.add(c),
+    remove: (c) => classes.delete(c),
+    has: (c) => classes.has(c),
+  };
+  return dot;
+}
+
+function stubTreeRoot(specs) {
+  const nodes = specs.map((s) => stubTreeNode(s.id, s.label, s.meta));
+  const dots = specs.map((s) => stubTreeDot(s.id));
+  const panel = stubEl({});
+  panel.textContent = 'Select a node to inspect its parent and children.';
+  const listeners = {};
+  return {
+    nodes,
+    dots,
+    panel,
+    addEventListener(t, fn) { (listeners[t] = listeners[t] || []).push(fn); },
+    fire(t, e = {}) { (listeners[t] || []).forEach((fn) => fn({ preventDefault() {}, ...e })); },
+    classList: { add() {} },
+    querySelector(sel) {
+      if (sel === '.viz-status') return panel;
+      return null;
+    },
+    querySelectorAll(sel) {
+      if (sel === '.viz-treenode') return nodes;
+      if (sel === '.viz-tnode') return dots;
+      return [];
+    },
+  };
+}
+
+const TREE_SPECS = [
+  { id: 'start', label: 'Start', meta: 'root · level 0 · 2 children' },
+  { id: 'a', label: 'A', meta: 'child of Start · level 1 · 2 children' },
+  { id: 'b', label: 'B', meta: 'child of Start · level 1 · leaf' },
+];
+
+describe('tree binding on stub DOM', () => {
+  it('selects on click with single pressed state, mirror, and status', () => {
+    const root = stubTreeRoot(TREE_SPECS);
+    const bound = bindTree(root);
+    assert.ok(bound, 'tree binds');
+    assert.equal(bound.current, -1, 'nothing selected initially');
+    assert.ok(root.nodes.every((n) => n.getAttribute('aria-pressed') === 'false'), 'all unpressed initially');
+    root.nodes[1].fire('click');
+    assert.equal(bound.current, 1);
+    assert.equal(root.nodes[1].getAttribute('aria-pressed'), 'true', 'clicked node pressed');
+    assert.equal(root.nodes[0].getAttribute('aria-pressed'), 'false', 'single selection only');
+    assert.ok(root.dots[1].classList.has('is-selected'), 'diagram mirror highlights');
+    assert.ok(!root.dots[0].classList.has('is-selected'), 'mirror is single too');
+    assert.ok(root.panel.textContent.includes('Selected'), 'status announces selection');
+    assert.ok(root.panel.textContent.includes('A'), 'status names the node value');
+    assert.ok(root.panel.textContent.includes('child of Start'), 'status states the parent relationship');
+  });
+
+  it('moves selection with arrows, Home, End, and clears with Escape', () => {
+    const root = stubTreeRoot(TREE_SPECS);
+    const bound = bindTree(root);
+    root.fire('keydown', { key: 'ArrowDown' });
+    assert.equal(bound.current, 0, 'arrow selects from empty');
+    assert.ok(root.nodes[0].isFocused(), 'focus follows selection');
+    root.fire('keydown', { key: 'ArrowDown' });
+    assert.equal(bound.current, 1);
+    root.fire('keydown', { key: 'ArrowUp' });
+    assert.equal(bound.current, 0);
+    root.fire('keydown', { key: 'End' });
+    assert.equal(bound.current, 2, 'End jumps last');
+    root.fire('keydown', { key: 'Home' });
+    assert.equal(bound.current, 0, 'Home jumps first');
+    root.fire('keydown', { key: 'Escape' });
+    assert.equal(bound.current, -1, 'Escape clears');
+    assert.ok(root.panel.textContent.includes('Select a node'), 'prompt restored');
+    assert.ok(root.nodes.every((n) => n.getAttribute('aria-pressed') === 'false'), 'all unpressed after clear');
+  });
+
+  it('keeps multiple tree widgets independent', () => {
+    const first = stubTreeRoot(TREE_SPECS);
+    const second = stubTreeRoot(TREE_SPECS);
+    const a = bindTree(first);
+    const b = bindTree(second);
+    a.select(2);
+    assert.ok(first.panel.textContent.includes('B'), 'first selects B');
+    assert.ok(second.panel.textContent.includes('Select a node'), 'second untouched');
+    b.select(0);
+    assert.ok(first.panel.textContent.includes('B'), 'first untouched by second');
+  });
+
+  it('selects under prefers-reduced-motion with no autoplay surface', () => {
+    const realWindow = globalThis.window;
+    globalThis.window = { matchMedia: () => ({ matches: true }) };
+    try {
+      const root = stubTreeRoot(TREE_SPECS);
+      const bound = bindTree(root);
+      assert.ok(bound, 'tree binds under reduced motion');
+      root.nodes[0].fire('click');
+      assert.equal(bound.current, 0, 'selection still instant');
+      assert.ok(root.panel.textContent.includes('Start'), 'status still announces');
+    } finally {
+      if (realWindow === undefined) delete globalThis.window;
+      else globalThis.window = realWindow;
+    }
+  });
+
+  it('fails safely on malformed DOM with the static list untouched', () => {
+    assert.equal(bindTree({ querySelectorAll: () => [], querySelector: () => stubEl({}) }), null, 'no nodes does not bind');
+    assert.equal(bindTree({ querySelectorAll: () => [stubEl({})], querySelector: () => null }), null, 'no status does not bind');
+    assert.equal(bindTree(null), null, 'null root does not bind');
+  });
+});
+
+describe('tree stylesheet and regression contract', () => {
+  it('covers diagram, nodes, selection, focus, list, and print', () => {
+    const css = read('style.css');
+    for (const sel of [
+      '.viz-tree-diagram', '.viz-tree-svg', '.viz-tnode.is-selected',
+      '.viz-tree-list', '.viz-treenode', '.viz-treenode[aria-pressed="true"]',
+      '.viz-treenode:focus-visible', '.viz-tnid', '.viz-tnmeta',
+    ]) {
+      assert.ok(css.includes(sel), `stylesheet covers ${sel}`);
+    }
+    assert.ok(!/width:\s*100vw/.test(css), 'no viewport-width traps introduced');
+  });
+
+  it('uses theme variables without hardcoded colors or animation', () => {
+    const css = read('style.css');
+    const block = css.slice(css.indexOf('Hierarchical tree viewer'));
+    assert.ok(block.length > 200, 'tree block present');
+    assert.ok(!/#[0-9a-fA-F]{3,8}/.test(block), 'theme variables only, all modes inherit');
+    assert.ok(!/transition\s*:|animation\s*:|@keyframes/.test(block), 'no animation declarations to reduce');
+    assert.ok(block.includes('@media print'), 'print behavior declared');
+    assert.ok(block.includes('.viz-treenode:focus-visible'), 'visible keyboard focus');
+  });
+
+  it('keeps static output understandable without JS', () => {
+    const out = transformCustomWidgets(SEARCH_TREE);
+    assert.ok(out.includes('<ul class="viz-tree-list">'), 'nested semantic list present');
+    assert.ok(out.includes('aria-hidden="true"'), 'diagram marked visual-only');
+    assert.ok(!out.includes('is-live'), 'no live marker without JS');
+    assert.ok(out.includes('Select a node to inspect'), 'prompt visible statically');
+  });
+
+  it('leaves flow, stepper, trace, lab, and structure unaffected', () => {
+    assert.ok(transformCustomWidgets('::: viz flow Tour\n1. One\n2. Two\n:::').includes('class="viz viz-flow"'), 'flow still enhances');
+    assert.ok(transformCustomWidgets('::: viz stepper Tour\n- One\n- Two\n:::').includes('class="viz viz-stepper"'), 'stepper still enhances');
+    assert.ok(transformCustomWidgets('::: viz trace T\nstate | A\nop | Go\nstate | B\n:::').includes('class="viz viz-trace"'), 'trace still enhances');
+    assert.ok(transformCustomWidgets('::: viz lab rtt Lab\nNotes.\n:::').includes('class="viz viz-lab"'), 'lab still enhances');
+    assert.ok(transformCustomWidgets('::: viz structure T\nfield | A | 8 | meaning\n:::').includes('class="viz viz-struct"'), 'structure still enhances');
+    const mixed = transformCustomWidgets('::: viz tree T\nnode | r | R\nnode | a | A | r\n:::\n\n::: viz trace U\nstate | A\nop | Go\nstate | B\n:::');
+    assert.ok(mixed.includes('viz-tree') && mixed.includes('viz-trace'), 'tree and trace coexist on one page');
   });
 });
