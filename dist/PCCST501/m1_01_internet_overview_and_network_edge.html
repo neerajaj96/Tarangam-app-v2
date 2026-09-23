@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 1</span>
-    <span class="badge">⏱️ 37 MIN READ</span>
+    <span class="badge">⏱️ 38 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -459,7 +459,7 @@ One laptop is a <code>client</code> when streaming and a <code>server</code> whe
 <li><em>What:</em> Internet over the existing copper telephone line to a home.</li>
 <li><em>How:</em> Frequency-division splits one wire into parallel channels: roughly 0–4 kHz stays voice, higher bands carry data upstream (~25–138 kHz) and downstream (~138 kHz–1.1 MHz) in classic ADSL (Asymmetric DSL) — numbers are illustrative of the ADSL standard, not every DSL variant.</li>
 <li><em>Why it exists:</em> reuses the phone wiring already in every house; the copper pair is <em>dedicated</em> (your bits are not shared with neighbors).</li>
-<li><em>Characteristics/example:</em> typically asymmetric (representative ADSL: ~24 Mbps down, ~1–3 Mbps up) because homes download more than they upload; rate falls sharply with distance from the telephone central office (a few km limit).</li>
+<li><em>Characteristics/example:</em> typically asymmetric (representative ADSL: ~24 Mbps down, ~1–3 Mbps up) because homes download more than they upload; rate falls sharply with distance from the telephone central office (a few km limit). At the office, a DSLAM (Digital Subscriber Line Access Multiplexer) terminates all those copper pairs, splitting voice toward the phone network and data toward the Internet.</li>
 </ul>
 <pre><code class="language-mermaid">flowchart TB
     accTitle: DSL home access architecture
@@ -486,7 +486,7 @@ One laptop is a <code>client</code> when streaming and a <code>server</code> whe
 <p><strong>FTTH (Fiber to the Home).</strong></p>
 <ul>
 <li><em>What:</em> glass fiber running from the central office all the way into the home (an ONT — Optical Network Terminal — converts light back to electrical frames).</li>
-<li><em>How:</em> two deployment styles — AON (Active Optical Network, powered neighborhood switches route light per home) vs. PON (Passive Optical Network, unpowered optical splitters divide one feeder fiber among up to ~64 homes).</li>
+<li><em>How:</em> two deployment styles — AON (Active Optical Network, powered neighborhood switches route light per home) vs. PON (Passive Optical Network, unpowered optical splitters divide one feeder fiber among up to ~64 homes). The office end is an OLT (Optical Line Terminal), the light-source counterpart of the DSLAM.</li>
 <li><em>Why it exists:</em> removes copper&#39;s distance/bandwidth ceiling entirely.</li>
 <li><em>Characteristics/example:</em> typically symmetric with commonly offered rates around hundreds of Mbps to ~1 Gbps (multi-gigabit in some deployments) and very low latency.</li>
 </ul>
@@ -527,9 +527,11 @@ One laptop is a <code>client</code> when streaming and a <code>server</code> whe
 <li><strong>What it is.</strong> The network core&#39;s forwarding discipline: application data → chopped into addressed packets → each packet transmitted link by link through routers → reassembled at the destination.</li>
 <li><strong>How one message travels.</strong> (1) <em>Packetization:</em> the source splits a message (say a 10 MB image) into small packets. (2) <em>Headers:</em> each packet gets source/destination addresses. (3) <em>Hop-by-hop forwarding:</em> every router reads the destination and pushes the packet onto the next link. (4) <em>Reassembly:</em> the destination strips headers, reorders, and rebuilds the message.</li>
 <li><strong>Why packets, not whole messages.</strong> Short uniform pieces keep any single transfer from monopolizing a link, let routers interleave many flows, and bound the damage of one lost chunk to a retransmission of that chunk — not the whole file.</li>
-<li><strong>Circuit switching contrast.</strong> Old telephone networks <em>reserved</em> an end-to-end circuit per call: guaranteed rate, zero queuing — but silence on the line still burned reserved capacity, and only ~10 users fit a 1 Mbps link at 100 Kbps each. Packet switching <em>shares</em> capacity on demand (statistical multiplexing): with each of 35 users active only 10% of the time, the chance that more than 10 transmit at once is under 0.04% — so 35 users comfortably share that same 1 Mbps link. <em>Result:</em> far higher utilization at the cost of variable delay and possible loss.</li>
+<li><strong>Circuit switching contrast.</strong> Old telephone networks <em>reserved</em> an end-to-end circuit per call: guaranteed rate, zero queuing — but silence on the line still burned reserved capacity, and only ~10 users fit a 1 Mbps link at 100 Kbps each. Packet switching <em>shares</em> capacity on demand (statistical multiplexing — sharing by statistics: at every instant the link serves whoever is actually transmitting right now): with each of 35 users active only 10% of the time, the chance that more than 10 transmit at once is about 0.04% (binomial model: 35 independent users, each active with probability 0.1 — roughly 4 instants in 10,000), so 35 users comfortably share that same 1 Mbps link. <em>Result:</em> far higher utilization at the cost of variable delay and possible loss.</li>
 <li><strong>When/where.</strong> The entire Internet core is packet-switched; circuits survive only in niche guaranteed-rate services. Exam cue: &quot;dedicated/reserved&quot; → circuit; &quot;shared/on-demand/statistical&quot; → packet.</li>
 </ul>
+<h3>Numbers Toolkit — Read This First (2 minutes)</h3>
+<p>Every delay calculation in this note uses four plain ideas. (1) A <strong>bit</strong> is one binary digit (0/1); a <strong>byte</strong> is 8 bits — network rates count <em>bits</em>, file sizes usually count <em>bytes</em>, so convert first (×8). (2) Rates: 1 Kbps = 1,000 bits/s, 1 Mbps = 1,000,000 bits/s (networking uses decimal thousands, not 1,024). (3) Distances to meters, times to seconds: 1 km = 1,000 m, 1 ms = 0.001 s. (4) Units must cancel: bits ÷ (bits/second) = seconds; meters ÷ (meters/second) = seconds. If your units don&#39;t cancel to seconds, something is wrong — that single check catches most beginner errors before they happen.</p>
 <h3>3.9 Store-and-Forward — The Rule That Creates Delay</h3>
 <ul>
 <li><strong>What it is.</strong> A router must receive <em>the entire packet</em> (all L bits) into its buffer before transmitting its first bit onward (simplified model used throughout this syllabus).</li>
@@ -546,7 +548,7 @@ One laptop is a <code>client</code> when streaming and a <code>server</code> whe
 <h3>3.10 Forwarding vs. Routing — Local Action vs. Global Computation</h3>
 <p>This distinction must be razor sharp — it recurs in every later module:</p>
 <ul>
-<li><strong>FORWARDING (data plane, local).</strong> <em>What:</em> moving one arriving packet from a router&#39;s input port to the correct output port, <em>right now</em>, via a table lookup. <em>How:</em> read destination address → longest-prefix match in the local forwarding table → emit on the listed port — in microseconds, per packet, in hardware.</li>
+<li><strong>FORWARDING (data plane, local).</strong> <em>What:</em> moving one arriving packet from a router&#39;s input port to the correct output port, <em>right now</em>, via a table lookup. <em>How:</em> read destination address → longest-prefix match in the local forwarding table (use the table row whose address prefix matches the most leading bits — the most specific route wins) → emit on the listed port — in microseconds, per packet, in hardware.</li>
 <li><strong>ROUTING (control plane, global).</strong> <em>What:</em> computing the end-to-end paths across all routers and <em>filling</em> those forwarding tables. <em>How:</em> routing protocols (OSPF inside an ISP, BGP between ISPs) exchange reachability information in the background and continuously update tables.</li>
 <li><strong>Concrete example.</strong> Packet for 10.0.0.5 arrives; the table says prefix 10.0.0.0/8 → port 2; the packet leaves on port 2 (forwarding). That table row exists because routing protocols earlier discovered &quot;10.0.0.0/8 is reachable via port 2&quot; (routing). GPS analogy: routing plans the whole New York→Los Angeles route; forwarding takes Exit 14B at this interchange.</li>
 </ul>
@@ -603,11 +605,11 @@ One laptop is a <code>client</code> when streaming and a <code>server</code> whe
 <td>One car driving 100 km of highway</td>
 </tr>
 </tbody></table>
-<p><strong>Combined nodal example (all four, with steps).</strong> Packet L = 10,000 bits; link R = 2 Mbps; distance d = 2,500 km fiber (s = 2.5×10⁸ m/s); d_proc = 1 ms; d_queue = 4 ms.</p>
+<p><strong>Combined nodal example (all four, with steps).</strong> Packet L = 10,000 bits; link R = 2 Mbps; distance d = 2,500 km fiber (s = 2×10⁸ m/s, the same fiber speed used above — not rounded); d_proc = 1 ms; d_queue = 4 ms.</p>
 <ol>
 <li>d_trans = 10,000 / 2,000,000 = 0.005 s = <strong>5 ms</strong>.</li>
-<li>d_prop = 2,500,000 / 250,000,000 = 0.01 s = <strong>10 ms</strong>.</li>
-<li>d_nodal = 1 + 4 + 5 + 10 = <strong>20 ms</strong>. <em>Interpretation:</em> on long links propagation dominates; on slow links transmission dominates; under load queuing dominates — read which term is largest before diagnosing.</li>
+<li>d_prop = 2,500,000 / 200,000,000 = 0.0125 s = <strong>12.5 ms</strong>.</li>
+<li>d_nodal = 1 + 4 + 5 + 12.5 = <strong>22.5 ms</strong>. <em>Interpretation:</em> on long links propagation dominates; on slow links transmission dominates; under load queuing dominates — read which term is largest before diagnosing.</li>
 </ol>
 <h3>3.12 Queuing, Traffic Intensity, and Packet Loss</h3>
 <ul>
