@@ -496,6 +496,12 @@ describe('viz structure transform', () => {
   });
 });
 
+function fieldsOf(courseFile) {
+  const t = read(`content/PCCST501/${courseFile}`);
+  return t.split('\n').map((l) => l.trim()).filter((l) => l.toLowerCase().startsWith('field |'))
+    .map((l) => l.split('|').map((p) => p.trim()));
+}
+
 function stubField(name, size, exp) {
   const btn = stubEl({});
   let focused = false;
@@ -578,5 +584,78 @@ describe('structure stylesheet contract', () => {
       assert.ok(css.includes(sel), `stylesheet covers ${sel}`);
     }
     assert.ok(css.includes('@media (max-width: 640px)'), 'narrow-viewport rules present');
+  });
+});
+
+describe('structure hardening: strict widths, groups, notes, labels', () => {
+  const build = (body) => transformCustomWidgets(`::: viz structure T\n${body}\n:::`);
+
+  it('rejects non-decimal widths that Number() would accept', () => {
+    for (const bad of ['field | X | 0x10 | y', 'field | X | 1e2 | y', 'field | X | +16 | y', 'field | X | 16.5 | y', 'field | X |  | y']) {
+      assert.ok(build(bad).startsWith('::: viz structure'), `rejected: ${bad}`);
+    }
+    const ok = build('field | X | 16 | y');
+    assert.ok(ok.includes('data-fields="1"'), 'plain decimal accepted');
+  });
+
+  it('carries a group label across a blank line instead of dropping it', () => {
+    const out = build('group | Control\n\nfield | Flags | 9 | signals');
+    assert.ok(out.includes('Control'), 'group label preserved');
+    assert.ok(out.includes('data-fields="1"'), 'field parsed');
+  });
+
+  it('preserves multi-paragraph notes instead of merging them', () => {
+    const out = build('field | A | 8 | x\n\nFirst paragraph.\n\nSecond paragraph.\n:::'.replace(/\n:::$/, ''));
+    const notes = out.split('<div class="viz-notes">')[1] || '';
+    assert.ok(notes.includes('First paragraph') && notes.includes('Second paragraph'), 'both paragraphs kept');
+  });
+
+  it('numbers row aria-labels distinctly', () => {
+    const out = build('field | A | 8 | x\n\nfield | B | 8 | y');
+    assert.ok(out.includes('Fields row 1 of 2') && out.includes('Fields row 2 of 2'), 'distinct row labels');
+  });
+
+  it('keeps every field explanation in static output (no-JS contract)', () => {
+    const out = build('field | Checksum | 16 | Error detection here');
+    assert.ok(out.includes('Error detection here'), 'meaning present without JS');
+    assert.ok(out.includes('role="status"'), 'live panel present for enhancement');
+  });
+});
+
+describe('reference header accuracy (UDP 64 bits, TCP 160 bits)', () => {
+  it('UDP header is exactly four 16-bit fields', () => {
+    const fields = fieldsOf('m2_02_udp_segment_structure_and_checksum.md');
+    assert.deepEqual(fields.map((p) => p[1]), ['Source Port', 'Destination Port', 'Length', 'Checksum']);
+    const bits = fields.map((p) => parseInt(p[2], 10));
+    assert.ok(bits.every((b) => b === 16), 'all fields 16 bits');
+    assert.equal(bits.reduce((a, b) => a + b, 0), 64, 'total 64 bits = 8 bytes');
+  });
+
+  it('TCP header is the ten standard minimum fields totaling 160 bits', () => {
+    const fields = fieldsOf('m2_03_tcp_segment_structure_and_rtt.md');
+    assert.deepEqual(
+      fields.map((p) => p[1]),
+      ['Source Port', 'Destination Port', 'Sequence Number', 'Acknowledgment Number',
+        'Data Offset', 'Reserved', 'Flags', 'Window', 'Checksum', 'Urgent Pointer']);
+    assert.deepEqual(fields.map((p) => parseInt(p[2], 10)), [16, 16, 32, 32, 4, 3, 9, 16, 16, 16]);
+    assert.equal(fields.reduce((a, p) => a + parseInt(p[2], 10), 0), 160, 'total 160 bits = 20 bytes');
+  });
+
+  it('TCP control region names real flags without inventing fields', () => {
+    const t = read('content/PCCST501/m2_03_tcp_segment_structure_and_rtt.md');
+    assert.ok(t.includes('SYN') && t.includes('FIN'), 'flag names present');
+    assert.ok(!/NS, CWR, ECE/i.test(t.split('::: viz structure')[1].split(':::')[0] || ''), 'no invented flag claims in widget');
+  });
+});
+
+describe('structure stylesheet hardening', () => {
+  it('stacks rows on narrow screens without viewport traps or hex colors', () => {
+    const css = read('style.css');
+    const block = css.slice(css.indexOf('Annotated structure viewer'));
+    assert.ok(block.includes('.viz-srow { flex-direction: column; }'), 'stacked mobile rows');
+    assert.ok(!/width:\s*100vw/.test(block), 'no viewport-width traps');
+    assert.ok(!/#[0-9a-fA-F]{3,8}/.test(block), 'theme variables only, all modes inherit');
+    assert.ok(block.includes('.viz-field:focus-visible'), 'visible keyboard focus');
+    assert.ok(block.includes('.viz-struct.is-live .viz-fexp'), 'live collapse rule present');
   });
 });

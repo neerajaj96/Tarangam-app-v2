@@ -264,7 +264,7 @@ for (const course of courses) {
       if (!fields.length) fail(`${course}/${f}: ::: viz structure block needs at least one "field | Name | bits | meaning" line`);
       fields.forEach((l) => {
         const parts = l.split('|').map((p) => p.trim());
-        const bits = Number(parts[2]);
+        const bits = /^[0-9]+$/.test(parts[2] || '') ? parseInt(parts[2], 10) : NaN;
         if (parts.length < 4 || !parts[1] || !Number.isInteger(bits) || bits <= 0 || !parts[3]) {
           fail(`${course}/${f}: malformed viz structure field (need "field | Name | positive-integer bits | meaning") — actual: "${l.slice(0, 60)}"`);
         }

@@ -339,15 +339,19 @@ export function transformCustomWidgets(markdownText) {
     const safeTitle = escapeHtml(title);
     const rows = [];
     let current = { group: null, fields: [] };
-    const notes = [];
+    const noteLines = [];
     let ok = true;
     const flush = () => {
-      if (current.fields.length) rows.push(current);
-      current = { group: null, fields: [] };
+      // Push row only when it has fields; a pending group label carries
+      // forward across blank lines instead of vanishing silently.
+      if (current.fields.length) {
+        rows.push(current);
+        current = { group: null, fields: [] };
+      }
     };
     for (const raw of rawBody.split('\n')) {
       const l = raw.trim();
-      if (!l) { flush(); continue; }
+      if (!l) { flush(); noteLines.push(''); continue; }
       if (l.toLowerCase().startsWith('group |')) {
         flush();
         current.group = l.slice(7).trim() || null;
@@ -355,7 +359,9 @@ export function transformCustomWidgets(markdownText) {
       }
       if (l.toLowerCase().startsWith('field |')) {
         const parts = l.split('|').map((p) => p.trim());
-        const bits = Number(parts[2]);
+        // Strict decimal integers only: Number("0x10") or Number("1e2")
+        // would otherwise smuggle non-decimal widths past the gate.
+        const bits = /^[0-9]+$/.test(parts[2] || '') ? parseInt(parts[2], 10) : NaN;
         if (parts.length < 4 || !parts[1] || !Number.isInteger(bits) || bits <= 0 || !parts[3]) {
           ok = false;
           break;
@@ -363,21 +369,22 @@ export function transformCustomWidgets(markdownText) {
         current.fields.push({ name: parts[1], bits, md: parts.slice(3).join(' | ') });
         continue;
       }
-      notes.push(l);
+      noteLines.push(l);
     }
     flush();
     if (!ok || !rows.length) return match;
     let idx = 0;
-    const rowHtml = rows.map((row) => {
+    const rowHtml = rows.map((row, ri) => {
       const cells = row.fields.map((f) => {
         const n = idx++;
         return `<button type="button" class="viz-field" data-i="${n}" aria-pressed="false" style="flex:${f.bits} 1 0"><span class="viz-fname">${escapeHtml(f.name)}</span><span class="viz-fsize">${f.bits} bit${f.bits === 1 ? '' : 's'}</span><span class="viz-fexp">${renderMarkdown(f.md)}</span></button>`;
       }).join('\n');
       const label = row.group ? `<p class="viz-fgroup">${escapeHtml(row.group)}</p>` : '';
-      return `${label}<div class="viz-srow" role="group" aria-label="${escapeHtml(row.group || `Fields row`)}">${cells}</div>`;
+      const rowLabel = row.group || `Fields row ${ri + 1} of ${rows.length}`;
+      return `${label}<div class="viz-srow" role="group" aria-label="${escapeHtml(rowLabel)}">${cells}</div>`;
     }).join('\n');
     const total = rows.reduce((a, r) => a + r.fields.length, 0);
-    const notesHtml = notes.length ? `<div class="viz-notes">${renderMarkdown(notes.join('\n'))}</div>` : '';
+    const notesHtml = noteLines.join('\n').trim() ? `<div class="viz-notes">${renderMarkdown(noteLines.join('\n').trim())}</div>` : '';
     return `<div class="viz viz-struct" data-viz="struct" data-fields="${total}">
   <div class="viz-head"><span class="viz-tag">Interactive structure &middot; ${safeTitle}</span></div>
   <div class="viz-srows">
