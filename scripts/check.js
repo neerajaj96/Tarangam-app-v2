@@ -243,8 +243,8 @@ for (const course of courses) {
     // scripts/scenes.js when the first head word names one; otherwise it
     // is title text.
     for (const m of t.matchAll(/^::: viz (\S+)(.*)$/gm)) {
-      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt'].includes(m[1])) {
-        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, or rtt`);
+      if (!['flow', 'stepper', 'tabs', 'compare', 'rtt', 'structure'].includes(m[1])) {
+        fail(`${course}/${f}: unknown viz type '${m[1]}' — expected flow, stepper, tabs, compare, rtt, or structure`);
       }
     }
     for (const b of t.matchAll(/::: viz (?:flow|stepper)(.*?)\n([\s\S]*?)\n:::/g)) {
@@ -258,6 +258,17 @@ for (const course of courses) {
     for (const b of t.matchAll(/::: viz compare(.*?)\n([\s\S]*?)\n:::/g)) {
       const heads = (b[2].match(/^\s*##\s+/gm) || []).length;
       if (heads < 2) fail(`${course}/${f}: ::: viz compare block needs two "## Heading" sections — actual: ${heads}`);
+    }
+    for (const b of t.matchAll(/::: viz structure(.*?)\n([\s\S]*?)\n:::/g)) {
+      const fields = b[2].split('\n').map((l) => l.trim()).filter((l) => l.toLowerCase().startsWith('field |'));
+      if (!fields.length) fail(`${course}/${f}: ::: viz structure block needs at least one "field | Name | bits | meaning" line`);
+      fields.forEach((l) => {
+        const parts = l.split('|').map((p) => p.trim());
+        const bits = Number(parts[2]);
+        if (parts.length < 4 || !parts[1] || !Number.isInteger(bits) || bits <= 0 || !parts[3]) {
+          fail(`${course}/${f}: malformed viz structure field (need "field | Name | positive-integer bits | meaning") — actual: "${l.slice(0, 60)}"`);
+        }
+      });
     }
   }
 }

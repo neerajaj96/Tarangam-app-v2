@@ -65,7 +65,7 @@ Tree visualizer demand (BST/heaps/parse/decision trees, 8 topics), code-trace de
 |---|---|---|
 | Timeline | **Not needed** | Chronology is staging; `flow` covers it (M1T4 evolution proves the pattern) |
 | Graph / generalized lab | **Needed later** | `rtt` proves the pattern; generalize to formula-driven inputs for P0/P1 H rows (subnet, Shannon, ALOHA, backprop) |
-| Annotated structure (`struct`) | **Needed next** | 2× P0 + 2× P1 packet/register/header rows cannot be served well by tabs or prose |
+| Annotated structure (`struct`) | **Implemented (Session 7B)** | `::: viz structure` shipped with UDP/TCP reference implementations; registers/memory and overflow rows can now use it |
 | Tree visualizer | **Needed later** | 8 topics; stepper text suffices until then |
 | Code execution/trace viewer | **Needed later** | Lab-course scope; larger than a widget extension |
 | State-machine visualizer | **Needed later** | No topic strictly requires it today |
@@ -98,13 +98,13 @@ Viz-planning metadata must **not** go in topic front matter: `data/topic-schema.
 ## 8. Accessibility and performance implications
 
 - All current families inherit tested contracts: native controls, keyboard operation, screen-reader labels/live regions, static no-JS fallback with full information, reduced-motion handling, print reveal, theme-var styling.
-- **Acceptance criteria for the two future primitives (`struct`, generalized `lab`):** same contract — static fallback, keyboard operability, text alternative, reduced-motion safety, no new dependencies, per-widget (not global) cost.
+- **Acceptance criteria for the remaining future primitive (generalized `lab`):** same contract — static fallback, keyboard operability, text alternative, reduced-motion safety, no new dependencies, per-widget (not global) cost.
 - Page-size watch: M1T4 precedent is ~100 KB generated HTML against the 163,840-byte expanded budget; mapping-driven sessions must keep each page under it. Reject any representation whose educational benefit does not justify its DOM/byte cost (applies today to matrix explorers and concept maps).
 
 ## 9. Dependency-aware implementation order (future sessions)
 
 - **Session A (no new primitives):** wire unused scenes (`dv-count`→m2_10, `bfs-layers`→m3_06); flows for FTP/SMTP/handshake-upgrade/ARP/I2C; steppers for linked lists, AVL foundations, merge/topo sort, RSA, A*, resolution, Kruskal/Prim.
-- **Session B (`struct` primitive):** UDP/TCP/IP headers, registers/memory map, VLAN/AES overflow from P1/P2.
+- **Session B (done in 7B: `struct` primitive):** UDP/TCP headers shipped; registers/memory map, VLAN/AES overflow from P1/P2 can now use it.
 - **Session C (generalized `lab`):** subnetting, Shannon/Nyquist, ALOHA, backprop, TCP RTO.
 - **Session D (later, on demand):** tree visualizer, code-trace viewer, state-machine visualizer — only when a session's P-row requires them.
 - Never a "visualize everything" pass: each session picks rows from `data/viz-map.json` and stops.

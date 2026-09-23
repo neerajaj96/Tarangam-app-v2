@@ -297,7 +297,7 @@
       <div class="topic-header">
   <div class="topic-badges">
     <span class="badge badge-accent">MODULE 2</span>
-    <span class="badge">⏱️ 11 MIN READ</span>
+    <span class="badge">⏱️ 12 MIN READ</span>
     <span class="badge badge-gold">🟢 BEGINNER FRIENDLY</span>
     <span class="badge">🎯 KTU 2024 SCHEME</span>
   </div>
@@ -378,23 +378,32 @@
 An <code>acknowledgment number</code> is the next byte the receiver expects, confirming everything before it.
 Tiny example: a 1000-byte segment starting at 5000 earns ACK 6000, confirming bytes 5000 through 5999.</p>
 </div></details><h3>3.2 Packet Structure: The Header Fields That Earn Marks (20 bytes minimum)</h3>
-<p>Source/destination ports (multiplexing), <strong>sequence + acknowledgment numbers</strong> (ordering/reliability), header length, flags (<strong>SYN</strong> — synchronize, <strong>ACK</strong> — acknowledgment, <strong>FIN</strong> — finish, <strong>RST</strong> — reset: connection control), <strong>receive window</strong> <code>rwnd</code> (flow control, next topic), <strong>checksum</strong> (always computed in TCP; contrast UDP, where it is optional in IPv4 and mandatory in IPv6), urgent pointer.</p>
-<pre><code class="language-text"> 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|          Source Port          |       Destination Port        |  demux
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Sequence Number                        |  byte # of
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  1st payload byte
-|                     Acknowledgment Number                     |  next byte
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  expected
-|Offset |  Flags (SYN ACK FIN..)|        Receive Window         |  control +
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  flow ctrl
-|            Checksum           |         Urgent Pointer        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                     20 bytes minimum (options may extend)
-</code></pre>
-<h3>3.2a Interactive Walkthrough: Reading the 20 Bytes Row by Row</h3>
+<p>Source/destination ports (multiplexing), <strong>sequence + acknowledgment numbers</strong> (ordering/reliability), header length, flags (<strong>SYN</strong> — synchronize, <strong>ACK</strong> — acknowledgment, <strong>FIN</strong> — finish, <strong>RST</strong> — reset: connection control), <strong>receive window</strong> <code>rwnd</code> (flow control, next topic), <strong>checksum</strong> (always computed in TCP; contrast UDP, where it is optional in IPv4 and mandatory in IPv6), urgent pointer. Select any field below to inspect its size and role; the walkthrough after it reads the same header row by row.</p>
+<div class="viz viz-struct" data-viz="struct" data-fields="10">
+  <div class="viz-head"><span class="viz-tag">Interactive structure &middot; TCP Header: 20 bytes minimum, options extend it</span></div>
+  <div class="viz-srows">
+    <div class="viz-srow" role="group" aria-label="Fields row"><button type="button" class="viz-field" data-i="0" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Source Port</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Sending process identity for replies</p>
+</span></button>
+<button type="button" class="viz-field" data-i="1" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Destination Port</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Receiving process identity for demultiplexing</p>
+</span></button></div>
+<p class="viz-fgroup">Byte numbering</p><div class="viz-srow" role="group" aria-label="Byte numbering"><button type="button" class="viz-field" data-i="2" aria-pressed="false" style="flex:32 1 0"><span class="viz-fname">Sequence Number</span><span class="viz-fsize">32 bits</span><span class="viz-fexp"><p>First payload byte&#39;s number in the stream</p>
+</span></button>
+<button type="button" class="viz-field" data-i="3" aria-pressed="false" style="flex:32 1 0"><span class="viz-fname">Acknowledgment Number</span><span class="viz-fsize">32 bits</span><span class="viz-fexp"><p>Next byte expected — everything before it confirmed</p>
+</span></button></div>
+<p class="viz-fgroup">Control and flow</p><div class="viz-srow" role="group" aria-label="Control and flow"><button type="button" class="viz-field" data-i="4" aria-pressed="false" style="flex:4 1 0"><span class="viz-fname">Data Offset</span><span class="viz-fsize">4 bits</span><span class="viz-fexp"><p>Header length in 4-byte words (locates the payload start)</p>
+</span></button>
+<button type="button" class="viz-field" data-i="5" aria-pressed="false" style="flex:3 1 0"><span class="viz-fname">Reserved</span><span class="viz-fsize">3 bits</span><span class="viz-fexp"><p>Must-be-zero padding for future use</p>
+</span></button>
+<button type="button" class="viz-field" data-i="6" aria-pressed="false" style="flex:9 1 0"><span class="viz-fname">Flags</span><span class="viz-fsize">9 bits</span><span class="viz-fexp"><p>SYN, ACK, FIN, RST and more — one bit per signal</p>
+</span></button>
+<button type="button" class="viz-field" data-i="7" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Window</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Receive window in bytes — flow-control credit granted</p>
+</span></button></div>
+<p class="viz-fgroup">Integrity</p><div class="viz-srow" role="group" aria-label="Integrity"><button type="button" class="viz-field" data-i="8" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Checksum</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Mandatory end-to-end error detection, pseudoheader included</p>
+</span></button>
+<button type="button" class="viz-field" data-i="9" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Urgent Pointer</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Offset to urgent data when the URG flag is set</p>
+</span></button></div>
+  </div>
+  <p class="viz-fpanel" role="status">Select a field to inspect its size and meaning.</p></div><h3>3.2a Interactive Walkthrough: Reading the 20 Bytes Row by Row</h3>
 <div class="viz viz-stepper" data-viz="stepper" data-steps="5">
   <div class="viz-head"><span class="viz-tag">Interactive stepper &middot; Walk the TCP header four bytes at a time</span></div>  <ol class="viz-steps">
     <li class="viz-step" data-i="0"><p>Bytes 0–3: source port, destination port — who talks to whom (multiplexing, as in UDP)</p>

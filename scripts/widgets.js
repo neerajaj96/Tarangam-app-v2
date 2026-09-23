@@ -324,5 +324,69 @@ export function transformCustomWidgets(markdownText) {
 </div>`;
   });
 
+  // 7e. Annotated structure viewer (fields with sizes and meanings).
+  // Syntax: `::: viz structure <title>` with body lines
+  // `field | Name | <bits> | explanation`, optional `group | Label` dividers
+  // (each group starts a new visual row), and blank lines also break rows.
+  // Any other non-empty line becomes a plain note below. Widths must be
+  // positive integers (bits); proportional flex does the layout, so tiny
+  // fields keep a readable minimum width via CSS. Without JS every field
+  // shows name, size, and explanation inline; viz.js collapses to a
+  // select-to-inspect panel. Malformed blocks stay raw for check.js.
+  const vizStructPattern = /::: viz structure(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(vizStructPattern, (match, head, rawBody) => {
+    const title = head.trim() || 'Structure';
+    const safeTitle = escapeHtml(title);
+    const rows = [];
+    let current = { group: null, fields: [] };
+    const notes = [];
+    let ok = true;
+    const flush = () => {
+      if (current.fields.length) rows.push(current);
+      current = { group: null, fields: [] };
+    };
+    for (const raw of rawBody.split('\n')) {
+      const l = raw.trim();
+      if (!l) { flush(); continue; }
+      if (l.toLowerCase().startsWith('group |')) {
+        flush();
+        current.group = l.slice(7).trim() || null;
+        continue;
+      }
+      if (l.toLowerCase().startsWith('field |')) {
+        const parts = l.split('|').map((p) => p.trim());
+        const bits = Number(parts[2]);
+        if (parts.length < 4 || !parts[1] || !Number.isInteger(bits) || bits <= 0 || !parts[3]) {
+          ok = false;
+          break;
+        }
+        current.fields.push({ name: parts[1], bits, md: parts.slice(3).join(' | ') });
+        continue;
+      }
+      notes.push(l);
+    }
+    flush();
+    if (!ok || !rows.length) return match;
+    let idx = 0;
+    const rowHtml = rows.map((row) => {
+      const cells = row.fields.map((f) => {
+        const n = idx++;
+        return `<button type="button" class="viz-field" data-i="${n}" aria-pressed="false" style="flex:${f.bits} 1 0"><span class="viz-fname">${escapeHtml(f.name)}</span><span class="viz-fsize">${f.bits} bit${f.bits === 1 ? '' : 's'}</span><span class="viz-fexp">${renderMarkdown(f.md)}</span></button>`;
+      }).join('\n');
+      const label = row.group ? `<p class="viz-fgroup">${escapeHtml(row.group)}</p>` : '';
+      return `${label}<div class="viz-srow" role="group" aria-label="${escapeHtml(row.group || `Fields row`)}">${cells}</div>`;
+    }).join('\n');
+    const total = rows.reduce((a, r) => a + r.fields.length, 0);
+    const notesHtml = notes.length ? `<div class="viz-notes">${renderMarkdown(notes.join('\n'))}</div>` : '';
+    return `<div class="viz viz-struct" data-viz="struct" data-fields="${total}">
+  <div class="viz-head"><span class="viz-tag">Interactive structure &middot; ${safeTitle}</span></div>
+  <div class="viz-srows">
+    ${rowHtml}
+  </div>
+  <p class="viz-fpanel" role="status">Select a field to inspect its size and meaning.</p>
+  ${notesHtml}
+</div>`;
+  });
+
   return markdownText;
 }

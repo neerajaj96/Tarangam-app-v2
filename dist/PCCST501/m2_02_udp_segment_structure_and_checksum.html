@@ -388,7 +388,19 @@
 </tr>
 </tbody></table>
 <p>No sequence numbers, no acknowledgment numbers, no window fields — the header&#39;s tiny size <em>is</em> the entire design philosophy: minimum mechanism, maximum speed.</p>
-<details class="interactive-toggle"><summary>What are the four UDP header fields?</summary><div class="toggle-content"><p>The four fields are <code>source port</code>, <code>destination port</code>, <code>length</code>, and <code>checksum</code>, each 2 bytes for 8 total.
+<div class="viz viz-struct" data-viz="struct" data-fields="4">
+  <div class="viz-head"><span class="viz-tag">Interactive structure &middot; UDP Header: four 2-byte fields, 8 bytes total</span></div>
+  <div class="viz-srows">
+    <div class="viz-srow" role="group" aria-label="Fields row"><button type="button" class="viz-field" data-i="0" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Source Port</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Reply address for responses (optional in requests)</p>
+</span></button>
+<button type="button" class="viz-field" data-i="1" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Destination Port</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Demultiplexing key — e.g. 53 for DNS</p>
+</span></button>
+<button type="button" class="viz-field" data-i="2" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Length</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Whole segment size in bytes, header plus data</p>
+</span></button>
+<button type="button" class="viz-field" data-i="3" aria-pressed="false" style="flex:16 1 0"><span class="viz-fname">Checksum</span><span class="viz-fsize">16 bits</span><span class="viz-fexp"><p>Error detection over header, data, and pseudoheader</p>
+</span></button></div>
+  </div>
+  <p class="viz-fpanel" role="status">Select a field to inspect its size and meaning.</p></div><details class="interactive-toggle"><summary>What are the four UDP header fields?</summary><div class="toggle-content"><p>The four fields are <code>source port</code>, <code>destination port</code>, <code>length</code>, and <code>checksum</code>, each 2 bytes for 8 total.
 <code>Ports</code> steer to processes, <code>length</code> gives header plus data bytes, <code>checksum</code> detects errors.
 Tiny example: a DNS query to destination port 53 carries its reply port, total length, and checksum in 8 bytes.</p>
 </div></details><h3>3.1a Interactive Walkthrough: Reading the 8 Bytes by Offset</h3>

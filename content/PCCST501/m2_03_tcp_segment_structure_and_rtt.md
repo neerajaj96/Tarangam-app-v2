@@ -72,24 +72,26 @@ Tiny example: a 1000-byte segment starting at 5000 earns ACK 6000, confirming by
 
 ### 3.2 Packet Structure: The Header Fields That Earn Marks (20 bytes minimum)
 
-Source/destination ports (multiplexing), **sequence + acknowledgment numbers** (ordering/reliability), header length, flags (**SYN** — synchronize, **ACK** — acknowledgment, **FIN** — finish, **RST** — reset: connection control), **receive window** `rwnd` (flow control, next topic), **checksum** (always computed in TCP; contrast UDP, where it is optional in IPv4 and mandatory in IPv6), urgent pointer.
+Source/destination ports (multiplexing), **sequence + acknowledgment numbers** (ordering/reliability), header length, flags (**SYN** — synchronize, **ACK** — acknowledgment, **FIN** — finish, **RST** — reset: connection control), **receive window** `rwnd` (flow control, next topic), **checksum** (always computed in TCP; contrast UDP, where it is optional in IPv4 and mandatory in IPv6), urgent pointer. Select any field below to inspect its size and role; the walkthrough after it reads the same header row by row.
 
-```text
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|          Source Port          |       Destination Port        |  demux
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Sequence Number                        |  byte # of
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  1st payload byte
-|                     Acknowledgment Number                     |  next byte
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  expected
-|Offset |  Flags (SYN ACK FIN..)|        Receive Window         |  control +
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  flow ctrl
-|            Checksum           |         Urgent Pointer        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                     20 bytes minimum (options may extend)
-```
+::: viz structure TCP Header: 20 bytes minimum, options extend it
+field | Source Port | 16 | Sending process identity for replies
+field | Destination Port | 16 | Receiving process identity for demultiplexing
+
+group | Byte numbering
+field | Sequence Number | 32 | First payload byte's number in the stream
+field | Acknowledgment Number | 32 | Next byte expected — everything before it confirmed
+
+group | Control and flow
+field | Data Offset | 4 | Header length in 4-byte words (locates the payload start)
+field | Reserved | 3 | Must-be-zero padding for future use
+field | Flags | 9 | SYN, ACK, FIN, RST and more — one bit per signal
+field | Window | 16 | Receive window in bytes — flow-control credit granted
+
+group | Integrity
+field | Checksum | 16 | Mandatory end-to-end error detection, pseudoheader included
+field | Urgent Pointer | 16 | Offset to urgent data when the URG flag is set
+:::
 
 ### 3.2a Interactive Walkthrough: Reading the 20 Bytes Row by Row
 

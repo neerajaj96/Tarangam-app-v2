@@ -65,6 +65,13 @@ Dropping the post office now: 8-byte header = source port + destination port + l
 
 No sequence numbers, no acknowledgment numbers, no window fields — the header's tiny size *is* the entire design philosophy: minimum mechanism, maximum speed.
 
+::: viz structure UDP Header: four 2-byte fields, 8 bytes total
+field | Source Port | 16 | Reply address for responses (optional in requests)
+field | Destination Port | 16 | Demultiplexing key — e.g. 53 for DNS
+field | Length | 16 | Whole segment size in bytes, header plus data
+field | Checksum | 16 | Error detection over header, data, and pseudoheader
+:::
+
 ::: toggle What are the four UDP header fields?
 The four fields are `source port`, `destination port`, `length`, and `checksum`, each 2 bytes for 8 total.
 `Ports` steer to processes, `length` gives header plus data bytes, `checksum` detects errors.

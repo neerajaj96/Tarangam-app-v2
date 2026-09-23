@@ -133,6 +133,7 @@ export function initViz(scope) {
     else if (kind === 'tabs') bound.push(bindTabs(root));
     else if (kind === 'compare') bound.push(bindCompare(root));
     else if (kind === 'rtt') bound.push(bindRtt(root));
+    else if (kind === 'struct') bound.push(bindStruct(root));
   });
   return bound.filter(Boolean);
 }
@@ -224,4 +225,49 @@ export function bindRtt(root) {
   root.classList.add('is-live');
   recompute();
   return { root, recompute };
+}
+
+// Annotated structure viewer: exactly one field selected at a time (or
+// none after Escape). Click/Enter/Space select via native buttons; arrows
+// move; selection is announced through the live panel. No timers, no
+// animation — reduced motion is inherently satisfied.
+export function bindStruct(root) {
+  if (!root || typeof root.querySelectorAll !== 'function') return null;
+  const fields = Array.from(root.querySelectorAll('.viz-field'));
+  const panel = root.querySelector ? root.querySelector('.viz-fpanel') : null;
+  if (fields.length < 1 || !panel) return null;
+  const prompt = panel.textContent;
+  const describe = (btn) => {
+    const name = btn.querySelector ? btn.querySelector('.viz-fname') : null;
+    const size = btn.querySelector ? btn.querySelector('.viz-fsize') : null;
+    const exp = btn.querySelector ? btn.querySelector('.viz-fexp') : null;
+    const parts = [name && name.textContent, size && size.textContent, exp && exp.textContent]
+      .map((s) => (s || '').trim()).filter(Boolean);
+    return parts.join(' — ');
+  };
+  const select = (i) => {
+    const k = i === null ? -1 : Math.max(0, Math.min(fields.length - 1, i));
+    fields.forEach((btn, j) => {
+      const on = j === k;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    panel.textContent = k < 0 ? prompt : describe(fields[k]);
+    return k;
+  };
+  let current = -1;
+  fields.forEach((btn, i) => {
+    btn.addEventListener('click', () => { current = select(i); });
+  });
+  if (typeof root.addEventListener === 'function') {
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); current = select(current + 1 > fields.length - 1 ? 0 : current + 1); fields[current].focus(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); current = select(current - 1 < 0 ? fields.length - 1 : current - 1); fields[current].focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); current = select(0); fields[current].focus(); }
+      else if (e.key === 'End') { e.preventDefault(); current = select(fields.length - 1); fields[current].focus(); }
+      else if (e.key === 'Escape') { e.preventDefault(); current = select(null); }
+    });
+  }
+  root.classList.add('is-live');
+  select(null);
+  return { root, select, get current() { return current; } };
 }

@@ -1058,3 +1058,40 @@ img, video, svg, canvas { max-width: 100%; height: auto; }
   .viz-compare .viz-count[hidden] { display: block; }
   .viz-toggle { display: none !important; }
 }
+
+/* ---------- Annotated structure viewer (`::: viz structure`) ---
+   Same static-first contract: every field shows name, size, and meaning
+   until viz.js marks the widget live; then inline meanings collapse and
+   the live panel announces the selected field. Proportional flex widths
+   mirror bit sizes with a readable minimum; narrow screens stack rows. */
+.viz-srows { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 0; }
+.viz-fgroup { margin: 4px 0 0; font-size: 12.5px; font-weight: 700; color: var(--ink-faint); font-family: var(--font-mono); }
+.viz-srow { display: flex; gap: 8px; }
+.viz-field {
+  flex: 1 1 0; min-width: 76px; min-height: 64px;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  background: var(--surface-2); color: var(--ink);
+  padding: 8px 10px; font-family: var(--font-body); font-size: 14px; text-align: left;
+  cursor: pointer; display: flex; flex-direction: column; gap: 2px;
+}
+.viz-field:hover { border-color: var(--accent); }
+.viz-field[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-3); font-weight: 700; }
+.viz-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.viz-fname { font-weight: 600; }
+.viz-fsize { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+.viz-fexp { font-size: 13px; color: var(--ink-dim); }
+.viz-fexp > :first-child { margin-top: 0; }
+.viz-fexp > :last-child { margin-bottom: 0; }
+.viz-struct .viz-fpanel { display: none; }
+.viz-struct.is-live .viz-fpanel { display: block; }
+.viz-struct .viz-fexp { display: block; }
+.viz-struct.is-live .viz-fexp { display: none; }
+.viz-fpanel { font-size: 14px; margin: 0; padding: 12px 16px; border-top: 1px solid var(--border-soft); }
+@media (max-width: 640px) {
+  .viz-srow { flex-direction: column; }
+  .viz-field { min-height: 56px; }
+}
+@media print {
+  .viz-struct .viz-fexp { display: block; }
+  .viz-fpanel { display: none !important; }
+}

@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { transformCustomWidgets } from './widgets.js';
 import { SCENES, SCENE_IDS } from './scenes.js';
-import { createStepper, bindViz, bindTabs, bindCompare, bindRtt, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
+import { createStepper, bindViz, bindTabs, bindCompare, bindRtt, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
 
 const read = (f) => fs.readFileSync(f, 'utf-8');
 
@@ -460,5 +460,123 @@ describe('compare and rtt bindings on stub DOM', () => {
   it('refuses to bind without inputs and outputs', () => {
     assert.equal(bindRtt({ querySelector: () => null, querySelectorAll: () => [] }), null);
     assert.equal(bindCompare({ querySelector: () => null, querySelectorAll: () => [] }), null);
+  });
+});
+
+describe('viz structure transform', () => {
+  it('renders proportional field buttons with sizes, panel, and notes', () => {
+    const out = transformCustomWidgets(
+      '::: viz structure UDP Header\nfield | Source Port | 16 | Reply address\nfield | Checksum | 16 | Error detection\nA fixed 8-byte header.\n:::'
+    );
+    assert.ok(out.includes('class="viz viz-struct"'), 'struct shell class');
+    assert.ok(out.includes('data-fields="2"'), 'field count advertised');
+    assert.ok(out.includes('style="flex:16 1 0"'), 'width proportional to bits');
+    assert.ok(out.includes('16 bits') && out.includes('Source Port'), 'name and size visible statically');
+    assert.ok(out.includes('Reply address') && out.includes('Error detection'), 'meanings visible statically');
+    assert.ok(out.includes('role="status"'), 'live panel region for selection announcements');
+    assert.ok(out.includes('A fixed 8-byte header'), 'plain note lines rendered below');
+    assert.ok(out.includes('<button type="button" class="viz-field"'), 'native buttons for keyboard use');
+  });
+
+  it('supports group dividers and singular bit labels', () => {
+    const out = transformCustomWidgets(
+      '::: viz structure Flags\nfield | SYN | 1 | Open\n\ngroup | Control\nfield | Window | 16 | Flow credit\n:::'
+    );
+    assert.ok(out.includes('Control'), 'group divider rendered');
+    assert.ok(out.includes('1 bit') && !out.includes('1 bits'), 'singular bit label');
+    assert.ok(out.includes('data-fields="2"'), 'groups do not count as fields');
+  });
+
+  it('leaves malformed structures raw for check.js', () => {
+    const raw = (body) => transformCustomWidgets(`::: viz structure Bad\n${body}\n:::`);
+    assert.ok(raw('field | NoSize | abc | x').startsWith('::: viz structure'), 'non-integer width untouched');
+    assert.ok(raw('field | Only Name').startsWith('::: viz structure'), 'missing columns untouched');
+    assert.ok(raw('Just a note, no fields.').startsWith('::: viz structure'), 'fieldless block untouched');
+    assert.ok(raw('field | Zero | 0 | x').startsWith('::: viz structure'), 'non-positive width untouched');
+  });
+});
+
+function stubField(name, size, exp) {
+  const btn = stubEl({});
+  let focused = false;
+  btn.querySelector = (sel) => {
+    if (sel === '.viz-fname') return { textContent: name };
+    if (sel === '.viz-fsize') return { textContent: size };
+    if (sel === '.viz-fexp') return { textContent: exp };
+    return null;
+  };
+  btn.focus = () => { focused = true; };
+  btn.isFocused = () => focused;
+  return btn;
+}
+
+function stubStructRoot(specs) {
+  const fields = specs.map(([n, s, e]) => stubField(n, s, e));
+  const panel = stubEl({});
+  panel.textContent = 'Select a field to inspect its size and meaning.';
+  const listeners = {};
+  return {
+    fields,
+    panel,
+    addEventListener(t, fn) { (listeners[t] = listeners[t] || []).push(fn); },
+    fire(t, e = {}) { (listeners[t] || []).forEach((fn) => fn({ preventDefault() {}, ...e })); },
+    classList: { add() {} },
+    querySelector(sel) {
+      if (sel === '.viz-fpanel') return panel;
+      return null;
+    },
+    querySelectorAll(sel) {
+      if (sel === '.viz-field') return fields;
+      return [];
+    },
+  };
+}
+
+describe('structure binding on stub DOM', () => {
+  it('selects fields with pressed state and panel announcements', () => {
+    const root = stubStructRoot([['Source Port', '16 bits', 'Reply address'], ['Checksum', '16 bits', 'Error detection']]);
+    const bound = bindStruct(root);
+    assert.ok(bound, 'struct binds');
+    assert.equal(bound.current, -1, 'nothing selected initially');
+    assert.equal(root.fields[0].getAttribute('aria-pressed'), 'false');
+    root.fields[1].fire('click');
+    assert.equal(bound.current, 1);
+    assert.equal(root.fields[1].getAttribute('aria-pressed'), 'true');
+    assert.equal(root.fields[0].getAttribute('aria-pressed'), 'false', 'single selection');
+    assert.ok(root.panel.textContent.includes('Checksum'), 'panel names the field');
+    assert.ok(root.panel.textContent.includes('16 bits'), 'panel states the size');
+    assert.ok(root.panel.textContent.includes('Error detection'), 'panel explains the meaning');
+  });
+
+  it('navigates with arrows and clears with Escape', () => {
+    const root = stubStructRoot([['A', '1 bit', 'x'], ['B', '2 bits', 'y']]);
+    const bound = bindStruct(root);
+    root.fire('keydown', { key: 'ArrowRight' });
+    assert.equal(bound.current, 0, 'arrow selects from empty');
+    assert.ok(root.fields[0].isFocused(), 'focus follows selection');
+    root.fire('keydown', { key: 'ArrowRight' });
+    assert.equal(bound.current, 1);
+    root.fire('keydown', { key: 'ArrowLeft' });
+    assert.equal(bound.current, 0);
+    root.fire('keydown', { key: 'Escape' });
+    assert.equal(bound.current, -1, 'Escape clears');
+    assert.ok(root.panel.textContent.includes('Select a field'), 'prompt restored');
+  });
+
+  it('refuses to bind without fields and panel', () => {
+    assert.equal(bindStruct({ querySelector: () => null, querySelectorAll: () => [] }), null);
+  });
+});
+
+describe('structure stylesheet contract', () => {
+  it('covers proportional layout, selection, focus, print, and stacking', () => {
+    const css = read('style.css');
+    for (const sel of [
+      '.viz-srow', '.viz-field[aria-pressed="true"]', '.viz-field:focus-visible',
+      '.viz-struct.is-live .viz-fexp', '.viz-fgroup',
+    ]) {
+      assert.ok(css.includes(sel), `stylesheet covers ${sel}`);
+    }
+    assert.ok(css.includes('@media (max-width: 640px)'), 'narrow-viewport rules present');
   });
 });
