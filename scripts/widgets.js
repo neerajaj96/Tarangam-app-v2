@@ -625,10 +625,15 @@ export function transformCustomWidgets(markdownText) {
   // self-parents, no cycles, no disconnected nodes. Child order follows
   // document order, so rendering is deterministic for identical input.
   // Labels are plain text (escaped, no Markdown) so the SVG diagram and the
-  // static list always agree. Static fallback: the SVG diagram plus a nested
+  // static list always agree. Long labels are truncated deterministically
+  // to 12 characters in the SVG diagram only (fixed 22px nodes, 120px
+  // spacing — full text would overlap neighbors); the complete label is
+  // always preserved in the semantic list buttons and announced in full by
+  // the selection status. Static fallback: the SVG diagram plus a nested
   // semantic list carrying parent/level/children facts per node — fully
   // readable without JS. viz.js adds select-to-inspect (native buttons,
-  // aria-pressed, live status, SVG highlight mirror). Malformed blocks stay
+  // aria-pressed, live status naming parent and children labels from
+  // build-time data attributes, SVG highlight mirror). Malformed blocks stay
   // raw for scripts/check.js. Intentionally NOT supported: general graphs,
   // zoom/pan/drag, editing, search, animation.
   const vizTreePattern = /::: viz tree(.*?)\n([\s\S]*?)\n:::/g;
@@ -667,19 +672,34 @@ export function transformCustomWidgets(markdownText) {
     const cy = (id) => TOP + depth.get(id) * Y_STEP;
     const edges = nodes.filter((n) => n.parent !== null).map((n) =>
       `<line class="viz-tedge" x1="${cx(n.parent)}" y1="${cy(n.parent) + NODE_R}" x2="${cx(n.id)}" y2="${cy(n.id) - NODE_R}"/>`).join('');
+    // Fit-safe SVG labels: at 13px monospace a 12-character label spans
+    // ~94px, inside the 120px node spacing, so neighbors never overlap.
+    // Code-point-safe slice keeps surrogate pairs intact. Full labels live
+    // in the list buttons and the selection status below.
+    const fitSvgLabel = (label) => {
+      const chars = Array.from(label);
+      return chars.length > 12 ? `${chars.slice(0, 11).join('')}…` : label;
+    };
     const dots = nodes.map((n) =>
-      `<g class="viz-tnode" data-node="${escapeHtml(n.id)}"><circle cx="${cx(n.id)}" cy="${cy(n.id)}" r="${NODE_R}"/><text x="${cx(n.id)}" y="${cy(n.id) + 5}">${escapeHtml(n.label)}</text></g>`).join('');
+      `<g class="viz-tnode" data-node="${escapeHtml(n.id)}"><circle cx="${cx(n.id)}" cy="${cy(n.id)}" r="${NODE_R}"/><text x="${cx(n.id)}" y="${cy(n.id) + 5}">${escapeHtml(fitSvgLabel(n.label))}</text></g>`).join('');
     const meta = (n) => {
       const kids = children.get(n.id);
       const tail = kids.length === 0 ? 'leaf' : `${kids.length} child${kids.length === 1 ? '' : 'ren'}`;
       const head = n.parent === null ? 'root' : `child of ${byId.get(n.parent).label}`;
       return `${head} · level ${depth.get(n.id)} · ${tail}`;
     };
+    // Build-time relationship facts for the runtime status sentence
+    // (scripts/viz.js reads these instead of reparsing DOM text).
+    const facts = (n) => {
+      const parentLabel = n.parent === null ? '' : byId.get(n.parent).label;
+      const kidLabels = children.get(n.id).map((id) => byId.get(id).label).join(', ');
+      return ` data-label="${escapeHtml(n.label)}" data-parent="${escapeHtml(parentLabel)}" data-kids="${escapeHtml(kidLabels)}"`;
+    };
     const renderList = (id) => {
       const n = byId.get(id);
       const kids = children.get(id);
       const sub = kids.length ? `<ul>${kids.map(renderList).join('')}</ul>` : '';
-      return `<li><button type="button" class="viz-treenode" data-node="${escapeHtml(n.id)}" aria-pressed="false"><span class="viz-tnid">${escapeHtml(n.label)}</span><span class="viz-tnmeta">${escapeHtml(meta(n))}</span></button>${sub}</li>`;
+      return `<li><button type="button" class="viz-treenode" data-node="${escapeHtml(n.id)}"${facts(n)} aria-pressed="false"><span class="viz-tnid">${escapeHtml(n.label)}</span><span class="viz-tnmeta">${escapeHtml(meta(n))}</span></button>${sub}</li>`;
     };
     return `<div class="viz viz-tree" data-viz="tree" data-nodes="${nodes.length}">
   <div class="viz-head"><span class="viz-tag">Interactive tree &middot; ${safeTitle}</span></div>

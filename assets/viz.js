@@ -410,8 +410,9 @@ export function bindStruct(root) {
 // node; arrows/Home/End move the selection in document order; Escape
 // clears it. Selection is exposed through aria-pressed on exactly one
 // button, a mirrored highlight on the SVG diagram node, and a polite
-// status sentence naming the node's label, parent, and children — never
-// color-only. No timers, no animation, so reduced motion is inherently
+// status sentence naming the node's full label, parent, and children
+// labels from the build-time data attributes — never color-only, never
+// truncated. No timers, no animation, so reduced motion is inherently
 // satisfied. Malformed DOM (no nodes or no status) fails safely: no
 // is-live class, null return, and the static list stays untouched. No
 // Markdown parsing here — DOM state only.
@@ -423,6 +424,16 @@ export function bindTree(root) {
   const prompt = panel.textContent;
   const dots = Array.from(root.querySelectorAll('.viz-tnode'));
   const describe = (btn) => {
+    const get = (k) => (btn.getAttribute ? String(btn.getAttribute(k) ?? '').trim() : '');
+    const label = get('data-label');
+    if (label) {
+      const parent = get('data-parent');
+      const kids = get('data-kids');
+      const where = parent ? `child of ${parent}` : 'root';
+      const below = kids ? `children: ${kids}` : 'leaf';
+      return `${label} — ${where} — ${below}`;
+    }
+    // Fallback for hand-written markup without build-time facts.
     const name = btn.querySelector ? btn.querySelector('.viz-tnid') : null;
     const meta = btn.querySelector ? btn.querySelector('.viz-tnmeta') : null;
     const parts = [name && name.textContent, meta && meta.textContent]

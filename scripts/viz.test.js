@@ -1296,11 +1296,15 @@ describe('viz tree transform (invalid stays raw)', () => {
   });
 });
 
-function stubTreeNode(id, label, meta) {
-  const btn = stubEl({ 'data-node': id });
+function stubTreeNode(spec) {
+  const attrs = { 'data-node': spec.id };
+  if (spec.label !== undefined) attrs['data-label'] = spec.label;
+  if (spec.parent !== undefined) attrs['data-parent'] = spec.parent;
+  if (spec.kids !== undefined) attrs['data-kids'] = spec.kids;
+  const btn = stubEl(attrs);
   btn.querySelector = (sel) => {
-    if (sel === '.viz-tnid') return { textContent: label };
-    if (sel === '.viz-tnmeta') return { textContent: meta };
+    if (sel === '.viz-tnid') return { textContent: spec.label ?? '' };
+    if (sel === '.viz-tnmeta') return { textContent: spec.meta ?? '' };
     return null;
   };
   let focused = false;
@@ -1321,7 +1325,7 @@ function stubTreeDot(id) {
 }
 
 function stubTreeRoot(specs) {
-  const nodes = specs.map((s) => stubTreeNode(s.id, s.label, s.meta));
+  const nodes = specs.map((s) => stubTreeNode(s));
   const dots = specs.map((s) => stubTreeDot(s.id));
   const panel = stubEl({});
   panel.textContent = 'Select a node to inspect its parent and children.';
@@ -1346,9 +1350,9 @@ function stubTreeRoot(specs) {
 }
 
 const TREE_SPECS = [
-  { id: 'start', label: 'Start', meta: 'root · level 0 · 2 children' },
-  { id: 'a', label: 'A', meta: 'child of Start · level 1 · 2 children' },
-  { id: 'b', label: 'B', meta: 'child of Start · level 1 · leaf' },
+  { id: 'start', label: 'Start', parent: '', kids: 'A, B' },
+  { id: 'a', label: 'A', parent: 'Start', kids: 'C, D' },
+  { id: 'b', label: 'B', parent: 'Start', kids: '' },
 ];
 
 describe('tree binding on stub DOM', () => {
@@ -1463,5 +1467,127 @@ describe('tree stylesheet and regression contract', () => {
     assert.ok(transformCustomWidgets('::: viz structure T\nfield | A | 8 | meaning\n:::').includes('class="viz viz-struct"'), 'structure still enhances');
     const mixed = transformCustomWidgets('::: viz tree T\nnode | r | R\nnode | a | A | r\n:::\n\n::: viz trace U\nstate | A\nop | Go\nstate | B\n:::');
     assert.ok(mixed.includes('viz-tree') && mixed.includes('viz-trace'), 'tree and trace coexist on one page');
+  });
+});
+
+const LONG_TREE = '::: viz tree Long labels\n'
+  + 'node | root | Initial State Of Search\n'
+  + 'node | a | Very Long Search State | root\n'
+  + 'node | b | Goal State Reached | root\n'
+  + 'node | c | Another Extremely Long Sibling Label | root\n:::';
+
+const svgTexts = (out) => [...out.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
+const viewBoxOf = (out) => /viewBox="([^"]+)"/.exec(out)?.[1];
+
+describe('tree long-label hardening', () => {
+  it('truncates SVG labels deterministically while keeping full labels in the list', () => {
+    const out = transformCustomWidgets(LONG_TREE);
+    assert.ok(out.includes('class="viz viz-tree"'), 'long-label tree still renders');
+    for (const full of ['Initial State Of Search', 'Very Long Search State', 'Goal State Reached', 'Another Extremely Long Sibling Label']) {
+      assert.ok(out.includes(full), `complete label preserved in semantic list: ${full.slice(0, 20)}`);
+    }
+    const texts = svgTexts(out);
+    assert.equal(texts.length, 4, 'one SVG label per node');
+    assert.ok(texts.every((t) => Array.from(t).length <= 12), 'every SVG label fits the node spacing');
+    assert.ok(texts.some((t) => t.endsWith('…')), 'overlong labels truncated with ellipsis');
+    assert.ok(texts.includes('Initial Sta…'), 'truncation is an exact 11-char prefix plus ellipsis');
+  });
+
+  it('leaves 12-character labels intact and truncates at 13', () => {
+    const out = transformCustomWidgets('::: viz tree Bounds\nnode | r | ABCDEFGHIJKL\nnode | a | ABCDEFGHIJKLM | r\n:::');
+    const texts = svgTexts(out);
+    assert.ok(texts.includes('ABCDEFGHIJKL'), 'exactly-12 label untouched');
+    assert.ok(texts.includes('ABCDEFGHIJK…'), '13-char label truncated');
+  });
+
+  it('keeps geometry label-independent and deterministic', () => {
+    const short = transformCustomWidgets('::: viz tree S\nnode | root | R\nnode | a | A | root\nnode | b | B | root\nnode | c | C | root\n:::');
+    assert.equal(viewBoxOf(transformCustomWidgets(LONG_TREE)), viewBoxOf(short), 'same shape renders same viewBox regardless of label length');
+    assert.equal(viewBoxOf(short), '0 0 336 180', 'three-leaf geometry is exact');
+    assert.equal(transformCustomWidgets(LONG_TREE), transformCustomWidgets(LONG_TREE), 'long-label rendering deterministic');
+  });
+
+  it('handles long labels across multiple levels without edge loss', () => {
+    const out = transformCustomWidgets('::: viz tree Deep\nnode | r | Root Node With Words\nnode | a | Left Branch State | r\nnode | b | Right Branch State | r\nnode | c | Deep Leaf State Here | a\n:::');
+    assert.equal((out.match(/class="viz-tedge"/g) || []).length, 3, 'edges number nodes minus one');
+    assert.ok(svgTexts(out).every((t) => Array.from(t).length <= 12), 'deep labels bounded too');
+    assert.ok(out.includes('Deep Leaf State Here'), 'deep full label in list');
+  });
+
+  it('locks the tiny search-tree reference geometry', () => {
+    const out = transformCustomWidgets(SEARCH_TREE);
+    assert.equal(viewBoxOf(out), '0 0 336 276', 'reference positions unchanged');
+    assert.equal((out.match(/class="viz-tedge"/g) || []).length, 5, 'reference edges unchanged');
+  });
+});
+
+describe('tree selection status', () => {
+  it('names children for the root', () => {
+    const root = stubTreeRoot(TREE_SPECS);
+    const bound = bindTree(root);
+    bound.select(0);
+    assert.equal(root.panel.textContent, 'Selected Start — root — children: A, B.', 'root status names children');
+  });
+
+  it('names parent and children for internal nodes', () => {
+    const root = stubTreeRoot(TREE_SPECS);
+    const bound = bindTree(root);
+    bound.select(1);
+    assert.equal(root.panel.textContent, 'Selected A — child of Start — children: C, D.', 'internal status names parent and children');
+  });
+
+  it('identifies leaves without inventing children', () => {
+    const root = stubTreeRoot(TREE_SPECS);
+    const bound = bindTree(root);
+    bound.select(2);
+    assert.equal(root.panel.textContent, 'Selected B — child of Start — leaf.', 'leaf status identifies leaf');
+  });
+
+  it('announces long labels in full, never truncated', () => {
+    const root = stubTreeRoot([
+      { id: 'root', label: 'Initial State Of Search', parent: '', kids: 'Very Long Search State, Goal State Reached' },
+      { id: 'a', label: 'Very Long Search State', parent: 'Initial State Of Search', kids: '' },
+    ]);
+    const bound = bindTree(root);
+    bound.select(0);
+    assert.ok(root.panel.textContent.includes('Initial State Of Search'), 'full root label in status');
+    assert.ok(root.panel.textContent.includes('Very Long Search State, Goal State Reached'), 'full children labels in status');
+    bound.select(1);
+    assert.ok(root.panel.textContent.includes('Very Long Search State — child of Initial State Of Search — leaf'), 'full labels for leaf selection');
+  });
+
+  it('falls back to span text for markup without build-time facts', () => {
+    const root = stubTreeRoot([{ id: 'x', meta: 'Xtra · leaf' }]);
+    const bound = bindTree(root);
+    assert.ok(bound, 'hand-written markup still binds');
+    bound.select(0);
+    assert.ok(root.panel.textContent.includes('Xtra'), 'fallback status reads span text');
+  });
+});
+
+describe('tree accessibility hardening', () => {
+  it('keeps node buttons natively keyboard-reachable with full labels', () => {
+    const out = transformCustomWidgets(LONG_TREE);
+    assert.ok(!out.includes('tabindex'), 'no tabindex manipulation — native tab order');
+    assert.ok(out.includes('aria-pressed="false"'), 'selection state exposed');
+    assert.ok(out.includes('role="status"'), 'status region present');
+    for (const full of ['Initial State Of Search', 'Very Long Search State']) {
+      const btn = out.match(new RegExp(`<button[^>]*data-label="${full}"[^>]*>`));
+      assert.ok(btn, `button carries full label for assistive tech: ${full.slice(0, 20)}`);
+    }
+  });
+
+  it('holds exactly one selection with Escape clearing', () => {
+    const root = stubTreeRoot(TREE_SPECS);
+    const bound = bindTree(root);
+    bound.select(0);
+    bound.select(1);
+    assert.deepEqual(
+      root.nodes.map((n) => n.getAttribute('aria-pressed')),
+      ['false', 'true', 'false'],
+      'exactly one node pressed'
+    );
+    root.fire('keydown', { key: 'Escape' });
+    assert.ok(root.nodes.every((n) => n.getAttribute('aria-pressed') === 'false'), 'Escape clears all');
   });
 });
