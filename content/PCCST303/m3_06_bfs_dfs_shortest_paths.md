@@ -100,6 +100,17 @@ Watch layers ignite in order — s, then a and b, then c, d and e, then f and g.
 = Order 1, 2, 4, 3 with no distances claimed
 :::
 
+The same three links drawn as an explorable graph: every node links to two neighbours, forming a cycle — graphs allow cycles, trees forbid them. Select any node to read its connections.
+
+::: viz graph Tiny triangle network
+node | a | A
+node | b | B
+node | c | C
+edge | a | b
+edge | b | c
+edge | c | a
+:::
+
 ---
 
 <a id="self-check"></a>

@@ -12,9 +12,9 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { transformCustomWidgets, parseTraceBody, parseTreeBody } from './widgets.js';
+import { transformCustomWidgets, parseTraceBody, parseTreeBody, parseGraphBody, parseGraphMode } from './widgets.js';
 import { SCENES, SCENE_IDS } from './scenes.js';
-import { createStepper, bindViz, bindTrace, bindTree, bindTabs, bindCompare, bindRtt, bindLab, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
+import { createStepper, bindViz, bindTrace, bindTree, bindGraph, bindTabs, bindCompare, bindRtt, bindLab, bindStruct, calcRtt, VIZ_PLAY_INTERVAL_MS } from '../assets/viz.js';
 import { LABS, LAB_IDS, getLab, validateLab, computeLab, formatInt, formatNum2 } from './viz-calcs.js';
 
 const read = (f) => fs.readFileSync(f, 'utf-8');
@@ -1589,5 +1589,354 @@ describe('tree accessibility hardening', () => {
     );
     root.fire('keydown', { key: 'Escape' });
     assert.ok(root.nodes.every((n) => n.getAttribute('aria-pressed') === 'false'), 'Escape clears all');
+  });
+});
+
+const TRIANGLE_GRAPH = '::: viz graph Tiny triangle network\n'
+  + 'node | a | A\n'
+  + 'node | b | B\n'
+  + 'node | c | C\n'
+  + 'edge | a | b\n'
+  + 'edge | b | c\n'
+  + 'edge | c | a\n:::';
+
+const ARROW_GRAPH = '::: viz graph directed Tiny directed graph\n'
+  + 'node | a | A\n'
+  + 'node | b | B\n'
+  + 'edge | a | b\n:::';
+
+describe('viz graph parser', () => {
+  it('accepts a valid undirected graph with a cycle', () => {
+    const parsed = parseGraphBody('node | a | A\nnode | b | B\nnode | c | C\nedge | a | b\nedge | b | c\nedge | c | a', false);
+    assert.ok(parsed.ok, 'triangle cycle is valid for graphs');
+    assert.deepEqual(parsed.order, ['a', 'b', 'c'], 'document order preserved');
+  });
+
+  it('accepts a valid directed graph with reversed edges as distinct', () => {
+    assert.ok(parseGraphBody('node | a | A\nnode | b | B\nedge | a | b\nedge | b | a', true).ok, 'opposite directed edges coexist');
+    assert.ok(parseGraphBody('node | s | Only', true).ok, 'isolated directed node valid');
+  });
+
+  it('accepts disconnected components and isolated nodes', () => {
+    assert.ok(parseGraphBody('node | a | A\nnode | z | Z', false).ok, 'disconnected nodes valid');
+    assert.ok(parseGraphBody('node | s | Only', false).ok, 'single isolated node valid');
+  });
+
+  it('parses the directed mode word off the head', () => {
+    assert.deepEqual(parseGraphMode('directed Tiny directed graph'), { directed: true, title: 'Tiny directed graph' });
+    assert.deepEqual(parseGraphMode('Tiny network'), { directed: false, title: 'Tiny network' });
+    assert.deepEqual(parseGraphMode('DIRECTED X'), { directed: true, title: 'X' });
+    assert.deepEqual(parseGraphMode(''), { directed: false, title: '' });
+  });
+
+  it('rejects every non-graph shape without guessing', () => {
+    const cases = [
+      ['duplicate ids', 'node | a | A\nnode | a | B', false, /duplicate/],
+      ['empty id', 'node |  | X', false, /empty graph node id/],
+      ['empty label', 'node | a | ', false, /empty graph node label/],
+      ['unknown edge endpoint', 'node | a | A\nedge | a | z', false, /unknown graph edge endpoint/],
+      ['duplicate edge', 'node | a | A\nnode | b | B\nedge | a | b\nedge | a | b', false, /duplicate graph edge/],
+      ['reversed duplicate undirected', 'node | a | A\nnode | b | B\nedge | a | b\nedge | b | a', false, /duplicate graph edge/],
+      ['self-loop undirected', 'node | a | A\nedge | a | a', false, /self-loop/],
+      ['self-loop directed', 'node | a | A\nedge | a | a', true, /self-loop/],
+      ['zero nodes', 'edge | a | b', false, /at least 1 node/],
+      ['malformed node columns', 'node | a', false, /malformed graph node/],
+      ['malformed edge columns', 'node | a | A\nedge | a', false, /malformed graph edge/],
+      ['empty edge endpoint', 'node | a | A\nnode | b | B\nedge | a | ', false, /empty graph edge endpoint/],
+      ['unknown line', 'node | a | A\nremember this', false, /unknown graph line/],
+      ['unknown prefix', 'node | a | A\nlink | a | b', false, /unknown graph line/],
+    ];
+    for (const [label, body, directed, reason] of cases) {
+      const parsed = parseGraphBody(body, directed);
+      assert.equal(parsed.ok, false, `${label} rejected`);
+      assert.match(parsed.reason, reason, `${label} reason precise`);
+    }
+  });
+
+  it('leaves malformed graph blocks raw with no live shell', () => {
+    const raws = [
+      '::: viz graph Dup\nnode | a | A\nnode | a | B\n:::',
+      '::: viz graph Loop\nnode | a | A\nedge | a | a\n:::',
+      '::: viz graph Lost\nnode | a | A\nedge | a | z\n:::',
+      '::: viz graph Empty\n\n\n:::',
+      '::: viz graph directed Dup\nnode | a | A\nnode | b | B\nedge | a | b\nedge | a | b\n:::',
+    ];
+    for (const raw of raws) {
+      const out = transformCustomWidgets(raw);
+      assert.equal(out, raw, `stays raw: ${raw.slice(0, 40)}`);
+      assert.ok(!out.includes('viz-graph'), 'no live graph shell');
+      assert.ok(!out.includes('viz-graphnode'), 'no node controls');
+    }
+  });
+});
+
+describe('viz graph rendering', () => {
+  it('renders undirected nodes, plain edges, and static fallback', () => {
+    const out = transformCustomWidgets(TRIANGLE_GRAPH);
+    assert.ok(out.includes('class="viz viz-graph"'), 'graph shell class');
+    assert.ok(out.includes('data-nodes="3"') && out.includes('data-edges="3"'), 'counts advertised');
+    assert.ok(out.includes('data-mode="undirected"'), 'mode advertised');
+    assert.equal((out.match(/class="viz-gedge"/g) || []).length, 3, 'one line per edge');
+    assert.ok(!out.includes('viz-garrow'), 'no arrows when undirected');
+    assert.equal((out.match(/class="viz-graphnode"/g) || []).length, 3, 'one button per node');
+    assert.ok(out.includes('connected to B, C') || out.includes('connected to'), 'relationships readable statically');
+    assert.ok(out.includes('<ul class="viz-graph-list">'), 'flat semantic list present');
+    assert.ok(out.includes('aria-hidden="true"'), 'diagram marked visual-only');
+    assert.ok(!out.includes('is-live'), 'no live marker without JS');
+    assert.ok(out.includes('role="status"'), 'polite live status region');
+    assert.ok(out.includes('<button type="button" class="viz-graphnode"'), 'native buttons for keyboard use');
+  });
+
+  it('renders directed arrows with incoming/outgoing facts', () => {
+    const out = transformCustomWidgets(ARROW_GRAPH);
+    assert.ok(out.includes('data-mode="directed"'), 'directed mode advertised');
+    assert.equal((out.match(/class="viz-garrow"/g) || []).length, 1, 'one arrowhead per directed edge');
+    assert.ok(out.includes('outgoing: B'), 'outgoing fact rendered');
+    assert.ok(out.includes('incoming: A'), 'incoming fact rendered');
+  });
+
+  it('renders isolated nodes with honest facts', () => {
+    const out = transformCustomWidgets('::: viz graph Solo\nnode | s | Only\n:::');
+    assert.ok(out.includes('data-nodes="1"') && out.includes('data-edges="0"'), 'counts advertised');
+    assert.ok(!out.includes('viz-gedge'), 'no edges drawn');
+    assert.ok(out.includes('isolated node'), 'isolation stated');
+  });
+
+  it('uses deterministic circle coordinates', () => {
+    const a = transformCustomWidgets(TRIANGLE_GRAPH);
+    assert.equal(a, transformCustomWidgets(TRIANGLE_GRAPH), 'identical input renders identically');
+    assert.ok(a.includes('viewBox="0 0 360 260"'), 'fixed deterministic frame');
+    assert.ok(a.includes('<circle cx="180" cy="48" r="22"/>'), 'first node at top of circle');
+  });
+
+  it('renders multiple graph widgets on one page', () => {
+    const out = transformCustomWidgets(`${TRIANGLE_GRAPH}\n\n${ARROW_GRAPH}`);
+    assert.equal((out.match(/class="viz viz-graph"/g) || []).length, 2, 'two live graph shells');
+    assert.ok(out.includes('data-mode="undirected"') && out.includes('data-mode="directed"'), 'modes independent');
+  });
+
+  it('truncates long SVG labels but keeps full labels in list and buttons', () => {
+    const long = transformCustomWidgets('::: viz graph Long\nnode | a | Initial State Of Search\nnode | b | Goal State Reached\nedge | a | b\n:::');
+    assert.ok(long.includes('Initial State Of Search') && long.includes('Goal State Reached'), 'full labels in list');
+    const texts = [...long.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
+    assert.ok(texts.every((t) => Array.from(t).length <= 12), 'SVG labels bounded');
+    assert.ok(texts.includes('Initial Sta…'), 'deterministic truncation');
+  });
+
+  it('preserves Unicode labels end to end', () => {
+    const out = transformCustomWidgets('::: viz graph Uni\nnode | s | αβγ Start\nnode | g | Goal 🎯\nedge | s | g\n:::');
+    assert.ok(out.includes('αβγ Start') && out.includes('Goal 🎯'), 'Unicode labels in list');
+    assert.ok(out.includes('>αβγ Start<'), 'short Unicode label intact in diagram');
+  });
+
+  it('uses the tiny triangle reference shape', () => {
+    const t = read('content/PCCST303/m3_06_bfs_dfs_shortest_paths.md');
+    const block = t.match(/::: viz graph([\s\S]*?)\n:::/);
+    assert.ok(block, 'reference block present in the BFS/DFS note');
+    const out = transformCustomWidgets(block[0]);
+    assert.ok(out.includes('class="viz viz-graph"'), 'reference renders live');
+    assert.ok(out.includes('data-nodes="3"') && out.includes('data-edges="3"'), 'reference has three nodes and edges');
+    assert.ok(!out.includes('viz-garrow'), 'reference is undirected');
+  });
+});
+
+function stubGraphNode(spec) {
+  const attrs = { 'data-node': spec.id };
+  if (spec.label !== undefined) attrs['data-label'] = spec.label;
+  if (spec.peers !== undefined) attrs['data-peers'] = spec.peers;
+  if (spec.out !== undefined) attrs['data-out'] = spec.out;
+  if (spec.inn !== undefined) attrs['data-in'] = spec.inn;
+  const btn = stubEl(attrs);
+  btn.querySelector = (sel) => {
+    if (sel === '.viz-gnid') return { textContent: spec.label ?? '' };
+    if (sel === '.viz-gnmeta') return { textContent: spec.meta ?? '' };
+    return null;
+  };
+  let focused = false;
+  btn.focus = () => { focused = true; };
+  btn.isFocused = () => focused;
+  return btn;
+}
+
+function stubGraphDot(id) {
+  const dot = stubEl({ 'data-node': id });
+  const classes = new Set();
+  dot.classList = {
+    add: (c) => classes.add(c),
+    remove: (c) => classes.delete(c),
+    has: (c) => classes.has(c),
+  };
+  return dot;
+}
+
+function stubGraphRoot(specs) {
+  const nodes = specs.map((s) => stubGraphNode(s));
+  const dots = specs.map((s) => stubGraphDot(s.id));
+  const panel = stubEl({});
+  panel.textContent = 'Select a node to inspect its connections.';
+  const listeners = {};
+  return {
+    nodes,
+    dots,
+    panel,
+    addEventListener(t, fn) { (listeners[t] = listeners[t] || []).push(fn); },
+    fire(t, e = {}) { (listeners[t] || []).forEach((fn) => fn({ preventDefault() {}, ...e })); },
+    classList: { add() {} },
+    querySelector(sel) {
+      if (sel === '.viz-status') return panel;
+      return null;
+    },
+    querySelectorAll(sel) {
+      if (sel === '.viz-graphnode') return nodes;
+      if (sel === '.viz-gnode') return dots;
+      return [];
+    },
+  };
+}
+
+const GRAPH_SPECS = [
+  { id: 'a', label: 'A', peers: 'B, C' },
+  { id: 'b', label: 'B', peers: 'A, C' },
+  { id: 'c', label: 'C', peers: 'A, B' },
+];
+
+const DIGRAPH_SPECS = [
+  { id: 'a', label: 'A', out: 'B', inn: '' },
+  { id: 'b', label: 'B', out: '', inn: 'A' },
+];
+
+describe('graph binding on stub DOM', () => {
+  it('selects on click with single pressed state, mirror, and peer status', () => {
+    const root = stubGraphRoot(GRAPH_SPECS);
+    const bound = bindGraph(root);
+    assert.ok(bound, 'graph binds');
+    assert.equal(bound.current, -1, 'nothing selected initially');
+    root.nodes[0].fire('click');
+    assert.equal(bound.current, 0);
+    assert.equal(root.nodes[0].getAttribute('aria-pressed'), 'true', 'clicked node pressed');
+    assert.equal(root.nodes[1].getAttribute('aria-pressed'), 'false', 'single selection only');
+    assert.ok(root.dots[0].classList.has('is-selected'), 'diagram mirror highlights');
+    assert.ok(!root.dots[1].classList.has('is-selected'), 'mirror is single too');
+    assert.equal(root.panel.textContent, 'Selected A — connected to: B, C.', 'peer status names neighbors');
+  });
+
+  it('distinguishes outgoing and incoming for directed graphs', () => {
+    const root = stubGraphRoot(DIGRAPH_SPECS);
+    const bound = bindGraph(root);
+    bound.select(0);
+    assert.equal(root.panel.textContent, 'Selected A — outgoing: B.', 'source status');
+    bound.select(1);
+    assert.equal(root.panel.textContent, 'Selected B — incoming: A.', 'target status');
+  });
+
+  it('identifies isolated nodes without inventing connections', () => {
+    const root = stubGraphRoot([{ id: 's', label: 'Only', peers: '' }]);
+    bindGraph(root).select(0);
+    assert.equal(root.panel.textContent, 'Selected Only — isolated node.', 'isolation stated');
+    const diroot = stubGraphRoot([{ id: 's', label: 'Only', out: '', inn: '' }]);
+    bindGraph(diroot).select(0);
+    assert.equal(diroot.panel.textContent, 'Selected Only — isolated node.', 'directed isolation stated');
+  });
+
+  it('announces long labels in full, never truncated', () => {
+    const root = stubGraphRoot([{ id: 'a', label: 'Initial State Of Search', peers: 'Goal State Reached' }]);
+    bindGraph(root).select(0);
+    assert.ok(root.panel.textContent.includes('Initial State Of Search'), 'full label in status');
+    assert.ok(root.panel.textContent.includes('Goal State Reached'), 'full neighbor in status');
+  });
+
+  it('moves selection with arrows, Home, End, and clears with Escape', () => {
+    const root = stubGraphRoot(GRAPH_SPECS);
+    const bound = bindGraph(root);
+    root.fire('keydown', { key: 'ArrowRight' });
+    assert.equal(bound.current, 0, 'arrow selects from empty');
+    assert.ok(root.nodes[0].isFocused(), 'focus follows selection');
+    root.fire('keydown', { key: 'ArrowDown' });
+    assert.equal(bound.current, 1);
+    root.fire('keydown', { key: 'End' });
+    assert.equal(bound.current, 2, 'End jumps last');
+    root.fire('keydown', { key: 'Home' });
+    assert.equal(bound.current, 0, 'Home jumps first');
+    root.fire('keydown', { key: 'Escape' });
+    assert.equal(bound.current, -1, 'Escape clears');
+    assert.ok(root.panel.textContent.includes('Select a node'), 'prompt restored');
+    assert.ok(root.nodes.every((n) => n.getAttribute('aria-pressed') === 'false'), 'all unpressed after clear');
+  });
+
+  it('keeps multiple graph widgets independent', () => {
+    const first = stubGraphRoot(GRAPH_SPECS);
+    const second = stubGraphRoot(GRAPH_SPECS);
+    const a = bindGraph(first);
+    const b = bindGraph(second);
+    a.select(2);
+    assert.ok(first.panel.textContent.includes('C'), 'first selects C');
+    assert.ok(second.panel.textContent.includes('Select a node'), 'second untouched');
+    b.select(0);
+    assert.ok(first.panel.textContent.includes('C'), 'first untouched by second');
+  });
+
+  it('selects under prefers-reduced-motion with no autoplay surface', () => {
+    const realWindow = globalThis.window;
+    globalThis.window = { matchMedia: () => ({ matches: true }) };
+    try {
+      const root = stubGraphRoot(GRAPH_SPECS);
+      const bound = bindGraph(root);
+      assert.ok(bound, 'graph binds under reduced motion');
+      root.nodes[0].fire('click');
+      assert.equal(bound.current, 0, 'selection still instant');
+    } finally {
+      if (realWindow === undefined) delete globalThis.window;
+      else globalThis.window = realWindow;
+    }
+  });
+
+  it('fails safely on malformed DOM with the static list untouched', () => {
+    assert.equal(bindGraph({ querySelectorAll: () => [], querySelector: () => stubEl({}) }), null, 'no nodes does not bind');
+    assert.equal(bindGraph({ querySelectorAll: () => [stubEl({})], querySelector: () => null }), null, 'no status does not bind');
+    assert.equal(bindGraph(null), null, 'null root does not bind');
+  });
+
+  it('falls back to span text for markup without build-time facts', () => {
+    const root = stubGraphRoot([{ id: 'x', meta: 'Xtra · connected to Y' }]);
+    const bound = bindGraph(root);
+    assert.ok(bound, 'hand-written markup still binds');
+    bound.select(0);
+    assert.ok(root.panel.textContent.includes('Xtra'), 'fallback status reads span text');
+  });
+});
+
+describe('graph stylesheet and regression contract', () => {
+  it('covers diagram, edges, arrows, nodes, selection, focus, list, and print', () => {
+    const css = read('style.css');
+    for (const sel of [
+      '.viz-graph-diagram', '.viz-graph-svg', '.viz-gedge', '.viz-garrow',
+      '.viz-gnode.is-selected', '.viz-graph-list', '.viz-graphnode',
+      '.viz-graphnode[aria-pressed="true"]', '.viz-graphnode:focus-visible',
+      '.viz-gnid', '.viz-gnmeta',
+    ]) {
+      assert.ok(css.includes(sel), `stylesheet covers ${sel}`);
+    }
+    assert.ok(!/width:\s*100vw/.test(css), 'no viewport-width traps introduced');
+  });
+
+  it('uses theme variables without hardcoded colors or animation', () => {
+    const css = read('style.css');
+    const block = css.slice(css.indexOf('General graph viewer'));
+    assert.ok(block.length > 200, 'graph block present');
+    assert.ok(!/#[0-9a-fA-F]{3,8}/.test(block), 'theme variables only, all modes inherit');
+    assert.ok(!/transition\s*:|animation\s*:|@keyframes/.test(block), 'no animation declarations to reduce');
+    assert.ok(block.includes('@media print'), 'print behavior declared');
+    assert.ok(block.includes('.viz-graphnode:focus-visible'), 'visible keyboard focus');
+  });
+
+  it('leaves flow, stepper, trace, lab, structure, and tree unaffected', () => {
+    assert.ok(transformCustomWidgets('::: viz flow Tour\n1. One\n2. Two\n:::').includes('class="viz viz-flow"'), 'flow still enhances');
+    assert.ok(transformCustomWidgets('::: viz stepper Tour\n- One\n- Two\n:::').includes('class="viz viz-stepper"'), 'stepper still enhances');
+    assert.ok(transformCustomWidgets('::: viz trace T\nstate | A\nop | Go\nstate | B\n:::').includes('class="viz viz-trace"'), 'trace still enhances');
+    assert.ok(transformCustomWidgets('::: viz lab rtt Lab\nNotes.\n:::').includes('class="viz viz-lab"'), 'lab still enhances');
+    assert.ok(transformCustomWidgets('::: viz structure T\nfield | A | 8 | meaning\n:::').includes('class="viz viz-struct"'), 'structure still enhances');
+    assert.ok(transformCustomWidgets('::: viz tree T\nnode | r | R\nnode | a | A | r\n:::').includes('class="viz viz-tree"'), 'tree still enhances');
+    const mixed = transformCustomWidgets(`${TRIANGLE_GRAPH}\n\n::: viz tree T\nnode | r | R\nnode | a | A | r\n:::`);
+    assert.ok(mixed.includes('viz-graph') && mixed.includes('viz-tree'), 'graph and tree coexist on one page');
   });
 });

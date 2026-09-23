@@ -128,6 +128,72 @@ export function parseTreeBody(rawBody) {
   return { ok: true, nodes, root, children, depth, order };
 }
 
+// Head parser for `::: viz graph` widgets: an optional leading `directed`
+// word selects directed semantics (arrow edges, incoming/outgoing status);
+// otherwise the graph is undirected (plain edges, connected-to status).
+// Returns { directed, title } — never throws.
+export function parseGraphMode(head) {
+  const words = String(head ?? '').trim().split(/\s+/).filter(Boolean);
+  if (words.length && words[0].toLowerCase() === 'directed') {
+    return { directed: true, title: words.slice(1).join(' ') };
+  }
+  return { directed: false, title: words.join(' ') };
+}
+
+// Strict structural validator for `::: viz graph` bodies, shared by the
+// parser below and scripts/check.js so both enforce one identical grammar:
+//   node | <id> | <label>   (at least one; ids unique and non-empty)
+//   edge | <from> | <to>    (endpoints must exist; no self-loops;
+//                            no duplicate edges — unordered pair when
+//                            undirected, ordered pair when directed)
+// Deliberately NOT tree semantics: cycles are valid, disconnected
+// components are valid, there is no root, and nodes may have any number
+// of connections. Labels are plain text (escaped, never Markdown-
+// rendered). Returns { ok:true, nodes, edges, directed, order } or
+// { ok:false, reason } — never throws, never coerces, never guesses.
+export function parseGraphBody(rawBody, directed = false) {
+  const nodes = [];
+  const edges = [];
+  const seen = new Set();
+  const edgeKeys = new Set();
+  for (const raw of String(rawBody).split('\n')) {
+    const l = raw.trim();
+    if (!l) continue;
+    const low = l.toLowerCase();
+    if (low.startsWith('node |')) {
+      const parts = l.split('|').map((p) => p.trim());
+      if (parts.length !== 3) {
+        return { ok: false, reason: `malformed graph node line (need "node | id | label") — actual: "${l.slice(0, 40)}"` };
+      }
+      if (!parts[1]) return { ok: false, reason: 'empty graph node id is invalid' };
+      if (!parts[2]) return { ok: false, reason: `empty graph node label is invalid (node "${parts[1].slice(0, 20)}")` };
+      if (seen.has(parts[1])) return { ok: false, reason: `duplicate graph node id "${parts[1].slice(0, 20)}" — each node must be declared once` };
+      seen.add(parts[1]);
+      nodes.push({ id: parts[1], label: parts[2] });
+    } else if (low.startsWith('edge |')) {
+      const parts = l.split('|').map((p) => p.trim());
+      if (parts.length !== 3) {
+        return { ok: false, reason: `malformed graph edge line (need "edge | from | to") — actual: "${l.slice(0, 40)}"` };
+      }
+      if (!parts[1] || !parts[2]) return { ok: false, reason: 'empty graph edge endpoint is invalid' };
+      edges.push({ from: parts[1], to: parts[2] });
+    } else {
+      return { ok: false, reason: `unknown graph line (expected "node | id | label" or "edge | from | to") — actual: "${l.slice(0, 40)}"` };
+    }
+  }
+  if (!nodes.length) return { ok: false, reason: 'graph needs at least 1 node — actual: 0' };
+  for (const e of edges) {
+    if (!seen.has(e.from)) return { ok: false, reason: `unknown graph edge endpoint "${e.from.slice(0, 20)}" — every edge must reference an existing node` };
+    if (!seen.has(e.to)) return { ok: false, reason: `unknown graph edge endpoint "${e.to.slice(0, 20)}" — every edge must reference an existing node` };
+    if (e.from === e.to) return { ok: false, reason: `graph self-loop on "${e.from.slice(0, 20)}" is not supported` };
+    const key = directed ? `${e.from} ${e.to}` : [e.from, e.to].sort().join(' ');
+    if (edgeKeys.has(key)) return { ok: false, reason: `duplicate graph edge "${e.from.slice(0, 20)}" — "${e.to.slice(0, 20)}" — each connection must be declared once` };
+    edgeKeys.add(key);
+  }
+  const order = nodes.map((n) => n.id);
+  return { ok: true, nodes, edges, directed, order };
+}
+
 export function transformCustomWidgets(markdownText) {
   // Per-page counter for unique viz widget ids (aria wiring). Deterministic:
   // widgets transform in document order, so ids are stable across builds.
@@ -708,6 +774,133 @@ export function transformCustomWidgets(markdownText) {
     ${renderList(root.id)}
   </ul>
   <p class="viz-status" role="status">Select a node to inspect its parent and children.</p>
+</div>`;
+  });
+
+  // 7h. General graph viewer: nodes with any number of connections, where
+  // cycles, cross-links, isolated nodes, and disconnected components are all
+  // valid and there is no root. `tree` covers hierarchies; graph covers
+  // networks, topologies, and state spaces. Syntax:
+  // `::: viz graph <title>` (undirected) or
+  // `::: viz graph directed <title>` (directed, arrow edges):
+  //   node | <id> | <label>
+  //   edge | <from-id> | <to-id>
+  // Strict grammar (see parseGraphBody): at least 1 node, unique non-empty
+  // ids, non-empty labels, existing edge endpoints, no self-loops, no
+  // duplicate edges (unordered pair undirected, ordered pair directed).
+  // Cycles and disconnected components are accepted — tree constraints must
+  // NOT leak in. Layout is a deterministic circle in document order (no
+  // physics, no randomness, no library); directed edges get explicit
+  // triangular arrowheads drawn as polygons so widgets never share marker
+  // ids. Labels are plain text; overlong SVG labels use the same
+  // deterministic 12-character truncation as trees while list buttons and
+  // status keep full labels. Static fallback: diagram plus a flat semantic
+  // list stating each node's connections — fully readable without JS.
+  // viz.js adds select-to-inspect (native buttons, aria-pressed, live
+  // status naming connections from build-time data attributes, SVG mirror).
+  // Malformed blocks stay raw for scripts/check.js. Intentionally NOT
+  // supported: force layout, zoom/pan/drag, editing, search, animation.
+  const vizGraphPattern = /::: viz graph(.*?)\n([\s\S]*?)\n:::/g;
+  markdownText = markdownText.replace(vizGraphPattern, (match, head, rawBody) => {
+    const mode = parseGraphMode(head);
+    const safeTitle = escapeHtml(mode.title || 'Graph');
+    const parsed = parseGraphBody(rawBody, mode.directed);
+    if (!parsed.ok) return match;
+    const { nodes, edges, directed } = parsed;
+    const byId = new Map(nodes.map((n) => [n.id, n]));
+    // Deterministic circle layout in document order: node i sits at angle
+    // −90° + i·360°/n. Hand-computable, identical for identical input.
+    const GW = 360;
+    const GH = 260;
+    const GX = 180;
+    const GY = 130;
+    const GRX = 118;
+    const GRY = 82;
+    const GR = 22;
+    const pos = new Map();
+    nodes.forEach((n, i) => {
+      if (nodes.length === 1) {
+        pos.set(n.id, [GX, GY]);
+      } else {
+        const a = (-Math.PI / 2) + ((i * 2 * Math.PI) / nodes.length);
+        pos.set(n.id, [Math.round(GX + GRX * Math.cos(a)), Math.round(GY + GRY * Math.sin(a))]);
+      }
+    });
+    const edgeSvg = edges.map((e) => {
+      const [x1, y1] = pos.get(e.from);
+      const [x2, y2] = pos.get(e.to);
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const len = Math.hypot(dx, dy) || 1;
+      const ux = dx / len;
+      const uy = dy / len;
+      const sx = Math.round(x1 + ux * (GR + 2));
+      const sy = Math.round(y1 + uy * (GR + 2));
+      const ex = Math.round(x2 - ux * (GR + 2));
+      const ey = Math.round(y2 - uy * (GR + 2));
+      let arrow = '';
+      if (directed) {
+        const bx = ex - ux * 11;
+        const by = ey - uy * 11;
+        const px = -uy * 5;
+        const py = ux * 5;
+        const r1 = (v) => Math.round(v * 10) / 10;
+        arrow = `<polygon class="viz-garrow" points="${r1(ex)},${r1(ey)} ${r1(bx + px)},${r1(by + py)} ${r1(bx - px)},${r1(by - py)}"/>`;
+      }
+      return `<line class="viz-gedge" x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}"/>${arrow}`;
+    }).join('');
+    const fitSvgLabel = (label) => {
+      const chars = Array.from(label);
+      return chars.length > 12 ? `${chars.slice(0, 11).join('')}…` : label;
+    };
+    const dots = nodes.map((n) => {
+      const [x, y] = pos.get(n.id);
+      return `<g class="viz-gnode" data-node="${escapeHtml(n.id)}"><circle cx="${x}" cy="${y}" r="${GR}"/><text x="${x}" y="${y + 5}">${escapeHtml(fitSvgLabel(n.label))}</text></g>`;
+    }).join('');
+    // Adjacency in edge document order; labels resolved from parsed data.
+    const peers = new Map(nodes.map((n) => [n.id, []]));
+    const out = new Map(nodes.map((n) => [n.id, []]));
+    const inn = new Map(nodes.map((n) => [n.id, []]));
+    edges.forEach((e) => {
+      if (directed) {
+        out.get(e.from).push(e.to);
+        inn.get(e.to).push(e.from);
+      } else {
+        peers.get(e.from).push(e.to);
+        peers.get(e.to).push(e.from);
+      }
+    });
+    const lbl = (ids) => ids.map((id) => byId.get(id).label);
+    const meta = (n) => {
+      if (!directed) {
+        const ps = peers.get(n.id);
+        return ps.length ? `connected to ${lbl(ps).join(', ')}` : 'isolated node';
+      }
+      const o = out.get(n.id);
+      const ii = inn.get(n.id);
+      if (!o.length && !ii.length) return 'isolated node';
+      const parts = [];
+      if (o.length) parts.push(`outgoing: ${lbl(o).join(', ')}`);
+      if (ii.length) parts.push(`incoming: ${lbl(ii).join(', ')}`);
+      return parts.join(' · ');
+    };
+    // Build-time relationship facts for the runtime status sentence
+    // (scripts/viz.js reads these instead of reparsing DOM text).
+    const facts = (n) => {
+      if (!directed) {
+        return ` data-label="${escapeHtml(n.label)}" data-peers="${escapeHtml(lbl(peers.get(n.id)).join(', '))}"`;
+      }
+      return ` data-label="${escapeHtml(n.label)}" data-out="${escapeHtml(lbl(out.get(n.id)).join(', '))}" data-in="${escapeHtml(lbl(inn.get(n.id)).join(', '))}"`;
+    };
+    const items = nodes.map((n) =>
+      `<li><button type="button" class="viz-graphnode" data-node="${escapeHtml(n.id)}"${facts(n)} aria-pressed="false"><span class="viz-gnid">${escapeHtml(n.label)}</span><span class="viz-gnmeta">${escapeHtml(meta(n))}</span></button></li>`).join('');
+    return `<div class="viz viz-graph" data-viz="graph" data-nodes="${nodes.length}" data-edges="${edges.length}" data-mode="${directed ? 'directed' : 'undirected'}">
+  <div class="viz-head"><span class="viz-tag">Interactive graph &middot; ${safeTitle}</span></div>
+  <div class="viz-graph-diagram"><svg class="viz-graph-svg" viewBox="0 0 ${GW} ${GH}" aria-hidden="true" focusable="false">${edgeSvg}${dots}</svg></div>
+  <ul class="viz-graph-list">
+    ${items}
+  </ul>
+  <p class="viz-status" role="status">Select a node to inspect its connections.</p>
 </div>`;
   });
 

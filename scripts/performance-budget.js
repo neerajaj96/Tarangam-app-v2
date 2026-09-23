@@ -32,12 +32,13 @@ export const PERFORMANCE_BUDGETS = {
   // the comprehensive PCCST501 m4_01 SNMP lesson at ~150 KiB). The gate
   // stays active; this is headroom for intentional depth, not a bypass.
   maxTopicPageBytes: 160 * 1024,
-  // Shared stylesheet. Raised deliberately (Sep 2026) from 52 KiB to
-  // 54 KiB: the reusable `::: viz tree` primitive added themed,
-  // responsive, print-safe hierarchy styles shared by all future tree
-  // widgets (following the earlier trace-primitive raise). The gate stays
-  // active; this is headroom for an intentional primitive, not a bypass.
-  sharedCssBytes: 54 * 1024,
+  // Shared stylesheet. Raised deliberately (Sep 2026) from 54 KiB to
+  // 56 KiB: the reusable `::: viz graph` primitive added themed,
+  // responsive, print-safe network styles shared by all future graph
+  // widgets (following the earlier trace/tree-primitive raises). The gate
+  // stays active; this is headroom for an intentional primitive, not a
+  // bypass.
+  sharedCssBytes: 56 * 1024,
   // All shipped runtime JavaScript, in total.
   totalJsBytes: 480 * 1024,
   // Largest single shipped JavaScript asset.
